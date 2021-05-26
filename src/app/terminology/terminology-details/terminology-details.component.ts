@@ -19,9 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
-  Input,
-  OnDestroy
-} from '@angular/core';
+  Input} from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -39,16 +37,10 @@ import {
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { Subscription } from 'rxjs';
 import {
-  Branchable,
-  Modelable,
-  ModelableDetail,
   ModelUpdatePayload,
-  SecurableModel,
-  TerminologyDetailResponse,
-  Versionable
-} from '@maurodatamapper/mdm-resources';
+  TerminologyDetail,
+  TerminologyDetailResponse} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
@@ -56,10 +48,10 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
   templateUrl: './terminology-details.component.html',
   styleUrls: ['./terminology-details.component.sass']
 })
-export class TerminologyDetailsComponent implements OnInit, OnDestroy {
-  @Input() mcTerminology: ModelableDetail & Modelable & Branchable & Versionable & SecurableModel;
+export class TerminologyDetailsComponent implements OnInit {
+  @Input() mcTerminology: TerminologyDetail;
 
-  originalTerminology: ModelableDetail & Modelable & Branchable & Versionable & SecurableModel;
+  originalTerminology:TerminologyDetail;
   openEditFormVal: any;
   processing = false;
   exportError = null;
@@ -73,7 +65,6 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   exporting: boolean;
   currentBranch = '';
   branchGraph = [];
-  dataChangedSub: Subscription;
   downloadLinks = new Array<HTMLAnchorElement>();
   access: any;
   editMode = false;
@@ -92,9 +83,6 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     private editingService: EditingService,
     private messageService: MessageService
   ) {}
-  ngOnDestroy(): void {
-    this.dataChangedSub.unsubscribe();
-  }
 
   ngOnInit() {
     this.terminologyDetails();
@@ -144,7 +132,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
 
     this.resources.terminology.update(resource.id, resource).subscribe(
       (res: TerminologyDetailResponse) => {
-        this.mcTerminology = res.body;
+        this.originalTerminology = res.body;
         this.editMode = false;
         this.editingService.stop();
         this.messageHandler.showSuccess('Terminology updated successfully.');

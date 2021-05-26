@@ -57,7 +57,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   showSecuritySection: boolean;
   isAdminUser: boolean;
   deleteInProgress: boolean;
-  errorMessage = '';
   processing = false;
   addedToFavourite = false;
   currentBranch = '';
@@ -311,8 +310,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.editingService.stop();
     this.codeSetDetails();
   }
 

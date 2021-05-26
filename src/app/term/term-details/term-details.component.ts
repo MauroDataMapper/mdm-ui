@@ -121,9 +121,10 @@ export class TermDetailsComponent implements OnInit {
       this.resourcesService.term
         .update(this.terminologyId, this.mcTerm.id, this.mcTerm)
         .subscribe(
-          () => {
+          (res: TermDetailResponse) => {
             this.messageHandler.showSuccess('Term updated successfully.');
             this.editingService.stop();
+            this.originalTerm = res.body;
             this.editMode = false;
             this.errorMessage = '';
             this.broadcastSvc.broadcast('$reloadFoldersTree');

@@ -17,20 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { EditableDataModel } from '../model/dataModelModel';
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChildren,
-  QueryList,
-  ViewChild,
-  ElementRef,
-  ViewEncapsulation,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
-import { EMPTY, Subscription } from 'rxjs';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { EMPTY } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -57,6 +45,7 @@ import {
   ModelUpdatePayload
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { ValidatorService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -64,44 +53,22 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
   styleUrls: ['./data-model-detail.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class DataModelDetailComponent
-  implements OnInit, AfterViewInit, OnDestroy {
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  result: DataModelDetail;
-  hasResult = false;
-  subscription: Subscription;
-  showSecuritySection: boolean;
-  showUserGroupAccess: boolean;
-  showEdit: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
-  showSoftDelete: boolean;
-  showPermDelete: boolean;
+export class DataModelDetailComponent implements OnInit {
+  @Input() dataModel: DataModelDetail;
+  originalDataModel: DataModelDetail;
+  editMode = false;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
   exporting: boolean;
-  editableForm: EditableDataModel;
-  errorMessage = '';
-  showEditMode = false;
   processing = false;
-  showNewVersion = false;
   compareToList = [];
-  exportError = null;
-  exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  download: any;
-  urlText: any;
-  canEditDescription = true;
-  showEditDescription = false;
   branchGraph = [];
   currentBranch = '';
   downloadLinks = new Array<HTMLAnchorElement>();
+  access: any;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -115,125 +82,39 @@ export class DataModelDetailComponent
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
     private title: Title,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private validatorService: ValidatorService
   ) {}
 
   ngOnInit() {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.loadExporterList();
-    this.DataModelDetails();
-
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach((x) =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach((x) => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.setEditableFormData();
-      if (this.result.classifiers) {
-        this.result.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.result.aliases) {
-        this.result.aliases.forEach((item) => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
-
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
-      (message: boolean) => {
-        this.showSecuritySection = message;
-      }
-    );
+    this.dataModelDetails();
+    this.access = this.securityHandler.elementAccess(this.dataModel);
+    this.title.setTitle(`${this.dataModel?.type} - ${this.dataModel?.label}`);
   }
 
-  ngAfterViewInit(): void {
-    this.editForm.changes.subscribe(() => {
-      if (this.editMode) {
-        this.editForm.forEach((x) =>
-          x.edit({
-            editing: true,
-            focus: x.name === 'moduleName' ? true : false
-          })
-        );
-        this.showForm();
-      }
-    });
-  }
+  dataModelDetails(): any {
+    this.getModelGraph(this.dataModel.id);
 
-  DataModelDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      (serverResult) => {
-        this.result = serverResult;
-        this.setEditableFormData();
-        if (this.result.domainType === 'DataModel') {
-          this.getModelGraph(this.result.id);
+    if (this.dataModel.semanticLinks) {
+      this.dataModel.semanticLinks.forEach((link) => {
+        if (link.linkType === 'New Version Of') {
+          this.compareToList.push(link.target);
         }
-        if (this.result.classifiers) {
-          this.result.classifiers.forEach((item) => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.result.aliases) {
-          this.result.aliases.forEach((item) => {
-            this.editableForm.aliases.push(item);
-          });
-        }
-        if (this.result.semanticLinks) {
-          this.result.semanticLinks.forEach((link) => {
-            if (link.linkType === 'New Version Of') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.result.semanticLinks) {
-          this.result.semanticLinks.forEach((link) => {
-            if (link.linkType === 'Superseded By') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.result != null) {
-          this.hasResult = true;
-          this.watchDataModelObject();
-        }
-        this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
-      }
-    );
-  }
-
-  watchDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.result);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showPermission = access.showPermission;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-      this.showFinalise = access.showFinalise;
-      this.showNewVersion = access.showNewVersion;
-      this.showSoftDelete = access.showSoftDelete;
-      this.showPermDelete = access.showPermanentDelete;
-      this.canEditDescription = access.canEditDescription;
+      });
     }
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
+
+    if (this.dataModel.semanticLinks) {
+      this.dataModel.semanticLinks.forEach((link) => {
+        if (link.linkType === 'Superseded By') {
+          this.compareToList.push(link.target);
+        }
+      });
+    }
+
+    this.originalDataModel = Object.assign({}, this.dataModel);
   }
 
   toggleSecuritySection() {
@@ -250,15 +131,10 @@ export class DataModelDetailComponent
     this.messageService.toggleSearch();
   }
 
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
-  }
-
   getModelGraph = (modelId) => {
     this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(
       (res) => {
-        this.currentBranch = this.result.branchName;
+        this.currentBranch = this.dataModel.branchName;
         this.branchGraph = res.body;
       },
       (error) => {
@@ -283,13 +159,13 @@ export class DataModelDetailComponent
   };
 
   delete(permanent) {
-    if (!this.showDelete) {
+    if (!this.access.showDelete) {
       return;
     }
     this.deleteInProgress = true;
 
     this.resourcesService.dataModel
-      .remove(this.result.id, { permanent })
+      .remove(this.dataModel.id, { permanent })
       .subscribe(
         () => {
           if (permanent) {
@@ -313,7 +189,7 @@ export class DataModelDetailComponent
   }
 
   askForSoftDelete() {
-    if (!this.showSoftDelete) {
+    if (!this.access.showSoftDelete) {
       return;
     }
 
@@ -335,7 +211,7 @@ export class DataModelDetailComponent
   }
 
   askForPermanentDelete(): any {
-    if (!this.showPermDelete) {
+    if (!this.access.showPermanentDelete) {
       return;
     }
 
@@ -364,14 +240,14 @@ export class DataModelDetailComponent
   }
 
   restore() {
-    if (!this.isAdminUser || !this.result.deleted) {
+    if (!this.isAdminUser || !this.dataModel.deleted) {
       return;
     }
 
     this.processing = true;
 
     this.resourcesService.dataModel
-      .undoSoftDelete(this.result.id)
+      .undoSoftDelete(this.dataModel.id)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -386,50 +262,28 @@ export class DataModelDetailComponent
       )
       .subscribe(() => {
         this.messageHandler.showSuccess(
-          `The Data Model "${this.result.label}" has been restored.`
+          `The Data Model "${this.dataModel.label}" has been restored.`
         );
         this.stateHandler.reload();
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       });
   }
 
-  formBeforeSave() {
-    this.editMode = false;
-    this.errorMessage = '';
-
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
+  save() {
     const resource: ModelUpdatePayload = {
-      id: this.result.id,
-      domainType: this.result.domainType,
-      description: this.editableForm.description || ''
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType,
+      label: this.dataModel.label
     };
 
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.result.type;
-      resource.aliases = aliases;
-      resource.classifiers = classifiers;
-    }
-
-    if (this.validateLabel(this.result.label)) {
+    if (this.validatorService.validateLabel(this.dataModel.label)) {
       this.resourcesService.dataModel
-        .update(this.result.id, resource)
+        .update(this.dataModel.id, resource)
         .subscribe(
           (res: DataModelDetailResponse) => {
             this.messageHandler.showSuccess('Data Model updated successfully.');
-            this.editableForm.visible = false;
-            this.result.description = res.body.description;
-            this.editForm.forEach((x) => x.edit({ editing: false }));
+            this.editMode = false;
+            this.originalDataModel = res.body;
             this.editingService.stop();
             this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
@@ -440,125 +294,118 @@ export class DataModelDetailComponent
             );
           }
         );
-    }
-  }
-
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = 'DataModel name can not be empty';
-      return false;
-    } else {
-      return true;
+    }else{
+      this.messageHandler.showError('There is an error with the label please correct and try again');
     }
   }
 
   showForm() {
-    this.showEditDescription = false;
     this.editingService.start();
-    this.editableForm.show();
+    this.editMode = true;
   }
 
-  onCancelEdit() {
-    this.errorMessage = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
+  cancel() {
+    this.editMode = false;
+    this.editingService.stop();
+    this.dataModel = Object.assign({}, this.originalDataModel);
   }
 
   toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.result)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
+    if (this.favouriteHandler.toggle(this.dataModel)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.dataModel);
     }
   }
 
   finalise() {
-    const promise = new Promise(() => {
-      this.resourcesService.dataModel
-        .latestModelVersion(this.result.id)
-        .subscribe((response) => {
-          const dialog = this.dialog.open<
-            FinaliseModalComponent,
-            any,
-            FinaliseModalResponse
-          >(FinaliseModalComponent, {
-            data: {
-              modelVersion: response.body.modelVersion,
-              title: 'Finalise Data Model',
-              okBtnTitle: 'Finalise Data Model',
-              btnType: 'accent',
-              message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+    this.resourcesService.dataModel
+      .latestModelVersion(this.dataModel.id)
+      .subscribe((response) => {
+        const dialog = this.dialog.open<
+          FinaliseModalComponent,
+          any,
+          FinaliseModalResponse
+        >(FinaliseModalComponent, {
+          data: {
+            modelVersion: response.body.modelVersion,
+            title: 'Finalise Data Model',
+            okBtnTitle: 'Finalise Data Model',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
                       <p>to be finalised with: </p>`
-            }
-          });
-
-          dialog.afterClosed().subscribe((dialogResult) => {
-            if (dialogResult?.status !== ModalDialogStatus.Ok) {
-              return;
-            }
-            this.processing = true;
-            this.resourcesService.dataModel
-              .finalise(this.result.id, dialogResult.request)
-              .subscribe(
-                () => {
-                  this.processing = false;
-                  this.messageHandler.showSuccess(
-                    'Data Model finalised successfully.'
-                  );
-                  this.stateHandler.Go(
-                    'datamodel',
-                    { id: this.result.id },
-                    { reload: true }
-                  );
-                },
-                (error) => {
-                  this.processing = false;
-                  this.messageHandler.showError(
-                    'There was a problem finalising the Data Model.',
-                    error
-                  );
-                }
-              );
-          });
+          }
         });
-    });
-    return promise;
+
+        dialog.afterClosed().subscribe((dialogResult) => {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
+            return;
+          }
+          this.processing = true;
+          this.resourcesService.dataModel
+            .finalise(this.dataModel.id, dialogResult.request)
+            .subscribe(
+              () => {
+                this.processing = false;
+                this.messageHandler.showSuccess(
+                  'Data Model finalised successfully.'
+                );
+                this.stateHandler.Go(
+                  'datamodel',
+                  { id: this.dataModel.id },
+                  { reload: true }
+                );
+              },
+              (error) => {
+                this.processing = false;
+                this.messageHandler.showError(
+                  'There was a problem finalising the Data Model.',
+                  error
+                );
+              }
+            );
+        });
+      });
   }
 
   newVersion() {
     this.stateHandler.Go(
       'newVersionModel',
-      { id: this.result.id, domainType:  'dataModel'},
+      { id: this.dataModel.id, domainType: 'dataModel' },
       { location: true }
     );
-  };
+  }
 
   compare(dataModel = null) {
     this.stateHandler.NewWindow(
       'modelscomparison',
       {
-        sourceId: this.result.id,
+        sourceId: this.dataModel.id,
         targetId: dataModel ? dataModel.id : null
       },
       null
     );
   }
 
-  merge = () => {
+  merge() {
     this.stateHandler.Go(
       'modelsmerging',
-      new ModelMergingModel(this.result.id, null, ModelDomainType.DATA_MODELS),
+      new ModelMergingModel(
+        this.dataModel.id,
+        null,
+        ModelDomainType.DATA_MODELS
+      ),
       null
     );
-  };
+  }
 
-  showMergeGraph = () => {
+  showMergeGraph() {
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(VersioningGraphModalComponent, {
-        data: { parentDataModel: this.result.id },
+        data: { parentDataModel: this.dataModel.id },
         panelClass: 'versioning-graph-modal'
       });
 
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
+      dialog.afterClosed().subscribe((dataModel) => {
+        if (dataModel != null && dataModel.status === 'ok') {
           resolve();
         } else {
           reject();
@@ -566,25 +413,24 @@ export class DataModelDetailComponent
       });
     });
     promise.then(() => {}).catch(() => {});
-  };
+  }
 
   export(exporter) {
-    this.exportError = null;
     this.processing = true;
-    this.exportedFileIsReady = false;
     this.exportHandler
-      .exportDataModel([this.result], exporter, 'dataModels')
+      .exportDataModel([this.dataModel], exporter, 'dataModels')
       .subscribe(
-        (result) => {
-          if (result != null) {
-            this.exportedFileIsReady = true;
-            const tempDownloadList = Object.assign([],this.downloadLinks);
+        (dataModel) => {
+          if (dataModel != null) {
+            const tempDownloadList = Object.assign([], this.downloadLinks);
             const label =
-              [this.result].length === 1
-                ? [this.result][0].label
+              [this.dataModel].length === 1
+                ? [this.dataModel][0].label
                 : 'data_models';
             const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([result.body], { type: exporter.fileType });
+            const file = new Blob([dataModel.body], {
+              type: exporter.fileType
+            });
             const link = this.exportHandler.createBlobLink(file, fileName);
             tempDownloadList.push(link);
             this.downloadLinks = tempDownloadList;
@@ -609,8 +455,8 @@ export class DataModelDetailComponent
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (!result.body.authenticatedSession) {
+    this.securityHandler.isAuthenticated().subscribe((dataModel) => {
+      if (!dataModel.body.authenticatedSession) {
         return;
       }
 
@@ -626,27 +472,5 @@ export class DataModelDetailComponent
         }
       );
     });
-  }
-
-  onLabelChange(value: any) {
-    if (!this.validateLabel(value)) {
-      this.editableForm.validationError = true;
-    } else {
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-    }
-  }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  private setEditableFormData() {
-    this.editableForm.description = this.result.description;
-    this.editableForm.label = this.result.label;
-    this.editableForm.organisation = this.result.organisation;
-    this.editableForm.author = this.result.author;
   }
 }

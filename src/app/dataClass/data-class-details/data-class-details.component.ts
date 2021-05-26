@@ -168,7 +168,7 @@ export class DataClassDetailsComponent implements OnInit {
               this.messageHandler.showSuccess(
                 'Data Class updated successfully.'
               );
-              this.dataClass = dataClass.body;
+              this.originalDataClass = dataClass.body;
               this.editMode = false;
               this.broadcastSvc.broadcast('$reloadFoldersTree');
               this.editingService.stop();

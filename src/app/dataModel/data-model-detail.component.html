@@ -18,13 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
   <form
-    editable-form
     name="form"
-    (ngSubmit)="formBeforeSave()"
     disable-submit-on-enter
   >
     <div class="panel-body">
-      <div class="full-width" style="clear: both" *ngIf="result">
+      <div class="full-width" style="clear: both" *ngIf="dataModel">
         <button
           type="button"
           mat-icon-button
@@ -39,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showFinalise"
+            *ngIf="access.showFinalise"
             class="has-text-green"
             (click)="finalise()"
           >
@@ -52,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showEdit || canEditDescription"
+            *ngIf="access.showEdit"
             (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
@@ -69,7 +67,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showNewVersion"
+            *ngIf="access.showNewVersion"
             (click)="newVersion()"
           >
             <i class="fas fa-copy"></i> Create a New Version
@@ -83,7 +81,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             class="has-text-green"
-            *ngIf="result.deleted && isAdminUser"
+            *ngIf="dataModel.deleted && isAdminUser"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore
@@ -92,7 +90,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             [matMenuTriggerFor]="userActionsDelete"
-            *ngIf="showDelete"
+            *ngIf="access.showDelete"
             class="warning"
           >
             <i class="far fa-trash-alt warning"></i> Delete
@@ -105,21 +103,21 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             (click)="askForSoftDelete()"
-            *ngIf="showSoftDelete && !result.deleted"
+            *ngIf="access.showSoftDelete && !dataModel.deleted"
           >
             Mark as deleted
           </button>
           <button
             mat-menu-item
             (click)="askForPermanentDelete()"
-            *ngIf="showPermDelete"
+            *ngIf="access.showPermanentDelete"
           >
             Delete <span class="warning">permanently</span>
           </button>
         </mat-menu>
 
         <mat-menu #compareMenu="matMenu">
-          <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
+          <button mat-menu-item (click)="compare()" *ngIf="!dataModel?.deleted">
             Compare to another Data Model
           </button>
           <div
@@ -149,9 +147,9 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of second level sub menu -->
 
         <div
-          *ngIf="showPermission"
+          *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -168,7 +166,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <div
           style="position: relative; float: right; margin-right: 8px"
-          *ngIf="!editableForm.visible && !editableForm.deletePending"
+          *ngIf="!editMode && !deleteInProgress"
         >
           <button
             mat-icon-button
@@ -200,7 +198,7 @@ SPDX-License-Identifier: Apache-2.0
             margin-right: 8px;
             margin-left: 8px;
           "
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -217,132 +215,119 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <div *ngIf="result">
-        <div
-          [ngClass]="{ 'has-error': errorMessage != '' }"
-          class="data-model-header"
+      <div *ngIf="dataModel">
+        <div class="detail-icons--cta">
+          <i
+            [ngClass]="{
+              'fas fa-star favouritesIcon': true,
+              addedToFavourite: addedToFavourite
+            }"
+            (click)="toggleFavourite()"
+            matTooltip="Favourite"
+          ></i>
+        </div>
+        <h4
+          class="inline-block marginless"
+          [ngClass]="{ deletedDataModelTitle: dataModel?.deleted }"
         >
-          <div class="detail-icons--cta">
-            <i
-              [ngClass]="{
-                'fas fa-star favouritesIcon': true,
-                addedToFavourite: addedToFavourite
-              }"
-              (click)="toggleFavourite()"
-              matTooltip="Favourite"
-            ></i>
-          </div>
-          <h4
-            class="inline-block marginless"
-            [ngClass]="{ deletedDataModelTitle: result?.deleted }"
+          <span
+            class="dataModelTypeIcon"
+            *ngIf="dataModel?.type === 'Data Standard'"
           >
-            <span
-              class="dataModelTypeIcon"
-              *ngIf="result?.type === 'Data Standard'"
-            >
-              <i matTooltip="Data Standard" class="fas fa-file-alt"></i>
-            </span>
-            <span
-              class="dataModelTypeIcon"
-              *ngIf="result?.type === 'Data Asset'"
-            >
-              <i matTooltip="Data Asset" class="fas fa-database"></i>
-            </span>
-            <mdm-inline-text-edit
-              [readOnly]="showEditDescription"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="editableForm.label"
-              [name]="'moduleName'"
-              size="20"
-              [styleCss]="'dataModelDetailsLabel'"
-            >
-            </mdm-inline-text-edit>
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
-            <sup
-              *ngIf="result?.readableByEveryone"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-globe-europe globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Publicly Available"
-              ></i
-            ></sup>
-          </h4>
-          <span class="inline-block" *ngIf="result?.deleted">
-            <small class="warning"> | Deleted</small>
+            <i matTooltip="Data Standard" class="fas fa-file-alt"></i>
           </span>
+          <span
+            class="dataModelTypeIcon"
+            *ngIf="dataModel?.type === 'Data Asset'"
+          >
+            <i matTooltip="Data Asset" class="fas fa-database"></i>
+          </span>
+          <mdm-inline-text-edit
+            [readOnly]="false"
+            [inEditMode]="editMode"
+            [(ngModel)]="dataModel.label"
+            [showButtons]="true"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+            [name]="'moduleName'"
+            size="20"
+            [styleCss]="'dataModelDetailsLabel'"
+          >
+          </mdm-inline-text-edit>
+          <sup
+            *ngIf="dataModel?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+        </h4>
+        <span class="inline-block" *ngIf="dataModel?.deleted">
+          <small class="warning"> | Deleted</small>
+        </span>
 
-          <mdm-element-status [result]="result"></mdm-element-status>
-        </div>
-        <div
-          [ngClass]="{ 'form-group': true, 'has-error': true }"
-          *ngIf="errorMessage != ''"
-        >
-          <span class="help-block">{{ errorMessage }}</span>
-        </div>
+        <mdm-element-status [result]="dataModel"></mdm-element-status>
       </div>
 
       <div class="detail-icons">
         <div
           class="text-muted"
           *ngIf="
-            result?.type === 'Data Asset' || result?.type === 'Data Standard'
+            dataModel?.type === 'Data Asset' ||
+            dataModel?.type === 'Data Standard'
           "
         >
           <small class="block">
             <div>
               <i class="fas fa-cube" matTooltip="Item type"></i>
               <strong>Item type: </strong>
-              <span class="item-type" *ngIf="result?.type === 'Data Asset'"
+              <span class="item-type" *ngIf="dataModel?.type === 'Data Asset'"
                 >Data Asset</span
               >
-              <span class="item-type" *ngIf="result?.type === 'Data Standard'"
+              <span
+                class="item-type"
+                *ngIf="dataModel?.type === 'Data Standard'"
                 >Data Standard</span
               >
             </div>
           </small>
         </div>
-        <div class="text-muted" *ngIf="result?.authority">
+        <div class="text-muted" *ngIf="dataModel?.authority">
           <small>
             <i class="far fa-building" matTooltip="Authority"></i>
             <span
-              ><strong>Authority: </strong>{{ result.authority['label'] }}</span
+              ><strong>Authority: </strong
+              >{{ dataModel.authority['label'] }}</span
             >
           </small>
         </div>
-        <div class="text-muted" *ngIf="result?.documentationVersion">
+        <div class="text-muted" *ngIf="dataModel?.documentationVersion">
           <small>
             <i matTooltip="Documentation Version" class="fas fa-copy"></i>
             <span
               ><strong>Documentation Version: </strong
-              >{{ result.documentationVersion }}</span
+              >{{ dataModel.documentationVersion }}</span
             >
           </small>
         </div>
         <div
           class="text-muted"
-          *ngIf="result?.modelVersion && result?.finalised"
+          *ngIf="dataModel?.modelVersion && dataModel?.finalised"
         >
           <small>
             <i matTooltip="Model Version" class="fas fa-file-alt"></i>
-            <span><strong>Version: </strong>{{ result.modelVersion }}</span>
-            <span *ngIf="result.modelVersionTag" class="tag-name">
+            <span><strong>Version: </strong>{{ dataModel.modelVersion }}</span>
+            <span *ngIf="dataModel.modelVersionTag" class="tag-name">
               <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
-              <span>{{ result.modelVersionTag }}</span>
+              <span>{{ dataModel.modelVersionTag }}</span>
             </span>
           </small>
         </div>
-        <!-- <div class="text-muted" *ngIf="result && !result?.finalised"> TO DO waiting for back-end -->
-        <div class="text-muted" *ngIf="result">
+        <!-- <div class="text-muted" *ngIf="dataModel && !dataModel?.finalised"> TO DO waiting for back-end -->
+        <div class="text-muted" *ngIf="dataModel">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>
@@ -371,7 +356,7 @@ SPDX-License-Identifier: Apache-2.0
             </span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="result?.readableByEveryone">
+        <div class="text-muted" *ngIf="dataModel?.readableByEveryone">
           <small>
             <i
               class="fas fa-globe-europe globe"
@@ -386,15 +371,8 @@ SPDX-License-Identifier: Apache-2.0
   </form>
 </div>
 
-    <mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
+<mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
 
-<div style="text-align: left" *ngIf="exportError">
-  <div style="padding-top: 25px">
-    <div class="alert alert-danger">
-      <strong>Error!</strong> {{ exportError }}
-    </div>
-  </div>
-</div>
 <div style="clear: both" *ngIf="processing">
   <mat-progress-bar
     value="50"

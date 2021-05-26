@@ -21,26 +21,62 @@ import { Observable } from 'rxjs';
 import { CatalogueTreeNodeSelectedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
 import { BroadcastService } from './broadcast.service';
 
+/**
+ * Extension methods for the {@link BroadcastService} to assist with dispatch and setup of common events.
+ */
 declare module './broadcast.service' {
   interface BroadcastService {
+    /**
+     * Notify that the application is offline.
+     * @param error The HTTP error response that triggered this event.
+     */
     applicationOffline(error: HttpErrorResponse): void;
 
+    /**
+     * Get an observable to watch for the `applicationOffline` {@link BroadcastEvent}.
+     */
     onApplicationOffline(): Observable<HttpErrorResponse>;
 
+    /**
+     * Notify that a user has logged in.
+     * @param data The data associated with the log in.
+     */
     userLoggedIn(data: UserLoggedInBroadcastData): void;
 
+    /**
+     * Get an observable to watch for the `userLoggedIn` {@link BroadcastEvent}.
+     */
     onUserLoggedIn(): Observable<UserLoggedInBroadcastData>;
 
+    /**
+     * Notify that a user has logged out.
+     */
     userLoggedOut(): void;
 
+    /**
+     * Get an observable to watch for the `userLoggedOut` {@link BroadcastEvent}.
+     */
     onUserLoggedOut(): Observable<void>;
 
+    /**
+     * Notify that the catalogue tree should be reloaded.
+     */
     reloadCatalogueTree(): void;
 
+    /**
+     * Get an observable to watch for the `reloadCatalogueTree` {@link BroadcastEvent}.
+     */
     onReloadCatalogueTree(): Observable<void>;
 
+    /**
+     * Notify that a tree node has been selected in the catalogue tree.
+     * @param data The data associated with the selection.
+     */
     catalogueTreeNodeSelected(data: CatalogueTreeNodeSelectedBroadcastData): void;
 
+    /**
+     * Get an observable to watch for the `catalogueTreeNodeSelected` {@link BroadcastEvent}.
+     */
     onCatalogueTreeNodeSelected(): Observable<CatalogueTreeNodeSelectedBroadcastData>;
   }
 }

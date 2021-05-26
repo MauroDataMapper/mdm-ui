@@ -46,10 +46,22 @@ export class BroadcastMessage<T> {
     public data?: T) { }
 }
 
+/**
+ * Data to broadcast for the `userLoggedIn` {@link BroadcastEvent}.
+ */
 export interface UserLoggedInBroadcastData {
+  /**
+   * The next UI route to navigate to after logging in.
+   */
   nextRoute: string;
 }
 
+/**
+ * Data to broadcast for the `catalogueTreeNodeSelected` {@link BroadcastEvent}.
+ */
 export interface CatalogueTreeNodeSelectedBroadcastData {
+  /**
+   * The node that was selected.
+   */
   node: FlatNode;
 }

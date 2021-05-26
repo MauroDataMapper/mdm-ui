@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { BroadcastEvent, BroadcastMessage } from './broadcast.model';
 

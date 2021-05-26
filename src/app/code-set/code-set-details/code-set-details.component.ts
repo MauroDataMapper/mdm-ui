@@ -16,8 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Subscription } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { EMPTY } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -49,11 +49,10 @@ import { ValidatorService } from '@mdm/services';
   templateUrl: './code-set-details.component.html',
   styleUrls: ['./code-set-details.component.scss']
 })
-export class CodeSetDetailsComponent implements OnInit, OnDestroy {
-  @Input() editMode = false;
-
-  codeSetDetail: CodeSetDetail;
-  subscription: Subscription;
+export class CodeSetDetailsComponent implements OnInit {
+  @Input() codeSetDetail: CodeSetDetail;
+  editMode = false;
+  originalCodeSetDetail: CodeSetDetail;
   showSecuritySection: boolean;
   isAdminUser: boolean;
   deleteInProgress: boolean;
@@ -79,7 +78,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     private editingService: EditingService
   ) {
     this.isAdminUser = this.sharedService.isAdmin;
-     this.codeSetDetails();
   }
 
   public showAddElementToMarkdown() {
@@ -88,25 +86,14 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
-      (message: boolean) => {
-        this.showSecuritySection = message;
-      }
-    );
+    this.codeSetDetails();
+    this.originalCodeSetDetail = Object.assign({}, this.codeSetDetail);
   }
 
   codeSetDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      (serverResult) => {
-        if (serverResult.domainType !== 'CodeSet') {
-          return;
-        }
-        this.codeSetDetail = serverResult;
-        this.access = this.securityHandler.elementAccess(this.codeSetDetail);
-        this.getModelGraph(this.codeSetDetail.id);
-        this.title.setTitle(`Code Set - ${this.codeSetDetail?.label}`);
-      }
-    );
+    this.access = this.securityHandler.elementAccess(this.codeSetDetail);
+    this.getModelGraph(this.codeSetDetail.id);
+    this.title.setTitle(`Code Set - ${this.codeSetDetail?.label}`);
   }
 
   toggleSecuritySection() {
@@ -117,11 +104,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       },
       panelClass: 'security-modal'
     });
-  }
-
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
   }
 
   delete(permanent: boolean) {
@@ -236,7 +218,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getModelGraph = (codesetId) => {
+  getModelGraph (codesetId : string) {
     this.currentBranch = this.codeSetDetail.branchName;
     this.branchGraph = [
       {
@@ -263,7 +245,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     );
   };
 
-  onModelChange = () => {
+  onModelChange() {
     for (const val in this.branchGraph) {
       if (this.branchGraph[val].branchName === this.currentBranch) {
         this.stateHandler.Go(
@@ -283,24 +265,27 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
         domainType: this.codeSetDetail.domainType
       };
 
-      this.resourcesService.codeSet.update(this.codeSetDetail.id, resource).subscribe(
-        (res: CodeSetDetailResponse) => {
-          this.editMode = false;
-          this.editingService.stop();
-          this.codeSetDetail = res.body;
-          this.messageHandler.showSuccess('Code Set updated successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Code Set.',
-            error
-          );
-        }
+      this.resourcesService.codeSet
+        .update(this.codeSetDetail.id, resource)
+        .subscribe(
+          (res: CodeSetDetailResponse) => {
+            this.editMode = false;
+            this.editingService.stop();
+            this.originalCodeSetDetail = res.body;
+            this.messageHandler.showSuccess('Code Set updated successfully.');
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the Code Set.',
+              error
+            );
+          }
+        );
+    } else {
+      this.messageHandler.showError(
+        'There is an error with the label please correct and try again'
       );
-    }
-    else{
-      this.messageHandler.showError('There is an error with the label please correct and try again');
     }
   }
 
@@ -312,7 +297,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   cancel() {
     this.editMode = false; // Use Input editor whe adding a new folder.
     this.editingService.stop();
-    this.codeSetDetails();
+    this.codeSetDetail = Object.assign({}, this.originalCodeSetDetail);
   }
 
   toggleFavourite() {

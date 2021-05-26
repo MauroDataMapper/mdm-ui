@@ -64,7 +64,20 @@ SPDX-License-Identifier: Apache-2.0
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
             </ng-container>
         </ng-container>
+        <ng-container *ngIf="node.domainType === 'VersionedFolder'">
+          <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node)">Create Folder</button>
+          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Create Data Model</button>
+          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Create Code Set</button>
+          <ng-container *ngIf="isUserAdmin">
+              <mat-divider></mat-divider>
+              <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
+              <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
+          </ng-container>
+      </ng-container>
         <ng-container *ngIf="node.domainType === 'DataModel'">
+            <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
             <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">
@@ -87,6 +100,7 @@ SPDX-License-Identifier: Apache-2.0
             </ng-container>
         </ng-container>
         <ng-container *ngIf="node.domainType === 'Terminology'">
+            <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
         </ng-container>

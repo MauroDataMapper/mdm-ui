@@ -18,9 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width mb-1 mdm--shadow-block">
   <div class="panel">
-    <mdm-folder-detail
-      [afterSave]="afterSave"
-      [editMode]="editMode"
+    <mdm-folder-detail *ngIf="folder"
+      [folder]="folder"
     ></mdm-folder-detail>
   </div>
 

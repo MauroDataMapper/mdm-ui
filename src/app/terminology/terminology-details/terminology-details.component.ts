@@ -135,7 +135,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  save = () => {
+  save(){
     const resource: ModelUpdatePayload = {
       id: this.mcTerminology.id,
       label: this.mcTerminology.label,

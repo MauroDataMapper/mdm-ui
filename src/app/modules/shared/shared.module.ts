@@ -27,7 +27,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
 import { FooterComponent } from '@mdm/shared/footer/footer.component';
-import { ComparisonTreeComponent } from '@mdm/shared/comparison-tree/comparison-tree.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
 import { EnumerationCompareComponent } from '@mdm/shared/enumeration-compare/enumeration-compare.component';
 import { MaterialModule } from '../material/material.module';
@@ -52,7 +51,6 @@ import { NewVersionComponent } from '@mdm/shared/new-version/new-version.compone
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
-    ComparisonTreeComponent,
     MetadataCompareComponent,
     EnumerationCompareComponent,
     ErrorComponent,
@@ -88,7 +86,6 @@ import { NewVersionComponent } from '@mdm/shared/new-version/new-version.compone
     MatPasswordStrengthModule,
     InlineTextEditComponent,
     FooterComponent,
-    ComparisonTreeComponent,
     MetadataCompareComponent,
     EnumerationCompareComponent,
     NgxJsonViewerModule,

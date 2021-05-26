@@ -59,7 +59,7 @@ export class DataElementDetailsComponent
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService,
@@ -122,7 +122,7 @@ export class DataElementDetailsComponent
       .subscribe(
         () => {
           this.messageHandler.showSuccess('Data Element deleted successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.broadcast.reloadCatalogueTree();
           this.stateHandler.Go(
             'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
           );
@@ -160,7 +160,7 @@ export class DataElementDetailsComponent
             this.messageHandler.showSuccess(
               'Data Element updated successfully.'
             );
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
           },
           (error) => {
             this.messageHandler.showError(

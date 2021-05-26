@@ -64,7 +64,7 @@ export class FolderDetailComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private validatorService: ValidatorService,
     private title: Title,
     private editingService: EditingService,
@@ -121,7 +121,7 @@ export class FolderDetailComponent implements OnInit {
     this.folderHandler
       .askForPermanentDelete(this.folder.id)
       .subscribe(() => {
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
   }
@@ -140,6 +140,7 @@ export class FolderDetailComponent implements OnInit {
           this.editingService.stop();
           this.folder = result.body;
           this.editMode = false;
+          this.broadcast.reloadCatalogueTree();
           this.stateHandler.reload();
         }, error => {
           this.messageHandlerService.showError('There was a problem updating the Folder.', error);

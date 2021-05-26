@@ -80,7 +80,7 @@ export class TerminologyComponent
     private stateService: StateService,
     private title: Title,
     resources: MdmResourcesService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private messageService: MessageService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
@@ -200,7 +200,7 @@ export class TerminologyComponent
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       },
       (error) => {
         this.messageHandler.showError(
@@ -256,7 +256,7 @@ export class TerminologyComponent
   };
 
   save = (updatedResource?) => {
-    this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
+    this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
   };
 
   tabSelected = (tabIndex) => {

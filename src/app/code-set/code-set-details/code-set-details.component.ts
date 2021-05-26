@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { EMPTY } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -66,13 +65,12 @@ export class CodeSetDetailsComponent implements OnInit {
   constructor(
     private resourcesService: MdmResourcesService,
     private validatorService: ValidatorService,
-    private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
@@ -126,7 +124,7 @@ export class CodeSetDetailsComponent implements OnInit {
           } else {
             this.stateHandler.reload();
           }
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.broadcast.reloadCatalogueTree();
         },
         (error) => {
           this.deleteInProgress = false;
@@ -215,7 +213,7 @@ export class CodeSetDetailsComponent implements OnInit {
           `The Code Set "${this.codeSetDetail.label}" has been restored.`
         );
         this.stateHandler.reload();
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       });
   }
 
@@ -274,7 +272,7 @@ export class CodeSetDetailsComponent implements OnInit {
             this.editingService.stop();
             this.originalCodeSetDetail = res.body;
             this.messageHandler.showSuccess('Code Set updated successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
           },
           (error) => {
             this.messageHandler.showError(

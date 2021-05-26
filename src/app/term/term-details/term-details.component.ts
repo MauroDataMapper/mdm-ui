@@ -63,7 +63,7 @@ export class TermDetailsComponent implements OnInit {
     private title: Title,
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private editingService: EditingService,
     private validatorServive: ValidatorService,
     private uiRouterGlobals: UIRouterGlobals,
@@ -126,7 +126,7 @@ export class TermDetailsComponent implements OnInit {
             this.editingService.stop();
             this.originalTerm = res.body;
             this.editMode = false;
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
           },
           (error) => {
             this.messageHandler.showError(

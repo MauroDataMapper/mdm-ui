@@ -55,7 +55,7 @@ export class DataClassDetailsComponent implements OnInit {
     private resourcesService: MdmResourcesService,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private stateHandler: StateHandlerService,
     private title: Title,
     private dialog: MatDialog,
@@ -111,7 +111,7 @@ export class DataClassDetailsComponent implements OnInit {
         .subscribe(
           () => {
             this.messageHandler.showSuccess('Data Class deleted successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
             this.stateHandler.Go(
               'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
             );
@@ -134,7 +134,7 @@ export class DataClassDetailsComponent implements OnInit {
         .subscribe(
           () => {
             this.messageHandler.showSuccess('Data Class deleted successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
             this.stateHandler.Go(
               'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
             );
@@ -171,7 +171,7 @@ export class DataClassDetailsComponent implements OnInit {
               );
               this.originalDataClass = dataClass.body;
               this.editMode = false;
-              this.broadcastSvc.broadcast('$reloadFoldersTree');
+              this.broadcast.reloadCatalogueTree();
               this.editingService.stop();
            },
             (error) => {
@@ -197,7 +197,7 @@ export class DataClassDetailsComponent implements OnInit {
               this.editMode = false;
               this.editingService.stop();
               this.dataClass = dataClass.body;
-              this.broadcastSvc.broadcast('$reloadFoldersTree');
+              this.broadcast.reloadCatalogueTree();
             },
             (error) => {
               this.messageHandler.showError(

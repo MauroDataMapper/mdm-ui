@@ -78,7 +78,7 @@ export class TerminologyDetailsComponent implements OnInit {
     private resources: MdmResourcesService,
     private exportHandler: ExportHandlerService,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private editingService: EditingService,
@@ -137,7 +137,7 @@ export class TerminologyDetailsComponent implements OnInit {
         this.editMode = false;
         this.editingService.stop();
         this.messageHandler.showSuccess('Terminology updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       },
       (error) => {
         this.messageHandler.showError(
@@ -224,8 +224,8 @@ export class TerminologyDetailsComponent implements OnInit {
           } else {
             this.stateHandler.reload();
           }
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.broadcastSvc.broadcast('$elementDeleted');
+          this.broadcast.reloadCatalogueTree();
+          this.broadcast.dispatch('elementDeleted');
         },
         (error) => {
           this.deleteInProgress = false;

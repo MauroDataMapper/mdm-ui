@@ -38,7 +38,7 @@ export class RegisterModalComponent implements OnInit {
   message: any;
 
   constructor(
-    public broadcastService: BroadcastService,
+    public broadcast: BroadcastService,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<RegisterModalComponent>,
     private resources: MdmResourcesService,
@@ -98,7 +98,7 @@ export class RegisterModalComponent implements OnInit {
 
   login() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openLoginModalDialog');
+    this.broadcast.dispatch('openLoginModalDialog');
   }
 
   close() {

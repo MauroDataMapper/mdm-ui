@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
@@ -41,8 +41,11 @@ import { StateRoleAccessService } from './services/utility/state-role-access.ser
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/services/broadcast.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { ProfileBaseComponent } from './profile-base/profile-base.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @NgModule({
@@ -69,13 +72,15 @@ import { ProfileBaseComponent } from './profile-base/profile-base.component';
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: MatDialogRef, useValue: {} },
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestProgressInterceptor, multi: true}
-],
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true, autoFocus: false } },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestProgressInterceptor, multi: true }
+  ],
   bootstrap: [UiViewComponent]
 })
-export class AppModule {
+export class AppModule implements OnDestroy {
   latestError: any;
+
+  private unsubscribe$ = new Subject();
 
   constructor(
     private sharedService: SharedService,
@@ -95,49 +100,29 @@ export class AppModule {
 
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
-    this.broadcast.subscribe('applicationOffline', () => {
-      this.toast.error('Application is offline!');
-    });
-
-    this.broadcast.subscribe('connectionError', () => {
-      this.toast.error('Server connection failed');
-    });
-
-    this.broadcast.subscribe('notAuthenticated', () => {
-      this.stateHandler.NotAuthorized({ location: false });
-    });
-
-    this.broadcast.subscribe('userLoggedIn', args => {
-      this.userSettingsHandler.init().then(() => {
-        // To remove any ngToast messages specifically sessionExpiry,...
-        this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
-        if (args && args.goTo) {
-          this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });
-        }
+    this.broadcast
+      .onApplicationOffline()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.toast.error('Application is offline!');
       });
-    });
 
-    this.broadcast.subscribe('userLoggedOut', args => {
-      if (args && args.goTo) {
-        this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });
-      }
-    });
-
-    this.broadcast.subscribe('resourceNotFound', () => {
-      this.stateHandler.NotFound({ location: false });
-    });
-
-    this.broadcast.subscribe('serverError', response => {
-      this.latestError = {
-        url: window.location.href,
-        host: window.location.host,
-        response
-      };
-      this.stateHandler.ServerError({ location: false });
-    });
-
-    this.broadcast.subscribe('notImplemented', () => {
-      this.stateHandler.NotImplemented({ location: false });
-    });
+    this.broadcast
+      .onUserLoggedIn()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(args => {
+        this.userSettingsHandler.init().then(() => {
+          // To remove any ngToast messages specifically sessionExpiry,...
+          this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
+          if (args && args.nextRoute) {
+            this.stateHandler.Go(args.nextRoute, {}, { reload: true, inherit: false, notify: true });
+          }
+        });
+      });
   }
- }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+}

@@ -17,30 +17,45 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { BroadcastEvent, BroadcastMessage } from './broadcast.model';
 
+/**
+ * Service to broadcast events and data payloads to any other part of the application that subscribes to those events.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class BroadcastService {
 
-  private handler: Subject<Message> = new Subject<Message>();
-  constructor() { }
+  private handler = new Subject<BroadcastMessage<any>>();
 
-  broadcast(type: string, payload: any = null) {
-    this.handler.next({ type, payload });
-  }
-
-  subscribe(type: string, callback: (payload: any) => void): Subscription {
+  /**
+   * Request an observable to subscribe to when a particular `BroadcastEvent` occurs.
+   *
+   * @typedef T The type of the event payload
+   * @param event The `BroadcastEvent` type to watch.
+   * @returns An `Observable<T>` to subscribe to for watching for these events.
+   *
+   * For any observable returned that is subscribed to, each must be correctly unsubscribed from when finished
+   * to prevent memory leaks.
+   */
+   on<T>(event: BroadcastEvent): Observable<T> {
     return this.handler.pipe(
-      filter(message => message.type === type),
-      map(message => message.payload)
-    ).subscribe(callback);
+      filter(message => message.event === event),
+      map(message => message.data)
+    );
   }
-}
 
-export interface Message {
-  type: string;
-  payload: any;
+  /**
+   * Dispatch a new event to broadcast to any watchers.
+   *
+   * @typedef T The type of the event payload
+   * @param event The `BroadcastEvent` type to broadcast.
+   * @param data The optional payload that is associated with the event.
+   */
+  dispatch<T>(event: BroadcastEvent, data?: T) {
+    this.handler.next(new BroadcastMessage(event, data));
+  }
 }

@@ -229,7 +229,7 @@ export class TermComponent
   }
 
   Save(updatedResource) {
-    this.broadcast.broadcast('$elementDetailsUpdated', updatedResource);
+    this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
   }
 
   getTabDetailByIndex(index) {

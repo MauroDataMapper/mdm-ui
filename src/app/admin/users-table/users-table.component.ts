@@ -57,7 +57,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private title: Title,
     private gridService: GridService
   ) { }
@@ -127,7 +127,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     row.disabled = !row.disabled;
     from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
       this.messageHandler.showSuccess('User details updated successfully.');
-      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.broadcast.dispatch('pendingUserUpdated');
     }, error => {
       this.messageHandler.showError('There was a problem updating the user.', error);
     });

@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { LoginModalComponent } from '@mdm/modals/login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from '@mdm/modals/forgot-password-modal/forgot-password-modal.component';
@@ -24,12 +24,12 @@ import { SharedService } from '@mdm/services/shared.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { ThemingService } from '@mdm/services/theming.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
@@ -37,7 +37,7 @@ import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-reso
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   profilePictureReloadIndex = 0;
   profile: any;
@@ -51,23 +51,31 @@ export class NavbarComponent implements OnInit {
   sideNav: any;
   pendingUsersCount = 0;
   isLoggedIn = this.securityHandler.isLoggedIn();
-  subscription: Subscription;
   features = this.sharedService.features;
+
+  private unsubscribe$ = new Subject();
 
   constructor(
     private sharedService: SharedService,
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
-    private messageService: MessageService,
+    private broadcast: BroadcastService,
     private editingService: EditingService,
     private theming: ThemingService,
     private resources: MdmResourcesService) { }
 
   ngOnInit() {
-    this.subscription = this.messageService.loggedInChanged$.subscribe(result => {
-      this.isLoggedIn = result;
-    });
+
+    this.broadcast
+      .onUserLoggedIn()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.isLoggedIn = true);
+
+    this.broadcast
+      .onUserLoggedOut()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.isLoggedIn = false);
+
     if (this.isLoggedIn) {
       this.profile = this.securityHandler.getCurrentUser();
       // if (this.isAdmin()) {
@@ -81,16 +89,26 @@ export class NavbarComponent implements OnInit {
     this.imgChanged = false;
     this.HDFLink = this.sharedService.HDFLink;
     this.current = this.sharedService.current;
-    this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-      this.getPendingUsers();
-    });
 
-    this.broadcastSvc.subscribe('profileImgUndated', () => {
-      this.imgChanged = true;
-      setTimeout(() => {
-        this.imgChanged = false;
-      }, 1000);
-    });
+    this.broadcast
+      .on('pendingUserUpdated')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.getPendingUsers());
+
+    this.broadcast
+      .on('profileImageUpdated')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.imgChanged = true;
+        setTimeout(() => {
+          this.imgChanged = false;
+        }, 1000);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   setupLogo() {
@@ -132,11 +150,11 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
+          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.changePassword' });
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };
@@ -156,11 +174,11 @@ export class NavbarComponent implements OnInit {
     dialog.afterClosed().subscribe(user => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.change-password' });
+          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.change-password' });
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };

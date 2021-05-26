@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
@@ -26,8 +26,9 @@ import { RegisterModalComponent } from '../modals/register-modal/register-modal.
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService } from '@mdm/services';
-import { catchError } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { Subject } from 'rxjs';
 
 const defaultHtmlContent = [
   {
@@ -90,7 +91,7 @@ const defaultHtmlContent = [
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;
   profile: any;
   isLoggedIn = false;
@@ -105,19 +106,21 @@ export class HomeComponent implements OnInit {
 
   documentationUrl = this.shared.documentation.url;
 
+  private unsubcribe$ = new Subject();
+
   constructor(
     public dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private shared: SharedService,
     private title: Title
   ) {
-    this.broadcastSvc.subscribe('userLoggedOut', () => {
-      this.isLoggedIn = false;
-    });
-
+    this.broadcast
+      .onUserLoggedOut()
+      .pipe(takeUntil(this.unsubcribe$))
+      .subscribe(() => this.isLoggedIn = false);
   }
 
   ngOnInit() {
@@ -145,6 +148,11 @@ export class HomeComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.unsubcribe$.next();
+    this.unsubcribe$.complete();
+  }
+
   private loadContent(properties: ApiProperty[]) {
     this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
     this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
@@ -162,11 +170,11 @@ export class HomeComponent implements OnInit {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
+          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.changePassword' });
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };
@@ -179,11 +187,11 @@ export class HomeComponent implements OnInit {
     this.dialog.open(RegisterModalComponent, {panelClass: 'register-modal'}).afterClosed().subscribe(user => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.change-password' });
+          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.change-password' });
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };

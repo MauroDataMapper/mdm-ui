@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from './state-handler.service';
-import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -50,12 +49,11 @@ export class SecurityHandlerService {
   in_AuthLoginRequiredCheck = false;
 
   constructor(
-    private elementTypes: ElementTypesService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private messageService: MessageService,
-    private broadcastService: BroadcastService
-  ) {}
+    private broadcast: BroadcastService
+  ) { }
 
   removeUserFromLocalStorage() {
     localStorage.removeItem('token');
@@ -173,7 +171,7 @@ export class SecurityHandlerService {
 
     // Clear everything on client side whether server acknowledge or not.
     this.removeUserFromLocalStorage();
-    this.broadcastService.broadcast('userLoggedOut');
+    this.broadcast.userLoggedOut();
     this.messageService.loggedInChanged(false);
     this.stateHandler.Go('appContainer.mainApp.home');
   }

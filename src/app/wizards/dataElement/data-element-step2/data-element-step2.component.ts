@@ -87,7 +87,13 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
 
-  constructor(private changeRef: ChangeDetectorRef, private gridService: GridService, private validator: ValidatorService, private resources: MdmResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private validator: ValidatorService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
     const settings = JSON.parse(localStorage.getItem('userSettings'));
@@ -339,7 +345,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     promise.then(() => {
       this.processing = false;
       this.isProcessComplete = true;
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.broadcast.reloadCatalogueTree();
     }).catch(() => {
       this.processing = false;
       this.isProcessComplete = true;

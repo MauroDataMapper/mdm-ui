@@ -50,7 +50,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
     private gridService: GridService,
@@ -147,7 +147,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   approveUser = (row) => {
     this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
       this.messageHandler.showSuccess('User approved successfully');
-      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.broadcast.dispatch('pendingUserUpdated');
       this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
@@ -163,7 +163,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   rejectUser = (row) => {
     this.resourcesService.catalogueUser.reject(row.id, null).subscribe(() => {
       this.messageHandler.showSuccess('User rejected successfully');
-      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.broadcast.dispatch('pendingUserUpdated');
       this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;

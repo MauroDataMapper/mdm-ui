@@ -18,10 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
-import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageService } from '@mdm/services/message.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
@@ -52,15 +49,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private helpDialogueService: HelpDialogueHandlerService,
     private sanitizer: DomSanitizer,
-    private broadcastService: BroadcastService
+    private broadcast: BroadcastService
   ) {
     this.currentUser = this.securityHandler.getCurrentUser();
   }
@@ -102,7 +96,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
       this.isImageLoaded = null;
-      this.broadcastService.broadcast('profileImgUndated');
+      this.broadcast.dispatch('profileImageUpdated');
       this.userDetails();
     }, error => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
@@ -133,7 +127,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.imageVersion++;
       this.isImageLoaded = null;
       this.userDetails();
-      this.broadcastService.broadcast('profileImgUndated');
+      this.broadcast.dispatch('profileImageUpdated');
     },
       error => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);

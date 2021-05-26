@@ -80,7 +80,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcaseSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private title: Title,
     private dialog: MatDialog,
     private editingService: EditingService
@@ -281,7 +281,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   delete() {
     this.resourcesService.classifier.remove(this.result.id, { permanent: true }).subscribe(() => {
       this.messageHandler.showSuccess('Classifier deleted successfully.');
-      this.broadcaseSvc.broadcast('$reloadFoldersTree');
+      this.broadcast.reloadCatalogueTree();
       this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
     }, error => {
       this.messageHandler.showError('There was a problem deleting this Classification.', error);

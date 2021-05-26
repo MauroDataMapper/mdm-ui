@@ -44,7 +44,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
   ) { }
 
@@ -85,7 +85,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   };
 
   closeAndRefresh = () => {
-    this.broadcastSvc.broadcast('$reloadFoldersTree');
+    this.broadcast.reloadCatalogueTree();
     this.dialogRef.close({ status: 'ok' });
   };
 

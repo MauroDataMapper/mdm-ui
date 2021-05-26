@@ -28,6 +28,7 @@ declare module './broadcast.service' {
   interface BroadcastService {
     /**
      * Notify that the application is offline.
+     *
      * @param error The HTTP error response that triggered this event.
      */
     applicationOffline(error: HttpErrorResponse): void;
@@ -39,6 +40,7 @@ declare module './broadcast.service' {
 
     /**
      * Notify that a user has logged in.
+     *
      * @param data The data associated with the log in.
      */
     userLoggedIn(data: UserLoggedInBroadcastData): void;
@@ -70,6 +72,7 @@ declare module './broadcast.service' {
 
     /**
      * Notify that a tree node has been selected in the catalogue tree.
+     *
      * @param data The data associated with the selection.
      */
     catalogueTreeNodeSelected(data: CatalogueTreeNodeSelectedBroadcastData): void;
@@ -83,42 +86,42 @@ declare module './broadcast.service' {
 
 BroadcastService.prototype.applicationOffline = function(this: BroadcastService, error: HttpErrorResponse) {
   this.dispatch('applicationOffline', error);
-}
+};
 
 BroadcastService.prototype.onApplicationOffline = function(this: BroadcastService): Observable<HttpErrorResponse> {
   return this.on<HttpErrorResponse>('applicationOffline');
-}
+};
 
 BroadcastService.prototype.userLoggedIn = function(this: BroadcastService, data: UserLoggedInBroadcastData) {
   this.dispatch('userLoggedIn', data);
-}
+};
 
 BroadcastService.prototype.onUserLoggedIn = function(this: BroadcastService): Observable<UserLoggedInBroadcastData> {
   return this.on<UserLoggedInBroadcastData>('userLoggedIn');
-}
+};
 
 BroadcastService.prototype.userLoggedOut = function(this: BroadcastService) {
   this.dispatch('userLoggedOut');
-}
+};
 
 BroadcastService.prototype.onUserLoggedOut = function(this: BroadcastService): Observable<void> {
   return this.on('userLoggedOut');
-}
+};
 
 BroadcastService.prototype.reloadCatalogueTree = function(this: BroadcastService) {
   this.dispatch('reloadCatalogueTree');
-}
+};
 
 BroadcastService.prototype.onReloadCatalogueTree = function(this: BroadcastService): Observable<void> {
   return this.on('reloadCatalogueTree');
-}
+};
 
 BroadcastService.prototype.catalogueTreeNodeSelected = function(this: BroadcastService, data: CatalogueTreeNodeSelectedBroadcastData) {
   this.dispatch('catalogueTreeNodeSelected', data);
-}
+};
 
 BroadcastService.prototype.onCatalogueTreeNodeSelected = function(this: BroadcastService): Observable<CatalogueTreeNodeSelectedBroadcastData> {
   return this.on<CatalogueTreeNodeSelectedBroadcastData>('catalogueTreeNodeSelected');
-}
+};
 
-export { }
+export { };

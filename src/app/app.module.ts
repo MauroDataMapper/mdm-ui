@@ -18,13 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LOCALE_ID, NgModule, OnDestroy } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { TransitionService, UIRouterModule } from '@uirouter/angular';
-import { ToastrService } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ROLES } from './constants/roles';
@@ -34,18 +33,13 @@ import { CatalogueModule } from './modules/catalogue/catalogue.module';
 import { MdmResourcesModule } from './modules/resources/mdm-resources.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
-import { BroadcastService } from './services/broadcast.service';
-import { StateHandlerService } from './services/handlers/state-handler.service';
 import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
-import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 import '@mdm/services/broadcast.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { ProfileBaseComponent } from './profile-base/profile-base.component';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 
 @NgModule({
@@ -77,52 +71,18 @@ import { takeUntil } from 'rxjs/operators';
   ],
   bootstrap: [UiViewComponent]
 })
-export class AppModule implements OnDestroy {
+export class AppModule {
   latestError: any;
-
-  private unsubscribe$ = new Subject();
 
   constructor(
     private sharedService: SharedService,
-    private broadcast: BroadcastService,
-    private toast: ToastrService,
-    private stateHandler: StateHandlerService,
     private trans: TransitionService,
-    private rolesService: StateRoleAccessService,
-    private userSettingsHandler: UserSettingsHandlerService
-  ) {
+    private rolesService: StateRoleAccessService) {
     this.trans.onStart({}, state => {
       this.sharedService.current = state.$to().name;
       return this.rolesService.hasAccess(state.$to().name);
     });
 
     this.sharedService.handleExpiredSession(true);
-
-    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    // Add 'implements OnInit' to the class.
-    this.broadcast
-      .onApplicationOffline()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        this.toast.error('Application is offline!');
-      });
-
-    this.broadcast
-      .onUserLoggedIn()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(args => {
-        this.userSettingsHandler.init().then(() => {
-          // To remove any ngToast messages specifically sessionExpiry,...
-          this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
-          if (args && args.nextRoute) {
-            this.stateHandler.Go(args.nextRoute, {}, { reload: true, inherit: false, notify: true });
-          }
-        });
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 }

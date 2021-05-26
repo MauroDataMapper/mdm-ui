@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { FlatNode } from "@mdm/folders-tree/flat-node";
+import { FlatNode } from '@mdm/folders-tree/flat-node';
 
 /**
  * Represents the global events that can happen throughout the application.
@@ -35,7 +35,7 @@ export type BroadcastEvent =
   | 'favoritesChanged'
   | 'elementDetailsUpdated'
   | 'elementDeleted'
-  | 'profileImageUpdated'
+  | 'profileImageUpdated';
 
 /**
  * Represents a message to broadcast with an optional data payload.

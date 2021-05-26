@@ -19,8 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
+import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BroadcastService, StateHandlerService, UserSettingsHandlerService } from './services';
 import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
 import { ThemingService } from './services/theming.service';
@@ -46,8 +48,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private editingService: EditingService,
     private theming: ThemingService,
-    private overlayContainer: OverlayContainer
-  ) { }
+    private overlayContainer: OverlayContainer,
+    private broadcast: BroadcastService,
+    private toastr: ToastrService,
+    private stateHandler: StateHandlerService,
+    private userSettingsHandler: UserSettingsHandlerService) { }
 
 
   @HostListener('window:mousemove', ['$event'])
@@ -65,6 +70,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setTheme();
+
+    this.broadcast
+      .onApplicationOffline()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.toastr.error('Application is offline!'));
+
+    this.broadcast
+      .onUserLoggedIn()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(args => {
+        this.userSettingsHandler.init().then(() => {
+          // To remove any ngToast messages specifically sessionExpiry,...
+          this.toastr.toasts.forEach(x => this.toastr.clear(x.toastId));
+          if (args && args.nextRoute) {
+            this.stateHandler.Go(args.nextRoute, {}, { reload: true, inherit: false, notify: true });
+          }
+        });
+      });
+
     this.setupIdleTimer();
   }
 

@@ -17,10 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    name="form"
-    disable-submit-on-enter
-  >
+  <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="mcTerm">
         <button
@@ -64,26 +61,24 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div *ngIf="mcTerm">
-        <div [ngClass]="{ 'has-error': errorMessage != '' }">
-          <h4 class="inline-block marginless">
-            {{ parentLabel }}:
-            <mdm-inline-text-edit
-              [showButtons]="true"
-              (saveClicked)="save()"
-              (cancelClicked)="cancel()"
-              [readOnly]="false"
-              [inEditMode]="editMode"
-              [(ngModel)]="this.mcTerm.definition"
-              [styleCss]="'dataModelDetailsLabel'"
-              name="moduleName"
-              size="20"
-            >
-            </mdm-inline-text-edit>
-          </h4>
-          <td>
-            <mdm-model-path [path]="mcTerm.breadcrumbs"></mdm-model-path>
-          </td>
-        </div>
+        <h4 class="inline-block marginless">
+          {{ parentLabel }}:
+          <mdm-inline-text-edit
+            [showButtons]="true"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+            [readOnly]="false"
+            [inEditMode]="editMode"
+            [(ngModel)]="this.mcTerm.definition"
+            [styleCss]="'dataModelDetailsLabel'"
+            name="moduleName"
+            size="20"
+          >
+          </mdm-inline-text-edit>
+        </h4>
+        <td>
+          <mdm-model-path [path]="mcTerm.breadcrumbs"></mdm-model-path>
+        </td>
       </div>
     </div>
   </form>

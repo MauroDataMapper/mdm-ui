@@ -51,7 +51,6 @@ export class TermDetailsComponent implements OnInit {
   addedToFavourite = false;
 
   deleteInProgress: boolean;
-  errorMessage = '';
 
   parentLabel = '';
   access: Access;
@@ -127,7 +126,6 @@ export class TermDetailsComponent implements OnInit {
             this.editingService.stop();
             this.originalTerm = res.body;
             this.editMode = false;
-            this.errorMessage = '';
             this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
           (error) => {

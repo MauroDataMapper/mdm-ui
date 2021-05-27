@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 export interface Access {
     showEdit : boolean;
     canEditDescription: boolean;
-    showNewVersion: boolean;
+    showNewVersion?: boolean;
     showFinalise: boolean;
     showPermission: boolean;
     showSoftDelete: boolean;

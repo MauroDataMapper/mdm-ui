@@ -246,6 +246,7 @@ SPDX-License-Identifier: Apache-2.0
             [readOnly]="false"
             [inEditMode]="editMode"
             [(ngModel)]="dataModel.label"
+            [isRequired]="true"
             [showButtons]="true"
             (saveClicked)="save()"
             (cancelClicked)="cancel()"

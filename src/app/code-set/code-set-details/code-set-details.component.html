@@ -162,6 +162,7 @@ SPDX-License-Identifier: Apache-2.0
             (saveClicked)="save()"
             (cancelClicked)="cancel()"
             [(ngModel)]="codeSetDetail.label"
+            [isRequired]="true"
             [name]="'moduleName'"
             size="20"
             [styleCss]="'dataModelDetailsLabel'"

@@ -43,6 +43,7 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Input() styleCss: string;
   @Input() name: string;
   @Input() showButtons = false;
+
   val: any;
   constructor() { }
 

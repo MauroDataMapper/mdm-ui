@@ -31,6 +31,7 @@ SPDX-License-Identifier: Apache-2.0
     [ngClass]="styleCss" />
     <button
     *ngIf="showButtons"
+    [disabled]="isRequired && ngValue.length === 0"
     mat-icon-button
     color="accent"
     type="button"

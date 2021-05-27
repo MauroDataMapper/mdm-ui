@@ -17,104 +17,137 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-        <div class="panel-body">
+  <form
+    name="form"
+    disable-submit-on-enter
+  >
+    <div class="panel-body">
+      <div class="full-width" style="clear: both" *ngIf="folder">
+        <button
+          type="button"
+          mat-icon-button
+          [matMenuTriggerFor]="userActions"
+          style="position: relative; float: right; margin-right: 4px"
+        >
+          <i class="fas fa-ellipsis-v"></i>
+          <span style="display: none">Menu</span>
+        </button>
+        <!--First level Menu-->
+        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="showForm()"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit Title
+          </button>
+          <mat-divider></mat-divider>
+          <button
+            mat-menu-item
+            type="button"
+            [matMenuTriggerFor]="userActionsDelete"
+            *ngIf="access.showSoftDelete || access.showPermanentDelete"
+            class="warning"
+          >
+            <i class="far fa-trash-alt warning"></i> Delete
+          </button>
+        </mat-menu>
+        <!-- End of first level menu -->
 
-            <div class="full-width" style="clear: both;" *ngIf="result">
-                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions"
-                    style="position: relative; float: right; margin-right:4px;">
-                    <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
-                </button>
-                <!--First level Menu-->
-                <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-                    <button mat-menu-item type="button" *ngIf="showEdit" (click)="showForm()">
-                        <i class="fas fa-pencil-alt"></i> Edit Title
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete"
-                        class="warning">
-                        <i class="far fa-trash-alt warning"></i> Delete
-                    </button>
-                </mat-menu>
-                <!-- End of first level menu -->
+        <!--Second level sub Menu-->
+        <mat-menu #userActionsDelete="matMenu">
+          <button
+            mat-menu-item
+            (click)="askForSoftDelete()"
+            *ngIf="access.showSoftDelete && !folder.deleted"
+          >
+            Mark as deleted
+          </button>
+          <button
+            mat-menu-item
+            (click)="askForPermanentDelete()"
+            *ngIf="access.showPermanentDelete"
+          >
+            Delete <span class="warning">permanently</span>
+          </button>
+        </mat-menu>
 
-                <!--Second level sub Menu-->
-                <mat-menu #userActionsDelete="matMenu">
-                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
-                        Mark as deleted
-                    </button>
-                    <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                        Delete <span class="warning">permanently</span>
-                    </button>
-                </mat-menu>
-
-                <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;"
-                    [hidden]="editableForm.visible || editableForm.deletePending">
-                    <button mat-icon-button color="primary" type="button" class="paddingless"
-                        (click)="toggleSecuritySection()" matTooltip="User & Group Access"
-                        aria-label="User & Group Access">
-                        <i class="fas fa-user-lock"></i>
-                    </button>
-                </div>
-
-            </div>
-
-            <div *ngIf="result">
-                <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
-                        <span class="dataModelTypeIcon">
-                            <i matTooltip="Folder" class="fas fa-folder"></i>
-                        </span>
-                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible"
-                            [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20"
-                            (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'">
-                        </mdm-inline-text-edit>
-                        <mdm-editable-form-buttons *ngIf="editableForm" [hidden]="!editableForm.visible"
-                            [onCancelEdit]="onCancelEdit" [editable]="editableForm" [textLocation]="'left'"
-                            [hideDelete]="true" [hideCancel]="false"></mdm-editable-form-buttons>
-                    </h4>
-                    <span class="inline-block">
-                        <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
-                    </span>
-                </div>
-                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                    <span class="help-block">{{errorMessage}}</span>
-                </div>
-            </div>
-
-            <div class="detail-icons">
-                <div class="text-muted">
-                    <small>
-                        <i class="fas fa-cube" matTooltip="Item type"></i>
-                        <span><strong>Item type: </strong><span class="item-type">Folder</span></span>
-                    </small>
-                </div>
-                <div class="text-muted" *ngIf="result?.readableByEveryone">
-                    <small>
-                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-                        <span><strong>Availability: </strong>Publicly Readable</span>
-                    </small>
-                </div>
-                <div class="text-muted" *ngIf="result">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Last update: </strong> {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
-            </div>
+        <div
+          *ngIf="access.showPermission"
+          style="position: relative; float: right; margin-right: 8px"
+          [hidden]="editMode || deleteInProgress"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            class="paddingless"
+            (click)="toggleSecuritySection()"
+            matTooltip="User & Group Access"
+            aria-label="User & Group Access"
+          >
+            <i class="fas fa-user-lock"></i>
+          </button>
         </div>
-    </form>
-</div>
+      </div>
 
-<div *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
-    <div style="width:100%;">
-        <div class="userAccess" style="margin: 10px 0px 50px 0px">
-            <mdm-share-with [mcElement]="'result'" [mcDomainType]="'Folder'"></mdm-share-with>
-            <div colspan="2">
-                <div style="margin-top: 10px">
-                    <mdm-group-access-new [parent]="'result'" [parentType]="'Folder'"></mdm-group-access-new>
-                </div>
-            </div>
+      <div *ngIf="folder">
+        <h4
+          class="inline-block marginless"
+          [ngClass]="{ deletedDataModelTitle: folder?.deleted }"
+        >
+          <span class="dataModelTypeIcon">
+            <i matTooltip="Folder" class="fas fa-folder"></i>
+          </span>
+          <mdm-inline-text-edit
+            [readOnly]="false"
+            [inEditMode]="editMode"
+            [showButtons]="true"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+            [(ngModel)]="folder.label"
+            [name]="'moduleName'"
+            size="20"
+            [styleCss]="'dataModelDetailsLabel'"
+          >
+          </mdm-inline-text-edit>
+        </h4>
+        <span class="inline-block">
+          <small *ngIf="folder?.deleted" class="warning"> | Deleted</small>
+        </span>
+      </div>
+
+      <div class="detail-icons">
+        <div class="text-muted">
+          <small>
+            <i class="fas fa-cube" matTooltip="Item type"></i>
+            <span
+              ><strong>Item type: </strong
+              ><span class="item-type">Folder</span></span
+            >
+          </small>
         </div>
+        <div class="text-muted" *ngIf="folder?.readableByEveryone">
+          <small>
+            <i
+              class="fas fa-globe-europe globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="folder">
+          <small>
+            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+            <span
+              ><strong>Last update: </strong>
+              {{ folder.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
+            >
+          </small>
+        </div>
+      </div>
     </div>
+  </form>
 </div>

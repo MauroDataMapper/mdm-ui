@@ -37,6 +37,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { CatalogueItemDomainType, CodeSetDetail, ModelUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -60,7 +61,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filter: {};
   deleteInProgress: boolean;
   records: any[] = [];
-  access: any;
+  access: Access;
   baseTypes: any;
   classifiableBaseTypes: any;
   filterValue: any;

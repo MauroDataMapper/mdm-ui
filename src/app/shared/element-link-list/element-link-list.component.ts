@@ -30,6 +30,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -66,7 +67,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
   records: any[] = [];
 
-  access: any;
+  access: Access;
 
   constructor(
     public elementTypes: ElementTypesService,

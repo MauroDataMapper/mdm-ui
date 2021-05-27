@@ -117,7 +117,7 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        const access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.elementAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -134,7 +134,7 @@ export class LinkSuggestionComponent implements OnInit {
       const data = result.body;
       this.model.source = data;
       this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-      const access = this.securityHandler.dataModelAccess(this.model.source);
+      const access = this.securityHandler.elementAccess(this.model.source);
       this.model.sourceEditable = access.showEdit;
       this.model.loadingSource = false;
     });

@@ -16,17 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Editable } from '../model/folderModel';
 import {
   Component,
-  OnInit,
-  AfterViewInit,
   Input,
-  ViewChildren,
-  QueryList,
-  OnDestroy
+  OnInit
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { FolderHandlerService } from '../services/handlers/folder-handler.service';
@@ -40,36 +34,26 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
-import { FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ContainerUpdatePayload, FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-folder-detail',
   templateUrl: './folder-detail.component.html',
   styleUrls: ['./folder-detail.component.scss']
 })
-export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  result: FolderDetail;
-  hasResult = false;
-  subscription: Subscription;
-  showSecuritySection: boolean;
-  showUserGroupAccess: boolean;
-  showEdit: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
-  showPermDelete: boolean;
-  showSoftDelete: boolean;
+export class FolderDetailComponent implements OnInit {
+  @Input() folder: FolderDetail;
+  originalFolder: FolderDetail;
+
+  editMode = false;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
-  exporting: boolean;
-  editableForm: Editable;
-  errorMessage = '';
   showEditMode = false;
   processing: boolean;
-
+  access: Access ;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -81,12 +65,17 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcastSvc: BroadcastService,
+    private validatorService: ValidatorService,
     private title: Title,
     private editingService: EditingService,
     private dialog: MatDialog) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+  }
+
+  ngOnInit(): void {
     this.FolderDetails();
+    this.originalFolder = Object.assign({}, this.folder);
   }
 
   public showAddElementToMarkdown() {
@@ -94,79 +83,9 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
-  ngOnInit() {
-    this.editableForm = new Editable();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x._name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.errorMessage = '';
-      this.editableForm.label = this.result.label;
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.editableForm.description = this.result.description;
-    };
-
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-      this.showSecuritySection = message;
-    });
-  }
-
-  ngAfterViewInit(): void {
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe(() => {
-      if (this.editMode) {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x._name === 'moduleName' ? true : false
-          })
-        );
-        this.showForm();
-      }
-    });
-  }
-
-
   FolderDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.result = serverResult;
-        this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result.description;
-        const access: any = this.securityHandler.folderAccess(this.result);
-        this.showEdit = access.showEdit;
-        this.showPermission = access.showPermission;
-        this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-        this.showPermDelete = access.showPermanentDelete;
-        this.showSoftDelete = access.showSoftDelete;
-        if (this.result != null) {
-          this.hasResult = true;
-          this.watchFolderObject();
-        }
-        this.title.setTitle('Folder - ' + this.result?.label);
-      }
-    );
-  }
-
-  watchFolderObject() {
-    const access = this.securityHandler.folderAccess(this.result);
-    this.showEdit = access.showEdit;
-    this.showPermission = access.showPermission;
-    this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-    this.showPermDelete = access.showPermanentDelete;
-    this.showSoftDelete = access.showSoftDelete;
+        this.access = this.securityHandler.elementAccess(this.folder);
+        this.title.setTitle('Folder - ' + this.folder?.label);
   }
 
   toggleSecuritySection() {
@@ -177,91 +96,66 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       }, panelClass: 'security-modal'
     });
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
 
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
-  }
-
   askForSoftDelete() {
-    if (!this.showDelete) {
+    if (!this.access.showDelete) {
       return;
     }
 
     this.folderHandler
-      .askForSoftDelete(this.result.id)
+      .askForSoftDelete(this.folder.id)
       .subscribe(() => {
         this.stateHandler.reload();
       });
   }
 
   askForPermanentDelete(): any {
-    if (!this.showPermDelete) {
+    if (!this.access.showPermanentDelete) {
       return;
     }
 
     this.folderHandler
-      .askForPermanentDelete(this.result.id)
+      .askForPermanentDelete(this.folder.id)
       .subscribe(() => {
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.errorMessage = '';
+  save(){
 
-    const resource = {
-      id: this.result.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description
+
+    const resource : ContainerUpdatePayload = {
+      id: this.folder.id,
+      label: this.folder.label
     };
 
-    if (this.validateLabel(this.result.label)) {
+    if (this.validatorService.validateLabel(this.folder.label)) {
       this.resourcesService.folder.update(resource.id, resource).subscribe((result: FolderDetailResponse) => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
           this.messageHandlerService.showSuccess('Folder updated successfully.');
           this.editingService.stop();
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.folder = result.body;
+          this.editMode = false;
           this.stateHandler.reload();
         }, error => {
           this.messageHandlerService.showError('There was a problem updating the Folder.', error);
       });
+    }else{
+      this.messageHandlerService.showError('There is an error with the label please correct and try again');
     }
   };
 
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = 'DataModel name can not be empty';
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   showForm() {
     this.editingService.start();
-    this.editableForm.show();
+    this.editMode = true;
   }
 
-  onCancelEdit() {
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.errorMessage = '';
-  }
-
-  onLabelChange(value: any) {
-    if (!this.validateLabel(value)) {
-      this.editableForm.validationError = true;
-    } else {
-      this.editableForm.validationError = false;
-    }
+  cancel() {
+    this.editMode = false;
+    this.folder = Object.assign({},this.originalFolder);
   }
 }

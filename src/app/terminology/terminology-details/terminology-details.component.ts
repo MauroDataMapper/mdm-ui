@@ -19,80 +19,56 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
-  Input,
-  EventEmitter,
-  Output,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-  OnDestroy
-} from '@angular/core';
+  Input} from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
-import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import {
+  FinaliseModalComponent,
+  FinaliseModalResponse
+} from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { Subscription } from 'rxjs';
-import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
-import { ModelUpdatePayload, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ModelUpdatePayload,
+  TerminologyDetail,
+  TerminologyDetailResponse} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-terminology-details',
   templateUrl: './terminology-details.component.html',
   styleUrls: ['./terminology-details.component.sass']
 })
-export class TerminologyDetailsComponent implements OnInit, OnDestroy {
-  @Input() mcTerminology: any;
-  @Input() hideEditButton: boolean;
-  @Output() afterSave = new EventEmitter<any>();
-  @Output() openEditFormChanged = new EventEmitter<any>();
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+export class TerminologyDetailsComponent implements OnInit {
+  @Input() mcTerminology: TerminologyDetail;
 
+  originalTerminology:TerminologyDetail;
   openEditFormVal: any;
-  securitySection = false;
   processing = false;
   exportError = null;
   exportList = [];
   isAdminUser = this.sharedService.isAdminUser();
-  isLoggedIn = this.securityHandler.isLoggedIn();
+  isLoggedIn = this.sharedService.isLoggedIn();
   exportedFileIsReady = false;
   addedToFavourite = false;
   deleteInProgress = false;
-  editableForm: EditableDataModel;
-  showEdit: boolean;
-  showPermission: boolean;
-  showNewVersion: boolean;
-  showFinalise: boolean;
-  showDelete: boolean;
-  showSoftDelete: boolean;
-  showPermDelete: boolean;
   errorMessage: string;
   exporting: boolean;
   currentBranch = '';
   branchGraph = [];
-  dataChangedSub: Subscription;
-  canEditDescription = true;
-  showEditDescription = false;
   downloadLinks = new Array<HTMLAnchorElement>();
-
-  @Input() get openEditForm() {
-    return this.openEditFormVal;
-  }
-  set openEditForm(val) {
-    this.openEditFormVal = val;
-    this.openEditFormChanged.emit(this.openEditFormVal);
-  }
+  access: Access;
+  editMode = false;
 
   constructor(
     private sharedService: SharedService,
@@ -105,72 +81,22 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
-    private renderer: Renderer2,
     private editingService: EditingService,
     private messageService: MessageService
   ) {}
-  ngOnDestroy(): void {
-    this.dataChangedSub.unsubscribe();
-  }
 
   ngOnInit() {
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-    this.setEditableFormData();
-
-    this.dataChangedSub = this.messageService.dataChanged$.subscribe(
-      (serverResult) => {
-        if(serverResult.domainType.toLowerCase() === ModelDomainRequestType.terminologies.toLowerCase()){
-          this.mcTerminology = serverResult;
-        }
-        this.setEditableFormData();
-      }
-    );
-
-    const access: any = this.securityHandler.elementAccess(this.mcTerminology);
-    this.showEdit = access.showEdit;
-    this.showPermission = access.showPermission;
-    this.showNewVersion = access.showNewVersion;
-    this.showFinalise = access.showFinalise;
-    this.showDelete = access.showSoftDelete || access.showPermanentDelete;
-    this.showSoftDelete = access.showSoftDelete;
-    this.showPermDelete = access.showPermanentDelete;
-    this.canEditDescription = access.canEditDescription;
-
-    this.editableForm.show = () => {
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.setEditableFormData();
-      if (this.mcTerminology.classifiers) {
-        this.mcTerminology.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.mcTerminology.aliases) {
-        this.mcTerminology.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
-
-    this.loadExporterList();
-    this.getModelGraph(this.mcTerminology.id);
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
+    this.terminologyDetails();
     this.title.setTitle(`Terminology - ${this.mcTerminology?.label}`);
   }
 
-  validateLabel(data) {
-    if (!data || (data && data.trim().length === 0)) {
-      return 'Terminology name can not be empty';
-    }
-  };
+  terminologyDetails() {
+    this.originalTerminology = Object.assign({},this.mcTerminology);
+    this.access = this.securityHandler.elementAccess(this.mcTerminology);
+    this.loadExporterList();
+    this.getModelGraph(this.mcTerminology.id);
+    this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
+  }
 
   getModelGraph(modelId) {
     this.currentBranch = this.mcTerminology.branchName;
@@ -184,7 +110,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         newFork: false
       }
     ];
-  };
+  }
 
   onModelChange() {
     for (const val in this.branchGraph) {
@@ -196,39 +122,20 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         );
       }
     }
-  };
+  }
 
-  formBeforeSave = () => {
+  save(){
     const resource: ModelUpdatePayload = {
       id: this.mcTerminology.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description,
-      author: this.editableForm.author,
-      organisation: this.editableForm.organisation,
-      type: this.mcTerminology.type,
-      domainType: this.mcTerminology.domainType,
-      aliases: this.mcTerminology.editAliases,
-
-      classifiers: this.mcTerminology.classifiers.map((cls) => {
-        return { id: cls.id };
-      })
+      label: this.mcTerminology.label,
+      domainType: this.mcTerminology.domainType
     };
 
-    this.resources.terminology.update(resource.id, resource).subscribe((res: TerminologyDetailResponse) => {
-        const result = res.body;
-
-        if (this.afterSave) {
-          this.afterSave.emit(resource);
-        }
-        this.mcTerminology.aliases = Object.assign({}, result.aliases || []);
-        this.mcTerminology.editAliases = Object.assign(
-          {},
-          this.mcTerminology.aliases
-        );
-
-        this.editableForm.visible = false;
+    this.resources.terminology.update(resource.id, resource).subscribe(
+      (res: TerminologyDetailResponse) => {
+        this.originalTerminology = res.body;
+        this.editMode = false;
         this.editingService.stop();
-
         this.messageHandler.showSuccess('Terminology updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       },
@@ -249,11 +156,11 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       },
       panelClass: 'security-modal'
     });
-  };
+  }
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
-  };
+  }
 
   export(exporter) {
     this.exportError = null;
@@ -265,7 +172,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         (result) => {
           if (result != null) {
             this.exportedFileIsReady = true;
-            const tempDownloadList = Object.assign([],this.downloadLinks);
+            const tempDownloadList = Object.assign([], this.downloadLinks);
             const label =
               [this.mcTerminology].length === 1
                 ? [this.mcTerminology][0].label
@@ -297,10 +204,10 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
 
   resetExportError() {
     this.exportError = null;
-  };
+  }
 
   delete(permanent: boolean) {
-    if (!this.showDelete) {
+    if (!this.access.showDelete) {
       return;
     }
     this.deleteInProgress = true;
@@ -328,10 +235,10 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
           );
         }
       );
-  };
+  }
 
   askForSoftDelete() {
-    if (!this.showSoftDelete) {
+    if (!this.access.showSoftDelete) {
       return;
     }
 
@@ -346,10 +253,10 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         }
       })
       .subscribe(() => this.delete(false));
-  };
+  }
 
   askForPermanentDelete() {
-    if (!this.showPermDelete) {
+    if (!this.access.showPermanentDelete) {
       return;
     }
 
@@ -375,58 +282,75 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe(() => this.delete(true));
-  };
-
-  openEditClicked(formName) {
-    if (this.openEditForm) {
-      this.openEditForm(formName);
-    }
-  };
+  }
 
   newVersion() {
     this.stateHandler.Go(
       'newversionmodel',
-      { id: this.mcTerminology.id, domainType:  'terminology'},
+      { id: this.mcTerminology.id, domainType: 'terminology' },
       { location: true }
     );
-  };
-
-  finalise() {
-    this.resources.terminology.latestModelVersion(this.mcTerminology.id).subscribe(response => {
-      this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
-          data: {
-            title: 'Finalise Terminology',
-            modelVersion: response.body.modelVersion,
-            okBtnTitle: 'Finalise Terminology',
-            btnType: 'accent',
-            message: `<p class='marginless'>Please select the version you would like this Terminology</p>
-                      <p>to be finalised with: </p>`
-          }
-        }).afterClosed().subscribe(dialogResult => {
-          if (dialogResult?.status !== ModalDialogStatus.Ok) {
-            return;
-          }
-          this.processing = true;
-          this.resources.terminology.finalise(this.mcTerminology.id, dialogResult.request).subscribe(() => {
-              this.processing = false;
-              this.messageHandler.showSuccess('Terminology finalised successfully.');
-              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
-            }, error => {
-              this.processing = false;
-              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
-          });
-      });
-    });
   }
 
-  onCancelEdit() {
+  finalise() {
+    this.resources.terminology
+      .latestModelVersion(this.mcTerminology.id)
+      .subscribe((response) => {
+        this.dialog
+          .open<FinaliseModalComponent, any, FinaliseModalResponse>(
+            FinaliseModalComponent,
+            {
+              data: {
+                title: 'Finalise Terminology',
+                modelVersion: response.body.modelVersion,
+                okBtnTitle: 'Finalise Terminology',
+                btnType: 'accent',
+                message: `<p class='marginless'>Please select the version you would like this Terminology</p>
+                      <p>to be finalised with: </p>`
+              }
+            }
+          )
+          .afterClosed()
+          .subscribe((dialogResult) => {
+            if (dialogResult?.status !== ModalDialogStatus.Ok) {
+              return;
+            }
+            this.processing = true;
+            this.resources.terminology
+              .finalise(this.mcTerminology.id, dialogResult.request)
+              .subscribe(
+                () => {
+                  this.processing = false;
+                  this.messageHandler.showSuccess(
+                    'Terminology finalised successfully.'
+                  );
+                  this.stateHandler.Go(
+                    'terminology',
+                    { id: this.mcTerminology.id },
+                    { reload: true }
+                  );
+                },
+                (error) => {
+                  this.processing = false;
+                  this.messageHandler.showError(
+                    'There was a problem finalising the Terminology.',
+                    error
+                  );
+                }
+              );
+          });
+      });
+  }
+
+  cancel() {
     this.errorMessage = '';
-    this.showEditDescription = false;
-  };
+    this.mcTerminology = Object.assign({}, this.originalTerminology);
+    this.editMode = false;
+  }
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe((result) => {
       if (!result.body.authenticatedSession) {
         return;
       }
@@ -442,29 +366,16 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         }
       );
     });
-  };
+  }
 
   toggleFavourite() {
     if (this.favouriteHandler.toggle(this.mcTerminology)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
     }
-  };
-
-  showForm() {
-    this.showEditDescription = true;
-    this.editingService.start();
-    this.editableForm.show();
   }
 
-  private setEditableFormData() {
-    this.editableForm.description = this.mcTerminology.description;
-    this.editableForm.label = this.mcTerminology.label;
-    this.editableForm.organisation = this.mcTerminology.organisation;
-    this.editableForm.author = this.mcTerminology.author;
-    if (this.mcTerminology.aliases) {
-      this.mcTerminology.aliases.forEach(item => {
-        this.editableForm.aliases.push(item);
-      });
-    }
+  showForm() {
+    this.editingService.start();
+    this.editMode = true;
   }
 }

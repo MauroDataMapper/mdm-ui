@@ -139,6 +139,14 @@ export class ValidatorService {
     return null;
   }
 
+  validateLabel(label :string): boolean {
+    if (!label || (label && label.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   guid() {
     // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     function s4() {

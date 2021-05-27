@@ -39,6 +39,7 @@ import {
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-class',
@@ -63,7 +64,7 @@ export class DataClassComponent
   error = '';
   editableForm: EditableDataClass;
   aliases: any[] = [];
-  access: any;
+  access: Access;
 
   newMinText: any;
   newMaxText: any;

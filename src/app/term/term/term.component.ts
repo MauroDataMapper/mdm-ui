@@ -43,6 +43,7 @@ import {
   TerminologyDetail,
   TerminologyDetailResponse
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-term',
@@ -74,7 +75,7 @@ export class TermComponent
   isLoadingRules = true;
   showEdit = false;
   showDelete = false;
-  access: any;
+  access: Access;
 
   constructor(
     resources: MdmResourcesService,

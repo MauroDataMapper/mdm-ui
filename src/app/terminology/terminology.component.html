@@ -21,11 +21,9 @@ SPDX-License-Identifier: Apache-2.0
   <div class="panel">
     <mdm-terminology-details
       *ngIf="terminology"
-      [hideEditButton]="true"
       [mcTerminology]="terminology"
       (afterSave)="save()"
-      [openEditForm]="openEditForm"
-    ></mdm-terminology-details>
+   ></mdm-terminology-details>
 
     <div class="panel-body" *ngIf="showSearch">
       <h4 class="marginless">Find Terms</h4>

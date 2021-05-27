@@ -39,6 +39,7 @@ import {
   PermissionsResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-folder',
@@ -67,7 +68,7 @@ export class FolderComponent
   isLoadingHistory = true;
   rulesItemCount = 0;
   isLoadingRules = true;
-  access: any;
+  access: Access;
   annotationsView = 'default';
 
   constructor(

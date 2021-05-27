@@ -25,7 +25,7 @@ import { EditingService } from '@mdm/services/editing.service';
    styleUrls: ['./editable-form-buttons.component.scss']
 })
 export class EditableFormButtonsComponent implements OnInit {
-  @Input() deleteIcon: any = null;
+  @Input() deleteIcon = null;
   @Input() deleteTitle  = '';
   @Input() editTitle = '';
   @Input() processing: any;

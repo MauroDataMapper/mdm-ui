@@ -17,72 +17,53 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { Access } from '@mdm/model/access';
-import { FormState, CatalogueItemDetailForm } from '@mdm/model/editable-forms';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService, MessageHandlerService, MessageService, SharedService, StateHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, finalize, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-versioned-folder-detail',
   templateUrl: './versioned-folder-detail.component.html',
   styleUrls: ['./versioned-folder-detail.component.scss']
 })
-export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
+export class VersionedFolderDetailComponent implements OnInit {
 
   @Input() detail: VersionedFolderDetail;
-  @Input() access: Access;
 
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 
-  editor: FormState<VersionedFolderDetail, CatalogueItemDetailForm<VersionedFolderDetail>>;
-
+  isEditing = false;
+  original: VersionedFolderDetail;
   isAdminUser = false;
   processing = false;
-
-  private unsubscribe$ = new Subject<void>();
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,
     private messages: MessageService,
     private messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private shared: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
-    private editing: EditingService) { }
+    private editing: EditingService,
+    private validator: ValidatorService) { }
 
   ngOnInit(): void {
     this.isAdminUser = this.shared.isAdmin;
-
+    this.access = this.securityHandler.elementAccess(this.detail);
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
-
-    this.editor = new FormState(this.detail, new CatalogueItemDetailForm());
-
-    this.editor.onShow
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.editing.start());
-
-    this.editor.onCancel
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.editing.stop());
-
-    this.editor.onFinish
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.editing.stop());
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.original = Object.assign({}, this.detail);
   }
 
   toggleShowSearch() {
@@ -100,38 +81,41 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
   }
 
   showForm() {
-    this.editor.show();
+    this.editing.start();
+    this.isEditing = true;
   }
 
   cancel() {
-    this.editor?.cancel();
+    this.isEditing = false;
+    this.editing.stop();
+    this.detail = Object.assign({}, this.original);
   }
 
   save() {
-    if (!this.editor.form.valid) {
+    if (!this.validator.validateLabel(this.detail.label)) {
+      this.messageHandler.showError('There is an error with the label. Please correct and try again.');
       return;
     }
-
-    this.editor.form.disable();
 
     this.resourcesService.versionedFolder
       .update(
         this.detail.id,
         {
           id: this.detail.id,
-          label: this.editor.form.label?.value
+          label: this.detail.label
         })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
           return EMPTY;
-        }),
-        finalize(() => this.editor.form.enable())
+        })
       )
       .subscribe(
         (response: VersionedFolderDetailResponse) => {
           this.messageHandler.showSuccess('Versioned Folder updated successfully.');
-          this.editor.finish(response.body);
+          this.isEditing = false;
+          this.original = response.body;
+          this.editing.stop();
           this.afterSave.emit(response.body);
           this.broadcast.broadcast('$reloadFoldersTree');
         });

@@ -48,8 +48,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <div *ngIf="editableForm">
     <div class="xeditableTextArea">
-        <textarea *ngIf="editableForm.visible"
-                  [(ngModel)]="editableForm[property]"
+        <textarea *ngIf="isEditorVisible"
+                  [(ngModel)]="editorModel"
                   name="{{ property }}"
                   class="full-width"
                   rows="{{ rows ? rows : '6' }}"
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
                   #editableTextArea
                   (keyup)="descriptionKeyUp($event)"></textarea>
 
-        <div style="float: right; margin-bottom: 10px;" *ngIf="editableForm.visible">
+        <div style="float: right; margin-bottom: 10px;" *ngIf="isEditorVisible">
             <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="position: relative;">
               Preview
             </mat-checkbox>
@@ -67,14 +67,14 @@ SPDX-License-Identifier: Apache-2.0
             </button>
         </div>
         <div *ngIf="!hideHelpText">
-            <div style="float: left; margin-top: 8px; margin-right: 15px;" *ngIf="inEditMode || editableForm.visible">
+            <div style="float: left; margin-top: 8px; margin-right: 15px;" *ngIf="inEditMode || isEditorVisible">
                 <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
             </div>
         </div>
 
         <div style="clear: both;">
-            <span mdmMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
-            <span mdmMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
+            <span mdmMarkdown [markdown]="editorModel" *ngIf="isEditorVisible && formData.showMarkDownPreview"></span>
+            <span mdmMarkdown [markdown]="element[property]" *ngIf="!isEditorVisible"></span>
         </div>
     </div>
 </div>

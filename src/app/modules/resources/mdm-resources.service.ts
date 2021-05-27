@@ -53,7 +53,8 @@ import {
   MdmVersioningResource,
   MdmApiPropertyResources,
   MdmSubscribedCataloguesResource,
-  MdmProfileResource
+  MdmProfileResource,
+  MdmVersionedFolderResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -73,6 +74,7 @@ export class MdmResourcesService {
   terms = new MdmTermResource(this.resourcesConfig, this.restHandler);
   term = new MdmTermResource(this.resourcesConfig, this.restHandler);
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
+  versionedFolder = new MdmVersionedFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);

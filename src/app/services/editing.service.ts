@@ -33,6 +33,7 @@ const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataType',
   'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
   'appContainer.mainApp.twoSidePanel.catalogue.folder',
+  'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
   'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
   'appContainer.adminArea.user',
   'appContainer.adminArea.group',

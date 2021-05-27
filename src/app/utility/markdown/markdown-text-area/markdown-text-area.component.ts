@@ -54,6 +54,26 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.descriptionChange.emit(this.descriptionVal);
   }
 
+  get isEditorVisible(): boolean {
+    return this.editableForm && (this.editableForm.visible || this.editableForm.isEditing);
+  }
+
+  get editorModel() {
+    if (this.editableForm.form) {
+      return this.editableForm.form[this.property];
+    }
+    return this.editableForm[this.property];
+  }
+
+  set editorModel(value) {
+    if (this.editableForm.form) {
+      this.editableForm.form[this.property] = value;
+      return;
+    }
+
+    this.editableForm[this.property] = value;
+  }
+
   elementDialogue;
   lastWasShiftKey: any;
   formData: any = {

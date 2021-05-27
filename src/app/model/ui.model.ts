@@ -18,20 +18,21 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 /**
- * Represents access/permissions flags to determine what a catalogue item can do.
- *
- * @see {@link SecurityHandlerService.elementAccess}
+ * Describes a tab in a tab group.
  */
-export interface Access {
-  showEdit: boolean;
-  canEditDescription: boolean;
-  showNewVersion?: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showSoftDelete: boolean;
-  showPermanentDelete: boolean;
-  canAddAnnotation: boolean;
-  canAddMetadata: boolean;
-  showDelete: boolean;
-  canAddLink: boolean;
+export interface TabDescriptor {
+  /**
+   * The index number of the tab.
+   */
+  index: number;
+
+  /**
+   * The name of the tab.
+   */
+  name: string;
 }
+
+/**
+ * Defines what annotation views are available.
+ */
+export type AnnotationViewOption = 'default' | 'attachments';

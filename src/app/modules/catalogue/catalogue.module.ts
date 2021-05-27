@@ -182,6 +182,8 @@ import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-pro
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
+import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
+import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 
 @NgModule({
   declarations: [
@@ -337,7 +339,9 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     SubscribedCatalogueDetailComponent,
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    VersionedFolderComponent,
+    VersionedFolderDetailComponent
   ],
   imports: [
     AdminModule,

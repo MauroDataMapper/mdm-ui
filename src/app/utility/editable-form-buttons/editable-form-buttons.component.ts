@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { EditingService } from '@mdm/services/editing.service';
-import { Editable } from '@mdm/model/folderModel';
 
 @Component({
   selector: 'mdm-editable-form-buttons',
@@ -26,11 +25,11 @@ import { Editable } from '@mdm/model/folderModel';
    styleUrls: ['./editable-form-buttons.component.scss']
 })
 export class EditableFormButtonsComponent implements OnInit {
-  @Input() deleteIcon: any;
-  @Input() deleteTitle: any;
-  @Input() editTitle: any;
+  @Input() deleteIcon = null;
+  @Input() deleteTitle  = '';
+  @Input() editTitle = '';
   @Input() processing: any;
-  @Input() editable: Editable;
+  @Input() editable: any;
   @Input() onEditClicked: any;
   @Input() onDeleteClicked: any;
   @Input() onConfirmDelete: any;
@@ -48,6 +47,10 @@ export class EditableFormButtonsComponent implements OnInit {
   public displayDeleteIcon: any = this.deleteIcon;
 
   public displayEditTitle: string = this.editTitle;
+
+  get isEditorVisible(): boolean {
+    return this.editable && (this.editable.visible || this.editable.isEditing);
+  }
 
   constructor(private editingService: EditingService) {}
 
@@ -127,7 +130,7 @@ export class EditableFormButtonsComponent implements OnInit {
         return;
       }
 
-      if (this.editable) {
+      if (this.editable && this.editable.cancel) {
         this.editable.cancel();
       }
       if (this.onCancelEdit) {

@@ -38,6 +38,7 @@ export class StateHandlerService {
         enumerationvalues: 'appContainer.mainApp.twoSidePanel.catalogue.enumerationValues',
         dataelement: 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
         folder: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
+        versionedfolder: 'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
         classification: 'appContainer.mainApp.twoSidePanel.catalogue.classification',
         diagram: 'appContainer.mainApp.diagram',
 
@@ -93,6 +94,7 @@ export class StateHandlerService {
     let state = name;
     const needsRedirect = [
       'appContainer.mainapp.twoSidePanel.catalogue.folder', 'folder',
+      'appContainer.mainapp.twoSidePanel.catalogue.versionedFolder', 'versionedfolder',
       'appContainer.mainapp.twoSidePanel.catalogue.datamodel', 'datamodel',
       'appContainer.mainapp.twoSidePanel.catalogue.referencedatamodel', 'referencedatamodel',
       'appContainer.mainapp.twoSidePanel.catalogue.dataclass', 'dataclass',

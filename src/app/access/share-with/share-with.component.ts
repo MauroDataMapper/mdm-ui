@@ -38,6 +38,7 @@ export class ShareWithComponent implements OnInit {
     DataModel: { name: 'dataModel', message: 'Data Model' },
     Classifier: { name: 'classifier', message: 'Classifier' },
     Folder: { name: 'folder', message: 'Folder' },
+    VersionedFolder: { name: 'versionedFolder', message: 'Versioned Folder' },
     Terminology: { name: 'terminology', message: 'Terminology' },
     CodeSet: { name: 'codeSet', message: 'CodeSet' },
     ReferenceDataModel: { name: 'referenceDataModel', message: 'ReferenceDataModel' }

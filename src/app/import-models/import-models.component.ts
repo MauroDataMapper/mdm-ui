@@ -70,7 +70,7 @@ export class ImportModelsComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
     private modelTree: ModelTreeService
   ) {}
@@ -236,7 +236,7 @@ export class ImportModelsComponent implements OnInit {
         this.importHasError = false;
         this.importErrors = [];
         this.messageHandler.showSuccess('Models imported successfully!');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
         if (result && result.body.count === 1) {
           this.stateHandler.Go(
             ModelDomainRequestType[this.importType],

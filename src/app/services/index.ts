@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 export * from './utility/state-role-access.service';
 export * from './utility/object-enhancer.service';
-export * from './utility/rest-handler.service';
 export * from './utility/property-renaming.service';
 export * from './utility/user-settings-handler.service';
 export * from './utility/app-setting.service';

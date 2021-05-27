@@ -31,7 +31,11 @@ export class ForgotPasswordModalComponent implements OnInit {
   username: string;
   message: string;
 
-  constructor(public broadcastService: BroadcastService, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: MdmResourcesService) {}
+  constructor(
+    public broadcast: BroadcastService,
+    public dialogRef: MatDialogRef<ForgotPasswordModalComponent>,
+    private securityHandler: SecurityHandlerService,
+    private resources: MdmResourcesService) {}
 
   ngOnInit() {
     this.username = this.securityHandler.getEmailFromStorage();
@@ -48,7 +52,7 @@ export class ForgotPasswordModalComponent implements OnInit {
 
   login() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openLoginModalDialog');
+    this.broadcast.dispatch('openLoginModalDialog');
   }
   close = () => {
     this.securityHandler.loginModalDisplayed = false;

@@ -78,7 +78,7 @@ export class DataModelDetailComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
@@ -170,12 +170,12 @@ export class DataModelDetailComponent implements OnInit {
       .subscribe(
         () => {
           if (permanent) {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
             this.stateHandler.Go(
               'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
             );
           } else {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
             this.stateHandler.reload();
           }
         },
@@ -266,7 +266,7 @@ export class DataModelDetailComponent implements OnInit {
           `The Data Model "${this.dataModel.label}" has been restored.`
         );
         this.stateHandler.reload();
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       });
   }
 
@@ -286,7 +286,7 @@ export class DataModelDetailComponent implements OnInit {
             this.editMode = false;
             this.originalDataModel = res.body;
             this.editingService.stop();
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
           },
           (error) => {
             this.messageHandler.showError(

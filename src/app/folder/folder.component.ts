@@ -78,7 +78,7 @@ export class FolderComponent
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
@@ -269,7 +269,7 @@ export class FolderComponent
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Folder updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       },
       (error) => {
         this.messageHandler.showError(

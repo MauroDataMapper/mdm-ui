@@ -29,7 +29,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
@@ -82,6 +82,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
   classifiers: { children: Classifier[]; isRoot: boolean };
 
   searchText: any;
+
+  private unsubscribe$ = new Subject();
 
   levels = {
     current: 0,
@@ -161,7 +163,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private resources: MdmResourcesService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
@@ -190,9 +192,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.initializeModelsTree();
 
-    this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadModelsTree(true);
-    });
+    this.broadcast
+      .onReloadCatalogueTree()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.loadModelsTree(true));
 
     this.currentClassification = null;
     this.allClassifications = [];
@@ -202,6 +205,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();
     }
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   isLoggedIn() {
@@ -495,7 +501,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.folderHandler
         .askForPermanentDelete(event.folder.id)
         .subscribe(() => {
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.broadcast.reloadCatalogueTree();
           this.stateHandler.Go(
             'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
           );

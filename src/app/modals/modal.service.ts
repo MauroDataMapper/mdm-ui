@@ -22,7 +22,8 @@ import { LoginModalComponent } from './login-modal/login-modal.component';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-password-modal.component';
 import { BroadcastService } from '../services/broadcast.service';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 // eslint-disable-next-line no-shadow
 export enum ModalType {
@@ -35,26 +36,27 @@ export enum ModalType {
   providedIn: 'root'
 })
 export class ModalService implements OnDestroy {
-  private subscriptions: Subscription;
+  private unsubscribe$ = new Subject();
 
-  constructor(private dialog: MatDialog, private broadcastService: BroadcastService) {}
+  constructor(
+    private dialog: MatDialog,
+    private broadcast: BroadcastService) { }
 
   init() {
-    this.subscriptions = this.broadcastService.subscribe('openLoginModalDialog', options => {
-      this.open(ModalType.Login, options);
-    });
+    this.broadcast
+      .on<any>('openLoginModalDialog')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(options => this.open(ModalType.Login, options));
 
-    this.subscriptions.add(
-      this.broadcastService.subscribe('openRegisterModalDialog', options => {
-        this.open(ModalType.Register, options);
-      })
-    );
+    this.broadcast
+      .on<any>('openRegisterModalDialog')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(options => this.open(ModalType.Register, options));
 
-    this.subscriptions.add(
-      this.broadcastService.subscribe('openForgotPasswordModalDialog', options => {
-        this.open(ModalType.ForgotPassword, options);
-      })
-    );
+    this.broadcast
+      .on<any>('openForgotPasswordModalDialog')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(options => this.open(ModalType.ForgotPassword, options));
   }
 
   open(modalType: ModalType, options?: MatDialogConfig) {
@@ -71,6 +73,7 @@ export class ModalService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

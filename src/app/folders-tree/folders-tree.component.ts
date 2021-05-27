@@ -21,7 +21,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { of, Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
@@ -31,6 +31,7 @@ import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -40,11 +41,11 @@ export class NodeConfirmClickEvent {
    constructor(
       public current: FlatNode,
       public next: FlatNode,
-      private broadcastSvc: BroadcastService)
+      private broadcast: BroadcastService)
    {
    }
 
-   setSelectedNode = (node: FlatNode) => this.broadcastSvc.broadcast('$folderTreeNodeSelection', node);
+   setSelectedNode = (node: FlatNode) => this.broadcast.catalogueTreeNodeSelected({ node });
 }
 
 @Component({
@@ -123,6 +124,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
    protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
 
+   private unsubscribe$ = new Subject();
+
    /**
     * Get the children for the given node from source data.
     *
@@ -137,7 +140,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       protected folderService: FolderService,
       protected stateHandler: StateHandlerService,
       protected messageHandler: MessageHandlerService,
-      private broadcastSvc: BroadcastService,
+      private broadcast: BroadcastService,
       public dialog: MatDialog,
       private editingService: EditingService,
       private modelTree: ModelTreeService) {
@@ -156,7 +159,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
       this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, []);
 
-      this.broadcastSvc.subscribe('$folderTreeNodeSelection', node => this.selectedNode = node);
+      this.broadcast
+        .onCatalogueTreeNodeSelected()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(data => this.selectedNode = data.node);
    }
 
 
@@ -247,7 +253,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
    handleClick(fnode: FlatNode) {
       if (this.nodeConfirmClickEvent.observers.length > 0) {
-         this.nodeConfirmClickEvent.emit(new NodeConfirmClickEvent(this.selectedNode, fnode, this.broadcastSvc));
+         this.nodeConfirmClickEvent.emit(new NodeConfirmClickEvent(this.selectedNode, fnode, this.broadcast));
          return;
       }
 
@@ -518,6 +524,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
    ngOnDestroy() {
       this.subscriptions.unsubscribe();
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
    }
 
    // Only used for Classifiers
@@ -668,7 +677,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          }
 
          this.messageHandler.showSuccess(`${currentNode.domainType} moved successfully.`);
-         this.broadcastSvc.broadcast('$reloadFoldersTree');
+         this.broadcast.reloadCatalogueTree();
       } catch (error) {
          this.messageHandler.showError(`There was a problem moving the ${currentNode.domainType}`, error);
       }
@@ -735,7 +744,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             }
 
             this.messageHandler.showSuccess('Folder moved successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
          } catch (error) {
             this.messageHandler.showError('There was a problem moving the Folder.', error);
          }

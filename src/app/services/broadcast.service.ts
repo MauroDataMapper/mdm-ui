@@ -16,31 +16,123 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
 
+/**
+ * Service to broadcast events and data payloads to any other part of the application that subscribes to those events.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class BroadcastService {
 
-  private handler: Subject<Message> = new Subject<Message>();
-  constructor() { }
+  private handler = new Subject<BroadcastMessage<any>>();
 
-  broadcast(type: string, payload: any = null) {
-    this.handler.next({ type, payload });
-  }
-
-  subscribe(type: string, callback: (payload: any) => void): Subscription {
+  /**
+   * Request an observable to subscribe to when a particular `BroadcastEvent` occurs.
+   *
+   * @typedef T The type of the event payload
+   * @param event The `BroadcastEvent` type to watch.
+   * @returns An `Observable<T>` to subscribe to for watching for these events.
+   *
+   * For any observable returned that is subscribed to, each must be correctly unsubscribed from when finished
+   * to prevent memory leaks.
+   */
+  on<T>(event: BroadcastEvent): Observable<T> {
     return this.handler.pipe(
-      filter(message => message.type === type),
-      map(message => message.payload)
-    ).subscribe(callback);
+      filter(message => message.event === event),
+      map(message => message.data)
+    );
   }
-}
 
-export interface Message {
-  type: string;
-  payload: any;
+  /**
+   * Dispatch a new event to broadcast to any watchers.
+   *
+   * @typedef T The type of the event payload
+   * @param event The `BroadcastEvent` type to broadcast.
+   * @param data The optional payload that is associated with the event.
+   */
+  dispatch<T>(event: BroadcastEvent, data?: T) {
+    this.handler.next(new BroadcastMessage(event, data));
+  }
+
+  /**
+   * Notify that the application is offline.
+   *
+   * @param error The HTTP error response that triggered this event.
+   */
+  applicationOffline(error: HttpErrorResponse) {
+    this.dispatch('applicationOffline', error);
+  }
+
+  /**
+   * Get an observable to watch for the `applicationOffline` {@link BroadcastEvent}.
+   */
+  onApplicationOffline(): Observable<HttpErrorResponse> {
+    return this.on<HttpErrorResponse>('applicationOffline');
+  }
+
+  /**
+   * Notify that a user has logged in.
+   *
+   * @param data The data associated with the log in.
+   */
+  userLoggedIn(data: UserLoggedInBroadcastData) {
+    this.dispatch('userLoggedIn', data);
+  }
+
+  /**
+   * Get an observable to watch for the `userLoggedIn` {@link BroadcastEvent}.
+   */
+  onUserLoggedIn(): Observable<UserLoggedInBroadcastData> {
+    return this.on<UserLoggedInBroadcastData>('userLoggedIn');
+  }
+
+  /**
+   * Notify that a user has logged out.
+   */
+  userLoggedOut() {
+    this.dispatch('userLoggedOut');
+  }
+
+  /**
+   * Get an observable to watch for the `userLoggedOut` {@link BroadcastEvent}.
+   */
+  onUserLoggedOut(): Observable<void> {
+    return this.on('userLoggedOut');
+  }
+
+  /**
+   * Notify that the catalogue tree should be reloaded.
+   */
+  reloadCatalogueTree() {
+    this.dispatch('reloadCatalogueTree');
+  }
+
+  /**
+   * Get an observable to watch for the `reloadCatalogueTree` {@link BroadcastEvent}.
+   */
+  onReloadCatalogueTree(): Observable<void> {
+    return this.on('reloadCatalogueTree');
+  }
+
+  /**
+   * Notify that a tree node has been selected in the catalogue tree.
+   *
+   * @param data The data associated with the selection.
+   */
+  catalogueTreeNodeSelected(data: CatalogueTreeNodeSelectedBroadcastData) {
+    this.dispatch('catalogueTreeNodeSelected', data);
+  }
+
+  /**
+   * Get an observable to watch for the `catalogueTreeNodeSelected` {@link BroadcastEvent}.
+   */
+  onCatalogueTreeNodeSelected(): Observable<CatalogueTreeNodeSelectedBroadcastData> {
+    return this.on<CatalogueTreeNodeSelectedBroadcastData>('catalogueTreeNodeSelected');
+  }
 }

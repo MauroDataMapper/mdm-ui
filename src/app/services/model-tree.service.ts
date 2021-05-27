@@ -16,13 +16,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
-import { Node, DOMAIN_TYPE, FlatNode } from '@mdm/folders-tree/flat-node';
+import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from './broadcast.service';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
@@ -31,9 +31,11 @@ import { UserSettingsHandlerService } from './utility/user-settings-handler.serv
 @Injectable({
   providedIn: 'root'
 })
-export class ModelTreeService {
+export class ModelTreeService implements OnDestroy {
 
   currentNode?: Node;
+
+  private unsubscribe$ = new Subject();
 
   constructor(
     private resources: MdmResourcesService,
@@ -42,8 +44,17 @@ export class ModelTreeService {
     private subscribedCatalogues: SubscribedCataloguesService,
     private messageHandler: MessageHandlerService,
     private broadcast: BroadcastService) {
-      this.broadcast.subscribe('$folderTreeNodeSelection', (fnode: FlatNode) => this.currentNode = fnode.node);
-    }
+
+    this.broadcast
+      .onCatalogueTreeNodeSelected()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => this.currentNode = data.node);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
     let options: any = {};

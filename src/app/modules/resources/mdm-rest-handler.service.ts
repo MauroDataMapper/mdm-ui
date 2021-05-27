@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MdmRestHandler, RequestSettings } from '@maurodatamapper/mdm-resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -30,7 +30,11 @@ import { catchError } from 'rxjs/operators';
  */
 @Injectable()
 export class MdmRestHandlerService implements MdmRestHandler {
-  constructor(private messageService: MessageService, private http: HttpClient, private broadcastSvc: BroadcastService, private stateHandler: StateHandlerService) { }
+  constructor(
+    private messageService: MessageService,
+    private http: HttpClient,
+    private broadcast: BroadcastService,
+    private stateHandler: StateHandlerService) { }
 
   process(url: string, options: RequestSettings) {
     if (options.withCredentials === undefined ||
@@ -58,9 +62,9 @@ export class MdmRestHandlerService implements MdmRestHandler {
       observe: 'response',
       responseType: options.responseType
     }).pipe(
-      catchError(response => {
+      catchError((response: HttpErrorResponse) => {
         if (response.status === 0 || response.status === -1) {
-          this.broadcastSvc.broadcast('applicationOffline', response);
+          this.broadcast.applicationOffline(response);
         }
         else if (response.status === 401) {
           this.messageService.lastError = response;

@@ -27,7 +27,10 @@ import { BroadcastService } from '../broadcast.service';
 })
 export class FavouriteHandlerService {
 
-  constructor(private userSettingsHandler: UserSettingsHandlerService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+  constructor(
+    private userSettingsHandler: UserSettingsHandlerService,
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService) {
   }
 
   add(element) {
@@ -46,7 +49,7 @@ export class FavouriteHandlerService {
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess(`${element.domainType} added to Favorites successfully.`);
-      this.broadcastSvc.broadcast('favourites', { name: 'add', element });
+      this.broadcast.dispatch('favoritesChanged', { name: 'add', element });
     }, error => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
     });
@@ -82,7 +85,7 @@ export class FavouriteHandlerService {
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('Removed from Favorites successfully.');
-      this.broadcastSvc.broadcast('favourites', { name: 'remove', element });
+      this.broadcast.dispatch('favoritesChanged', { name: 'remove', element });
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
     });

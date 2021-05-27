@@ -47,7 +47,7 @@ export class LoginModalComponent implements OnInit {
   }
 
   constructor(
-    private broadcastService: BroadcastService,
+    private broadcast: BroadcastService,
     public dialogRef: MatDialogRef<LoginModalComponent>,
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
@@ -111,12 +111,12 @@ export class LoginModalComponent implements OnInit {
 
   forgotPassword() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openForgotPasswordModalDialog');
+    this.broadcast.dispatch('openForgotPasswordModalDialog');
   }
 
   signUp() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openRegisterModalDialog');
+    this.broadcast.dispatch('openRegisterModalDialog');
   }
   close = () => {
     this.securityHandler.loginModalDisplayed = false;

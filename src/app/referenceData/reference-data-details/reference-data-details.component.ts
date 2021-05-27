@@ -78,7 +78,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
@@ -146,7 +146,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
           `The Reference Data Model "${this.refDataModel.label}" has been restored.`
         );
         this.stateHandler.reload();
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       });
   }
 
@@ -220,15 +220,14 @@ export class ReferenceDataDetailsComponent implements OnInit {
       .remove(this.refDataModel.id, { permanent })
       .subscribe(
         () => {
+          this.broadcast.reloadCatalogueTree();
           if (permanent) {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
             this.stateHandler.Go(
               'allDataModel',
               { reload: true, location: true },
               null
             );
           } else {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
             this.stateHandler.reload();
           }
         },
@@ -355,7 +354,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
               'Reference Data Model updated successfully.'
             );
             this.editingService.stop();
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.broadcast.reloadCatalogueTree();
           },
           (error) => {
             this.messageHandler.showError(

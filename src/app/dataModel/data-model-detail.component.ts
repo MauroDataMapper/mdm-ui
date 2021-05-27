@@ -46,6 +46,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -68,7 +69,7 @@ export class DataModelDetailComponent implements OnInit {
   branchGraph = [];
   currentBranch = '';
   downloadLinks = new Array<HTMLAnchorElement>();
-  access: any;
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,

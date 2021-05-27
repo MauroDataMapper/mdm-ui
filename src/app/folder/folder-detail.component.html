@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             [matMenuTriggerFor]="userActionsDelete"
-            *ngIf="access.SoftDelete || access.showPermanentDelete"
+            *ngIf="access.showSoftDelete || access.showPermanentDelete"
             class="warning"
           >
             <i class="far fa-trash-alt warning"></i> Delete
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             (click)="askForSoftDelete()"
-            *ngIf="access.SoftDelete && !folder.deleted"
+            *ngIf="access.showSoftDelete && !folder.deleted"
           >
             Mark as deleted
           </button>
@@ -76,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
         <div
           *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="access.editMode || deleteInProgress"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button

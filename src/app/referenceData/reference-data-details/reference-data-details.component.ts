@@ -45,7 +45,7 @@ import {
   ReferenceDataModelDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
-import { UIRouterGlobals } from '@uirouter/core';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -69,7 +69,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
   branchGraph = [];
   compareToList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
-  access: any;
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -84,8 +84,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService,
-    private uiRouterGlobals: UIRouterGlobals
+    private validatorService: ValidatorService
   ) {}
 
   ngOnInit() {

@@ -30,6 +30,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -42,7 +43,7 @@ export class DataTypeDetailComponent implements OnInit {
 
   originalDataType : DataTypeDetail;
   elementType: any;
-  access: any;
+  access: Access;
   editMode = false;
 
   constructor(

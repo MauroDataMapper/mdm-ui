@@ -43,6 +43,7 @@ import {
   CodeSetUpdatePayload
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -60,7 +61,7 @@ export class CodeSetDetailsComponent implements OnInit {
   addedToFavourite = false;
   currentBranch = '';
   branchGraph = [];
-  access: any;
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,

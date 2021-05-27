@@ -32,6 +32,7 @@ import {
 import { ValidatorService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { UIRouterGlobals } from '@uirouter/angular';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-term-details',
@@ -53,7 +54,7 @@ export class TermDetailsComponent implements OnInit {
   errorMessage = '';
 
   parentLabel = '';
-  access: any;
+  access: Access;
 
   compareToList = [];
 

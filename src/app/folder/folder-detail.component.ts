@@ -36,6 +36,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { ContainerUpdatePayload, FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -52,7 +53,7 @@ export class FolderDetailComponent implements OnInit {
   deleteInProgress: boolean;
   showEditMode = false;
   processing: boolean;
-  access: any ;
+  access: Access ;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -83,7 +84,7 @@ export class FolderDetailComponent implements OnInit {
   }
 
   FolderDetails(): any {
-        this.access = this.securityHandler.folderAccess(this.folder);
+        this.access = this.securityHandler.elementAccess(this.folder);
         this.title.setTitle('Folder - ' + this.folder?.label);
   }
 

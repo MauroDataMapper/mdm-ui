@@ -27,7 +27,8 @@ import { AuthenticatedSessionError, SignInError, UserDetails } from './security-
 import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { AdminSessionResponse, AuthenticatedResponse, Finalisable, LoginPayload, LoginResponse, Securable, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { AdminSessionResponse, AuthenticatedResponse, Finalisable, LoginPayload, LoginResponse, Securable } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Injectable({
   providedIn: 'root',
@@ -236,7 +237,8 @@ export class SecurityHandlerService {
       );
   }
 
-  dataModelAccess(element: Securable & Finalisable) {
+
+  elementAccess(element) : Access {
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -248,118 +250,8 @@ export class SecurityHandlerService {
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
-      canAddLink: element.availableActions.includes('update'),
-    };
-  }
-
-  termAccess(element: Securable & Finalisable) {
-    return {
-      showEdit: element.availableActions.includes('update') && !element.finalised,
-      canEditDescription: element.availableActions.includes('editDescription'),
-      showNewVersion: element.availableActions.includes('update') && element.finalised,
-      showFinalise: element.availableActions.includes('finalise'),
-      showPermission: element.availableActions.includes('update') || this.isAdmin(),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
-      showSoftDelete: element.availableActions.includes('softDelete'),
-      showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: element.availableActions.includes('update'),
-
-      canAddLink: element.availableActions.includes('update'),
-    };
-  }
-
-  dataElementAccess(element: Securable) {
-    return {
-      showEdit: element.availableActions.includes('update'),
-      canEditDescription: element.availableActions.includes('editDescription'),
-     showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
-      showSoftDelete: element.availableActions.includes('softDelete'),
-      showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: element.availableActions.includes('update'),
-
       canAddLink: element.availableActions.includes('update')
-    };
-  }
-
-  dataClassAccess(element: Securable) {
-    return {
-      showEdit: element.availableActions.includes('update'),
-      canEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
-      showSoftDelete: element.availableActions.includes('softDelete'),
-      showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: element.availableActions.includes('update'),
-      canAddLink: element.availableActions.includes('update')
-    };
-  }
-
-  dataTypeAccess(element: Securable) {
-    return {
-      showEdit: element.availableActions.includes('update'),
-      canEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
-      showSoftDelete: element.availableActions.includes('softDelete'),
-      showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: element.availableActions.includes('update'),
-
-      canAddLink: element.availableActions.includes('update'),
-    };
-  }
-
-  datFlowAccess(dataFlow: Securable) {
-    return {
-      showEdit: dataFlow.availableActions.includes('update'),
-      canAddAnnotation: dataFlow.availableActions.includes('comment'),
-      canAddMetadata: dataFlow.availableActions.includes('update')
-    };
-  }
-
-  elementAccess(element) {
-    if (element.domainType === CatalogueItemDomainType.DataModel ||
-      element.domainType === CatalogueItemDomainType.Terminology ||
-      element.domainType === CatalogueItemDomainType.CodeSet ||
-      element.domainType === CatalogueItemDomainType.ReferenceDataModel) {
-      return this.dataModelAccess(element);
-    }
-
-    if (element.domainType === CatalogueItemDomainType.Term) {
-      return this.termAccess(element);
-    }
-
-    if (element.domainType === CatalogueItemDomainType.DataElement) {
-      return this.dataElementAccess(element);
-    }
-
-    if (element.domainType === CatalogueItemDomainType.DataClass) {
-      return this.dataClassAccess(element);
-    }
-
-    const dataTypes = this.elementTypes.getAllDataTypesMap();
-    if (dataTypes[element.domainType]) {
-      return this.dataTypeAccess(element);
-    }
-
-    if (element.domainType ===  'DataFlow') {
-      return this.datFlowAccess(element);
-    }
-
-    if (element.domainType === CatalogueItemDomainType.Folder) {
-      return this.folderAccess(element);
-    }
-  }
-
-  folderAccess(folder: Securable) {
-    return {
-      showEdit: folder.availableActions.includes('update'),
-      showPermission: folder.availableActions.includes('update') || this.isAdmin(),
-      showSoftDelete: folder.availableActions.includes('softDelete'),
-      showPermanentDelete: folder.availableActions.includes('delete'),
-      canAddMetadata: folder.availableActions.includes('update'),
-      canAddAnnotation: folder.availableActions.includes('comment')
     };
   }
 }
+

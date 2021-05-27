@@ -42,6 +42,7 @@ import {
   TerminologyDetail,
   TerminologyDetailResponse} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -66,7 +67,7 @@ export class TerminologyDetailsComponent implements OnInit {
   currentBranch = '';
   branchGraph = [];
   downloadLinks = new Array<HTMLAnchorElement>();
-  access: any;
+  access: Access;
   editMode = false;
 
   constructor(

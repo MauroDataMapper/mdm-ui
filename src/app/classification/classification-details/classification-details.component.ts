@@ -154,7 +154,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
         this.result = serverResult;
         this.editableForm.label = this.result.label;
         this.editableForm.description = this.result.description;
-        const access: any = this.securityHandler.folderAccess(this.result);
+        const access: any = this.securityHandler.elementAccess(this.result);
         this.showEdit = access.showEdit;
         this.showPermission = access.showPermission;
         this.showDelete = access.showPermanentDelete || access.showSoftDelete;
@@ -170,7 +170,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   watchClassificationObject() {
-    const access = this.securityHandler.folderAccess(this.result);
+    const access = this.securityHandler.elementAccess(this.result);
     this.showEdit = access.showEdit;
     this.showPermission = access.showPermission;
     this.showDelete = access.showPermanentDelete || access.showSoftDelete;

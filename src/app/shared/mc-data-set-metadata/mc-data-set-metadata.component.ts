@@ -36,6 +36,7 @@ import { MatInput } from '@angular/material/input';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-set-metadata',
@@ -59,7 +60,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
   namespaces: any[];
   metadataKeys: any[];
-  access: any;
+  access: Access;
   loading = false;
   records: any[];
   metadata: any;

@@ -43,6 +43,7 @@ import {
   ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-code-set',
@@ -77,7 +78,7 @@ export class CodeSetComponent
   showDelete: boolean;
   canEditDescription: boolean;
   showEditDescription = false;
-  access: any;
+  access: Access;
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -359,7 +360,7 @@ export class CodeSetComponent
   }
 
   watchDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.codeSetModel);
+    const access: Access = this.securityHandler.elementAccess(this.codeSetModel);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.canEditDescription = access.canEditDescription;

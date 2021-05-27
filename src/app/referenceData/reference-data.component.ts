@@ -45,6 +45,7 @@ import {
   ReferenceDataModelDetailResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -71,7 +72,7 @@ export class ReferenceDataComponent
   errorMessage = '';
   showEdit = false;
   showDelete = false;
-  access: any;
+  access: Access;
 
   typesItemCount = 0;
   isLoadingTypes = true;

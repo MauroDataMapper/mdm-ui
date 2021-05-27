@@ -220,23 +220,6 @@ SPDX-License-Identifier: Apache-2.0
               matTooltip="Favourite"
             ></i>
           </div>
-          <div
-            *ngIf="access.showSecuritySection"
-            style="position: relative; float: right; margin-right: 8px"
-            [hidden]="showEdit || deleteInProgress"
-          >
-            <button
-              mat-icon-button
-              color="primary"
-              type="button"
-              class="paddingless"
-              (click)="toggleSecuritySection()"
-              matTooltip="User & Group Access"
-              aria-label="User & Group Access"
-            >
-              <i class="fas fa-user-lock"></i>
-            </button>
-          </div>
           <h4
             class="inline-block marginless"
             [ngClass]="{ deletedDataModelTitle: refDataModel.deleted }"

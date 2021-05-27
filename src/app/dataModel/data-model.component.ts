@@ -44,6 +44,7 @@ import {
   ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-model',
@@ -72,7 +73,7 @@ export class DataModelComponent
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
-  access: any;
+  access: Access;
 
   editableForm: EditableDataModel;
   errorMessage = '';

@@ -34,6 +34,7 @@ import {
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -48,7 +49,7 @@ export class DataClassDetailsComponent implements OnInit {
   deleteInProgress: boolean;
   exportError: any;
   parentLabel = '';
-  access: any;
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,

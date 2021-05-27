@@ -34,6 +34,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { EditingService } from '@mdm/services/editing.service';
 import { DataElement, DataElementDetail } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -49,7 +50,7 @@ export class DataElementDetailsComponent
   subscription: Subscription;
   deleteInProgress: boolean;
   parentLabel = '';
-  access: any;
+  access: Access;
   errorMessage = '';
 
   constructor(

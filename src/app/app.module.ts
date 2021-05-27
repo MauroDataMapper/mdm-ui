@@ -37,7 +37,6 @@ import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
-import '@mdm/services/broadcast.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { ProfileBaseComponent } from './profile-base/profile-base.component';
 

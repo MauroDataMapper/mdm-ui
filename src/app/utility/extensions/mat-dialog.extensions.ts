@@ -17,8 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { CatalogueItem, SecurableModel } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { SecurityAccessResource, SecurityModalConfiguration } from '@mdm/modals/security-modal/security-modal.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
@@ -88,6 +91,16 @@ declare module '@angular/material/dialog/dialog' {
      * @see `openConfirmationAsync()`
      */
     openDoubleConfirmationAsync(firstConfig: MatDialogConfig<ConfirmationModalConfig>, finalConfig: MatDialogConfig<ConfirmationModalConfig>): Observable<void>;
+
+    /**
+     * Extension method to open the user/group access security dialog and control read access for a catalogue item.
+     * Only domains defined in the {@link SecurityAccessResource} can be used.
+     *
+     * @param element The catalogue item element to change security access for.
+     * @param resource The resource name that applies to this element.
+     * @returns The dialog reference to observe.
+     */
+    openSecurityAccess(element: CatalogueItem & SecurableModel, resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
   }
 }
 
@@ -131,3 +144,19 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
       })
     );
 };
+
+MatDialog.prototype.openSecurityAccess = function(
+  this: MatDialog,
+  element: CatalogueItem & SecurableModel,
+  resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus> {
+  return this.open<SecurityModalComponent, SecurityModalConfiguration, ModalDialogStatus>(
+    SecurityModalComponent,
+    {
+      data: {
+        element,
+        resource
+      },
+      panelClass: 'security-modal'
+    }
+  );
+}

@@ -100,12 +100,6 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       this.messages.changeSearch.subscribe((show: boolean) => {
         this.showSearch = show;
       }));
-
-    // Observe when the User Access/Permissions dialog makes changes to the catalogue
-    // item permissions
-    this.messages.dataChanged$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => this.afterDetailsSaved(data));
   }
 
   ngAfterViewInit(): void {
@@ -195,9 +189,6 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       // this.UsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
       // this.UnUsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
     }
-
-    // Send data state so that User Access/Permissions dialog has access to it
-    this.messages.FolderSendMessage(this.detail);
   }
 
   private createFormState() {

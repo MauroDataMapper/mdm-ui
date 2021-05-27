@@ -180,9 +180,6 @@ export class DataModelComponent
           this.DataModelPermissions(id);
           this.UsedProfiles('dataModels', id);
           this.UnUsedProfiles('dataModels', id);
-        } else {
-          this.messageService.FolderSendMessage(this.dataModel);
-          this.messageService.dataChanged(this.dataModel);
         }
 
         this.editableForm = new EditableDataModel();
@@ -240,9 +237,6 @@ export class DataModelComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.dataModel[attrname] = permissions.body[attrname];
         });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.dataModel);
-        this.messageService.dataChanged(this.dataModel);
       });
   }
 

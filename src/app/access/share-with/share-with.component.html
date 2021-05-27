@@ -17,30 +17,39 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mb-2 bordered">
-    <div class="heading-container">
-        <h4 class="marginless">Restrict user access globally</h4>
+  <div class="heading-container">
+    <h4 class="marginless">Restrict user access globally</h4>
+  </div>
+  <div style="padding: 16px">
+    <div class="mb-1">
+      <mat-checkbox
+        name="shareReadWithEveryone"
+        [(ngModel)]="readableByEveryone"
+        data-md-icheck
+        (change)="shareReadWithEveryoneChanged()"
+      >
+        Publicly readable
+      </mat-checkbox>
+      <small class="block">
+        <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
+        By making the {{ message }} publicly readable, it would be accessible by
+        all registered and non-registered users.
+      </small>
     </div>
-    <div style="padding: 16px;">
-        <div class="mb-1">
-            <mat-checkbox name="shareReadWithEveryone" [(ngModel)]="readableByEveryone" data-md-icheck (change)="shareReadWithEveryoneChanged()">
-                Publicly readable
-            </mat-checkbox>
-            <small class="block">
-                <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
-                By making the {{message}} publicly readable, it would be accessible by all registered and
-                non-registered users.
-            </small>
-        </div>
-        <div class="mb-1">
-            <mat-checkbox name="shareReadWithAuthenticated" [(ngModel)]="readableByAuthenticated" data-md-icheck
-                (change)="shareReadWithAuthenticatedChanged()">
-                Readable by authenticated users
-            </mat-checkbox>
-            <small class="block">
-                <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
-                By making the {{message}} readable by authenticated users, it would be accessible by all registered
-                users.
-            </small>
-        </div>
+    <div class="mb-1">
+      <mat-checkbox
+        name="shareReadWithAuthenticated"
+        [(ngModel)]="readableByAuthenticatedUsers"
+        data-md-icheck
+        (change)="shareReadWithAuthenticatedChanged()"
+      >
+        Readable by authenticated users
+      </mat-checkbox>
+      <small class="block">
+        <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
+        By making the {{ message }} readable by authenticated users, it would be
+        accessible by all registered users.
+      </small>
     </div>
+  </div>
 </div>

@@ -18,26 +18,30 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CatalogueItem, SecurableModel } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { SecurityAccessResource, SecurityModalConfiguration } from './security-modal.model';
 
 @Component({
-   selector: 'mdm-security-modal',
-   templateUrl: './security-modal.component.html',
-   styleUrls: ['./security-modal.component.scss']
+  selector: 'mdm-security-modal',
+  templateUrl: './security-modal.component.html',
+  styleUrls: ['./security-modal.component.scss']
 })
 export class SecurityModalComponent implements OnInit {
-   element = '';
-   domainType = '';
-   constructor(
-      private dialogRef: MatDialogRef<SecurityModalComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any
-    ) { }
+  element: CatalogueItem & SecurableModel;
+  resource: SecurityAccessResource;
 
-   ngOnInit(): void {
-      this.element = this.data.element ? this.data.element : '';
-      this.domainType = this.data.domainType ? this.data.domainType : '';
-   }
+  constructor(
+    private dialogRef: MatDialogRef<SecurityModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: SecurityModalConfiguration
+  ) { }
 
-   close() {
-      this.dialogRef.close({ status: 'close' });
-    }
+  ngOnInit(): void {
+    this.element = this.data.element;
+    this.resource = this.data.resource;
+  }
+
+  close() {
+    this.dialogRef.close(ModalDialogStatus.Close);
+  }
 }

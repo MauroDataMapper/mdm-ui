@@ -32,7 +32,6 @@ import {
   FinaliseModalComponent,
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -96,13 +95,7 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'result',
-        domainType: 'codeSets'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.codeSetDetail, 'codeSet');
   }
 
   delete(permanent: boolean) {

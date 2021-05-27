@@ -28,7 +28,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
@@ -84,7 +84,6 @@ export class CodeSetComponent
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
-    private stateService: StateService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
@@ -258,11 +257,9 @@ export class CodeSetComponent
           !this.sharedService.isLoggedIn() ||
           !this.codeSetModel.editable ||
           this.codeSetModel.finalised;
+
         if (this.sharedService.isLoggedIn(true)) {
           this.CodeSetPermissions();
-        } else {
-          this.messageService.FolderSendMessage(this.codeSetModel);
-          this.messageService.dataChanged(this.codeSetModel);
         }
 
         this.tabGroup?.realignInkBar();
@@ -284,9 +281,6 @@ export class CodeSetComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.codeSetModel[attrname] = permissions.body[attrname];
         });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.codeSetModel);
-        this.messageService.dataChanged(this.codeSetModel);
       });
   }
 

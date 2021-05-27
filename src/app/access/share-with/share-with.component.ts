@@ -16,11 +16,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from '@mdm/services/message.service';
-import { Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EMPTY, Observable } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Uuid } from '@maurodatamapper/mdm-resources';
+import { catchError } from 'rxjs/operators';
+import { SecurityAccessResource, securityAccessResourceDisplayNames } from '@mdm/modals/security-modal/security-modal.model';
 
 @Component({
   selector: 'mdm-share-with',
@@ -28,80 +30,58 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
   styleUrls: ['./share-with.component.sass'],
 })
 export class ShareWithComponent implements OnInit {
-  @Input() mcElement: string;
-  @Input() mcDomainType: string;
-  folderResult: any;
-  subscription: Subscription;
-  type;
 
-  supportedDomainTypes = {
-    DataModel: { name: 'dataModel', message: 'Data Model' },
-    Classifier: { name: 'classifier', message: 'Classifier' },
-    Folder: { name: 'folder', message: 'Folder' },
-    VersionedFolder: { name: 'versionedFolder', message: 'Versioned Folder' },
-    Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: { name: 'codeSet', message: 'CodeSet' },
-    ReferenceDataModel: { name: 'referenceDataModel', message: 'ReferenceDataModel' }
-  };
+  @Input() catalogueItemId: Uuid;
+  @Input() readableByEveryone = false;
+  @Input() readableByAuthenticatedUsers = false;
+  @Input() resource: SecurityAccessResource;
 
-  readableByEveryone: false;
-  readableByAuthenticated: false;
+  @Output() readableByEveryoneChange = new EventEmitter<boolean>();
+  @Output() readableByAuthenticatedUsersChange = new EventEmitter<boolean>();
 
-  message = 'Permission';
-  domainType: string;
+  message: string;
 
   constructor(
-    private messageService: MessageService,
-    private resourcesService: MdmResourcesService,
-    private messageHandler: MessageHandlerService
-  ) { }
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit() {
-    this.folderResult = this.messageService.getFolderPermissions();
-    this.readableByEveryone = this.folderResult?.readableByEveryone;
-    this.readableByAuthenticated = this.folderResult?.readableByAuthenticated;
-    this.type = this.supportedDomainTypes[this.mcDomainType];
-    this.domainType = this.type?.name;
-    this.message = this.type?.message;
+    this.message = securityAccessResourceDisplayNames[this.resource];
   }
 
-  shareReadWithEveryoneChanged = () => {
-    if (this.readableByEveryone) {
-      this.resourcesService[this.domainType].updateReadByEveryone(this.folderResult?.id).subscribe((result) => {
-        this.folderResult = result.body;
-        this.messageService.dataChanged(this.folderResult);
+  shareReadWithEveryoneChanged() {
+    const request: Observable<unknown> = this.readableByEveryone
+      ? this.resources[this.resource].updateReadByEveryone(this.catalogueItemId, {})
+      : this.resources[this.resource].removeReadByEveryone(this.catalogueItemId);
+
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
         this.messageHandler.showSuccess(`${this.message} updated successfully.`);
-      }, (error) => {
-        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+        this.readableByEveryoneChange.emit(this.readableByEveryone);
       });
-    } else if (!this.readableByEveryone) {
-      this.resourcesService[this.domainType].removeReadByEveryone(this.folderResult?.id).subscribe((result) => {
-        this.folderResult = result.body;
-        this.messageService.dataChanged(this.folderResult);
-        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
-      }, (error) => {
-        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
-      });
-    }
   };
 
   shareReadWithAuthenticatedChanged = () => {
-    if (this.readableByAuthenticated) {
-      this.resourcesService[this.domainType].updateReadByAuthenticated(this.folderResult.id).subscribe((serverResult) => {
-        this.folderResult = serverResult.body;
-        this.messageService.dataChanged(this.folderResult);
+    const request: Observable<any> = this.readableByAuthenticatedUsers
+      ? this.resources[this.resource].updateReadByAuthenticated(this.catalogueItemId, {})
+      : this.resources[this.resource].removeReadByAuthenticated(this.catalogueItemId);
+
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
         this.messageHandler.showSuccess(`${this.message} updated successfully.`);
-      }, (error) => {
-        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+        this.readableByAuthenticatedUsersChange.emit(this.readableByAuthenticatedUsers);
       });
-    } else if (!this.readableByAuthenticated) {
-      this.resourcesService[this.domainType].removeReadByAuthenticated(this.folderResult.id).subscribe((serverResult) => {
-        this.folderResult = serverResult.body;
-        this.messageService.dataChanged(this.folderResult);
-        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
-      }, (error) => {
-        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
-      });
-    }
   };
 }

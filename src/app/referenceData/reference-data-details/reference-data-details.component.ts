@@ -29,7 +29,6 @@ import { ExportHandlerService } from '@mdm/services/handlers/export-handler.serv
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   FinaliseModalComponent,
@@ -73,7 +72,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
@@ -201,13 +199,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'referenceDataModels',
-        domainType: 'ReferenceDataModel'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.refDataModel, 'referenceDataModel');
   }
 
   delete(permanent: boolean) {

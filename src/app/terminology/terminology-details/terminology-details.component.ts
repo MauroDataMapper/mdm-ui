@@ -34,7 +34,6 @@ import {
   FinaliseModalComponent,
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -149,13 +148,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'terminologies',
-        domainType: 'Terminology'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.mcTerminology, 'terminology');
   }
 
   toggleShowSearch() {

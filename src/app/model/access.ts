@@ -17,16 +17,21 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+/**
+ * Represents access/permissions flags to determine what a catalogue item can do.
+ *
+ * @see {@link SecurityHandlerService.elementAccess}
+ */
 export interface Access {
-    showEdit : boolean;
-    canEditDescription: boolean;
-    showNewVersion?: boolean;
-    showFinalise: boolean;
-    showPermission: boolean;
-    showSoftDelete: boolean;
-    showPermanentDelete: boolean;
-    canAddAnnotation: boolean;
-    canAddMetadata: boolean;
-    showDelete: boolean;
-    canAddLink: boolean;
-  }
+  showEdit: boolean;
+  canEditDescription: boolean;
+  showNewVersion?: boolean;
+  showFinalise: boolean;
+  showPermission: boolean;
+  showSoftDelete: boolean;
+  showPermanentDelete: boolean;
+  canAddAnnotation: boolean;
+  canAddMetadata: boolean;
+  showDelete: boolean;
+  canAddLink: boolean;
+}

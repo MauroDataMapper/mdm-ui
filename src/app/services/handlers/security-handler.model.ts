@@ -80,26 +80,3 @@ export interface UserDetails {
   isAdmin?: boolean;
   needsToResetPassword?: boolean;
 }
-
-export interface ContainerAccess {
-  showEdit: boolean;
-  showPermission: boolean;
-  showSoftDelete: boolean;
-  showPermanentDelete: boolean;
-  canAddMetadata: boolean;
-  canAddAnnotation: boolean;
-  showFinalise: boolean;
-}
-
-export interface DataModelAccess {
-  showEdit: boolean;
-  canEditDescription: boolean;
-  showNewVersion: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showSoftDelete: boolean;
-  showPermanentDelete: boolean;
-  canAddAnnotation: boolean;
-  canAddMetadata: boolean;
-  canAddLink: boolean;
-}

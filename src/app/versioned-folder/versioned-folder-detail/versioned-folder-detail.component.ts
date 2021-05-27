@@ -22,11 +22,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { Access } from '@mdm/model/access';
 import { FormState, CatalogueItemDetailForm } from '@mdm/model/editable-forms';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { ContainerAccess } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil } from 'rxjs/operators';
 
@@ -38,7 +38,7 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
   @Input() detail: VersionedFolderDetail;
-  @Input() access: ContainerAccess;
+  @Input() access: Access;
 
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 

@@ -21,13 +21,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { PermissionsResponse, SecurableDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 import { ContainerDefaultProfileForm, FormState } from '@mdm/model/editable-forms';
 import { AnnotationViewOption, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { ContainerAccess } from '@mdm/services/handlers/security-handler.model';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -46,7 +46,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
 
   activeTab: TabDescriptor;
   editor: FormState<VersionedFolderDetail, ContainerDefaultProfileForm<VersionedFolderDetail>>;
-  access: ContainerAccess;
+  access: Access;
 
   showSearch = false;
   showExtraTabs = false;
@@ -187,7 +187,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   private setupDetails(value: VersionedFolderDetail) {
     this.detail = value;
     this.catalogueItem = this.detail;
-    this.access = this.securityHandler.defineCatalogueItemAccess(this.detail);
+    this.access = this.securityHandler.elementAccess(this.detail);
 
     if (this.shared.isLoggedIn(true)) {
       this.checkPermissions(this.detail.id);

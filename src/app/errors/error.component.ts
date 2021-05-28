@@ -82,7 +82,7 @@ export class ErrorComponent implements OnInit {
     const summary = this.lastError.error.message;
     const description = JSON.stringify(this.lastError, null, 2);
 
-    this.youtrackService.reportIssueToYouTrack(summary, description).subscribe(() => {
+    this.youtrackService.reportIssue(summary, description).subscribe(() => {
         this.successfulReport();
       }, () => {
         this.errorReport();

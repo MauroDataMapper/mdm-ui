@@ -30,6 +30,7 @@ import { SecurityAccessResource, SecurityModalConfiguration } from './security-m
 export class SecurityModalComponent implements OnInit {
   element: CatalogueItem & SecurableModel;
   resource: SecurityAccessResource;
+  canAddGroups: boolean;
 
   constructor(
     private dialogRef: MatDialogRef<SecurityModalComponent>,
@@ -39,6 +40,7 @@ export class SecurityModalComponent implements OnInit {
   ngOnInit(): void {
     this.element = this.data.element;
     this.resource = this.data.resource;
+    this.canAddGroups = this.element.availableActions?.includes('update') ?? false;
   }
 
   close() {

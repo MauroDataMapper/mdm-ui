@@ -17,15 +17,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { PageEvent } from '@angular/material/paginator';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { EMPTY, forkJoin } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-group-access-new',
@@ -33,37 +34,23 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./group-access-new.component.sass'],
 })
 export class GroupAccessNewComponent implements OnInit {
-  @Input() parent: any;
-  @Input() parentType: any;
+  @Input() catalogueItem: CatalogueItem;
+  @Input() canAddGroups = false;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true })
-  paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+
   displayedColumns: string[] = ['user', 'access', 'edit'];
   totalItemCount = 0;
   groups = [];
   allGroups = [];
   groupsMap = {};
-  editable = false;
   accessLevels = [];
-  isLoadingResults = true;
-
-  folderResult: any;
-
+  loading = true;
   dataSource: MatTableDataSource<any>;
-  // MatPaginator Output
-  pageEvent: PageEvent;
 
-  supportedDomainTypes = {
-    DataModel: { name: 'dataModel', message: 'Data Model' },
-    Classifier: { name: 'classifier', message: 'Classifier' },
-    Folder: { name: 'folder', message: 'Folder' },
-    VersionedFolder: { name: 'versionedFolder', message: 'Versioned Folder' },
-    Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: { name: 'codeSet', message: 'CodeSet' },
-  };
 
   constructor(
-    private messageService: MessageService,
     private resourceService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
@@ -73,9 +60,7 @@ export class GroupAccessNewComponent implements OnInit {
 
   ngOnInit() {
     this.buildGroups();
-    this.loadAllGroups('', 0, 0);
-
-    this.editable = this.folderResult?.availableActions.indexOf('update') !== -1;
+    this.loadAllGroups(0, 0);
 
     this.dataSource = new MatTableDataSource(this.groups);
     this.dataSource.sort = this.sort;
@@ -93,52 +78,76 @@ export class GroupAccessNewComponent implements OnInit {
     };
   }
 
-  loadAllGroups(text, offset, limit) {
+  loadAllGroups(offset: number, limit: number) {
     this.allGroups = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (!result.body.authenticatedSession) {
-        return;
-      }
-      limit = limit ? limit : 10;
-      offset = offset ? offset : 0;
-      this.resourceService.userGroups.list().subscribe((data) => {
-        this.allGroups = data.body.items;
-      }, (error) => {
-        this.messageHandler.showError('There was a problem getting the group list.', error);
+
+    this.securityHandler
+      .isAuthenticated()
+      .subscribe((result) => {
+        if (!result.body.authenticatedSession) {
+          return;
+        }
+
+        limit = limit ? limit : 10;
+        offset = offset ? offset : 0;
+
+        this.resourceService.userGroups
+          .list()
+          .pipe(
+            catchError(error => {
+              this.messageHandler.showError('There was a problem getting the group list.', error);
+              return EMPTY;
+            })
+          )
+          .subscribe(data => this.allGroups = data.body.items);
       });
-    });
   }
 
-  buildGroups = () => {
+  buildGroups() {
     this.groups = [];
-    this.folderResult = this.messageService.getFolderPermissions();
-    this.isLoadingResults = true;
-    this.resourceService.securableResource.getGroupRoles(this.folderResult?.domainType, this.folderResult?.id, '').subscribe((res) => {
-      this.accessLevels = res.body.items;
-      this.resourceService.securableResource.getSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, '').subscribe((result) => {
-        this.groups = result.body.items;
-        this.totalItemCount = result.body.count;
-        this.isLoadingResults = false;
+    this.loading = true;
+
+    forkJoin([
+      this.resourceService.securableResource.getGroupRoles(this.catalogueItem.domainType, this.catalogueItem.id, ''),
+      this.resourceService.securableResource.getSecurableResourceGroupRole(this.catalogueItem.domainType, this.catalogueItem.id, '')
+    ])
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to load group roles.', error);
+          return EMPTY;
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe(([groupRoles, resourceGroupRole]: [any, any]) => {
+        this.accessLevels = groupRoles.body.items;
+        this.groups = resourceGroupRole.body.items;
+        this.totalItemCount = resourceGroupRole.body.count;
         this.refreshDataSource();
       });
-    });
   };
 
   save(row) {
-    const mId = this.folderResult.id;
-    const gId = row.edit.group.id;
-    const levelId = row.groupLevelId.id;
+    this.resourceService.securableResource
+      .addUserGroupToSecurableResourceGroupRole(
+        this.catalogueItem.domainType,
+        this.catalogueItem.id,
+        row.groupLevelId.id,
+        row.edit.group.id,
+        null)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem saving this group.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Group saved successfully.');
 
-    this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult?.domainType, mId, levelId, gId, null).subscribe(() => {
-      this.messageHandler.showSuccess('Save Successful');
+        row.inEdit = false;
+        this.editingService.setFromCollection(this.groups);
 
-      row.inEdit = false;
-      this.editingService.setFromCollection(this.groups);
-
-      this.buildGroups();
-    }, (error) => {
-      this.messageHandler.showError('Save Error', error);
-    });
+        this.buildGroups();
+      });
   }
 
   add() {
@@ -160,7 +169,7 @@ export class GroupAccessNewComponent implements OnInit {
     this.refreshDataSource();
   }
 
-  cancelEdit(record, index) {
+  cancelEdit(record, index: number) {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (!confirm) {
         return;
@@ -178,12 +187,13 @@ export class GroupAccessNewComponent implements OnInit {
   refreshDataSource() {
     this.dataSource.data = this.groups;
   }
-  onGroupSelect = (select, record) => {
+
+  onGroupSelect(select, record) {
     delete record.edit.errors;
     record.edit.group = select;
   };
 
-  onGroupAccessSelect = (select, record) => {
+  onGroupAccessSelect(select, record) {
     record.groupLevelId = select;
   };
 
@@ -218,12 +228,22 @@ export class GroupAccessNewComponent implements OnInit {
     }
   }
 
-  deleteRecord = (record) => {
-    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, record.groupRole.id, record.userGroup.id).subscribe(() => {
-      this.messageHandler.showSuccess('Delete Successful');
-      this.buildGroups();
-    }, (error) => {
-      this.messageHandler.showError('Error Removing', error);
-    });
+  deleteRecord(record) {
+    this.resourceService.securableResource
+      .removeUserGroupFromSecurableResourceGroupRole(
+        this.catalogueItem.domainType,
+        this.catalogueItem.id,
+        record.groupRole.id,
+        record.userGroup.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem removing this group.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Group removed successfully.');
+        this.buildGroups();
+      });
   };
 }

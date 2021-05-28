@@ -33,6 +33,9 @@ SPDX-License-Identifier: Apache-2.0
     [(readableByAuthenticatedUsers)]="element.readableByAuthenticatedUsers"
   ></mdm-share-with>
   <div class="mt-2">
-    <!-- <mdm-group-access-new [parent]='element' [parentType]='domainType'></mdm-group-access-new> -->
+    <mdm-group-access-new
+      [catalogueItem]="element"
+      [canAddGroups]="canAddGroups"
+    ></mdm-group-access-new>
   </div>
 </div>

@@ -38,7 +38,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+import { GroupAccessNewComponent } from '@mdm/access/group-access-new/group-access-new.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { DownloadLinkComponent } from '@mdm/utility/download-link/download-link.component';

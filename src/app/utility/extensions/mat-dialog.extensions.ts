@@ -159,4 +159,4 @@ MatDialog.prototype.openSecurityAccess = function(
       panelClass: 'security-modal'
     }
   );
-}
+};

@@ -26,7 +26,7 @@ import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-tex
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+import { GroupAccessNewComponent } from '@mdm/access/group-access-new/group-access-new.component';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';

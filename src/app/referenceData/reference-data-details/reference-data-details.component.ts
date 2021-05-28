@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';

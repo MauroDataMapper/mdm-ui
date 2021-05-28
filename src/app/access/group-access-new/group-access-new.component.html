@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
         </h4>
       </div>
       <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-        <div *ngIf="editable" class="mt-1">
+        <div *ngIf="canAddGroups" class="mt-1">
           <button mat-flat-button color="primary" type="button" (click)="add()">
             <i class="fas fa-plus"></i>
             Add Group
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <form>
-    <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
+    <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
@@ -130,11 +130,11 @@ SPDX-License-Identifier: Apache-2.0
     </table>
   </form>
 
-  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !loading}">
     <p class="marginless">There are no groups this repository.</p>
   </div>
 
-  <div class="item" *ngIf="isLoadingResults">
+  <div class="item" *ngIf="loading">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
         <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>

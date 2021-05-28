@@ -182,11 +182,7 @@ export class ReferenceDataComponent
 
         if (this.sharedService.isLoggedIn(true)) {
           this.ReferenceModelPermissions(id);
-        } else {
-          this.messageService.dataChanged(this.referenceModel);
-          this.messageService.FolderSendMessage(this.referenceModel);
         }
-        this.messageService.dataChanged(this.referenceModel);
 
         if (this.tabGroup) {
           this.tabGroup.realignInkBar();
@@ -205,9 +201,6 @@ export class ReferenceDataComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.referenceModel[attrname] = permissions.body[attrname];
         });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.referenceModel);
-        this.messageService.dataChanged(this.referenceModel);
       });
   }
 

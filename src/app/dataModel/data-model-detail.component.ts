@@ -34,7 +34,6 @@ import {
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
-import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
@@ -119,13 +118,7 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'dataModel',
-        domainType: 'DataModel'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.dataModel, 'dataModel');
   }
 
   toggleShowSearch() {

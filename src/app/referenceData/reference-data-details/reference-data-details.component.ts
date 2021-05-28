@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -29,7 +28,6 @@ import { ExportHandlerService } from '@mdm/services/handlers/export-handler.serv
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   FinaliseModalComponent,
@@ -73,7 +71,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
@@ -201,13 +198,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'referenceDataModels',
-        domainType: 'ReferenceDataModel'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.refDataModel, 'referenceDataModel');
   }
 
   delete(permanent: boolean) {

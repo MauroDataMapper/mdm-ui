@@ -33,7 +33,6 @@ import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { ContainerUpdatePayload, FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
@@ -53,13 +52,13 @@ export class FolderDetailComponent implements OnInit {
   deleteInProgress: boolean;
   showEditMode = false;
   processing: boolean;
-  access: Access ;
+  access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
-    private messageHandlerService: MessageHandlerService ,
+    private messageHandlerService: MessageHandlerService,
     private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
@@ -84,17 +83,12 @@ export class FolderDetailComponent implements OnInit {
   }
 
   FolderDetails(): any {
-        this.access = this.securityHandler.elementAccess(this.folder);
-        this.title.setTitle('Folder - ' + this.folder?.label);
+    this.access = this.securityHandler.elementAccess(this.folder);
+    this.title.setTitle('Folder - ' + this.folder?.label);
   }
 
   toggleSecuritySection() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'result',
-        domainType: 'Folder'
-      }, panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.folder, 'folder');
   }
 
   toggleShowSearch() {
@@ -126,26 +120,24 @@ export class FolderDetailComponent implements OnInit {
       });
   }
 
-  save(){
-
-
-    const resource : ContainerUpdatePayload = {
+  save() {
+    const resource: ContainerUpdatePayload = {
       id: this.folder.id,
       label: this.folder.label
     };
 
     if (this.validatorService.validateLabel(this.folder.label)) {
       this.resourcesService.folder.update(resource.id, resource).subscribe((result: FolderDetailResponse) => {
-          this.messageHandlerService.showSuccess('Folder updated successfully.');
-          this.editingService.stop();
-          this.folder = result.body;
-          this.editMode = false;
-          this.broadcast.reloadCatalogueTree();
-          this.stateHandler.reload();
-        }, error => {
-          this.messageHandlerService.showError('There was a problem updating the Folder.', error);
+        this.messageHandlerService.showSuccess('Folder updated successfully.');
+        this.editingService.stop();
+        this.folder = result.body;
+        this.editMode = false;
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.reload();
+      }, error => {
+        this.messageHandlerService.showError('There was a problem updating the Folder.', error);
       });
-    }else{
+    } else {
       this.messageHandlerService.showError('There is an error with the label please correct and try again');
     }
   };
@@ -157,6 +149,6 @@ export class FolderDetailComponent implements OnInit {
 
   cancel() {
     this.editMode = false;
-    this.folder = Object.assign({},this.originalFolder);
+    this.folder = Object.assign({}, this.originalFolder);
   }
 }

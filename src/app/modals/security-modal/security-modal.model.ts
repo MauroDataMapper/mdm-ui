@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,27 +15,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<button
-  mat-icon-button
-  color="warn"
-  type="button"
-  (click)="close()"
-  class="close-modal paddingless"
->
-  <i class="fas fa-times"></i>
-</button>
-<div class="userAccess full-width" style="margin: 30px 0px 50px 0px">
-  <mdm-share-with
-    [catalogueItemId]="element.id"
-    [resource]="resource"
-    [(readableByEveryone)]="element.readableByEveryone"
-    [(readableByAuthenticatedUsers)]="element.readableByAuthenticatedUsers"
-  ></mdm-share-with>
-  <div class="mt-2">
-    <mdm-group-access-new
-      [catalogueItem]="element"
-      [canAddGroups]="canAddGroups"
-    ></mdm-group-access-new>
-  </div>
-</div>
+*/
+
+import { CatalogueItem, SecurableModel } from '@maurodatamapper/mdm-resources';
+
+export type SecurityAccessResource = 'folder' | 'versionedFolder' | 'classifier' | 'dataModel' | 'codeSet' | 'terminology' | 'referenceDataModel';
+
+export const securityAccessResourceDisplayNames = {
+  folder: 'Folder',
+  versionedFolder: 'Versioned Folder',
+  classifier: 'Classifier',
+  dataModel: 'Data Model',
+  codeSet: 'Code Set',
+  terminology: 'Terminology',
+  referenceDataModel: 'Reference Data Model'
+};
+
+export interface SecurityModalConfiguration {
+  element: CatalogueItem & SecurableModel;
+  resource: SecurityAccessResource;
+}

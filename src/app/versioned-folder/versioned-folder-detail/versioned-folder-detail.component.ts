@@ -21,7 +21,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
-import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
@@ -71,13 +70,7 @@ export class VersionedFolderDetailComponent implements OnInit {
   }
 
   showSecurityDialog() {
-    this.dialog.open(SecurityModalComponent, {
-      data: {
-        element: 'versionedFolder',
-        domainType: 'VersionedFolder'
-      },
-      panelClass: 'security-modal'
-    });
+    this.dialog.openSecurityAccess(this.detail, 'versionedFolder');
   }
 
   showForm() {

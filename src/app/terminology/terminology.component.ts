@@ -142,8 +142,6 @@ export class TerminologyComponent
           this.editableForm.aliases.push(item);
         });
       }
-      this.messageService.FolderSendMessage(data);
-      this.messageService.dataChanged(data);
     });
 
     this.subscription = this.messageService.changeSearch.subscribe(

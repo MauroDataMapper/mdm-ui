@@ -152,9 +152,6 @@ export class FolderComponent
 
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);
-      } else {
-        this.messageService.FolderSendMessage(this.folder);
-        this.messageService.dataChanged(this.folder);
       }
     });
   }
@@ -166,9 +163,6 @@ export class FolderComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.folder[attrname] = permissions.body[attrname];
         });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.folder);
-        this.messageService.dataChanged(this.folder);
       });
   }
 

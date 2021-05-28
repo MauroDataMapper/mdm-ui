@@ -22,6 +22,10 @@ import { ClipboardService } from 'ngx-clipboard';
 import { YoutrackService } from '@mdm/services/youtrack.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
+import { SecurityHandlerService, StateHandlerService } from '@mdm/services';
+import {
+  AuthenticatedResponse} from '@maurodatamapper/mdm-resources';
+
 @Component({
   selector: 'mdm-not-found-error',
   templateUrl: '../error.component.html',
@@ -31,8 +35,18 @@ export class NotFoundComponent extends ErrorComponent implements OnInit {
   constructor(protected messageService: MessageService,
               protected clipboardService: ClipboardService,
               protected sharedService: SharedService,
-              protected youtrackService: YoutrackService) {
+              protected youtrackService: YoutrackService,
+              protected security: SecurityHandlerService,
+              protected stateHandler: StateHandlerService) {
     super(messageService, clipboardService, sharedService, youtrackService);
+
+    this.security.isAuthenticated().subscribe((result: AuthenticatedResponse)  => {
+      if(!result.body.authenticatedSession)
+      {
+        this.sharedService.handleRequiredToLogin();
+      }
+    });
+
     this.errorHeader = 'Not Found';
     this.errorMessage = 'We\'re sorry, but the server returned a \'Not Found\' error';
     this.errorResolution = 'You may need to check that the item you have requested actually exists, and that you have permission to view it';

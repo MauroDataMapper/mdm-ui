@@ -117,7 +117,7 @@ export class VersionedFolderDetailComponent implements OnInit {
           this.original = response.body;
           this.editing.stop();
           this.afterSave.emit(response.body);
-          this.broadcast.broadcast('$reloadFoldersTree');
+          this.broadcast.reloadCatalogueTree();
         });
   }
 
@@ -191,7 +191,7 @@ export class VersionedFolderDetailComponent implements OnInit {
       )
       .subscribe(
         () => {
-          this.broadcast.broadcast('$reloadFoldersTree');
+          this.broadcast.reloadCatalogueTree();
           if (permanent) {
             this.stateHandler.Go(
               'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'

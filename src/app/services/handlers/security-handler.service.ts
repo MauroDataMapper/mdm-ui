@@ -92,6 +92,11 @@ export class SecurityHandlerService {
     return localStorage.getItem('email');
   }
 
+  loginRequired()
+  {
+    this.stateHandler.Go('appContainer.mainApp.home');
+  }
+
   addToLocalStorage(user) {
     // Keep username for 100 days
     const expireDate = new Date();

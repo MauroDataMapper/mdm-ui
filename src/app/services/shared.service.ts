@@ -54,9 +54,15 @@ export class SharedService {
     this.isAdmin = this.securityHandler.isAdmin();
   }
 
-  logout = () => {
+  logout() {
     this.securityHandler.logout();
   };
+
+  handleRequiredToLogin()
+  {
+    this.securityHandler.loginRequired();
+    this.toaster.info('Please log in to continue.');
+  }
 
   isLoggedIn = (checkServerSession?) => {
     if (checkServerSession !== undefined) {

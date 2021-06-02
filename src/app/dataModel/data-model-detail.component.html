@@ -265,6 +265,16 @@ SPDX-License-Identifier: Apache-2.0
               matTooltip="Publicly Available"
             ></i
           ></sup>
+          <sup
+            *ngIf="dataModel?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
         </h4>
         <span class="inline-block" *ngIf="dataModel?.deleted">
           <small class="warning"> | Deleted</small>
@@ -294,6 +304,26 @@ SPDX-License-Identifier: Apache-2.0
                 >Data Standard</span
               >
             </div>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="dataModel?.readableByEveryone">
+          <small>
+            <i
+              class="fas fa-globe-europe globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="dataModel?.readableByAuthenticatedUsers">
+          <small>
+            <i
+              class="fas fa-users globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Authenticated users only</span>
           </small>
         </div>
         <div class="text-muted" *ngIf="dataModel?.authority">
@@ -355,16 +385,6 @@ SPDX-License-Identifier: Apache-2.0
                 </option>
               </select>
             </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
           </small>
         </div>
       </div>

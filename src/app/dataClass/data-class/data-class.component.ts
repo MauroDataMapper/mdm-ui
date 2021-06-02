@@ -311,17 +311,17 @@ export class DataClassComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'annotations' };
+        return { index: 1, name: 'elements' };
       case 2:
-        return { index: 2, name: 'elements' };
+        return { index: 2, name: 'context' };
       case 3:
-        return { index: 3, name: 'context' };
+        return { index: 3, name: 'data' };
       case 4:
-        return { index: 4, name: 'history' };
+        return { index: 4, name: 'rules' };
       case 5:
-        return { index: 5, name: 'data' };
+        return { index: 5, name: 'annotations' };
       case 6:
-        return { index: 6, name: 'rules' };
+        return { index: 6, name: 'history' };
       default:
         return { index: 0, name: 'description' };
     }

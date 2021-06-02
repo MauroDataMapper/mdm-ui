@@ -215,14 +215,12 @@ export class TermComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
       case 'links':
-        return { index: 2, name: 'links' };
-
+        return { index: 1, name: 'links' };
       case 'rules':
-        return { index: 3, name: 'rules' };
-
+        return { index: 2, name: 'rules' };
+      case 'annotations':
+        return { index: 3, name: 'annotations' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -237,12 +235,11 @@ export class TermComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'annotations' };
+        return { index: 1, name: 'links' };
       case 2:
-        return { index: 2, name: 'links' };
-
+        return { index: 2, name: 'rules' };
       case 3:
-        return { index: 3, name: 'rules' };
+        return { index: 3, name: 'annotations' };
       default:
         return { index: 0, name: 'description' };
     }

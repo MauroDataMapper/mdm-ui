@@ -299,18 +299,18 @@ export class CodeSetComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
       case 'terms':
-        return { index: 2, name: 'terms' };
-      case 'history':
-        return { index: 3, name: 'history' };
+        return { index: 1, name: 'terms' };
       case 'links':
-        return { index: 4, name: 'links' };
+        return { index: 2, name: 'links' };
       case 'rules':
-        return { index: 5, name: 'rules' };
+        return { index: 3, name: 'rules' };
+      case 'annotations':
+        return { index: 4, name: 'annotations' };
+      case 'history':
+        return { index: 5, name: 'history' };
       default:
-        return { index: 0, name: 'terminology' };
+        return { index: 0, name: 'description' };
     }
   }
 
@@ -319,15 +319,15 @@ export class CodeSetComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'annotations' };
+        return { index: 1, name: 'terms' };
       case 2:
-        return { index: 2, name: 'terms' };
+        return { index: 2, name: 'links' };
       case 3:
-        return { index: 3, name: 'history' };
+        return { index: 3, name: 'rules' };
       case 4:
-        return { index: 4, name: 'links' };
+        return { index: 4, name: 'annotations' };
       case 5:
-        return { index: 5, name: 'rules' };
+        return { index: 5, name: 'history' };
       default:
         return { index: 0, name: 'terminology' };
     }

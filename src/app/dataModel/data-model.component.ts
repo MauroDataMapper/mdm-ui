@@ -347,19 +347,18 @@ export class DataModelComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
       case 'schema':
-        return { index: 2, name: 'schema' };
+        return { index: 1, name: 'schema' };
       case 'types':
-        return { index: 3, name: 'types' };
+        return { index: 2, name: 'types' };
       case 'context':
-        return { index: 4, name: 'context' };
+        return { index: 3, name: 'context' };
+      case 'rules':
+        return { index: 4, name: 'rules' };
+      case 'annotations':
+        return { index: 5, name: 'annotations' };
       case 'history':
-        return { index: 5, name: 'history' };
-      case 'rulesConstraints': {
-        return { index: 6, name: 'rulesConstraints' };
-      }
+        return { index: 6, name: 'history' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -370,19 +369,17 @@ export class DataModelComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'annotations' };
+        return { index: 1, name: 'schema' };
       case 2:
-        return { index: 2, name: 'schema' };
+        return { index: 2, name: 'types' };
       case 3:
-        return { index: 3, name: 'types' };
+        return { index: 3, name: 'context' };
       case 4:
-        return { index: 4, name: 'context' };
-      case 5: {
-        return { index: 5, name: 'history' };
-      }
-      case 6: {
-        return { index: 6, name: 'rulesConstraints' };
-      }
+        return { index: 4, name: 'rules' };
+      case 5:
+        return { index: 5, name: 'annotations' };
+      case 6:
+        return { index: 6, name: 'history' };
       default:
         return { index: 0, name: 'description' };
     }

@@ -203,7 +203,7 @@ export class ClassificationComponent
   }
 
   edit = () => {
-     this.editableForm.show();
+    this.editableForm.show();
   };
 
   formBeforeSave = () => {
@@ -238,7 +238,9 @@ export class ClassificationComponent
       case 1:
         return { index: 1, name: 'classifiedElements' };
       case 2:
-        return { index: 2, name: 'history' };
+        return { index: 2, name: 'annotations' };
+      case 3:
+        return { index: 3, name: 'history' };
       default:
         return { index: 0, name: 'access' };
     }
@@ -250,8 +252,10 @@ export class ClassificationComponent
         return { index: 0, name: 'description' };
       case 'classifiedElements':
         return { index: 1, name: 'classifiedElements' };
+      case 'annotations':
+        return { index: 2, name: 'annotations' };
       case 'history':
-        return { index: 2, name: 'history' };
+        return { index: 3, name: 'history' };
       default:
         return { index: 0, name: 'description' };
     }

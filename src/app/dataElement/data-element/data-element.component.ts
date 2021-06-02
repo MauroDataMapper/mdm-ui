@@ -480,13 +480,13 @@ export class DataElementComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'annotations' };
+        return { index: 1, name: 'links' };
       case 2:
-        return { index: 2, name: 'links' };
+        return { index: 2, name: 'summaryMetadata' };
       case 3:
-        return { index: 3, name: 'summaryMetadata' };
+        return { index: 3, name: 'rules' };
       case 4:
-        return { index: 4, name: 'rules' };
+          return { index: 4, name: 'annotations' };
       default:
         return { index: 0, name: 'description' };
     }

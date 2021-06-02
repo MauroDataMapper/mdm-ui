@@ -65,7 +65,7 @@ export class DataTypeComponent
   elementType: any;
   showEdit: boolean;
   showEditDescription = false;
-  access:any;
+  access: any;
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -235,18 +235,18 @@ export class DataTypeComponent
 
   getTabDetail = (tabName) => {
     switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'dataElements':
         return { index: 1, name: 'dataElements' };
+      case 'rules':
+        return { index: 2, name: 'rules' };
       case 'comments':
-        return { index: 2, name: 'comments' };
+        return { index: 3, name: 'comments' };
       case 'links':
-        return { index: 3, name: 'links' };
+        return { index: 4, name: 'links' };
       case 'attachments':
-        return { index: 4, name: 'attachments' };
-      case 'history':
-        return { index: 5, name: 'history', fetchUrl: null };
+        return { index: 5, name: 'attachments' };
       default:
         return { index: 0, name: 'properties' };
     }

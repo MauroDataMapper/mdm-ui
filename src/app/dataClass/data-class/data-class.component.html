@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
               <i class="fas fa-times"></i>
             </button>
           </div>
-        </div>        
+        </div>
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
@@ -194,7 +194,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                   <td class="detailsRowHeader">Aliases</td>
                   <td>
-                    <mdm-element-alias                     
+                    <mdm-element-alias
                       [inEditMode]="editableForm?.visible"
                       [aliases]="aliases"
                       [element]="dataClass"
@@ -323,6 +323,63 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
+    <mat-tab label="Elements">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-data-classes-list
+            *ngIf="dataClass"
+            [parentDataModel]="parentDataModel"
+            [parentDataClass]="dataClass"
+            [grandParentDataClass]="parentDataClass"
+            [isEditable]="isEditable"
+            class="mb-3 block"
+          >
+          </mdm-data-classes-list>
+
+          <mdm-data-elements-list
+            *ngIf="dataClass"
+            [parentDataModel]="parentDataModel"
+            [parentDataClass]="dataClass"
+            [grandParentDataClass]="parentDataClass"
+            [isEditable]="isEditable"
+          >
+          </mdm-data-elements-list>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Context">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-element-link-list
+            *ngIf="dataClass"
+            [parent]="dataClass"
+            [domainType]="'dataClasses'"
+          ></mdm-element-link-list>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Data" *ngIf="showExtraTabs">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-summary-metadata-table
+            *ngIf="dataClass"
+            [parent]="dataClass"
+            [domainType]="'dataClasses'"
+          ></mdm-summary-metadata-table>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Rules">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-constraints-rules
+            *ngIf="dataClass"
+            [parent]="dataClass"
+            [domainType]="'dataClasses'"
+          ></mdm-constraints-rules>
+        </div>
+      </ng-template>
+    </mat-tab>
     <mat-tab label="Annotations">
       <ng-template matTabContent>
         <div class="full-width">
@@ -371,7 +428,7 @@ SPDX-License-Identifier: Apache-2.0
               ></div>
             </div>
           </div>
-  
+
           <div *ngIf="annotationsView === 'default'">
             <mdm-annotation-list
               *ngIf="dataClass"
@@ -379,7 +436,7 @@ SPDX-License-Identifier: Apache-2.0
               [domainType]="'dataClasses'"
             ></mdm-annotation-list>
           </div>
-  
+
           <div
             class="mdm--shadow-block bordered"
             *ngIf="annotationsView === 'attachments'"
@@ -395,41 +452,6 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Elements">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-data-classes-list
-            *ngIf="dataClass"
-            [parentDataModel]="parentDataModel"
-            [parentDataClass]="dataClass"
-            [grandParentDataClass]="parentDataClass"
-            [isEditable]="isEditable"
-            class="mb-3 block"
-          >
-          </mdm-data-classes-list>
-
-          <mdm-data-elements-list
-            *ngIf="dataClass"
-            [parentDataModel]="parentDataModel"
-            [parentDataClass]="dataClass"
-            [grandParentDataClass]="parentDataClass"
-            [isEditable]="isEditable"
-          >
-          </mdm-data-elements-list>
-        </div>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Context">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-element-link-list
-            *ngIf="dataClass"
-            [parent]="dataClass"
-            [domainType]="'dataClasses'"
-          ></mdm-element-link-list>
-        </div>
-      </ng-template>
-    </mat-tab>
     <mat-tab label="History">
       <ng-template matTabContent>
         <div class="full-width">
@@ -440,28 +462,6 @@ SPDX-License-Identifier: Apache-2.0
             [parentId]="dataClass.id"
             [domainType]="'dataClasses'"
           ></mdm-history>
-        </div>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Data" *ngIf="showExtraTabs">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-summary-metadata-table
-            *ngIf="dataClass"
-            [parent]="dataClass"
-            [domainType]="'dataClasses'"
-          ></mdm-summary-metadata-table>
-        </div>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Rules">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-constraints-rules
-            *ngIf="dataClass"
-            [parent]="dataClass"
-            [domainType]="'dataClasses'"
-          ></mdm-constraints-rules>
         </div>
       </ng-template>
     </mat-tab>

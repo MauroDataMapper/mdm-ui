@@ -201,78 +201,6 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Annotations">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <div class="heading-container">
-          <div
-            fxFlex
-            fxLayout="row"
-            fxLayout.md="row"
-            fxLayout.sm="row"
-            fxLayout.xs="column"
-            fxLayoutAlign="space-around"
-          >
-            <div
-              fxFlex
-              fxLayout="row"
-              fxFlex="50"
-              fxFlex.md="50"
-              fxFlex.sm="100"
-              fxFlex.xs="100"
-              fxLayoutAlign="flex-start center"
-              fxLayoutAlign.xs="flex-start center"
-            >
-              <mat-form-field
-                appearance="outline"
-                class="paddingless"
-                style="max-width: 230px; width: 100%"
-              >
-                <mat-select
-                  [(ngModel)]="annotationsView"
-                  name="annotationsView"
-                >
-                  <mat-option value="default">Comments</mat-option>
-                  <mat-option value="attachments">Attachments</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div
-              fxFlex
-              fxLayout="row"
-              fxFlex="50"
-              fxFlex.md="50"
-              fxFlex.sm="100"
-              fxFlex.xs="100"
-              fxLayoutAlign="flex-end center"
-              fxLayoutAlign.xs="flex-start center"
-            ></div>
-          </div>
-        </div>
-
-        <div *ngIf="annotationsView === 'default'">
-          <mdm-annotation-list
-            *ngIf="catalogueItem"
-            [parent]="catalogueItem"
-            [domainType]="'dataModels'"
-          ></mdm-annotation-list>
-        </div>
-
-        <div
-          class="mdm--shadow-block bordered"
-          *ngIf="annotationsView === 'attachments'"
-        >
-          <div class="pxy-2">
-            <mdm-attachment-list
-              *ngIf="catalogueItem"
-              [parent]="catalogueItem"
-              [domainType]="'dataModels'"
-            ></mdm-attachment-list>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-  </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       Schema
@@ -499,14 +427,12 @@ SPDX-License-Identifier: Apache-2.0
       ({{ rulesItemCount }})
     </ng-template>
     <div class="full-width">
-      <mdm-history
-        (totalCount)="historyCountEmitter($event)"
-        *ngIf="catalogueItem"
-        [parent]="'catalogueItem'"
-        [parentType]="'DataModel'"
-        [parentId]="parentId"
+      <mdm-constraints-rules
+        *ngIf="dataModel"
+        [parent]="dataModel"
         [domainType]="'dataModels'"
-      ></mdm-history>
+        (totalCount)="rulesCountEmitter($event)"
+      ></mdm-constraints-rules>
     </div>
   </mat-tab>
   <mat-tab label="Annotations">
@@ -600,12 +526,14 @@ SPDX-License-Identifier: Apache-2.0
     </ng-template>
 
     <div class="full-width">
-      <mdm-constraints-rules
-        *ngIf="catalogueItem"
-        [parent]="catalogueItem"
+      <mdm-history
+        (totalCount)="historyCountEmitter($event)"
+        *ngIf="dataModel"
+        [parent]="'dataModel'"
+        [parentType]="'DataModel'"
+        [parentId]="parentId"
         [domainType]="'dataModels'"
-        (totalCount)="rulesCountEmitter($event)"
-      ></mdm-constraints-rules>
+      ></mdm-history>
     </div>
   </mat-tab>
 </mat-tab-group>

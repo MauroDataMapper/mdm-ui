@@ -20,7 +20,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import {
   EditableDataElement
@@ -39,6 +39,7 @@ import {
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-element',
@@ -80,6 +81,7 @@ export class DataElementComponent
   rulesItemCount = 0;
   isLoadingRules = true;
   access:any;
+  tabs = new TabCollection(['description', 'links', 'summaryMetadata', 'rules', 'annotations']);
   newlyAddedDataType = {
     label: '',
     description: '',
@@ -95,6 +97,7 @@ export class DataElementComponent
   constructor(
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
+    private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
@@ -107,53 +110,46 @@ export class DataElementComponent
     editingService: EditingService
   ) {
     super(resourcesService, dialog, editingService, messageHandler);
-    // tslint:disable-next-line: deprecation
     if (
-      this.isGuid(this.stateService.params.id) &&
-      (!this.stateService.params.id ||
-        !this.stateService.params.dataModelId ||
-        !this.stateService.params.dataClassId)
+      this.isGuid(this.uiRouterGlobals.params.id) &&
+      (!this.uiRouterGlobals.params.id ||
+        !this.uiRouterGlobals.params.dataModelId ||
+        !this.uiRouterGlobals.params.dataClassId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
     if (
-      this.stateService.params.id &&
-      this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() !== ''
+      this.uiRouterGlobals.params.id &&
+      this.uiRouterGlobals.params.dataModelId &&
+      this.uiRouterGlobals.params.dataModelId.trim() !== ''
     ) {
-      // tslint:disable-next-line: deprecation
-      this.dataModel = { id: this.stateService.params.dataModelId };
+      this.dataModel = { id: this.uiRouterGlobals.params.dataModelId };
     }
 
-    // tslint:disable-next-line: deprecation
     if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id &&
+      this.uiRouterGlobals.params.dataClassId &&
+      this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
-      // tslint:disable-next-line: deprecation
-      this.dataClass = { id: this.stateService.params.dataClassId };
+      this.dataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Data Element');
-    // tslint:disable-next-line: deprecation
+
     this.dataElementDetails(
-      this.stateService.params.dataModelId,
+      this.uiRouterGlobals.params.dataModelId,
       this.dataClass.id,
       this.stateService.params.id
     );
@@ -475,31 +471,13 @@ export class DataElementComponent
     this.messageService.toggleSearch();
   }
 
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'links' };
-      case 2:
-        return { index: 2, name: 'summaryMetadata' };
-      case 3:
-        return { index: 3, name: 'rules' };
-      case 4:
-          return { index: 4, name: 'annotations' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'dataElement',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-    this.activeTab = tab.index;
   }
 
   onCancelEdit() {

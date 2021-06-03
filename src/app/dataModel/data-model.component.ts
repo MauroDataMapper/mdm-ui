@@ -45,6 +45,7 @@ import {
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-model',
@@ -74,6 +75,7 @@ export class DataModelComponent
   rootCell: any;
   semanticLinks: any[] = [];
   access: Access;
+  tabs = new TabCollection(['description', 'schema', 'types', 'context', 'rules', 'annotations', 'history']);
 
   editableForm: EditableDataModel;
   errorMessage = '';
@@ -119,9 +121,7 @@ export class DataModelComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.getTabDetailByName(
-      this.uiRouterGlobals.params.tabView
-    ).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
@@ -343,50 +343,8 @@ export class DataModelComponent
     this.editableForm.show();
   };
 
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'schema':
-        return { index: 1, name: 'schema' };
-      case 'types':
-        return { index: 2, name: 'types' };
-      case 'context':
-        return { index: 3, name: 'context' };
-      case 'rules':
-        return { index: 4, name: 'rules' };
-      case 'annotations':
-        return { index: 5, name: 'annotations' };
-      case 'history':
-        return { index: 6, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'schema' };
-      case 2:
-        return { index: 2, name: 'types' };
-      case 3:
-        return { index: 3, name: 'context' };
-      case 4:
-        return { index: 4, name: 'rules' };
-      case 5:
-        return { index: 5, name: 'annotations' };
-      case 6:
-        return { index: 6, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
   }
 

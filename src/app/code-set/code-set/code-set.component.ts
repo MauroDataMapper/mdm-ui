@@ -44,6 +44,7 @@ import {
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-code-set',
@@ -79,6 +80,7 @@ export class CodeSetComponent
   canEditDescription: boolean;
   showEditDescription = false;
   access: Access;
+  tabs = new TabCollection(['description', 'terms', 'links', 'rules', 'annotations', 'history']);
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -263,9 +265,7 @@ export class CodeSetComponent
         }
 
         this.tabGroup?.realignInkBar();
-        this.activeTab = this.getTabDetailByName(
-          this.uiRouterGlobals.params.tabView
-        ).index;
+        this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
         this.tabSelected(this.activeTab);
       });
   }
@@ -295,52 +295,13 @@ export class CodeSetComponent
     }
   }
 
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'terms':
-        return { index: 1, name: 'terms' };
-      case 'links':
-        return { index: 2, name: 'links' };
-      case 'rules':
-        return { index: 3, name: 'rules' };
-      case 'annotations':
-        return { index: 4, name: 'annotations' };
-      case 'history':
-        return { index: 5, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'terms' };
-      case 2:
-        return { index: 2, name: 'links' };
-      case 3:
-        return { index: 3, name: 'rules' };
-      case 4:
-        return { index: 4, name: 'annotations' };
-      case 5:
-        return { index: 5, name: 'history' };
-      default:
-        return { index: 0, name: 'terminology' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'codeSet',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-    this.activeTab = tab.index;
   }
 
   rulesCountEmitter($event) {

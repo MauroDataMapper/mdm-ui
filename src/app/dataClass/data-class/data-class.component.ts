@@ -20,7 +20,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
@@ -40,6 +40,7 @@ import {
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-class',
@@ -65,6 +66,7 @@ export class DataClassComponent
   editableForm: EditableDataClass;
   aliases: any[] = [];
   access: Access;
+  tabs = new TabCollection(['description', 'elements', 'context', 'data', 'rules', 'annotations', 'history']);
 
   newMinText: any;
   newMaxText: any;
@@ -77,6 +79,7 @@ export class DataClassComponent
   constructor(
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
+    private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
@@ -91,29 +94,24 @@ export class DataClassComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
     if (
-      this.isGuid(this.stateService.params.id) &&
-      (!this.stateService.params.id || !this.stateService.params.dataModelId)
+      this.isGuid(this.uiRouterGlobals.params.id) &&
+      (!this.uiRouterGlobals.params.id || !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
     if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id &&
+      this.uiRouterGlobals.params.dataClassId &&
+      this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
-      // tslint:disable-next-line: deprecation
-      this.parentDataClass = { id: this.stateService.params.dataClassId };
+      this.parentDataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
 
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
@@ -127,35 +125,14 @@ export class DataClassComponent
 
     // tslint:disable-next-line: deprecation
     this.dataClassDetails(
-      this.stateService.params.dataModelId,
-      this.stateService.params.id,
+      this.uiRouterGlobals.params.dataModelId,
+      this.uiRouterGlobals.params.id,
       this.parentDataClass.id
     );
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
-  }
-
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
-      case 'elements':
-        return { index: 2, name: 'elements' };
-      case 'context':
-        return { index: 3, name: 'context' };
-      case 'history':
-        return { index: 4, name: 'history' };
-      case 'data':
-        return { index: 5, name: 'data' };
-      case 'rules':
-        return { index: 6, name: 'rules' };
-      default:
-        return { index: 0, name: 'description' };
-    }
   }
 
   dataClassDetails(model, id, parentDataClass?) {
@@ -181,13 +158,6 @@ export class DataClassComponent
           this.UnUsedProfiles('dataClass', id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
-
-          this.tabGroup.realignInkBar();
-          // tslint:disable-next-line: deprecation
-          this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
-          ).index;
-          this.tabSelected(this.activeTab);
 
           if (this.dataClass.classifiers) {
             this.dataClass.classifiers.forEach((item) => {
@@ -239,15 +209,6 @@ export class DataClassComponent
           this.UnUsedProfiles('dataClass', id);
           this.catalogueItem = this.dataClass;
           this.access = this.securityHandler.elementAccess(this.dataClass);
-
-          if (this.dataClass) {
-            this.tabGroup.realignInkBar();
-            // tslint:disable-next-line: deprecation
-            this.activeTab = this.getTabDetailByName(
-              this.stateService.params.tabView
-            ).index;
-            this.tabSelected(this.activeTab);
-          }
         });
     }
   }
@@ -306,30 +267,9 @@ export class DataClassComponent
     this.messageService.toggleSearch();
   }
 
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'elements' };
-      case 2:
-        return { index: 2, name: 'context' };
-      case 3:
-        return { index: 3, name: 'data' };
-      case 4:
-        return { index: 4, name: 'rules' };
-      case 5:
-        return { index: 5, name: 'annotations' };
-      case 6:
-        return { index: 6, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false });
-    this.activeTab = tab.index;
   }
 
   setEditableForm() {

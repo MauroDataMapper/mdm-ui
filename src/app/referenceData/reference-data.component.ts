@@ -46,6 +46,7 @@ import {
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -73,6 +74,7 @@ export class ReferenceDataComponent
   showEdit = false;
   showDelete = false;
   access: Access;
+  tabs = new TabCollection(['description', 'elements', 'types', 'data', 'rules', 'annotations', 'history']);
 
   typesItemCount = 0;
   isLoadingTypes = true;
@@ -108,6 +110,9 @@ export class ReferenceDataComponent
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Reference Data Model');
+
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
 
     this.referenceModelDetails(this.parentId);
   }
@@ -183,14 +188,6 @@ export class ReferenceDataComponent
         if (this.sharedService.isLoggedIn(true)) {
           this.ReferenceModelPermissions(id);
         }
-
-        if (this.tabGroup) {
-          this.tabGroup.realignInkBar();
-        }
-        this.activeTab = this.getTabDetailByName(
-          this.uiRouterGlobals.params.tabView
-        ).index;
-        this.tabSelected(this.activeTab);
       });
   }
 
@@ -281,56 +278,13 @@ export class ReferenceDataComponent
     }
   }
 
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'elements':
-        return { index: 1, name: 'elements' };
-      case 'types':
-        return { index: 2, name: 'types' };
-      case 'data':
-        return { index: 3, name: 'data' };
-      case 'rules':
-        return { index: 4, name: 'rules' };
-      case 'annotations':
-        return { index: 5, name: 'annotations' };
-      case 'history':
-        return { index: 6, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'elements' };
-      case 2:
-        return { index: 2, name: 'types' };
-      case 3:
-        return { index: 3, name: 'data' };
-      case 4:
-        return { index: 4, name: 'rules' };
-      case 5:
-        return { index: 5, name: 'annotations' };
-      case 6:
-        return { index: 6, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'referencedatamodel',
       { tabView: tab.name },
       { notify: false }
     );
-    this.activeTab = tab.index;
   }
 
   watchRefDataModelObject() {

@@ -38,6 +38,7 @@ import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-classification',
@@ -60,13 +61,14 @@ export class ClassificationComponent
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  activeTab: any;
+  activeTab: number;
   catalogueItemsCount: any;
   terminologiesCount: any;
   termsCount: any;
   codeSetsCount: any;
   loading = false;
   catalogueItems: any;
+  tabs = new TabCollection(['description', 'classifiedElements', 'annotations', 'history']);
 
   annotationsView = 'default';
   descriptionView = 'default';
@@ -135,7 +137,8 @@ export class ClassificationComponent
     this.afterSave = (result: { body: { id: any } }) =>
       this.classifierDetails(result.body.id);
 
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
   }
 
   ngAfterViewInit(): void {
@@ -197,9 +200,9 @@ export class ClassificationComponent
     }
   }
 
-  tabSelected(itemsName) {
-    this.getTabDetail(itemsName);
-    // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
+    this.stateHandler.Go('classification', { tabView: tab.name }, { notify: false });
   }
 
   edit = () => {
@@ -230,47 +233,4 @@ export class ClassificationComponent
       }
     );
   };
-
-  getTabDetail(tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'classifiedElements' };
-      case 2:
-        return { index: 2, name: 'annotations' };
-      case 3:
-        return { index: 3, name: 'history' };
-      default:
-        return { index: 0, name: 'access' };
-    }
-  }
-
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'classifiedElements':
-        return { index: 1, name: 'classifiedElements' };
-      case 'annotations':
-        return { index: 2, name: 'annotations' };
-      case 'history':
-        return { index: 3, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'classifiedElements' };
-      case 2:
-        return { index: 2, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
 }

@@ -44,6 +44,7 @@ import {
   TerminologyDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-term',
@@ -63,7 +64,7 @@ export class TermComponent
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   showExtraTabs = false;
-  activeTab: any;
+  activeTab: number;
   result: TermDetail;
   hasResult = false;
   showEditForm = false;
@@ -76,6 +77,7 @@ export class TermComponent
   showEdit = false;
   showDelete = false;
   access: Access;
+  tabs = new TabCollection(['description', 'links', 'rules', 'annotations']);
 
   constructor(
     resources: MdmResourcesService,
@@ -104,6 +106,10 @@ export class TermComponent
 
     this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
+
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
     this.termDetails(this.parentId);
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -152,9 +158,6 @@ export class TermComponent
 
       this.term.classifiers = this.term.classifiers || [];
       this.term.terminology = this.terminology;
-      this.activeTab = this.getTabDetailByName(
-        this.uiRouterGlobals.params.tabView
-      );
 
       this.editableForm = new EditableTerm();
       this.editableForm.visible = false;
@@ -178,11 +181,6 @@ export class TermComponent
       this.messageService.dataChanged(this.result);
       this.changeRef.detectChanges();
     });
-
-    this.activeTab = this.getTabDetailByName(
-      this.uiRouterGlobals.params.tabView
-    ).index;
-    this.tabSelected(this.activeTab);
   }
 
   setEditableForm() {
@@ -211,42 +209,12 @@ export class TermComponent
     }
   }
 
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'links':
-        return { index: 1, name: 'links' };
-      case 'rules':
-        return { index: 2, name: 'rules' };
-      case 'annotations':
-        return { index: 3, name: 'annotations' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
   Save(updatedResource) {
     this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
   }
 
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'links' };
-      case 2:
-        return { index: 2, name: 'rules' };
-      case 3:
-        return { index: 3, name: 'annotations' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('term', { tabView: tab.name }, { notify: false });
   }
 

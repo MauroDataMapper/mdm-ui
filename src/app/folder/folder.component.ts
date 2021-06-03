@@ -40,6 +40,7 @@ import {
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabDescriptor, TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-folder',
@@ -59,7 +60,7 @@ export class FolderComponent
   editableForm: Editable;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
-  activeTab: any;
+  activeTab: number;
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
@@ -70,6 +71,7 @@ export class FolderComponent
   isLoadingRules = true;
   access: Access;
   annotationsView = 'default';
+  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
 
   constructor(
     private resources: MdmResourcesService,
@@ -133,9 +135,11 @@ export class FolderComponent
     this.afterSave = (result: { body: { id: any } }) =>
       this.folderDetails(result.body.id);
 
-    this.activeTab = this.getTabDetailByName(
-      this.uiRouterGlobals.params.tabView
-    );
+    this.activeTab = this.tabs
+      .getByName(this.uiRouterGlobals.params.tabView)
+      .index;
+
+    this.tabSelected(this.activeTab);
   }
 
   folderDetails(id: string) {
@@ -177,43 +181,13 @@ export class FolderComponent
     }
   }
 
-  tabSelected(itemsName) {
-    const tab = this.getTabDetail(itemsName);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'folder',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-  }
-
-  getTabDetail(tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'rules' };
-      case 2:
-        return { index: 2, name: 'annotations' };
-      case 3:
-        return { index: 3, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'rules':
-        return { index: 1, name: 'rules' };
-      case 'annotations':
-        return { index: 2, name: 'annotations' };
-      case 'history':
-        return { index: 3, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
   }
 
   setEditableForm() {

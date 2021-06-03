@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -33,6 +33,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-type',
@@ -48,8 +49,8 @@ export class DataTypeComponent
   dataModelId: any;
   dataModel: any;
   id: any;
-  tabView: any;
-  activeTab: any;
+  //tabView: string;
+  activeTab: number;
   showExtraTabs: boolean;
   showEditForm = false;
 
@@ -67,12 +68,15 @@ export class DataTypeComponent
   showEditDescription = false;
   access: any;
 
+  tabs = new TabCollection(['description', 'dataElements', 'rules', 'comments', 'links', 'attachments']);
+
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
 
   constructor(
     private title: Title,
     private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     resource: MdmResourcesService,
     private sharedService: SharedService,
@@ -86,12 +90,8 @@ export class DataTypeComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.id = this.stateService.params.id;
-    // tslint:disable-next-line: deprecation
-    this.dataModelId = this.stateService.params.dataModelId;
-    // tslint:disable-next-line: deprecation
-    this.tabView = this.stateService.params.tabView;
+    this.id = this.uiRouterGlobals.params.id;
+    this.dataModelId = this.uiRouterGlobals.params.dataModelId;
 
     if (this.isGuid(this.id) && (!this.id || !this.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
@@ -99,6 +99,10 @@ export class DataTypeComponent
     }
 
     this.title.setTitle('Data Type');
+
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
@@ -179,7 +183,6 @@ export class DataTypeComponent
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
-        this.activeTab = this.getTabDetail(this.tabView);
         this.showExtraTabs =
           !this.sharedService.isLoggedIn() || !this.dataType.editable;
       },
@@ -200,26 +203,13 @@ export class DataTypeComponent
     }
   }
 
-  tabSelected = (itemsName) => {
-    const tab = this.getTabDetail(itemsName);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'dataType',
-      { tabView: itemsName },
-      { notify: false, location: tab.index !== 0 }
+      { tabView: tab.name },
+      { notify: false }
     );
-    this[itemsName] = [];
-
-    this.activeTab = this.getTabDetail(itemsName);
-    if (this.activeTab && this.activeTab.fetchUrl) {
-      this[this.activeTab.name] = [];
-      this.loadingData = true;
-      this.resourcesService.dataType
-        .get(this.dataModelId, this.id)
-        .subscribe((data) => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
-    }
   };
 
   edit = () => {
@@ -231,25 +221,6 @@ export class DataTypeComponent
     this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
-  };
-
-  getTabDetail = (tabName) => {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'dataElements':
-        return { index: 1, name: 'dataElements' };
-      case 'rules':
-        return { index: 2, name: 'rules' };
-      case 'comments':
-        return { index: 3, name: 'comments' };
-      case 'links':
-        return { index: 4, name: 'links' };
-      case 'attachments':
-        return { index: 5, name: 'attachments' };
-      default:
-        return { index: 0, name: 'properties' };
-    }
   };
 
   rulesCountEmitter($event) {

@@ -38,11 +38,11 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
+import { TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-terminology',
@@ -64,7 +64,6 @@ export class TerminologyComponent
   editForm = null;
   descriptionView = 'default';
   annotationsView = 'default';
-  editableForm: EditableDataModel;
   showSearch = false;
   subscription: Subscription;
   rulesItemCount = 0;
@@ -103,23 +102,6 @@ export class TerminologyComponent
     this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);
 
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.setEditableForm();
-      this.editingService.start();
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.setEditableForm();
-    };
-
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
@@ -137,13 +119,6 @@ export class TerminologyComponent
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
 
-      this.editableForm.description = this.terminology.description;
-
-      if (this.terminology.aliases) {
-        this.terminology.aliases.forEach((item) => {
-          this.editableForm.aliases.push(item);
-        });
-      }
     });
 
     this.subscription = this.messageService.changeSearch.subscribe(
@@ -152,74 +127,6 @@ export class TerminologyComponent
       }
     );
   }
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
-  setEditableForm() {
-    this.editableForm.description = this.terminology.description;
-    if (this.terminology.classifiers) {
-      this.terminology.classifiers.forEach((item) => {
-        this.editableForm.classifiers.push(item);
-      });
-    }
-  }
-
-  formBeforeSave = () => {
-    const resource: ModelUpdatePayload = {
-      id: this.terminology.id,
-      domainType: CatalogueItemDomainType.Terminology,
-      description: this.editableForm.description || ''
-    };
-
-    this.editingService.stop();
-
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.terminology.type;
-      resource.classifiers = this.terminology.classifiers;
-      resource.aliases = this.editableForm.aliases;
-    }
-
-    this.resourcesService.terminology.update(resource.id, resource).subscribe(
-      (res: TerminologyDetailResponse) => {
-        const result = res.body;
-
-        this.terminology = result;
-        this.terminology.aliases = Object.assign({}, result.aliases || []);
-        this.terminology.editAliases = Object.assign(
-          {},
-          this.terminology.aliases
-        );
-
-        this.editableForm.visible = false;
-        this.editingService.stop();
-
-        this.messageHandler.showSuccess('Terminology updated successfully.');
-        this.broadcast.reloadCatalogueTree();
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Terminology.',
-          error
-        );
-      }
-    );
-  };
-
-  onCancelEdit = () => {
-    if (this.terminology) {
-      this.terminology.editAliases = Object.assign(
-        {},
-        this.terminology.aliases
-      );
-      this.showEditDescription = false;
-    }
-  };
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
@@ -238,21 +145,13 @@ export class TerminologyComponent
     );
   };
 
-  openEditForm = (formName) => {
-    this.showEditForm = true;
-    this.editForm = formName;
-  };
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
 
-  closeEditForm = () => {
-    this.showEditForm = false;
-    this.editForm = null;
-  };
 
-  fetch = (text, loadAll, offset, limit) => {
+  fetch(text, loadAll, offset, limit) {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {
@@ -268,7 +167,7 @@ export class TerminologyComponent
     });
   };
 
-  onTermSelect = (term) => {
+  onTermSelect(term) {
     this.stateHandler.Go(
       'term',
       { terminologyId: term.model, id: term.id },
@@ -292,10 +191,4 @@ export class TerminologyComponent
     this.isLoadingHistory = false;
     this.historyItemCount = $event;
   }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
 }

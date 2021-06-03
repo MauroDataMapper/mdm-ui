@@ -161,10 +161,10 @@ SPDX-License-Identifier: Apache-2.0
               </button>
 
               <mat-menu #editMenu="matMenu">
-                <button mat-menu-item (click)="showDescription()">
+                <button mat-menu-item (click)="edit(true)">
                   <i class="fas fa-pencil-alt"></i> Edit Description
                 </button>
-                <button mat-menu-item (click)="edit()">
+                <button mat-menu-item (click)="edit(false)">
                   <i class="fas fa-pencil-alt"></i>Edit
                 </button>
               </mat-menu>
@@ -186,71 +186,7 @@ SPDX-License-Identifier: Apache-2.0
               [isProfileView]="true"
             ></mdm-data-set-metadata>
           </div>
-          <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-        >
-          <table
-            *ngIf="this.descriptionView === 'default' && terminology"
-            class="mdm--mat-table table-striped mdm--table-fixed"
-          >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Aliases</td>
-                <td>
-                  <mdm-element-alias
-                    [readOnly]="showEditDescription"
-                    [inEditMode]="editableForm.visible"
-                    [aliases]="editableForm?.aliases"
-                    [editableForm]="editableForm"
-                    [property]="'aliases'"
-                  ></mdm-element-alias>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Author</td>
-                <td>{{ terminology.author }}</td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Organisation</td>
-                <td>{{ terminology.organisation }}</td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <mdm-markdown-text-area
-                    [editableForm]="editableForm"
-                    [element]="terminology"
-                    [property]="'description'"
-                  >
-                  </mdm-markdown-text-area>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Classifications</td>
-                <td>
-                  <mdm-element-classifications
-                    [readOnly]="showEditDescription"
-                    [classifications]="terminology.classifiers"
-                    [editableForm]="editableForm"
-                  >
-                  </mdm-element-classifications>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-          *ngIf="editableForm"
-          [hidden]="!editableForm.visible"
-          [onCancelEdit]="onCancelEdit"
-          [editable]="editableForm"
-          [textLocation]="'left'"
-          [hideDelete]="true"
-          [hideCancel]="false"
-        ></mdm-editable-form-buttons>
-      </form>
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default'" [catalogueItem]="catalogueItem"></mdm-default-profile>
         </div>
       </ng-template>
     </mat-tab>

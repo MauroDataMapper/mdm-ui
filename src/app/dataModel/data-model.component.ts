@@ -21,17 +21,13 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ViewChildren,
-  QueryList
-} from '@angular/core';
+  ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -39,9 +35,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  DataModelDetail,
   DataModelDetailResponse,
-  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -56,28 +50,20 @@ export class DataModelComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  dataModel: DataModelDetail;
-  showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
   parentId: string;
 
-  afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
   activeTab: any;
-  dataModel4Diagram: any;
-  cells: any;
-  rootCell: any;
   semanticLinks: any[] = [];
   access: Access;
   tabs = new TabCollection(['description', 'schema', 'types', 'context', 'rules', 'annotations', 'history']);
 
-  editableForm: EditableDataModel;
   errorMessage = '';
 
   schemaView = 'list';
@@ -133,7 +119,6 @@ export class DataModelComponent
         this.showSearch = message;
       }
     );
-    // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
 
   ngAfterViewInit(): void {
@@ -141,7 +126,7 @@ export class DataModelComponent
   }
 
   watchDataModelObject() {
-    this.access = this.securityHandler.elementAccess(this.dataModel);
+    this.access = this.securityHandler.elementAccess(this.catalogueItem);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
       this.showDelete =
@@ -149,27 +134,26 @@ export class DataModelComponent
     }
   }
 
-  dataModelDetails(id: any) {
+  dataModelDetails(id: string) {
     let arr = [];
 
     this.resourcesService.dataModel
       .get(id)
       .subscribe(async (result: DataModelDetailResponse) => {
-        this.dataModel = result.body;
-        this.catalogueItem = this.dataModel;
-        this.watchDataModelObject();
-        id = result.body.id;
+        this.catalogueItem = result.body;
 
-        this.isEditable = this.dataModel.availableActions?.includes('update');
-        this.parentId = this.dataModel.id;
+        this.watchDataModelObject();
+
+        this.isEditable = this.catalogueItem.availableActions?.includes('update');
+        this.parentId = this.catalogueItem.id;
 
         await this.resourcesService.versionLink
-          .list('dataModels', this.dataModel.id)
+          .list('dataModels', this.catalogueItem.id)
           .subscribe((response) => {
             if (response.body.count > 0) {
               arr = response.body.items;
               for (const val in arr) {
-                if (this.dataModel.id !== arr[val].targetModel.id) {
+                if (this.catalogueItem.id !== arr[val].targetModel.id) {
                   this.semanticLinks.push(arr[val]);
                 }
               }
@@ -181,52 +165,6 @@ export class DataModelComponent
           this.UsedProfiles('dataModels', id);
           this.UnUsedProfiles('dataModels', id);
         }
-
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-        this.setEditableFormData();
-
-        this.editableForm.show = () => {
-          this.editingService.start();
-          this.editForm.forEach((x) =>
-            x.edit({
-              editing: true,
-              focus: x.name === 'moduleName' ? true : false
-            })
-          );
-          this.editableForm.visible = true;
-        };
-
-        this.editableForm.cancel = () => {
-          this.editForm.forEach((x) => x.edit({ editing: false }));
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.editingService.stop();
-          this.errorMessage = '';
-          this.setEditableFormData();
-          if (this.dataModel.classifiers) {
-            this.dataModel.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.dataModel.aliases) {
-            this.dataModel.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
-
-        if (this.dataModel.classifiers) {
-          this.dataModel.classifiers.forEach((item) => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.dataModel.aliases) {
-          this.dataModel.aliases.forEach((item) => {
-            this.editableForm.aliases.push(item);
-          });
-        }
       });
   }
 
@@ -235,63 +173,11 @@ export class DataModelComponent
       .permissions(SecurableDomainType.DataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
-          this.dataModel[attrname] = permissions.body[attrname];
+          this.catalogueItem[attrname] = permissions.body[attrname];
         });
       });
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.errorMessage = '';
-    this.editingService.stop();
-
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
-    const resource: ModelUpdatePayload = {
-      id: this.dataModel.id,
-      domainType: this.dataModel.domainType,
-      description: this.editableForm.description || ''
-    };
-
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.dataModel.type;
-      resource.aliases = aliases;
-      resource.classifiers = classifiers;
-    }
-
-    this.resourcesService.dataModel
-      .update(this.dataModel.id, resource)
-      .subscribe(
-        (res: DataModelDetailResponse) => {
-          this.messageHandler.showSuccess('Data Model updated successfully.');
-          this.editableForm.visible = false;
-          this.dataModel.description = res.body.description;
-          this.editForm.forEach((x) => x.edit({ editing: false }));
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Data Model.',
-            error
-          );
-        }
-      );
-  };
-
-  onCancelEdit() {
-    this.errorMessage = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
-  }
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
@@ -324,34 +210,19 @@ export class DataModelComponent
     this.historyItemCount = $event;
   }
 
-  addDataClass = () => {
+  addDataClass() {
     this.stateHandler.Go(
       'newDataClass',
-      { parentDataModelId: this.dataModel.id, parentDataClassId: null },
+      { parentDataModelId: this.catalogueItem.id, parentDataClassId: null },
       null
     );
   };
 
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
   }
 
-  private setEditableFormData() {
-    this.editableForm.description = this.dataModel.description;
-    this.editableForm.label = this.dataModel.label;
-    this.editableForm.organisation = this.dataModel.organisation;
-    this.editableForm.author = this.dataModel.author;
-  }
+
 }

@@ -46,6 +46,7 @@ import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-mod
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
+import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 
 const DefaultAceConfig: AceConfigInterface = {
 };
@@ -85,7 +86,8 @@ const DefaultAceConfig: AceConfigInterface = {
     AddRuleRepresentationModalComponent,
     AddRuleModalComponent,
     ApiKeysModalComponent,
-    MarkupDisplayModalComponent
+    MarkupDisplayModalComponent,
+    DefaultProfileEditorModalComponent
   ],
   providers: [
     ModalService,

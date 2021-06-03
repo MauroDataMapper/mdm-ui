@@ -31,16 +31,13 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  CatalogueItemDomainType,
   CodeSetDetail,
   CodeSetDetailResponse,
-  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -67,7 +64,6 @@ export class CodeSetComponent
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
-  editableForm: EditableDataModel;
   descriptionView = 'default';
   annotationsView = 'default';
   compareToList = [];
@@ -123,53 +119,6 @@ export class CodeSetComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  formBeforeSave = async () => {
-    this.editMode = false;
-    this.editingService.stop();
-
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
-    const resource: ModelUpdatePayload = {
-      id: this.codeSetModel.id,
-      domainType: CatalogueItemDomainType.CodeSet,
-      label: this.codeSetModel.label,
-      description: this.editableForm.description || '',
-      author: this.codeSetModel.author,
-      organisation: this.codeSetModel.organisation,
-      aliases,
-      classifiers
-    };
-
-    await this.resourcesService.codeSet
-      .update(this.codeSetModel.id, resource)
-      .subscribe(
-        (res) => {
-          this.editingService.stop();
-          this.messageHandler.showSuccess('Code Set updated successfully.');
-          this.editableForm.visible = false;
-          this.codeSetModel.description = res.body.description;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Code Set.',
-            error
-          );
-        }
-      );
-  };
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
   codeSetDetails(id: string) {
     let arr = [];
     this.resourcesService.codeSet
@@ -181,63 +130,6 @@ export class CodeSetComponent
         this.catalogueItem = this.codeSetModel;
         this.UnUsedProfiles('codeSets', id);
         this.UsedProfiles('codeSets', id);
-
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-
-        this.editableForm.description = this.codeSetModel.description;
-        if (this.codeSetModel.classifiers) {
-          this.codeSetModel.classifiers.forEach((item) => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.codeSetModel.aliases) {
-          this.codeSetModel.aliases.forEach((item) => {
-            this.editableForm.aliases.push(item);
-          });
-        }
-        if (this.codeSetModel.semanticLinks) {
-          this.codeSetModel.semanticLinks.forEach((link) => {
-            if (link.linkType === 'New Version Of') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.codeSetModel.semanticLinks) {
-          this.codeSetModel.semanticLinks.forEach((link) => {
-            if (link.linkType === 'Superseded By') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.codeSetModel != null) {
-          this.watchDataModelObject();
-        }
-
-        this.editableForm.show = () => {
-          this.editableForm.visible = true;
-          this.editingService.start();
-        };
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.editableForm.description = this.codeSetModel.description;
-          if (this.codeSetModel.classifiers) {
-            this.codeSetModel.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.codeSetModel.aliases) {
-            this.codeSetModel.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
 
         this.access = this.securityHandler.elementAccess(this.codeSetModel);
         this.showEdit = this.access.showEdit;
@@ -270,9 +162,6 @@ export class CodeSetComponent
       });
   }
 
-  onCancelEdit() {
-    this.editMode = false; // Use Input editor whe adding a new folder.
-  }
 
   CodeSetPermissions() {
     this.resourcesService.security
@@ -322,10 +211,4 @@ export class CodeSetComponent
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
     }
   }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
 }

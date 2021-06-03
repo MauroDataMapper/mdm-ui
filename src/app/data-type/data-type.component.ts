@@ -24,7 +24,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import {
   ElementTypesService,
   MessageHandlerService,
@@ -60,7 +59,6 @@ export class DataTypeComponent
   contextView = 'default';
   rulesItemCount = 0;
   isLoadingRules = true;
-  editableForm: EditableDataModel;
   errorMessage: any;
   elementType: any;
   showEdit: boolean;
@@ -121,64 +119,8 @@ export class DataTypeComponent
 
         this.watchDataTypeObject();
 
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-        this.editableForm.description = this.dataType.description;
-        this.editableForm.label = this.dataType.label;
+
         this.title.setTitle(`Data Type - ${this.dataType?.label}`);
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.errorMessage = '';
-          this.editableForm.description = this.dataType.description;
-          this.editableForm.label = this.dataType.label;
-          if (this.dataType.classifiers) {
-            this.dataType.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.dataType.aliases) {
-            this.dataType.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
-
-        this.editableForm.show = () => {
-          this.editableForm.visible = true;
-        };
-
-        if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'Terminology'
-        ) {
-          this.resourcesService.terminology
-            .get(this.dataModelId.modelResourceId)
-            .subscribe((termResult: TerminologyDetailResponse) => {
-              this.elementType = termResult.body;
-            });
-        } else if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'CodeSet'
-        ) {
-          this.resourcesService.codeSet
-            .get(this.dataType.modelResourceId)
-            .subscribe((elmResult: CodeSetDetailResponse) => {
-              this.elementType = elmResult.body;
-            });
-        } else if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'ReferenceDataModel'
-        ) {
-          this.resourcesService.referenceDataModel
-            .get(this.dataType.modelResourceId)
-            .subscribe((dataTypeResult: ReferenceDataModelDetailResponse) => {
-              this.elementType = dataTypeResult.body;
-            });
-        }
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
@@ -211,67 +153,8 @@ export class DataTypeComponent
     );
   };
 
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
   }
-
-  onCancelEdit = () => {
-    this.dataType.editAliases = Object.assign([], this.dataType.aliases);
-    this.showEditDescription = false;
-  };
-
-  formBeforeSave = () => {
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
-    const resource: DataType = {
-      id: this.dataType.id,
-      label: this.editableForm.label,
-      domainType: this.dataType.domainType,
-      description: this.editableForm.description || ''
-    };
-
-    if (!this.showEditDescription) {
-      resource.description = this.editableForm.description || '';
-      resource.aliases = aliases;
-      resource.domainType = this.dataType.domainType;
-      resource.classifiers = this.dataType.classifiers.map(cls => ({ id: cls.id }));
-    }
-
-    this.resourcesService.dataType
-      .update(this.dataModel.id, this.dataType.id, resource)
-      .subscribe(
-        (res: DataTypeDetailResponse) => {
-          const result = res.body;
-
-          this.dataType.aliases = Object.assign([], result.aliases);
-          this.dataType.editAliases = Object.assign([], this.dataType.aliases);
-          this.dataType.label = result.label;
-          this.dataType.description = result.description;
-          this.messageHandler.showSuccess('Data Type updated successfully.');
-          this.editingService.stop();
-          this.editableForm.visible = false;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Data Type.',
-            error
-          );
-        }
-      );
-  };
 }

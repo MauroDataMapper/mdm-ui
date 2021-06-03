@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-  <mdm-data-model-detail *ngIf="dataModel" [dataModel]="dataModel"></mdm-data-model-detail>
+  <mdm-data-model-detail *ngIf="catalogueItem" [dataModel]="catalogueItem"></mdm-data-model-detail>
 </div>
 <div *ngIf="showSearch" style="clear: both">
   <div class="mdm--shadow-block">
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
-          [parent]="dataModel"
+          [parent]="catalogueItem"
           [showRestrictTo]="false"
           [doNotShowDataModelInModelPath]="false"
           [doNotDisplayModelPathStatus]="false"
@@ -172,10 +172,10 @@ SPDX-License-Identifier: Apache-2.0
               </button>
 
               <mat-menu #editMenu="matMenu">
-                <button mat-menu-item (click)="showDescription()">
+                <button mat-menu-item (click)="edit(true)">
                   <i class="fas fa-pencil-alt"></i> Edit Description
                 </button>
-                <button mat-menu-item (click)="edit()">
+                <button mat-menu-item (click)="edit(false)">
                   <i class="fas fa-pencil-alt"></i>Edit
                 </button>
               </mat-menu>
@@ -191,100 +191,85 @@ SPDX-License-Identifier: Apache-2.0
         <div class="full-width">
           <mdm-data-set-metadata
             *ngIf="this.descriptionView === 'other'"
-            [parent]="dataModel"
+            [parent]="catalogueItem"
             [type]="'dynamic'"
             [domainType]="'dataModels'"
             [isProfileView]="true"
           ></mdm-data-set-metadata>
         </div>
-        <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-        >
-          <table
-            *ngIf="this.descriptionView === 'default' && editableForm"
-            class="table table-bordered mdm--table-fixed"
+         <mdm-default-profile  *ngIf="this.descriptionView === 'default'" [catalogueItem]="catalogueItem"></mdm-default-profile>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
           >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Aliases</td>
-                <td>
-                  <mdm-element-alias
-                    [inEditMode]="editableForm.visible"
-                    [aliases]="dataModel.aliases"
-                    [editableForm]="editableForm"
-                    [property]="'aliases'"
-                    [readOnly]="showEditDescription"
-                  >
-                  </mdm-element-alias>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Author</td>
-                <td *ngIf="dataModel">
-                  <mdm-inline-text-edit
-                    [readOnly]="showEditDescription"
-                    [inEditMode]="editableForm.visible"
-                    [(ngModel)]="dataModel.author"
-                    [name]="'moduleNameAuthor'"
-                    size="20"
-                    [styleCss]="'dataModelDetailsLabel'"
-                  >
-                  </mdm-inline-text-edit>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Organisation</td>
-                <td *ngIf="dataModel">
-                  <mdm-inline-text-edit
-                    [readOnly]="showEditDescription"
-                    [inEditMode]="editableForm.visible"
-                    [(ngModel)]="dataModel.organisation"
-                    [name]="'moduleNameOrganisation'"
-                    size="20"
-                    [styleCss]="'dataModelDetailsLabel'"
-                  >
-                  </mdm-inline-text-edit>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <div *ngIf="dataModel">
-                    <mdm-markdown-text-area
-                      [editableForm]="editableForm"
-                      [element]="dataModel"
-                      [property]="'description'"
-                    ></mdm-markdown-text-area>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Classifications</td>
-                <td *ngIf="dataModel">
-                  <mdm-element-classifications
-                    [classifications]="dataModel.classifiers"
-                    [editableForm]="editableForm"
-                    [element]="dataModel"
-                    [property]="'classifiers'"
-                    [readOnly]="showEditDescription"
-                  ></mdm-element-classifications>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-            *ngIf="editableForm"
-            [hidden]="!editableForm.visible"
-            [onCancelEdit]="onCancelEdit"
-            [editable]="editableForm"
-            [textLocation]="'left'"
-            [hideDelete]="true"
-            [hideCancel]="false"
-          ></mdm-editable-form-buttons>
-        </form>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
+
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="catalogueItem"
+            [parent]="catalogueItem"
+            [domainType]="'dataModels'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="catalogueItem"
+              [parent]="catalogueItem"
+              [domainType]="'dataModels'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
       </div>
     </ng-template>
   </mat-tab>
@@ -360,8 +345,8 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div *ngIf="schemaView === 'list'">
         <mdm-element-child-data-classes-list
-          *ngIf="dataModel"
-          [parentDataModel]="dataModel"
+          *ngIf="catalogueItem"
+          [parentDataModel]="catalogueItem"
           [isEditable]="isEditable"
           [parentDataClass]="{ id: null }"
           [mcDataClass]="{ id: null }"
@@ -371,7 +356,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div class="bordered" *ngIf="schemaView === 'diagram'">
         <mdm-diagram-tab
-          [parent]="dataModel"
+          [parent]="catalogueItem"
           [mode]="'umlclass'"
         ></mdm-diagram-tab>
       </div>
@@ -396,8 +381,8 @@ SPDX-License-Identifier: Apache-2.0
     </ng-template>
     <div class="full-width">
       <mdm-element-owned-data-type-list
-        *ngIf="dataModel"
-        [parent]="dataModel"
+        *ngIf="catalogueItem"
+        [parent]="catalogueItem"
         [type]="'dynamic'"
         [isEditable]="isEditable"
         (totalCount)="typesCountEmitter($event)"
@@ -436,13 +421,13 @@ SPDX-License-Identifier: Apache-2.0
                   <mat-option
                     value="semanticLinks"
                     *ngIf="
-                      dataModel && semanticLinks && semanticLinks.length > 0
+                      catalogueItem && semanticLinks && semanticLinks.length > 0
                     "
                     >Semantic Links</mat-option
                   >
                   <mat-option
                     value="dataFlow"
-                    *ngIf="dataModel && dataModel.type === 'Data Asset'"
+                    *ngIf="catalogueItem && catalogueItem.type === 'Data Asset'"
                     >Data Flow</mat-option
                   >
                 </mat-select>
@@ -463,8 +448,8 @@ SPDX-License-Identifier: Apache-2.0
 
         <div *ngIf="contextView === 'default'">
           <mdm-element-link-list
-            *ngIf="dataModel"
-            [parent]="dataModel"
+            *ngIf="catalogueItem"
+            [parent]="catalogueItem"
             [domainType]="'dataModels'"
           ></mdm-element-link-list>
         </div>
@@ -486,10 +471,10 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div
-          *ngIf="contextView === 'dataFlow' && dataModel.type === 'Data Asset'"
+          *ngIf="contextView === 'dataFlow' && catalogueItem.type === 'Data Asset'"
         >
           <mdm-diagram-tab
-            [parent]="dataModel"
+            [parent]="catalogueItem"
             [mode]="'dataflow-model'"
           ></mdm-diagram-tab>
         </div>
@@ -514,12 +499,14 @@ SPDX-License-Identifier: Apache-2.0
       ({{ rulesItemCount }})
     </ng-template>
     <div class="full-width">
-      <mdm-constraints-rules
-        *ngIf="dataModel"
-        [parent]="dataModel"
+      <mdm-history
+        (totalCount)="historyCountEmitter($event)"
+        *ngIf="catalogueItem"
+        [parent]="'catalogueItem'"
+        [parentType]="'DataModel'"
+        [parentId]="parentId"
         [domainType]="'dataModels'"
-        (totalCount)="rulesCountEmitter($event)"
-      ></mdm-constraints-rules>
+      ></mdm-history>
     </div>
   </mat-tab>
   <mat-tab label="Annotations">
@@ -613,14 +600,12 @@ SPDX-License-Identifier: Apache-2.0
     </ng-template>
 
     <div class="full-width">
-      <mdm-history
-        (totalCount)="historyCountEmitter($event)"
-        *ngIf="dataModel"
-        [parent]="'dataModel'"
-        [parentType]="'DataModel'"
-        [parentId]="parentId"
+      <mdm-constraints-rules
+        *ngIf="catalogueItem"
+        [parent]="catalogueItem"
         [domainType]="'dataModels'"
-      ></mdm-history>
+        (totalCount)="rulesCountEmitter($event)"
+      ></mdm-constraints-rules>
     </div>
   </mat-tab>
 </mat-tab-group>

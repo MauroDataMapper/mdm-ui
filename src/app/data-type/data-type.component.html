@@ -148,10 +148,10 @@ SPDX-License-Identifier: Apache-2.0
                 </button>
 
                 <mat-menu #editMenu="matMenu">
-                  <button mat-menu-item (click)="showDescription()">
+              <button mat-menu-item (click)="edit(true)">
                     <i class="fas fa-pencil-alt"></i> Edit Description
                   </button>
-                  <button mat-menu-item (click)="edit()">
+              <button mat-menu-item (click)="edit(false)">
                     <i class="fas fa-pencil-alt"></i>Edit
                   </button>
                 </mat-menu>
@@ -173,115 +173,7 @@ SPDX-License-Identifier: Apache-2.0
               [domainType]="'dataTypes'"
             ></mdm-data-set-metadata>
           </div>
-          <form
-            editable-form
-            name="form"
-            (ngSubmit)="formBeforeSave()"
-            disable-submit-on-enter
-          >
-            <table
-              *ngIf="this.descriptionView === 'default'"
-              class="table table-bordered mdm--table-fixed"
-            >
-              <tbody>
-                <tr>
-                  <td class="detailsRowHeader">Aliases</td>
-                  <td>
-                    <mdm-element-alias
-                      [aliases]="dataType?.aliases"
-                      [inEditMode]="editableForm?.visible"
-                      [editableForm]="editableForm"
-                      [property]="'aliases'"
-                      [readOnly]="showEditDescription"
-                    ></mdm-element-alias>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Description</th>
-                  <td class="elementDetailDescription">
-                    <mdm-content-editor
-                      [editableForm]="editableForm"
-                      [element]="dataType"
-                      [property]="'description'"
-                    >
-                    </mdm-content-editor>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Type</th>
-                  <td>
-                    <div
-                      *ngIf="allDataTypesMap[dataType.domainType]?.displayLabel"
-                    >
-                      {{ allDataTypesMap[dataType.domainType]?.displayLabel }}
-                    </div>
-
-                    <div
-                      *ngIf="
-                        !allDataTypesMap[dataType?.domainType]?.displayLabel
-                      "
-                    >
-                      {{
-                        allDataTypesMap[dataType.modelResourceDomainType]
-                          ?.displayLabel
-                      }}
-                    </div>
-
-                    <mdm-element-data-type
-                      [elementDataType]="dataType"
-                      [hideName]="true"
-                      [showTypeName]="true"
-                      [onlyShowRefDataClass]="true"
-                      [hideEnumList]="true"
-                    >
-                    </mdm-element-data-type>
-
-                    <div *ngIf="dataType.domainType === 'ModelDataType'">
-                      <small
-                        ><span
-                          *ngIf="!elementType?.finalised"
-                          class="badge badge-warning"
-                          >Draft</span
-                        ></small
-                      >
-                      <small
-                        ><span
-                          *ngIf="elementType?.finalised"
-                          class="badge badge-success"
-                          >Finalised</span
-                        >
-                      </small>
-                      <mdm-element-link
-                        [element]="elementType"
-                        [showLink]="true"
-                        [newWindow]="false"
-                      ></mdm-element-link>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Classifications</th>
-                  <td>
-                    <mdm-element-classifications
-                      [classifications]="dataType.classifiers"
-                      [editableForm]="editableForm"
-                      [readOnly]="showEditDescription"
-                    ></mdm-element-classifications>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
-          </form>
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default'" [catalogueItem]="catalogueItem"></mdm-default-profile>
         </div>
       </ng-template>
     </mat-tab>

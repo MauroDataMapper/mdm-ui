@@ -38,6 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  Term,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,

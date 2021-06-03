@@ -94,6 +94,10 @@ export class SecurityHandlerService {
 
   loginRequired()
   {
+    if(this.isLoggedIn)
+    {
+      this.logout();
+    }
     this.stateHandler.Go('appContainer.mainApp.home');
   }
 

@@ -18,34 +18,60 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItem, ModelDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  ClassifierDetail,
+  CodeSetDetail,
+  DataElementDetail,
+  DataModelDetail,
+  FolderDetail,
+  ModelDomainType,
+  ModelUpdatePayload,
+  TermDetail,
+  TerminologyDetail,
+  VersionedFolderDetail
+} from '@maurodatamapper/mdm-resources';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import {
+  DefaultProfileItem,
+  DefaultProfile,
+  ProfileControlTypes
+} from '@mdm/model/defaultProfileModel';
+import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
-  template : ''
+  template: ''
 })
 export class ProfileBaseComponent extends BaseComponent {
-
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any = {};
   descriptionView = 'default';
   lastDescriptionView: string;
 
-  catalogueItem: CatalogueItem;
+  catalogueItem:
+    | DataModelDetail
+    | TermDetail
+    | CodeSetDetail
+    | TerminologyDetail
+    | FolderDetail
+    | DataElementDetail
+    | VersionedFolderDetail;
 
-  constructor(protected resourcesService: MdmResourcesService,
+
+  constructor(
+    protected resourcesService: MdmResourcesService,
     protected dialog: MatDialog,
     protected editingService: EditingService,
-    protected messageHandler: MessageHandlerService,
-   ) {
+    protected messageHandler: MessageHandlerService
+  ) {
     super();
-     }
+  }
 
   deleteProfile() {
     if (this.currentProfileDetails) {
@@ -70,8 +96,14 @@ export class ProfileBaseComponent extends BaseComponent {
               () => {
                 this.messageHandler.showSuccess('Profile deleted successfully');
                 this.descriptionView = 'default';
-                this.UsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
-                this.UnUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+                this.UsedProfiles(
+                  this.catalogueItem.domainType,
+                  this.catalogueItem.id
+                );
+                this.UnUsedProfiles(
+                  this.catalogueItem.domainType,
+                  this.catalogueItem.id
+                );
                 this.changeProfile();
               },
               (error) => {
@@ -85,14 +117,80 @@ export class ProfileBaseComponent extends BaseComponent {
     }
   }
 
-  editProfile = (
-    isNew: boolean,
-  ) => {
+  edit(isDescriptionOnly: boolean) {
+    const data: DefaultProfile = {
+      items: this.setDefaultProfileData(isDescriptionOnly)
+    };
+
+    const catModel = this.catalogueItem;
+
+    const editDialog = this.dialog.open<
+      DefaultProfileEditorModalComponent,
+      DefaultProfile
+    >(DefaultProfileEditorModalComponent, {
+      data,
+      panelClass: 'full-width-dialog'
+    });
+
+    this.editingService.configureDialogRef(editDialog);
+
+    editDialog.afterClosed().subscribe((editResult) => {
+      if (editResult) {
+        this.editingService.stop();
+
+        const resource: ModelUpdatePayload = {
+          id: catModel.id,
+          domainType: catModel.domainType,
+          description:
+            editResult.find((x) => x.displayName === 'Description').value || ''
+        };
+
+        if (!isDescriptionOnly) {
+          resource.label = editResult.find(
+            (x) => x.displayName.toLowerCase() === 'label'
+          )?.value;
+          resource.author = editResult.find(
+            (x) => x.displayName.toLowerCase() === 'author'
+          )?.value;
+          resource.organisation = editResult.find(
+            (x) => x.displayName.toLowerCase() === 'organisation'
+          )?.value;
+          resource.aliases = editResult.find(
+            (x) => x.displayName.toLowerCase() === 'aliases'
+          )?.value;
+          resource.classifiers = editResult.find(
+            (x) => x.displayName.toLowerCase() === 'classifiers'
+          )?.value;
+        }
+
+        this.resourcesService[ModelDomainRequestType[catModel.domainType]]
+          .update(catModel.id, resource)
+          .subscribe(
+            (res: any) => {
+              this.messageHandler.showSuccess('Model updated successfully.');
+              this.catalogueItem = res.body;
+            },
+            (error) => {
+              this.messageHandler.showError(
+                'There was a problem updating the Model.',
+                error
+              );
+            }
+          );
+      }
+    });
+  }
+
+  editProfile = (isNew: boolean) => {
     this.editingService.start();
-    let prof = this.allUsedProfiles.find((x) => x.value === this.descriptionView);
+    let prof = this.allUsedProfiles.find(
+      (x) => x.value === this.descriptionView
+    );
 
     if (!prof) {
-      prof = this.allUnUsedProfiles.find((x) => x.value === this.descriptionView);
+      prof = this.allUnUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
     }
 
     const dialog = this.dialog.open(EditProfileModalComponent, {
@@ -141,7 +239,9 @@ export class ProfileBaseComponent extends BaseComponent {
                       this.catalogueItem.id
                     );
                   } else {
-                    this.messageHandler.showSuccess('Profile Edited Successfully');
+                    this.messageHandler.showSuccess(
+                      'Profile Edited Successfully'
+                    );
                   }
                 });
             },
@@ -170,10 +270,7 @@ export class ProfileBaseComponent extends BaseComponent {
       });
   }
 
-  async UnUsedProfiles(
-    domainType: ModelDomainType | string,
-    id: any
-  ) {
+  async UnUsedProfiles(domainType: ModelDomainType | string, id: any) {
     await this.resourcesService.profile
       .unusedProfiles(domainType, id)
       .subscribe((profiles: { body: { [x: string]: any } }) => {
@@ -193,25 +290,26 @@ export class ProfileBaseComponent extends BaseComponent {
       this.descriptionView !== 'addnew'
     ) {
       this.lastDescriptionView = this.descriptionView;
-      const splitDescription =  this.descriptionView.split('/');
-      const response = await this.resourcesService.profile.profile(
-        this.catalogueItem.domainType,
-        this.catalogueItem.id,
-        splitDescription[0],
-        splitDescription[1]
-      ).toPromise();
+      const splitDescription = this.descriptionView.split('/');
+      const response = await this.resourcesService.profile
+        .profile(
+          this.catalogueItem.domainType,
+          this.catalogueItem.id,
+          splitDescription[0],
+          splitDescription[1]
+        )
+        .toPromise();
 
       this.currentProfileDetails = response.body;
       this.currentProfileDetails.namespace = splitDescription[0];
       this.currentProfileDetails.name = splitDescription[1];
-    } else if ( this.descriptionView === 'addnew') {
-      if(!this.lastDescriptionView)
-      {
+    } else if (this.descriptionView === 'addnew') {
+      if (!this.lastDescriptionView) {
         this.lastDescriptionView = 'default';
       }
       const dialog = this.dialog.open(AddProfileModalComponent, {
         data: {
-          domainType:  this.catalogueItem.domainType,
+          domainType: this.catalogueItem.domainType,
           domainId: this.catalogueItem.id
         }
       });
@@ -235,16 +333,13 @@ export class ProfileBaseComponent extends BaseComponent {
                 this.currentProfileDetails = body.body;
                 this.currentProfileDetails.namespace = splitDescription[0];
                 this.currentProfileDetails.name = splitDescription[1];
-                this.editProfile(
-                  true
-                );
+                this.editProfile(true);
               },
               (error) => {
                 this.messageHandler.showError('error saving', error.message);
               }
             );
-        }
-        else{
+        } else {
           this.descriptionView = this.lastDescriptionView;
           this.changeProfile();
         }
@@ -253,7 +348,75 @@ export class ProfileBaseComponent extends BaseComponent {
       this.currentProfileDetails = null;
       this.lastDescriptionView = this.descriptionView;
     }
-
   }
 
+  setDefaultProfileData(isDescriptionOnly: boolean): Array<DefaultProfileItem> {
+    const items = new Array<DefaultProfileItem>();
+
+    items.push(
+      this.createDefaultProfileItem(
+        this.catalogueItem.description,
+        'Description',
+        ProfileControlTypes.html
+      )
+    );
+
+    if (!isDescriptionOnly) {
+      items.push(
+        this.createDefaultProfileItem(
+          this.catalogueItem.label,
+          'Label',
+          ProfileControlTypes.text
+        )
+      );
+      if ('organisation' in this.catalogueItem) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.organisation,
+            'Organisation',
+            ProfileControlTypes.text
+          )
+        );
+      }
+      if ('author' in this.catalogueItem) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.author,
+            'Author',
+            ProfileControlTypes.text
+          )
+        );
+      }
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.aliases || [],
+            'Aliases',
+            ProfileControlTypes.aliases
+          )
+        );
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.classifiers || [],
+            'Classifications',
+            ProfileControlTypes.classifications
+          )
+        );
+    }
+
+    return items;
+  }
+
+  createDefaultProfileItem(
+    value: string,
+    displayName: string,
+    controlType: ProfileControlTypes
+  ): DefaultProfileItem {
+    const item: DefaultProfileItem = {
+      controlType,
+      displayName,
+      value
+    };
+
+    return item;
+  }
 }

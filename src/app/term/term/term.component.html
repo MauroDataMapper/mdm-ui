@@ -173,10 +173,8 @@ SPDX-License-Identifier: Apache-2.0
                 <td>
                   <div style="width: 50%" *ngIf="term">
                     <mdm-element-alias
-                      [readOnly]="showEditDescription"
-                      [inEditMode]="editableForm.visible"
+                      [readOnly]="true"
                       [aliases]="term.aliases"
-                      [editableForm]="editableForm"
                       [property]="'aliases'"
                     ></mdm-element-alias>
                   </div>
@@ -242,7 +240,6 @@ SPDX-License-Identifier: Apache-2.0
                   <mdm-element-classifications
                     [readOnly]="showEditDescription"
                     [classifications]="term.classifiers"
-                    [editableForm]="editableForm"
                     [element]="term"
                     [property]="'classifiers'"
                   >

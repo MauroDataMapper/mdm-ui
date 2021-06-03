@@ -159,10 +159,8 @@ SPDX-License-Identifier: Apache-2.0
                   <div>
                     <mdm-element-alias
                       [readOnly]="showEditDescription"
-                      [inEditMode]="editableForm.visible"
                       [aliases]="aliases"
                       [element]="dataElementOutput"
-                      [editableForm]="editableForm"
                       [property]="'aliases'"
                     >
                     </mdm-element-alias>
@@ -359,7 +357,6 @@ SPDX-License-Identifier: Apache-2.0
                   <mdm-element-classifications
                     [readOnly]="showEditDescription"
                     [classifications]="dataElementOutput.classifiers"
-                    [editableForm]="editableForm"
                     [element]="dataElementOutput"
                     [property]="'classifiers'"
                   >

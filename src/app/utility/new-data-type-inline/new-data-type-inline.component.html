@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
 			<tr *ngIf="showClassification">
 				<td class="detailsRowHeader">Classifications</td>
 				<td>
-					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}">
+					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event">
 					</mdm-element-classifications>
 				</td>
 			</tr>

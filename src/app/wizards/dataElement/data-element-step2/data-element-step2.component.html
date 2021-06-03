@@ -111,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
                 </mdm-select>
             </div>
 
-            <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
+            <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event"></mdm-element-classifications>
         </form>
     </div>
     <div *ngIf="model.createType == 'copy'" class="mb-3">

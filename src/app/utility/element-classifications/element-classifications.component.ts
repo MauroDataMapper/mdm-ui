@@ -28,7 +28,6 @@ import { Classifier, ClassifierIndexResponse, DataModelDetail } from '@maurodata
 })
 export class ElementClassificationsComponent implements OnInit {
 
-  @Input() editableForm: any;
   @Input() readOnly = true;
   @Input() inEditMode: boolean;
   @Input() property: string;
@@ -36,23 +35,13 @@ export class ElementClassificationsComponent implements OnInit {
   @Input() newWindow = false;
 
   @Output() classificationsChanged = new EventEmitter<any[]>();
-  @Input() get classifications() {
-    return this.classificationsVal;
-  }
-
-  set classifications(val) {
-
-    this.classificationsVal = val;
-    this.classificationsChanged.emit(this.classificationsVal);
-  }
-
-  classificationsVal: any[];
+  @Input() classifications : any[];
 
   target: string;
   lastWasShiftKey: any;
-  formData: any = {
-    showMarkDownPreview: Boolean,
-    classifiers: []
+  formData: {
+    showMarkDownPreview: Boolean;
+    classifiers: any[];
   };
   allClassifications: Classifier[];
   selectedClassification = [];
@@ -60,7 +49,7 @@ export class ElementClassificationsComponent implements OnInit {
 
   ngOnInit() {
     this.getAllClassifications();
-    if (!this.editableForm.visible) {
+    if (!this.readOnly) {
       if (this.newWindow) {
         this.target = '_blank';
       }
@@ -72,7 +61,7 @@ export class ElementClassificationsComponent implements OnInit {
         });
       }
     } else {
-      this.formData.classifiers = this.editableForm.classifiers;
+      this.formData.classifiers = this.element.classifiers;
     }
 
   }
@@ -87,13 +76,12 @@ export class ElementClassificationsComponent implements OnInit {
         });
         this.selectedClassification = selectedList;
         this.formData.classifiers = selectedList;
-        this.editableForm.classifiers = selectedList;
       }
     });
   }
   onModelChanged() {
     this.formData.classifiers = this.selectedClassification;
-    this.editableForm.classifiers = this.selectedClassification;
     this.classifications = this.selectedClassification;
+    this.classificationsChanged.emit(this.classifications);
   }
 }

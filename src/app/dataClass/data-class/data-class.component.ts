@@ -22,7 +22,6 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -35,7 +34,6 @@ import {
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  DataClass,
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
@@ -63,7 +61,6 @@ export class DataClassComponent
   max: any;
   min: any;
   error = '';
-  editableForm: EditableDataClass;
   aliases: any[] = [];
   access: Access;
   tabs = new TabCollection(['description', 'elements', 'context', 'data', 'rules', 'annotations', 'history']);
@@ -81,7 +78,7 @@ export class DataClassComponent
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
@@ -123,7 +120,6 @@ export class DataClassComponent
       }
     );
 
-    // tslint:disable-next-line: deprecation
     this.dataClassDetails(
       this.uiRouterGlobals.params.dataModelId,
       this.uiRouterGlobals.params.id,
@@ -147,8 +143,6 @@ export class DataClassComponent
           this.catalogueItem = this.dataClass;
           this.isEditable = this.dataClass.availableActions?.includes('update');
 
-          this.createEditableForm();
-
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
@@ -158,18 +152,6 @@ export class DataClassComponent
           this.UnUsedProfiles('dataClass', id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
-
-          if (this.dataClass.classifiers) {
-            this.dataClass.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          this.aliases = [];
-          if (this.dataClass.aliases) {
-            this.dataClass.aliases.forEach((item) => {
-              this.aliases.push(item);
-            });
-          }
 
           if (
             this.dataClass.minMultiplicity &&
@@ -194,14 +176,11 @@ export class DataClassComponent
         .getChildDataClass(model, parentDataClass, id)
         .subscribe((result: DataClassDetailResponse) => {
           this.dataClass = result.body;
-          this.createEditableForm();
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
           this.isEditable = this.dataClass.availableActions?.includes('update');
-
-          this.createEditableForm();
 
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
@@ -213,56 +192,6 @@ export class DataClassComponent
     }
   }
 
-  createEditableForm() {
-    this.editableForm = new EditableDataClass();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-    this.editableForm.description = this.dataClass.description;
-
-    this.editableForm.show = () => {
-      this.editableForm.visible = true;
-      if (this.min === '*') {
-        this.min = '-1';
-      }
-
-      if (this.max === '*') {
-        this.max = '-1';
-      }
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-
-      this.error = '';
-
-      this.setEditableForm();
-
-      if (this.dataClass.classifiers) {
-        this.dataClass.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      this.editableForm.aliases = [];
-      this.aliases = [];
-      if (this.dataClass.aliases) {
-        this.dataClass.aliases.forEach((item) => {
-          this.aliases.push(item);
-          this.editableForm.aliases.push(item);
-        });
-      }
-
-      if (this.min === '-1') {
-        this.min = '*';
-      }
-
-      if (this.max === '-1') {
-        this.max = '*';
-      }
-    };
-  }
-
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -272,23 +201,7 @@ export class DataClassComponent
     this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false });
   }
 
-  setEditableForm() {
-    this.editableForm.description = this.dataClass?.description;
-    this.editableForm.label = this.dataClass?.label;
-    this.min = this.dataClass?.minMultiplicity;
-    this.max = this.dataClass?.maxMultiplicity;
-  }
-
-  validateMultiplicity(minVal, maxVal) {
-    let min = '';
-    if (minVal != null && minVal !== undefined) {
-      min = `${minVal}`;
-    }
-    let max = '';
-    if (maxVal != null && maxVal !== undefined) {
-      max = `${maxVal}`;
-    }
-
+  validateMultiplicity(min, max) {
     const errorMessage = this.validator.validateMultiplicities(min, max);
     if (errorMessage) {
       this.error = errorMessage;
@@ -296,112 +209,4 @@ export class DataClassComponent
     }
     return true;
   }
-
-  formBeforeSave = () => {
-    this.error = '';
-
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-    if (this.validateMultiplicity(this.min, this.max)) {
-      if (
-        this.min != null &&
-        this.min !== '' &&
-        this.max != null &&
-        this.max !== ''
-      ) {
-        if (this.newMinText === '*') {
-          this.newMinText = -1;
-        }
-
-        if (this.max === '*') {
-          this.max = -1;
-        }
-      }
-
-      const resource: DataClass = {
-        id: this.dataClass.id,
-        label: this.editableForm.label,
-        domainType: this.dataClass.domainType,
-        description: this.editableForm.description || ''
-      };
-
-      if (!this.showEditDescription) {
-        resource.aliases = aliases;
-        resource.classifiers = classifiers;
-        resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);
-      }
-
-      if (!this.dataClass.parentDataClass) {
-        this.resourcesService.dataClass
-          .update(this.dataClass.model, this.dataClass.id, resource)
-          .subscribe(
-            (result: DataClassDetailResponse) => {
-              this.dataClass = result.body;
-              this.messageHandler.showSuccess(
-                'Data Class updated successfully.'
-              );
-              this.editingService.stop();
-              this.editableForm.visible = false;
-              this.messageService.dataChanged(result.body);
-              this.setEditableForm();
-            },
-            (error) => {
-              this.messageHandler.showError(
-                'There was a problem updating the Data Class.',
-                error
-              );
-            }
-          );
-      } else {
-        this.resourcesService.dataClass
-          .updateChildDataClass(
-            this.dataClass.model,
-            this.dataClass.parentDataClass,
-            this.dataClass.id,
-            resource
-          )
-          .subscribe(
-            (result: DataClassDetailResponse) => {
-              this.dataClass = result.body;
-              this.messageHandler.showSuccess(
-                'Data Class updated successfully.'
-              );
-              this.editableForm.visible = false;
-              this.editingService.stop();
-              this.messageService.dataChanged(result.body);
-              this.setEditableForm();
-            },
-            (error) => {
-              this.messageHandler.showError(
-                'There was a problem updating the Data Class.',
-                error
-              );
-            }
-          );
-      }
-    }
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  onCancelEdit() {
-    this.error = '';
-    this.showEditDescription = false;
-  }
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
 }

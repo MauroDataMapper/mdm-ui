@@ -84,19 +84,19 @@ export class MultipleTermsSelectorComponent {
 
     if (!this.searchControlInput && content) {
       fromEvent(content.nativeElement, 'keyup').pipe(map((event: any) => {
-            return event.target.value;
-          }),
-          filter(res => res.length >= 0),
-          debounceTime(500),
-          distinctUntilChanged()
-        ).subscribe(() => {
-          this.dataSource = new MatTableDataSource<any>(null);
-          this.loading = false;
-          this.totalItemCount = 0;
-          this.currentRecord = 0;
-          this.isProcessing = false;
-          this.fetch(40, 0);
-        });
+        return event.target.value;
+      }),
+        filter(res => res.length >= 0),
+        debounceTime(500),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        this.dataSource = new MatTableDataSource<any>(null);
+        this.loading = false;
+        this.totalItemCount = 0;
+        this.currentRecord = 0;
+        this.isProcessing = false;
+        this.fetch(40, 0);
+      });
       this.searchControlInput = content;
     }
     this.cd.detectChanges();
@@ -169,40 +169,55 @@ export class MultipleTermsSelectorComponent {
       this.loading = true;
 
       const position = offset;
-      this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
-        this.selectorSection.searchResult = result.body.items;
-        // make check=true if element is already selected
-        result.body.items.forEach((item) => {
-          item.terminology = this.selectorSection.selectedTerminology;
-          if (this.selectorSection.selectedTerms[item.id]) {
-            item.checked = true;
+      this.contextSearchHandler
+        .search(
+          this.selectorSection.selectedTerminology,
+          this.selectorSection.termSearchText,
+          this.selectorSection.searchResultPageSize,
+          position,
+          ['Term'],
+          true,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null)
+        .subscribe(result => {
+          this.selectorSection.searchResult = result.body.items;
+          // make check=true if element is already selected
+          result.body.items.forEach((item) => {
+            item.terminology = this.selectorSection.selectedTerminology;
+            if (this.selectorSection.selectedTerms[item.id]) {
+              item.checked = true;
+            }
+          });
+
+          this.calculateDisplayedSoFar(result);
+          this.loading = false;
+          this.isProcessing = false;
+          this.selectorSection.loading = false;
+
+          this.totalItemCount = result.body.count;
+          if (this.dataSource.data) {
+            this.dataSource.data = this.dataSource.data.concat(
+              this.selectorSection.searchResult
+            );
+            this.currentRecord = this.dataSource.data.length;
+            this.loading = false;
+            this.isProcessing = false;
+          } else {
+            this.dataSource.data = this.selectorSection.searchResult;
+            this.currentRecord = this.dataSource.data.length;
+            this.isProcessing = false;
+            this.loading = false;
           }
+
+        }, () => {
+          this.loading = false;
+          this.isProcessing = false;
         });
-
-        this.calculateDisplayedSoFar(result);
-        this.loading = false;
-        this.isProcessing = false;
-        this.selectorSection.loading = false;
-
-        this.totalItemCount = result.body.count;
-        if (this.dataSource.data) {
-          this.dataSource.data = this.dataSource.data.concat(
-            this.selectorSection.searchResult
-          );
-          this.currentRecord = this.dataSource.data.length;
-          this.loading = false;
-          this.isProcessing = false;
-        } else {
-          this.dataSource.data = this.selectorSection.searchResult;
-          this.currentRecord = this.dataSource.data.length;
-          this.isProcessing = false;
-          this.loading = false;
-        }
-
-      }, () => {
-        this.loading = false;
-        this.isProcessing = false;
-      });
     }
   };
 

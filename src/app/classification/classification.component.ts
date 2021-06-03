@@ -40,6 +40,8 @@ import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from 
 import { TabCollection } from '@mdm/model/ui.model';
 import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-classification',

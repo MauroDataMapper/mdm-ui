@@ -39,6 +39,7 @@ import {
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { min, max } from 'lodash';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -96,8 +97,7 @@ export class DataClassComponent
   ngOnInit() {
     if (
       this.isGuid(this.uiRouterGlobals.params.id) &&
-      (!this.uiRouterGlobals.params.id ||
-        !this.uiRouterGlobals.params.dataModelId)
+      (!this.uiRouterGlobals.params.id || !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;

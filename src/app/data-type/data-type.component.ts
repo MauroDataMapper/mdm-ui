@@ -32,6 +32,8 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
@@ -157,6 +159,36 @@ export class DataTypeComponent
       { notify: false }
     );
   };
+
+  save(saveItems: any) {
+
+    const resource: DataType = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType,
+      label: this.catalogueItem.label
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+    this.resourcesService.dataType
+      .update(this.dataModel.id, this.dataType.id, resource)
+      .subscribe(
+        (res: DataTypeDetailResponse) => {
+          this.dataType = res.body;
+          this.messageHandler.showSuccess('Data Type updated successfully.');
+          this.editingService.stop();
+
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Type.',
+            error
+    );
+        }
+      );
+  }
 
   rulesCountEmitter($event) {
     this.isLoadingRules = false;

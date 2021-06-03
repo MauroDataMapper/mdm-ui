@@ -136,9 +136,27 @@ export class TerminologyComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  save = (updatedResource?) => {
-    this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
-    };
+ save(saveItems: Array<DefaultProfileItem>) {
+    const tab = this.tabs.getByIndex(index);
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+    this.resourcesService.terminology
+      .update(this.catalogueItem.id, resource)
+      .subscribe(
+        (res: TerminologyDetailResponse) => {
+          this.messageHandler.showSuccess('Terminology updated successfully.');
+          this.catalogueItem = res.body;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Terminology.',
+            error
+          );
+        }
+      );
+  }
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);

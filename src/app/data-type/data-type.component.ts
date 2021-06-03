@@ -49,7 +49,6 @@ export class DataTypeComponent
   dataModelId: any;
   dataModel: any;
   id: any;
-  //tabView: string;
   activeTab: number;
   showExtraTabs: boolean;
   showEditForm = false;

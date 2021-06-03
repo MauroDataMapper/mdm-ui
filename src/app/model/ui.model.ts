@@ -40,6 +40,7 @@ export class TabCollection {
 
   /**
    * Creates a new `TabCollection`
+   *
    * @param names The names, in order as they appear in a tab view.
    */
   constructor(names: string[]) {

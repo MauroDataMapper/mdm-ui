@@ -40,7 +40,7 @@ import {
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
-import { TabDescriptor, TabCollection } from '@mdm/model/ui.model';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-folder',

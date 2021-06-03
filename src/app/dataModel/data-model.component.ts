@@ -41,7 +41,6 @@ import {
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   DataModelDetailResponse,
-  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -211,7 +210,7 @@ export class DataModelComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];
         });
-      });
+        });
   }
 
   toggleShowSearch() {

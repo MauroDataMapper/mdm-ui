@@ -38,7 +38,6 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   CodeSetDetail,
   CodeSetDetailResponse,
-  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';

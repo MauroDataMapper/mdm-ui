@@ -403,6 +403,57 @@ export abstract class ProfileBaseComponent extends BaseComponent {
         );
       }
 
+  setDefaultProfileData(isDescriptionOnly: boolean): Array<DefaultProfileItem> {
+    const items = new Array<DefaultProfileItem>();
+
+    items.push(
+      this.createDefaultProfileItem(
+        this.catalogueItem.description,
+        'Description',
+        ProfileControlTypes.html
+      )
+    );
+
+    if (!isDescriptionOnly) {
+      items.push(
+        this.createDefaultProfileItem(
+          this.catalogueItem.label,
+          'Label',
+          ProfileControlTypes.text
+        )
+      );
+      if ('organisation' in this.catalogueItem) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.organisation,
+            'Organisation',
+            ProfileControlTypes.text
+          )
+        );
+      }
+      if ('author' in this.catalogueItem) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.author,
+            'Author',
+            ProfileControlTypes.text
+          )
+        );
+      }
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.aliases || [],
+            'Aliases',
+            ProfileControlTypes.aliases
+          )
+        );
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.classifiers || [],
+            'Classifications',
+            ProfileControlTypes.classifications
+          )
+        );
     }
 
     return items;

@@ -34,7 +34,6 @@ import {
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  DataClass,
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';

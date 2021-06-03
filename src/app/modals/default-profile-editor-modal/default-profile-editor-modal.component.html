@@ -100,8 +100,8 @@ SPDX-License-Identifier: Apache-2.0
               <small class="warning">{{ multiplicityError }}</small>
             </div>
           </div>
-         
-            <div  *ngIf="item.controlType === profileControlType.dataType">    
+
+            <div  *ngIf="item.controlType === profileControlType.dataType">
               <div *ngIf="!showNewInlineDataType">
                 Please select a Data Type below or
                 <button
@@ -177,7 +177,7 @@ SPDX-License-Identifier: Apache-2.0
               <span class="help-block errorMessage" *ngIf="dataTypeErrors"
                 ><small>{{ dataTypeErrors }}</small></span
               >
-            </div>          
+            </div>
         </td>
       </tr>
     </tbody>

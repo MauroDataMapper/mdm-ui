@@ -101,7 +101,7 @@ export class TerminologyDetailsComponent implements OnInit {
     this.currentBranch = this.mcTerminology.branchName;
     this.branchGraph = [
       {
-        branchName: 'main',
+        branch: 'main',
         label: this.mcTerminology.label,
         modelId,
         newBranchModelVersion: false,
@@ -113,7 +113,7 @@ export class TerminologyDetailsComponent implements OnInit {
 
   onModelChange() {
     for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branchName === this.currentBranch) {
+      if (this.branchGraph[val].branch === this.currentBranch) {
         this.stateHandler.Go(
           'terminology',
           { id: this.branchGraph[val].id },

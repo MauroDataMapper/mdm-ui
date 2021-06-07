@@ -112,6 +112,26 @@ SPDX-License-Identifier: Apache-2.0
             [styleCss]="'dataModelDetailsLabel'"
           >
           </mdm-inline-text-edit>
+          <sup
+            *ngIf="folder?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+          <sup
+            *ngIf="folder?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
         </h4>
         <span class="inline-block">
           <small *ngIf="folder?.deleted" class="warning"> | Deleted</small>
@@ -136,6 +156,16 @@ SPDX-License-Identifier: Apache-2.0
               matTooltip="Availability"
             ></i>
             <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="folder?.readableByAuthenticatedUsers">
+          <small>
+            <i
+              class="fas fa-users globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Authenticated users only</span>
           </small>
         </div>
         <div class="text-muted" *ngIf="folder">

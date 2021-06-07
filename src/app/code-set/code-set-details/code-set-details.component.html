@@ -168,6 +168,26 @@ SPDX-License-Identifier: Apache-2.0
             [styleCss]="'dataModelDetailsLabel'"
           >
           </mdm-inline-text-edit>
+          <sup
+            *ngIf="codeSetDetail?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+          <sup
+            *ngIf="codeSetDetail?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
         </h4>
         <mdm-element-status [result]="codeSetDetail"></mdm-element-status>
         <span class="inline-block"
@@ -187,15 +207,6 @@ SPDX-License-Identifier: Apache-2.0
             >
           </small>
         </div>
-        <div class="text-muted" *ngIf="codeSetDetail?.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong
-              >{{ codeSetDetail.authority['label'] }}</span
-            >
-          </small>
-        </div>
         <div class="text-muted" *ngIf="codeSetDetail?.readableByEveryone">
           <small>
             <i
@@ -204,6 +215,25 @@ SPDX-License-Identifier: Apache-2.0
               matTooltip="Availability"
             ></i>
             <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="codeSetDetail?.readableByAuthenticatedUsers">
+          <small>
+            <i
+              class="fas fa-users globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Authenticated users only</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="codeSetDetail?.authority">
+          <small>
+            <i class="far fa-building" matTooltip="Authority"></i>
+            <span
+              ><strong>Authority: </strong
+              >{{ codeSetDetail.authority['label'] }}</span
+            >
           </small>
         </div>
         <div class="text-muted" *ngIf="codeSetDetail?.documentationVersion">

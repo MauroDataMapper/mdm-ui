@@ -43,17 +43,18 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     this.changeComponent(null);
 
     result.body.forEach((item: any) => {
-      if (item.newFork) {
-        this.addRectangleCell(item.modelId,  `${item.label} \n\n  ${item.branchName} branch`, 300, 100, 288);
+      if (item.isNewFork) {
+        this.addRectangleCell(item.id,  `Fork \n\n ${item.label} \n\n  ${item.branch} branch`, 300, 100, 288);
       }
-      if (item.newDocumentationVersion) {
-        this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.modelId, `${item.label} \n\n Version ${item.version} \n\n ${item.branchName} branch`, 300, 100, 288);
+      else if (item.isNewDocumentationVersion) {
+        this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.id, `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`, 300, 100, 288);
       }
-      if (item.newBranchModelVersion) {
-        this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
-      }
-      if (!item.newBranchModelVersion && !item.newDocumentationVersion && !item.newFork) {
-        this.addColoredRectangleCell(this.fontColorBlack, this.lightOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
+      else {
+        if(item.modelVersion){
+          this.addColoredRectangleCell(this.fontColorBlack, this.lightOrange, item.id, `${item.label} \n\n Version ${item.modelVersion}`, 300, 100, 288);
+        } else {
+          this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.id, `${item.label} \n\n ${item.branch} branch`, 300, 100, 288);
+        }
       }
     });
 
@@ -62,9 +63,9 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
       let link: any;
       item.targets.forEach(itmTarget => {
         link = new joint.shapes.standard.Link({
-          id: `${item.modelId} _  ${itmTarget.modelId}`,
-          source: { id: item.modelId },
-          target: { id: itmTarget.modelId },
+          id: `${item.id} _  ${itmTarget.id}`,
+          source: { id: item.id },
+          target: { id: itmTarget.id },
           labels: [{
             attrs: { text: { text: itmTarget.description } },
             position: {

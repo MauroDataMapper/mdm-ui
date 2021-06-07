@@ -19,12 +19,12 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputModalComponent } from '../input-modal/input-modal.component';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService } from '@mdm/services/grid.service';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { SharedService } from '@mdm/services';
+import { NewFolderModalConfiguration, NewFolderModalResponse } from './new-folder-modal.model';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
 
 
 @Component({
@@ -36,24 +36,30 @@ export class NewFolderModalComponent implements OnInit {
 
   okBtn: string;
   cancelBtn: string;
-  btnType: string;
-  newFolderData: { label: string; groups?: any[]; isVersioned? :boolean};
+  btnType: ThemePalette;
   modalTitle: string;
   message: string;
   inputLabel: string;
-  allGroups = [];
-  selectedGroups = [];
-  showVersionChbx: boolean;
-  feature = this.sharedService.features;
+  useVersionedFolders = false;
+
+  folderForm = new FormGroup({
+    label: new FormControl('', Validators.required),
+    isVersioned: new FormControl(false)
+  });
+
+  get label() {
+    return this.folderForm.get('label');
+  }
+
+  get isVersioned() {
+    return this.folderForm.get('isVersioned');
+  }
 
   constructor(
-    private dialogRef: MatDialogRef<InputModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourcesService: MdmResourcesService,
-    private gridService: GridService,
-    private messageHandler: MessageHandlerService,
+    private dialogRef: MatDialogRef<NewFolderModalComponent, NewFolderModalResponse>,
+    @Inject(MAT_DIALOG_DATA) public data: NewFolderModalConfiguration,
     private editingService: EditingService,
-    private sharedService: SharedService) {}
+    private shared: SharedService) {}
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -62,44 +68,28 @@ export class NewFolderModalComponent implements OnInit {
     this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
-    this.newFolderData = {
-      label: ''
-    };
 
-    this.showVersionChbx = this.feature.useVersionedFolders;
-
-    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
-    options['all'] = true;
-
-    this.resourcesService.userGroups.list(options).subscribe(res => {
-        this.allGroups = res.body.items;
-      }, error => {
-        this.messageHandler.showError('There was a problem getting the group list', error);
-      }
-    );
+    this.useVersionedFolders = this.data.useVersioned && this.shared.features.useVersionedFolders;
   }
-
-  onGroupSelect = (groups) => {
-    this.newFolderData.groups = [];
-    for (const val of this.allGroups) {
-      if (groups.value.includes(val.id)) {
-        this.newFolderData.groups.push({
-          id: val.id,
-          // label: val.label
-        });
-      }
-    }
-  };
 
   cancel() {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {
-        this.dialogRef.close();
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
       }
     });
   }
 
   confirm() {
-    this.dialogRef.close(this.newFolderData);
+    if (!this.folderForm.valid) {
+      return;
+    }
+
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      label: this.label.value,
+      useVersionedFolders: this.useVersionedFolders,
+      isVersioned: this.isVersioned.value
+    });
   }
 }

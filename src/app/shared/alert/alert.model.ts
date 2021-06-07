@@ -16,16 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-$defaultFontSize: 17px;
-$defaultFontColour: #333;
-$defaultLinkColour: #337AB7;
-$defaultWarningColor: #f19e3f;
 
-$mobile-xs: 460px;
-$mobile: 768px;
-$tablet: 992px;
-$desktop: 1600px;
+export type AlertStyle = 'none' | 'success' | 'info' | 'warning' | 'error';
 
-$fa-font-path: "assets/webfonts";
-
-$forms-max-width: 800px;
+export interface AlertStyleMetadata {
+  icon: string;
+  cssModifier: string;
+}

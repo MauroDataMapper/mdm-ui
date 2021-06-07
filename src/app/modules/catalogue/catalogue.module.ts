@@ -184,6 +184,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
 import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
+import { AlertComponent } from '@mdm/shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -341,7 +342,8 @@ import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned
     FederatedDataModelDetailComponent,
     ProfileDetailsComponent,
     VersionedFolderComponent,
-    VersionedFolderDetailComponent
+    VersionedFolderDetailComponent,
+    AlertComponent
   ],
   imports: [
     AdminModule,
@@ -512,7 +514,8 @@ import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    AlertComponent
   ]
 })
 export class CatalogueModule { }

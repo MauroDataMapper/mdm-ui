@@ -16,16 +16,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-$defaultFontSize: 17px;
-$defaultFontColour: #333;
-$defaultLinkColour: #337AB7;
-$defaultWarningColor: #f19e3f;
 
-$mobile-xs: 460px;
-$mobile: 768px;
-$tablet: 992px;
-$desktop: 1600px;
+import { ThemePalette } from '@angular/material/core';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
-$fa-font-path: "assets/webfonts";
+export interface NewFolderModalConfiguration {
+  okBtn?: string;
+  cancelBtn?: string;
+  btnType?: ThemePalette;
+  modalTitle?: string;
+  message?: string;
+  inputLabel?: string;
+  useVersioned?: boolean;
+}
 
-$forms-max-width: 800px;
+export interface NewFolderModalResponse {
+  status: ModalDialogStatus;
+  label?: string;
+  useVersionedFolders?: boolean;
+  isVersioned?: boolean;
+}

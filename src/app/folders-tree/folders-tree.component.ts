@@ -21,7 +21,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { of, Subject, Subscription } from 'rxjs';
+import { EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
@@ -31,7 +31,11 @@ import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
+import { NewFolderModalConfiguration, NewFolderModalResponse } from '@mdm/modals/new-folder-modal/new-folder-modal.model';
+import { filter } from 'rxjs/operators';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { FolderDetailResponse, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -379,58 +383,67 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       this.loadFavourites();
    }
 
-   handleAddFolderModal = (fnode: FlatNode) => {
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(NewFolderModalComponent, {
-            data: {
-               inputValue: this.folder,
-               modalTitle: 'Create a new Folder',
-               okBtn: 'Add folder',
-               btnType: 'primary',
-               inputLabel: 'Folder name',
-               message: 'Please enter the name of your Folder.'
-            }
-         });
+  handleAddFolderModal(fnode: FlatNode) {
+    const dialogRef = this.dialog
+      .open<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
+        NewFolderModalComponent,
+        {
+          data: {
+            modalTitle: 'Create a new Folder',
+            okBtn: 'Add folder',
+            btnType: 'primary',
+            inputLabel: 'Folder name',
+            message: 'Please enter the name of your Folder.',
+            useVersioned: true
+          }
+        }
+      );
 
-         this.editingService.configureDialogRef(dialog);
+    this.editingService.configureDialogRef(dialogRef);
 
-         dialog.afterClosed().subscribe(result => {
-            if (result) {
-               if (this.validateLabel(result)) {
-                  this.folder = result;
-                  this.handleAddFolder(fnode, result);
-               } else {
-                  const error = 'err';
-                  this.messageHandler.showError('Data Model name can not be empty', error);
-                  return;
-               }
-            } else {
-               return;
-            }
-         });
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => response.status === ModalDialogStatus.Ok)
+      )
+      .subscribe(async response => {
+        await this.handleAddFolder(fnode, response);
       });
-      return promise;
-   };
+   }
 
-   async handleAddFolder(fnode: FlatNode, payload?: { label: string; groups: any[] }) {
+   async handleAddFolder(fnode: FlatNode, payload: NewFolderModalResponse) {
       if (this.selectedNode) {
          this.selectedNode.selected = false;
       }
       try {
          let result: HttpResponse<Node>;
          let newNode: FlatNode;
+
          if (!fnode) {
             // Create new top level folder
-            result = await this.resources.folder.save({ label: payload.label, groups: payload.groups }).toPromise();
-            result.body.domainType = DOMAIN_TYPE.Folder;
-            this.node.children.push(result.body);
+            if (payload.useVersionedFolders && payload.isVersioned) {
+              result = await this.resources.versionedFolder.save({ label: payload.label }).toPromise();
+              result.body.domainType = DOMAIN_TYPE.VersionedFolder;
+            }
+            else {
+              result = await this.resources.folder.save({ label: payload.label }).toPromise();
+              result.body.domainType = DOMAIN_TYPE.Folder;
+            }
 
+            this.node.children.push(result.body);
             newNode = new FlatNode(result.body, 0);
             this.treeControl.dataNodes.push(newNode);
          } else {
             // Add new folder to existing folder
-            result = await this.resources.folder.saveChildrenOf(fnode.id, { label: payload.label, groups: payload.groups }).toPromise();
-            result.body.domainType = DOMAIN_TYPE.Folder;
+            if (payload.useVersionedFolders && payload.isVersioned) {
+              result = await this.resources.versionedFolder.saveToFolder(fnode.id, { label: payload.label }).toPromise();
+              result.body.domainType = DOMAIN_TYPE.VersionedFolder;
+            }
+            else {
+              result = await this.resources.folder.saveChildrenOf(fnode.id, { label: payload.label }).toPromise();
+              result.body.domainType = DOMAIN_TYPE.Folder;
+            }
+
             if (!fnode.children) {
                fnode.children = [];
             }

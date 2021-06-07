@@ -378,10 +378,10 @@ SPDX-License-Identifier: Apache-2.0
                 (ngModelChange)="onModelChange()"
               >
                 <option
-                  [value]="item.branchName"
+                  [value]="item.branch"
                   *ngFor="let item of branchGraph"
                 >
-                  {{ item.branchName }}
+                {{ item.branch ? item.branch : 'main' }}
                 </option>
               </select>
             </span>

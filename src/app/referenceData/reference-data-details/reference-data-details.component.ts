@@ -236,7 +236,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
     this.currentBranch = this.refDataModel.branchName;
     this.branchGraph = [
       {
-        branchName: 'main',
+        branch: 'main',
         label: this.refDataModel.label,
         modelId,
         newBranchModelVersion: false,
@@ -263,7 +263,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
 
   onModelChange = () => {
     for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branchName === this.currentBranch) {
+      if (this.branchGraph[val].branch === this.currentBranch) {
         this.stateHandler.Go(
           'referenceDataModels',
           { id: this.branchGraph[val].modelId },

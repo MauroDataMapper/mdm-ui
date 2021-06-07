@@ -142,7 +142,7 @@ export class DataModelDetailComponent implements OnInit {
 
   onModelChange = () => {
     for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branchName === this.currentBranch) {
+      if (this.branchGraph[val].branch === this.currentBranch) {
         this.stateHandler.Go(
           'datamodel',
           { id: this.branchGraph[val].modelId },

@@ -20,65 +20,65 @@ SPDX-License-Identifier: Apache-2.0
 @import "../../../style/abstracts/variables";
 
 @mixin mdm-alert-theme($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $warn: map-get($theme, warn);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
-    $infoColor: mat-color($primary);
-    $successColor: mat-color($accent);
-    $warningColor: $defaultWarningColor;
-    $errorColor: mat-color($warn);
+  $infoColor: mat-color($primary);
+  $successColor: mat-color($accent);
+  $warningColor: $defaultWarningColor;
+  $errorColor: mat-color($warn);
 
-    .mdm-alert {
-        &--success {
-            background-color: lighten($successColor, 60%);
+  .mdm-alert {
+    &--success {
+      background-color: lighten($successColor, 60%);
 
-            i.fas {
-                color: $successColor;
-            }
-        }
-
-        &--info {
-            background-color: lighten($infoColor, 50%);
-
-            i.fas {
-                color: $infoColor;
-            }
-        }
-
-        &--warning {
-            background-color: lighten($warningColor, 33%);
-
-            i.fas {
-                color: $warningColor;
-            }
-        }
-
-        &--error {
-            background-color: lighten($errorColor, 60%);
-
-            i.fas {
-                color: $errorColor;
-            }
-        }
+      i.fas {
+        color: $successColor;
+      }
     }
+
+    &--info {
+      background-color: lighten($infoColor, 50%);
+
+      i.fas {
+        color: $infoColor;
+      }
+    }
+
+    &--warning {
+      background-color: lighten($warningColor, 33%);
+
+      i.fas {
+        color: $warningColor;
+      }
+    }
+
+    &--error {
+      background-color: lighten($errorColor, 60%);
+
+      i.fas {
+        color: $errorColor;
+      }
+    }
+  }
 }
 
 .mdm-alert {
-    display: flex;
-    flex-direction: row;
-    margin: 16px 0px;
-    padding: 8px 0px;
-    border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  margin: 16px 0px;
+  padding: 8px 0px;
+  border-radius: 8px;
 
-    &__icon {
-        margin: 8px;
-        padding: 4px;
-    }
+  &__icon {
+    margin: 8px;
+    padding: 4px;
+  }
 
-    &__content {
-        margin: 8px;
-        padding: 4px;
-        width: 90%;
-    }
+  &__content {
+    margin: 8px;
+    padding: 4px;
+    width: 90%;
+  }
 }

@@ -405,6 +405,9 @@ export abstract class ProfileBaseComponent extends BaseComponent {
 
   setDefaultProfileData(isDescriptionOnly: boolean): Array<DefaultProfileItem> {
     const items = new Array<DefaultProfileItem>();
+    const controls = DefaultProfileControls.renderControls(
+      this.catalogueItem.domainType
+    );
 
     items.push(
       this.createDefaultProfileItem(
@@ -415,14 +418,18 @@ export abstract class ProfileBaseComponent extends BaseComponent {
     );
 
     if (!isDescriptionOnly) {
-      items.push(
-        this.createDefaultProfileItem(
-          this.catalogueItem.label,
-          'Label',
-          ProfileControlTypes.text
-        )
-      );
-      if ('organisation' in this.catalogueItem) {
+      if (this.showControl(controls, 'label'))
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.label,
+            'Label',
+            ProfileControlTypes.text
+          )
+        );
+      if (
+        'organisation' in this.catalogueItem &&
+        this.showControl(controls, 'organisation')
+      ) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.organisation,
@@ -431,7 +438,10 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           )
         );
       }
-      if ('author' in this.catalogueItem) {
+      if (
+        'author' in this.catalogueItem &&
+        this.showControl(controls, 'author')
+      ) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.author,
@@ -440,6 +450,7 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           )
         );
       }
+      if (this.showControl(controls, 'aliases')) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.aliases || [],
@@ -447,6 +458,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
             ProfileControlTypes.aliases
           )
         );
+      }
+      if (this.showControl(controls, 'classifications')) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.classifiers || [],
@@ -454,6 +467,18 @@ export abstract class ProfileBaseComponent extends BaseComponent {
             ProfileControlTypes.classifications
           )
         );
+      }
+      if (this.showControl(controls, 'multiplicity')) {
+        items.push({
+          controlType: ProfileControlTypes.multiplicity,
+          displayName: 'Multiplicity',
+          maxMultiplicity:
+            this.catalogueItem.maxMultiplicity === -1
+              ? '*'
+              : this.catalogueItem.maxMultiplicity,
+          minMultiplicity: this.catalogueItem.minMultiplicity
+        });
+      }
     }
 
     return items;

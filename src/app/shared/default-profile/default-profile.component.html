@@ -118,6 +118,15 @@
         ></mdm-element-classifications>
       </td>
     </tr>
+    <tr *ngIf="isInControlList('multiplicity')">
+      <th class="detailsRowHeader">Multiplicity</th>
+      <td class="dataClassDetailsModelPath">
+        <mdm-multiplicity
+          [min]="catalogueItem.minMultiplicity"
+          [max]="catalogueItem.maxMultiplicity"
+        ></mdm-multiplicity>
+      </td>
+    </tr>
 
   </tbody>
 </table>

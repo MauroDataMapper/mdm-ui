@@ -34,6 +34,7 @@ import {
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  DataClass,
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
@@ -96,7 +97,8 @@ export class DataClassComponent
   ngOnInit() {
     if (
       this.isGuid(this.uiRouterGlobals.params.id) &&
-      (!this.uiRouterGlobals.params.id || !this.uiRouterGlobals.params.dataModelId)
+      (!this.uiRouterGlobals.params.id ||
+        !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;

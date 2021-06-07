@@ -254,6 +254,32 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Rules
+        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ rulesItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-constraints-rules
+          *ngIf="terminology"
+          [parent]="terminology"
+          [domainType]="'terminologies'"
+          (totalCount)="rulesCountEmitter($event)"
+        ></mdm-constraints-rules>
+      </div>
+    </mat-tab>
     <mat-tab label="Annotations">
       <ng-template matTabContent>
         <div class="full-width">
@@ -302,7 +328,7 @@ SPDX-License-Identifier: Apache-2.0
               ></div>
             </div>
           </div>
-  
+
           <div *ngIf="annotationsView === 'default'">
             <mdm-annotation-list
               *ngIf="terminology"
@@ -310,7 +336,7 @@ SPDX-License-Identifier: Apache-2.0
               [domainType]="'terminologies'"
             ></mdm-annotation-list>
           </div>
-  
+
           <div
             class="mdm--shadow-block bordered"
             *ngIf="annotationsView === 'attachments'"
@@ -352,32 +378,6 @@ SPDX-License-Identifier: Apache-2.0
           [parentType]="'Terminology'"
           [domainType]="'terminologies'"
         ></mdm-history>
-      </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Rules
-        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
-        ({{ rulesItemCount }})
-      </ng-template>
-      <div class="full-width">
-        <mdm-constraints-rules
-          *ngIf="terminology"
-          [parent]="terminology"
-          [domainType]="'terminologies'"
-          (totalCount)="rulesCountEmitter($event)"
-        ></mdm-constraints-rules>
       </div>
     </mat-tab>
   </mat-tab-group>

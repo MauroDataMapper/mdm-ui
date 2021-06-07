@@ -366,7 +366,7 @@ SPDX-License-Identifier: Apache-2.0
                   </mdm-element-classifications>
                 </td>
               </tr>
-              
+
             </tbody>
           </table>
           <mdm-editable-form-buttons
@@ -381,6 +381,54 @@ SPDX-License-Identifier: Apache-2.0
         </form>
       </div>
     </ng-template>
+  </mat-tab>
+  <mat-tab label="Links">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-element-link-list
+          *ngIf="dataElementOutput"
+          [parent]="dataElementOutput"
+          [domainType]="'dataElements'"
+        ></mdm-element-link-list>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Summary" *ngIf="showExtraTabs">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-summary-metadata-table
+          *ngIf="dataElementOutput"
+          [parent]="dataElementOutput"
+          [domainType]="'dataElements'"
+        ></mdm-summary-metadata-table>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Rules
+      <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ rulesItemCount }})
+    </ng-template>
+    <div class="full-width">
+      <mdm-constraints-rules
+        *ngIf="dataElementOutput"
+        [parent]="dataElementOutput"
+        [domainType]="'dataElements'"
+        (totalCount)="rulesCountEmitter($event)"
+      ></mdm-constraints-rules>
+    </div>
   </mat-tab>
   <mat-tab label="Annotations">
     <ng-template matTabContent>
@@ -453,53 +501,5 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
     </ng-template>
-  </mat-tab>
-  <mat-tab label="Links">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-element-link-list
-          *ngIf="dataElementOutput"
-          [parent]="dataElementOutput"
-          [domainType]="'dataElements'"
-        ></mdm-element-link-list>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Summary" *ngIf="showExtraTabs">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-summary-metadata-table
-          *ngIf="dataElementOutput"
-          [parent]="dataElementOutput"
-          [domainType]="'dataElements'"
-        ></mdm-summary-metadata-table>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      Rules
-      <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
-      ({{ rulesItemCount }})
-    </ng-template>
-    <div class="full-width">
-      <mdm-constraints-rules
-        *ngIf="dataElementOutput"
-        [parent]="dataElementOutput"
-        [domainType]="'dataElements'"
-        (totalCount)="rulesCountEmitter($event)"
-      ></mdm-constraints-rules>
-    </div>
   </mat-tab>
 </mat-tab-group>

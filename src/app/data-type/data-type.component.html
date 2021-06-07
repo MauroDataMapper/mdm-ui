@@ -39,7 +39,11 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <div>
-  <mat-tab-group #tab>
+  <mat-tab-group
+    #tab
+    [selectedIndex]="activeTab"
+    (selectedIndexChange)="tabSelected($event)"
+  >
     <mat-tab label="Description">
       <ng-template matTabContent>
         <div *ngIf="dataType" class="mb-2 full-width">
@@ -81,8 +85,14 @@ SPDX-License-Identifier: Apache-2.0
                     >
                     <mat-divider></mat-divider>
                     <mat-option value="other">Other properties</mat-option>
-                    <mat-divider *ngIf="access && access.canAddMetadata"></mat-divider>
-                    <mat-option *ngIf="access && access.canAddMetadata" value="addnew">Add new profile...</mat-option>
+                    <mat-divider
+                      *ngIf="access && access.canAddMetadata"
+                    ></mat-divider>
+                    <mat-option
+                      *ngIf="access && access.canAddMetadata"
+                      value="addnew"
+                      >Add new profile...</mat-option
+                    >
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -96,47 +106,55 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign="flex-end center"
                 fxLayoutAlign.xs="flex-start center"
               >
-              <button
-              mat-flat-button
-              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
-              color="primary"
-              type="button"
-              class="mr-1"
-              (click)="editProfile(false)"
-            >
-              <i class="fas fa-pencil-alt"></i> Edit
-            </button>
+                <button
+                  mat-flat-button
+                  *ngIf="
+                    this.descriptionView !== 'default' &&
+                    this.descriptionView !== 'other' &&
+                    this.descriptionView !== 'addNew'
+                  "
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  (click)="editProfile(false)"
+                >
+                  <i class="fas fa-pencil-alt"></i> Edit
+                </button>
 
-            <button
-            mat-flat-button
-            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
-            color="warn"
-            type="button"
-            class="mr-1"
-            (click)="deleteProfile()"
-          >
-            <i class="fas fa-trash-alt"></i> Delete
-          </button>
+                <button
+                  mat-flat-button
+                  *ngIf="
+                    this.descriptionView !== 'default' &&
+                    this.descriptionView !== 'other' &&
+                    this.descriptionView !== 'addNew'
+                  "
+                  color="warn"
+                  type="button"
+                  class="mr-1"
+                  (click)="deleteProfile()"
+                >
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
 
-            <button
-              mat-flat-button
-              *ngIf="this.descriptionView === 'default'"
-              color="primary"
-              type="button"
-              class="mr-1"
-              [matMenuTriggerFor]="editMenu"
-            >
-              Edit
-            </button>
+                <button
+                  mat-flat-button
+                  *ngIf="this.descriptionView === 'default'"
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  [matMenuTriggerFor]="editMenu"
+                >
+                  Edit
+                </button>
 
-            <mat-menu #editMenu="matMenu">
-              <button mat-menu-item (click)="showDescription()">
-                <i class="fas fa-pencil-alt"></i> Edit Description
-              </button>
-              <button mat-menu-item (click)="edit()">
-                <i class="fas fa-pencil-alt"></i>Edit
-              </button>
-            </mat-menu>
+                <mat-menu #editMenu="matMenu">
+                  <button mat-menu-item (click)="showDescription()">
+                    <i class="fas fa-pencil-alt"></i> Edit Description
+                  </button>
+                  <button mat-menu-item (click)="edit()">
+                    <i class="fas fa-pencil-alt"></i>Edit
+                  </button>
+                </mat-menu>
               </div>
             </div>
           </div>
@@ -279,6 +297,32 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Rules
+        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ rulesItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-constraints-rules
+          *ngIf="dataType"
+          [parent]="dataType"
+          [domainType]="'dataTypes'"
+          (totalCount)="rulesCountEmitter($event)"
+        ></mdm-constraints-rules>
+      </div>
+    </mat-tab>
     <mat-tab label="Comments">
       <ng-template matTabContent>
         <div class="full-width">
@@ -312,31 +356,5 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Rules
-        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
-        ({{ rulesItemCount }})
-      </ng-template>
-      <div class="full-width">
-        <mdm-constraints-rules
-          *ngIf="dataType"
-          [parent]="dataType"
-          [domainType]="'dataTypes'"
-          (totalCount)="rulesCountEmitter($event)"
-        ></mdm-constraints-rules>
-      </div>
-    </mat-tab>
   </mat-tab-group>
-</div> 
+</div>

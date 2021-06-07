@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
@@ -41,6 +41,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-terminology',
@@ -54,7 +56,7 @@ export class TerminologyComponent
 
   terminology: TerminologyDetail;
   diagram: any;
-  activeTab: any;
+  activeTab: number;
   loadingData: boolean;
   searchTerm: any;
   pagination: McSelectPagination;
@@ -72,11 +74,13 @@ export class TerminologyComponent
   showEdit = false;
   showDelete = false;
   showEditDescription = false;
-  access:any;
+  access: Access;
+  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
 
   constructor(
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateService: StateService,
     private title: Title,
     resources: MdmResourcesService,
@@ -90,15 +94,13 @@ export class TerminologyComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    const id = this.stateService.params.id;
+    const id = this.uiRouterGlobals.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetail(this.stateService.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);
 
     this.editableForm = new EditableDataModel();
@@ -223,42 +225,12 @@ export class TerminologyComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  getTabDetail = (tabName) => {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
-      case 'history':
-        return { index: 2, name: 'history' };
-      case 'rules':
-        return { index: 3, name: 'rules' };
-      default:
-        return { index: 0, name: 'properties' };
-    }
-  };
-
-  getTabDetailIndex = (tabIndex) => {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'annotations' };
-      case 2:
-        return { index: 2, name: 'history' };
-      case 3:
-        return { index: 3, name: 'rules' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  };
-
   save = (updatedResource?) => {
     this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
   };
 
-  tabSelected = (tabIndex) => {
-    const tab = this.getTabDetailIndex(tabIndex);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'terminology',
       { tabView: tab.name },

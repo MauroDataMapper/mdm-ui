@@ -204,9 +204,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.classification',
       url: '/classification/:id/{tabView:string}',
       component: ClassificationComponent,
-      params: {
-        tabView: ''
-      }
+      params: { tabView: { dynamic: true, value: null, squash: true } }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.import',

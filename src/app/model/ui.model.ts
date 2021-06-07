@@ -33,6 +33,39 @@ export interface TabDescriptor {
 }
 
 /**
+ * Ordered collection of tab identifiers.
+ */
+export class TabCollection {
+  private names: string[];
+
+  /**
+   * Creates a new `TabCollection`
+   *
+   * @param names The names, in order as they appear in a tab view.
+   */
+  constructor(names: string[]) {
+    this.names = names.slice();
+  }
+
+  getByIndex(index: number): TabDescriptor {
+    if (index >= 0 && index < this.names.length) {
+      return { index, name: this.names[index] };
+    }
+
+    return { index: 0, name: this.names[0] };
+  }
+
+  getByName(name: string): TabDescriptor {
+    const index = this.names.findIndex(n => n === name);
+    if (index === -1) {
+      return { index: 0, name: this.names[0] };
+    }
+
+    return { index, name: this.names[index] };
+  }
+}
+
+/**
  * Defines what annotation views are available.
  */
 export type AnnotationViewOption = 'default' | 'attachments';

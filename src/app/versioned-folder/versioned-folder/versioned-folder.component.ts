@@ -23,7 +23,7 @@ import { Title } from '@angular/platform-browser';
 import { PermissionsResponse, SecurableDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { ContainerDefaultProfileForm, FormState } from '@mdm/model/editable-forms';
-import { AnnotationViewOption, TabDescriptor } from '@mdm/model/ui.model';
+import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
@@ -56,6 +56,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   isLoadingHistory = true;
   rulesItemCount = 0;
   isLoadingRules = true;
+  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
 
   private subscriptions: Subscription[] = [];
   private unsubscribe$ = new Subject<void>();
@@ -89,7 +90,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     this.showExtraTabs = this.shared.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.getTabByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView);
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Versioned Folder');
@@ -114,7 +115,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   }
 
   tabSelected(tab: TabDescriptor | number) {
-    const selected = typeof tab === 'number' ? this.getTabByIndex(tab) : tab;
+    const selected = typeof tab === 'number' ? this.tabs.getByIndex(tab) : tab;
     this.stateHandler.Go(
       'versionedFolder',
       { tabView: selected.name },
@@ -221,35 +222,5 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
             this.catalogueItem[attrname] = response.body[attrname];
           });
       });
-  }
-
-  private getTabByName(tabName: string): TabDescriptor {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'annotations':
-        return { index: 1, name: 'annotations' };
-      case 'history':
-        return { index: 2, name: 'history' };
-      case 'rulesConstraints':
-        return { index: 3, name: 'rulesConstraints' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  private getTabByIndex(index: number) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'annotations' };
-      case 2:
-        return { index: 2, name: 'history' };
-      case 3:
-        return { index: 3, name: 'rulesConstraints' };
-      default:
-        return { index: 0, name: 'description' };
-    }
   }
 }

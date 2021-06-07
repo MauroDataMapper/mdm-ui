@@ -169,7 +169,7 @@ SPDX-License-Identifier: Apache-2.0
                     color="primary"
                     type="button"
                     class="mr-1"
-                    (click)="edit()"
+                    (click)="edit(true)"
                   >
                     Edit
                   </button>
@@ -187,40 +187,7 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-data-set-metadata>
             </div>
-            <form
-              editable-form
-              name="form"
-              (ngSubmit)="formBeforeSave()"
-              disable-submit-on-enter
-            >
-              <table
-                *ngIf="this.descriptionView === 'default' && folder"
-                class="table table-bordered mdm--table-fixed"
-              >
-                <tbody>
-                  <tr>
-                    <td class="detailsRowHeader">Description</td>
-                    <td class="elementDetailDescription">
-                      <mdm-markdown-text-area
-                        [editableForm]="editableForm"
-                        [element]="folder"
-                        [property]="'description'"
-                      >
-                      </mdm-markdown-text-area>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <mdm-editable-form-buttons
-                *ngIf="editableForm"
-                [hidden]="!editableForm.visible"
-                [onCancelEdit]="onCancelEdit"
-                [editable]="editableForm"
-                [textLocation]="'left'"
-                [hideDelete]="true"
-                [hideCancel]="false"
-              ></mdm-editable-form-buttons>
-            </form>
+            <mdm-default-profile  *ngIf="this.descriptionView === 'default' && folder" [catalogueItem]="folder"></mdm-default-profile>
           </div>
         </ng-template>
       </mat-tab>

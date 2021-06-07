@@ -173,7 +173,7 @@ SPDX-License-Identifier: Apache-2.0
               [domainType]="'dataTypes'"
             ></mdm-data-set-metadata>
           </div>
-          <mdm-default-profile  *ngIf="this.descriptionView === 'default'" [catalogueItem]="catalogueItem"></mdm-default-profile>
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default' && dataType" [catalogueItem]="dataType"></mdm-default-profile>
         </div>
       </ng-template>
     </mat-tab>

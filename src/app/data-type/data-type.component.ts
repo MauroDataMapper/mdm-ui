@@ -27,7 +27,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   ElementTypesService,
   MessageHandlerService,
-  SecurityHandlerService
+  SecurityHandlerService,
+  ValidatorService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
@@ -42,6 +43,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class DataTypeComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   dataType: any;
@@ -81,9 +83,10 @@ export class DataTypeComponent
     private securityHandler: SecurityHandlerService,
     dialog: MatDialog,
     private elementTypes: ElementTypesService,
-    editingService: EditingService
+    editingService: EditingService,
+    validator: ValidatorService
   ) {
-    super(resource, dialog, editingService, messageHandler);
+    super(resource, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {

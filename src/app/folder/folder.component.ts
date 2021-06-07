@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Editable } from '../model/folderModel';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
 import { MessageService } from '../services/message.service';
@@ -29,7 +28,8 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   BroadcastService,
   MessageHandlerService,
-  SecurityHandlerService
+  SecurityHandlerService,
+  ValidatorService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
@@ -50,6 +50,8 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class FolderComponent
   extends ProfileBaseComponent
   implements OnInit, OnDestroy {
+
+
   readonly domainType = 'folders';
 
   folder: FolderDetail;
@@ -57,7 +59,6 @@ export class FolderComponent
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  editableForm: Editable;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   activeTab: number;
@@ -84,9 +85,10 @@ export class FolderComponent
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
-    messageHandler: MessageHandlerService
+    messageHandler: MessageHandlerService,
+    validator: ValidatorService
   ) {
-    super(resources, dialog, editingService, messageHandler);
+    super(resources, dialog, editingService, messageHandler,validator);
   }
 
   ngOnInit() {
@@ -103,23 +105,6 @@ export class FolderComponent
     }
     this.title.setTitle('Folder');
     this.showExtraTabs = this.sharedService.isLoggedIn();
-
-    this.editableForm = new Editable();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.setEditableForm();
-      this.editingService.start();
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.setEditableForm();
-    };
 
     this.folderDetails(this.uiRouterGlobals.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
@@ -190,50 +175,22 @@ export class FolderComponent
     );
   }
 
-  setEditableForm() {
-    this.editableForm.description = this.folder.description;
-  }
+  save(folderUpdates: any) {
+       this.editingService.stop();
 
-  showDescription() {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  }
-
-  edit() {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  }
-
-  onCancelEdit() {
-    if (this.folder) {
-      this.showEditDescription = false;
-    }
-  }
-
-  formBeforeSave() {
-    let resource: any = {};
-    this.editingService.stop();
-
-    if (!this.showEditDescription) {
-      resource = {
+    const resource = {
         id: this.folder.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
+        label: this.folder.label,
         domainType: this.folder.domainType
-      };
-    } else {
-      resource = {
-        id: this.folder.id,
-        description: this.editableForm.description || ''
-      };
-    }
+    };
+
+    folderUpdates.forEach((item) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
 
     this.resourcesService.folder.update(resource.id, resource).subscribe(
       (res) => {
         this.folder = res.body;
-
-        this.editableForm.visible = false;
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Folder updated successfully.');

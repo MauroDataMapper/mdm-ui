@@ -45,7 +45,7 @@ export enum  ModelDomainRequestType {
     Terms = 'term',
     Folder = 'folder',
     DataModel = 'dataModel',
-    DataClasse = 'dataClass',
+    DataClass = 'dataClass',
     DataType = 'dataType',
     Terminology = 'terminology',
     ReferenceDataModel = 'referenceDataModel',

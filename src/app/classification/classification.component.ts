@@ -34,7 +34,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, ValidatorService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
@@ -48,6 +48,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class ClassificationComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   @Input() afterSave: any;
@@ -83,9 +84,10 @@ export class ClassificationComponent
     private title: Title,
     editingService: EditingService,
     messageHandler: MessageHandlerService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    validator: ValidatorService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super(resourcesService, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
@@ -208,6 +210,10 @@ export class ClassificationComponent
   edit = () => {
     this.editableForm.show();
   };
+
+  save(catalogueItem: any) {
+    throw new Error('Method not implemented.');
+  }
 
   formBeforeSave = () => {
     this.editMode = false;

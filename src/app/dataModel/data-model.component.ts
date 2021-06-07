@@ -21,7 +21,8 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  ViewChild} from '@angular/core';
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -32,14 +33,20 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  SecurityHandlerService,
+  ValidatorService
+} from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   DataModelDetailResponse,
+  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-data-model',
@@ -90,9 +97,10 @@ export class DataModelComponent
     private title: Title,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService
+    editingService: EditingService,
+    validator: ValidatorService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super(resourcesService, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
@@ -121,6 +129,32 @@ export class DataModelComponent
     );
   }
 
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+    this.resourcesService.dataModel
+      .update(this.catalogueItem.id, resource)
+      .subscribe(
+        (res: DataModelDetailResponse) => {
+          this.messageHandler.showSuccess('Data Model updated successfully.');
+          this.catalogueItem = res.body;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Model.',
+            error
+          );
+        }
+      );
+  }
+
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
@@ -144,7 +178,9 @@ export class DataModelComponent
 
         this.watchDataModelObject();
 
-        this.isEditable = this.catalogueItem.availableActions?.includes('update');
+        this.isEditable = this.catalogueItem.availableActions?.includes(
+          'update'
+        );
         this.parentId = this.catalogueItem.id;
 
         await this.resourcesService.versionLink
@@ -177,7 +213,6 @@ export class DataModelComponent
         });
       });
   }
-
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
@@ -216,13 +251,10 @@ export class DataModelComponent
       { parentDataModelId: this.catalogueItem.id, parentDataClassId: null },
       null
     );
-  };
-
+  }
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
   }
-
-
 }

@@ -49,6 +49,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class DataElementComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataElementOutput: DataElementDetail;
   showSecuritySection: boolean;
@@ -102,7 +103,7 @@ export class DataElementComponent
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     dialog: MatDialog,
-    private validator: ValidatorService,
+    validator: ValidatorService,
     messageHandler: MessageHandlerService,
     private gridService: GridService,
     private title: Title,
@@ -244,6 +245,10 @@ export class DataElementComponent
 
   onDataTypeSelect(dataType) {
     this.dataElementOutput.dataType = dataType;
+  }
+
+  save(catalogueItem: any) {
+    throw new Error('Method not implemented.');
   }
 
   formBeforeSave() {

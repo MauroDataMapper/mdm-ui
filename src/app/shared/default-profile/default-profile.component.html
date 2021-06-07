@@ -1,8 +1,6 @@
-<table
-  class="table table-bordered mdm--table-fixed"
->
+<table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
-    <tr>
+    <tr *ngIf="isInControlList('aliases')" >
       <td class="detailsRowHeader">Aliases</td>
       <td>
         <mdm-element-alias
@@ -14,7 +12,7 @@
         </mdm-element-alias>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="isInControlList('author')" >
       <td class="detailsRowHeader">Author</td>
       <td *ngIf="catalogueItem">
         <mdm-inline-text-edit
@@ -27,7 +25,7 @@
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="isInControlList('organisation')" >
       <td class="detailsRowHeader">Organisation</td>
       <td *ngIf="catalogueItem">
         <mdm-inline-text-edit
@@ -40,7 +38,7 @@
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="isInControlList('description')">
       <td class="detailsRowHeader">Description</td>
       <td class="elementDetailDescription">
         <div *ngIf="catalogueItem">
@@ -51,7 +49,7 @@
         </div>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="isInControlList('classifications')">
       <td class="detailsRowHeader">Classifications</td>
       <td *ngIf="catalogueItem">
         <mdm-element-classifications
@@ -60,6 +58,15 @@
           [property]="'classifiers'"
           [readOnly]="true"
         ></mdm-element-classifications>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('multiplicity')">
+      <th class="detailsRowHeader">Multiplicity</th>
+      <td class="dataClassDetailsModelPath">
+        <mdm-multiplicity
+          [min]="catalogueItem.minMultiplicity"
+          [max]="catalogueItem.maxMultiplicity"
+        ></mdm-multiplicity>
       </td>
     </tr>
   </tbody>

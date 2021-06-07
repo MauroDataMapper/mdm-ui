@@ -33,7 +33,7 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
@@ -51,6 +51,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class ReferenceDataComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -88,9 +89,10 @@ export class ReferenceDataComponent
     editingService: EditingService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    private title: Title
+    private title: Title,
+    validator: ValidatorService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super(resourcesService, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit(): void {
@@ -131,6 +133,10 @@ export class ReferenceDataComponent
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  save() {
+    throw new Error('Method not implemented.');
   }
 
   referenceModelDetails(id: string) {

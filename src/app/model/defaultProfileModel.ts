@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {  Container } from '@maurodatamapper/mdm-resources';
+import {  CatalogueItemDomainType, Container } from '@maurodatamapper/mdm-resources';
 
 
 export interface DefaultProfile
@@ -30,6 +30,8 @@ export interface DefaultProfileItem
     displayName: string;
     value?: string | Container[] | string[];
     controlType: ProfileControlTypes;
+    minMultiplicity?: number| string;
+    maxMultiplicity? : number | string;
 }
 
 export enum ProfileControlTypes
@@ -37,6 +39,27 @@ export enum ProfileControlTypes
     text = 'Text',
     html = 'HTML',
     aliases = 'Aliases',
-    classifications = 'Classifications'
+    classifications = 'Classifications',
+    multiplicity = 'Multiplicity'
+}
 
+export class DefaultProfileControls
+{
+   static dataModel = ['description','author','aliases','organisation','classifications'];
+   static dataClass = ['description','classifications','multiplicity','aliases'];
+   static folder = ['description'];
+
+   static renderControls(domainType) : string[]
+   {
+    switch (domainType) {
+        case CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet:
+          return DefaultProfileControls.dataModel;
+          case CatalogueItemDomainType.DataClass:
+            return DefaultProfileControls.dataClass;
+        case CatalogueItemDomainType.Folder:
+            return DefaultProfileControls.folder;
+        default:
+         return DefaultProfileControls.dataModel;
+      }
+   }
 }

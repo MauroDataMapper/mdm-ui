@@ -19,13 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  ClassifierDetail,
   CodeSetDetail,
   DataElementDetail,
   DataModelDetail,
   FolderDetail,
   ModelDomainType,
-  ModelUpdatePayload,
   TermDetail,
   TerminologyDetail,
   VersionedFolderDetail
@@ -36,18 +34,19 @@ import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-p
 import {
   DefaultProfileItem,
   DefaultProfile,
-  ProfileControlTypes
+  ProfileControlTypes,
+  DefaultProfileControls
 } from '@mdm/model/defaultProfileModel';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   template: ''
 })
-export class ProfileBaseComponent extends BaseComponent {
+export abstract class ProfileBaseComponent extends BaseComponent {
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any = {};
@@ -63,12 +62,12 @@ export class ProfileBaseComponent extends BaseComponent {
     | DataElementDetail
     | VersionedFolderDetail;
 
-
   constructor(
     protected resourcesService: MdmResourcesService,
     protected dialog: MatDialog,
     protected editingService: EditingService,
-    protected messageHandler: MessageHandlerService
+    protected messageHandler: MessageHandlerService,
+    protected validator: ValidatorService
   ) {
     super();
   }
@@ -122,8 +121,6 @@ export class ProfileBaseComponent extends BaseComponent {
       items: this.setDefaultProfileData(isDescriptionOnly)
     };
 
-    const catModel = this.catalogueItem;
-
     const editDialog = this.dialog.open<
       DefaultProfileEditorModalComponent,
       DefaultProfile
@@ -136,47 +133,7 @@ export class ProfileBaseComponent extends BaseComponent {
 
     editDialog.afterClosed().subscribe((editResult) => {
       if (editResult) {
-        this.editingService.stop();
-
-        const resource: ModelUpdatePayload = {
-          id: catModel.id,
-          domainType: catModel.domainType,
-          description:
-            editResult.find((x) => x.displayName === 'Description').value || ''
-        };
-
-        if (!isDescriptionOnly) {
-          resource.label = editResult.find(
-            (x) => x.displayName.toLowerCase() === 'label'
-          )?.value;
-          resource.author = editResult.find(
-            (x) => x.displayName.toLowerCase() === 'author'
-          )?.value;
-          resource.organisation = editResult.find(
-            (x) => x.displayName.toLowerCase() === 'organisation'
-          )?.value;
-          resource.aliases = editResult.find(
-            (x) => x.displayName.toLowerCase() === 'aliases'
-          )?.value;
-          resource.classifiers = editResult.find(
-            (x) => x.displayName.toLowerCase() === 'classifiers'
-          )?.value;
-        }
-
-        this.resourcesService[ModelDomainRequestType[catModel.domainType]]
-          .update(catModel.id, resource)
-          .subscribe(
-            (res: any) => {
-              this.messageHandler.showSuccess('Model updated successfully.');
-              this.catalogueItem = res.body;
-            },
-            (error) => {
-              this.messageHandler.showError(
-                'There was a problem updating the Model.',
-                error
-              );
-            }
-          );
+        this.save(editResult);
       }
     });
   }
@@ -352,6 +309,9 @@ export class ProfileBaseComponent extends BaseComponent {
 
   setDefaultProfileData(isDescriptionOnly: boolean): Array<DefaultProfileItem> {
     const items = new Array<DefaultProfileItem>();
+    const controls = DefaultProfileControls.renderControls(
+      this.catalogueItem.domainType
+    );
 
     items.push(
       this.createDefaultProfileItem(
@@ -362,14 +322,18 @@ export class ProfileBaseComponent extends BaseComponent {
     );
 
     if (!isDescriptionOnly) {
-      items.push(
-        this.createDefaultProfileItem(
-          this.catalogueItem.label,
-          'Label',
-          ProfileControlTypes.text
-        )
-      );
-      if ('organisation' in this.catalogueItem) {
+      if (this.showControl(controls, 'label'))
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.label,
+            'Label',
+            ProfileControlTypes.text
+          )
+        );
+      if (
+        'organisation' in this.catalogueItem &&
+        this.showControl(controls, 'organisation')
+      ) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.organisation,
@@ -378,7 +342,10 @@ export class ProfileBaseComponent extends BaseComponent {
           )
         );
       }
-      if ('author' in this.catalogueItem) {
+      if (
+        'author' in this.catalogueItem &&
+        this.showControl(controls, 'author')
+      ) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.author,
@@ -387,6 +354,7 @@ export class ProfileBaseComponent extends BaseComponent {
           )
         );
       }
+      if (this.showControl(controls, 'aliases')) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.aliases || [],
@@ -394,6 +362,8 @@ export class ProfileBaseComponent extends BaseComponent {
             ProfileControlTypes.aliases
           )
         );
+      }
+      if (this.showControl(controls, 'classifications')) {
         items.push(
           this.createDefaultProfileItem(
             this.catalogueItem.classifiers || [],
@@ -401,9 +371,25 @@ export class ProfileBaseComponent extends BaseComponent {
             ProfileControlTypes.classifications
           )
         );
+      }
+      if (this.showControl(controls, 'multiplicity')) {
+        items.push({
+          controlType: ProfileControlTypes.multiplicity,
+          displayName: 'Multiplicity',
+          maxMultiplicity:
+            this.catalogueItem.maxMultiplicity === -1
+              ? '*'
+              : this.catalogueItem.maxMultiplicity,
+          minMultiplicity: this.catalogueItem.minMultiplicity
+        });
+      }
     }
 
     return items;
+  }
+
+  showControl(controls: string[], controlName: string): boolean {
+    return controls.findIndex((x) => x === controlName) !== -1;
   }
 
   createDefaultProfileItem(
@@ -419,4 +405,6 @@ export class ProfileBaseComponent extends BaseComponent {
 
     return item;
   }
+
+  abstract save(saveItems: Array<DefaultProfileItem>);
 }

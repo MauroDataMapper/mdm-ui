@@ -35,10 +35,9 @@ import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  Term,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
@@ -55,6 +54,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class TermComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
   term: TermDetail;
@@ -91,9 +91,10 @@ export class TermComponent
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    validator: ValidatorService
   ) {
-    super(resources, dialog, editingService, messageHandler);
+    super(resources, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
@@ -221,6 +222,10 @@ export class TermComponent
 
   onCancelEdit() {
     this.editMode = false; // Use Input editor whe adding a new folder.
+  }
+
+  save(catalogueItem: any) {
+    throw new Error('Method not implemented.');
   }
 
   formBeforeSave = () => {

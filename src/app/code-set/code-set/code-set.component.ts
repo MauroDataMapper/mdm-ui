@@ -23,7 +23,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
@@ -32,16 +32,19 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   CodeSetDetail,
   CodeSetDetailResponse,
+  ModelUpdatePayload,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-code-set',
@@ -51,6 +54,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class CodeSetComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   codeSetModel: CodeSetDetail;
   showSecuritySection: boolean;
@@ -88,9 +92,10 @@ export class CodeSetComponent
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
     editingService: EditingService,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    validator: ValidatorService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super(resourcesService, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
@@ -210,5 +215,32 @@ export class CodeSetComponent
       this.canEditDescription = access.canEditDescription;
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
     }
+  }
+
+  save(saveItems: any) {
+    const resource: ModelUpdatePayload = {
+      id: this.codeSetModel.id,
+      domainType: this.codeSetModel.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+     this.resourcesService.codeSet
+    .update(this.codeSetModel.id, resource)
+    .pipe( catchError(error =>
+      {
+        this.messageHandler.showError(  'There was a problem updating the Code Set.',   error );
+        return EMPTY ;
+      }))
+    .subscribe(
+      (res) => {
+        this.editingService.stop();
+        this.messageHandler.showSuccess('Code Set updated successfully.');
+        this.catalogueItem = res.body;
+      }
+    );
+
   }
 }

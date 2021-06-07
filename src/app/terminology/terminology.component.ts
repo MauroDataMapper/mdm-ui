@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
@@ -33,7 +33,8 @@ import { Subscription } from 'rxjs';
 import {
   MessageHandlerService,
   MessageService,
-  SecurityHandlerService
+  SecurityHandlerService,
+  ValidatorService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -43,6 +44,8 @@ import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, Termino
 import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
 import { TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-terminology',
@@ -87,9 +90,10 @@ export class TerminologyComponent
     private messageService: MessageService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService
+    editingService: EditingService,
+    validator: ValidatorService
   ) {
-    super(resources, dialog, editingService, messageHandler);
+    super(resources, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
@@ -134,7 +138,7 @@ export class TerminologyComponent
 
   save = (updatedResource?) => {
     this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
-  };
+    };
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);

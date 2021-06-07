@@ -19,8 +19,13 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DefaultProfile, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
+import {
+  DefaultProfile,
+  DefaultProfileItem,
+  ProfileControlTypes
+} from '@mdm/model/defaultProfileModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { ValidatorService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-default-profile-editor-modal',
@@ -28,18 +33,38 @@ import { MdmResourcesService } from '@mdm/modules/resources';
   styleUrls: ['./default-profile-editor-modal.component.sass']
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
+  error: string;
 
-  constructor( public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DefaultProfile,
-    protected resourcesSvc: MdmResourcesService
-   ) { }
+    protected resourcesSvc: MdmResourcesService,
+    protected validator: ValidatorService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   save() {
     // Save Changes
-    this.dialogRef.close(this.data.items);
+
+    let hasError = false;
+
+    this.data.items.forEach((item: DefaultProfileItem) => {
+      if (item.minMultiplicity !== undefined) {
+        const valResult = this.validator.validateMultiplicities(
+          item.minMultiplicity.toString(),
+          item.maxMultiplicity.toString()
+        );
+        if (valResult) {
+          this.error = valResult;
+          hasError = true;
+        }
+      }
+    });
+
+    if (!hasError) {
+      this.dialogRef.close(this.data.items);
+    }
   }
 
   onCancel() {

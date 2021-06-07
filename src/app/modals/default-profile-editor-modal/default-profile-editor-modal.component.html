@@ -23,20 +23,18 @@ SPDX-License-Identifier: Apache-2.0
     <tbody *ngFor="let item of this.data.items">
       <tr>
         <td [attr.colspan]="2" class="detailsRowHeader">
-            {{item.displayName}}
+          {{ item.displayName }}
         </td>
-        <td >
-            <mdm-content-editor
+        <td>
+          <mdm-content-editor
             *ngIf="item.controlType === profileControlType.html"
             [(description)]="item.value"
-              id="{{ item.value }}"                         
-              [inEditMode]="true"
-            ></mdm-content-editor>
-            <input
-            *ngIf="
-            item.controlType === profileControlType.text
-            "
-            matInput             
+            id="{{ item.value }}"
+            [inEditMode]="true"
+          ></mdm-content-editor>
+          <input
+            *ngIf="item.controlType === profileControlType.text"
+            matInput
             type="text"
             name="{item.displayName}}"
             [(ngModel)]="item.value"
@@ -44,23 +42,76 @@ SPDX-License-Identifier: Apache-2.0
             class="outlined-input form-control"
           />
           <mdm-element-classifications
-          *ngIf="
-          item.controlType === profileControlType.classifications
-          "
-          [readOnly]="false"
-          [(classifications)]="item.value"
-          name="classifiers"            
-          [property]="'classifiers'"
-        >
-        </mdm-element-classifications>
-        <mdm-element-alias
-        *ngIf="
-        item.controlType === profileControlType.aliases
-        "
-        [aliases]="item.value"
-        [readOnly]="false"
-      >
-      </mdm-element-alias>
+            *ngIf="item.controlType === profileControlType.classifications"
+            [readOnly]="false"
+            [(classifications)]="item.value"
+            name="classifiers"
+            [property]="'classifiers'"
+          >
+          </mdm-element-classifications>
+          <mdm-element-alias
+            *ngIf="item.controlType === profileControlType.aliases"
+            [aliases]="item.value"
+            [readOnly]="false"
+          >
+          </mdm-element-alias>
+          <div *ngIf="item.controlType === profileControlType.multiplicity">
+            <div style="float: left">
+              <div style="padding-left: 8px">Min</div>
+              <mdm-inline-text-edit
+                [readOnly]="false"
+                [inEditMode]="true"
+                [(ngModel)]="item.minMultiplicity"
+                [styleCss]="'dataModelDetailsLabel'"
+                name="moduleNameMinText"
+                size="20"
+                size="5"
+              >
+              </mdm-inline-text-edit>
+              <small class="block"> Use numbers only </small>
+
+              <span *ngIf="item.minMultiplicity && item.minMultiplicity == 0"
+                >..</span
+              >
+              <span style="padding-right: 10px"></span>
+            </div>
+
+            <div style="float: left; margin-right: 13px">
+              <div style="padding-left: 6px">
+                Max
+                <mdm-inline-text-edit
+                  [readOnly]="false"
+                  [inEditMode]="true"
+                  [(ngModel)]="item.maxMultiplicity"
+                  [styleCss]="'dataModelDetailsLabel'"
+                  name="moduleNameMaxText"
+                >
+                </mdm-inline-text-edit>
+                <small class="block">
+                  User numbers or <strong>*</strong> for unbound multiplicity
+                </small>
+              </div>
+            </div>
+            <div
+              style="clear: both"
+              [ngClass]="{ 'has-error': true }"
+              *ngIf="error != ''"
+            >
+              <small class="warning">{{ error }}</small>
+            </div>
+          </div>
+         
+            <div    
+            >
+              <mdm-element-data-type
+                [elementDataType]="item.value"
+                [mcParentDataModel]="data.catalogueItem"
+              >
+              </mdm-element-data-type>
+            </div>
+
+            
+          
         </td>
       </tr>
     </tbody>

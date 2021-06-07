@@ -34,10 +34,13 @@ import {
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  DataClass,
   DataClassDetail,
   DataClassDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { min, max } from 'lodash';
 import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
@@ -85,15 +88,16 @@ export class DataClassComponent
     editingService: EditingService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    private validator: ValidatorService
+    validator: ValidatorService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super(resourcesService, dialog, editingService, messageHandler, validator);
   }
 
   ngOnInit() {
     if (
       this.isGuid(this.uiRouterGlobals.params.id) &&
-      (!this.uiRouterGlobals.params.id || !this.uiRouterGlobals.params.dataModelId)
+      (!this.uiRouterGlobals.params.id ||
+        !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -189,6 +193,73 @@ export class DataClassComponent
           this.catalogueItem = this.dataClass;
           this.access = this.securityHandler.elementAccess(this.dataClass);
         });
+    }
+  }
+
+  save(saveItems: any) {
+    this.error = '';
+
+    const resource: DataClass = {
+      id: this.catalogueItem.id,
+      label: this.catalogueItem.label,
+      domainType: this.catalogueItem.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      if (item.maxMultiplicity !== undefined) {
+        if ((item.minMultiplicity as string) === '*') {
+          item.minMultiplicity = -1;
+        }
+
+        if ((item.maxMultiplicity as string) === '*') {
+          item.maxMultiplicity = -1;
+        }
+
+        resource.minMultiplicity = item.minMultiplicity as number;
+        resource.maxMultiplicity = item.maxMultiplicity;
+      } else {
+        resource[item.displayName.toLocaleLowerCase()] = item.value;
+      }
+    });
+
+    if (!this.catalogueItem.parentDataClass) {
+      this.resourcesService.dataClass
+        .update(this.catalogueItem.model, this.catalogueItem.id, resource)
+        .subscribe(
+          (result: DataClassDetailResponse) => {
+            this.catalogueItem = result.body;
+            this.messageHandler.showSuccess('Data Class updated successfully.');
+            this.editingService.stop();
+            this.messageService.dataChanged(result.body);
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the Data Class.',
+              error
+            );
+          }
+        );
+    } else {
+      this.resourcesService.dataClass
+        .updateChildDataClass(
+          this.dataClass.model,
+          this.dataClass.parentDataClass,
+          this.dataClass.id,
+          resource
+        )
+        .subscribe(
+          (result: DataClassDetailResponse) => {
+            this.messageHandler.showSuccess('Data Class updated successfully.');
+            this.editingService.stop();
+            this.catalogueItem = result.body;
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the Data Class.',
+              error
+            );
+          }
+        );
     }
   }
 

@@ -38,6 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   ModelUpdatePayload,
+  ReferenceDataModelDetail,
   ReferenceDataModelDetailResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
@@ -55,6 +56,7 @@ export class ReferenceDataComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  referenceModel: ReferenceDataModelDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   parentId: string;
@@ -152,7 +154,7 @@ export class ReferenceDataComponent
     .update(this.catalogueItem.id, resource)
     .subscribe(
       (res) => {
-        this.catalogueItem.description = res.body.description;
+        this.referenceModel = res.body;
         this.messageHandler.showSuccess(
           'Reference Data Model updated successfully.'
         );
@@ -172,14 +174,15 @@ export class ReferenceDataComponent
       .get(id)
       .subscribe((result: ReferenceDataModelDetailResponse) => {
         this.catalogueItem = result.body;
+        this.referenceModel = result.body;
         this.isEditable = this.catalogueItem.availableActions.includes(
           'update'
         );
-        this.parentId = this.catalogueItem.id;
+        this.parentId = this.referenceModel.id;
         this.watchRefDataModelObject();
 
-        this.UsedProfiles('referenceDataModels', this.catalogueItem.id);
-        this.UnUsedProfiles('referenceDataModels', this.catalogueItem.id);
+        this.UsedProfiles('referenceDataModels', this.referenceModel.id);
+        this.UnUsedProfiles('referenceDataModels', this.referenceModel.id);
 
         if (this.sharedService.isLoggedIn(true)) {
           this.ReferenceModelPermissions(id);

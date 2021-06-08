@@ -38,6 +38,7 @@ import { MessageHandlerService, SecurityHandlerService, ValidatorService } from 
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   ModelUpdatePayload,
+  Term,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
@@ -180,9 +181,6 @@ export class TermComponent
     }
   }
 
-  Save(updatedResource) {
-    this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
-  }
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
@@ -195,9 +193,11 @@ export class TermComponent
 
   save(saveItems: any) {
 
-    const resource: ModelUpdatePayload = {
+    const resource: Term = {
       id: this.term.id,
-      domainType: this.term.domainType
+      domainType: this.term.domainType,
+      code: this.term.code,
+      definition: this.term.definition
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
@@ -205,10 +205,10 @@ export class TermComponent
     });
 
     this.resourcesService.term
-    .update(this.term.terminology.id, this.term.id, this.term)
+    .update(this.term.terminology.id, this.term.id, resource)
     .subscribe(
       (result:TermDetailResponse) => {
-        this.term = result.body;
+        this.termDetails(result.body.id);
         this.messageHandler.showSuccess('Term updated successfully.');
         this.editingService.stop();
       },

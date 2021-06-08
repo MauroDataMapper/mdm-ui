@@ -40,6 +40,7 @@ import {
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  DataModelDetail,
   DataModelDetailResponse,
   ModelUpdatePayload,
   SecurableDomainType
@@ -62,6 +63,7 @@ export class DataModelComponent
   showSearch = false;
   parentId: string;
 
+  dataModel: DataModelDetail;
   editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
@@ -145,7 +147,7 @@ export class DataModelComponent
       .subscribe(
         (res: DataModelDetailResponse) => {
           this.messageHandler.showSuccess('Data Model updated successfully.');
-          this.catalogueItem = res.body;
+          this.dataModel = res.body;
         },
         (error) => {
           this.messageHandler.showError(
@@ -175,6 +177,7 @@ export class DataModelComponent
     this.resourcesService.dataModel
       .get(id)
       .subscribe(async (result: DataModelDetailResponse) => {
+        this.dataModel = result.body;
         this.catalogueItem = result.body;
 
         this.watchDataModelObject();

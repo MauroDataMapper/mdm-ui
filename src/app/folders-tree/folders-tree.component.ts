@@ -142,6 +142,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       public dialog: MatDialog,
       private modelTree: ModelTreeService,
       private shared: SharedService) {
+    this.loadFavourites();
     this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
     }));

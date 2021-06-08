@@ -40,6 +40,7 @@ export class NewFolderModalComponent implements OnInit {
   modalTitle: string;
   message: string;
   inputLabel: string;
+  createRootFolder = false;
   useVersionedFolders = false;
 
   folderForm = new FormGroup({
@@ -68,7 +69,7 @@ export class NewFolderModalComponent implements OnInit {
     this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
-
+    this.createRootFolder = this.data.createRootFolder;
     this.useVersionedFolders = this.data.canVersion && this.shared.features.useVersionedFolders;
   }
 

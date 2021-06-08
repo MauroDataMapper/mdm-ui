@@ -27,6 +27,7 @@ export interface NewFolderModalConfiguration {
   modalTitle?: string;
   message?: string;
   inputLabel?: string;
+  createRootFolder?: boolean;
   canVersion?: boolean;
 }
 

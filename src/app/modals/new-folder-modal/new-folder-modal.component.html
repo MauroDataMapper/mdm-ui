@@ -22,6 +22,9 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="modal-body pxy-2">
     <p [innerHtml]="message"></p>
+    <mdm-alert *ngIf="createRootFolder" alertStyle="info" [showIcon]="true">
+      This will be added at the top of the tree.
+    </mdm-alert>
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width mb-2">
         <mat-label>{{ inputLabel }}</mat-label>

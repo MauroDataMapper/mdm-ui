@@ -42,9 +42,7 @@ import {
   Classifier,
   ClassifierDetailResponse,
   ClassifierIndexResponse,
-  ContainerDomainType,
-  FolderDetailResponse
-} from '@maurodatamapper/mdm-resources';
+  ContainerDomainType} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -354,88 +352,24 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFolderAddModal() {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(NewFolderModalComponent, {
-        data: {
-          inputValue: this.folder,
-          modalTitle: 'Create a new Folder',
-          okBtn: 'Add folder',
-          btnType: 'primary',
-          inputLabel: 'Folder name',
-          message:
-            'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
-        }
-      });
+    this.modelTree
+      .createNewFolder()
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem creating the Folder.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        const item = response.body;
+        this.filteredModels.children.push(item);
 
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          if (this.validateLabel(result)) {
-            this.folder = result;
-            this.onAddFolder(null, null, result);
-          } else {
-            const error = 'err';
-            this.messageHandler.showError(
-              'Folder name can not be empty',
-              error
-            );
-            return;
-          }
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
-  };
-
-  onAddFolder(event?, folder?, payload?: { label: string; groups: any[] }) {
-    let parentId;
-    if (folder) {
-      parentId = folder.id;
-    }
-    let endpoint;
-    if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, {
-        label: payload.label,
-        groups: payload.groups
-      });
-    } else {
-      endpoint = this.resources.folder.save({
-        label: payload.label,
-        groups: payload.groups
-      });
-    }
-    endpoint.subscribe(
-      (res: FolderDetailResponse) => {
-        const result = res.body;
-        if (folder) {
-          // result.domainType = 'Folder';
-          folder.children = folder.children || [];
-          folder.children.push(result);
-        } else {
-          // result.domainType = 'Folder';
-          // this.allModels.children.push(result);
-          this.filteredModels.children.push(result);
-        }
-
-        // go to folder
-        this.stateHandler.Go('Folder', { id: result.id, edit: false });
-        this.messageHandler.showSuccess(
-          `Folder ${result.label} created successfully.`
-        );
+        this.stateHandler.Go(item.domainType, { id: item.id, edit: false });
+        this.messageHandler.showSuccess(`Folder ${item.label} created successfully.`);
         this.folder = '';
         this.loadModelsTree();
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem creating the Folder.',
-          error
-        );
-      }
-    );
-  }
+      });
+  };
 
   onAddDataModel(folder: any) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });

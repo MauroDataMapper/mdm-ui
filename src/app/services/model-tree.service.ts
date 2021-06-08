@@ -197,12 +197,13 @@ export class ModelTreeService implements OnDestroy {
             btnType: 'primary',
             inputLabel: 'Folder name',
             message: 'Please enter the name of your Folder.',
+            createRootFolder: !parentFolderId,
             canVersion: true
           }
         })
       .afterClosed()
       .pipe(
-        filter(response => response.status === ModalDialogStatus.Ok),
+        filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap(modal => {
           if (modal.useVersionedFolders && modal.isVersioned) {
             return this.saveVersionedFolder(modal.label, parentFolderId);

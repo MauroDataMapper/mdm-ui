@@ -44,7 +44,6 @@ import {
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
-import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-reference-data',

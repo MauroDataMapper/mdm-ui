@@ -32,9 +32,11 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  DataType,
+  DataTypeDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
-import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -47,7 +49,6 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class DataTypeComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
-
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   dataType: any;
@@ -71,7 +72,14 @@ export class DataTypeComponent
   showEditDescription = false;
   access: any;
 
-  tabs = new TabCollection(['description', 'dataElements', 'rules', 'comments', 'links', 'attachments']);
+  tabs = new TabCollection([
+    'description',
+    'dataElements',
+    'rules',
+    'comments',
+    'links',
+    'attachments'
+  ]);
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -104,7 +112,9 @@ export class DataTypeComponent
 
     this.title.setTitle('Data Type');
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.dataModel = { id: this.dataModelId };
@@ -125,7 +135,6 @@ export class DataTypeComponent
         this.catalogueItem = this.dataType;
 
         this.watchDataTypeObject();
-
 
         this.title.setTitle(`Data Type - ${this.dataType?.label}`);
 
@@ -153,15 +162,10 @@ export class DataTypeComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go(
-      'dataType',
-      { tabView: tab.name },
-      { notify: false }
-    );
-  };
+    this.stateHandler.Go('dataType', { tabView: tab.name }, { notify: false });
+  }
 
   save(saveItems: any) {
-
     const resource: DataType = {
       id: this.catalogueItem.id,
       domainType: this.catalogueItem.domainType,
@@ -179,33 +183,15 @@ export class DataTypeComponent
           this.dataType = res.body;
           this.messageHandler.showSuccess('Data Type updated successfully.');
           this.editingService.stop();
-
         },
         (error) => {
           this.messageHandler.showError(
             'There was a problem updating the Data Type.',
             error
           );
+        }
+      );
   }
-
-  getTabDetail = (tabName) => {
-    switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
-      case 'dataElements':
-        return { index: 1, name: 'dataElements' };
-      case 'comments':
-        return { index: 2, name: 'comments' };
-      case 'links':
-        return { index: 3, name: 'links' };
-      case 'attachments':
-        return { index: 4, name: 'attachments' };
-      case 'history':
-        return { index: 5, name: 'history', fetchUrl: null };
-      default:
-        return { index: 0, name: 'properties' };
-    }
-  };
 
   rulesCountEmitter($event) {
     this.isLoadingRules = false;

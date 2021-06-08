@@ -82,7 +82,6 @@ export class DataClassComponent
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
-    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,

@@ -27,7 +27,6 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, ValidatorService } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { ValidatorService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-default-profile-editor-modal',

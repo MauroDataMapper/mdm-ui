@@ -40,7 +40,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
 import { TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';

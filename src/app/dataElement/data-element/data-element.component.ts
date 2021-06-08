@@ -37,11 +37,8 @@ import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
-import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
-import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
-import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
-import { UIRouterGlobals } from '@uirouter/core';
+
 
 @Component({
   selector: 'mdm-data-element',
@@ -101,7 +98,6 @@ export class DataElementComponent
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
-    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     dialog: MatDialog,
     validator: ValidatorService,

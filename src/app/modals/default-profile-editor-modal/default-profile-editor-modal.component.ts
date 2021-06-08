@@ -25,7 +25,8 @@ import {
   ProfileControlTypes
 } from '@mdm/model/defaultProfileModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ValidatorService } from '@mdm/services';
+import { GridService, ValidatorService } from '@mdm/services';
+import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 
 @Component({
   selector: 'mdm-default-profile-editor-modal',
@@ -33,13 +34,18 @@ import { ValidatorService } from '@mdm/services';
   styleUrls: ['./default-profile-editor-modal.component.sass']
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
-  error: string;
+  multiplicityError: string;
+  dataTypeErrors: string;
+  showNewInlineDataType = false;
+  pagination: McSelectPagination;
 
   constructor(
     public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DefaultProfile,
     protected resourcesSvc: MdmResourcesService,
-    protected validator: ValidatorService
+    protected validator: ValidatorService,
+    protected gridService: GridService,
+    protected resources: MdmResourcesService
   ) {}
 
   ngOnInit(): void {}
@@ -50,15 +56,19 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     let hasError = false;
 
     this.data.items.forEach((item: DefaultProfileItem) => {
-      if (item.minMultiplicity !== undefined) {
+      if (item.controlType === ProfileControlTypes.multiplicity) {
         const valResult = this.validator.validateMultiplicities(
           item.minMultiplicity.toString(),
           item.maxMultiplicity.toString()
         );
         if (valResult) {
-          this.error = valResult;
+          this.multiplicityError = valResult;
           hasError = true;
         }
+      }
+      else if (item.controlType === ProfileControlTypes.dataType)
+      {
+       hasError = !this.validateDataType(item);
       }
     });
 
@@ -73,5 +83,75 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
+  }
+
+  validateDataType(item: any) {
+
+    let isValid = true;
+
+    if (!this.showNewInlineDataType) {
+      return true;
+    }
+    if (
+      !item.value.label ||
+      item.value.label.trim().length === 0
+    ) {
+      isValid = false;
+    }
+    // Check if for EnumerationType, at least one value is added
+    if (
+      item.value.domainType === 'EnumerationType' &&
+      item.value.enumerationValues.length === 0
+    ) {
+      isValid = false;
+    }
+    // Check if for ReferenceType, the dataClass is selected
+    if (
+      item.value.domainType === 'ReferenceType' &&
+      !item.value.referencedDataClass
+    ) {
+      isValid = false;
+    }
+
+    // Check if for TerminologyType, the terminology is selected
+    if (
+      item.value.domainType === 'TerminologyType' &&
+      !item.value.referencedTerminology
+    ) {
+      isValid = false;
+    }
+
+    if (!isValid) {
+      this.dataTypeErrors = '';
+      this.dataTypeErrors =
+        'Please fill in all required values for the new Data Type';
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  fetchDataTypes = (text, loadAll, offset, limit) => {
+    const options = this.gridService.constructOptions(
+      limit,
+      offset,
+      'label',
+      'asc',
+      { label: text }
+    );
+    this.pagination = {
+      limit: options['limit'],
+      offset: options['offset']
+    };
+    return this.resources.dataType.list(this.data.catalogueItem.breadcrumbs[0].id, options);
+  };
+
+  onDataTypeSelect(dataType, item) {
+    item.value = dataType;
+  }
+
+  toggleShowNewInlineDataType() {
+    this.showNewInlineDataType = !this.showNewInlineDataType;
+    this.dataTypeErrors = '';
   }
 }

@@ -37,7 +37,6 @@ import {
   ProfileControlTypes,
   DefaultProfileControls
 } from '@mdm/model/defaultProfileModel';
-import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -118,7 +117,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
 
   edit(isDescriptionOnly: boolean) {
     const data: DefaultProfile = {
-      items: this.setDefaultProfileData(isDescriptionOnly)
+      items: this.setDefaultProfileData(isDescriptionOnly),
+      catalogueItem: this.catalogueItem
     };
 
     const editDialog = this.dialog.open<
@@ -383,6 +383,26 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           minMultiplicity: this.catalogueItem.minMultiplicity
         });
       }
+      if (this.showControl(controls, 'dataType')) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.dataType,
+            'Data Type',
+            ProfileControlTypes.dataType
+          )
+        );
+      }
+      if(this.showControl(controls, 'url'))
+      {
+        items.push(
+          this.createDefaultProfileItem(
+          this.catalogueItem.url,
+          'URL',
+          ProfileControlTypes.text
+          )
+        );
+      }
+
     }
 
     return items;

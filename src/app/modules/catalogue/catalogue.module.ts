@@ -186,6 +186,7 @@ import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder
 import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -371,7 +372,8 @@ import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-pro
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    JoditAngularModule
+    JoditAngularModule,
+    PipesModule
   ],
   exports: [
     MarkedPipe,

@@ -37,11 +37,13 @@ import { MessageHandlerService, SecurityHandlerService, ValidatorService } from 
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  ModelUpdatePayload,
   ReferenceDataModelDetailResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -135,8 +137,34 @@ export class ReferenceDataComponent
     this.rulesItemCount = $event;
   }
 
-  save() {
-    throw new Error('Method not implemented.');
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+
+    this.resourcesService.referenceDataModel
+    .update(this.catalogueItem.id, resource)
+    .subscribe(
+      (res) => {
+        this.catalogueItem.description = res.body.description;
+        this.messageHandler.showSuccess(
+          'Reference Data Model updated successfully.'
+        );
+        this.editingService.stop();
+       },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Reference Data Model.',
+          error
+        );
+      }
+    );
   }
 
   referenceModelDetails(id: string) {

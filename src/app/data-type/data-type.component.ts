@@ -32,6 +32,8 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 

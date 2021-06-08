@@ -39,9 +39,9 @@ export class ElementClassificationsComponent implements OnInit {
 
   target: string;
   lastWasShiftKey: any;
-  formData: {
-    showMarkDownPreview: Boolean;
-    classifiers: any[];
+  formData = {
+    showMarkDownPreview : false,
+    classifiers: []
   };
   allClassifications: Classifier[];
   selectedClassification = [];
@@ -61,7 +61,7 @@ export class ElementClassificationsComponent implements OnInit {
         });
       }
     } else {
-      this.formData.classifiers = this.element.classifiers;
+      this.formData.classifiers = this.element.classifiers ? this.element.classifiers : [];
     }
 
   }

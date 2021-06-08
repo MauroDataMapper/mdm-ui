@@ -38,6 +38,19 @@
         </mdm-inline-text-edit>
       </td>
     </tr>
+    <tr *ngIf="isInControlList('url')" >
+      <td class="detailsRowHeader">URL</td>
+      <td *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.url"
+          [name]="'url'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
     <tr *ngIf="isInControlList('description')">
       <td class="detailsRowHeader">Description</td>
       <td class="elementDetailDescription">
@@ -49,15 +62,14 @@
         </div>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('classifications')">
-      <td class="detailsRowHeader">Classifications</td>
-      <td *ngIf="catalogueItem">
-        <mdm-element-classifications
-          [classifications]="catalogueItem.classifiers"
-          [element]="catalogueItem"
-          [property]="'classifiers'"
-          [readOnly]="true"
-        ></mdm-element-classifications>
+    <tr *ngIf="isInControlList('dataType')">
+      <th class="detailsRowHeader">Data Type</th>
+      <td>
+        <mdm-element-data-type
+        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
+        [mcParentDataModel]="catalogueItem"
+      >
+      </mdm-element-data-type>
       </td>
     </tr>
     <tr *ngIf="isInControlList('multiplicity')">
@@ -67,6 +79,17 @@
           [min]="catalogueItem.minMultiplicity"
           [max]="catalogueItem.maxMultiplicity"
         ></mdm-multiplicity>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('classifications')">
+      <td class="detailsRowHeader">Classifications</td>
+      <td *ngIf="catalogueItem">
+        <mdm-element-classifications
+          [classifications]="catalogueItem.classifiers"
+          [element]="catalogueItem"
+          [property]="'classifiers'"
+          [readOnly]="true"
+        ></mdm-element-classifications>
       </td>
     </tr>
   </tbody>

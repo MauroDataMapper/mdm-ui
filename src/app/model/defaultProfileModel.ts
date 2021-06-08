@@ -16,50 +16,84 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {  CatalogueItemDomainType, Container } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  Container,
+  DataTypeReference
+} from '@maurodatamapper/mdm-resources';
 
-
-export interface DefaultProfile
-{
-    items: Array<DefaultProfileItem>;
+export interface DefaultProfile {
+  items: Array<DefaultProfileItem>;
+  catalogueItem: any;
 }
 
 // TODO update classifications with model
-export interface DefaultProfileItem
-{
-    displayName: string;
-    value?: string | Container[] | string[];
-    controlType: ProfileControlTypes;
-    minMultiplicity?: number| string;
-    maxMultiplicity? : number | string;
+export interface DefaultProfileItem {
+  displayName: string;
+  value?: string | Container[] | string[] | DataTypeReference;
+  controlType: ProfileControlTypes;
+  minMultiplicity?: number | string;
+  maxMultiplicity?: number | string;
 }
 
-export enum ProfileControlTypes
-{
-    text = 'Text',
-    html = 'HTML',
-    aliases = 'Aliases',
-    classifications = 'Classifications',
-    multiplicity = 'Multiplicity'
+export enum ProfileControlTypes {
+  text = 'Text',
+  html = 'HTML',
+  aliases = 'Aliases',
+  classifications = 'Classifications',
+  multiplicity = 'Multiplicity',
+  dataType = 'DataType'
 }
 
-export class DefaultProfileControls
-{
-   static dataModel = ['description','author','aliases','organisation','classifications'];
-   static dataClass = ['description','classifications','multiplicity','aliases'];
-   static folder = ['description'];
+export class DefaultProfileControls {
+  static dataModel = [
+    'description',
+    'author',
+    'aliases',
+    'organisation',
+    'classifications'
+  ];
+  static dataClass = [
+    'description',
+    'classifications',
+    'multiplicity',
+    'aliases'
+  ];
+  static dataElement = [
+    'description',
+    'classifications',
+    'multiplicity',
+    'aliases',
+    'dataType'
+  ];
+  static folder = ['description'];
+  static dataType = ['description', 'aliases', 'classifications', 'dataType'];
+  static term = ['description', 'aliases',  'classifications', 'url'];
 
-   static renderControls(domainType) : string[]
-   {
+  static renderControls(domainType): string[] {
     switch (domainType) {
-        case CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet:
-          return DefaultProfileControls.dataModel;
-          case CatalogueItemDomainType.DataClass:
-            return DefaultProfileControls.dataClass;
-        case CatalogueItemDomainType.Folder:
-            return DefaultProfileControls.folder;
-        default:
-         return DefaultProfileControls.dataModel;
-      }
-   }
+      case (CatalogueItemDomainType.DataModel,
+      CatalogueItemDomainType.Terminology,
+      CatalogueItemDomainType.CodeSet):
+        return DefaultProfileControls.dataModel;
+      case CatalogueItemDomainType.Term:
+        return DefaultProfileControls.term;
+      case CatalogueItemDomainType.DataClass:
+        return DefaultProfileControls.dataClass;
+      case CatalogueItemDomainType.Folder:
+        return DefaultProfileControls.folder;
+      case CatalogueItemDomainType.DataElement:
+        return DefaultProfileControls.dataElement;
+      case (CatalogueItemDomainType.ReferenceDataModelType,
+      CatalogueItemDomainType.CodeSetType,
+      CatalogueItemDomainType.ModelDataType,
+      CatalogueItemDomainType.PrimitiveType,
+      CatalogueItemDomainType.TerminologyType,
+      CatalogueItemDomainType.EnumerationType,
+      CatalogueItemDomainType.ReferenceType):
+        return DefaultProfileControls.dataType;
+      default:
+        return DefaultProfileControls.dataModel;
+    }
+  }
 }

@@ -26,7 +26,6 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
@@ -56,7 +55,6 @@ export class ClassificationDetailsComponent implements OnInit {
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
     private folderHandler: FolderHandlerService,
-    private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
     private stateHandler: StateHandlerService,
     private title: Title,

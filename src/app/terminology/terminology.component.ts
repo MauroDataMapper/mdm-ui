@@ -27,24 +27,25 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { Subscription } from 'rxjs';
 import {
   MessageHandlerService,
   MessageService,
-  SecurityHandlerService,
-  ValidatorService
+  SecurityHandlerService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ModelUpdatePayload,
+  TerminologyDetail,
+  TerminologyDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
-import { TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
-import { ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
@@ -83,17 +84,14 @@ export class TerminologyComponent
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
-    private stateService: StateService,
     private title: Title,
     resources: MdmResourcesService,
-    private broadcast: BroadcastService,
     private messageService: MessageService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService,
-    validator: ValidatorService
+    editingService: EditingService
   ) {
-    super(resources, dialog, editingService, messageHandler, validator);
+    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -103,27 +101,31 @@ export class TerminologyComponent
       return;
     }
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resourcesService.terminology.get(id).subscribe((result: TerminologyDetailResponse) => {
-      const data = result.body;
-      this.catalogueItem = data;
+    this.resourcesService.terminology
+      .get(id)
+      .subscribe((result: TerminologyDetailResponse) => {
+        const data = result.body;
+        this.catalogueItem = data;
 
-      this.access = this.securityHandler.elementAccess(data);
-      this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+        this.access = this.securityHandler.elementAccess(data);
+        this.showEdit = this.access.showEdit;
+        this.showDelete =
+          this.access.showPermanentDelete || this.access.showSoftDelete;
 
-      this.UsedProfiles('terminology', id);
-      this.UnUsedProfiles('terminology', id);
+        this.UsedProfiles('terminology', id);
+        this.UnUsedProfiles('terminology', id);
 
-      this.terminology = data;
-      this.terminology.classifiers = this.terminology.classifiers || [];
-
-    });
+        this.terminology = data;
+        this.terminology.classifiers = this.terminology.classifiers || [];
+      });
 
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -136,8 +138,12 @@ export class TerminologyComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
- save(saveItems: Array<DefaultProfileItem>) {
-    const tab = this.tabs.getByIndex(index);
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType
+    };
+
     saveItems.forEach((item: DefaultProfileItem) => {
       resource[item.displayName.toLocaleLowerCase()] = item.value;
     });
@@ -165,13 +171,11 @@ export class TerminologyComponent
       { tabView: tab.name },
       { notify: false }
     );
-  };
-
+  }
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
-
 
   fetch(text, loadAll, offset, limit) {
     limit = limit ? limit : 30;
@@ -187,7 +191,7 @@ export class TerminologyComponent
       limit,
       offset
     });
-  };
+  }
 
   onTermSelect(term) {
     this.stateHandler.Go(
@@ -195,7 +199,7 @@ export class TerminologyComponent
       { terminologyId: term.model, id: term.id },
       null
     );
-  };
+  }
 
   ngOnDestroy() {
     if (this.subscription) {

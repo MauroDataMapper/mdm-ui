@@ -38,7 +38,7 @@ import {
   DefaultProfileControls
 } from '@mdm/model/defaultProfileModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -65,8 +65,7 @@ export abstract class ProfileBaseComponent extends BaseComponent {
     protected resourcesService: MdmResourcesService,
     protected dialog: MatDialog,
     protected editingService: EditingService,
-    protected messageHandler: MessageHandlerService,
-    protected validator: ValidatorService
+    protected messageHandler: MessageHandlerService
   ) {
     super();
   }

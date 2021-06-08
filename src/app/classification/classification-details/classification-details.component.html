@@ -56,55 +56,46 @@ SPDX-License-Identifier: Apache-2.0
     <div *ngIf="classification">
       <div [ngClass]="{ 'has-error': errorMessage != '' }">
         <h4
-          class="inline-block marginless"
-          [ngClass]="{ deletedDataModelTitle: classification?.deleted }"
+        class="inline-block marginless"
+        [ngClass]="{ deletedDataModelTitle: classification?.deleted }"
+      >
+        <span class="dataModelTypeIcon">
+          <i matTooltip="Classifier" class="fas fa-tag"></i>
+        </span>
+        <mdm-inline-text-edit
+          [readOnly]="false"
+          [inEditMode]="editMode"
+          [showButtons]="true"
+          (saveClicked)="save()"
+          (cancelClicked)="cancel()"
+          [isRequired]="true"
+          [(ngModel)]="classification.label"
+          [styleCss]="'dataModelDetailsLabel'"
+          name="moduleName"
+          size="20"
         >
-          <span class="dataModelTypeIcon">
-            <i matTooltip="Classifier" class="fas fa-tag"></i>
-          </span>
-          <mdm-inline-text-edit
-            [readOnly]="false"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="editableForm.label"
-              [name]="'moduleName'"
-              (input)="onLabelChange($event.target.value)"
-              size="20"
-              [styleCss]="'dataModelDetailsLabel'"
-            ></mdm-inline-text-edit>
-            <sup
-              *ngIf="result?.readableByEveryone"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-globe-europe globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Publicly Available"
-              ></i
-            ></sup>
-            <sup
-              *ngIf="result?.readableByAuthenticatedUsers"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-users globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Authenticated users only"
-              ></i
-            ></sup>
-          <mdm-inline-text-edit
-            [readOnly]="false"
-            [inEditMode]="editMode"
-            [showButtons]="true"
-            (saveClicked)="save()"
-            (cancelClicked)="cancel()"
-            [isRequired]="true"
-            [(ngModel)]="classification.label"
-            [styleCss]="'dataModelDetailsLabel'"
-            name="moduleName"
-            size="20"
-          >
-          </mdm-inline-text-edit>
-        </h4>
+        </mdm-inline-text-edit>
+        <sup
+        *ngIf="classification?.readableByEveryone"
+        class="text-muted"
+        style="margin-left: 4px"
+        ><i
+          class="fas fa-globe-europe globe fa-xs"
+          aria-hidden="true"
+          matTooltip="Publicly Available"
+        ></i
+      ></sup>
+      <sup
+        *ngIf="classification?.readableByAuthenticatedUsers"
+        class="text-muted"
+        style="margin-left: 4px"
+        ><i
+          class="fas fa-users globe fa-xs"
+          aria-hidden="true"
+          matTooltip="Authenticated users only"
+        ></i
+      ></sup>
+      </h4>
         <span class="inline-block">
           <small *ngIf="classification?.deleted" class="warning">
             | Deleted</small
@@ -128,7 +119,7 @@ SPDX-License-Identifier: Apache-2.0
           <span><strong>Availability: </strong>Publicly Readable</span>
         </small>
       </div>
-        <div class="text-muted" *ngIf="result?.readableByAuthenticatedUsers">
+        <div class="text-muted" *ngIf="classification?.readableByAuthenticatedUsers">
           <small>
             <i
               class="fas fa-users globe"
@@ -138,12 +129,12 @@ SPDX-License-Identifier: Apache-2.0
             <span><strong>Availability: </strong>Authenticated users only</span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="result">
+        <div class="text-muted" *ngIf="classification">
         <small>
           <i class="far fa-calendar-alt" matTooltip="Last update"></i>
             <span
               ><strong>Last update: </strong>
-              {{ result.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
+              {{ classification.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
             >
         </small>
       </div>

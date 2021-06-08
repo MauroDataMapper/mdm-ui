@@ -28,8 +28,7 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   BroadcastService,
   MessageHandlerService,
-  SecurityHandlerService,
-  ValidatorService
+  SecurityHandlerService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
@@ -85,10 +84,9 @@ export class FolderComponent
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
-    messageHandler: MessageHandlerService,
-    validator: ValidatorService
+    messageHandler: MessageHandlerService
   ) {
-    super(resources, dialog, editingService, messageHandler,validator);
+    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

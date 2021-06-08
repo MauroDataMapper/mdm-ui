@@ -345,8 +345,7 @@ import { PipesModule } from '../pipes/pipes.module';
     ProfileDetailsComponent,
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
-    AlertComponent
-    VersionedFolderDetailComponent,
+    AlertComponent,
     DefaultProfileComponent
   ],
   imports: [

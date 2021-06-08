@@ -35,8 +35,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
   MessageHandlerService,
-  SecurityHandlerService,
-  ValidatorService
+  SecurityHandlerService
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
@@ -100,10 +99,9 @@ export class DataModelComponent
     private title: Title,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService,
-    validator: ValidatorService
+    editingService: EditingService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler, validator);
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

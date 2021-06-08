@@ -33,14 +33,12 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-classification',
@@ -85,10 +83,9 @@ export class ClassificationComponent
     private title: Title,
     editingService: EditingService,
     messageHandler: MessageHandlerService,
-    dialog: MatDialog,
-    validator: ValidatorService
+    dialog: MatDialog
   ) {
-    super(resourcesService, dialog, editingService, messageHandler, validator);
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

@@ -34,10 +34,9 @@ import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  ModelUpdatePayload,
   Term,
   TermDetail,
   TermDetailResponse,
@@ -92,10 +91,9 @@ export class TermComponent
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
-    private securityHandler: SecurityHandlerService,
-    validator: ValidatorService
+    private securityHandler: SecurityHandlerService
   ) {
-    super(resources, dialog, editingService, messageHandler, validator);
+    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

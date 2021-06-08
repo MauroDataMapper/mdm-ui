@@ -33,7 +33,7 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
@@ -93,10 +93,9 @@ export class ReferenceDataComponent
     editingService: EditingService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    private title: Title,
-    validator: ValidatorService
+    private title: Title
   ) {
-    super(resourcesService, dialog, editingService, messageHandler, validator);
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit(): void {

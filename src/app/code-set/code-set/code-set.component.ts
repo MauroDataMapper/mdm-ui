@@ -32,7 +32,7 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
@@ -92,10 +92,9 @@ export class CodeSetComponent
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
     editingService: EditingService,
-    private securityHandler: SecurityHandlerService,
-    validator: ValidatorService
+    private securityHandler: SecurityHandlerService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler, validator);
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

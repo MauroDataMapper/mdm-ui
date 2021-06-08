@@ -26,7 +26,7 @@ import { ContainerDefaultProfileForm, FormState } from '@mdm/model/editable-form
 import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Subject, Subscription } from 'rxjs';
@@ -71,9 +71,8 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     private title: Title,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService,
-    validator: ValidatorService) {
-    super(resources, dialog, editingService, messageHandler,validator);
+    editingService: EditingService) {
+    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit(): void {

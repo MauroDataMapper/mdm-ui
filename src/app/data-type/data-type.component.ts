@@ -28,17 +28,11 @@ import {
   ElementTypesService,
   MessageHandlerService,
   SecurityHandlerService,
-  ValidatorService
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import {
-  DataType,
-  DataTypeDetailResponse
-} from '@maurodatamapper/mdm-resources';
-import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
@@ -96,9 +90,8 @@ export class DataTypeComponent
     dialog: MatDialog,
     private elementTypes: ElementTypesService,
     editingService: EditingService,
-    validator: ValidatorService
   ) {
-    super(resource, dialog, editingService, messageHandler, validator);
+    super(resource, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {

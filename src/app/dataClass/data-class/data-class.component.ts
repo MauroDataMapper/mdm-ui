@@ -20,7 +20,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -29,9 +29,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
   MessageHandlerService,
-  SecurityHandlerService,
-  ValidatorService
-} from '@mdm/services';
+  SecurityHandlerService
+  } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   DataClass,
@@ -41,8 +40,6 @@ import {
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { min, max } from 'lodash';
-import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-class',
@@ -87,10 +84,9 @@ export class DataClassComponent
     private title: Title,
     editingService: EditingService,
     dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    validator: ValidatorService
+    messageHandler: MessageHandlerService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler, validator);
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -270,14 +266,5 @@ export class DataClassComponent
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false });
-  }
-
-  validateMultiplicity(min, max) {
-    const errorMessage = this.validator.validateMultiplicities(min, max);
-    if (errorMessage) {
-      this.error = errorMessage;
-      return false;
-    }
-    return true;
   }
 }

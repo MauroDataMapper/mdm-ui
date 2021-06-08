@@ -58,8 +58,8 @@ export class NewFolderModalComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<NewFolderModalComponent, NewFolderModalResponse>,
     @Inject(MAT_DIALOG_DATA) public data: NewFolderModalConfiguration,
-    private editingService: EditingService,
-    private shared: SharedService) {}
+    private editing: EditingService,
+    private shared: SharedService) { }
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -69,15 +69,17 @@ export class NewFolderModalComponent implements OnInit {
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
 
-    this.useVersionedFolders = this.data.useVersioned && this.shared.features.useVersionedFolders;
+    this.useVersionedFolders = this.data.canVersion && this.shared.features.useVersionedFolders;
   }
 
   cancel() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
-      if (confirm) {
-        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-      }
-    });
+    this.editing
+      .confirmCancelAsync()
+      .subscribe(confirm => {
+        if (confirm) {
+          this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+        }
+      });
   }
 
   confirm() {

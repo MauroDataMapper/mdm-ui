@@ -31,13 +31,13 @@ SPDX-License-Identifier: Apache-2.0
         </mat-error>
       </mat-form-field>
       <div *ngIf="useVersionedFolders">
-        <mat-checkbox formControlName="isVersioned">Versioned</mat-checkbox>
+        <mat-checkbox formControlName="isVersioned">Version control this folder</mat-checkbox>
         <br />
         <small
-          >Create a <em>versioned</em> folder to version control all contents of
-          this folder.</small
+          >Create a <em>versioned</em> folder to control the version of all contents of
+          this folder. This will also allow branching/forking of this folder.</small
         >
-        <mdm-alert alertStyle="warning" [showIcon]="true"
+        <mdm-alert *ngIf="isVersioned.value" alertStyle="warning" [showIcon]="true"
           >This option can not be changed after the folder has been
           created.</mdm-alert
         >

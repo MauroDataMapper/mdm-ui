@@ -394,7 +394,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             btnType: 'primary',
             inputLabel: 'Folder name',
             message: 'Please enter the name of your Folder.',
-            useVersioned: true
+            canVersion: true
           }
         }
       );

@@ -27,7 +27,7 @@ export interface NewFolderModalConfiguration {
   modalTitle?: string;
   message?: string;
   inputLabel?: string;
-  useVersioned?: boolean;
+  canVersion?: boolean;
 }
 
 export interface NewFolderModalResponse {

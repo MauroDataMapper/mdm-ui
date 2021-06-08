@@ -479,6 +479,26 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           minMultiplicity: this.catalogueItem.minMultiplicity
         });
       }
+      if (this.showControl(controls, 'dataType')) {
+        items.push(
+          this.createDefaultProfileItem(
+            this.catalogueItem.dataType,
+            'Data Type',
+            ProfileControlTypes.dataType
+          )
+        );
+      }
+      if(this.showControl(controls, 'url'))
+      {
+        items.push(
+          this.createDefaultProfileItem(
+          this.catalogueItem.url,
+          'URL',
+          ProfileControlTypes.text
+          )
+        );
+      }
+
     }
 
     return items;

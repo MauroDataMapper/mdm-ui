@@ -20,7 +20,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -35,6 +35,8 @@ import {
 } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';

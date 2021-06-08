@@ -185,10 +185,27 @@ export class DataTypeComponent
           this.messageHandler.showError(
             'There was a problem updating the Data Type.',
             error
-    );
-        }
-      );
+          );
   }
+
+  getTabDetail = (tabName) => {
+    switch (tabName) {
+      case 'properties':
+        return { index: 0, name: 'properties' };
+      case 'dataElements':
+        return { index: 1, name: 'dataElements' };
+      case 'comments':
+        return { index: 2, name: 'comments' };
+      case 'links':
+        return { index: 3, name: 'links' };
+      case 'attachments':
+        return { index: 4, name: 'attachments' };
+      case 'history':
+        return { index: 5, name: 'history', fetchUrl: null };
+      default:
+        return { index: 0, name: 'properties' };
+    }
+  };
 
   rulesCountEmitter($event) {
     this.isLoadingRules = false;

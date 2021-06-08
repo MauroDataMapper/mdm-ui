@@ -17,21 +17,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { of, Subject, Subscription } from 'rxjs';
+import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
+import { convertCatalogueItemDomainType, DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
-import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
-import { EditingService } from '@mdm/services/editing.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -142,7 +139,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       protected messageHandler: MessageHandlerService,
       private broadcast: BroadcastService,
       public dialog: MatDialog,
-      private editingService: EditingService,
       private modelTree: ModelTreeService) {
       this.loadFavourites();
       this.subscriptions.add(this.messages.on('favourites', () => {
@@ -379,80 +375,55 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       this.loadFavourites();
    }
 
-   handleAddFolderModal = (fnode: FlatNode) => {
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(NewFolderModalComponent, {
-            data: {
-               inputValue: this.folder,
-               modalTitle: 'Create a new Folder',
-               okBtn: 'Add folder',
-               btnType: 'primary',
-               inputLabel: 'Folder name',
-               message: 'Please enter the name of your Folder.'
-            }
-         });
+  handleAddFolderModal(fnode: FlatNode) {
+    this.modelTree
+      .createNewFolder(fnode?.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem creating the Folder.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        if (this.selectedNode) {
+          this.selectedNode.selected = false;
+        }
 
-         this.editingService.configureDialogRef(dialog);
+        const node: Node = {
+          id: response.body.id,
+          domainType: convertCatalogueItemDomainType(response.body.domainType),
+          label: response.body.label,
+          hasChildFolders: response.body.hasChildFolders,
+          hasChildren: response.body.hasChildFolders
+        };
 
-         dialog.afterClosed().subscribe(result => {
-            if (result) {
-               if (this.validateLabel(result)) {
-                  this.folder = result;
-                  this.handleAddFolder(fnode, result);
-               } else {
-                  const error = 'err';
-                  this.messageHandler.showError('Data Model name can not be empty', error);
-                  return;
-               }
-            } else {
-               return;
-            }
-         });
+        const newFnode = new FlatNode(node, fnode ? this.treeControl.getLevel(fnode) + 1 : 0);
+
+        if (fnode) {
+          // Added to existing folder parent
+          if (!fnode.children) {
+            fnode.children = [];
+          }
+
+          fnode.children.push(node);
+          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, newFnode);
+        }
+        else {
+          // Created new top level folder
+          this.node.children.push(node);
+          this.treeControl.dataNodes.push(newFnode);
+        }
+
+        fnode.node.hasChildren = true;
+
+        this.treeControl.expand(fnode);
+        this.selectedNode = this.treeControl.dataNodes.find(dn => dn.id === newFnode.id && this.treeControl.getLevel(dn) === newFnode.level);
+        this.stateHandler.Go(node.domainType, { id: node.id, edit: false });
+
+        this.messageHandler.showSuccess('Folder created successfully.');
+        this.folder = '';
+        this.refreshTree();
       });
-      return promise;
-   };
-
-   async handleAddFolder(fnode: FlatNode, payload?: { label: string; groups: any[] }) {
-      if (this.selectedNode) {
-         this.selectedNode.selected = false;
-      }
-      try {
-         let result: HttpResponse<Node>;
-         let newNode: FlatNode;
-         if (!fnode) {
-            // Create new top level folder
-            result = await this.resources.folder.save({ label: payload.label, groups: payload.groups }).toPromise();
-            result.body.domainType = DOMAIN_TYPE.Folder;
-            this.node.children.push(result.body);
-
-            newNode = new FlatNode(result.body, 0);
-            this.treeControl.dataNodes.push(newNode);
-         } else {
-            // Add new folder to existing folder
-            result = await this.resources.folder.saveChildrenOf(fnode.id, { label: payload.label, groups: payload.groups }).toPromise();
-            result.body.domainType = DOMAIN_TYPE.Folder;
-            if (!fnode.children) {
-               fnode.children = [];
-            }
-            fnode.children.push(result.body);
-            newNode = new FlatNode(result.body, this.treeControl.getLevel(fnode) + 1);
-            this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, newNode);
-         }
-         fnode.node.hasChildren = true;
-
-         this.treeControl.expand(fnode);
-
-         this.selectedNode = this.treeControl.dataNodes.find(dn => dn.id === newNode.id && this.treeControl.getLevel(dn) === newNode.level);
-
-         this.stateHandler.Go('Folder', { id: result.body.id, edit: false });
-
-         this.messageHandler.showSuccess('Folder created successfully.');
-         this.folder = '';
-         this.refreshTree();
-
-      } catch (error) {
-         this.messageHandler.showError('There was a problem creating the Folder.', error);
-      }
    }
 
    handleAddDataModel(fnode: FlatNode) {

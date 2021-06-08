@@ -197,6 +197,7 @@ export class FlatNode {
 // eslint-disable-next-line no-shadow
 export enum DOMAIN_TYPE {
     Folder = 'Folder',
+    VersionedFolder = 'VersionedFolder',
     DataModel = 'DataModel',
     DataClass = 'DataClass',
     DataElement = 'DataElement',
@@ -222,17 +223,19 @@ const catalogueItemDomainTypeToDomainType = new Map<CatalogueItemDomainType, DOM
     [CatalogueItemDomainType.DataModel, DOMAIN_TYPE.DataModel],
     [CatalogueItemDomainType.EnumerationType, DOMAIN_TYPE.EnumerationType],
     [CatalogueItemDomainType.Folder, DOMAIN_TYPE.Folder],
+    [CatalogueItemDomainType.VersionedFolder, DOMAIN_TYPE.VersionedFolder],
     [CatalogueItemDomainType.ReferenceDataModel, DOMAIN_TYPE.ReferenceDataModel],
     [CatalogueItemDomainType.Term, DOMAIN_TYPE.Term],
     [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology]
 ]);
 
-export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType[source];
+export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType.get(source);
 
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
 
 const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
     [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+    [DOMAIN_TYPE.VersionedFolder, () => 'fa-project-diagram'],
     [DOMAIN_TYPE.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
     [DOMAIN_TYPE.Terminology, () => 'fa-book'],
     [DOMAIN_TYPE.CodeSet, () => 'fa-list'],

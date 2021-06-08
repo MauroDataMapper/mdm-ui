@@ -32,7 +32,6 @@ import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
@@ -40,11 +39,8 @@ import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
   Classifier,
-  ClassifierDetailResponse,
   ClassifierIndexResponse,
-  ContainerDomainType,
-  FolderDetailResponse
-} from '@maurodatamapper/mdm-resources';
+  ContainerDomainType} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -354,88 +350,24 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFolderAddModal() {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(NewFolderModalComponent, {
-        data: {
-          inputValue: this.folder,
-          modalTitle: 'Create a new Folder',
-          okBtn: 'Add folder',
-          btnType: 'primary',
-          inputLabel: 'Folder name',
-          message:
-            'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
-        }
-      });
+    this.modelTree
+      .createNewFolder()
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem creating the Folder.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        const item = response.body;
+        this.filteredModels.children.push(item);
 
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          if (this.validateLabel(result)) {
-            this.folder = result;
-            this.onAddFolder(null, null, result);
-          } else {
-            const error = 'err';
-            this.messageHandler.showError(
-              'Folder name can not be empty',
-              error
-            );
-            return;
-          }
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
-  };
-
-  onAddFolder(event?, folder?, payload?: { label: string; groups: any[] }) {
-    let parentId;
-    if (folder) {
-      parentId = folder.id;
-    }
-    let endpoint;
-    if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, {
-        label: payload.label,
-        groups: payload.groups
-      });
-    } else {
-      endpoint = this.resources.folder.save({
-        label: payload.label,
-        groups: payload.groups
-      });
-    }
-    endpoint.subscribe(
-      (res: FolderDetailResponse) => {
-        const result = res.body;
-        if (folder) {
-          // result.domainType = 'Folder';
-          folder.children = folder.children || [];
-          folder.children.push(result);
-        } else {
-          // result.domainType = 'Folder';
-          // this.allModels.children.push(result);
-          this.filteredModels.children.push(result);
-        }
-
-        // go to folder
-        this.stateHandler.Go('Folder', { id: result.id, edit: false });
-        this.messageHandler.showSuccess(
-          `Folder ${result.label} created successfully.`
-        );
+        this.stateHandler.Go(item.domainType, { id: item.id, edit: false });
+        this.messageHandler.showSuccess(`Folder ${item.label} created successfully.`);
         this.folder = '';
         this.loadModelsTree();
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem creating the Folder.',
-          error
-        );
-      }
-    );
-  }
+      });
+  };
 
   onAddDataModel(folder: any) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
@@ -638,64 +570,20 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onAddClassifier() {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(NewFolderModalComponent, {
-        data: {
-          inputValue: '',
-          modalTitle: 'Create a new Classifier',
-          okBtn: 'Add Classifier',
-          btnType: 'primary',
-          inputLabel: 'Classifier name',
-          message: 'Please enter the name of your Classifier.'
-        }
+    this.modelTree
+      .createNewClassifier()
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('Classification name can not be empty', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        this.messageHandler.showSuccess('Classifier saved successfully.');
+        this.stateHandler.Go('classification', { id: response.body.id });
+        this.loadClassifiers();
       });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          if (this.validateLabel(result)) {
-            const resource = {
-              label: result.label
-            };
-            this.resources.classifier.save(resource).subscribe(
-              (response: ClassifierDetailResponse) => {
-                this.messageHandler.showSuccess(
-                  'Classifier saved successfully.'
-                );
-                this.stateHandler.Go('classification', {
-                  id: response.body.id
-                });
-                this.loadClassifiers();
-              },
-              (error) => {
-                this.messageHandler.showError(
-                  'There was a problem saving the Classifier.',
-                  error
-                );
-              }
-            );
-          } else {
-            const error = 'err';
-            this.messageHandler.showError(
-              'Classification name can not be empty',
-              error
-            );
-            return;
-          }
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
-  };
-
-  validateLabel = (data) => {
-    if (!data || (data && data.label.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  }
 
   private _onFavouriteClick(node: Node) {
     this.stateHandler.Go(node.domainType, {

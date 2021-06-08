@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
@@ -30,7 +31,8 @@ describe('ModelTreeService', () => {
     TestBed.configureTestingModule({
       imports: [
         UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        MatDialogModule
       ],
       providers: [
         {

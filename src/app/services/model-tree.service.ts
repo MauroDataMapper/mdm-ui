@@ -17,13 +17,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
+import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
+import { NewFolderModalConfiguration, NewFolderModalResponse } from '@mdm/modals/new-folder-modal/new-folder-modal.model';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from './broadcast.service';
+import { EditingService } from './editing.service';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
 import { UserSettingsHandlerService } from './utility/user-settings-handler.service';
@@ -43,7 +47,8 @@ export class ModelTreeService implements OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     private subscribedCatalogues: SubscribedCataloguesService,
     private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService) {
+    private broadcast: BroadcastService,
+    private editing: EditingService) {
 
     this.broadcast
       .onCatalogueTreeNodeSelected()
@@ -172,5 +177,86 @@ export class ModelTreeService implements OnDestroy {
           parentId: item.catalogueId
         })))
       );
+  }
+
+  /**
+   * Display a dialog to create a new folder, then save the new folder to the model tree.
+   *
+   * @param parentFolderId The unique identifier of the parent folder to add the new folder to.
+   * If no parent is required, ignore this parameter or pass `null` or `undefined`.
+   * @returns An `Observable` containing either a `FolderDetailResponse` or `VersionedFolderDetailResponse`,
+   * depending on the options selected in the dialog.
+   */
+  createNewFolder(parentFolderId?: Uuid): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
+    return this.editing
+      .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
+        NewFolderModalComponent,
+        {
+          data: {
+            modalTitle: 'Create a new Folder',
+            okBtn: 'Add folder',
+            btnType: 'primary',
+            inputLabel: 'Folder name',
+            message: 'Please enter the name of your Folder.',
+            createRootFolder: !parentFolderId,
+            canVersion: true
+          }
+        })
+      .afterClosed()
+      .pipe(
+        filter(response => response?.status === ModalDialogStatus.Ok),
+        switchMap(modal => {
+          if (modal.useVersionedFolders && modal.isVersioned) {
+            return this.saveVersionedFolder(modal.label, parentFolderId);
+          }
+
+          return this.saveFolder(modal.label, parentFolderId);
+        })
+      );
+  }
+
+  /**
+   * Display a dialog to create a new classifier, then save the new classifier to the model tree.
+   *
+   * @returns An `Observable` containing a `ClassifierDetailResponse`.
+   */
+  createNewClassifier(): Observable<ClassifierDetailResponse> {
+    return this.editing
+      .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
+        NewFolderModalComponent,
+        {
+          data: {
+            modalTitle: 'Create a new Classifier',
+            okBtn: 'Add Classifier',
+            btnType: 'primary',
+            inputLabel: 'Classifier name',
+            message: 'Please enter the name of your Classifier.'
+          }
+        })
+      .afterClosed()
+      .pipe(
+        filter(response => response?.status === ModalDialogStatus.Ok),
+        switchMap(modal => this.saveClassifier(modal.label))
+      );
+  }
+
+  saveFolder(label: string, parentFolderId?: Uuid): Observable<FolderDetailResponse> {
+    if (parentFolderId) {
+      return this.resources.folder.saveChildrenOf(parentFolderId, { label });
+    }
+
+    return this.resources.folder.save({ label });
+  }
+
+  saveVersionedFolder(label: string, parentFolderId?: Uuid): Observable<VersionedFolderDetailResponse> {
+    if (parentFolderId) {
+      return this.resources.versionedFolder.saveToFolder(parentFolderId, { label });
+    }
+
+    return this.resources.versionedFolder.save({ label });
+  }
+
+  saveClassifier(label: string): Observable<ClassifierDetailResponse> {
+    return this.resources.classifier.save({ label });
   }
 }

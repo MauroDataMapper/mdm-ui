@@ -397,7 +397,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           hasChildren: response.body.hasChildFolders
         };
 
-        const newFnode = new FlatNode(node, !!fnode ? this.treeControl.getLevel(fnode) + 1 : 0);
+        const newFnode = new FlatNode(node, fnode ? this.treeControl.getLevel(fnode) + 1 : 0);
 
         if (fnode) {
           // Added to existing folder parent

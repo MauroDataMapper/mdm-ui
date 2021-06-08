@@ -44,7 +44,7 @@ export class NewFolderModalComponent implements OnInit {
   useVersionedFolders = false;
 
   folderForm = new FormGroup({
-    label: new FormControl('', Validators.required),
+    label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
     isVersioned: new FormControl(false)
   });
 

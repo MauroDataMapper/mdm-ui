@@ -32,7 +32,6 @@ import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
@@ -40,7 +39,6 @@ import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
   Classifier,
-  ClassifierDetailResponse,
   ClassifierIndexResponse,
   ContainerDomainType} from '@maurodatamapper/mdm-resources';
 

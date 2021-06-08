@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
@@ -181,6 +181,7 @@ export class ModelTreeService implements OnDestroy {
 
   /**
    * Display a dialog to create a new folder, then save the new folder to the model tree.
+   *
    * @param parentFolderId The unique identifier of the parent folder to add the new folder to.
    * If no parent is required, ignore this parameter or pass `null` or `undefined`.
    * @returns An `Observable` containing either a `FolderDetailResponse` or `VersionedFolderDetailResponse`,
@@ -216,6 +217,7 @@ export class ModelTreeService implements OnDestroy {
 
   /**
    * Display a dialog to create a new classifier, then save the new classifier to the model tree.
+   *
    * @returns An `Observable` containing a `ClassifierDetailResponse`.
    */
   createNewClassifier(): Observable<ClassifierDetailResponse> {

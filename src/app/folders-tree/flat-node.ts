@@ -235,6 +235,7 @@ type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatN
 
 const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
     [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+    [DOMAIN_TYPE.VersionedFolder, () => 'fa-project-diagram'],
     [DOMAIN_TYPE.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
     [DOMAIN_TYPE.Terminology, () => 'fa-book'],
     [DOMAIN_TYPE.CodeSet, () => 'fa-list'],

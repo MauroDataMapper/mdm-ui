@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
@@ -214,6 +214,30 @@ export class ModelTreeService implements OnDestroy {
       );
   }
 
+  /**
+   * Display a dialog to create a new classifier, then save the new classifier to the model tree.
+   * @returns An `Observable` containing a `ClassifierDetailResponse`.
+   */
+  createNewClassifier(): Observable<ClassifierDetailResponse> {
+    return this.editing
+      .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
+        NewFolderModalComponent,
+        {
+          data: {
+            modalTitle: 'Create a new Classifier',
+            okBtn: 'Add Classifier',
+            btnType: 'primary',
+            inputLabel: 'Classifier name',
+            message: 'Please enter the name of your Classifier.'
+          }
+        })
+      .afterClosed()
+      .pipe(
+        filter(response => response?.status === ModalDialogStatus.Ok),
+        switchMap(modal => this.saveClassifier(modal.label))
+      );
+  }
+
   saveFolder(label: string, parentFolderId?: Uuid): Observable<FolderDetailResponse> {
     if (parentFolderId) {
       return this.resources.folder.saveChildrenOf(parentFolderId, { label });
@@ -228,5 +252,9 @@ export class ModelTreeService implements OnDestroy {
     }
 
     return this.resources.versionedFolder.save({ label });
+  }
+
+  saveClassifier(label: string): Observable<ClassifierDetailResponse> {
+    return this.resources.classifier.save({ label });
   }
 }

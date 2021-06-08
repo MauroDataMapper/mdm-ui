@@ -572,64 +572,20 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onAddClassifier() {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(NewFolderModalComponent, {
-        data: {
-          inputValue: '',
-          modalTitle: 'Create a new Classifier',
-          okBtn: 'Add Classifier',
-          btnType: 'primary',
-          inputLabel: 'Classifier name',
-          message: 'Please enter the name of your Classifier.'
-        }
+    this.modelTree
+      .createNewClassifier()
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('Classification name can not be empty', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        this.messageHandler.showSuccess('Classifier saved successfully.');
+        this.stateHandler.Go('classification', { id: response.body.id });
+        this.loadClassifiers();
       });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          if (this.validateLabel(result)) {
-            const resource = {
-              label: result.label
-            };
-            this.resources.classifier.save(resource).subscribe(
-              (response: ClassifierDetailResponse) => {
-                this.messageHandler.showSuccess(
-                  'Classifier saved successfully.'
-                );
-                this.stateHandler.Go('classification', {
-                  id: response.body.id
-                });
-                this.loadClassifiers();
-              },
-              (error) => {
-                this.messageHandler.showError(
-                  'There was a problem saving the Classifier.',
-                  error
-                );
-              }
-            );
-          } else {
-            const error = 'err';
-            this.messageHandler.showError(
-              'Classification name can not be empty',
-              error
-            );
-            return;
-          }
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
-  };
-
-  validateLabel = (data) => {
-    if (!data || (data && data.label.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  }
 
   private _onFavouriteClick(node: Node) {
     this.stateHandler.Go(node.domainType, {

@@ -31,6 +31,26 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-element-alias>
       </td>
     </tr>
+    <tr *ngIf="isInControlList('description')">
+      <td class="detailsRowHeader">Description</td>
+      <td class="elementDetailDescription">
+        <div *ngIf="catalogueItem">
+          <mdm-content-editor
+            [(description)]="catalogueItem.description"
+            [inEditMode]="false"
+          ></mdm-content-editor>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('multiplicity')">
+      <th class="detailsRowHeader">Multiplicity</th>
+      <td class="dataClassDetailsModelPath">
+        <mdm-multiplicity
+          [min]="catalogueItem.minMultiplicity"
+          [max]="catalogueItem.maxMultiplicity"
+        ></mdm-multiplicity>
+      </td>
+    </tr>
     <tr *ngIf="isInControlList('author')" >
       <td class="detailsRowHeader">Author</td>
       <td *ngIf="catalogueItem">
@@ -96,17 +116,7 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('description')">
-      <td class="detailsRowHeader">Description</td>
-      <td class="elementDetailDescription">
-        <div *ngIf="catalogueItem">
-          <mdm-content-editor
-            [(description)]="catalogueItem.description"
-            [inEditMode]="false"
-          ></mdm-content-editor>
-        </div>
-      </td>
-    </tr>
+
     <tr *ngIf="isInControlList('dataType')">
       <th class="detailsRowHeader">Data Type</th>
       <td>
@@ -117,15 +127,7 @@ SPDX-License-Identifier: Apache-2.0
       </mdm-element-data-type>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('multiplicity')">
-      <th class="detailsRowHeader">Multiplicity</th>
-      <td class="dataClassDetailsModelPath">
-        <mdm-multiplicity
-          [min]="catalogueItem.minMultiplicity"
-          [max]="catalogueItem.maxMultiplicity"
-        ></mdm-multiplicity>
-      </td>
-    </tr>
+
     <tr *ngIf="isInControlList('classifications')">
       <td class="detailsRowHeader">Classifications</td>
       <td *ngIf="catalogueItem">
@@ -137,15 +139,5 @@ SPDX-License-Identifier: Apache-2.0
         ></mdm-element-classifications>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('multiplicity')">
-      <th class="detailsRowHeader">Multiplicity</th>
-      <td class="dataClassDetailsModelPath">
-        <mdm-multiplicity
-          [min]="catalogueItem.minMultiplicity"
-          [max]="catalogueItem.maxMultiplicity"
-        ></mdm-multiplicity>
-      </td>
-    </tr>
-
   </tbody>
 </table>

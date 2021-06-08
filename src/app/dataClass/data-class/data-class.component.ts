@@ -200,9 +200,9 @@ export class DataClassComponent
     this.error = '';
 
     const resource: DataClass = {
-      id: this.catalogueItem.id,
-      label: this.catalogueItem.label,
-      domainType: this.catalogueItem.domainType
+      id: this.dataClass.id,
+      label: this.dataClass.label,
+      domainType: this.dataClass.domainType
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
@@ -222,12 +222,12 @@ export class DataClassComponent
       }
     });
 
-    if (!this.catalogueItem.parentDataClass) {
+    if (!this.dataClass.parentDataClass) {
       this.resourcesService.dataClass
-        .update(this.catalogueItem.model, this.catalogueItem.id, resource)
+        .update(this.dataClass.model, this.dataClass.id, resource)
         .subscribe(
           (result: DataClassDetailResponse) => {
-            this.catalogueItem = result.body;
+            this.dataClass = result.body;
             this.messageHandler.showSuccess('Data Class updated successfully.');
             this.editingService.stop();
             this.messageService.dataChanged(result.body);
@@ -251,7 +251,7 @@ export class DataClassComponent
           (result: DataClassDetailResponse) => {
             this.messageHandler.showSuccess('Data Class updated successfully.');
             this.editingService.stop();
-            this.catalogueItem = result.body;
+            this.dataClass = result.body;
           },
           (error) => {
             this.messageHandler.showError(

@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mdm--shadow-block">
   <div class="heading-container">
     <h4 class="marginless">
-      Profiles
+      Dynamic Profiles
       <span class="mdm--badge mdm--element-count">{{ totalProfileCount }}</span>
     </h4>
   </div>
@@ -70,14 +70,14 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="namespace">
+      <ng-container matColumnDef="metadataNamespace">
         <th
           mat-header-cell
           *matHeaderCellDef
-          mat-sort-header="namespace"
+          mat-sort-header="metadataNamespace"
           [disabled]="!hideFilters"
           style="cursor: pointer; max-width: 35%; width: 35%"
-          columnName="namespace"
+          columnName="metadataNamespace"
         >
           <span [hidden]="!hideFilters">Namespace</span>
           <div [hidden]="hideFilters">
@@ -86,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
               <input
                 #filters
                 matInput
-                name="namespace"
+                name="metadataNamespace"
                 (keyup)="applyFilter()"
               />
             </mat-form-field>
@@ -103,7 +103,7 @@ SPDX-License-Identifier: Apache-2.0
           "
         >
           <div>
-            {{ record.namespace }}
+            {{ record.metadataNamespace }}
           </div>
         </td>
       </ng-container>

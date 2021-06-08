@@ -51,7 +51,7 @@ export class ProfilesDashboardComponent implements AfterViewInit {
   filter: {};
   dynamicProfileRecords: any[] = [];
   hideFilters = true;
-  displayedColumns = ['displayName', 'namespace', 'version'];
+  displayedColumns = ['displayName', 'metadataNamespace', 'version'];
 
   constructor(
     private resourcesService: MdmResourcesService,

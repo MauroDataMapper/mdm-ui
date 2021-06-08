@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
-  $infoColor: mat-color($primary);
+  $infoColor: $defaultInfoColor;
   $successColor: mat-color($accent);
   $warningColor: $defaultWarningColor;
   $errorColor: mat-color($warn);

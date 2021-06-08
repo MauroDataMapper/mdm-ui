@@ -68,7 +68,8 @@ export class DefaultProfileControls {
   ];
   static folder = ['description'];
   static dataType = ['description', 'aliases', 'classifications', 'dataType'];
-  static term = ['description', 'aliases',  'classifications', 'url'];
+  static term = ['description', 'aliases',  'classifications', 'url','terminology'];
+  static classification = ['description'];
 
   static renderControls(domainType): string[] {
     switch (domainType) {
@@ -92,6 +93,8 @@ export class DefaultProfileControls {
       CatalogueItemDomainType.EnumerationType,
       CatalogueItemDomainType.ReferenceType):
         return DefaultProfileControls.dataType;
+    case CatalogueItemDomainType.Classification:
+        return DefaultProfileControls.classification;
       default:
         return DefaultProfileControls.dataModel;
     }

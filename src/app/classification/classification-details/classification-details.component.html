@@ -54,14 +54,14 @@ SPDX-License-Identifier: Apache-2.0
       <!-- End of first level menu -->
     </div>
     <div *ngIf="classification">
-                <div [ngClass]="{ 'has-error': errorMessage != ''}">
+      <div [ngClass]="{ 'has-error': errorMessage != '' }">
         <h4
           class="inline-block marginless"
           [ngClass]="{ deletedDataModelTitle: classification?.deleted }"
         >
-                    <span class="dataModelTypeIcon">
-                        <i matTooltip="Classifier" class="fas fa-tag"></i>
-                    </span>
+          <span class="dataModelTypeIcon">
+            <i matTooltip="Classifier" class="fas fa-tag"></i>
+          </span>
           <mdm-inline-text-edit
             [readOnly]="false"
               [inEditMode]="editableForm.visible"
@@ -109,21 +109,21 @@ SPDX-License-Identifier: Apache-2.0
           <small *ngIf="classification?.deleted" class="warning">
             | Deleted</small
           >
-                  </span>
-                </div>
+        </span>
+      </div>
                 <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                    <span class="help-block">{{errorMessage}}</span>
-                </div>
-            </div>
-            <div class="detail-icons">
-                <div class="text-muted">
-                    <small>
-                        <i class="fas fa-cube" matTooltip="Item type"></i>
+        <span class="help-block">{{ errorMessage }}</span>
+      </div>
+    </div>
+    <div class="detail-icons">
+      <div class="text-muted">
+        <small>
+          <i class="fas fa-cube" matTooltip="Item type"></i>
                         <span><strong>Item type: </strong><span class="item-type">Classifier</span></span>
-                    </small>
-                </div>
+        </small>
+      </div>
       <div class="text-muted" *ngIf="classification?.readableByEveryone">
-                  <small>
+        <small>
                         <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
           <span><strong>Availability: </strong>Publicly Readable</span>
         </small>

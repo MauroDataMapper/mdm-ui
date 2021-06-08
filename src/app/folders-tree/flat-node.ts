@@ -223,12 +223,13 @@ const catalogueItemDomainTypeToDomainType = new Map<CatalogueItemDomainType, DOM
     [CatalogueItemDomainType.DataModel, DOMAIN_TYPE.DataModel],
     [CatalogueItemDomainType.EnumerationType, DOMAIN_TYPE.EnumerationType],
     [CatalogueItemDomainType.Folder, DOMAIN_TYPE.Folder],
+    [CatalogueItemDomainType.VersionedFolder, DOMAIN_TYPE.VersionedFolder],
     [CatalogueItemDomainType.ReferenceDataModel, DOMAIN_TYPE.ReferenceDataModel],
     [CatalogueItemDomainType.Term, DOMAIN_TYPE.Term],
     [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology]
 ]);
 
-export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType[source];
+export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType.get(source);
 
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
 

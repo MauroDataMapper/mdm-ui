@@ -17,14 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, MdmTreeItem, MdmTreeItemListResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { FlatNode } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NewFolderModalConfiguration, NewFolderModalResponse } from '@mdm/modals/new-folder-modal/new-folder-modal.model';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
-import { Observable, of, Subject } from 'rxjs';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from './broadcast.service';
 import { EditingService } from './editing.service';
@@ -37,7 +37,7 @@ import { UserSettingsHandlerService } from './utility/user-settings-handler.serv
 })
 export class ModelTreeService implements OnDestroy {
 
-  currentNode?: Node;
+  currentNode?: FlatNode;
 
   private unsubscribe$ = new Subject();
 
@@ -61,7 +61,7 @@ export class ModelTreeService implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
+  getLocalCatalogueTreeNodes(noCache?: boolean): Observable<MdmTreeItem[]> {
     let options: any = {};
     if (this.sharedService.isLoggedIn()) {
       options = {
@@ -78,13 +78,13 @@ export class ModelTreeService implements OnDestroy {
     }
 
     return this.resources.tree
-      .list(ContainerDomainType.FOLDERS, options.queryStringParams)
+      .list(ContainerDomainType.Folders, options.queryStringParams)
       .pipe(
-        map((response: any) => response.body as Node[])
+        map((response: MdmTreeItemListResponse) => response.body)
       );
   }
 
-  getSubscribedCatalogueTreeNodes(): Observable<Node[]> {
+  getSubscribedCatalogueTreeNodes(): Observable<MdmTreeItem[]> {
     if (!this.sharedService.isLoggedIn(true) || !this.sharedService.features.useSubscribedCatalogues) {
       return of([]);
     }
@@ -105,46 +105,50 @@ export class ModelTreeService implements OnDestroy {
       .list(queryParams, restOptions)
       .pipe(
         map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
-        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
+        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, MdmTreeItem>({}, {
           id: item.id,
-          domainType: DOMAIN_TYPE.SubscribedCatalogue,
+          domainType: CatalogueItemDomainType.SubscribedCatalogue,
           hasChildren: true,
-          label: item.label
+          label: item.label,
+          availableActions: []
         }))),
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
-          return of<Node[]>([]);
+          return EMPTY
         }),
       );
   }
 
-  createRootNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createRootNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '',
-      domainType: DOMAIN_TYPE.Root,
+      domainType: CatalogueItemDomainType.Root,
       children,
       hasChildren: true,
-      isRoot: true
+      isRoot: true,
+      availableActions: []
     });
   }
 
-  createLocalCatalogueNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createLocalCatalogueNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '4aa2444c-ed08-471b-84dd-96f6b3b4a00a',
-      domainType: DOMAIN_TYPE.LocalCatalogue,
+      domainType: CatalogueItemDomainType.LocalCatalogue,
       label: 'This catalogue',
       hasChildren: true,
-      children
+      children,
+      availableActions: []
     });
   }
 
-  createExternalCataloguesNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createExternalCataloguesNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '30dca3f9-5cf5-41a8-97eb-fd2dab2d4c20',
-      domainType: DOMAIN_TYPE.ExternalCatalogues,
+      domainType: CatalogueItemDomainType.ExternalCatalogues,
       label: 'External catalogues',
       hasChildren: true,
-      children
+      children,
+      availableActions: []
     });
   }
 
@@ -160,20 +164,21 @@ export class ModelTreeService implements OnDestroy {
    *
    * @see FederatedDataModel
    */
-  getFederatedDataModelNodes(catalogueId: string): Observable<Node[]> {
+  getFederatedDataModelNodes(catalogueId: string): Observable<MdmTreeItem[]> {
     return this.subscribedCatalogues
       .getFederatedDataModels(catalogueId)
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem getting federated data models from a subscribed catalogue.', error);
-          return [];
+          return EMPTY;
         }),
-        map(models => models.map(item => Object.assign<{}, Node>({}, {
+        map(models => models.map(item => Object.assign<{}, MdmTreeItem>({}, {
           id: item.modelId,
-          domainType: DOMAIN_TYPE.FederatedDataModel,
+          domainType: CatalogueItemDomainType.FederatedDataModel,
           hasChildren: false,
           label: item.label,
-          parentId: item.catalogueId
+          parentId: item.catalogueId,
+          availableActions: []
         })))
       );
   }

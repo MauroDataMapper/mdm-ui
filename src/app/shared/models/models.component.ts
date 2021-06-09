@@ -31,16 +31,15 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
   Classifier,
   ClassifierIndexResponse,
-  ContainerDomainType} from '@maurodatamapper/mdm-resources';
+  ContainerDomainType,
+  MdmTreeItem} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -50,7 +49,7 @@ import {
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
   activeTab = 0;
-  allModels: Node = null;
+  allModels: MdmTreeItem = null;
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
@@ -313,16 +312,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNodeClick(node: Node) {
-    this.modelTree.currentNode = node;
-  }
-
-  onNodeDbClick(node: Node ){
-    this.modelTree.currentNode = node;
-
-    // if the element if a dataModel, load it
+  onNodeDbClick(node: MdmTreeItem) {
+    // if the element is a dataModel, load it
     if (
-      [DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(
+      [CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology].indexOf(
         node.domainType
       ) === -1
     ) {
@@ -512,16 +505,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.allModels = null;
 
       this.resources.tree
-        .search(ContainerDomainType.FOLDERS, this.sharedService.searchCriteria)
+        .search(ContainerDomainType.Folders, this.sharedService.searchCriteria)
         .subscribe((res) => {
-          const result: Node[] = res.body;
+          const result: MdmTreeItem[] = res.body;
           this.reloading = false;
           this.allModels = {
             id: '',
-            domainType: DOMAIN_TYPE.Root,
+            domainType: CatalogueItemDomainType.Root,
             children: result,
             hasChildren: true,
-            isRoot: true
+            isRoot: true,
+            availableActions: []
           };
 
           this.filteredModels = Object.assign({}, this.allModels);
@@ -535,7 +529,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  classifierTreeOnSelect(node: Node) {
+  classifierTreeOnSelect(node: MdmTreeItem) {
     this.stateHandler.Go('classification', { id: node.id });
   }
 
@@ -556,11 +550,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFavouriteDbClick(node: Node) {
+  onFavouriteDbClick(node: MdmTreeItem) {
     this._onFavouriteClick(node);
   }
 
-  onFavouriteClick(node: Node) {
+  onFavouriteClick(node: MdmTreeItem) {
     this._onFavouriteClick(node);
   }
 
@@ -584,7 +578,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _onFavouriteClick(node: Node) {
+  private _onFavouriteClick(node: MdmTreeItem) {
     this.stateHandler.Go(node.domainType, {
       id: node.id
     });

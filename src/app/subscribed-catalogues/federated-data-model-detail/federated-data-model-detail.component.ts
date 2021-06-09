@@ -27,6 +27,7 @@ import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FolderDetailResponse, SubscribedDataModelResponse } from '@maurodatamapper/mdm-resources';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -52,7 +53,7 @@ export class FederatedDataModelDetailComponent implements OnInit {
   }
 
   getModelTypeIcon() {
-    return getDomainTypeIcon(convertCatalogueItemDomainType(this.dataModel.modelType));
+    return getCatalogueItemDomainTypeIcon(this.dataModel.modelType);
   }
 
   subscribeToModel() {

@@ -72,10 +72,10 @@ export class ModelManagementComponent implements OnInit {
         includeDeleted: true,
       },
     };
-    let url = this.resourcesService.tree.list(ContainerDomainType.FOLDERS, options.queryStringParams);
+    let url = this.resourcesService.tree.list(ContainerDomainType.Folders, options.queryStringParams);
 
     if (this.filterStatus === 'all') {
-      url = this.resourcesService.tree.list(ContainerDomainType.FOLDERS, options.queryStringParams);
+      url = this.resourcesService.tree.list(ContainerDomainType.Folders, options.queryStringParams);
     } else if (this.filterStatus === 'includeDeleted') {
       url = this.resourcesService.admin.deletedModels('folders', 'dataModels');
     } else if (this.filterStatus === 'includeDocumentSuperseded') {

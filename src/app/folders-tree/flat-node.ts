@@ -18,184 +18,124 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
-
-/** (Partial) Structure of source node */
-export interface Node {
-    children?: Node[];
-    deleted?: boolean;
-    finalised?: boolean;
-    domainType: DOMAIN_TYPE;
-    type?: string;
-    hasChildren: boolean;
-    id: string;
-    label?: string;
-    parentFolder?: string;
-    code?: string;
-    hasChildFolders?: boolean;
-    checked?: boolean;
-    isRoot?: boolean;
-    superseded?: boolean;
-    documentationVersion?: string;
-    branchName?: string;
-    modelVersion?: string;
-    modelId?: string;
-    parentId?: string;
-}
+import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
 
 /** Wrapper for source node to support Material Flat Tree */
 export class FlatNode {
   disableChecked: boolean;
 
-    constructor(public node: Node, public level: number) {}
+  constructor(public node: MdmTreeItem, public level: number) { }
 
-    /**
-     * Getter and Setter passthrough to source node.
-     */
-    get id() {
-        return this.node?.id;
-    }
-
-    get modelId() {
-      return this.node?.modelId;
+  /**
+   * Getter and Setter passthrough to source node.
+   */
+  get id() {
+    return this.node?.id;
   }
 
-    get label() {
-        return this.node?.label;
-    }
+  get modelId() {
+    return this.node?.modelId;
+  }
 
-    get children()  {
-        return this.node?.children;
-    }
-    set children(nodes) {
-        this.node.children = nodes;
-    }
+  get label() {
+    return this.node?.label;
+  }
 
-    get checked() {
-        return this.node?.checked;
-    }
-    set checked(c: boolean) {
-        this.node.checked = c;
-    }
+  get children() {
+    return this.node?.children;
+  }
+  set children(nodes) {
+    this.node.children = nodes;
+  }
 
-    get type() {
-        return this.node?.type;
-    }
+  get checked() {
+    return this.node?.checked;
+  }
+  set checked(c: boolean) {
+    this.node.checked = c;
+  }
 
-    get deleted() {
-        return this.node?.deleted;
-    }
-    set deleted(d: boolean) {
-        this.node.deleted = d;
-    }
+  get type() {
+    return this.node?.type;
+  }
 
-    get finalised() {
-        return this.node?.finalised;
-    }
-    set finalised(d: boolean) {
-        this.node.finalised = d;
-    }
+  get deleted() {
+    return this.node?.deleted;
+  }
+  set deleted(d: boolean) {
+    this.node.deleted = d;
+  }
 
-    get domainType() {
-        return this.node?.domainType;
-    }
+  get finalised() {
+    return this.node?.finalised;
+  }
+  set finalised(d: boolean) {
+    this.node.finalised = d;
+  }
 
-    get hasChildren() {
-        return this.node?.hasChildren;
-    }
+  get domainType() {
+    return this.node?.domainType;
+  }
 
-    get hasChildFolders() {
-        return this.node?.hasChildFolders;
-    }
+  get hasChildren() {
+    return this.node?.hasChildren;
+  }
 
-    get parentFolder() {
-        return this.node?.parentFolder;
-    }
+  get hasChildFolders() {
+    return this.node?.hasChildFolders;
+  }
 
-    get isRoot() {
-        return this.node?.isRoot;
-    }
+  get parentFolder() {
+    return this.node?.parentFolder;
+  }
 
-    get code() {
-        return this.node?.code;
-    }
+  get isRoot() {
+    return this.node?.isRoot;
+  }
 
-    get superseded() {
-        return this.node?.superseded;
-    }
+  get code() {
+    return this.node?.code;
+  }
 
-    get documentationVersion() {
-        return this.node?.documentationVersion;
-    }
+  get superseded() {
+    return this.node?.superseded;
+  }
 
-    get branchName() {
-      return this.node?.branchName;
-    }
+  get documentationVersion() {
+    return this.node?.documentationVersion;
+  }
 
-    get modelVersion() {
-        return this.node?.modelVersion;
-    }
+  get branchName() {
+    return this.node?.branchName;
+  }
+
+  get modelVersion() {
+    return this.node?.modelVersion;
+  }
 
 }
-
-// eslint-disable-next-line no-shadow
-export enum DOMAIN_TYPE {
-    Folder = 'Folder',
-    VersionedFolder = 'VersionedFolder',
-    DataModel = 'DataModel',
-    DataClass = 'DataClass',
-    DataElement = 'DataElement',
-    Terminology = 'Terminology',
-    Term = 'Term',
-    CodeSet = 'CodeSet',
-    Classification = 'Classification',
-    ReferenceDataModel = 'ReferenceDataModel',
-    EnumerationType = 'EnumerationType',
-
-    // TODO: UI only domains for prototyping, consider making them part of backend
-    Root = 'Root',
-    LocalCatalogue = 'LocalCatalogue',
-    ExternalCatalogues = 'ExternalCatalogues',
-    SubscribedCatalogue = 'SubscribedCatalogue',
-    FederatedDataModel = 'FederatedDataModel'
-}
-
-const catalogueItemDomainTypeToDomainType = new Map<CatalogueItemDomainType, DOMAIN_TYPE>([
-    [CatalogueItemDomainType.CodeSetType, DOMAIN_TYPE.CodeSet],
-    [CatalogueItemDomainType.DataClass, DOMAIN_TYPE.DataClass],
-    [CatalogueItemDomainType.DataElement, DOMAIN_TYPE.DataElement],
-    [CatalogueItemDomainType.DataModel, DOMAIN_TYPE.DataModel],
-    [CatalogueItemDomainType.EnumerationType, DOMAIN_TYPE.EnumerationType],
-    [CatalogueItemDomainType.Folder, DOMAIN_TYPE.Folder],
-    [CatalogueItemDomainType.VersionedFolder, DOMAIN_TYPE.VersionedFolder],
-    [CatalogueItemDomainType.ReferenceDataModel, DOMAIN_TYPE.ReferenceDataModel],
-    [CatalogueItemDomainType.Term, DOMAIN_TYPE.Term],
-    [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology]
-]);
-
-export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType.get(source);
 
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
 
-const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
-    [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
-    [DOMAIN_TYPE.VersionedFolder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'],
-    [DOMAIN_TYPE.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
-    [DOMAIN_TYPE.Terminology, () => 'fa-book'],
-    [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
-    [DOMAIN_TYPE.Classification, () => 'fa-tags'],
-    // [DOMAIN_TYPE.Term, () => 'fa-code'],
-    [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
-    [DOMAIN_TYPE.LocalCatalogue, () => 'fa-desktop'],
-    [DOMAIN_TYPE.ExternalCatalogues, () => 'fa-network-wired'],
-    [DOMAIN_TYPE.SubscribedCatalogue, () => 'fa-rss'],
-    [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
- ]);
+const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
+  [CatalogueItemDomainType.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+  [CatalogueItemDomainType.VersionedFolder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'],
+  [CatalogueItemDomainType.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
+  [CatalogueItemDomainType.Terminology, () => 'fa-book'],
+  [CatalogueItemDomainType.CodeSet, () => 'fa-list'],
+  [CatalogueItemDomainType.Classification, () => 'fa-tags'],
+  // [CatalogueItemDomainType.Term, () => 'fa-code'],
+  [CatalogueItemDomainType.ReferenceDataModel, () => 'fa-file-contract'],
+  [CatalogueItemDomainType.LocalCatalogue, () => 'fa-desktop'],
+  [CatalogueItemDomainType.ExternalCatalogues, () => 'fa-network-wired'],
+  [CatalogueItemDomainType.SubscribedCatalogue, () => 'fa-rss'],
+  [CatalogueItemDomainType.FederatedDataModel, () => 'fa-external-link-alt']
+]);
 
- export const getDomainTypeIcon = (type: DOMAIN_TYPE, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
-    if (!domainTypeIcons.has(type)) {
-        return null;
-     }
+export const getCatalogueItemDomainTypeIcon = (domain: CatalogueItemDomainType, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
+  if (!domainTypeIcons.has(domain)) {
+    return null;
+  }
 
-     return domainTypeIcons.get(type)(fnode, treeControl);
- };
+  return domainTypeIcons.get(domain)(fnode, treeControl);
+}

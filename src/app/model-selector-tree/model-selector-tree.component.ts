@@ -32,8 +32,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
-import { Node } from '@mdm/folders-tree/flat-node';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -70,7 +69,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
-  selectedElementsVal: Node[];
+  selectedElementsVal: MdmTreeItem[];
   @Input()
   get ngModel() {
     return this.selectedElements;
@@ -92,7 +91,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   rootNode: any;
   filteredRootNode: any;
   markChildren: any;
-  selectedElements: Node[] = [];
+  selectedElements: MdmTreeItem[] = [];
   searchCriteria: any;
   hasValidationError: boolean;
   inSearchMode: any;
@@ -147,7 +146,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
+        this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
           this.filteredRootNode = {
             children: result.body,
             isRoot: true
@@ -183,7 +182,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
         if (this.searchCriteria.trim().length > 0) {
           this.inSearchMode = true;
-          this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
+          this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
               isRoot: true
@@ -214,7 +213,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.tree.list(ContainerDomainType.FOLDERS, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
+      this.resources.tree.list(ContainerDomainType.Folders, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
         this.loading = false;
         this.rootNode = {
           children: data.body,
@@ -256,7 +255,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list(ContainerDomainType.FOLDERS, options);
+    let method = this.resources.tree.list(ContainerDomainType.Folders, options);
 
 
     if (id) {
@@ -340,15 +339,15 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
 
-  onNodeClick(node: Node) {
+  onNodeClick(node: MdmTreeItem) {
     this.selectNode(node);
   }
 
-  onNodeDbClick(node: Node) {
+  onNodeDbClick(node: MdmTreeItem) {
     this.selectNode(node);
   }
 
-  selectNode(node: Node) {
+  selectNode(node: MdmTreeItem) {
     this.hasValidationError = false;
 
     if (this.accepts && this.accepts.indexOf(node.domainType) === -1) {

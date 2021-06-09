@@ -163,7 +163,7 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list(ContainerDomainType.FOLDERS, { domainType: 'dataModels' }).subscribe((data) => {
+    this.resourceService.tree.list(ContainerDomainType.Folders, { domainType: 'dataModels' }).subscribe((data) => {
       this.rootNode = {
         children: data.body,
         isRoot: true
@@ -456,7 +456,7 @@ export class ElementSelectorComponent implements OnInit {
       domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search(ContainerDomainType.FOLDERS, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
+    this.resourceService.tree.search(ContainerDomainType.Folders, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

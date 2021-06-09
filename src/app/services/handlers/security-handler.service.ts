@@ -270,8 +270,14 @@ export class SecurityHandlerService {
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
-      showDelete:  element.availableActions.includes('softDelete') ||   element.availableActions.includes('delete'),
-      canAddLink: element.availableActions.includes('update')
+      showDelete:  element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      canAddLink: element.availableActions.includes('update'),
+      canCreateFolder: element.availableActions.includes('createFolder'),
+      canCreateVersionedFolder: element.availableActions.includes('createVersionedFolder'),
+      canCreateModel: element.availableActions.includes('createModel'),
+      canCreateModelItem: element.availableActions.includes('createModelItem'),
+      canMoveToFolder: element.availableActions.includes('moveToFolder'),
+      canMoveToVersionedFolder: element.availableActions.includes('moveToVersionedFolder')
     };
 
     if((element as Finalisable).finalised !== undefined)

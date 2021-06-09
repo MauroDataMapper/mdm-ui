@@ -19,12 +19,16 @@ SPDX-License-Identifier: Apache-2.0
 
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 /** Wrapper for source node to support Material Flat Tree */
 export class FlatNode {
   disableChecked: boolean;
 
-  constructor(public node: MdmTreeItem, public level: number) { }
+  constructor(
+    public node: MdmTreeItem,
+    public level: number,
+    public readonly access: Access) { }
 
   /**
    * Getter and Setter passthrough to source node.

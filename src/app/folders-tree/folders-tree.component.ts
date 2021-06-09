@@ -153,7 +153,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }));
 
     this.treeFlattener = new MatTreeFlattener(
-      (node: MdmTreeItem, level: number) => new FlatNode(node, level),
+      (node: MdmTreeItem, level: number) => new FlatNode(node, level, this.securityHandler.elementAccess(node)),
       (node: FlatNode) => node.level,
       (node: FlatNode) => node?.hasChildren || node?.hasChildFolders,
       this.getChildren);
@@ -425,7 +425,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           availableActions: response.body.availableActions
         };
 
-        const newFnode = new FlatNode(node, fnode ? this.treeControl.getLevel(fnode) + 1 : 0);
+        const newFnode = new FlatNode(
+          node,
+          fnode ? this.treeControl.getLevel(fnode) + 1 : 0,
+          this.securityHandler.elementAccess(node));
 
         if (fnode) {
           // Added to existing folder parent
@@ -831,7 +834,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
           const newNodes = fnode.children?.map((c: any) => {
-            return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
+            return new FlatNode(
+              c,
+              this.treeControl.getLevel(fnode) + 1,
+              this.securityHandler.elementAccess(c));
           });
 
           this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...(newNodes || []));

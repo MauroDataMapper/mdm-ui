@@ -128,7 +128,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
 
   showForm() {
     this.editor.show();
-  };
+  }
 
   cancel() {
     this.editor?.cancel();

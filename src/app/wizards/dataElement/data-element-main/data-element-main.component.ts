@@ -259,7 +259,7 @@ export class DataElementMainComponent implements OnInit {
       error => {
         this.messageHandler.showError('There was a problem saving the Data Type.', error);
       });
-  };
+  }
 
   saveDataElement(dataType: any) {
     const resource: DataElement = {
@@ -302,7 +302,7 @@ export class DataElementMainComponent implements OnInit {
       }, error => {
         this.messageHandler.showError('There was a problem saving the Data Element.', error);
       });
-  };
+  }
 
   validateDataType() {
     let isValid = true;

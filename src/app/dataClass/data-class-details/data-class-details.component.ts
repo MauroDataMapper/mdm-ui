@@ -208,7 +208,7 @@ export class DataClassDetailsComponent implements OnInit {
           );
       }
     }
-  };
+  }
 
 
   showForm() {
@@ -225,5 +225,5 @@ export class DataClassDetailsComponent implements OnInit {
 
   isAdmin() {
     return this.securityHandler.isAdmin();
-  };
+  }
 }

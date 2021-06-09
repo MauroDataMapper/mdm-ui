@@ -133,7 +133,7 @@ export class AnnotationListComponent implements AfterViewInit {
 
     this.records = [].concat([newRecord]).concat(this.records);
     this.editingService.setFromCollection(this.records);
-  };
+  }
 
   cancelEdit(record: any, index: number) {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
@@ -170,7 +170,7 @@ export class AnnotationListComponent implements AfterViewInit {
         this.messageHandler.showSuccess('Comment saved successfully.');
         this.reloadEvent.emit();
       });
-  };
+  }
 
   addChild(annotation: any) {
     const resource = {
@@ -191,7 +191,7 @@ export class AnnotationListComponent implements AfterViewInit {
         annotation.newChildText = '';
         this.messageHandler.showSuccess('Comment saved successfully.');
       });
-  };
+  }
 
   showChildren(annotation: any) {
     if (annotation.show) {
@@ -201,5 +201,5 @@ export class AnnotationListComponent implements AfterViewInit {
       annotation.newChildText = '';
       annotation.show = true;
     }
-  };
+  }
 }

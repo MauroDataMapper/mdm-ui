@@ -94,7 +94,7 @@ export class DataTypeDetailComponent implements OnInit {
     this.editingService.stop();
     this.dataType = Object.assign({}, this.originalDataType);
     this.editMode = false;
-  };
+  }
 
   delete(){
     this.resources.dataType.remove(this.mcParentDataModel.id, this.dataType.id).subscribe(() => {

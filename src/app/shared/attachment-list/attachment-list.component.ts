@@ -134,11 +134,11 @@ export class AttachmentListComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  };
+  }
 
   filterClick() {
     this.hideFilters = !this.hideFilters;
-  };
+  }
 
   attachmentFetch(
     pageSize?: number,
@@ -158,7 +158,7 @@ export class AttachmentListComponent implements AfterViewInit {
       this.parent.id,
       options
     );
-  };
+  }
 
   cancelEdit(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
     if (record.isNew) {
@@ -168,12 +168,12 @@ export class AttachmentListComponent implements AfterViewInit {
     }
 
     this.editingService.setFromCollection(this.records);
-  };
+  }
 
   getFile(inputFileName: string) {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
-  };
+  }
 
   delete(record: EditableRecord<ReferenceFile, ReferenceFileEditor>) {
     this.dialog
@@ -196,7 +196,7 @@ export class AttachmentListComponent implements AfterViewInit {
         this.messageHandler.showSuccess('Attachment deleted successfully.');
         this.filterEvent.emit();
       });
-  };
+  }
 
   add() {
     const newRecord = new EditableRecord<ReferenceFile, ReferenceFileEditor>(
@@ -216,7 +216,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.records = [].concat([newRecord]).concat(this.records);
     this.dataSource.data = this.records;
     this.editingService.setFromCollection(this.records);
-  };
+  }
 
 
   save(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
@@ -253,5 +253,5 @@ export class AttachmentListComponent implements AfterViewInit {
           this.filterEvent.emit();
         });
     };
-  };
+  }
 }

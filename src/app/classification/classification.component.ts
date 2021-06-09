@@ -207,5 +207,5 @@ export class ClassificationComponent
         );
       }
     );
-  };
+  }
 }

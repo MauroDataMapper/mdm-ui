@@ -149,7 +149,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           );
       }
     }
-  };
+  }
 
   constructor(
     private sharedService: SharedService,
@@ -330,7 +330,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       return;
     }
     this.levels.focusedElement(node);
-  };
+  }
 
   loadModelsToCompare(dataModel: any) {
     this.resources.catalogueItem
@@ -347,7 +347,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           }
         });
       });
-  };
+  }
 
   onFolderAddModal() {
     this.modelTree
@@ -367,7 +367,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.folder = '';
         this.loadModelsTree();
       });
-  };
+  }
 
   onAddDataModel(folder: any) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
@@ -375,7 +375,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onAddCodeSet(folder: any) {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
-  };
+  }
 
   onAddChildDataClass(element: any) {
     this.stateHandler.Go('NewDataClassNew', {
@@ -385,7 +385,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         element.domainType === 'DataModel' ? element.id : element.dataModel,
       parentDataClassId: element.domainType === 'DataModel' ? null : element.id
     });
-  };
+  }
 
   onAddChildDataElement(element: any) {
     this.stateHandler.Go('NewDataElement', {
@@ -395,15 +395,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
       parentDataModelId: element.dataModel,
       parentDataClassId: element.id
     });
-  };
+  }
 
   onAddChildDataType(element: any) {
     this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
-  };
+  }
 
   toggleFilterMenu() {
     this.showFilters = !this.showFilters;
-  };
+  }
 
   toggleFilters(filerName: string) {
     this[filerName] = !this[filerName];
@@ -423,7 +423,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     this.loadModelsTree();
     this.showFilters = !this.showFilters;
-  };
+  }
 
   onDeleteFolder(event: any) {
     if (!this.securityHandler.isAdmin()) {
@@ -443,12 +443,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
         event.folder.deleted = true;
       });
     }
-  };
+  }
 
   initializeModelsTree() {
     this.loadModelsTree();
     this.loadClassifiers();
-  };
+  }
 
   changeState(newState: string, type?: string, newWindow?: boolean) {
     if (newWindow) {
@@ -465,7 +465,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
 
     this.stateHandler.Go(newState);
-  };
+  }
 
   onSearchInputKeyDown(event: KeyboardEvent | InputEvent) {
     // Initialize debounce listener if necessary
@@ -534,11 +534,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.searchText = '';
       this.loadModelsTree();
     }
-  };
+  }
 
   classifierTreeOnSelect(node: Node) {
     this.stateHandler.Go('classification', { id: node.id });
-  };
+  }
 
   classificationFilterChange(val: string) {
     if (val && val.length !== 0 && val.trim().length === 0) {
@@ -546,7 +546,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     } else {
       this.loadClassifiers();
     }
-  };
+  }
 
   filterClassifications() {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
@@ -555,19 +555,19 @@ export class ModelsComponent implements OnInit, OnDestroy {
     } else {
       this.loadClassifiers();
     }
-  };
+  }
 
   onFavouriteDbClick(node: Node) {
     this._onFavouriteClick(node);
-  };
+  }
 
   onFavouriteClick(node: Node) {
     this._onFavouriteClick(node);
-  };
+  }
 
   reloadTree() {
     this.loadModelsTree(true);
-  };
+  }
 
   onAddClassifier() {
     this.modelTree

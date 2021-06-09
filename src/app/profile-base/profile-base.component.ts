@@ -434,9 +434,9 @@ export abstract class ProfileBaseComponent extends BaseComponent {
   }
 
   /**
-  * Save operation for default profile
-  *
-  * @param saveItems properties which are going to be updated
-  */
+   * Save operation for default profile
+   *
+   * @param saveItems properties which are going to be updated
+   */
   abstract save(saveItems: Array<DefaultProfileItem>);
 }

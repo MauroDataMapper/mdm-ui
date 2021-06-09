@@ -342,11 +342,11 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
   onNodeClick(node: Node) {
     this.selectNode(node);
-  };
+  }
 
   onNodeDbClick(node: Node) {
     this.selectNode(node);
-  };
+  }
 
   selectNode(node: Node) {
     this.hasValidationError = false;
@@ -390,7 +390,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     this.ngModel = this.selectedElements;
     this.checkValidationError();
-  };
+  }
 
   onNodeChecked(node, parent, checkedList) {
     if (this.onCheck) {

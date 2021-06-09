@@ -235,7 +235,7 @@ export class CodeSetDetailsComponent implements OnInit {
         );
       }
     );
-  };
+  }
 
   onModelChange() {
     for (const val in this.branchGraph) {
@@ -247,7 +247,7 @@ export class CodeSetDetailsComponent implements OnInit {
         );
       }
     }
-  };
+  }
 
   save() {
     if (this.validatorService.validateLabel(this.codeSetDetail.label)) {

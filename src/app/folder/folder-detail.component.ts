@@ -140,7 +140,7 @@ export class FolderDetailComponent implements OnInit {
     } else {
       this.messageHandlerService.showError('There is an error with the label please correct and try again');
     }
-  };
+  }
 
   showForm() {
     this.editingService.start();

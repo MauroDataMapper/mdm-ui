@@ -22,6 +22,7 @@ import {
   DataTypeReference
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { servicesPlugin } from '@uirouter/core';
 
 export interface DefaultProfileModalConfiguration {
   items: Array<DefaultProfileItem>;

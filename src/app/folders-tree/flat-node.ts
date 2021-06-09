@@ -23,7 +23,6 @@ import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 /** (Partial) Structure of source node */
 export interface Node {
     children?: Node[];
-    created?: boolean;
     deleted?: boolean;
     selected?: boolean;
     modified?: boolean;
@@ -83,13 +82,6 @@ export class FlatNode {
 
     get type() {
         return this.node?.type;
-    }
-
-    get created() {
-        return this.node?.created;
-    }
-    set created(c: boolean) {
-        this.node.created = c;
     }
 
     get deleted() {

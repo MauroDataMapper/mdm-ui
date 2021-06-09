@@ -332,7 +332,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       delete this.checkedList[element.node.id];
     }
 
-    this.nodeCheckedEvent.emit([child, child.parentDataClass, this.checkedList]);
+    this.nodeCheckedEvent.emit([child, null, this.checkedList]);
   }
 
   find(node: Node, parent: Node, id: string) {
@@ -491,7 +491,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     switch (fnode.domainType) {
       case DOMAIN_TYPE.ReferenceDataModel: this.stateHandler.NewWindow(DOMAIN_TYPE.ReferenceDataModel.toLocaleLowerCase(), { id: fnode.id }); break;
       case DOMAIN_TYPE.DataModel: this.stateHandler.NewWindow(DOMAIN_TYPE.DataModel.toLocaleLowerCase(), { id: fnode.id }); break;
-      case DOMAIN_TYPE.DataClass: this.stateHandler.NewWindow(DOMAIN_TYPE.DataClass.toLocaleLowerCase(), { id: fnode.id, dataModelId: fnode.dataModel, dataClassId: fnode.parentDataClass }); break;
+      case DOMAIN_TYPE.DataClass: this.stateHandler.NewWindow(DOMAIN_TYPE.DataClass.toLocaleLowerCase(), { id: fnode.id, dataModelId: fnode.modelId }); break;
       case DOMAIN_TYPE.Terminology: this.stateHandler.NewWindow(DOMAIN_TYPE.Terminology.toLocaleLowerCase(), { id: fnode.id }); break;
     }
   }
@@ -505,14 +505,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   isNodeFinalised(node: FlatNode) {
-    if (node.finalised) {
-      return node.finalised;
-    } else if (node.dataModel) {
-      const dm = this.treeControl.dataNodes.find(fnode => fnode.id === node.dataModel);
-      return dm?.finalised;
-    } else {
-      return false;
-    }
+    return node.finalised;
   }
 
   ngOnDestroy() {

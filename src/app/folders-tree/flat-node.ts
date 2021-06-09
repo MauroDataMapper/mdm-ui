@@ -26,24 +26,17 @@ export interface Node {
     created?: boolean;
     deleted?: boolean;
     selected?: boolean;
-    isGhost?: boolean;
     modified?: boolean;
     finalised?: boolean;
     domainType: DOMAIN_TYPE;
     type?: string;
-    terminology?: any;
-    term?: any;
     hasChildren: boolean;
     id: string;
     label?: string;
-    open?: boolean;
-    folder?: string;
-    disableChecked?: boolean;
+    parentFolder?: string;
     code?: string;
     hasChildFolders?: boolean;
     checked?: boolean;
-    parentDataClass?: Node;
-    dataModel?: any;
     isRoot?: boolean;
     superseded?: boolean;
     documentationVersion?: string;
@@ -51,11 +44,12 @@ export interface Node {
     modelVersion?: string;
     modelId?: string;
     parentId?: string;
-    model?: any;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
 export class FlatNode {
+  disableChecked: boolean;
+
     constructor(public node: Node, public level: number) {}
 
     /**
@@ -87,27 +81,8 @@ export class FlatNode {
         this.node.checked = c;
     }
 
-    get disableChecked() {
-        return this.node?.disableChecked;
-    }
-    set disableChecked(dc: boolean) {
-        this.node.disableChecked = dc;
-    }
-
     get type() {
         return this.node?.type;
-    }
-
-    get terminology() {
-        return this.node?.terminology;
-    }
-
-    get parentDataClass() {
-        return this.node?.parentDataClass;
-    }
-
-    get dataModel() {
-        return this.node?.dataModel;
     }
 
     get created() {
@@ -129,13 +104,6 @@ export class FlatNode {
     }
     set selected(s: boolean) {
         this.node.selected = s;
-    }
-
-    get isGhost() {
-        return this.node?.isGhost;
-    }
-    set isGhost(ig: boolean) {
-        this.node.isGhost = ig;
     }
 
     get modified() {
@@ -165,7 +133,7 @@ export class FlatNode {
     }
 
     get parentFolder() {
-        return this.node?.folder;
+        return this.node?.parentFolder;
     }
 
     get isRoot() {

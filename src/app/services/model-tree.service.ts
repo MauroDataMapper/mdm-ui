@@ -173,7 +173,6 @@ export class ModelTreeService implements OnDestroy {
           domainType: DOMAIN_TYPE.FederatedDataModel,
           hasChildren: false,
           label: item.label,
-          dataModel: item,
           parentId: item.catalogueId
         })))
       );

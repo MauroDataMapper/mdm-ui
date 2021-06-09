@@ -304,8 +304,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         edit: false,
         dataModelId: node.modelId,
         dataClassId: node.parentId || '',
-        terminologyId: node.modelId || node.model,
-        dataModel: node.dataModel,
+        terminologyId: node.modelId,
         parentId: node.parentId
       })
       .then(
@@ -587,9 +586,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private _onFavouriteClick(node: Node) {
     this.stateHandler.Go(node.domainType, {
-      id: node.id,
-      dataModelId: node.dataModel,
-      dataClassId: node.parentDataClass
+      id: node.id
     });
   }
 }

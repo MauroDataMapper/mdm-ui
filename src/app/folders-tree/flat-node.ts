@@ -24,8 +24,6 @@ import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 export interface Node {
     children?: Node[];
     deleted?: boolean;
-    selected?: boolean;
-    modified?: boolean;
     finalised?: boolean;
     domainType: DOMAIN_TYPE;
     type?: string;
@@ -89,20 +87,6 @@ export class FlatNode {
     }
     set deleted(d: boolean) {
         this.node.deleted = d;
-    }
-
-    get selected() {
-        return this.node?.selected;
-    }
-    set selected(s: boolean) {
-        this.node.selected = s;
-    }
-
-    get modified() {
-        return this.node?.modified;
-    }
-    set modified(m: boolean) {
-        this.node.modified = m;
     }
 
     get finalised() {

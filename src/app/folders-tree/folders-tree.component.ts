@@ -407,10 +407,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         })
       )
       .subscribe(response => {
-        if (this.selectedNode) {
-          this.selectedNode.selected = false;
-        }
-
         const node: Node = {
           id: response.body.id,
           domainType: convertCatalogueItemDomainType(response.body.domainType),

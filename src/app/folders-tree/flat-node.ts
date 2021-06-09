@@ -207,7 +207,6 @@ export enum DOMAIN_TYPE {
     Classification = 'Classification',
     ReferenceDataModel = 'ReferenceDataModel',
     EnumerationType = 'EnumerationType',
-    VersionedFolder = 'VersionedFolder',
 
     // TODO: UI only domains for prototyping, consider making them part of backend
     Root = 'Root',
@@ -227,8 +226,7 @@ const catalogueItemDomainTypeToDomainType = new Map<CatalogueItemDomainType, DOM
     [CatalogueItemDomainType.VersionedFolder, DOMAIN_TYPE.VersionedFolder],
     [CatalogueItemDomainType.ReferenceDataModel, DOMAIN_TYPE.ReferenceDataModel],
     [CatalogueItemDomainType.Term, DOMAIN_TYPE.Term],
-    [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology],
-    [CatalogueItemDomainType.VersionedFolder, DOMAIN_TYPE.VersionedFolder]
+    [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology]
 ]);
 
 export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType.get(source);

@@ -51,95 +51,95 @@ export class NodeConfirmClickEvent {
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
-   @Input() node: any;
-   @Input() searchCriteria: string;
-   @Input() defaultCheckedMap: any = {};
+  @Input() node: any;
+  @Input() searchCriteria: string;
+  @Input() defaultCheckedMap: any = {};
 
-   @Output() nodeClickEvent = new EventEmitter<Node>();
-   @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
-   @Output() nodeDbClickEvent = new EventEmitter<Node>();
-   @Output() nodeCheckedEvent = new EventEmitter<any>();
+  @Output() nodeClickEvent = new EventEmitter<Node>();
+  @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
+  @Output() nodeDbClickEvent = new EventEmitter<Node>();
+  @Output() nodeCheckedEvent = new EventEmitter<any>();
 
-   @Output() addFolderEvent = new EventEmitter<any>();
-   @Output() addCodeSetEvent = new EventEmitter<any>();
-   @Output() addDataModelEvent = new EventEmitter<any>();
-   @Output() addChildDataClassEvent = new EventEmitter<any>();
-   @Output() addChildDataTypeEvent = new EventEmitter<any>();
-   @Output() addChildDataElementEvent = new EventEmitter<any>();
-   @Output() deleteFolderEvent = new EventEmitter<any>();
+  @Output() addFolderEvent = new EventEmitter<any>();
+  @Output() addCodeSetEvent = new EventEmitter<any>();
+  @Output() addDataModelEvent = new EventEmitter<any>();
+  @Output() addChildDataClassEvent = new EventEmitter<any>();
+  @Output() addChildDataTypeEvent = new EventEmitter<any>();
+  @Output() addChildDataElementEvent = new EventEmitter<any>();
+  @Output() deleteFolderEvent = new EventEmitter<any>();
 
-   @Output() compareToEvent = new EventEmitter<any>();
-   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
+  @Output() compareToEvent = new EventEmitter<any>();
+  @Output() loadModelsToCompareEvent = new EventEmitter<any>();
 
-   @Input() doNotShowDataClasses: any;
-   @Input() doNotShowTerms: any;
-   @Input() justShowFolders: any;
-   @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
-   @Input() propagateCheckbox: any;
-   @Input() enableDragAndDrop = false;
-   @Input() enableContextMenu = false;
-   @Input() rememberExpandedStates = false;
-   @Input() expandOnNodeClickFor: any;
-   @Input() doNotMakeSelectedBold: any;
-   @Input() filterByDomainType: DOMAIN_TYPE[];
+  @Input() doNotShowDataClasses: any;
+  @Input() doNotShowTerms: any;
+  @Input() justShowFolders: any;
+  @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
+  @Input() propagateCheckbox: any;
+  @Input() enableDragAndDrop = false;
+  @Input() enableContextMenu = false;
+  @Input() rememberExpandedStates = false;
+  @Input() expandOnNodeClickFor: any;
+  @Input() doNotMakeSelectedBold: any;
+  @Input() filterByDomainType: DOMAIN_TYPE[];
 
-   @Input() treeName = 'unnamed';
+  @Input() treeName = 'unnamed';
 
-   @Input() inSearchMode: any;
+  @Input() inSearchMode: any;
 
-   @Input() initialExpandedPaths: string[];
-   @Input() isComparisonTree = false;
+  @Input() initialExpandedPaths: string[];
+  @Input() isComparisonTree = false;
 
-   @Input() selectedNode: FlatNode = null; // Control highlighting
+  @Input() selectedNode: FlatNode = null; // Control highlighting
 
-   @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
-   contextMenuPosition = { x: '0', y: '0' };
+  @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
+  contextMenuPosition = { x: '0', y: '0' };
 
-   favourites: { [x: string]: any };
-   subscriptions: Subscription = new Subscription();
-   checkedList = this.defaultCheckedMap || {};
+  favourites: { [x: string]: any };
+  subscriptions: Subscription = new Subscription();
+  checkedList = this.defaultCheckedMap || {};
 
-   targetVersions = [];
-   expandedPaths = [];
+  targetVersions = [];
+  expandedPaths = [];
 
-   draggableDomains = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
-   droppableDomains = [DOMAIN_TYPE.Folder];
-   draggedTreeNode: FlatNode;
-   showDropTopPlaceHolder = false;
+  draggableDomains = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
+  droppableDomains = [DOMAIN_TYPE.Folder];
+  draggedTreeNode: FlatNode;
+  showDropTopPlaceHolder = false;
 
-   /** The TreeControl controls the expand/collapse state of tree nodes.  */
-   treeControl: FlatTreeControl<FlatNode>;
+  /** The TreeControl controls the expand/collapse state of tree nodes.  */
+  treeControl: FlatTreeControl<FlatNode>;
 
-   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-   dataSource: MatTreeFlatDataSource<Node, FlatNode>;
+  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+  dataSource: MatTreeFlatDataSource<Node, FlatNode>;
 
-   folder = '';
+  folder = '';
 
-   expandedNodeSet = new Set<string>();
+  expandedNodeSet = new Set<string>();
 
-   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-   protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
+  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
+  protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
 
-   private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject();
 
-   /**
-    * Get the children for the given node from source data.
-    *
-    * Defined as property to retain reference to `this`.
-    */
+  /**
+   * Get the children for the given node from source data.
+   *
+   * Defined as property to retain reference to `this`.
+   */
 
-   constructor(
-      protected messages: MessageService,
-      protected resources: MdmResourcesService,
-      protected securityHandler: SecurityHandlerService,
-      protected favouriteHandler: FavouriteHandlerService,
-      protected folderService: FolderService,
-      protected stateHandler: StateHandlerService,
-      protected messageHandler: MessageHandlerService,
-      private broadcast: BroadcastService,
-      public dialog: MatDialog,
-      private modelTree: ModelTreeService,
-      private shared: SharedService) {
+  constructor(
+    protected messages: MessageService,
+    protected resources: MdmResourcesService,
+    protected securityHandler: SecurityHandlerService,
+    protected favouriteHandler: FavouriteHandlerService,
+    protected folderService: FolderService,
+    protected stateHandler: StateHandlerService,
+    protected messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService,
+    public dialog: MatDialog,
+    private modelTree: ModelTreeService,
+    private shared: SharedService) {
     this.loadFavourites();
     this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
@@ -264,6 +264,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   handleDbClick(fnode: FlatNode) {
     this.selectedNode = fnode; // Control highlighting selected tree node
+    this.focusNode(fnode);
+  }
+
+  focusNode(fnode: FlatNode) {
+    this.selectedNode = fnode; // Control highlighting selected tree node
     this.nodeDbClickEvent.emit(fnode.node);
   }
 
@@ -274,6 +279,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           if (this.justShowFolders) {
             const folderResponse = await this.resources.tree.get('folders', 'folders', node.id).toPromise();
             return folderResponse.body;
+          } else {
+            return node.children;
+          }
+        case DOMAIN_TYPE.VersionedFolder:
+          if (this.justShowFolders) {
+            const versionedFolderResponse = await this.resources.tree.get('folders', 'versionedFolders', node.id).toPromise();
+            return versionedFolderResponse.body;
           } else {
             return node.children;
           }
@@ -327,7 +339,12 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     if (node.id === id) {
       return { node, parent };
     }
-    if (node.domainType === DOMAIN_TYPE.Terminology || node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
+    if (node.domainType === DOMAIN_TYPE.Terminology
+      || node.domainType === DOMAIN_TYPE.Folder
+      || node.domainType === DOMAIN_TYPE.VersionedFolder
+      || node.domainType === DOMAIN_TYPE.DataModel
+      || node.domainType === DOMAIN_TYPE.DataClass
+      || node.isRoot === true) {
       if (!node.children) {
         return null;
       }
@@ -349,20 +366,20 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     delete this.checkedList[node.id];
 
     if (this.propagateCheckbox) {
-       node.children?.forEach((n: FlatNode) => {
-          n.disableChecked = status;
-          this.markChildren(n, null, status);
-       });
+      node.children?.forEach((n: FlatNode) => {
+        n.disableChecked = status;
+        this.markChildren(n, null, status);
+      });
     }
- }
+  }
 
- /** Context Menu */
- async onContextMenu(fnode: FlatNode, event: MouseEvent) {
+  /** Context Menu */
+  async onContextMenu(fnode: FlatNode, event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
 
     if (!this.enableContextMenu || fnode.domainType === DOMAIN_TYPE.CodeSet || fnode.domainType === DOMAIN_TYPE.Term) {
-       return;
+      return;
     }
 
     this.contextMenuPosition.x = `${event.clientX}px`;
@@ -371,14 +388,14 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.contextMenuTrigger.openMenu();
 
     if (fnode.domainType === DOMAIN_TYPE.DataModel) {
-       this.targetVersions = await this.folderService.loadVersions(fnode.node);
+      this.targetVersions = await this.folderService.loadVersions(fnode.node);
     }
- }
+  }
 
-   handleFavourites(fnode: FlatNode) {
-      this.favouriteHandler.toggle(fnode.node);
-      this.loadFavourites();
-   }
+  handleFavourites(fnode: FlatNode) {
+    this.favouriteHandler.toggle(fnode.node);
+    this.loadFavourites();
+  }
 
   handleAddFolderModal(fnode: FlatNode) {
     this.modelTree
@@ -429,33 +446,33 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         this.folder = '';
         this.refreshTree();
       });
-   }
+  }
 
-   handleAddDataModel(fnode: FlatNode) {
-      this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
-   }
+  handleAddDataModel(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
+  }
 
-   handleAddCodeSet(fnode: FlatNode) {
-      this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
-   }
+  handleAddCodeSet(fnode: FlatNode) {
+    this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
+  }
 
-   handleDeleteFolder(fnode: FlatNode, permanent = false) {
-      this.deleteFolderEvent.emit({ folder: fnode, permanent });
-   }
+  handleDeleteFolder(fnode: FlatNode, permanent = false) {
+    this.deleteFolderEvent.emit({ folder: fnode, permanent });
+  }
 
-   handleAddDataClass(fnode: FlatNode) {
-      this.stateHandler.Go('NewDataClass', {
-         grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node.parentId : null,
-         parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node.modelId,
-         parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
-      });
-    }
+  handleAddDataClass(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
+    });
+  }
 
   handleAddDataElement(fnode: FlatNode) {
     this.stateHandler.Go('NewDataElement', {
-        grandParentDataClassId: fnode.node.parentId ? fnode.node.parentId : null,
-        parentDataModelId: fnode.node.modelId,
-        parentDataClassId: fnode.id
+      grandParentDataClassId: fnode.node.parentId ? fnode.node.parentId : null,
+      parentDataModelId: fnode.node.modelId,
+      parentDataClassId: fnode.id
     });
   }
 
@@ -465,8 +482,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   handleDataModelCompare(fnode: FlatNode, targetVersion = null) {
     this.stateHandler.NewWindow('modelscomparison', {
-        sourceId: fnode.id,
-        targetId: targetVersion ? targetVersion.id : null
+      sourceId: fnode.id,
+      targetId: targetVersion ? targetVersion.id : null
     });
   }
 

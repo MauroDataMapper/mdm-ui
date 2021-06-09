@@ -163,7 +163,7 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list('folders', { domainType: 'dataModels' }).subscribe((data) => {
+    this.resourceService.tree.list(ContainerDomainType.FOLDERS, { domainType: 'dataModels' }).subscribe((data) => {
       this.rootNode = {
         children: data.body,
         isRoot: true

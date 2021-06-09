@@ -214,7 +214,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.tree.list('folders', {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
+      this.resources.tree.list(ContainerDomainType.FOLDERS, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
         this.loading = false;
         this.rootNode = {
           children: data.body,
@@ -256,7 +256,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list('folders', options);
+    let method = this.resources.tree.list(ContainerDomainType.FOLDERS, options);
 
 
     if (id) {

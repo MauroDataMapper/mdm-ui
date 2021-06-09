@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
@@ -78,7 +78,7 @@ export class ModelTreeService implements OnDestroy {
     }
 
     return this.resources.tree
-      .list('folders', options.queryStringParams)
+      .list(ContainerDomainType.FOLDERS, options.queryStringParams)
       .pipe(
         map((response: any) => response.body as Node[])
       );

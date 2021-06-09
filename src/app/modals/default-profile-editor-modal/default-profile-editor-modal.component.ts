@@ -17,15 +17,21 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+// TODO update to use reactive forms
+
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
-  DefaultProfile,
+  DefaultProfileModalConfiguration,
+  DefaultProfileModalResponse,
   DefaultProfileItem,
   ProfileControlTypes
 } from '@mdm/model/defaultProfileModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, ValidatorService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 
 @Component({
@@ -40,26 +46,26 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   pagination: McSelectPagination;
 
   constructor(
-    public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DefaultProfile,
+    public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent,DefaultProfileModalResponse>,
+    @Inject(MAT_DIALOG_DATA) public data: DefaultProfileModalConfiguration,
     protected resourcesSvc: MdmResourcesService,
     protected validator: ValidatorService,
     protected gridService: GridService,
-    protected resources: MdmResourcesService
+    protected resources: MdmResourcesService,
+    protected editing: EditingService
   ) {}
 
   ngOnInit(): void {}
 
   save() {
-    // Save Changes
 
     let hasError = false;
 
     this.data.items.forEach((item: DefaultProfileItem) => {
       if (item.controlType === ProfileControlTypes.multiplicity) {
         const valResult = this.validator.validateMultiplicities(
-          item.minMultiplicity.toString(),
-          item.maxMultiplicity.toString()
+          item.minMultiplicity === undefined ? '' : item.minMultiplicity.toString(),
+          item.maxMultiplicity === undefined ? '' : item.maxMultiplicity.toString()
         );
         if (valResult) {
           this.multiplicityError = valResult;
@@ -73,12 +79,18 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     });
 
     if (!hasError) {
-      this.dialogRef.close(this.data.items);
+      this.dialogRef.close({status: ModalDialogStatus.Ok, items: this.data.items});
     }
   }
 
   onCancel() {
-    this.dialogRef.close();
+    this.editing
+    .confirmCancelAsync()
+    .subscribe(confirm => {
+      if (confirm) {
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+      }
+    });
   }
 
   public get profileControlType(): typeof ProfileControlTypes {
@@ -100,14 +112,14 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     }
     // Check if for EnumerationType, at least one value is added
     if (
-      item.value.domainType === 'EnumerationType' &&
+      item.value.domainType === CatalogueItemDomainType.EnumerationType &&
       item.value.enumerationValues.length === 0
     ) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
     if (
-      item.value.domainType === 'ReferenceType' &&
+      item.value.domainType === CatalogueItemDomainType.ReferenceType &&
       !item.value.referencedDataClass
     ) {
       isValid = false;
@@ -115,7 +127,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
     // Check if for TerminologyType, the terminology is selected
     if (
-      item.value.domainType === 'TerminologyType' &&
+      item.value.domainType === CatalogueItemDomainType.TerminologyType &&
       !item.value.referencedTerminology
     ) {
       isValid = false;
@@ -137,13 +149,13 @@ export class DefaultProfileEditorModalComponent implements OnInit {
       offset,
       'label',
       'asc',
-      { label: text }
+      { label: text, loadAll }
     );
     this.pagination = {
       limit: options['limit'],
       offset: options['offset']
     };
-    return this.resources.dataType.list(this.data.catalogueItem.breadcrumbs[0].id, options);
+    return this.resources.dataType.list(this.data.parentCatalogueItem.id, options);
   };
 
   onDataTypeSelect(dataType, item) {

@@ -154,10 +154,10 @@ export class ReferenceDataComponent
     .subscribe(
       (res) => {
         this.referenceModel = res.body;
+        this.catalogueItem = res.body;
         this.messageHandler.showSuccess(
           'Reference Data Model updated successfully.'
         );
-        this.editingService.stop();
        },
       (error) => {
         this.messageHandler.showError(

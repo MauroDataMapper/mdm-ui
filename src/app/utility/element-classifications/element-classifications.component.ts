@@ -61,7 +61,7 @@ export class ElementClassificationsComponent implements OnInit {
         });
       }
     } else {
-      this.formData.classifiers = this.element.classifiers ? this.element.classifiers : [];
+      this.formData.classifiers = this.element.classifiers ?? [];
     }
 
   }

@@ -198,6 +198,7 @@ export class ClassificationComponent
         this.messageHandler.showSuccess('Classifier updated successfully.');
         this.editingService.stop();
         this.result = result.body;
+        this.catalogueItem = result.body;
       },
       (error) => {
         this.messageHandler.showError(

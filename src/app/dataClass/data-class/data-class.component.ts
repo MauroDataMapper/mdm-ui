@@ -192,7 +192,7 @@ export class DataClassComponent
     }
   }
 
-  save(saveItems: any) {
+  save(saveItems: Array<DefaultProfileItem>) {
     this.error = '';
 
     const resource: DataClass = {
@@ -224,6 +224,7 @@ export class DataClassComponent
         .subscribe(
           (result: DataClassDetailResponse) => {
             this.dataClass = result.body;
+            this.catalogueItem = result.body;
             this.messageHandler.showSuccess('Data Class updated successfully.');
             this.editingService.stop();
             this.messageService.dataChanged(result.body);

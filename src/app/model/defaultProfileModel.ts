@@ -21,10 +21,16 @@ import {
   Container,
   DataTypeReference
 } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
-export interface DefaultProfile {
+export interface DefaultProfileModalConfiguration {
   items: Array<DefaultProfileItem>;
-  catalogueItem: any;
+  parentCatalogueItem?: any;
+}
+
+export interface DefaultProfileModalResponse {
+  status: ModalDialogStatus;
+  items?: Array<DefaultProfileItem>;
 }
 
 // TODO update classifications with model
@@ -34,6 +40,7 @@ export interface DefaultProfileItem {
   controlType: ProfileControlTypes;
   minMultiplicity?: number | string;
   maxMultiplicity?: number | string;
+  propertyName: string;
 }
 
 export enum ProfileControlTypes {
@@ -45,46 +52,50 @@ export enum ProfileControlTypes {
   dataType = 'DataType'
 }
 
-export class DefaultProfileControls {
-  static dataModel = [
-    'description',
-    'author',
-    'aliases',
-    'organisation',
-    'classifications'
-  ];
-  static dataClass = [
-    'description',
-    'classifications',
-    'multiplicity',
-    'aliases'
-  ];
-  static dataElement = [
-    'description',
-    'classifications',
-    'multiplicity',
-    'aliases',
-    'dataType'
-  ];
-  static folder = ['description'];
-  static dataType = ['description', 'aliases', 'classifications', 'dataType'];
-  static term = ['description', 'aliases',  'classifications', 'url','terminology'];
-  static classification = ['description'];
+export  class DefaultProfileControls {
 
   static renderControls(domainType): string[] {
+
+    const dataModel = [
+      'description',
+      'author',
+      'aliases',
+      'organisation',
+      'classifications'
+    ];
+    const dataClass = [
+      'description',
+      'classifications',
+      'multiplicity',
+      'aliases'
+    ];
+    const dataElement = [
+      'description',
+      'classifications',
+      'multiplicity',
+      'aliases',
+      'dataType'
+    ];
+    const folder = ['description'];
+    const dataType = ['description', 'aliases', 'classifications', 'dataType'];
+    const term = ['description', 'aliases',  'classifications', 'url','terminology'];
+    const classification = ['description'];
+
+
     switch (domainType) {
       case (CatalogueItemDomainType.DataModel,
+        CatalogueItemDomainType.ReferenceDataModel,
       CatalogueItemDomainType.Terminology,
       CatalogueItemDomainType.CodeSet):
-        return DefaultProfileControls.dataModel;
+        return dataModel;
       case CatalogueItemDomainType.Term:
-        return DefaultProfileControls.term;
+        return term;
       case CatalogueItemDomainType.DataClass:
-        return DefaultProfileControls.dataClass;
+        return dataClass;
       case CatalogueItemDomainType.Folder:
-        return DefaultProfileControls.folder;
+        return folder;
       case CatalogueItemDomainType.DataElement:
-        return DefaultProfileControls.dataElement;
+        return dataElement;
       case (CatalogueItemDomainType.ReferenceDataModelType,
       CatalogueItemDomainType.CodeSetType,
       CatalogueItemDomainType.ModelDataType,
@@ -92,11 +103,11 @@ export class DefaultProfileControls {
       CatalogueItemDomainType.TerminologyType,
       CatalogueItemDomainType.EnumerationType,
       CatalogueItemDomainType.ReferenceType):
-        return DefaultProfileControls.dataType;
+        return dataType;
     case CatalogueItemDomainType.Classification:
-        return DefaultProfileControls.classification;
+        return classification;
       default:
-        return DefaultProfileControls.dataModel;
+        return dataModel;
     }
   }
 }

@@ -275,7 +275,7 @@ SPDX-License-Identifier: Apache-2.0
         <mdm-element-child-data-classes-list
           *ngIf="catalogueItem"
           [parentDataModel]="catalogueItem"
-          [isEditable]="isEditable"
+          [isEditable]="access.showEdit"
           [parentDataClass]="{ id: null }"
           [mcDataClass]="{ id: null }"
           [type]="'dynamic'"
@@ -312,7 +312,7 @@ SPDX-License-Identifier: Apache-2.0
         *ngIf="catalogueItem"
         [parent]="catalogueItem"
         [type]="'dynamic'"
-        [isEditable]="isEditable"
+        [isEditable]="access.showEdit"
         (totalCount)="typesCountEmitter($event)"
       ></mdm-element-owned-data-type-list>
     </div>

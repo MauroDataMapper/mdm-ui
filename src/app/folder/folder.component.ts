@@ -40,6 +40,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-folder',
@@ -173,7 +174,7 @@ export class FolderComponent
     );
   }
 
-  save(folderUpdates: any) {
+  save(folderUpdates: Array<DefaultProfileItem>) {
        this.editingService.stop();
 
     const resource = {
@@ -189,6 +190,7 @@ export class FolderComponent
     this.resourcesService.folder.update(resource.id, resource).subscribe(
       (res) => {
         this.folder = res.body;
+        this.catalogueItem = res.body;
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Folder updated successfully.');

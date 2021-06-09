@@ -158,7 +158,7 @@ export class DataTypeComponent
     this.stateHandler.Go('dataType', { tabView: tab.name }, { notify: false });
   }
 
-  save(saveItems: any) {
+  save(saveItems: Array<DefaultProfileItem>) {
     const resource: DataType = {
       id: this.catalogueItem.id,
       domainType: this.catalogueItem.domainType,
@@ -174,6 +174,7 @@ export class DataTypeComponent
       .subscribe(
         (res: DataTypeDetailResponse) => {
           this.dataType = res.body;
+          this.catalogueItem = res.body;
           this.messageHandler.showSuccess('Data Type updated successfully.');
           this.editingService.stop();
         },

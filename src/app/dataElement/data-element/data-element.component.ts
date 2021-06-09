@@ -196,7 +196,7 @@ export class DataElementComponent
 
 
 
-  save(saveItems: any) {
+  save(saveItems: Array<DefaultProfileItem>) {
 
     const resource: DataElement = {
       id: this.dataElementOutput.id,
@@ -234,8 +234,8 @@ export class DataElementComponent
       )
       .subscribe(
         (result: DataElementDetailResponse) => {
-          this.editingService.stop();
           this.dataElementOutput = result.body;
+          this.catalogueItem = result.body;
           this.messageHandler.showSuccess(
             'Data Element updated successfully.'
           );

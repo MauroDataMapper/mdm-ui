@@ -216,7 +216,7 @@ export class CodeSetComponent
     }
   }
 
-  save(saveItems: any) {
+  save(saveItems: Array<DefaultProfileItem>) {
     const resource: ModelUpdatePayload = {
       id: this.codeSetModel.id,
       domainType: this.codeSetModel.domainType
@@ -238,6 +238,7 @@ export class CodeSetComponent
         this.editingService.stop();
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.catalogueItem = res.body;
+        this.codeSetModel = res.body;
       }
     );
 

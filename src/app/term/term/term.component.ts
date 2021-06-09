@@ -189,7 +189,7 @@ export class TermComponent
     this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
-  save(saveItems: any) {
+  save(saveItems: Array<DefaultProfileItem>) {
 
     const resource: Term = {
       id: this.term.id,

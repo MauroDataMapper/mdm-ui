@@ -64,7 +64,6 @@ export class DataModelComponent
 
   dataModel: DataModelDetail;
   editMode = false;
-  isEditable: boolean;
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
@@ -132,12 +131,12 @@ export class DataModelComponent
 
   save(saveItems: Array<DefaultProfileItem>) {
     const resource: ModelUpdatePayload = {
-      id: this.catalogueItem.id,
-      domainType: this.catalogueItem.domainType
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
-      resource[item.displayName.toLocaleLowerCase()] = item.value;
+      resource[item.propertyName] = item.value;
     });
 
     this.resourcesService.dataModel
@@ -146,6 +145,7 @@ export class DataModelComponent
         (res: DataModelDetailResponse) => {
           this.messageHandler.showSuccess('Data Model updated successfully.');
           this.dataModel = res.body;
+          this.catalogueItem = this.dataModel;
         },
         (error) => {
           this.messageHandler.showError(
@@ -179,10 +179,6 @@ export class DataModelComponent
         this.catalogueItem = result.body;
 
         this.watchDataModelObject();
-
-        this.isEditable = this.catalogueItem.availableActions?.includes(
-          'update'
-        );
         this.parentId = this.catalogueItem.id;
 
         await this.resourcesService.versionLink

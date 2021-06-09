@@ -20,22 +20,26 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   CodeSetDetail,
+  Container,
   DataElementDetail,
   DataModelDetail,
+  DataTypeReference,
   FolderDetail,
   ModelDomainType,
   TermDetail,
   TerminologyDetail,
   VersionedFolderDetail
 } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import {
   DefaultProfileItem,
-  DefaultProfile,
   ProfileControlTypes,
-  DefaultProfileControls
+  DefaultProfileControls,
+  DefaultProfileModalConfiguration,
+  DefaultProfileModalResponse
 } from '@mdm/model/defaultProfileModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
@@ -115,26 +119,23 @@ export abstract class ProfileBaseComponent extends BaseComponent {
   }
 
   edit(isDescriptionOnly: boolean) {
-    const data: DefaultProfile = {
-      items: this.setDefaultProfileData(isDescriptionOnly),
-      catalogueItem: this.catalogueItem
-    };
-
-    const editDialog = this.dialog.open<
-      DefaultProfileEditorModalComponent,
-      DefaultProfile
-    >(DefaultProfileEditorModalComponent, {
-      data,
-      panelClass: 'full-width-dialog'
-    });
-
-    this.editingService.configureDialogRef(editDialog);
-
-    editDialog.afterClosed().subscribe((editResult) => {
-      if (editResult) {
-        this.save(editResult);
-      }
-    });
+    this.editingService
+      .openDialog<
+        DefaultProfileEditorModalComponent,
+        DefaultProfileModalConfiguration,
+        DefaultProfileModalResponse
+      >(DefaultProfileEditorModalComponent, {
+        data: {
+          items: this.setDefaultProfileData(isDescriptionOnly),
+          parentCatalogueItem: this.catalogueItem.breadcrumbs[0]
+        }
+      })
+      .afterClosed().subscribe((result) => {
+        if(result.status === ModalDialogStatus.Ok)
+        {
+          this.save(result.items);
+        }
+      });
   }
 
   editProfile = (isNew: boolean) => {
@@ -316,7 +317,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
       this.createDefaultProfileItem(
         this.catalogueItem.description,
         'Description',
-        ProfileControlTypes.html
+        ProfileControlTypes.html,
+        'description'
       )
     );
 
@@ -326,7 +328,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.label,
             'Label',
-            ProfileControlTypes.text
+            ProfileControlTypes.text,
+            'label'
           )
         );
       if (
@@ -337,7 +340,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.organisation,
             'Organisation',
-            ProfileControlTypes.text
+            ProfileControlTypes.text,
+            'organisation'
           )
         );
       }
@@ -349,7 +353,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.author,
             'Author',
-            ProfileControlTypes.text
+            ProfileControlTypes.text,
+            'author'
           )
         );
       }
@@ -358,7 +363,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.aliases || [],
             'Aliases',
-            ProfileControlTypes.aliases
+            ProfileControlTypes.aliases,
+            'aliases'
           )
         );
       }
@@ -367,7 +373,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.classifiers || [],
             'Classifications',
-            ProfileControlTypes.classifications
+            ProfileControlTypes.classifications,
+            'classifications'
           )
         );
       }
@@ -379,7 +386,8 @@ export abstract class ProfileBaseComponent extends BaseComponent {
             this.catalogueItem.maxMultiplicity === -1
               ? '*'
               : this.catalogueItem.maxMultiplicity,
-          minMultiplicity: this.catalogueItem.minMultiplicity
+          minMultiplicity: this.catalogueItem.minMultiplicity,
+          propertyName: 'multiplicity'
         });
       }
       if (this.showControl(controls, 'dataType')) {
@@ -387,21 +395,21 @@ export abstract class ProfileBaseComponent extends BaseComponent {
           this.createDefaultProfileItem(
             this.catalogueItem.dataType,
             'Data Type',
-            ProfileControlTypes.dataType
+            ProfileControlTypes.dataType,
+            'dataType'
           )
         );
       }
-      if(this.showControl(controls, 'url'))
-      {
+      if (this.showControl(controls, 'url')) {
         items.push(
           this.createDefaultProfileItem(
-          this.catalogueItem.url,
-          'URL',
-          ProfileControlTypes.text
+            this.catalogueItem.url,
+            'URL',
+            ProfileControlTypes.text,
+            'url'
           )
         );
       }
-
     }
 
     return items;
@@ -412,18 +420,23 @@ export abstract class ProfileBaseComponent extends BaseComponent {
   }
 
   createDefaultProfileItem(
-    value: string,
+    value: string | Container[] | string[] | DataTypeReference,
     displayName: string,
-    controlType: ProfileControlTypes
+    controlType: ProfileControlTypes,
+    propertyName: string
   ): DefaultProfileItem {
-    const item: DefaultProfileItem = {
+    return {
       controlType,
       displayName,
-      value
+      value,
+      propertyName
     };
-
-    return item;
   }
 
+  /**
+  * Save operation for default profile
+  *
+  * @param saveItems properties which are going to be updated
+  */
   abstract save(saveItems: Array<DefaultProfileItem>);
 }

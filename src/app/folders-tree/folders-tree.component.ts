@@ -26,9 +26,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { convertCatalogueItemDomainType, DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
-import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService, SharedService } from '@mdm/services';
-import { EditingService } from '@mdm/services/editing.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { catchError, takeUntil } from 'rxjs/operators';
 

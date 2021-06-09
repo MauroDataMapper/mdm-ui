@@ -55,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #treeMenu="matMenu">
     <ng-template matMenuContent let-node="node">
         <ng-container *ngIf="node.domainType === 'Folder'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node)">Create Folder</button>
+            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node, true)">Create Folder</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Create Data Model</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Create Code Set</button>
             <ng-container *ngIf="isUserAdmin">
@@ -67,7 +67,7 @@ SPDX-License-Identifier: Apache-2.0
         <ng-container *ngIf="node.domainType === 'VersionedFolder'">
           <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
           <mat-divider></mat-divider>
-          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node)">Create Folder</button>
+          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node, false)">Create Folder</button>
           <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Create Data Model</button>
           <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Create Code Set</button>
           <ng-container *ngIf="isUserAdmin">

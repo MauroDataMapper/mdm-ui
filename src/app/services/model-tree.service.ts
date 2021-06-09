@@ -187,7 +187,7 @@ export class ModelTreeService implements OnDestroy {
    * @returns An `Observable` containing either a `FolderDetailResponse` or `VersionedFolderDetailResponse`,
    * depending on the options selected in the dialog.
    */
-  createNewFolder(parentFolderId?: Uuid): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
+  createNewFolder(settings: { allowVersioning?: boolean, parentFolderId?: Uuid }): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
     return this.editing
       .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
         NewFolderModalComponent,
@@ -198,8 +198,8 @@ export class ModelTreeService implements OnDestroy {
             btnType: 'primary',
             inputLabel: 'Folder name',
             message: 'Please enter the name of your Folder.',
-            createRootFolder: !parentFolderId,
-            canVersion: true
+            createRootFolder: !(settings?.parentFolderId),
+            canVersion: settings?.allowVersioning
           }
         })
       .afterClosed()
@@ -207,10 +207,10 @@ export class ModelTreeService implements OnDestroy {
         filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap(modal => {
           if (modal.useVersionedFolders && modal.isVersioned) {
-            return this.saveVersionedFolder(modal.label, parentFolderId);
+            return this.saveVersionedFolder(modal.label, settings?.parentFolderId);
           }
 
-          return this.saveFolder(modal.label, parentFolderId);
+          return this.saveFolder(modal.label, settings?.parentFolderId);
         })
       );
   }

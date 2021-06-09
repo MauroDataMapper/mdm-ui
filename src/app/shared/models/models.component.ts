@@ -351,7 +351,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onFolderAddModal() {
     this.modelTree
-      .createNewFolder()
+      .createNewFolder({ allowVersioning: true })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem creating the Folder.', error);

@@ -397,9 +397,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.loadFavourites();
   }
 
-  handleAddFolderModal(fnode: FlatNode) {
+  handleAddFolderModal(fnode: FlatNode, allowVersioning: boolean) {
     this.modelTree
-      .createNewFolder(fnode?.id)
+      .createNewFolder({ parentFolderId: fnode?.id, allowVersioning })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem creating the Folder.', error);

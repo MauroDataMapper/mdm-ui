@@ -73,6 +73,11 @@ pipeline {
           }
         }
       }
+      post{
+        always{
+          recordIssues tools: [esLint(pattern: '**/eslint_report.xml')]
+        }
+      }
     }
 
     stage('Sonarqube') {

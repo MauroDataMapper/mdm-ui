@@ -19,13 +19,13 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentRef } from '@angular/core/core';
 
 export class Step {
-    title: any;
-    component: any;
-    hasForm = false;
-    invalid: boolean;
-    isProcessComplete: boolean;
-    scope: any;
-    compRef: ComponentRef<any>;
-    active: boolean;
-    constructor() {}
+  title: any;
+  component: any;
+  hasForm = false;
+  invalid: boolean;
+  isProcessComplete: boolean;
+  scope: any;
+  compRef: ComponentRef<any>;
+  active: boolean;
+  constructor() { }
 }

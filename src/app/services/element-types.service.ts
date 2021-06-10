@@ -42,6 +42,14 @@ export class ElementTypesService {
       isBase: true
     },
     {
+      id: 'VersionedFolder',
+      link: 'versionedFolder',
+      title: 'VersionedFolder',
+      markdown: 'vfd',
+      baseTitle: 'VersionedFolder',
+      isBase: true
+    },
+    {
       id: 'DataModel',
       link: 'dataModel',
       title: 'DataModel',

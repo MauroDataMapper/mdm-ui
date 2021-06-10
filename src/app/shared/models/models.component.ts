@@ -361,10 +361,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onAddDataModel(folder: any) {
-    this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
-  }
-
   onAddCodeSet(folder: any) {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
   }

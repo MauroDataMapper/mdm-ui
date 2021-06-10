@@ -21,6 +21,9 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { WizardStep } from '@mdm/wizards/wizards.model';
+import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-data-model-step1',
@@ -31,7 +34,7 @@ import { Subscription } from 'rxjs';
 export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   allDataModelTypes: any;
-  step: any;
+  step: WizardStep<DataModelMainComponent>;
   model: any;
 
   formChangesSubscription: Subscription;
@@ -56,6 +59,10 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(() => {
         this.step.invalid = this.myForm.invalid;
     });
+  }
+
+  getFolderIcon() {
+    return getCatalogueItemDomainTypeIcon(this.step.scope.parentDomainType);
   }
 
   loadHelp = () => {

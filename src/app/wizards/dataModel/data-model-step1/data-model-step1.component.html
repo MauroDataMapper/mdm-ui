@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <form #myForm="ngForm" ngNativeValidate class="full-width">
     <div class="mb-2">
         <strong>Selected folder: </strong>
+        <i class="fas {{getFolderIcon()}} dataModelTypeIcon"></i>
         <mdm-element-link [showTypeTitle]="false" [newWindow]="true" [element]="step.scope.parentFolder"></mdm-element-link>
     </div>
 

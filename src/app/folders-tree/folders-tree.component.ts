@@ -63,7 +63,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   @Output() addFolderEvent = new EventEmitter<any>();
   @Output() addCodeSetEvent = new EventEmitter<any>();
-  @Output() addDataModelEvent = new EventEmitter<any>();
   @Output() addChildDataClassEvent = new EventEmitter<any>();
   @Output() addChildDataTypeEvent = new EventEmitter<any>();
   @Output() addChildDataElementEvent = new EventEmitter<any>();
@@ -476,7 +475,12 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   handleAddDataModel(fnode: FlatNode) {
-    this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
+    this.stateHandler.Go(
+      'NewDataModel',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
+      });
   }
 
   handleAddCodeSet(fnode: FlatNode) {

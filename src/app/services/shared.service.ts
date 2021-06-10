@@ -100,5 +100,5 @@ export class SharedService {
 
   pendingUsersCount = () => {
     return this.resources.catalogueUser.pending({ disabled: false });
-  }
+  };
 }

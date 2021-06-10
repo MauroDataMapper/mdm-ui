@@ -149,7 +149,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           );
       }
     }
-  }
+  };
 
   constructor(
     private sharedService: SharedService,

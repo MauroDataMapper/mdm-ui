@@ -33,7 +33,6 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   ]
 })
 export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
-  @Output() editableFormChanged = new EventEmitter<any>();
   @Output() saveClicked = new EventEmitter();
   @Output() cancelClicked = new EventEmitter();
 

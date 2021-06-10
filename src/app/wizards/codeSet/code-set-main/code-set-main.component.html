@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
             <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
         </mat-form-field>
     </div>
-    <mdm-element-classifications [readOnly]="false" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}" class="mb-2"></mdm-element-classifications>
+    <mdm-element-classifications [readOnly]="false" (classificationsChanged)="model.classifiers = $event" class="mb-2"></mdm-element-classifications>
     <mdm-multiple-terms-selector (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
 </form>
 <button mat-flat-button type="button" color="primary" class="custom" [disabled]="!(model.label.length && model.author.length && model.organisation.length && model.terms.length > 0)" (click)="save()">Submit Code Set</button>

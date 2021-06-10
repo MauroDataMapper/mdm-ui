@@ -185,6 +185,8 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
 import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 import { AlertComponent } from '@mdm/shared/alert/alert.component';
+import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -343,7 +345,8 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
     ProfileDetailsComponent,
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
-    AlertComponent
+    AlertComponent,
+    DefaultProfileComponent
   ],
   imports: [
     AdminModule,
@@ -368,7 +371,8 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    JoditAngularModule
+    JoditAngularModule,
+    PipesModule
   ],
   exports: [
     MarkedPipe,
@@ -515,6 +519,7 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
+    DefaultProfileComponent,
     AlertComponent
   ]
 })

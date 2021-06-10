@@ -16,26 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
 import { Component, Input, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
+
+import { DefaultProfileControls } from '@mdm/model/defaultProfileModel';
 
 @Component({
-  selector: 'mdm-subscribed-catalogue-detail',
-  templateUrl: './subscribed-catalogue-detail.component.html',
-  styleUrls: ['./subscribed-catalogue-detail.component.scss']
+  selector: 'mdm-default-profile',
+  templateUrl: './default-profile.component.html'
 })
-export class SubscribedCatalogueDetailComponent implements OnInit {
+export class DefaultProfileComponent implements OnInit {
+  @Input() catalogueItem: any;
 
-  @Input() subscribedCatalogue: SubscribedCatalogue;
+  controls: Array<string>;
 
-
-  processing = false;
-
-  constructor(
-    private title: Title) { }
+  constructor() {}
 
   ngOnInit(): void {
-    this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
+    this.controls = DefaultProfileControls.renderControls(
+      this.catalogueItem.domainType
+    );
+  }
+
+  isInControlList(control: string): boolean {
+    return this.controls.findIndex((x) => x === control) !== -1;
   }
 }

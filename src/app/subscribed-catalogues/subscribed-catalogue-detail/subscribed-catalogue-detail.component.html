@@ -23,8 +23,8 @@ SPDX-License-Identifier: Apache-2.0
                 <span class="dataModelTypeIcon">
                     <i matTooltip="Data Standard" class="fas fa-rss"></i>
                 </span>
-                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
-                    [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
+                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="subscribedCatalogue.label" name="labelName"
+                    [inEditMode]="false" [styleCss]="'dataTypeDetailsLabel'">
                 </mdm-inline-text-edit>
             </h4>
             <div class="detail-icons">
@@ -41,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-                        <mdm-content-editor [editableForm]="editable.form" [element]="subscribedCatalogue"
+                        <mdm-content-editor [content]="subscribedCatalogue.description" [element]="subscribedCatalogue"
                             [property]="'description'">
                         </mdm-content-editor>
                     </td>

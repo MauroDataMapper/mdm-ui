@@ -145,7 +145,7 @@ export class TerminologyDetailsComponent implements OnInit {
         );
       }
     );
-  };
+  }
 
   toggleSecuritySection() {
     this.dialog.openSecurityAccess(this.mcTerminology, 'terminology');

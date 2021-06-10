@@ -89,7 +89,6 @@ export class HtmlEditorComponent implements OnInit {
   @Output() descriptionChange = new EventEmitter<string>();
 
   /* Inputs for model binding */
-  @Input() editableForm: any;
   @Input() element: any;
   @Input() property: string;
 

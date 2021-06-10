@@ -303,7 +303,7 @@ export class ModelMergingComponent implements OnInit {
     objects.modified = tempMod;
 
     return objects;
-  };
+  }
 
   createDataTypesElements(model: any) {
     const objects: any = {};
@@ -343,7 +343,7 @@ export class ModelMergingComponent implements OnInit {
     objects.modified = tempMod;
 
     return objects;
-  };
+  }
 
   createDataElementsElements(model: any) {
     const objects: any = {};
@@ -715,7 +715,7 @@ export class ModelMergingComponent implements OnInit {
     }
 
     this.diffs = this.mergeArrays(tempDiffTarget, tempDiffsSource);
-  };
+  }
 
   mergeArrays(source, target) {
     const jointArray = {};

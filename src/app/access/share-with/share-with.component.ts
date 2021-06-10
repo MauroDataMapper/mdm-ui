@@ -65,7 +65,7 @@ export class ShareWithComponent implements OnInit {
         this.messageHandler.showSuccess(`${this.message} updated successfully.`);
         this.readableByEveryoneChange.emit(this.readableByEveryone);
       });
-  };
+  }
 
   shareReadWithAuthenticatedChanged = () => {
     const request: Observable<any> = this.readableByAuthenticatedUsers

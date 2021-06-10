@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="!editableForm">
+<div *ngIf="!element">
    <jodit-editor *ngIf="inEditMode" 
                   [(ngModel)]="description" 
                   name="{{property}}"
@@ -29,13 +29,13 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
-<div *ngIf="editableForm">
-   <jodit-editor *ngIf="editableForm.visible" 
-                  [(ngModel)]="editableForm[property]" 
+<div *ngIf="element">
+   <jodit-editor *ngIf="inEditMode" 
+                  [(ngModel)]="element[property]" 
                   name="{{property}}"
                   [config]="editorConfig">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!editableForm.visible"></span>
+      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!inEditMode"></span>
    </div>
 </div>

@@ -1,0 +1,143 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<table *ngIf="controls" class="table table-bordered mdm--table-fixed">
+  <tbody>
+    <tr *ngIf="isInControlList('aliases')" >
+      <td class="detailsRowHeader">Aliases</td>
+      <td>
+        <mdm-element-alias
+          *ngIf="catalogueItem"
+          [aliases]="catalogueItem.aliases"
+          [property]="'aliases'"
+          [readOnly]="true"
+        >
+        </mdm-element-alias>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('description')">
+      <td class="detailsRowHeader">Description</td>
+      <td class="elementDetailDescription">
+        <div *ngIf="catalogueItem">
+          <mdm-content-editor
+            [(content)]="catalogueItem.description"
+            [inEditMode]="false"
+          ></mdm-content-editor>
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('multiplicity')">
+      <th class="detailsRowHeader">Multiplicity</th>
+      <td class="dataClassDetailsModelPath">
+        <mdm-multiplicity
+          [min]="catalogueItem.minMultiplicity"
+          [max]="catalogueItem.maxMultiplicity"
+        ></mdm-multiplicity>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('author')" >
+      <td class="detailsRowHeader">Author</td>
+      <td *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.author"
+          [name]="'moduleNameAuthor'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('organisation')" >
+      <td class="detailsRowHeader">Organisation</td>
+      <td *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.organisation"
+          [name]="'moduleNameOrganisation'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('terminology')">
+      <td class="detailsRowHeader">Terminology</td>
+      <td *ngIf="catalogueItem.terminology">
+        <span *ngIf="catalogueItem.terminology">
+          <small
+            ><span
+              *ngIf="!catalogueItem.terminology.finalised"
+              class="badge badge-warning ml-1"
+              >Draft</span
+            ></small
+          >
+          <small
+            ><span
+              *ngIf="catalogueItem.terminology.finalised"
+              class="badge badge-success ml-1"
+              >Finalised</span
+            >
+          </small>
+        </span>
+        <mdm-element-link
+          [element]="catalogueItem.terminology"
+          [showLink]="true"
+          [newWindow]="false"
+        ></mdm-element-link>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('url')" >
+      <td class="detailsRowHeader">URL</td>
+      <td *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.url"
+          [name]="'url'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
+
+    <tr *ngIf="isInControlList('dataType')">
+      <th class="detailsRowHeader">Data Type</th>
+      <td>
+        <mdm-element-data-type
+        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
+        [mcParentDataModel]="catalogueItem"
+      >
+      </mdm-element-data-type>
+      </td>
+    </tr>
+
+    <tr *ngIf="isInControlList('classifications')">
+      <td class="detailsRowHeader">Classifications</td>
+      <td *ngIf="catalogueItem">
+        <mdm-element-classifications
+          [classifications]="catalogueItem.classifiers"
+          [element]="catalogueItem"
+          [property]="'classifiers'"
+          [readOnly]="true"
+        ></mdm-element-classifications>
+      </td>
+    </tr>
+  </tbody>
+</table>

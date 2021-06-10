@@ -16,26 +16,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
 
-@Component({
-  selector: 'mdm-subscribed-catalogue-detail',
-  templateUrl: './subscribed-catalogue-detail.component.html',
-  styleUrls: ['./subscribed-catalogue-detail.component.scss']
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+
+@NgModule({
+  declarations: [  HighlighterPipe],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    HighlighterPipe
+  ]
 })
-export class SubscribedCatalogueDetailComponent implements OnInit {
-
-  @Input() subscribedCatalogue: SubscribedCatalogue;
-
-
-  processing = false;
-
-  constructor(
-    private title: Title) { }
-
-  ngOnInit(): void {
-    this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
-  }
-}
+export class PipesModule { }

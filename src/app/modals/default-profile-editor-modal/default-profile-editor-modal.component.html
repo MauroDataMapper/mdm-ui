@@ -1,0 +1,206 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<h4 mat-dialog-title>Edit Default Profile</h4>
+<mat-dialog-content class="mat-typography">
+  <table class="table table-bordered">
+    <tbody *ngFor="let item of this.data.items">
+      <tr>
+        <td [attr.colspan]="2" class="detailsRowHeader">
+          {{ item.displayName }}
+        </td>
+        <td>
+          <mdm-element-alias
+          *ngIf="item.controlType === profileControlType.aliases"
+          [aliases]="item.value"
+          [readOnly]="false"
+        >
+        </mdm-element-alias>
+          <mdm-content-editor
+            *ngIf="item.controlType === profileControlType.html"
+            [(content)]="item.value"
+            id="{{ item.value }}"
+            [inEditMode]="true"
+          ></mdm-content-editor>
+          <input
+            *ngIf="item.controlType === profileControlType.text"
+            matInput
+            type="text"
+            name="{item.displayName}}"
+            [(ngModel)]="item.value"
+            value="item.value"
+            class="outlined-input form-control"
+          />
+          <div *ngIf="item.controlType === profileControlType.multiplicity">
+            <div style="float: left">
+              <div style="padding-left: 8px">Min</div>
+              <mdm-inline-text-edit
+                [readOnly]="false"
+                [inEditMode]="true"
+                [(ngModel)]="item.minMultiplicity"
+                [styleCss]="'dataModelDetailsLabel'"
+                name="moduleNameMinText"
+                size="20"
+                size="5"
+              >
+              </mdm-inline-text-edit>
+              <small class="block"> Use numbers only </small>
+
+              <span *ngIf="item.minMultiplicity && item.minMultiplicity == 0"
+                >..</span
+              >
+              <span style="padding-right: 10px"></span>
+            </div>
+
+            <div style="float: left; margin-right: 13px">
+              <div style="padding-left: 6px">
+                Max
+                <mdm-inline-text-edit
+                  [readOnly]="false"
+                  [inEditMode]="true"
+                  [(ngModel)]="item.maxMultiplicity"
+                  [styleCss]="'dataModelDetailsLabel'"
+                  name="moduleNameMaxText"
+                >
+                </mdm-inline-text-edit>
+                <small class="block">
+                  User numbers or <strong>*</strong> for unbound multiplicity
+                </small>
+              </div>
+            </div>
+            <div
+              style="clear: both"
+              [ngClass]="{ 'has-error': true }"
+              *ngIf="multiplicityError != ''"
+            >
+              <small class="warning">{{ multiplicityError }}</small>
+            </div>
+          </div>
+
+            <div  *ngIf="item.controlType === profileControlType.dataType">
+              <div *ngIf="!showNewInlineDataType">
+                Please select a Data Type below or
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="toggleShowNewInlineDataType()"
+                >
+                  Add a new Data Type
+                </button>
+              </div>
+              <div *ngIf="showNewInlineDataType">
+                Please
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="toggleShowNewInlineDataType()"
+                >
+                  select a Data Type
+                </button>
+                or Add a new Data Type by completing the form below:
+              </div>
+
+              <div *ngIf="showNewInlineDataType">
+                <mdm-data-type-inline
+                  [model]="item.value"
+                  [parentDataModel]="data.parentCatalogueItem"
+                  [showClassification]="false"
+                  [showParentDataModel]="false"
+                >
+                </mdm-data-type-inline>
+              </div>
+              <div *ngIf="!showNewInlineDataType">
+                <mdm-select
+                  [width]="'100%'"
+                  [acceptTypedInput]="true"
+                  [valueType]="'dynamic'"
+                  [defaultValue]="item.value"
+                  [hasError]="dataTypeErrors"
+                  [loadDynamicValues]="fetchDataTypes"
+                  [loadAllOnClick]="true"
+                  [minInputLength]="1"
+                  [idProperty]="'id'"
+                  [pagination]="pagination"
+                  [displayProperty]="'label'"
+                  [searchProperty]="'label'"
+                  (selectEvent)="onDataTypeSelect($event[0], item)"
+                >
+                  <ng-template
+                    #lineContent
+                    let-item="item"
+                    let-searchTerm="inputText"
+                  >
+                    <div
+                      [innerHTML]="item.label | mchighlighter: searchTerm"
+                    ></div>
+                    <div>
+                      <mdm-element-link
+                        [element]="item"
+                        [showTypeTitle]="true"
+                        [showLink]="false"
+                      ></mdm-element-link>
+                      <mdm-element-link
+                        [element]="item"
+                        [showTypeTitle]="true"
+                        [showLink]="false"
+                      >
+                      </mdm-element-link>
+                    </div>
+                  </ng-template>
+                </mdm-select>
+              </div>
+              <span class="help-block errorMessage" *ngIf="dataTypeErrors"
+                ><small>{{ dataTypeErrors }}</small></span
+              >
+          
+            </div>
+            <mdm-element-classifications
+            *ngIf="item.controlType === profileControlType.classifications"
+            [readOnly]="false"
+            [(classifications)]="item.value"
+            name="classifiers"
+            [property]="'classifiers'"
+          >
+          </mdm-element-classifications>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-2 pb-2">
+  <div>
+    <button
+      mat-button
+      color="warn"
+      style="margin-right: 8px"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="custom"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
+</mat-dialog-actions>

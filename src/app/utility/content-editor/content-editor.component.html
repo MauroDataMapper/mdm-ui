@@ -17,21 +17,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <mdm-markdown-text-area *ngIf="contentFormat === ContentFormatType.Markdown"
-    [editableForm]="editableForm" 
     [element]="element" 
     [property]="property"
     [inEditMode]="inEditMode"
-    [description]="description"
+    [description]="content"
     [hideHelpText]="!markdownOptions.showHelpText"
     (descriptionChange)="onEditorDescriptionChanged($event)">
 </mdm-markdown-text-area>
 
-<mdm-html-editor *ngIf="contentFormat === ContentFormatType.Html"
-    [editableForm]="editableForm" 
+<mdm-html-editor *ngIf="contentFormat === ContentFormatType.Html"  
     [element]="element" 
     [property]="property"
     [inEditMode]="inEditMode"
-    [description]="description"
+    [description]="content"
     [buttonMode]="htmlOptions.useBasicButtons ? ButtonModeTypes.Basic : ButtonModeTypes.Standard"
     (descriptionChange)="onEditorDescriptionChanged($event)">
 </mdm-html-editor>

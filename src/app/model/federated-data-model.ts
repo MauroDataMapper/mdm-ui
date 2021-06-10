@@ -27,6 +27,7 @@ export class FederatedDataModel {
   modelType?: CatalogueItemDomainType;
   subscriptionId?: string;
   folderId?: string;
+  folderLabel?: string;
 
   constructor(
     catalogueId: string,

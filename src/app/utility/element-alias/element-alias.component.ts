@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { DataClassDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
@@ -26,12 +26,10 @@ import { DataClassDetail } from '@maurodatamapper/mdm-resources';
 })
 export class ElementAliasComponent {
   @Input() aliases: any[] = [];
-  @Input() readOnly = true;
-  @Input() editableForm: any;
+  @Input() readOnly;
   @Input() property: string;
   @Input() element: DataClassDetail;
-  @Input() inEditMode: false;
-  @ViewChild('typedAliasId', { static: false }) alias: ElementRef;
+  @ViewChild('typedAliasId', { read: ViewContainerRef, static: false }) alias: ElementRef;
   typedAlias: string;
 
   constructor() { }
@@ -41,8 +39,7 @@ export class ElementAliasComponent {
     const index = this.aliases.findIndex(alias => alias === element);
     if (index !== -1) {
       this.aliases.splice(index, 1);
-      this.editableForm.aliases = this.aliases;
-    }
+      }
   }
 
   add() {
@@ -59,8 +56,6 @@ export class ElementAliasComponent {
       this.aliases = [];
     }
     this.aliases.push(this.typedAlias);
-    this.editableForm.aliases = this.aliases;
-
     this.typedAlias = '';
     this.alias.nativeElement.focus();
   }

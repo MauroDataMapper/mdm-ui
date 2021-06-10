@@ -28,7 +28,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { EditableTerm } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -38,6 +37,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
+  Term,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
@@ -45,6 +45,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-term',
@@ -54,6 +55,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class TermComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
   term: TermDetail;
@@ -68,7 +70,6 @@ export class TermComponent
   result: TermDetail;
   hasResult = false;
   showEditForm = false;
-  editableForm: EditableTerm;
   descriptionView = 'default';
   annotationsView = 'default';
   showEditDescription = false;
@@ -159,20 +160,6 @@ export class TermComponent
       this.term.classifiers = this.term.classifiers || [];
       this.term.terminology = this.terminology;
 
-      this.editableForm = new EditableTerm();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
-      this.setEditableForm();
-
-      this.editableForm.show = () => {
-        this.editableForm.visible = true;
-      };
-
-      this.editableForm.cancel = () => {
-        this.editingService.stop();
-        this.setEditableForm();
-      };
-
       this.result = this.term;
       if (this.result.terminology) {
         this.hasResult = true;
@@ -181,23 +168,6 @@ export class TermComponent
       this.messageService.dataChanged(this.result);
       this.changeRef.detectChanges();
     });
-  }
-
-  setEditableForm() {
-    this.editableForm.visible = false;
-    this.editableForm.validationError = false;
-    this.editableForm.description = this.term.description;
-    this.editableForm.url = this.term.url;
-    if (this.term.classifiers) {
-      this.term.classifiers.forEach((item) => {
-        this.editableForm.classifiers.push(item);
-      });
-    }
-    if (this.term.aliases) {
-      this.term.aliases.forEach((item) => {
-        this.editableForm.aliases.push(item);
-      });
-    }
   }
 
   watchTermObject() {
@@ -209,9 +179,6 @@ export class TermComponent
     }
   }
 
-  Save(updatedResource) {
-    this.broadcast.dispatch('elementDetailsUpdated', updatedResource);
-  }
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
@@ -222,47 +189,33 @@ export class TermComponent
     this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
+  save(saveItems: Array<DefaultProfileItem>) {
 
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
+    const resource: Term = {
+      id: this.term.id,
+      domainType: this.term.domainType,
+      code: this.term.code,
+      definition: this.term.definition
+    };
 
-    this.term['aliases'] = aliases;
-    this.term['classifiers'] = classifiers;
-    this.term['description'] = this.editableForm.description;
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
 
     this.resourcesService.term
-      .update(this.term.terminology.id, this.term.id, this.term)
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Term updated successfully.');
-          this.editingService.stop();
-          this.editableForm.visible = false;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Term.',
-            error
-          );
-        }
-      );
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
+    .update(this.term.terminology.id, this.term.id, resource)
+    .subscribe(
+      (result:TermDetailResponse) => {
+        this.termDetails(result.body.id);
+        this.messageHandler.showSuccess('Term updated successfully.');
+        this.editingService.stop();
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Term.',
+          error
+        );
+      }
+    );
+  }
 }

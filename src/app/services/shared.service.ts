@@ -96,7 +96,7 @@ export class SharedService {
 
         this.securityHandler.logout();
       });
-  };
+  }
 
   pendingUsersCount = () => {
     return this.resources.catalogueUser.pending({ disabled: false });

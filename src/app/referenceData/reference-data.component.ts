@@ -33,19 +33,17 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
-  CatalogueItemDomainType,
-  Classifier,
   ModelUpdatePayload,
   ReferenceDataModelDetail,
   ReferenceDataModelDetailResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
@@ -56,6 +54,7 @@ import { TabCollection } from '@mdm/model/ui.model';
 export class ReferenceDataComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   referenceModel: ReferenceDataModelDetail;
   showSecuritySection: boolean;
@@ -69,7 +68,6 @@ export class ReferenceDataComponent
   descriptionView = 'default';
   contextView = 'default';
   annotationsView = 'default';
-  editableForm: EditableDataModel;
   errorMessage = '';
   showEdit = false;
   showDelete = false;
@@ -84,7 +82,6 @@ export class ReferenceDataComponent
   isLoadingElements = true;
   rulesItemCount = 0;
   isLoadingRules = true;
-  showEditDescription = false;
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -141,46 +138,47 @@ export class ReferenceDataComponent
     this.rulesItemCount = $event;
   }
 
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
+
+    this.resourcesService.referenceDataModel
+    .update(this.catalogueItem.id, resource)
+    .subscribe(
+      (res) => {
+        this.referenceModel = res.body;
+        this.catalogueItem = res.body;
+        this.messageHandler.showSuccess(
+          'Reference Data Model updated successfully.'
+        );
+       },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Reference Data Model.',
+          error
+        );
+      }
+    );
+  }
+
   referenceModelDetails(id: string) {
     this.resourcesService.referenceDataModel
       .get(id)
       .subscribe((result: ReferenceDataModelDetailResponse) => {
+        this.catalogueItem = result.body;
         this.referenceModel = result.body;
-        this.catalogueItem = this.referenceModel;
-        this.isEditable = this.referenceModel.availableActions.includes(
+        this.isEditable = this.catalogueItem.availableActions.includes(
           'update'
         );
         this.parentId = this.referenceModel.id;
-
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-
         this.watchRefDataModelObject();
-
-        this.editableForm.show = () => {
-          this.editingService.start();
-          this.editableForm.visible = true;
-        };
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.errorMessage = '';
-          this.setEditableFormData();
-          if (this.referenceModel.classifiers) {
-            this.referenceModel.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.referenceModel.aliases) {
-            this.referenceModel.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
 
         this.UsedProfiles('referenceDataModels', this.referenceModel.id);
         this.UnUsedProfiles('referenceDataModels', this.referenceModel.id);
@@ -196,77 +194,10 @@ export class ReferenceDataComponent
       .permissions(SecurableDomainType.ReferenceDataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
-          this.referenceModel[attrname] = permissions.body[attrname];
+          this.catalogueItem[attrname] = permissions.body[attrname];
         });
       });
   }
-
-  onCancelEdit() {
-    this.errorMessage = '';
-    this.showEditDescription = false;
-    this.editingService.stop();
-  }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  setEditableFormData() {
-    this.editableForm.description = this.referenceModel.description;
-    this.editableForm.label = this.referenceModel.label;
-    this.editableForm.organisation = this.referenceModel.organisation;
-    this.editableForm.author = this.referenceModel.author;
-  }
-
-  formBeforeSave = () => {
-    this.errorMessage = '';
-    this.editingService.stop();
-
-    const classifiers: Classifier[] = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases: string[] = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
-    const resource: ModelUpdatePayload = {
-      id: this.referenceModel.id,
-      domainType: CatalogueItemDomainType.ReferenceDataModel,
-      description: this.editableForm.description || ''
-    };
-
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.referenceModel.type;
-      resource.aliases = aliases;
-      resource.classifiers = classifiers;
-    }
-
-    this.resourcesService.referenceDataModel
-      .update(this.referenceModel.id, resource)
-      .subscribe(
-        (res) => {
-          this.referenceModel.description = res.body.description;
-          this.messageHandler.showSuccess(
-            'Reference Data Model updated successfully.'
-          );
-          this.editingService.stop();
-          this.editableForm.visible = false;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Reference Data Model.',
-            error
-          );
-        }
-      );
-  };
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
@@ -288,16 +219,11 @@ export class ReferenceDataComponent
   }
 
   watchRefDataModelObject() {
-    this.access = this.securityHandler.elementAccess(this.referenceModel);
+    this.access = this.securityHandler.elementAccess(this.catalogueItem);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
       this.showDelete =
         this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
 }

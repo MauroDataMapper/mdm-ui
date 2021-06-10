@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
         <span *ngIf="!editExisting">Add Property</span>
     </h4>
 </div>
-<form name="editableForm" class="mdm--form mb-2" *ngIf="property" [formGroup]="formGroup">
+<form name="apiPropForm" class="mdm--form mb-2" *ngIf="property" [formGroup]="formGroup">
     <div *ngIf="property.metadata.isSystem" class="mdm-api-property__system-message">
         <i class="fas fa-cog"></i>
         <span class="ml-2">This is a system property, you may only change the value.</span>

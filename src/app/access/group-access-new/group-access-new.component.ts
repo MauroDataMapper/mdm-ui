@@ -191,11 +191,11 @@ export class GroupAccessNewComponent implements OnInit {
   onGroupSelect(select, record) {
     delete record.edit.errors;
     record.edit.group = select;
-  };
+  }
 
   onGroupAccessSelect(select, record) {
     record.groupLevelId = select;
-  };
+  }
 
   validate(record) {
     let isValid = true;
@@ -245,5 +245,5 @@ export class GroupAccessNewComponent implements OnInit {
         this.messageHandler.showSuccess('Group removed successfully.');
         this.buildGroups();
       });
-  };
+  }
 }

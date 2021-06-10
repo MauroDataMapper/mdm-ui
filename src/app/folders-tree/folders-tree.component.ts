@@ -61,11 +61,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Output() nodeDbClickEvent = new EventEmitter<MdmTreeItem>();
   @Output() nodeCheckedEvent = new EventEmitter<any>();
 
-  @Output() addFolderEvent = new EventEmitter<any>();
-  @Output() addCodeSetEvent = new EventEmitter<any>();
-  @Output() addChildDataClassEvent = new EventEmitter<any>();
-  @Output() addChildDataTypeEvent = new EventEmitter<any>();
-  @Output() addChildDataElementEvent = new EventEmitter<any>();
   @Output() deleteFolderEvent = new EventEmitter<any>();
 
   @Output() compareToEvent = new EventEmitter<any>();
@@ -484,7 +479,12 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   handleAddCodeSet(fnode: FlatNode) {
-    this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
+    this.stateHandler.Go(
+      'NewCodeSet',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
+      });
   }
 
   handleDeleteFolder(fnode: FlatNode, permanent = false) {

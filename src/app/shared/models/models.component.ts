@@ -361,34 +361,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onAddCodeSet(folder: any) {
-    this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
-  }
-
-  onAddChildDataClass(element: any) {
-    this.stateHandler.Go('NewDataClassNew', {
-      grandParentDataClassId:
-        element.domainType === 'DataClass' ? element.parentDataClass : null,
-      parentDataModelId:
-        element.domainType === 'DataModel' ? element.id : element.dataModel,
-      parentDataClassId: element.domainType === 'DataModel' ? null : element.id
-    });
-  }
-
-  onAddChildDataElement(element: any) {
-    this.stateHandler.Go('NewDataElement', {
-      grandParentDataClassId: element.parentDataClass
-        ? element.parentDataClass
-        : null,
-      parentDataModelId: element.dataModel,
-      parentDataClassId: element.id
-    });
-  }
-
-  onAddChildDataType(element: any) {
-    this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
-  }
-
   toggleFilterMenu() {
     this.showFilters = !this.showFilters;
   }

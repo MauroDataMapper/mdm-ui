@@ -145,7 +145,7 @@ export class DataModelComponent
         (res: DataModelDetailResponse) => {
           this.messageHandler.showSuccess('Data Model updated successfully.');
           this.dataModel = res.body;
-          this.catalogueItem = this.dataModel;
+          this.catalogueItem = res.body;
         },
         (error) => {
           this.messageHandler.showError(

@@ -360,9 +360,10 @@ export abstract class ProfileBaseComponent extends BaseComponent {
         );
       }
       if (this.showControl(controls, 'aliases')) {
+        const aliasesCopy = Object.assign([],this.catalogueItem.aliases);
         items.push(
           this.createDefaultProfileItem(
-            this.catalogueItem.aliases || [],
+            aliasesCopy,
             'Aliases',
             ProfileControlTypes.aliases,
             'aliases'

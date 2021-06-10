@@ -118,7 +118,7 @@ mat-tree-node.mat-tree-node {
   color: #f19e3f;
 }
 i.favouritesIcon.addedToFavourite {
-  color: #ffa743;
+  color: $defaultFavoritesColor;
 }
 i.subscribedIcon {
   color: #028821;
@@ -257,15 +257,24 @@ ul.favourites li:focus {
 .favourites.nodeLabel.selected {
   font-weight: bold;
 }
+
+.is-not-favourite {
+  color: #aaa;
+}
+
+.is-favourite {
+  color: $defaultFavoritesColor;
+}
+
 /*****************************************************************/
 .detail-icons--cta {
   .favouritesIcon {
-    color: #aaa;
+    @extend .is-not-favourite;
     cursor: pointer;
   }
 
   .favouritesIcon.addedToFavourite {
-    color: #ff9933;
+    @extend .is-favourite;
   }
 }
 .detail-icons {

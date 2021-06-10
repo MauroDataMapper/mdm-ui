@@ -52,59 +52,67 @@ SPDX-License-Identifier: Apache-2.0
     [style.top]="contextMenuPosition.y"
     [matMenuTriggerFor]="treeMenu">
 </div>
+
 <mat-menu #treeMenu="matMenu">
-    <ng-template matMenuContent let-node="node">
-        <ng-container *ngIf="node.domainType === 'Folder'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node, true)">Create Folder</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Create Data Model</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Create Code Set</button>
-            <ng-container *ngIf="isUserAdmin">
-                <mat-divider></mat-divider>
-                <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="node.domainType === 'VersionedFolder'">
-          <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
-          <mat-divider></mat-divider>
-          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node, false)">Create Folder</button>
-          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Create Data Model</button>
-          <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Create Code Set</button>
-          <ng-container *ngIf="isUserAdmin">
-              <mat-divider></mat-divider>
-              <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
-              <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
-          </ng-container>
-      </ng-container>
-        <ng-container *ngIf="node.domainType === 'DataModel'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
-            <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">
-                <mat-divider></mat-divider>
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataClass(node)">Create Data Class</button>
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataType(node)">Create Data Type</button>
-            </ng-container>
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">Compare...</button>
-        </ng-container>
-        <ng-container *ngIf="node.domainType === 'ReferenceDataModel'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
-        </ng-container>
-        <ng-container *ngIf="node.domainType === 'DataClass'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
-            <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataClass(node)">Create Data Class</button>
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataElement(node)">Create Data Element</button>
-            </ng-container>
-        </ng-container>
-        <ng-container *ngIf="node.domainType === 'Terminology'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Set Focus</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
-        </ng-container>
-    </ng-template>
+  <ng-template matMenuContent let-node="node">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
+      <i class="fas fa-plus"></i> Create
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">
+      <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
+      <i *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></i>
+      {{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
+      <i class="fas fa-binoculars"></i> View
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
+      <i class="fas fa-eye"></i> Compare
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showDelete" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
+      <i class="far fa-trash-alt warning"></i> Delete
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "View" -->
+<mat-menu #viewMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Focus on this element</button>
+    <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in new window</button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "Create" -->
+<mat-menu #createMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolderModal(node)">
+      <i class="fas fa-folder dataModelTypeIcon"></i> Folder
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
+      <i class="fas fa-file-alt dataModelTypeIcon"></i> Data Model
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
+      <i class="fas fa-list dataModelTypeIcon"></i> Code Set
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
+      Data Class
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
+      Data Type
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
+      Data Element
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "Delete" -->
+<mat-menu #deleteMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted">Mark as deleted</button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete">Delete <span class="warning">permanently</span></button>
+  </ng-template>
 </mat-menu>
 
 <!-- Sub-menu for "Compare..." -->

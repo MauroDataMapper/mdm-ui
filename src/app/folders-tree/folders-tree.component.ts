@@ -401,12 +401,30 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
   }
 
+  canCreateElements(fnode: FlatNode) {
+    if (!fnode.access.canCreate) {
+      return false;
+    }
+
+    // TODO: remove these exceptions when there are suitable actions to use for these domain types
+    if (fnode.domainType === CatalogueItemDomainType.Terminology || fnode.domainType === CatalogueItemDomainType.ReferenceDataModel) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canCompare(fnode: FlatNode) {
+    return fnode.domainType === CatalogueItemDomainType.DataModel;
+  }
+
   handleFavourites(fnode: FlatNode) {
     this.favouriteHandler.toggle(fnode.node);
     this.loadFavourites();
   }
 
-  handleAddFolderModal(fnode: FlatNode, allowVersioning: boolean) {
+  handleAddFolderModal(fnode: FlatNode) {
+    const allowVersioning = fnode.access.canCreateVersionedFolder;
     this.modelTree
       .createNewFolder({ parentFolderId: fnode?.id, allowVersioning })
       .pipe(

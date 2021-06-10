@@ -127,8 +127,9 @@ export abstract class ProfileBaseComponent extends BaseComponent {
       >(DefaultProfileEditorModalComponent, {
         data: {
           items: this.setDefaultProfileData(isDescriptionOnly),
-          parentCatalogueItem: this.catalogueItem.breadcrumbs[0]
-        }
+          parentCatalogueItem: this.catalogueItem.breadcrumbs ? this.catalogueItem.breadcrumbs[0] : null
+        },
+        panelClass: 'full-width-dialog'
       })
       .afterClosed().subscribe((result) => {
         if(result.status === ModalDialogStatus.Ok)

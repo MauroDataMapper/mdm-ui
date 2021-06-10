@@ -45,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
                     <div style="margin-left: 5px;">
-                        <mdm-content-editor [description]="record.description" [inEditMode]="false">                            
+                        <mdm-content-editor [content]="record.description" [inEditMode]="false">                            
                         </mdm-content-editor>
                     </div>
                     <div *ngIf="canAddAnnotation">
@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
                                     <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                 </div>
                                 <div style="padding:5px 5px 5px 10px;">
-                                    <mdm-content-editor [description]="childAnnotation.description" [inEditMode]="false">                            
+                                    <mdm-content-editor [content]="childAnnotation.description" [inEditMode]="false">                            
                                     </mdm-content-editor>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ SPDX-License-Identifier: Apache-2.0
                                 </span>
                             </div>
                             <div style="padding-left: 10px;">
-                                <mdm-content-editor [(description)]="record.newChildText" [inEditMode]="true">                                    
+                                <mdm-content-editor [(content)]="record.newChildText" [inEditMode]="true">                                    
                                 </mdm-content-editor>
                                 <div style="float: right; margin: 8px 0;">
                                     <button mat-button color="warn" (click)="showChildren(record)">
@@ -107,7 +107,7 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div>
                         <span>Description</span>
-                        <mdm-content-editor [(description)]="record.edit.description" [inEditMode]="true">                            
+                        <mdm-content-editor [(content)]="record.edit.description" [inEditMode]="true">                            
                         </mdm-content-editor>
                     </div>
 

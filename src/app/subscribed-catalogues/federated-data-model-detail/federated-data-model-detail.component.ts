@@ -16,10 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
-import { Editable } from '@mdm/model/editable-forms';
+import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { convertCatalogueItemDomainType, getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,38 +33,22 @@ import { FolderDetailResponse, SubscribedDataModelResponse } from '@maurodatamap
   templateUrl: './federated-data-model-detail.component.html',
   styleUrls: ['./federated-data-model-detail.component.scss']
 })
-export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
+export class FederatedDataModelDetailComponent implements OnInit {
 
   @Input() dataModel: FederatedDataModel;
   @Output() reloading = new EventEmitter();
 
-  editable: Editable<FederatedDataModel, FederatedDataModelForm>;
   processing = false;
 
   constructor(
     private resources: MdmResourcesService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private title: Title) { }
+    private title: Title) {}
 
   ngOnInit(): void {
     this.title.setTitle(`Federated Data Model - ${this.dataModel.label}`);
-
-    this.editable = new Editable(
-      this.dataModel,
-      new FederatedDataModelForm());
-
-    this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
-
-    // After subscribing to the "onReset" observable, trigger a reset to get all required details
-    this.editable.reset();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.dataModel && changes.dataModel.previousValue && changes.dataModel.currentValue) {
-      // Refresh computed properties after changes
-      this.editable.reset(this.dataModel);
-    }
+    this.setFolderLabelToForm();
   }
 
   getModelTypeIcon() {
@@ -160,13 +143,14 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         errors => this.messageHandler.showError('There was a problem synchronising a data model.', errors));
   }
 
-  private setFolderLabelToForm(data: FederatedDataModel) {
-    if (!data.folderId) {
+   setFolderLabelToForm() {
+    if (!this.dataModel.folderId) {
       return;
     }
 
     this.resources.folder
-      .get(data.folderId)
-      .subscribe((response: FolderDetailResponse) => this.editable.form.folderLabel = response.body.label);
-  }
+      .get(this.dataModel.folderId)
+      .subscribe((response: FolderDetailResponse) => this.dataModel.folderLabel = response.body.label);
+
+}
 }

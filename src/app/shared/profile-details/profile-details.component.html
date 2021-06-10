@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
       </td>
       <td class="elementDetailDescription">
         <mdm-content-editor
-        [(description)]="field.currentValue"
+        [(content)]="field.currentValue"
           id="{{ field.fieldName }}"       
           [inEditMode]="false"
           *ngIf="field.dataType === 'text'"

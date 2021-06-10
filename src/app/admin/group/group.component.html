@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
       <span *ngIf="!group.id">Add Group</span>
   </h4>
 </div>
-<form name="editableForm" class="mdm--form mb-2">
+<form name="groupForm" class="mdm--form mb-2">
     <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput name="name" [(ngModel)]="group.name" required>

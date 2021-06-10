@@ -175,7 +175,6 @@ export class FolderComponent
   }
 
   save(folderUpdates: Array<DefaultProfileItem>) {
-       this.editingService.stop();
 
     const resource = {
         id: this.folder.id,
@@ -184,7 +183,7 @@ export class FolderComponent
     };
 
     folderUpdates.forEach((item) => {
-      resource[item.displayName.toLocaleLowerCase()] = item.value;
+      resource[item.propertyName] = item.value;
     });
 
     this.resourcesService.folder.update(resource.id, resource).subscribe(

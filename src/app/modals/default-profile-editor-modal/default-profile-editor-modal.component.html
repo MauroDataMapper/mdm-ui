@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-element-alias>
           <mdm-content-editor
             *ngIf="item.controlType === profileControlType.html"
-            [(description)]="item.value"
+            [(content)]="item.value"
             id="{{ item.value }}"
             [inEditMode]="true"
           ></mdm-content-editor>

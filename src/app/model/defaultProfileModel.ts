@@ -22,7 +22,6 @@ import {
   DataTypeReference
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { servicesPlugin } from '@uirouter/core';
 
 export interface DefaultProfileModalConfiguration {
   items: Array<DefaultProfileItem>;
@@ -84,26 +83,27 @@ export  class DefaultProfileControls {
 
 
     switch (domainType) {
-      case (CatalogueItemDomainType.DataModel,
-        CatalogueItemDomainType.ReferenceDataModel,
-      CatalogueItemDomainType.Terminology,
-      CatalogueItemDomainType.CodeSet):
+      case CatalogueItemDomainType.DataModel:
+      case CatalogueItemDomainType.ReferenceDataModel:
+      case CatalogueItemDomainType.Terminology:
+      case CatalogueItemDomainType.CodeSet:
         return dataModel;
       case CatalogueItemDomainType.Term:
         return term;
       case CatalogueItemDomainType.DataClass:
         return dataClass;
       case CatalogueItemDomainType.Folder:
+      case CatalogueItemDomainType.VersionedFolder:
         return folder;
       case CatalogueItemDomainType.DataElement:
         return dataElement;
-      case (CatalogueItemDomainType.ReferenceDataModelType,
-      CatalogueItemDomainType.CodeSetType,
-      CatalogueItemDomainType.ModelDataType,
-      CatalogueItemDomainType.PrimitiveType,
-      CatalogueItemDomainType.TerminologyType,
-      CatalogueItemDomainType.EnumerationType,
-      CatalogueItemDomainType.ReferenceType):
+      case CatalogueItemDomainType.ReferenceDataModelType:
+      case CatalogueItemDomainType.CodeSetType:
+      case CatalogueItemDomainType.ModelDataType:
+      case CatalogueItemDomainType.PrimitiveType:
+      case CatalogueItemDomainType.TerminologyType:
+      case CatalogueItemDomainType.EnumerationType:
+      case CatalogueItemDomainType.ReferenceType:
         return dataType;
     case CatalogueItemDomainType.Classification:
         return classification;

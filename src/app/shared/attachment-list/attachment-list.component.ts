@@ -216,7 +216,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.records = [].concat([newRecord]).concat(this.records);
     this.dataSource.data = this.records;
     this.editingService.setFromCollection(this.records);
-  }
+  };
 
 
   save(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {

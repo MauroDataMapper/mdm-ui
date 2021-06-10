@@ -30,7 +30,6 @@ export class MarkdownTextAreaComponent implements OnInit {
   @Output() descriptionChange = new EventEmitter<string>();
   @Input() inEditMode: boolean;
   @Input() hideHelpText: boolean;
-  @Input() editableForm: any;
   @Input() rows: number;
   @Input() property: string;
   @Input() element: any;
@@ -55,23 +54,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   }
 
   get isEditorVisible(): boolean {
-    return this.editableForm && (this.editableForm.visible || this.editableForm.isEditing);
-  }
-
-  get editorModel() {
-    if (this.editableForm.form) {
-      return this.editableForm.form[this.property];
-    }
-    return this.editableForm[this.property];
-  }
-
-  set editorModel(value) {
-    if (this.editableForm.form) {
-      this.editableForm.form[this.property] = value;
-      return;
-    }
-
-    this.editableForm[this.property] = value;
+    return this.inEditMode;
   }
 
   elementDialogue;
@@ -94,12 +77,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   ngOnInit() {
     this.lastWasShiftKey = null;
     this.formData.showMarkDownPreview = false;
-    if (!this.editableForm) {
-      this.formData.description = this.description;
-    } else {
-      this.formData.description = this.editableForm.description;
-    }
-
+    this.formData.description = this.description;
     this.elementSelected();
   }
 
@@ -137,11 +115,7 @@ export class MarkdownTextAreaComponent implements OnInit {
 
             this.editableTextArea.nativeElement.selectionStart = startPos;
             this.editableTextArea.nativeElement.focus();
-            if (this.editableForm) {
-              this.editableForm.description = this.editableTextArea.nativeElement.value;
-            } else {
-              this.description = this.editableTextArea.nativeElement.value;
-            }
+            this.description = this.editableTextArea.nativeElement.value;
           }
         });
       }
@@ -149,8 +123,6 @@ export class MarkdownTextAreaComponent implements OnInit {
   }
 
   onDescriptionChange = () => {
-    if (!this.editableForm) {
       this.description = this.formData.description;
-    }
   };
 }

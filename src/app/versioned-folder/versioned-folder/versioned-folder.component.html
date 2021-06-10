@@ -166,7 +166,7 @@ SPDX-License-Identifier: Apache-2.0
                 color="primary"
                 type="button"
                 class="mr-1"
-                (click)="showForm()"
+                (click)="edit(false)"
               >
                 Edit
               </button>
@@ -188,40 +188,7 @@ SPDX-License-Identifier: Apache-2.0
             [isProfileView]="true"
           ></mdm-data-set-metadata>
         </div>
-        <form
-          *ngIf="editor"
-          name="form"
-          [formGroup]="editor.formGroup"
-          (ngSubmit)="save()"
-          disable-submit-on-enter
-        >
-          <table
-            *ngIf="this.descriptionView === 'default' && editor"
-            class="table table-bordered mdm--table-fixed"
-          >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <mdm-content-editor
-                    [description]="editor.form.description.value"
-                    (descriptionChange)="editor.form.descriptionValue = $event"
-                    [inEditMode]="editor.isEditing"
-                  ></mdm-content-editor>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-            *ngIf="editor"
-            [hidden]="!editor.isEditing"
-            [onCancelEdit]="cancel"
-            [editable]="editor"
-            [textLocation]="'left'"
-            [hideDelete]="true"
-            [hideCancel]="false"
-          ></mdm-editable-form-buttons>
-        </form>
+        <mdm-default-profile  *ngIf="this.descriptionView === 'default' && detail" [catalogueItem]="detail"></mdm-default-profile>
       </div>
     </ng-template>
   </mat-tab>

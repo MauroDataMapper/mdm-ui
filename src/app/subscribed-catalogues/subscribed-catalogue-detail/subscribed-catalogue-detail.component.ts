@@ -19,8 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
-import { Editable } from '@mdm/model/editable-forms';
-import { SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
 
 @Component({
   selector: 'mdm-subscribed-catalogue-detail',
@@ -31,7 +29,7 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   @Input() subscribedCatalogue: SubscribedCatalogue;
 
-  editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
+
   processing = false;
 
   constructor(
@@ -39,9 +37,5 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
-
-    this.editable = new Editable(
-      this.subscribedCatalogue,
-      new SubscribedCatalogueForm());
   }
 }

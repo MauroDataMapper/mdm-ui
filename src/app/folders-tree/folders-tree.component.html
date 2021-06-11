@@ -78,8 +78,12 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "View" -->
 <mat-menu #viewMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" (click)="focusNode(node)">Focus on this element</button>
-    <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in new window</button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="canSetTreeFocus(node)" (click)="focusNode(node)">
+      <i class="fas fa-eye"></i> Focus on this element
+    </button>
+    <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">
+      <i class="fas fa-external-link-alt"></i> Open in new window
+    </button>
   </ng-template>
 </mat-menu>
 

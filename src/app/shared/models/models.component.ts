@@ -20,7 +20,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -32,14 +31,16 @@ import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
-import { EditingService } from '@mdm/services/editing.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
   Classifier,
   ClassifierIndexResponse,
   ContainerDomainType,
-  MdmTreeItem} from '@maurodatamapper/mdm-resources';
+  isContainerDomainType,
+  MdmTreeItem,
+  MdmTreeItemListResponse} from '@maurodatamapper/mdm-resources';
+import { mapCatalogueDomainTypeToContainer, MdmTreeLevelManager } from './models.model';
 
 @Component({
   selector: 'mdm-models',
@@ -80,72 +81,48 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  levels = {
+  levels: MdmTreeLevelManager = {
     current: 0,
     currentFocusedElement: null,
 
-    folders: () => {
+    backToTree: () => {
       this.levels.current = 0;
       this.reloadTree();
     },
-    focusedElement: (node?) => {
+
+    focusTreeItem: (node?: MdmTreeItem) => {
       if (node) {
         this.levels.currentFocusedElement = node;
       }
 
-      this.reloading = true;
+      const containerType = mapCatalogueDomainTypeToContainer(this.levels.currentFocusedElement.domainType);
+      if (containerType) {
+        this.reloading = true;
 
-      if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
         this.resources.tree
           .get(
-            'dataModels',
+            containerType,
             this.levels.currentFocusedElement.domainType,
-            this.levels.currentFocusedElement.id
+            this.levels.currentFocusedElement.id)
+          .pipe(
+            catchError(error => {
+              this.messageHandler.showError('There was a problem focusing the tree element.', error);
+              return EMPTY;
+            }),
+            finalize(() => this.reloading = false)
           )
-          .subscribe(
-            (result) => {
-              const children = result.body;
-              this.levels.currentFocusedElement.children = children;
-              this.levels.currentFocusedElement.open = true;
-              this.levels.currentFocusedElement.selected = true;
-              const curModel = {
-                children: [this.levels.currentFocusedElement],
-                isRoot: true
-              };
-              this.filteredModels = Object.assign({}, curModel);
-              this.reloading = false;
-              this.levels.current = 1;
-            },
-            () => {
-              this.reloading = false;
-            }
-          );
-      } else if (
-        this.levels.currentFocusedElement?.domainType === 'Terminology'
-      ) {
-        this.resources.tree
-          .get(
-            'terminologies',
-            this.levels.currentFocusedElement.domainType,
-            this.levels.currentFocusedElement.id
-          )
-          .subscribe(
-            (children) => {
-              this.levels.currentFocusedElement.children = children.body;
-              this.levels.currentFocusedElement.open = true;
-              this.levels.currentFocusedElement.selected = true;
-              const curElement = {
-                children: [this.levels.currentFocusedElement],
-                isRoot: true
-              };
-              this.filteredModels = Object.assign({}, curElement);
-              this.reloading = false;
-              this.levels.current = 1;
-            },
-            () => {
-              this.reloading = false;
-            }
-          );
+          .subscribe((response: MdmTreeItemListResponse) => {
+            const children = response.body;
+            this.levels.currentFocusedElement.children = children;
+            this.levels.currentFocusedElement.open = true;
+            this.levels.currentFocusedElement.selected = true;
+            const curModel = {
+              children: [this.levels.currentFocusedElement],
+              isRoot: true
+            };
+            this.filteredModels = Object.assign({}, curModel);
+            this.levels.current = 1;
+          })
       }
     }
   };
@@ -153,7 +130,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private validator: ValidatorService,
-    private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private title: Title,
@@ -162,7 +138,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
-    private editingService: EditingService,
     private modelTree: ModelTreeService
   ) { }
 
@@ -313,15 +288,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
   }
 
   onNodeDbClick(node: MdmTreeItem) {
-    // if the element is a dataModel, load it
-    if (
-      [CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology].indexOf(
-        node.domainType
-      ) === -1
-    ) {
-      return;
+    if (isContainerDomainType(node.domainType)
+      || node.domainType === CatalogueItemDomainType.DataModel
+      || node.domainType === CatalogueItemDomainType.Terminology) {
+      this.levels.focusTreeItem(node);
     }
-    this.levels.focusedElement(node);
   }
 
   loadModelsToCompare(dataModel: any) {

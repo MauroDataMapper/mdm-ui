@@ -434,6 +434,12 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return isContainerDomainType(fnode.domainType) || isModelDomainType(fnode.domainType);
   }
 
+  canSetTreeFocus(fnode: FlatNode) {
+    return isContainerDomainType(fnode.domainType)
+      || fnode.domainType === CatalogueItemDomainType.DataModel
+      || fnode.domainType === CatalogueItemDomainType.Terminology;
+  }
+
   handleFavourites(fnode: FlatNode) {
     this.favouriteHandler.toggle(fnode.node);
     this.loadFavourites();

@@ -556,12 +556,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   openWindow(fnode: FlatNode) {
-    switch (fnode.domainType) {
-      case CatalogueItemDomainType.ReferenceDataModel: this.stateHandler.NewWindow(CatalogueItemDomainType.ReferenceDataModel.toLocaleLowerCase(), { id: fnode.id }); break;
-      case CatalogueItemDomainType.DataModel: this.stateHandler.NewWindow(CatalogueItemDomainType.DataModel.toLocaleLowerCase(), { id: fnode.id }); break;
-      case CatalogueItemDomainType.DataClass: this.stateHandler.NewWindow(CatalogueItemDomainType.DataClass.toLocaleLowerCase(), { id: fnode.id, dataModelId: fnode.modelId }); break;
-      case CatalogueItemDomainType.Terminology: this.stateHandler.NewWindow(CatalogueItemDomainType.Terminology.toLocaleLowerCase(), { id: fnode.id }); break;
+    const parameters: any = { id: fnode.id };
+
+    if (fnode.domainType === CatalogueItemDomainType.DataClass) {
+      parameters.dataModelId = fnode.modelId;
     }
+
+    this.stateHandler.NewWindow(fnode.domainType.toLocaleLowerCase(), { id: fnode.id });
   }
 
   isFavourited(fnode: FlatNode) {

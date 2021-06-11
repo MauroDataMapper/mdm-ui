@@ -22,60 +22,81 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { CodeSetCreatePayload } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, CodeSetCreatePayload, CodeSetDetailResponse, Container, Uuid } from '@maurodatamapper/mdm-resources';
+import { FolderService } from '@mdm/folders-tree/folder.service';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
-    selector: 'mdm-code-set-main',
-    templateUrl: './code-set-main.component.html',
-    styleUrls: ['./code-set-main.component.scss'],
+  selector: 'mdm-code-set-main',
+  templateUrl: './code-set-main.component.html',
+  styleUrls: ['./code-set-main.component.scss'],
 })
 export class CodeSetMainComponent implements OnInit {
-    savingInProgress = false;
-    model = {
-        label: '',
-        author: '',
-        organisation: '',
-        description: '',
-        classifiers: [],
-        parentFolderId: null,
-        parentFolder: null,
-        terms: [],
-    };
-    constructor(
-        private uiRouterGlobals: UIRouterGlobals,
-        private stateHandler: StateHandlerService,
-        private resources: MdmResourcesService,
-        private messageHandler: MessageHandlerService,
-        private title: Title
-    ) { }
+  parentFolderId: Uuid;
+  parentDomainType: CatalogueItemDomainType;
+  parentFolder: Container;
+  savingInProgress = false;
+  model = {
+    label: '',
+    author: '',
+    organisation: '',
+    description: '',
+    classifiers: [],
+    terms: [],
+  };
 
-    ngOnInit() {
-        this.model.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
-        if (!this.model.parentFolderId) {
-            this.stateHandler.NotFound({ location: false });
-        }
-        this.title.setTitle('New Code Set');
+  constructor(
+    private uiRouterGlobals: UIRouterGlobals,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private folders: FolderService,
+    private title: Title) { }
+
+  ngOnInit() {
+    this.title.setTitle('New Code Set');
+
+    this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
+    this.parentDomainType = this.uiRouterGlobals.params.parentDomainType;
+
+    this.folders
+      .getFolder(this.parentFolderId, this.parentDomainType)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem loading the Folder.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        this.parentFolder = response.body;
+      });
+  }
+
+  save() {
+    if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
+      const resource: CodeSetCreatePayload = {
+        label: this.model.label,
+        author: this.model.author,
+        organisation: this.model.organisation,
+        description: this.model.description,
+        classifiers: this.model.classifiers,
+        folder: this.parentFolderId,
+        terms: this.model.terms
+      };
+
+      this.resources.codeSet
+        .addToFolder(this.parentFolderId, resource)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem creating the Code Set.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe((response: CodeSetDetailResponse) => {
+          this.messageHandler.showSuccess('Code Set created successfully.');
+          this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+        });
     }
-
-    async save() {
-        if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
-            const resource: CodeSetCreatePayload = {
-                label: this.model.label,
-                author: this.model.author,
-                organisation: this.model.organisation,
-                description: this.model.description,
-                classifiers: this.model.classifiers,
-                folder: this.model.parentFolderId,
-                terms: this.model.terms
-            };
-
-            try {
-               const result = await this.resources.codeSet.addToFolder(this.model.parentFolderId, resource).toPromise();
-               this.messageHandler.showSuccess('Code Set created successfully.');
-               this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
-            } catch (error) {
-               this.messageHandler.showError('There was a problem creating the Code Set.', error);
-            }
-        }
-    }
+  }
 }

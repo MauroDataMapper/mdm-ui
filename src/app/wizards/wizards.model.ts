@@ -16,25 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input } from '@angular/core';
-import { CatalogueItem } from '@maurodatamapper/mdm-resources';
-import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { ComponentRef } from '@angular/core';
 
-@Component({
-  selector: 'mdm-element-icon',
-  templateUrl: './element-icon.component.html',
-  styleUrls: ['./element-icon.component.sass']
-})
-export class ElementIconComponent {
-  @Input() element: CatalogueItem;
-
-  constructor() { }
-
-  getIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType);
-  }
-
-  hasIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
-  }
+export interface WizardStep<T> {
+  scope: T;
+  component: any;
+  title: any;
+  hasForm?: boolean;
+  invalid?: boolean;
+  componentRef?: ComponentRef<any>;
+  active?: boolean;
 }

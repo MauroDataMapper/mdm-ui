@@ -146,7 +146,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
-      url: '/dataModelNew/new?parentFolderId',
+      url: '/dataModelNew/new?parentFolderId&parentDomainType',
       component: DataModelMainComponent
     },
     {
@@ -268,7 +268,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
-      url: '/codeSet/new?parentFolderId',
+      url: '/codeSet/new?parentFolderId&parentDomainType',
       component: CodeSetMainComponent
     },
     {

@@ -20,6 +20,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataModelDefaultDataTypesResponse, DataTypeProvider } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { WizardStep } from '@mdm/wizards/wizards.model';
+import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
 
 @Component({
   selector: 'mdm-data-model-step2',
@@ -30,7 +32,7 @@ export class DataModelStep2Component implements OnInit {
   loadingData: any;
   defaultDataTypeProviders: DataTypeProvider[];
   dataTypes: any;
-  step: any;
+  step: WizardStep<DataModelMainComponent>;
 
   constructor(
     private resources: MdmResourcesService,

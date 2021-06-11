@@ -37,10 +37,10 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
-import { ModelDomainType } from '@mdm/model/model-domain-type';
 import {
   DataModelDetail,
   DataModelDetailResponse,
+  ModelDomainType,
   ModelUpdatePayload
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -385,7 +385,7 @@ export class DataModelDetailComponent implements OnInit {
       new ModelMergingModel(
         this.dataModel.id,
         null,
-        ModelDomainType.DATA_MODELS
+        ModelDomainType.DataModels
       ),
       null
     );

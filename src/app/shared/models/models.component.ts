@@ -20,7 +20,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -31,16 +30,17 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
-import { EditingService } from '@mdm/services/editing.service';
-import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
   Classifier,
   ClassifierIndexResponse,
-  ContainerDomainType} from '@maurodatamapper/mdm-resources';
+  ContainerDomainType,
+  isContainerDomainType,
+  MdmTreeItem,
+  MdmTreeItemListResponse} from '@maurodatamapper/mdm-resources';
+import { mapCatalogueDomainTypeToContainer, MdmTreeLevelManager } from './models.model';
 
 @Component({
   selector: 'mdm-models',
@@ -50,7 +50,7 @@ import {
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
   activeTab = 0;
-  allModels: Node = null;
+  allModels: MdmTreeItem = null;
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
@@ -81,72 +81,48 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  levels = {
+  levels: MdmTreeLevelManager = {
     current: 0,
     currentFocusedElement: null,
 
-    folders: () => {
+    backToTree: () => {
       this.levels.current = 0;
       this.reloadTree();
     },
-    focusedElement: (node?) => {
+
+    focusTreeItem: (node?: MdmTreeItem) => {
       if (node) {
         this.levels.currentFocusedElement = node;
       }
 
-      this.reloading = true;
+      const containerType = mapCatalogueDomainTypeToContainer(this.levels.currentFocusedElement.domainType);
+      if (containerType) {
+        this.reloading = true;
 
-      if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
         this.resources.tree
           .get(
-            'dataModels',
+            containerType,
             this.levels.currentFocusedElement.domainType,
-            this.levels.currentFocusedElement.id
+            this.levels.currentFocusedElement.id)
+          .pipe(
+            catchError(error => {
+              this.messageHandler.showError('There was a problem focusing the tree element.', error);
+              return EMPTY;
+            }),
+            finalize(() => this.reloading = false)
           )
-          .subscribe(
-            (result) => {
-              const children = result.body;
-              this.levels.currentFocusedElement.children = children;
-              this.levels.currentFocusedElement.open = true;
-              this.levels.currentFocusedElement.selected = true;
-              const curModel = {
-                children: [this.levels.currentFocusedElement],
-                isRoot: true
-              };
-              this.filteredModels = Object.assign({}, curModel);
-              this.reloading = false;
-              this.levels.current = 1;
-            },
-            () => {
-              this.reloading = false;
-            }
-          );
-      } else if (
-        this.levels.currentFocusedElement?.domainType === 'Terminology'
-      ) {
-        this.resources.tree
-          .get(
-            'terminologies',
-            this.levels.currentFocusedElement.domainType,
-            this.levels.currentFocusedElement.id
-          )
-          .subscribe(
-            (children) => {
-              this.levels.currentFocusedElement.children = children.body;
-              this.levels.currentFocusedElement.open = true;
-              this.levels.currentFocusedElement.selected = true;
-              const curElement = {
-                children: [this.levels.currentFocusedElement],
-                isRoot: true
-              };
-              this.filteredModels = Object.assign({}, curElement);
-              this.reloading = false;
-              this.levels.current = 1;
-            },
-            () => {
-              this.reloading = false;
-            }
-          );
+          .subscribe((response: MdmTreeItemListResponse) => {
+            const children = response.body;
+            this.levels.currentFocusedElement.children = children;
+            this.levels.currentFocusedElement.open = true;
+            this.levels.currentFocusedElement.selected = true;
+            const curModel = {
+              children: [this.levels.currentFocusedElement],
+              isRoot: true
+            };
+            this.filteredModels = Object.assign({}, curModel);
+            this.levels.current = 1;
+          });
       }
     }
   };
@@ -154,7 +130,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private validator: ValidatorService,
-    private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private title: Title,
@@ -163,7 +138,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
-    private editingService: EditingService,
     private modelTree: ModelTreeService
   ) { }
 
@@ -304,8 +278,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         edit: false,
         dataModelId: node.modelId,
         dataClassId: node.parentId || '',
-        terminologyId: node.modelId || node.model,
-        dataModel: node.dataModel,
+        terminologyId: node.modelId,
         parentId: node.parentId
       })
       .then(
@@ -314,22 +287,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNodeClick(node: Node) {
-    this.modelTree.currentNode = node;
+  onNodeDbClick(node: MdmTreeItem) {
+    if (isContainerDomainType(node.domainType)
+      || node.domainType === CatalogueItemDomainType.DataModel
+      || node.domainType === CatalogueItemDomainType.Terminology) {
+      this.levels.focusTreeItem(node);
+    }
   }
 
-  onNodeDbClick(node: Node ){
-    this.modelTree.currentNode = node;
-
-    // if the element if a dataModel, load it
-    if (
-      [DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(
-        node.domainType
-      ) === -1
-    ) {
-      return;
-    }
-    this.levels.focusedElement(node);
+  onNodeAdded() {
+    this.loadModelsTree();
   }
 
   loadModelsToCompare(dataModel: any) {
@@ -351,7 +318,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onFolderAddModal() {
     this.modelTree
-      .createNewFolder()
+      .createNewFolder({ allowVersioning: true })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem creating the Folder.', error);
@@ -367,38 +334,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.folder = '';
         this.loadModelsTree();
       });
-  }
-
-  onAddDataModel(folder: any) {
-    this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
-  }
-
-  onAddCodeSet(folder: any) {
-    this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
-  }
-
-  onAddChildDataClass(element: any) {
-    this.stateHandler.Go('NewDataClassNew', {
-      grandParentDataClassId:
-        element.domainType === 'DataClass' ? element.parentDataClass : null,
-      parentDataModelId:
-        element.domainType === 'DataModel' ? element.id : element.dataModel,
-      parentDataClassId: element.domainType === 'DataModel' ? null : element.id
-    });
-  }
-
-  onAddChildDataElement(element: any) {
-    this.stateHandler.Go('NewDataElement', {
-      grandParentDataClassId: element.parentDataClass
-        ? element.parentDataClass
-        : null,
-      parentDataModelId: element.dataModel,
-      parentDataClassId: element.id
-    });
-  }
-
-  onAddChildDataType(element: any) {
-    this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
   }
 
   toggleFilterMenu() {
@@ -423,26 +358,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     this.loadModelsTree();
     this.showFilters = !this.showFilters;
-  }
-
-  onDeleteFolder(event: any) {
-    if (!this.securityHandler.isAdmin()) {
-      return;
-    }
-    if (event.permanent) {
-      this.folderHandler
-        .askForPermanentDelete(event.folder.id)
-        .subscribe(() => {
-          this.broadcast.reloadCatalogueTree();
-          this.stateHandler.Go(
-            'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
-          );
-        });
-    } else {
-      this.folderHandler.askForSoftDelete(event.folder.id).subscribe(() => {
-        event.folder.deleted = true;
-      });
-    }
   }
 
   initializeModelsTree() {
@@ -513,16 +428,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.allModels = null;
 
       this.resources.tree
-        .search(ContainerDomainType.FOLDERS, this.sharedService.searchCriteria)
+        .search(ContainerDomainType.Folders, this.sharedService.searchCriteria)
         .subscribe((res) => {
-          const result: Node[] = res.body;
+          const result: MdmTreeItem[] = res.body;
           this.reloading = false;
           this.allModels = {
             id: '',
-            domainType: DOMAIN_TYPE.Root,
+            domainType: CatalogueItemDomainType.Root,
             children: result,
             hasChildren: true,
-            isRoot: true
+            isRoot: true,
+            availableActions: []
           };
 
           this.filteredModels = Object.assign({}, this.allModels);
@@ -536,7 +452,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  classifierTreeOnSelect(node: Node) {
+  classifierTreeOnSelect(node: MdmTreeItem) {
     this.stateHandler.Go('classification', { id: node.id });
   }
 
@@ -557,11 +473,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFavouriteDbClick(node: Node) {
+  onFavouriteDbClick(node: MdmTreeItem) {
     this._onFavouriteClick(node);
   }
 
-  onFavouriteClick(node: Node) {
+  onFavouriteClick(node: MdmTreeItem) {
     this._onFavouriteClick(node);
   }
 
@@ -585,11 +501,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _onFavouriteClick(node: Node) {
+  private _onFavouriteClick(node: MdmTreeItem) {
     this.stateHandler.Go(node.domainType, {
-      id: node.id,
-      dataModelId: node.dataModel,
-      dataClassId: node.parentDataClass
+      id: node.id
     });
   }
 }

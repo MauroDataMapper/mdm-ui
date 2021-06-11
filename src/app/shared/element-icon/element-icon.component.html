@@ -16,11 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<i [ngClass]="{'foldersTree folderTreeIcon fas':true,
-              '': !element.deleted,
-              'deletedFolder':element.deleted ,
-              'fa-database':    element.domainType === 'DataModel' && element.type === 'Data Asset',
-              'fa-file-alt': element.domainType === 'DataModel' && element.type === 'Data Standard',
-              'fa-book': element.domainType === 'Terminology',
-              'fa-list': element.domainType === 'CodeSet',
-              'fa-folder':   element.domainType === 'Folder'}"></i>
+<mat-icon
+  *ngIf="hasIcon()"
+  fontSet="fas"
+  [fontIcon]="getIcon()"
+  [ngClass]="'foldersTree folderTreeIcon'"
+></mat-icon>

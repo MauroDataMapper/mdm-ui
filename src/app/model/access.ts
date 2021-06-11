@@ -34,4 +34,12 @@ export interface Access {
   canAddMetadata: boolean;
   showDelete: boolean;
   canAddLink: boolean;
+  canCreateFolder: boolean;
+  canCreateVersionedFolder: boolean;
+  canCreateFolderContainer: boolean;
+  canCreateModel: boolean;
+  canCreateModelItem: boolean;
+  canCreate: boolean;
+  canMoveToFolder: boolean;
+  canMoveToVersionedFolder: boolean;
 }

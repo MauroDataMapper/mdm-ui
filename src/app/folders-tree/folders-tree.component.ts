@@ -23,12 +23,13 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { convertCatalogueItemDomainType, DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
+import { FlatNode, getCatalogueItemDomainTypeIcon } from './flat-node';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService, SharedService } from '@mdm/services';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { catchError, takeUntil } from 'rxjs/operators';
+import { CatalogueItemDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -51,102 +52,101 @@ export class NodeConfirmClickEvent {
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
-   @Input() node: any;
-   @Input() searchCriteria: string;
-   @Input() defaultCheckedMap: any = {};
+  @Input() node: any;
+  @Input() searchCriteria: string;
+  @Input() defaultCheckedMap: any = {};
 
-   @Output() nodeClickEvent = new EventEmitter<Node>();
-   @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
-   @Output() nodeDbClickEvent = new EventEmitter<Node>();
-   @Output() nodeCheckedEvent = new EventEmitter<any>();
+  @Output() nodeClickEvent = new EventEmitter<MdmTreeItem>();
+  @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
+  @Output() nodeDbClickEvent = new EventEmitter<MdmTreeItem>();
+  @Output() nodeCheckedEvent = new EventEmitter<any>();
+  @Output() nodeAdded = new EventEmitter<MdmTreeItem>();
 
-   @Output() addFolderEvent = new EventEmitter<any>();
-   @Output() addCodeSetEvent = new EventEmitter<any>();
-   @Output() addDataModelEvent = new EventEmitter<any>();
-   @Output() addChildDataClassEvent = new EventEmitter<any>();
-   @Output() addChildDataTypeEvent = new EventEmitter<any>();
-   @Output() addChildDataElementEvent = new EventEmitter<any>();
-   @Output() deleteFolderEvent = new EventEmitter<any>();
+  @Output() compareToEvent = new EventEmitter<any>();
+  @Output() loadModelsToCompareEvent = new EventEmitter<any>();
 
-   @Output() compareToEvent = new EventEmitter<any>();
-   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
+  @Input() doNotShowDataClasses: any;
+  @Input() doNotShowTerms: any;
+  @Input() justShowFolders: any;
+  @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
+  @Input() propagateCheckbox: any;
+  @Input() enableDragAndDrop = false;
+  @Input() enableContextMenu = false;
+  @Input() rememberExpandedStates = false;
+  @Input() expandOnNodeClickFor: any;
+  @Input() doNotMakeSelectedBold: any;
+  @Input() filterByDomainType: CatalogueItemDomainType[];
 
-   @Input() doNotShowDataClasses: any;
-   @Input() doNotShowTerms: any;
-   @Input() justShowFolders: any;
-   @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
-   @Input() propagateCheckbox: any;
-   @Input() enableDragAndDrop = false;
-   @Input() enableContextMenu = false;
-   @Input() rememberExpandedStates = false;
-   @Input() expandOnNodeClickFor: any;
-   @Input() doNotMakeSelectedBold: any;
-   @Input() filterByDomainType: DOMAIN_TYPE[];
+  @Input() treeName = 'unnamed';
 
-   @Input() treeName = 'unnamed';
+  @Input() inSearchMode: any;
 
-   @Input() inSearchMode: any;
+  @Input() initialExpandedPaths: string[];
+  @Input() isComparisonTree = false;
 
-   @Input() initialExpandedPaths: string[];
-   @Input() isComparisonTree = false;
+  @Input() selectedNode: FlatNode = null; // Control highlighting
 
-   @Input() selectedNode: FlatNode = null; // Control highlighting
+  @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
+  contextMenuPosition = { x: '0', y: '0' };
 
-   @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
-   contextMenuPosition = { x: '0', y: '0' };
+  favourites: { [x: string]: any };
+  subscriptions: Subscription = new Subscription();
+  checkedList = this.defaultCheckedMap || {};
 
-   favourites: { [x: string]: any };
-   subscriptions: Subscription = new Subscription();
-   checkedList = this.defaultCheckedMap || {};
+  targetVersions = [];
+  expandedPaths = [];
 
-   targetVersions = [];
-   expandedPaths = [];
+  draggableDomains = [
+    CatalogueItemDomainType.Folder,
+    CatalogueItemDomainType.DataModel,
+    CatalogueItemDomainType.Terminology,
+    CatalogueItemDomainType.CodeSet,
+    CatalogueItemDomainType.ReferenceDataModel
+  ];
+  droppableDomains = [CatalogueItemDomainType.Folder];
+  draggedTreeNode: FlatNode;
+  showDropTopPlaceHolder = false;
 
-   draggableDomains = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
-   droppableDomains = [DOMAIN_TYPE.Folder];
-   draggedTreeNode: FlatNode;
-   showDropTopPlaceHolder = false;
+  /** The TreeControl controls the expand/collapse state of tree nodes.  */
+  treeControl: FlatTreeControl<FlatNode>;
 
-   /** The TreeControl controls the expand/collapse state of tree nodes.  */
-   treeControl: FlatTreeControl<FlatNode>;
+  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+  dataSource: MatTreeFlatDataSource<MdmTreeItem, FlatNode>;
 
-   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-   dataSource: MatTreeFlatDataSource<Node, FlatNode>;
+  folder = '';
 
-   folder = '';
+  expandedNodeSet = new Set<string>();
 
-   expandedNodeSet = new Set<string>();
+  /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
+  protected treeFlattener: MatTreeFlattener<MdmTreeItem, FlatNode>;
 
-   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-   protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
+  private unsubscribe$ = new Subject();
 
-   private unsubscribe$ = new Subject();
+  /**
+   * Get the children for the given node from source data.
+   *
+   * Defined as property to retain reference to `this`.
+   */
 
-   /**
-    * Get the children for the given node from source data.
-    *
-    * Defined as property to retain reference to `this`.
-    */
-
-   constructor(
-      protected messages: MessageService,
-      protected resources: MdmResourcesService,
-      protected securityHandler: SecurityHandlerService,
-      protected favouriteHandler: FavouriteHandlerService,
-      protected folderService: FolderService,
-      protected stateHandler: StateHandlerService,
-      protected messageHandler: MessageHandlerService,
-      private broadcast: BroadcastService,
-      public dialog: MatDialog,
-      private modelTree: ModelTreeService,
-      private shared: SharedService) {
+  constructor(
+    protected messages: MessageService,
+    protected resources: MdmResourcesService,
+    protected securityHandler: SecurityHandlerService,
+    protected favouriteHandler: FavouriteHandlerService,
+    protected folderService: FolderService,
+    protected stateHandler: StateHandlerService,
+    protected messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService,
+    public dialog: MatDialog,
+    private modelTree: ModelTreeService,
+    private shared: SharedService) {
     this.loadFavourites();
     this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
     }));
 
     this.treeFlattener = new MatTreeFlattener(
-      (node: Node, level: number) => new FlatNode(node, level),
+      (node: MdmTreeItem, level: number) => new FlatNode(node, level, this.securityHandler.elementAccess(node)),
       (node: FlatNode) => node.level,
       (node: FlatNode) => node?.hasChildren || node?.hasChildFolders,
       this.getChildren);
@@ -156,8 +156,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, []);
 
     if (this.shared.features.useVersionedFolders) {
-      this.draggableDomains.push(DOMAIN_TYPE.VersionedFolder);
-      this.droppableDomains.push(DOMAIN_TYPE.VersionedFolder);
+      this.draggableDomains.push(CatalogueItemDomainType.VersionedFolder);
+      this.droppableDomains.push(CatalogueItemDomainType.VersionedFolder);
     }
 
     this.broadcast
@@ -200,7 +200,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   /** Get whether the node has children or not. Tree branch control. */
   hasChild(_: number, node: FlatNode) {
-    if (node?.domainType === DOMAIN_TYPE.DataModel && this.doNotShowDataClasses) {
+    if (node?.domainType === CatalogueItemDomainType.DataModel && this.doNotShowDataClasses) {
       return false;
     }
 
@@ -213,11 +213,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   /** Determine which tree node icon to use based on given node's domain type */
   getIcon(fnode: FlatNode) {
-    return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl);
+    return getCatalogueItemDomainTypeIcon(fnode.domainType, fnode, this.treeControl);
   }
 
   hasIcon(fnode: FlatNode) {
-    return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
+    return getCatalogueItemDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
   }
 
   /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
@@ -259,41 +259,55 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
 
     this.selectedNode = fnode; // Control highlighting selected tree node
+    this.modelTree.currentNode = fnode;
     this.nodeClickEvent.emit(fnode.node);
   }
 
   handleDbClick(fnode: FlatNode) {
     this.selectedNode = fnode; // Control highlighting selected tree node
+    this.modelTree.currentNode = fnode;
+    this.focusNode(fnode);
+  }
+
+  focusNode(fnode: FlatNode) {
+    this.selectedNode = fnode; // Control highlighting selected tree node
     this.nodeDbClickEvent.emit(fnode.node);
   }
 
-  async expand(node: Node) {
+  async expand(node: MdmTreeItem) {
     try {
       switch (node.domainType) {
-        case DOMAIN_TYPE.Folder:
+        case CatalogueItemDomainType.Folder:
           if (this.justShowFolders) {
             const folderResponse = await this.resources.tree.get('folders', 'folders', node.id).toPromise();
             return folderResponse.body;
           } else {
             return node.children;
           }
-        case DOMAIN_TYPE.DataModel: {
+        case CatalogueItemDomainType.VersionedFolder:
+          if (this.justShowFolders) {
+            const versionedFolderResponse = await this.resources.tree.get('folders', 'versionedFolders', node.id).toPromise();
+            return versionedFolderResponse.body;
+          } else {
+            return node.children;
+          }
+        case CatalogueItemDomainType.DataModel: {
           const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
           return dataModelResponse.body;
         }
-        case DOMAIN_TYPE.DataClass: {
+        case CatalogueItemDomainType.DataClass: {
           const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
           return dataClassResponse.body;
         }
-        case DOMAIN_TYPE.Terminology: {
+        case CatalogueItemDomainType.Terminology: {
           const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
           return terminologyResponse.body;
         }
-        case DOMAIN_TYPE.Term: {
+        case CatalogueItemDomainType.Term: {
           const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
           return termResponse.body;
         }
-        case DOMAIN_TYPE.SubscribedCatalogue:
+        case CatalogueItemDomainType.SubscribedCatalogue:
           return await this.modelTree.getFederatedDataModelNodes(node.id).toPromise();
         default:
           return [];
@@ -312,7 +326,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   nodeChecked(child: FlatNode) {
     const element = this.find(this.node, null, child.node.id);
 
-    this.markChildren(child, child, child.checked);
+    this.markChildren(child.node, child, child.checked);
 
     if (child.checked) {
       this.checkedList[element.node.id] = element;
@@ -320,14 +334,19 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       delete this.checkedList[element.node.id];
     }
 
-    this.nodeCheckedEvent.emit([child, child.parentDataClass, this.checkedList]);
+    this.nodeCheckedEvent.emit([child, null, this.checkedList]);
   }
 
-  find(node: Node, parent: Node, id: string) {
+  find(node: MdmTreeItem, parent: MdmTreeItem, id: string) {
     if (node.id === id) {
       return { node, parent };
     }
-    if (node.domainType === DOMAIN_TYPE.Terminology || node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
+    if (node.domainType === CatalogueItemDomainType.Terminology
+      || node.domainType === CatalogueItemDomainType.Folder
+      || node.domainType === CatalogueItemDomainType.VersionedFolder
+      || node.domainType === CatalogueItemDomainType.DataModel
+      || node.domainType === CatalogueItemDomainType.DataClass
+      || node.isRoot) {
       if (!node.children) {
         return null;
       }
@@ -344,25 +363,27 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return null;
   }
 
-  markChildren(node: FlatNode, root: FlatNode, status: boolean) {
+  markChildren(node: MdmTreeItem, root: FlatNode, status: boolean) {
     node.checked = status;
     delete this.checkedList[node.id];
 
     if (this.propagateCheckbox) {
-       node.children?.forEach((n: FlatNode) => {
-          n.disableChecked = status;
-          this.markChildren(n, null, status);
-       });
+      node.children?.forEach((n: MdmTreeItem) => {
+        n.disableChecked = status;
+        this.markChildren(n, null, status);
+      });
     }
- }
+  }
 
- /** Context Menu */
- async onContextMenu(fnode: FlatNode, event: MouseEvent) {
+  /** Context Menu */
+  async onContextMenu(fnode: FlatNode, event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.enableContextMenu || fnode.domainType === DOMAIN_TYPE.CodeSet || fnode.domainType === DOMAIN_TYPE.Term) {
-       return;
+    // TODO: remove these exceptions when there are suitable actions to use for these domain types
+    if (!this.enableContextMenu
+      || fnode.domainType === CatalogueItemDomainType.Term) {
+      return;
     }
 
     this.contextMenuPosition.x = `${event.clientX}px`;
@@ -370,19 +391,64 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.contextMenuTrigger.menuData = { node: fnode };
     this.contextMenuTrigger.openMenu();
 
-    if (fnode.domainType === DOMAIN_TYPE.DataModel) {
-       this.targetVersions = await this.folderService.loadVersions(fnode.node);
+    if (fnode.domainType === CatalogueItemDomainType.DataModel) {
+      this.targetVersions = await this.folderService.loadVersions(fnode.node);
     }
- }
+  }
 
-   handleFavourites(fnode: FlatNode) {
-      this.favouriteHandler.toggle(fnode.node);
-      this.loadFavourites();
-   }
+  canCreateElements(fnode: FlatNode) {
+    if (!fnode.access.canCreate) {
+      return false;
+    }
 
-  handleAddFolderModal(fnode: FlatNode) {
+    // TODO: remove these exceptions when there are suitable actions to use for these domain types
+    if (fnode.domainType === CatalogueItemDomainType.CodeSet
+      || fnode.domainType === CatalogueItemDomainType.Terminology
+      || fnode.domainType === CatalogueItemDomainType.ReferenceDataModel) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canDeleteElements(fnode: FlatNode) {
+    if (!fnode.access.showDelete) {
+      return false;
+    }
+
+    // TODO: remove these exceptions when there are suitable ways to accomodate them - these domain
+    // types have `remove` endpoints with multiple parent ids
+    if (fnode.domainType === CatalogueItemDomainType.DataElement
+      || fnode.domainType === CatalogueItemDomainType.DataClass) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canCompare(fnode: FlatNode) {
+    return fnode.domainType === CatalogueItemDomainType.DataModel;
+  }
+
+  canAddToFavorites(fnode: FlatNode) {
+    return isContainerDomainType(fnode.domainType) || isModelDomainType(fnode.domainType);
+  }
+
+  canSetTreeFocus(fnode: FlatNode) {
+    return isContainerDomainType(fnode.domainType)
+      || fnode.domainType === CatalogueItemDomainType.DataModel
+      || fnode.domainType === CatalogueItemDomainType.Terminology;
+  }
+
+  handleFavourites(fnode: FlatNode) {
+    this.favouriteHandler.toggle(fnode.node);
+    this.loadFavourites();
+  }
+
+  handleAddFolder(fnode: FlatNode) {
+    const allowVersioning = fnode.access.canCreateVersionedFolder;
     this.modelTree
-      .createNewFolder(fnode?.id)
+      .createNewFolder({ parentFolderId: fnode?.id, allowVersioning })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem creating the Folder.', error);
@@ -390,72 +456,71 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         })
       )
       .subscribe(response => {
-        if (this.selectedNode) {
-          this.selectedNode.selected = false;
-        }
-
-        const node: Node = {
+        const node: MdmTreeItem = {
           id: response.body.id,
-          domainType: convertCatalogueItemDomainType(response.body.domainType),
+          domainType: response.body.domainType,
           label: response.body.label,
           hasChildFolders: response.body.hasChildFolders,
-          hasChildren: response.body.hasChildFolders
+          hasChildren: response.body.hasChildFolders,
+          availableActions: response.body.availableActions
         };
 
-        const newFnode = new FlatNode(node, fnode ? this.treeControl.getLevel(fnode) + 1 : 0);
-
-        if (fnode) {
-          // Added to existing folder parent
-          if (!fnode.children) {
-            fnode.children = [];
-          }
-
-          fnode.children.push(node);
-          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, newFnode);
-        }
-        else {
-          // Created new top level folder
-          this.node.children.push(node);
-          this.treeControl.dataNodes.push(newFnode);
-        }
-
-        fnode.node.hasChildren = true;
-
-        this.treeControl.expand(fnode);
-        this.selectedNode = this.treeControl.dataNodes.find(dn => dn.id === newFnode.id && this.treeControl.getLevel(dn) === newFnode.level);
-        this.stateHandler.Go(node.domainType, { id: node.id, edit: false });
-
         this.messageHandler.showSuccess('Folder created successfully.');
-        this.folder = '';
-        this.refreshTree();
+        this.stateHandler.Go(node.domainType, { id: node.id });
+        this.nodeAdded.emit(node);
       });
-   }
+  }
 
-   handleAddDataModel(fnode: FlatNode) {
-      this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
-   }
-
-   handleAddCodeSet(fnode: FlatNode) {
-      this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
-   }
-
-   handleDeleteFolder(fnode: FlatNode, permanent = false) {
-      this.deleteFolderEvent.emit({ folder: fnode, permanent });
-   }
-
-   handleAddDataClass(fnode: FlatNode) {
-      this.stateHandler.Go('NewDataClass', {
-         grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node.parentId : null,
-         parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node.modelId,
-         parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
+  handleAddDataModel(fnode: FlatNode) {
+    this.stateHandler.Go(
+      'NewDataModel',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
       });
-    }
+  }
+
+  handleAddCodeSet(fnode: FlatNode) {
+    this.stateHandler.Go(
+      'NewCodeSet',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
+      });
+  }
+
+  handleSoftDelete(fnode: FlatNode) {
+    this.modelTree
+      .deleteCatalogueItemSoft(fnode)
+      .subscribe(() => {
+        fnode.deleted = true;
+      });
+  }
+
+  handlePermanentDelete(fnode: FlatNode) {
+    this.modelTree
+      .deleteCatalogueItemPermanent(fnode)
+      .subscribe(() => {
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.Go(
+          'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+        );
+      });
+  }
+
+  handleAddDataClass(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
 
   handleAddDataElement(fnode: FlatNode) {
     this.stateHandler.Go('NewDataElement', {
-        grandParentDataClassId: fnode.node.parentId ? fnode.node.parentId : null,
-        parentDataModelId: fnode.node.modelId,
-        parentDataClassId: fnode.id
+      grandParentDataClassId: fnode.node.parentId ? fnode.node.parentId : null,
+      parentDataModelId: fnode.node.modelId,
+      parentDataClassId: fnode.id
     });
   }
 
@@ -465,18 +530,19 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   handleDataModelCompare(fnode: FlatNode, targetVersion = null) {
     this.stateHandler.NewWindow('modelscomparison', {
-        sourceId: fnode.id,
-        targetId: targetVersion ? targetVersion.id : null
+      sourceId: fnode.id,
+      targetId: targetVersion ? targetVersion.id : null
     });
   }
 
   openWindow(fnode: FlatNode) {
-    switch (fnode.domainType) {
-      case DOMAIN_TYPE.ReferenceDataModel: this.stateHandler.NewWindow(DOMAIN_TYPE.ReferenceDataModel.toLocaleLowerCase(), { id: fnode.id }); break;
-      case DOMAIN_TYPE.DataModel: this.stateHandler.NewWindow(DOMAIN_TYPE.DataModel.toLocaleLowerCase(), { id: fnode.id }); break;
-      case DOMAIN_TYPE.DataClass: this.stateHandler.NewWindow(DOMAIN_TYPE.DataClass.toLocaleLowerCase(), { id: fnode.id, dataModelId: fnode.dataModel, dataClassId: fnode.parentDataClass }); break;
-      case DOMAIN_TYPE.Terminology: this.stateHandler.NewWindow(DOMAIN_TYPE.Terminology.toLocaleLowerCase(), { id: fnode.id }); break;
+    const parameters: any = { id: fnode.id };
+
+    if (fnode.domainType === CatalogueItemDomainType.DataClass) {
+      parameters.dataModelId = fnode.modelId;
     }
+
+    this.stateHandler.NewWindow(fnode.domainType.toLocaleLowerCase(), { id: fnode.id });
   }
 
   isFavourited(fnode: FlatNode) {
@@ -488,14 +554,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   isNodeFinalised(node: FlatNode) {
-    if (node.finalised) {
-      return node.finalised;
-    } else if (node.dataModel) {
-      const dm = this.treeControl.dataNodes.find(fnode => fnode.id === node.dataModel);
-      return dm?.finalised;
-    } else {
-      return false;
-    }
+    return node.finalised;
   }
 
   ngOnDestroy() {
@@ -506,11 +565,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   // Only used for Classifiers
-  filter(filterText: string, sourceNodes: Node[] = this.node.children) {
+  filter(filterText: string, sourceNodes: MdmTreeItem[] = this.node.children) {
     if (!filterText) {
       return;
     }
-    const filteredTreeData: Node[] = sourceNodes.filter(d => d.label.toLocaleLowerCase().includes(filterText.toLocaleLowerCase()));
+    const filteredTreeData: MdmTreeItem[] = sourceNodes.filter(d => d.label.toLocaleLowerCase().includes(filterText.toLocaleLowerCase()));
 
     filteredTreeData.forEach(ftd => {
       let str = (ftd.label);
@@ -559,7 +618,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     const currentNode = this.draggedTreeNode;
 
-    if (currentNode.domainType === DOMAIN_TYPE.Folder || currentNode.domainType === DOMAIN_TYPE.VersionedFolder) {
+    if (currentNode.domainType === CatalogueItemDomainType.Folder || currentNode.domainType === CatalogueItemDomainType.VersionedFolder) {
       this.showDropTopPlaceHolder = true;
     }
 
@@ -571,7 +630,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
 
     // Do not allow versioned folders to be dragged and dropped into other versioned folders
-    if (currentNode.domainType === DOMAIN_TYPE.VersionedFolder && parentFolder.domainType === DOMAIN_TYPE.VersionedFolder) {
+    if (currentNode.domainType === CatalogueItemDomainType.VersionedFolder && parentFolder.domainType === CatalogueItemDomainType.VersionedFolder) {
       return;
     }
 
@@ -595,7 +654,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
 
     // Do not allow versioned folders to be dragged and dropped into other versioned folders
-    if (this.draggedTreeNode.domainType === DOMAIN_TYPE.VersionedFolder && parentFolder.domainType === DOMAIN_TYPE.VersionedFolder) {
+    if (this.draggedTreeNode.domainType === CatalogueItemDomainType.VersionedFolder && parentFolder.domainType === CatalogueItemDomainType.VersionedFolder) {
       return;
     }
 
@@ -640,18 +699,18 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
 
     // Do not allow versioned folders to be dragged and dropped into other versioned folders
-    if (currentNode.domainType === DOMAIN_TYPE.VersionedFolder && parentFolder.domainType === DOMAIN_TYPE.VersionedFolder) {
+    if (currentNode.domainType === CatalogueItemDomainType.VersionedFolder && parentFolder.domainType === CatalogueItemDomainType.VersionedFolder) {
       return;
     }
 
     try {
       switch (currentNode.domainType) {
-        case DOMAIN_TYPE.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
-        case DOMAIN_TYPE.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
-        case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
-        case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
-        case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
-        case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
+        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
+        case CatalogueItemDomainType.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+        case CatalogueItemDomainType.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+        case CatalogueItemDomainType.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+        case CatalogueItemDomainType.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
         default:
           this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
           return;
@@ -720,7 +779,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     const currentNode: FlatNode = this.draggedTreeNode;
 
-    if (currentNode.domainType !== DOMAIN_TYPE.Folder && currentNode.domainType !== DOMAIN_TYPE.VersionedFolder) {
+    if (currentNode.domainType !== CatalogueItemDomainType.Folder && currentNode.domainType !== CatalogueItemDomainType.VersionedFolder) {
       this.messageHandler.showWarning('Only folders are allowed at the top level.');
       return;
     }
@@ -728,8 +787,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     try {
       // Top level tree node has no parent
       switch (currentNode.domainType) {
-        case DOMAIN_TYPE.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
-        case DOMAIN_TYPE.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
+        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
+        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
         default:
           this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
           return;
@@ -758,16 +817,16 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   // End Drag n Drop
 
-  private getChildren = (node: Node) => {
+  private getChildren = (node: MdmTreeItem) => {
     if (!node.children) {
       return [];
     }
 
     let children = [];
     if (this.justShowFolders && node.children) {
-      children = node.children.filter(c => c.domainType === DOMAIN_TYPE.Folder);
+      children = node.children.filter(c => c.domainType === CatalogueItemDomainType.Folder);
     } else if (this.doNotShowDataClasses && node.children) {
-      children = node.children.filter(c => c.domainType !== DOMAIN_TYPE.DataClass);
+      children = node.children.filter(c => c.domainType !== CatalogueItemDomainType.DataClass);
     } else {
       children = node.children;
     }
@@ -815,7 +874,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
           const newNodes = fnode.children?.map((c: any) => {
-            return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
+            return new FlatNode(
+              c,
+              this.treeControl.getLevel(fnode) + 1,
+              this.securityHandler.elementAccess(c));
           });
 
           this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...(newNodes || []));

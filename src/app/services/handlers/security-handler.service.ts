@@ -262,16 +262,27 @@ export class SecurityHandlerService {
 
   elementAccess(element: Securable | (Securable & Finalisable)): Access {
     const baseRtn: Access = {
-      showEdit: element.availableActions.includes('update'),
-      canEditDescription: element.availableActions.includes('editDescription'),
-      showFinalise: element.availableActions.includes('finalise'),
-      showPermission: element.availableActions.includes('update') || this.isAdmin(),
-      showSoftDelete: element.availableActions.includes('softDelete'),
-      showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: element.availableActions.includes('update'),
-      showDelete:  element.availableActions.includes('softDelete') ||   element.availableActions.includes('delete'),
-      canAddLink: element.availableActions.includes('update')
+      showEdit: element.availableActions?.includes('update'),
+      canEditDescription: element.availableActions?.includes('editDescription'),
+      showFinalise: element.availableActions?.includes('finalise'),
+      showPermission: element.availableActions?.includes('update') || this.isAdmin(),
+      showSoftDelete: element.availableActions?.includes('softDelete'),
+      showPermanentDelete: element.availableActions?.includes('delete'),
+      canAddAnnotation: element.availableActions?.includes('comment'),
+      canAddMetadata: element.availableActions?.includes('update'),
+      showDelete: element.availableActions?.includes('softDelete') || element.availableActions?.includes('delete'),
+      canAddLink: element.availableActions?.includes('update'),
+      canCreateFolder: element.availableActions?.includes('createFolder'),
+      canCreateVersionedFolder: element.availableActions?.includes('createVersionedFolder'),
+      canCreateFolderContainer: element.availableActions?.includes('createFolder') || element.availableActions?.includes('createVersionedFolder'),
+      canCreateModel: element.availableActions?.includes('createModel'),
+      canCreateModelItem: element.availableActions?.includes('createModelItem'),
+      canCreate: element.availableActions?.includes('createFolder')
+        || element.availableActions?.includes('createVersionedFolder')
+        || element.availableActions?.includes('createModel')
+        || element.availableActions?.includes('createModelItem'),
+      canMoveToFolder: element.availableActions?.includes('moveToFolder'),
+      canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder')
     };
 
     if((element as Finalisable).finalised !== undefined)

@@ -98,7 +98,7 @@ export class ContentSearchHandlerService {
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {
-          return this.resources.tree.search(ContainerDomainType.FOLDERS, searchText,
+          return this.resources.tree.search(ContainerDomainType.Folders, searchText,
               {
                   searchTerm: searchText,
                   limit,

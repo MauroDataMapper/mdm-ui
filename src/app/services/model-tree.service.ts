@@ -17,17 +17,20 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
-import { ClassifierDetailResponse, FolderDetailResponse, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItemDomainType, ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, MdmTreeItem, MdmTreeItemListResponse, Modelable, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { FlatNode } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NewFolderModalConfiguration, NewFolderModalResponse } from '@mdm/modals/new-folder-modal/new-folder-modal.model';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
-import { Observable, of, Subject } from 'rxjs';
+import { EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from './broadcast.service';
 import { EditingService } from './editing.service';
+import { ElementTypesService } from './element-types.service';
+import { SecurityHandlerService } from './handlers/security-handler.service';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
 import { UserSettingsHandlerService } from './utility/user-settings-handler.service';
@@ -37,7 +40,7 @@ import { UserSettingsHandlerService } from './utility/user-settings-handler.serv
 })
 export class ModelTreeService implements OnDestroy {
 
-  currentNode?: Node;
+  currentNode?: FlatNode;
 
   private unsubscribe$ = new Subject();
 
@@ -47,7 +50,10 @@ export class ModelTreeService implements OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     private subscribedCatalogues: SubscribedCataloguesService,
     private messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
+    private elementTypes: ElementTypesService,
     private broadcast: BroadcastService,
+    private dialog: MatDialog,
     private editing: EditingService) {
 
     this.broadcast
@@ -61,7 +67,7 @@ export class ModelTreeService implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
+  getLocalCatalogueTreeNodes(noCache?: boolean): Observable<MdmTreeItem[]> {
     let options: any = {};
     if (this.sharedService.isLoggedIn()) {
       options = {
@@ -78,13 +84,13 @@ export class ModelTreeService implements OnDestroy {
     }
 
     return this.resources.tree
-      .list('folders', options.queryStringParams)
+      .list(ContainerDomainType.Folders, options.queryStringParams)
       .pipe(
-        map((response: any) => response.body as Node[])
+        map((response: MdmTreeItemListResponse) => response.body)
       );
   }
 
-  getSubscribedCatalogueTreeNodes(): Observable<Node[]> {
+  getSubscribedCatalogueTreeNodes(): Observable<MdmTreeItem[]> {
     if (!this.sharedService.isLoggedIn(true) || !this.sharedService.features.useSubscribedCatalogues) {
       return of([]);
     }
@@ -105,46 +111,50 @@ export class ModelTreeService implements OnDestroy {
       .list(queryParams, restOptions)
       .pipe(
         map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
-        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
+        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, MdmTreeItem>({}, {
           id: item.id,
-          domainType: DOMAIN_TYPE.SubscribedCatalogue,
+          domainType: CatalogueItemDomainType.SubscribedCatalogue,
           hasChildren: true,
-          label: item.label
+          label: item.label,
+          availableActions: []
         }))),
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
-          return of<Node[]>([]);
+          return EMPTY;
         }),
       );
   }
 
-  createRootNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createRootNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '',
-      domainType: DOMAIN_TYPE.Root,
+      domainType: CatalogueItemDomainType.Root,
       children,
       hasChildren: true,
-      isRoot: true
+      isRoot: true,
+      availableActions: []
     });
   }
 
-  createLocalCatalogueNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createLocalCatalogueNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '4aa2444c-ed08-471b-84dd-96f6b3b4a00a',
-      domainType: DOMAIN_TYPE.LocalCatalogue,
+      domainType: CatalogueItemDomainType.LocalCatalogue,
       label: 'This catalogue',
       hasChildren: true,
-      children
+      children,
+      availableActions: []
     });
   }
 
-  createExternalCataloguesNode(children?: Node[]): Node {
-    return Object.assign<{}, Node>({}, {
+  createExternalCataloguesNode(children?: MdmTreeItem[]): MdmTreeItem {
+    return Object.assign<{}, MdmTreeItem>({}, {
       id: '30dca3f9-5cf5-41a8-97eb-fd2dab2d4c20',
-      domainType: DOMAIN_TYPE.ExternalCatalogues,
+      domainType: CatalogueItemDomainType.ExternalCatalogues,
       label: 'External catalogues',
       hasChildren: true,
-      children
+      children,
+      availableActions: []
     });
   }
 
@@ -160,21 +170,21 @@ export class ModelTreeService implements OnDestroy {
    *
    * @see FederatedDataModel
    */
-  getFederatedDataModelNodes(catalogueId: string): Observable<Node[]> {
+  getFederatedDataModelNodes(catalogueId: string): Observable<MdmTreeItem[]> {
     return this.subscribedCatalogues
       .getFederatedDataModels(catalogueId)
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem getting federated data models from a subscribed catalogue.', error);
-          return [];
+          return EMPTY;
         }),
-        map(models => models.map(item => Object.assign<{}, Node>({}, {
+        map(models => models.map(item => Object.assign<{}, MdmTreeItem>({}, {
           id: item.modelId,
-          domainType: DOMAIN_TYPE.FederatedDataModel,
+          domainType: CatalogueItemDomainType.FederatedDataModel,
           hasChildren: false,
           label: item.label,
-          dataModel: item,
-          parentId: item.catalogueId
+          parentId: item.catalogueId,
+          availableActions: []
         })))
       );
   }
@@ -187,7 +197,7 @@ export class ModelTreeService implements OnDestroy {
    * @returns An `Observable` containing either a `FolderDetailResponse` or `VersionedFolderDetailResponse`,
    * depending on the options selected in the dialog.
    */
-  createNewFolder(parentFolderId?: Uuid): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
+  createNewFolder(settings: { allowVersioning?: boolean; parentFolderId?: Uuid }): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
     return this.editing
       .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
         NewFolderModalComponent,
@@ -198,8 +208,8 @@ export class ModelTreeService implements OnDestroy {
             btnType: 'primary',
             inputLabel: 'Folder name',
             message: 'Please enter the name of your Folder.',
-            createRootFolder: !parentFolderId,
-            canVersion: true
+            createRootFolder: !(settings?.parentFolderId),
+            canVersion: settings?.allowVersioning
           }
         })
       .afterClosed()
@@ -207,10 +217,10 @@ export class ModelTreeService implements OnDestroy {
         filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap(modal => {
           if (modal.useVersionedFolders && modal.isVersioned) {
-            return this.saveVersionedFolder(modal.label, parentFolderId);
+            return this.saveVersionedFolder(modal.label, settings?.parentFolderId);
           }
 
-          return this.saveFolder(modal.label, parentFolderId);
+          return this.saveFolder(modal.label, settings?.parentFolderId);
         })
       );
   }
@@ -258,5 +268,66 @@ export class ModelTreeService implements OnDestroy {
 
   saveClassifier(label: string): Observable<ClassifierDetailResponse> {
     return this.resources.classifier.save({ label });
+  }
+
+  deleteCatalogueItemSoft(item: Modelable): Observable<void> {
+    return this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: `Are you sure you want to delete '${item.label}'?`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class="marginless">This item will be marked as deleted and will not be viewable by users </p>
+                  <p class="marginless">except Administrators.</p>`
+        }
+      })
+      .pipe(
+        switchMap(() => this.deleteCatalogueItem(item, false))
+      );
+  }
+
+  deleteCatalogueItemPermanent(item: Modelable): Observable<void> {
+    if (!this.securityHandler.isAdmin()) {
+      this.messageHandler.showWarning('Only administrators may permanently delete catalogue items.');
+      return of();
+    }
+
+    return this.dialog
+      .openDoubleConfirmationAsync({
+        data: {
+          title: 'Permanent deletion',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to <span class=\'warning\'>permanently</span> delete '${item.label}'?`
+        }
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
+        }
+      })
+      .pipe(
+        switchMap(() => this.deleteCatalogueItem(item, true))
+      );
+  }
+
+  private deleteCatalogueItem(item: Modelable, permanent: boolean): Observable<void> {
+    const baseTypes = this.elementTypes.getBaseTypes();
+    const type = baseTypes[item.domainType];
+    if (!type) {
+      return throwError(`Cannot find resource name for domain type '${item.domainType}'`);
+    }
+
+    return this.resources[type.resourceName]
+      .remove(item.id, { permanent })
+      .pipe(
+        map(() => this.messageHandler.showSuccess(`Successfully deleted '${item.label}'`)),
+        catchError(error => {
+          this.messageHandler.showError(`There was a problem deleting '${item.label}'.`, error);
+          return EMPTY;
+        })
+      );
   }
 }

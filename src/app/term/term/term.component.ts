@@ -31,13 +31,13 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   Term,
+  CatalogueItemDomainType,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
@@ -143,7 +143,7 @@ export class TermComponent
       this.term = term.body;
 
       this.resourcesService.catalogueItem
-        .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
+        .listSemanticLinks(CatalogueItemDomainType.Term, this.term.id)
         .subscribe((resp) => {
           this.term.semanticLinks = resp.body.items;
         });

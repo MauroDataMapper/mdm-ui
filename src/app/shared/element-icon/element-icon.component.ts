@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-element-icon',
@@ -24,7 +26,15 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./element-icon.component.sass']
 })
 export class ElementIconComponent {
-  @Input() element: any;
+  @Input() element: CatalogueItem;
 
   constructor() { }
+
+  getIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType);
+  }
+
+  hasIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
+  }
 }

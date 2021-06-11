@@ -29,7 +29,8 @@ import { FolderService } from './folder.service';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService, SharedService } from '@mdm/services';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { catchError, takeUntil } from 'rxjs/operators';
-import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { findNode } from '@angular/compiler';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -427,6 +428,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   canCompare(fnode: FlatNode) {
     return fnode.domainType === CatalogueItemDomainType.DataModel;
+  }
+
+  canAddToFavorites(fnode: FlatNode) {
+    return isContainerDomainType(fnode.domainType) || isModelDomainType(fnode.domainType);
   }
 
   handleFavourites(fnode: FlatNode) {

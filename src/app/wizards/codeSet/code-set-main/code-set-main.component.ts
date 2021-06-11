@@ -26,7 +26,6 @@ import { CatalogueItemDomainType, CodeSetCreatePayload, CodeSetDetailResponse, C
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-code-set-main',

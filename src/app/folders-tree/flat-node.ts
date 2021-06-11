@@ -144,4 +144,4 @@ export const getCatalogueItemDomainTypeIcon = (domain: CatalogueItemDomainType, 
   }
 
   return domainTypeIcons.get(domain)(fnode, treeControl);
-}
+};

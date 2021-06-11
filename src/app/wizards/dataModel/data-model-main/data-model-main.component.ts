@@ -23,11 +23,10 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UIRouterGlobals } from '@uirouter/core';
-import { Step } from '@mdm/model/stepModel';
 import { Title } from '@angular/platform-browser';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { CatalogueItemDomainType, Container, DataModelCreatePayload, DataModelDetailResponse, FolderDetailResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, Container, DataModelCreatePayload, DataModelDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 

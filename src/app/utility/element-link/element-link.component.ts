@@ -28,7 +28,7 @@ export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
   @Input() justShowCodeForTerm: boolean;
   @Input() showTypeTitle: boolean;
-  @Input() showTypeIcon: boolean = false;
+  @Input() showTypeIcon = false;
   @Input() newWindow: boolean;
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;

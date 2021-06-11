@@ -23,7 +23,6 @@ import { ControlContainer, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
-import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-data-model-step1',

@@ -120,7 +120,7 @@ export class ModelTreeService implements OnDestroy {
         }))),
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
-          return EMPTY
+          return EMPTY;
         }),
       );
   }
@@ -197,7 +197,7 @@ export class ModelTreeService implements OnDestroy {
    * @returns An `Observable` containing either a `FolderDetailResponse` or `VersionedFolderDetailResponse`,
    * depending on the options selected in the dialog.
    */
-  createNewFolder(settings: { allowVersioning?: boolean, parentFolderId?: Uuid }): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
+  createNewFolder(settings: { allowVersioning?: boolean; parentFolderId?: Uuid }): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
     return this.editing
       .openDialog<NewFolderModalComponent, NewFolderModalConfiguration, NewFolderModalResponse>(
         NewFolderModalComponent,

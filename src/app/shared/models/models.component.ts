@@ -122,7 +122,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             };
             this.filteredModels = Object.assign({}, curModel);
             this.levels.current = 1;
-          })
+          });
       }
     }
   };
@@ -295,7 +295,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onNodeAdded($event: MdmTreeItem) {
+  onNodeAdded() {
     this.loadModelsTree();
   }
 

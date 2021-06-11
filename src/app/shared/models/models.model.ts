@@ -43,4 +43,4 @@ export const mapCatalogueDomainTypeToContainer = (domain: CatalogueItemDomainTyp
   if (domain === CatalogueItemDomainType.VersionedFolder) {
     return ModelDomainType.VersionedFolders;
   }
-}
+};

@@ -371,12 +371,13 @@ export abstract class ProfileBaseComponent extends BaseComponent {
         );
       }
       if (this.showControl(controls, 'classifications')) {
+        const classificationsCopy = Object.assign([],this.catalogueItem.classifiers);
         items.push(
           this.createDefaultProfileItem(
-            this.catalogueItem.classifiers || [],
+            classificationsCopy,
             'Classifications',
             ProfileControlTypes.classifications,
-            'classifications'
+            'classifiers'
           )
         );
       }

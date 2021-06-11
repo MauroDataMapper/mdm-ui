@@ -33,7 +33,7 @@ export interface DefaultProfileModalResponse {
   items?: Array<DefaultProfileItem>;
 }
 
-// TODO update classifications with model
+
 export interface DefaultProfileItem {
   displayName: string;
   value?: string | Container[] | string[] | DataTypeReference;

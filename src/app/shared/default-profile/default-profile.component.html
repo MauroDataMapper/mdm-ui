@@ -130,11 +130,9 @@ SPDX-License-Identifier: Apache-2.0
 
     <tr *ngIf="isInControlList('classifications')">
       <td class="detailsRowHeader">Classifications</td>
-      <td *ngIf="catalogueItem">
+      <td>
         <mdm-element-classifications
-          [classifications]="catalogueItem.classifiers"
-          [element]="catalogueItem"
-          [property]="'classifiers'"
+          [classifications]="catalogueItem.classifiers"      
           [readOnly]="true"
         ></mdm-element-classifications>
       </td>

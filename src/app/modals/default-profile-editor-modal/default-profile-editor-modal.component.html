@@ -176,6 +176,7 @@ SPDX-License-Identifier: Apache-2.0
             [(classifications)]="item.value"
             name="classifiers"
             [property]="'classifiers'"
+            (classificationsChanged)="classificationChanged($event,item)"
           >
           </mdm-element-classifications>
         </td>

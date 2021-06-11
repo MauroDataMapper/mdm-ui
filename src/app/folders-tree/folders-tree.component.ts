@@ -30,7 +30,6 @@ import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateH
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { CatalogueItemDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
-import { findNode } from '@angular/compiler';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -61,6 +60,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
   @Output() nodeDbClickEvent = new EventEmitter<MdmTreeItem>();
   @Output() nodeCheckedEvent = new EventEmitter<any>();
+  @Output() nodeAdded = new EventEmitter<MdmTreeItem>();
 
   @Output() compareToEvent = new EventEmitter<any>();
   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
@@ -445,7 +445,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.loadFavourites();
   }
 
-  handleAddFolderModal(fnode: FlatNode) {
+  handleAddFolder(fnode: FlatNode) {
     const allowVersioning = fnode.access.canCreateVersionedFolder;
     this.modelTree
       .createNewFolder({ parentFolderId: fnode?.id, allowVersioning })
@@ -465,35 +465,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           availableActions: response.body.availableActions
         };
 
-        const newFnode = new FlatNode(
-          node,
-          fnode ? this.treeControl.getLevel(fnode) + 1 : 0,
-          this.securityHandler.elementAccess(node));
-
-        if (fnode) {
-          // Added to existing folder parent
-          if (!fnode.children) {
-            fnode.children = [];
-          }
-
-          fnode.children.push(node);
-          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, newFnode);
-        }
-        else {
-          // Created new top level folder
-          this.node.children.push(node);
-          this.treeControl.dataNodes.push(newFnode);
-        }
-
-        fnode.node.hasChildren = true;
-
-        this.treeControl.expand(fnode);
-        this.selectedNode = this.treeControl.dataNodes.find(dn => dn.id === newFnode.id && this.treeControl.getLevel(dn) === newFnode.level);
-        this.stateHandler.Go(node.domainType, { id: node.id, edit: false });
-
         this.messageHandler.showSuccess('Folder created successfully.');
-        this.folder = '';
-        this.refreshTree();
+        this.stateHandler.Go(node.domainType, { id: node.id });
+        this.nodeAdded.emit(node);
       });
   }
 

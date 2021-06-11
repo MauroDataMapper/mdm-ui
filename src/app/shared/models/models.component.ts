@@ -295,6 +295,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onNodeAdded($event: MdmTreeItem) {
+    this.loadModelsTree();
+  }
+
   loadModelsToCompare(dataModel: any) {
     this.resources.catalogueItem
       .listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })

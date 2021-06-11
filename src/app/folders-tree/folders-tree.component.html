@@ -90,7 +90,7 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Create" -->
 <mat-menu #createMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolderModal(node)">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolder(node)">
       <i class="fas fa-folder dataModelTypeIcon"></i> Folder
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">

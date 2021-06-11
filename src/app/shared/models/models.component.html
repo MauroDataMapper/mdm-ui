@@ -137,7 +137,8 @@ SPDX-License-Identifier: Apache-2.0
                                         [enableDragAndDrop]="true"
                                         [enableContextMenu]="true"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)">
+                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
+                                        (nodeAdded)="onNodeAdded($event)">
                             </mdm-folders-tree>
                     </div>
                     <div class="loading-spinner" *ngIf="reloading">

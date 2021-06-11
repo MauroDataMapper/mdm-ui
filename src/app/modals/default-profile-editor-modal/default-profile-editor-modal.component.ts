@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 
 // TODO update to use reactive forms
 
-import { Container } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';

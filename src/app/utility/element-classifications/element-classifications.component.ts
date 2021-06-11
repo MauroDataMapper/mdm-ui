@@ -20,7 +20,6 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
-  CatalogueItemDomainType,
   Classifier,
   ClassifierIndexResponse,
   DataModelDetail

@@ -61,8 +61,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Output() nodeDbClickEvent = new EventEmitter<MdmTreeItem>();
   @Output() nodeCheckedEvent = new EventEmitter<any>();
 
-  @Output() deleteFolderEvent = new EventEmitter<any>();
-
   @Output() compareToEvent = new EventEmitter<any>();
   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
 
@@ -381,7 +379,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.enableContextMenu || fnode.domainType === CatalogueItemDomainType.CodeSet || fnode.domainType === CatalogueItemDomainType.Term) {
+    // TODO: remove these exceptions when there are suitable actions to use for these domain types
+    if (!this.enableContextMenu
+      || fnode.domainType === CatalogueItemDomainType.Term) {
       return;
     }
 
@@ -401,7 +401,24 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
 
     // TODO: remove these exceptions when there are suitable actions to use for these domain types
-    if (fnode.domainType === CatalogueItemDomainType.Terminology || fnode.domainType === CatalogueItemDomainType.ReferenceDataModel) {
+    if (fnode.domainType === CatalogueItemDomainType.CodeSet
+      || fnode.domainType === CatalogueItemDomainType.Terminology
+      || fnode.domainType === CatalogueItemDomainType.ReferenceDataModel) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canDeleteElements(fnode: FlatNode) {
+    if (!fnode.access.showDelete) {
+      return false;
+    }
+
+    // TODO: remove these exceptions when there are suitable ways to accomodate them - these domain
+    // types have `remove` endpoints with multiple parent ids
+    if (fnode.domainType === CatalogueItemDomainType.DataElement
+      || fnode.domainType === CatalogueItemDomainType.DataClass) {
       return false;
     }
 
@@ -487,8 +504,23 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       });
   }
 
-  handleDeleteFolder(fnode: FlatNode, permanent = false) {
-    this.deleteFolderEvent.emit({ folder: fnode, permanent });
+  handleSoftDelete(fnode: FlatNode) {
+    this.modelTree
+      .deleteCatalogueItemSoft(fnode)
+      .subscribe(() => {
+        fnode.deleted = true;
+      });
+  }
+
+  handlePermanentDelete(fnode: FlatNode) {
+    this.modelTree
+      .deleteCatalogueItemPermanent(fnode)
+      .subscribe(() => {
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.Go(
+          'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+        );
+      });
   }
 
   handleAddDataClass(fnode: FlatNode) {

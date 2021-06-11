@@ -195,7 +195,7 @@ export class ElementTypesService {
     },
   ];
 
-  private baseTypes: any = {
+  private baseTypes: { [key: string]: Type } = {
     DataModel: {
       id: 'DataModel',
       link: 'dataModel',
@@ -269,6 +269,15 @@ export class ElementTypesService {
       title: 'Folder',
       resourceName: 'folder',
       markdown: 'fd',
+      classifiable: true
+    },
+
+    VersionedFolder: {
+      id: 'VersionedFolder',
+      link: 'versionedFolder',
+      title: 'VersionedFolder',
+      resourceName: 'versionedFolder',
+      markdown: 'vfd',
       classifiable: true
     },
 
@@ -346,7 +355,7 @@ export class ElementTypesService {
     return array;
   }
 
-  getBaseTypes = () => {
+  getBaseTypes() {
     return this.baseTypes;
   };
 

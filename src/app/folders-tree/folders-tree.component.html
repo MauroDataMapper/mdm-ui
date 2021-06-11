@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
       <i class="fas fa-eye"></i> Compare
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showDelete" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="canDeleteElements(node)" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
       <i class="far fa-trash-alt warning"></i> Delete
     </button>
   </ng-template>
@@ -110,8 +110,8 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Delete" -->
 <mat-menu #deleteMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted">Mark as deleted</button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete">Delete <span class="warning">permanently</span></button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted" (click)="handleSoftDelete(node)">Mark as deleted</button>
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete" (click)="handlePermanentDelete(node)">Delete <span class="warning">permanently</span></button>
   </ng-template>
 </mat-menu>
 
@@ -132,7 +132,6 @@ SPDX-License-Identifier: Apache-2.0
           <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
           <mat-icon *ngIf="hasIcon(node)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
           <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
-          <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
         <!-- </div> -->
         <small *ngIf="node.branchName" class="ml-1 text-muted">
           <span> | </span>
@@ -143,6 +142,10 @@ SPDX-License-Identifier: Apache-2.0
           <span> | </span>
           <i class="fas fa-file-alt"></i>
           {{node.modelVersion}}
+        </small>
+        <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
+          <span> | </span>
+          <i class="fas fa-star favouritesIcon addedToFavourite"></i>
         </small>
         <small *ngIf="node.domainType === 'FederatedDataModel' && node.dataModel && node.dataModel.isSubscribed" class="ml-1 text-muted">
           <span> | </span>

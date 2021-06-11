@@ -166,4 +166,9 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     this.showNewInlineDataType = !this.showNewInlineDataType;
     this.dataTypeErrors = '';
   }
+
+  classificationChanged(classifications, item)
+  {
+   item.value  = classifications;
+  }
 }

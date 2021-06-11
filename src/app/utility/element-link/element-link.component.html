@@ -16,13 +16,35 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<a *ngIf="elementVal && showHref && showLink" tooltip-enable="element.documentationVersion" matTooltip="{{versionNumber}}" [href]="!disableLink ? linkUrl : null"  target="{{openLinkLocation}}">
-    <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
-    <span [innerHtml]="label"></span>
+<mat-icon
+  *ngIf="showTypeIcon && hasIcon()"
+  fontSet="fas"
+  [fontIcon]="getIcon()"
+  [ngClass]="'dataModelTypeIcon'"
+  [attr.aria-label]="elementTypeTitle + ' icon'"
+></mat-icon>
+<a
+  *ngIf="elementVal && showHref && showLink"
+  tooltip-enable="element.documentationVersion"
+  matTooltip="{{ versionNumber }}"
+  [href]="!disableLink ? linkUrl : null"
+  target="{{ openLinkLocation }}"
+>
+  <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
+  <span [innerHtml]="label"></span>
 </a>
-<a *ngIf="elementVal && !showHref && showLink" tooltip-enable="element.documentationVersion" aria-hidden="false" matTooltip="{{versionNumber}}" target="{{openLinkLocation}}">
-    <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
-    <span [innerHtml]="label"></span>
+<a
+  *ngIf="elementVal && !showHref && showLink"
+  tooltip-enable="element.documentationVersion"
+  aria-hidden="false"
+  matTooltip="{{ versionNumber }}"
+  target="{{ openLinkLocation }}"
+>
+  <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
+  <span [innerHtml]="label"></span>
 </a>
-<span><small *ngIf="elementVal && showTypeTitle" class="item-type ml-1">{{elementTypeTitle}}</small></span>
-
+<span
+  ><small *ngIf="elementVal && showTypeTitle" class="item-type ml-1">{{
+    elementTypeTitle
+  }}</small></span
+>

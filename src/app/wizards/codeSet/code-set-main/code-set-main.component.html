@@ -22,8 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 <form class="mdm--form mdm--form-configuration">
     <div class="mb-2 mt-2">
         <strong>Selected folder: </strong>
-        <i class="fas {{getFolderIcon()}} dataModelTypeIcon"></i>
-        <mdm-element-link [showTypeTitle]="false" [newWindow]="true" [element]="parentFolder"></mdm-element-link>
+        <mdm-element-link [showTypeTitle]="true" [showTypeIcon]="true" [newWindow]="true" [element]="parentFolder"></mdm-element-link>
     </div>
 
     <span>Please enter the Code Set details:</span>

@@ -61,10 +61,6 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  getFolderIcon() {
-    return getCatalogueItemDomainTypeIcon(this.step.scope.parentDomainType);
-  }
-
   loadHelp = () => {
     this.helpDialogueHandler.open('Create_a_new_model');
   };

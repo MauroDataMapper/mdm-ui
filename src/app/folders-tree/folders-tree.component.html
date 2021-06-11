@@ -96,13 +96,13 @@ SPDX-License-Identifier: Apache-2.0
       <i class="fas fa-list dataModelTypeIcon"></i> Code Set
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
-      Data Class
+      <i class="fas fa-cube dataModelTypeIcon"></i> Data Class
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
-      Data Type
+      <i class="fas fa-code dataModelTypeIcon"></i> Data Type
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
-      Data Element
+      <i class="fas fa-atom dataModelTypeIcon"></i> Data Element
     </button>
   </ng-template>
 </mat-menu>

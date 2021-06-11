@@ -74,10 +74,6 @@ export class CodeSetMainComponent implements OnInit {
       });
   }
 
-  getFolderIcon() {
-    return getCatalogueItemDomainTypeIcon(this.parentDomainType);
-  }
-
   save() {
     if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
       const resource: CodeSetCreatePayload = {

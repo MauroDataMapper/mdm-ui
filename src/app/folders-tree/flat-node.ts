@@ -133,7 +133,9 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   [CatalogueItemDomainType.LocalCatalogue, () => 'fa-desktop'],
   [CatalogueItemDomainType.ExternalCatalogues, () => 'fa-network-wired'],
   [CatalogueItemDomainType.SubscribedCatalogue, () => 'fa-rss'],
-  [CatalogueItemDomainType.FederatedDataModel, () => 'fa-external-link-alt']
+  [CatalogueItemDomainType.FederatedDataModel, () => 'fa-external-link-alt'],
+  [CatalogueItemDomainType.DataClass, () => 'fa-cube'],
+  [CatalogueItemDomainType.DataElement, () => 'fa-atom']
 ]);
 
 export const getCatalogueItemDomainTypeIcon = (domain: CatalogueItemDomainType, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {

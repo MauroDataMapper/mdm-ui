@@ -128,13 +128,13 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   [CatalogueItemDomainType.Terminology, () => 'fa-book'],
   [CatalogueItemDomainType.CodeSet, () => 'fa-list'],
   [CatalogueItemDomainType.Classification, () => 'fa-tags'],
-  // [CatalogueItemDomainType.Term, () => 'fa-code'],
+  [CatalogueItemDomainType.Term, () => 'fa-bookmark'],
   [CatalogueItemDomainType.ReferenceDataModel, () => 'fa-file-contract'],
   [CatalogueItemDomainType.LocalCatalogue, () => 'fa-desktop'],
   [CatalogueItemDomainType.ExternalCatalogues, () => 'fa-network-wired'],
   [CatalogueItemDomainType.SubscribedCatalogue, () => 'fa-rss'],
   [CatalogueItemDomainType.FederatedDataModel, () => 'fa-external-link-alt'],
-  [CatalogueItemDomainType.DataClass, () => 'fa-cube'],
+  [CatalogueItemDomainType.DataClass, () => 'fa-puzzle-piece'],
   [CatalogueItemDomainType.DataElement, () => 'fa-atom']
 ]);
 

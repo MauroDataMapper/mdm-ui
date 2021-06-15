@@ -28,6 +28,7 @@ mat-tree-node.mat-tree-node {
     display: flex;
     flex-direction: row;
     align-items: center;
+    min-height: 28px;
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -61,10 +62,15 @@ mat-tree-node.mat-tree-node {
     cursor: pointer;
     line-height: 1.5;
   }
+
+  div.mat-tree-node-inactive {
+    padding: 1px;
+  }
+
   div.mat-tree-node-active
   {
     background: #e5eeff;
-    padding: 2px 8px 2px 6px;
+    padding-right: 6px;
     border-radius: 5px;
     border: 1px solid #b1ccff;
     color: #002147;

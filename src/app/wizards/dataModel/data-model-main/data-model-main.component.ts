@@ -42,16 +42,6 @@ export class DataModelMainComponent implements OnInit {
   parentFolderId: Uuid;
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
-  model: {
-    metadata: Array<any>;
-    classifiers: Array<any>;
-    label: string | undefined;
-    description: string | undefined;
-    author: string | undefined;
-    organisation: string | undefined;
-    dataModelType: any;
-    selectedDataTypeProvider: any;
-  };
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -63,16 +53,6 @@ export class DataModelMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('New Data Model');
-    this.model = {
-      metadata: [],
-      classifiers: [],
-      label: undefined,
-      description: undefined,
-      author: undefined,
-      organisation: undefined,
-      dataModelType: undefined,
-      selectedDataTypeProvider: undefined
-    };
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
     this.parentDomainType = this.uiRouterGlobals.params.parentDomainType;
@@ -110,29 +90,23 @@ export class DataModelMainComponent implements OnInit {
   };
 
   save() {
+    const details = this.steps[0].compRef.instance as DataModelStep1Component;
+    const types = this.steps[1].compRef.instance as DataModelStep2Component;
+
     const resource: DataModelCreatePayload = {
       folder: this.parentFolderId,
-      label: this.model.label,
-      description: this.model.description,
-      author: this.model.author,
-      organisation: this.model.organisation,
-      type: this.model.dataModelType,
-      classifiers: this.model.classifiers.map(cls => {
-        return { id: cls.id };
-      }),
-      metadata: this.model.metadata.map(m => {
-        return {
-          key: m.key,
-          value: m.value,
-          namespace: m.namespace
-        };
-      })
+      label: details.label.value,
+      description: details.description.value,
+      author: details.author.value,
+      organisation: details.organisation.value,
+      type: details.dataModelType.value,
+      classifiers: details.classifiers.value.map(cls => { return { id: cls.id } })
     };
 
     let queryStringParams = {};
-    if (this.model.selectedDataTypeProvider) {
+    if (types.selectedDataTypeProvider) {
       queryStringParams = {
-        defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
+        defaultDataTypeProvider: types.selectedDataTypeProvider.name
       };
     }
 

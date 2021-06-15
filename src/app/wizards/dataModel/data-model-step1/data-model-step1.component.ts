@@ -16,13 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ControlContainer, NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { ControlContainer, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-data-model-step1',
@@ -30,34 +31,70 @@ import { DataModelMainComponent } from '../data-model-main/data-model-main.compo
   styleUrls: ['./data-model-step1.component.sass'],
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
-export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
+export class DataModelStep1Component implements OnInit, OnDestroy {
   allDataModelTypes: any;
   step: WizardStep<DataModelMainComponent>;
-  model: any;
+  setupForm: FormGroup;
 
-  formChangesSubscription: Subscription;
+  get label() {
+    return this.setupForm.get('label');
+  }
+
+  get author() {
+    return this.setupForm.get('author');
+  }
+
+  get organisation() {
+    return this.setupForm.get('organisation');
+  }
+
+  get description() {
+    return this.setupForm.get('description');
+  }
+
+  get dataModelType() {
+    return this.setupForm.get('dataModelType');
+  }
+
+  get classifiers() {
+    return this.setupForm.get('classifiers');
+  }
+
+  set classifiersValue(value: any[]) {
+    this.classifiers.setValue(value);
+  }
+
+  private unsubscribe$ = new Subject();
+
   constructor(
     private helpDialogueHandler: HelpDialogueHandlerService,
     private resources: MdmResourcesService
   ) {}
 
   ngOnInit() {
+    this.setupForm = new FormGroup({
+      label: new FormControl('', Validators.required),
+      author: new FormControl(''),
+      organisation: new FormControl(''),
+      description: new FormControl(''),
+      dataModelType: new FormControl('', Validators.required),
+      classifiers: new FormControl([])
+    });
 
-    this.model = this.step.scope.model;
+    this.setupForm.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.step.invalid = this.setupForm.invalid;
+      });
+
     this.resources.dataModel.types().toPromise().then(dataTypes => {
       this.allDataModelTypes = dataTypes.body;
-  });
+    });
   }
 
   ngOnDestroy() {
-    this.formChangesSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(() => {
-        this.step.invalid = this.myForm.invalid;
-    });
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadHelp = () => {

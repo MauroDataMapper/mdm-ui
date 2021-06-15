@@ -33,6 +33,7 @@ export class DataModelStep2Component implements OnInit {
   defaultDataTypeProviders: DataTypeProvider[];
   dataTypes: any;
   step: WizardStep<DataModelMainComponent>;
+  selectedDataTypeProvider?: DataTypeProvider;
 
   constructor(
     private resources: MdmResourcesService,
@@ -40,7 +41,6 @@ export class DataModelStep2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.resources.dataModel.defaultDataTypes()
       .subscribe(
         (result: DataModelDefaultDataTypesResponse) => this.defaultDataTypeProviders = result.body,
@@ -54,9 +54,9 @@ export class DataModelStep2Component implements OnInit {
       return;
     }
     this.loadingData = true;
-    this.step.scope.model.selectedDataTypeProvider = dataTypeProvider[0];
+    this.selectedDataTypeProvider = dataTypeProvider[0];
     this.dataTypes = {
-      items: this.step.scope.model.selectedDataTypeProvider.dataTypes
+      items: this.selectedDataTypeProvider.dataTypes
     };
     this.loadingData = false;
   }

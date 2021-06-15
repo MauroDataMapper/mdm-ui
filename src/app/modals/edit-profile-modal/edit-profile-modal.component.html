@@ -38,18 +38,15 @@ SPDX-License-Identifier: Apache-2.0
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
             <i
-            style="float: right"
-            (click)="showInfo(field)"
-            class="fas fa-info-circle helpIcon"
-          ></i>
-     
+              style="float: right"
+              (click)="showInfo(field)"
+              class="fas fa-info-circle helpIcon"
+            ></i>
           </td>
           <td class="elementDetailDescription">
-           
-
             <mdm-content-editor
-            [(content)]="field.currentValue"
-              id="{{ field.fieldName }}"                         
+              [(content)]="field.currentValue"
+              id="{{ field.fieldName }}"
               [inEditMode]="true"
               *ngIf="field.dataType === 'text'"
             ></mdm-content-editor>
@@ -80,7 +77,7 @@ SPDX-License-Identifier: Apache-2.0
                 field.dataType != 'Boolean' &&
                 field.dataType != 'enumeration'
               "
-              matInput             
+              matInput
               type="{{ formOptionsMap[field.dataType] }}"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -91,32 +88,45 @@ SPDX-License-Identifier: Apache-2.0
               }"
               [required]="field.optional === false"
             />
-            <input
-              *ngIf="field.dataType === 'date'"
-              matInput              
-              type="date"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
-              [(ngModel)]="field.currentValue"
-              value="{{ field.currentValue }}"
-              [ngClass]="{
-                'outlined-input form-control':
-                  formOptionsMap[field.dataType] != 'checkbox'
-              }"
-              [required]="field.optional === false"
-            />
-            <input
-              *ngIf="field.dataType === 'datetime'"
-              matInput              
-              type="datetime-local"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
-              [(ngModel)]="field.currentValue"
-              value="{{ field.currentValue }}"
-              [ngClass]="{
-                'outlined-input form-control':
-                  formOptionsMap[field.dataType] != 'checkbox'
-              }"
-              [required]="field.optional === false"
-            />
+            <div style="display: flex;" *ngIf="field.dataType === 'date'">
+              
+              <input
+                matInput
+                [matDatepicker]="pickerDate"
+                name="{{ field.fieldName }} + {{ section.sectionName }}"
+                [(ngModel)]="field.currentValue"
+                [ngClass]="{
+                  'outlined-input form-control':
+                    formOptionsMap[field.dataType] != 'checkbox'
+                }"
+                [required]="field.optional === false"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="pickerDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickerDate></mat-datepicker>
+            </div>
+            <div style="display: flex;"  *ngIf="field.dataType === 'datetime'">
+              <input
+                matInput
+                [matDatepicker]="pickerDateTime"
+                name="{{ field.fieldName }} + {{ section.sectionName }} + date " 
+                [(ngModel)]="field.date"
+                 [ngClass]="{
+                  'outlined-input form-control':
+                    formOptionsMap[field.dataType] != 'checkbox'
+                }"
+                [required]="field.optional === false"
+              />
+              <mat-datepicker-toggle
+              matSuffix
+              [for]="pickerDateTime"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #pickerDateTime></mat-datepicker>
+              <ngx-timepicker-field #profileTimePicker [(ngModel)]="field.time" [format]="24" name="{{ field.fieldName }} + {{ section.sectionName }} + time"          
+              ></ngx-timepicker-field>
+            </div>
             <div *ngIf="field.dataType === 'datamodel'">
               <input
                 type="text"
@@ -143,9 +153,15 @@ SPDX-License-Identifier: Apache-2.0
               </button>
             </div>
             <div *ngIf="field.dataType === 'enumeration'">
-             <mat-select [(ngModel)]="field.currentValue" name="{{ field.fieldName }} + {{ section.sectionName }}">
-                <mat-option *ngFor="let value of field.allowedValues" [value]="value">
-                  {{value}}
+              <mat-select
+                [(ngModel)]="field.currentValue"
+                name="{{ field.fieldName }} + {{ section.sectionName }}"
+              >
+                <mat-option
+                  *ngFor="let value of field.allowedValues"
+                  [value]="value"
+                >
+                  {{ value }}
                 </mat-option>
               </mat-select>
             </div>
@@ -165,11 +181,13 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
-            <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
+            <mat-error *ngFor="let error of field.validationErrors">{{
+              error
+            }}</mat-error>
             <!-- <div *ngIf="field.validationErrors.length > 0">
               <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
               <mat-error>Test error</mat-error> -->
-              <!-- <ul>
+            <!-- <ul>
                 <li *ngFor="let error of field.validationErrors;">
                   <span class="help-block">{{error}}</span>
                 </li>
@@ -201,14 +219,14 @@ SPDX-License-Identifier: Apache-2.0
       Cancel
     </button>
     <button
-    mat-flat-button
-    color="primary"
-    type="submit"
-    class="custom"
-    (click)="validate()"   
-  >
-    Validate Profile
-  </button>
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="custom"
+      (click)="validate()"
+    >
+      Validate Profile
+    </button>
     <button
       mat-flat-button
       color="primary"

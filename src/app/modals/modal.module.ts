@@ -48,6 +48,7 @@ import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 const DefaultAceConfig: AceConfigInterface = {
 };
@@ -66,7 +67,8 @@ const DefaultAceConfig: AceConfigInterface = {
     SharedModule,
     AceModule,
     CatalogueModule,
-    PipesModule
+    PipesModule,
+    NgxMaterialTimepickerModule
   ],
   declarations: [
     RegisterModalComponent,

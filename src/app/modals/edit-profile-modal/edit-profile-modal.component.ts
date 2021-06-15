@@ -72,6 +72,17 @@ export class EditProfileModalComponent implements OnInit {
           }
         }
 
+        if (field.dataType === 'datetime') {
+          if (
+            field.currentValue &&
+            field.currentValue.length > 0
+          ) {
+            const dateTime = new Date(field.currentValue);
+              field.date = dateTime.toLocaleDateString();
+              field.time = dateTime.toTimeString();
+          }
+        }
+
         if (field.dataType === 'folder') {
           if (
             field.currentValue === '[]' ||
@@ -104,6 +115,14 @@ export class EditProfileModalComponent implements OnInit {
           field.currentValue.length > 0
         ) {
           field.currentValue = JSON.stringify(field.currentValue);
+        }
+
+        if (
+          field.dataType === 'datetime' &&
+          field.date &&
+          field.date.length > 0
+        ) {
+          field.currentValue =  new Date(`${new Date(field.date).toDateString()} ${field.time}`);
         }
       });
     });

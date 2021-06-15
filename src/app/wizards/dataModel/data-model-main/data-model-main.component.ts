@@ -100,7 +100,7 @@ export class DataModelMainComponent implements OnInit {
       author: details.author.value,
       organisation: details.organisation.value,
       type: details.dataModelType.value,
-      classifiers: details.classifiers.value.map(cls => { return { id: cls.id } })
+      classifiers: details.classifiers.value.map(cls => { return { id: cls.id }; })
     };
 
     let queryStringParams = {};

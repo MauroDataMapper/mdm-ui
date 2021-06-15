@@ -73,11 +73,11 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required),
+      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
       author: new FormControl(''),
       organisation: new FormControl(''),
       description: new FormControl(''),
-      dataModelType: new FormControl('', Validators.required),
+      dataModelType: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
       classifiers: new FormControl([])
     });
 

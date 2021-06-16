@@ -16,13 +16,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component,  OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItem, Modelable, ForkModelPayload, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Modelable, ForkModelPayload, CatalogueItemDomainType, MdmResponse, BranchModelPayload } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService, ValidatorService, MessageHandlerService, ElementTypesService, Type } from '@mdm/services';
+import { StateHandlerService, MessageHandlerService, ElementTypesService, Type } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { finalize } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-new-version',
@@ -30,32 +32,35 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./new-version.component.scss']
 })
 export class NewVersionComponent implements OnInit {
-
-  step = 1;
   catalogueItem: CatalogueItem & Modelable;
   domainType: CatalogueItemDomainType;
   domainElementType: Type;
-  errors: { label: string } | undefined;
-  versionType: 'Fork' | 'Branch' | 'Version' | undefined;
   processing: boolean;
-  form = {
-    label: '',
-    copyPermissions: false,
-    copyDataFlows: false,
-    moveDataFlows: false
-  };
+  setupForm: FormGroup;
+
+  get type() {
+    return this.setupForm.get('type');
+  }
+
+  get typeValue(): 'Fork' | 'Branch' | 'Version' | undefined {
+    return this.type.value;
+  }
+
+  get modelName() {
+    return this.setupForm.get('modelName');
+  }
+
+  get branchName() {
+    return this.setupForm.get('branchName');
+  }
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
-    private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private elementTypes: ElementTypesService,
-    private title: Title
-  ) {
-
-  }
+    private title: Title) { }
 
   ngOnInit(): void {
     this.title.setTitle('New Version');
@@ -70,128 +75,99 @@ export class NewVersionComponent implements OnInit {
     const types = this.elementTypes.getBaseTypes();
     this.domainElementType = types[this.domainType];
 
+    // Setup first key field in form first, remaining form fields depend on the type selected
+    this.setupForm = new FormGroup({
+      type: new FormControl('', Validators.required)
+    });
+
     this.resources[this.domainElementType.resourceName]
       .get(this.uiRouterGlobals.params.id)
-      .subscribe((response: any) => {
+      .subscribe((response: MdmResponse<CatalogueItem & Modelable>) => {
         this.catalogueItem = response.body;
       });
   }
 
-  validate() {
-    this.errors = null;
-    if (!this.versionType) {
-      return false;
+  typeChanged() {
+    if (this.modelName) {
+      this.setupForm.removeControl('modelName');
     }
-    if (this.versionType === 'Fork') {
-      if (this.validator.isEmpty(this.form.label)) {
-        this.errors = this.errors || undefined;
-        this.errors.label = 'Model name can not be empty!';
-      } else if (
-        this.form.label.trim().toLowerCase() ===
-        this.catalogueItem.label.trim().toLowerCase()
-      ) {
-        this.errors = this.errors || undefined;
-        this.errors.label = `The name should be different from the current version name ${this.catalogueItem.label}`;
-      }
+
+    if (this.branchName) {
+      this.setupForm.removeControl('branchName');
     }
-    if (this.versionType === 'Branch') {
-      if (this.validator.isEmpty(this.form.label)) {
-        this.errors = this.errors || undefined;
-        this.errors.label = 'Branch name can not be empty!';
-      }
+
+    if (this.typeValue === 'Fork') {
+      this.setupForm.addControl(
+        'modelName',
+        new FormControl(
+          '',
+          [
+            Validators.required,
+            this.forbiddenName(this.catalogueItem.label)
+          ]));
     }
-    return !this.errors;
+
+    if (this.typeValue === 'Branch') {
+      this.setupForm.addControl('branchName', new FormControl('', Validators.required));
+    }
   }
 
-  versionTypeChecked() {
-    this.step++;
+  forbiddenName(disallow: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (disallow.trim().toLowerCase() === control.value.trim().toLowerCase()) {
+        return {
+          forbiddenName: { value: control.value }
+        };
+      }
+
+      return null;
+    };
   }
 
-  save() {
-    if (!this.validate()) {
+  create() {
+    if (!this.setupForm.valid) {
       return;
     }
-    if (this.versionType === 'Fork') {
-      const resource : ForkModelPayload = {
-        label: this.form.label,
-        copyPermissions: this.form.copyPermissions,
-        copyDataFlows: this.form.copyDataFlows
+
+    this.processing = true;
+    this.setupForm.disable();
+
+    if (this.typeValue === 'Fork') {
+      const resource: ForkModelPayload = {
+        label: this.modelName.value,
+        copyPermissions: false,
+        copyDataFlows: false
       };
-      this.processing = true;
 
-      this.resources[this.domainElementType.resourceName]
-        .newForkModel(this.catalogueItem.id, resource)
-        .pipe(finalize(() => (this.processing = false)))
-        .subscribe(
-          (response) => {
-            this.messageHandler.showSuccess(
-              'New Data Model version created successfully.'
-            );
-            this.stateHandler.Go(
-              this.domainType,
-              { id: response.body.id },
-              { reload: true }
-            );
-          },
-          (error) => {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem creating the new Data Model version.',
-              error
-            );
-          }
-        );
-    } else if (this.versionType === 'Version') {
-      this.processing = true;
-      this.resources[this.domainElementType.resourceName]
-        .newBranchModelVersion(this.catalogueItem.id, {})
-        .subscribe(
-          (response) => {
-            this.processing = false;
-            this.messageHandler.showSuccess(
-              'New Document Model version created successfully.'
-            );
-            this.stateHandler.Go(
-              this.domainType,
-              { id: response.body.id },
-              { reload: true }
-            );
-          },
-          (error) => {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem creating the new Document Model version.',
-              error
-            );
-          }
-        );
-    } else if (this.versionType === 'Branch') {
-      let resources = {};
-      if (this.form.label !== null && this.form.label !== '') {
-        resources = { branchName: this.form.label };
-      }
+      const request = this.resources[this.domainElementType.resourceName]
+        .newForkModel(this.catalogueItem.id, resource);
 
-      this.processing = true;
-      this.resources[this.domainElementType.resourceName]
-        .newBranchModelVersion(this.catalogueItem.id, resources)
-        .subscribe(
-          (response) => {
-            this.processing = false;
-            this.messageHandler.showSuccess('New Branch created successfully.');
-            this.stateHandler.Go(
-              this.domainType,
-              { id: response.body.id },
-              { reload: true }
-            );
-          },
-          (error) => {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem creating the new Document Model version.',
-              error
-            );
-          }
-        );
+      this.handleCreateResponse(
+        request,
+        'New forked version created successfully.',
+        'There was a problem creating the new forked version.');
+    }
+    else if (this.typeValue === 'Version') {
+      const request = this.resources[this.domainElementType.resourceName]
+        .newBranchModelVersion(this.catalogueItem.id, {});
+
+      this.handleCreateResponse(
+        request,
+        'New version created successfully.',
+        'There was a problem creating the new version.');
+    }
+    else if (this.typeValue === 'Branch') {
+      const resource: BranchModelPayload = {
+        branchName: this.branchName.value
+      };
+
+      const request = this.resources[this.domainElementType.resourceName]
+         .newBranchModelVersion(this.catalogueItem.id, resource);
+
+      this.handleCreateResponse(
+        request,
+        'New branch created successfully.',
+        'There was a problem creating the new branch.');
     }
   }
 
@@ -199,6 +175,30 @@ export class NewVersionComponent implements OnInit {
     this.stateHandler.Go(this.domainType, {
       id: this.catalogueItem.id
     });
-  };
+  }
 
+  private handleCreateResponse(
+    request: Observable<MdmResponse<CatalogueItem>>,
+    successMessage: string,
+    errorMessage: string) {
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(errorMessage, error);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+          this.setupForm.enable();
+        })
+      )
+      .subscribe((response: MdmResponse<CatalogueItem>) => {
+        this.messageHandler.showSuccess(successMessage);
+        this.stateHandler.Go(
+          this.domainType,
+          { id: response.body.id },
+          { reload: true }
+        );
+      });
+  }
 }

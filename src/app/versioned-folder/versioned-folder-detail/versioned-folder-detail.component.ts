@@ -65,8 +65,6 @@ export class VersionedFolderDetailComponent implements OnInit {
     this.access = this.securityHandler.elementAccess(this.detail);
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
     this.original = Object.assign({}, this.detail);
-
-    this.access.showNewVersion = true;
   }
 
   toggleShowSearch() {

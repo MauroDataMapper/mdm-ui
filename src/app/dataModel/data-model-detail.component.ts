@@ -363,8 +363,10 @@ export class DataModelDetailComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newVersionModel',
-      { id: this.dataModel.id, domainType: 'dataModel' },
-      { location: true }
+      {
+        id: this.dataModel.id,
+        domainType: this.dataModel.domainType
+      }
     );
   }
 

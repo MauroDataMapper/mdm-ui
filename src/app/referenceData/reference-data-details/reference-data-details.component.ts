@@ -439,8 +439,10 @@ export class ReferenceDataDetailsComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newversionmodel',
-      { id: this.refDataModel.id, domainType: 'referenceDataModel' },
-      { location: true }
+      {
+        id: this.refDataModel.id,
+        domainType: this.refDataModel.domainType
+      }
     );
   }
 

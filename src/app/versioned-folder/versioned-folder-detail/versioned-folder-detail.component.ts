@@ -164,53 +164,61 @@ export class VersionedFolderDetailComponent implements OnInit {
   }
 
   finalise() {
-
-     const dialog = this.dialog.open<
-          FinaliseModalComponent,
-          any,
-          FinaliseModalResponse
-        >(FinaliseModalComponent, {
-          data: {
-            title: 'Finalise Versioned Folder',
-            okBtnTitle: 'Finalise Versioned Folder',
-            btnType: 'accent',
-            message: `<p class='marginless'>Please select the version you would like this Versioned Folder</p>
+    const dialog = this.dialog.open<
+      FinaliseModalComponent,
+      any,
+      FinaliseModalResponse
+    >(FinaliseModalComponent, {
+      data: {
+        title: 'Finalise Versioned Folder',
+        okBtnTitle: 'Finalise Versioned Folder',
+        btnType: 'accent',
+        message: `<p class='marginless'>Please select the version you would like this Versioned Folder</p>
                       <p>to be finalised with: </p>`
-          }
-        });
+      }
+    });
 
-        dialog.afterClosed().subscribe((dialogResult) => {
-          if (dialogResult?.status !== ModalDialogStatus.Ok) {
-            return;
-          }
-          this.processing = true;
-          this.resourcesService.versionedFolder
-            .finalise(this.detail.id, dialogResult.request)
-            .subscribe(
-              () => {
-                this.processing = false;
-                this.messageHandler.showSuccess(
-                  'Versioned Folder finalised successfully.'
-                );
-                this.stateHandler.Go(
-                  'versionedFolder',
-                  { id: this.detail.id },
-                  { reload: true }
-                );
-              },
-              (error) => {
-                this.processing = false;
-                this.messageHandler.showError(
-                  'There was a problem finalising the Versioned Folder.',
-                  error
-                );
-              }
+    dialog.afterClosed().subscribe((dialogResult) => {
+      if (dialogResult?.status !== ModalDialogStatus.Ok) {
+        return;
+      }
+      this.processing = true;
+      this.resourcesService.versionedFolder
+        .finalise(this.detail.id, dialogResult.request)
+        .subscribe(
+          () => {
+            this.processing = false;
+            this.messageHandler.showSuccess(
+              'Versioned Folder finalised successfully.'
             );
-        });
-
+            this.stateHandler.Go(
+              'versionedFolder',
+              { id: this.detail.id },
+              { reload: true }
+            );
+          },
+          (error) => {
+            this.processing = false;
+            this.messageHandler.showError(
+              'There was a problem finalising the Versioned Folder.',
+              error
+            );
+          }
+        );
+    });
   }
 
-  delete(permanent: boolean) {
+  newVersion() {
+    this.stateHandler.Go(
+      'newVersionModel',
+      {
+        id: this.detail.id,
+        domainType: this.detail.domainType
+      }
+    );
+  }
+
+  private delete(permanent: boolean) {
     if (!this.access.showSoftDelete && !this.access.showPermanentDelete) {
       return;
     }

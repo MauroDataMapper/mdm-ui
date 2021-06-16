@@ -351,8 +351,10 @@ export class CodeSetDetailsComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newVersionModel',
-      { id: this.codeSetDetail.id, domainType: 'codeSet' },
-      { location: true }
+      {
+        id: this.codeSetDetail.id,
+        domainType: this.codeSetDetail.domainType
+      }
     );
   }
 }

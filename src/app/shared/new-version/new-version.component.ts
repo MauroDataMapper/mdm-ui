@@ -18,9 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component,  OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItem, Modelable, ForkModelPayload } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Modelable, ForkModelPayload, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService, ValidatorService, MessageHandlerService } from '@mdm/services';
+import { StateHandlerService, ValidatorService, MessageHandlerService, ElementTypesService, Type } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { finalize } from 'rxjs/operators';
 
@@ -33,7 +33,8 @@ export class NewVersionComponent implements OnInit {
 
   step = 1;
   catalogueItem: CatalogueItem & Modelable;
-  domainType: string;
+  domainType: CatalogueItemDomainType;
+  domainElementType: Type;
   errors: { label: string } | undefined;
   versionType: 'Fork' | 'Branch' | 'Version' | undefined;
   processing: boolean;
@@ -50,23 +51,26 @@ export class NewVersionComponent implements OnInit {
     private resources: MdmResourcesService,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
+    private elementTypes: ElementTypesService,
     private title: Title
   ) {
 
   }
 
   ngOnInit(): void {
-    this.title.setTitle('New Model Version');
+    this.title.setTitle('New Version');
 
     this.domainType = this.uiRouterGlobals.params.domainType;
-
 
     if (!this.uiRouterGlobals.params.id || !this.domainType) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    this.resources[this.domainType]
+    const types = this.elementTypes.getBaseTypes();
+    this.domainElementType = types[this.domainType];
+
+    this.resources[this.domainElementType.resourceName]
       .get(this.uiRouterGlobals.params.id)
       .subscribe((response: any) => {
         this.catalogueItem = response.body;
@@ -115,7 +119,7 @@ export class NewVersionComponent implements OnInit {
       };
       this.processing = true;
 
-      this.resources[this.domainType]
+      this.resources[this.domainElementType.resourceName]
         .newForkModel(this.catalogueItem.id, resource)
         .pipe(finalize(() => (this.processing = false)))
         .subscribe(
@@ -139,7 +143,7 @@ export class NewVersionComponent implements OnInit {
         );
     } else if (this.versionType === 'Version') {
       this.processing = true;
-      this.resources[this.domainType]
+      this.resources[this.domainElementType.resourceName]
         .newBranchModelVersion(this.catalogueItem.id, {})
         .subscribe(
           (response) => {
@@ -168,7 +172,7 @@ export class NewVersionComponent implements OnInit {
       }
 
       this.processing = true;
-      this.resources[this.domainType]
+      this.resources[this.domainElementType.resourceName]
         .newBranchModelVersion(this.catalogueItem.id, resources)
         .subscribe(
           (response) => {
@@ -191,7 +195,7 @@ export class NewVersionComponent implements OnInit {
     }
   }
 
-  cancel = () => {
+  cancel() {
     this.stateHandler.Go(this.domainType, {
       id: this.catalogueItem.id
     });

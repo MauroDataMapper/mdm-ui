@@ -280,8 +280,10 @@ export class TerminologyDetailsComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newversionmodel',
-      { id: this.mcTerminology.id, domainType: 'terminology' },
-      { location: true }
+      {
+        id: this.mcTerminology.id,
+        domainType: this.mcTerminology.domainType
+      }
     );
   }
 

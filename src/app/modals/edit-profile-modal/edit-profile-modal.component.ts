@@ -123,6 +123,8 @@ export class EditProfileModalComponent implements OnInit {
           field.date.length > 0
         ) {
           field.currentValue =  new Date(`${new Date(field.date).toDateString()} ${field.time}`);
+          delete field.date;
+          delete field.time;
         }
       });
     });

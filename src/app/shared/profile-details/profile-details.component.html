@@ -31,19 +31,23 @@ SPDX-License-Identifier: Apache-2.0
           (click)="showInfo(field)"
           class="fas fa-info-circle helpIcon"
         ></i>
-   
       </td>
       <td class="elementDetailDescription">
         <mdm-content-editor
-        [(content)]="field.currentValue"
-          id="{{ field.fieldName }}"       
+          [(content)]="field.currentValue"
+          id="{{ field.fieldName }}"
           [inEditMode]="false"
           *ngIf="field.dataType === 'text'"
         ></mdm-content-editor>
         <input
           type="checkbox"
           *ngIf="formOptionsMap[field.dataType] === 'checkbox'"
-          style="width: 20px; height: 20px; position: relative; vertical-align: middle;"
+          style="
+            width: 20px;
+            height: 20px;
+            position: relative;
+            vertical-align: middle;
+          "
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
           name="{{ field.fieldName }} + {{ section.sectionName }}"
@@ -66,15 +70,15 @@ SPDX-License-Identifier: Apache-2.0
           [(ngModel)]="field.currentValue"
           value="field.currentValue"
         />
-        <input
-          *ngIf="field.dataType === 'date'"
-          style="background-color: #ffffff; border: hidden"
-          [readonly]="true"
-          type="date"
-          [(ngModel)]="field.currentValue"
-          value="{{ field.currentValue }}"
-          [required]="field.optional === false"
-        />
+        <div *ngIf="field.dataType === 'date'">
+          <input
+            matInput
+            [readonly]="true"
+            name="{{ field.fieldName }} + {{ section.sectionName }}"
+            style="background-color: #ffffff; width: 100%; border: hidden"
+            [ngModel]="field.currentValue | date:'fullDate'"     
+          />
+        </div>
         <input
           style="background-color: #ffffff; border: hidden"
           *ngIf="field.dataType === 'datetime'"

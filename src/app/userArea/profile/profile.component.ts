@@ -30,7 +30,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 @Component({
   selector: 'mdm-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.sass']
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
@@ -40,6 +40,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   imageThumb: any = '';
   imageSource: any = '';
   isImageLoaded = false;
+  isChangingProfileImage = false;
   profileImagePath: string;
   imageChangedEvent: any = '';
   trustedUrl: any;
@@ -96,6 +97,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
       this.isImageLoaded = null;
+      this.isChangingProfileImage = false;
       this.broadcast.dispatch('profileImageUpdated');
       this.userDetails();
     }, error => {
@@ -115,6 +117,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     const file: File = inputValue.files[0];
     const myReader: FileReader = new FileReader();
     myReader.onloadend = () => {
+      this.isChangingProfileImage = true;
       this.imageSource = myReader.result;
     };
     myReader.readAsDataURL(file);
@@ -138,6 +141,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   // Cancel the add image process
   public clear() {
     this.isImageLoaded = false;
+    this.isChangingProfileImage = false;
   }
 
   public loadHelp() {

@@ -155,7 +155,7 @@ $nhs-digital-typography: mat-typography-config(
 );
 
 .nhs-digital-theme {
-  @include angular-material-theme($nhs-digital-theme);    
+  @include angular-material-theme($nhs-digital-theme);
   @include angular-material-typography($nhs-digital-typography);
   @include mdm-custom-components-theme($nhs-digital-theme);
 
@@ -184,7 +184,7 @@ $nhs-digital-typography: mat-typography-config(
 
   form.mdm--form {
     padding: 20px;
-    
+
   }
 
   .mdm--shadow-block {
@@ -192,7 +192,7 @@ $nhs-digital-typography: mat-typography-config(
   }
 
   span.tree-top-actions, span.import-folder-actions {
-    
+
     button {
       background-color: $nhs-digital-plain-background-color;
     }
@@ -218,5 +218,11 @@ $nhs-digital-typography: mat-typography-config(
 
   .mdm-editable-form-buttons {
     padding: 10px;
+  }
+
+  .mdm--profile-block {
+    .mdm-profile__image {
+      background-color: $nhs-digital-background-color !important;
+    }
   }
 }

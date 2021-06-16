@@ -16,12 +16,19 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="mb-2 mdm--profile-block">
-	<img class="img-rounded" *ngIf="trustedUrl" style="width: 64px; height: auto; border-radius: 100%; margin-right: 10px;" [src]="trustedUrl" alt="User profile">
-	<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
-	<button mat-button color="primary" class="paddingless" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
-		<i class="fas fa-pencil-alt"></i>
-	</button>
+<div class="heading-container mb-1 forms-heading-container">
+  <h4 class="marginless">My profile </h4>
+  <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
+</div>
+<div class="mb-2 mdm--profile-block" [hidden]="isChangingProfileImage">
+  <div class="mdm-profile__image">
+	  <img class="img-rounded mdm-profile__image--avatar" *ngIf="trustedUrl" [src]="trustedUrl" alt="User profile">
+  </div>
+  <div class="mt-2 mb-4">
+    <button mat-flat-button color="primary" [disabled]="isChangingProfileImage" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
+      <i class="fas fa-pencil-alt"></i> Edit image
+    </button>
+  </div>
 	<mat-menu #menuProfile>
 		<label mat-menu-item>
 			<i class="fas fa-camera"></i>
@@ -29,13 +36,13 @@ SPDX-License-Identifier: Apache-2.0
 			<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
 		</label>
 		<button mat-menu-item (click)="removeProfileImage()">
-			<i class="fas fa-times"></i>
+			<i class="fas fa-times warning"></i>
 			Remove image
 		</button>
 	</mat-menu>
 </div>
 <mdm-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></mdm-img-croppie>
-<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px 0;">
+<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="mt-2 mb-4 mdm-profile__image__edit">
 	<button mat-button color="warn" type="button" (click)="clear()">Cancel</button>
 	<button mat-flat-button color="primary" type="button" (click)="savePicture()">Update profile image</button>
 </div>

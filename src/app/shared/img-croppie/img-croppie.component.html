@@ -16,15 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container">
-	<!--<div class="row" style="margin-top: 5%;">
-		<div class="text-center col-md-12">
-			<input type="file" (change)="fileChangeEvent($event)" />
-		</div>
-	</div>-->
-	<div class="row" style="margin-top: 5%;">
-		<div class="text-center col-md-3">
-			<!--<h5>Crop Image</h5>-->
+<div class="container-fluid mdm-img-croppie">
+	<div class="row" style="margin-top: 5%; background-color: rgba(77, 114, 156, 0.1)">
+		<div class="text-center col-md-6 mdm-img-croppie__crop">
+			<h5>Crop Image</h5>
 			<image-cropper
 				[imageChangedEvent]="imageChangedEvent"
 				[maintainAspectRatio]="true"
@@ -33,9 +28,9 @@ SPDX-License-Identifier: Apache-2.0
 				format="png"
 				(imageCropped)="imageCropped($event)"></image-cropper>
 		</div>
-		<div class="text-center col-md-2">
-			<!--<h5>Preview</h5>-->
-			<img [src]="imageBase64" class="imgPreview" alt="Image preview"/>
+		<div class="text-center col-md-6 mdm-img-croppie__preview">
+			<h5>Preview</h5>
+			<img [src]="imageBase64" alt="Image preview"/>
 		</div>
 	</div>
 </div>

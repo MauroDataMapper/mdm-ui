@@ -142,16 +142,3 @@ aside.menu {
     font-weight: 600;
   }
 }
-
-
-.mdm--profile-block {
-  position: relative;
-  > button {
-    position: absolute;
-    top: 40px;
-    left: 12px;
-    background: #fff;
-    border-radius: 100%;
-    min-width: 40px;
-  }
-}

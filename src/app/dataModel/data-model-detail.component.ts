@@ -380,7 +380,16 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    this.stateHandler.Go(
+    if (this.sharedService.features.useMergeUiV2) {
+      return this.stateHandler.Go(
+        'mergediff',
+        {
+          sourceId: this.dataModel.id,
+          catalogueDomainType: this.dataModel.domainType
+        });
+    }
+
+    return this.stateHandler.Go(
       'modelsmerging',
       new ModelMergingModel(
         this.dataModel.id,

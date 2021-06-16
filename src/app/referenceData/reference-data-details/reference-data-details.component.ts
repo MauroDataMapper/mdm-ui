@@ -456,7 +456,16 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   merge() {
-    this.stateHandler.Go(
+    if (this.sharedService.features.useMergeUiV2) {
+      return this.stateHandler.Go(
+        'mergediff',
+        {
+          sourceId: this.refDataModel.id,
+          catalogueDomainType: this.refDataModel.domainType
+        });
+    }
+
+    return this.stateHandler.Go(
       'modelsmerging',
       {
         sourceId: this.refDataModel.id,

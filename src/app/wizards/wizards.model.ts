@@ -24,6 +24,6 @@ export interface WizardStep<T> {
   title: any;
   hasForm?: boolean;
   invalid?: boolean;
-  componentRef?: ComponentRef<any>;
+  compRef?: ComponentRef<any>;
   active?: boolean;
 }

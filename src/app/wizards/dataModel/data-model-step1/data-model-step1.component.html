@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<form #myForm="ngForm" ngNativeValidate class="full-width">
+<form ngNativeValidate [formGroup]="setupForm" class="full-width">
     <div class="mb-2">
         <strong>Selected folder: </strong>
         <mdm-element-link [showTypeTitle]="true" [showTypeIcon]="true" [newWindow]="true" [element]="step.scope.parentFolder"></mdm-element-link>
@@ -26,44 +26,44 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Label</mat-label>
-            <input matInput type="text" name="label" [(ngModel)]="model.label" required>
+            <input matInput type="text" name="label" formControlName="label" required>
+            <mat-error *ngIf="setupForm && label.errors?.required">
+              Label is required
+            </mat-error>
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Author</mat-label>
-            <input matInput type="text" name="author" [(ngModel)]="model.author">
+            <input matInput type="text" name="author" formControlName="author">
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Organisation</mat-label>
-            <input matInput type="text" name="organisation" [(ngModel)]="model.organisation">
+            <input matInput type="text" name="organisation" formControlName="organisation">
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
+            <textarea matInput type="text" name="description" formControlName="description"></textarea>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Select a Data Model Type</mat-label>
-            <mat-select name="dataModelType" [(ngModel)]="model.dataModelType" required="DataModel Type can not be Empty">
+            <mat-select name="dataModelType" formControlName="dataModelType" required="DataModel Type can not be Empty">
                 <mat-option *ngFor="let option of allDataModelTypes" [value]="option">{{option}}</mat-option>
             </mat-select>
+            <mat-error *ngIf="setupForm && dataModelType.errors?.required">
+              Data model type is required
+            </mat-error>
         </mat-form-field>
     </div>
 
-    <div class="mdm--form-input" *ngIf="model.dataModelType == 'Database'">
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Database Dialect</mat-label>
-            <input matInput type="text" name="databaseDialect" [(ngModel)]="model.dialect" required>
-        </mat-form-field>
-    </div>
-    <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event"></mdm-element-classifications>
+    <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="classifiersValue = $event"></mdm-element-classifications>
 </form>

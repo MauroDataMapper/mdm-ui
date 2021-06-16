@@ -21,6 +21,7 @@ interface EnvironmentVariables {
   themeName: string;
   useFeaureSubscribedCatalogues: boolean;
   useVersionedFolders: boolean;
+  useMergeUiV2: boolean;
 }
 
 declare let $ENV: EnvironmentVariables;

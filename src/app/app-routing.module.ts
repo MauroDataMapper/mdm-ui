@@ -62,6 +62,7 @@ import { FederatedDataModelMainComponent } from './subscribed-catalogues/federat
 import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.component';
 import { NewVersionComponent } from './shared/new-version/new-version.component';
 import { VersionedFolderComponent } from './versioned-folder/versioned-folder/versioned-folder.component';
+import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -265,6 +266,14 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
       url: '/modelsMergingGraph/:modelType/:modelId',
       component: ModelsMergingGraphComponent
+    },
+    {
+      name: 'appContainer.mainApp.mergeDiff',
+      url: '/mergeDiff/:catalogueDomainType/:sourceId/:targetId',
+      component: MergeDiffContainerComponent,
+      params: {
+        targetId: null
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',

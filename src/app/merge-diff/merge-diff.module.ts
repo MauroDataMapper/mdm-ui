@@ -16,17 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-const webpack = require('webpack');
 
-module.exports = {
-  plugins: [
-    new webpack.DefinePlugin({
-      $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
-        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES'])),
-        useVersionedFolders: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_VERSIONED_FOLDERS'])),
-        useMergeUiV2: Boolean(JSON.stringify(process.env['MDM_UI_MERGE_UI_V2'])),
-      }
-    })
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { MaterialModule } from '@mdm/modules/material/material.module';
+import { MergeDiffContainerComponent } from '@mdm/merge-diff/merge-diff-container/merge-diff-container.component';
+
+@NgModule({
+  declarations: [
+    MergeDiffContainerComponent
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MaterialModule
+  ],
+  exports: [
+    MergeDiffContainerComponent
   ]
-};
+})
+export class MergeDiffModule { }

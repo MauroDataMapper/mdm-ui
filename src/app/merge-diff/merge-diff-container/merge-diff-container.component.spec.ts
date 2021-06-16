@@ -16,17 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-const webpack = require('webpack');
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { MergeDiffContainerComponent } from './merge-diff-container.component';
 
-module.exports = {
-  plugins: [
-    new webpack.DefinePlugin({
-      $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
-        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES'])),
-        useVersionedFolders: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_VERSIONED_FOLDERS'])),
-        useMergeUiV2: Boolean(JSON.stringify(process.env['MDM_UI_MERGE_UI_V2'])),
-      }
-    })
-  ]
-};
+describe('MergeDiffContainerComponent', () => {
+  let harness: ComponentHarness<MergeDiffContainerComponent>;
+
+  beforeEach(async() => {
+    harness = await setupTestModuleForComponent(MergeDiffContainerComponent);
+  });
+
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

@@ -16,17 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-const webpack = require('webpack');
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { MergeDiffAdapterService } from './merge-diff-adapter.service';
 
-module.exports = {
-  plugins: [
-    new webpack.DefinePlugin({
-      $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
-        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES'])),
-        useVersionedFolders: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_VERSIONED_FOLDERS'])),
-        useMergeUiV2: Boolean(JSON.stringify(process.env['MDM_UI_MERGE_UI_V2'])),
-      }
-    })
-  ]
-};
+describe('MergeDiffAdapterService', () => {
+  let service: MergeDiffAdapterService;
+
+  beforeEach(() => {
+    service = setupTestModuleForService(MergeDiffAdapterService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

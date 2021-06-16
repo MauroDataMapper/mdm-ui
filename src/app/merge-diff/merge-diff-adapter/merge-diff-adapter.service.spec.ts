@@ -16,16 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
-
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { MergeDiffAdapterService } from './merge-diff-adapter.service';
 
 describe('MergeDiffAdapterService', () => {
   let service: MergeDiffAdapterService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(MergeDiffAdapterService);
+    service = setupTestModuleForService(MergeDiffAdapterService);
   });
 
   it('should be created', () => {

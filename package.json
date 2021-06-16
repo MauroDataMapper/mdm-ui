@@ -61,6 +61,7 @@
     "jszip-utils": "^0.1.0",
     "lodash": "4.17.21",
     "marked": "^2.0.1",
+    "ng-mocks": "^9.6.4",
     "ng2-charts": "2.3.3",
     "ngx-ace-wrapper": "^11.0.0",
     "ngx-clipboard": "13.0.1",

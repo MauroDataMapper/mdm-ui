@@ -16,28 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { MergeDiffContainerComponent } from './merge-diff-container.component';
 
 describe('MergeDiffContainerComponent', () => {
-  let component: MergeDiffContainerComponent;
-  let fixture: ComponentFixture<MergeDiffContainerComponent>;
+  let harness: ComponentHarness<MergeDiffContainerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MergeDiffContainerComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MergeDiffContainerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async() => {
+    harness = await setupTestModuleForComponent(MergeDiffContainerComponent);
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness?.isComponentCreated).toBeTruthy();
   });
 });

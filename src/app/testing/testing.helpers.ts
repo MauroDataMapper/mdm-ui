@@ -67,13 +67,13 @@ export class ComponentHarness<T> {
  * @param configuration Optionally provide additional configuration for the test module.
  * @returns A new instance of the service under test.
  */
-export function setupTestModuleForService<T>(service: Type<T>, configuration?: TestModuleConfiguration): T {
+export const setupTestModuleForService = <T>(service: Type<T>, configuration?: TestModuleConfiguration): T => {
   TestBed.configureTestingModule({
     imports: [TestingModule, ...configuration?.imports ?? []],
     providers: configuration?.providers ?? []
   });
   return TestBed.inject(service);
-}
+};
 
 /**
  * Setup the test module for working with a component.
@@ -83,7 +83,7 @@ export function setupTestModuleForService<T>(service: Type<T>, configuration?: T
  * @param configuration Optionally provide additional configuration for the test module.
  * @returns A new `ComponentHarness<T>` containing an instance of the component under test with a fixture.
  */
-export async function setupTestModuleForComponent<T>(componentType: Type<T>, configuration?: TestModuleConfiguration) {
+export const setupTestModuleForComponent = async <T>(componentType: Type<T>, configuration?: TestModuleConfiguration) => {
   await TestBed
     .configureTestingModule({
       imports: [TestingModule, ...configuration?.imports ?? []],
@@ -99,4 +99,4 @@ export async function setupTestModuleForComponent<T>(componentType: Type<T>, con
   const component = fixture.componentInstance;
   fixture.detectChanges();
   return new ComponentHarness(component, fixture);
-}
+};

@@ -21,6 +21,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
@@ -161,7 +163,54 @@ export class VersionedFolderDetailComponent implements OnInit {
       .subscribe(() => this.delete(true));
   }
 
-  private delete(permanent: boolean) {
+  finalise() {
+
+     const dialog = this.dialog.open<
+          FinaliseModalComponent,
+          any,
+          FinaliseModalResponse
+        >(FinaliseModalComponent, {
+          data: {
+            title: 'Finalise Versioned Folder',
+            okBtnTitle: 'Finalise Versioned Folder',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Versioned Folder</p>
+                      <p>to be finalised with: </p>`
+          }
+        });
+
+        dialog.afterClosed().subscribe((dialogResult) => {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
+            return;
+          }
+          this.processing = true;
+          this.resourcesService.versionedFolder
+            .finalise(this.detail.id, dialogResult.request)
+            .subscribe(
+              () => {
+                this.processing = false;
+                this.messageHandler.showSuccess(
+                  'Versioned Folder finalised successfully.'
+                );
+                this.stateHandler.Go(
+                  'versionedFolder',
+                  { id: this.detail.id },
+                  { reload: true }
+                );
+              },
+              (error) => {
+                this.processing = false;
+                this.messageHandler.showError(
+                  'There was a problem finalising the Versioned Folder.',
+                  error
+                );
+              }
+            );
+        });
+  
+  }
+
+  delete(permanent: boolean) {
     if (!this.access.showSoftDelete && !this.access.showPermanentDelete) {
       return;
     }

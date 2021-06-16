@@ -25,6 +25,7 @@ module.exports = {
         themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
         useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES'])),
         useVersionedFolders: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_VERSIONED_FOLDERS'])),
+        useMergeUiV2: Boolean(JSON.stringify(process.env['MDM_UI_MERGE_UI_V2'])),
       }
     })
   ]

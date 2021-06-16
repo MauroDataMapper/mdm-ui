@@ -53,6 +53,7 @@ export const environment = {
   features: {
     useSubscribedCatalogues: $ENV.useFeaureSubscribedCatalogues ?? true,
     useDynamicProfiles: true,
-    useVersionedFolders: $ENV.useVersionedFolders ?? false
+    useVersionedFolders: $ENV.useVersionedFolders ?? false,
+    useMergeUiV2: $ENV.useMergeUiV2 ?? false
   }
 };

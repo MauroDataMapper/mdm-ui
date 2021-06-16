@@ -21,4 +21,5 @@ export interface Features {
   useSubscribedCatalogues: boolean;
   useDynamicProfiles: boolean;
   useVersionedFolders: boolean;
+  useMergeUiV2: boolean;
 }

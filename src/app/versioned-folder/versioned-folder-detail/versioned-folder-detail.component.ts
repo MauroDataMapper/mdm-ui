@@ -207,7 +207,7 @@ export class VersionedFolderDetailComponent implements OnInit {
               }
             );
         });
-  
+
   }
 
   delete(permanent: boolean) {

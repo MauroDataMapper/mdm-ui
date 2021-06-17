@@ -44,6 +44,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   exports: [
     MaterialModule,
     UIRouterModule,
+    FormsModule,
     ReactiveFormsModule
   ]
 })

@@ -32,6 +32,19 @@ SPDX-License-Identifier: Apache-2.0
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
           <button
+          mat-menu-item
+          type="button"
+          *ngIf="access.showFinalise"
+          class="has-text-green"
+          (click)="finalise()"
+        >
+          <i
+            class="fas fa-check-circle has-text-green"
+            aria-hidden="true"
+          ></i>
+          Finalise
+        </button>
+          <button
             mat-menu-item
             type="button"
             *ngIf="access.showEdit && !isEditing"

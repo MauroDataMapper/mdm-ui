@@ -32,7 +32,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -54,7 +54,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() justShowFolders: any;
   @Input() placeholder: any;
   @Output() placeholderChange = new EventEmitter<any>();
-  @Input() accepts: any;
+  @Input() accepts: CatalogueItemDomainType[];
   @Input() treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
   @Input() readOnlySearchInput: any;
   @Input() multiple: any;

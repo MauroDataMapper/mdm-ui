@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
                                              [ngModel]="option.value"
                                              name="Folder"
                                              (ngModelChange)="option.value = $event"
-                                             [accepts]="['Folder']"
+                                             [accepts]="allowedFolderTreeDomainTypes"
                                              ngDefaultControl
                                              [showValidationError]="option.optional === false"
                                              [isRequired]="option.optional == false">

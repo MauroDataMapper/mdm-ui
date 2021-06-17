@@ -824,7 +824,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     let children = [];
     if (this.justShowFolders && node.children) {
-      children = node.children.filter(c => c.domainType === CatalogueItemDomainType.Folder);
+      children = node.children.filter(c =>
+        c.domainType === CatalogueItemDomainType.Folder
+        || (this.shared.features.useVersionedFolders && c.domainType === CatalogueItemDomainType.VersionedFolder));
     } else if (this.doNotShowDataClasses && node.children) {
       children = node.children.filter(c => c.domainType !== CatalogueItemDomainType.DataClass);
     } else {

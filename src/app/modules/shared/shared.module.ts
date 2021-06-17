@@ -44,6 +44,7 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
 import { DownloadLinkComponent } from '@mdm/utility/download-link/download-link.component';
 import { NewVersionComponent } from '@mdm/shared/new-version/new-version.component';
 import { AlertComponent } from '@mdm/shared/alert/alert.component';
+import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-selector.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
     ElementLinkComponent,
     DownloadLinkComponent,
     NewVersionComponent,
-    AlertComponent
+    AlertComponent,
+    BranchSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -104,7 +106,8 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
     TextDiffComponent,
     DownloadLinkComponent,
     NewVersionComponent,
-    AlertComponent
+    AlertComponent,
+    BranchSelectorComponent
   ]
 })
 export class SharedModule {}

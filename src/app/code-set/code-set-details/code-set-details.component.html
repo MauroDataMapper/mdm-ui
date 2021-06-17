@@ -265,27 +265,7 @@ SPDX-License-Identifier: Apache-2.0
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>
             <span>
-              <select
-                class="form-control"
-                style="
-                  display: inline;
-                  max-width: 120px;
-                  height: 30px;
-                  line-height: 1;
-                  padding: 0 0.35em;
-                  width: auto;
-                "
-                [(ngModel)]="currentBranch"
-                name="currentBranch"
-                (ngModelChange)="onModelChange()"
-              >
-                <option
-                  [value]="item.branch"
-                  *ngFor="let item of branchGraph"
-                >
-                  {{ item.branch ? item.branch : 'main' }}
-                </option>
-              </select>
+              <mdm-branch-selector [catalogueItem]="codeSetDetail"></mdm-branch-selector>
             </span>
           </small>
         </div>

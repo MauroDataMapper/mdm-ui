@@ -65,8 +65,6 @@ export class DataModelDetailComponent implements OnInit {
   compareToList = [];
   exportList = [];
   addedToFavourite = false;
-  branchGraph = [];
-  currentBranch = '';
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
 
@@ -96,8 +94,6 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   dataModelDetails(): any {
-    this.getModelGraph(this.dataModel.id);
-
     if (this.dataModel.semanticLinks) {
       this.dataModel.semanticLinks.forEach((link) => {
         if (link.linkType === 'New Version Of') {
@@ -124,33 +120,6 @@ export class DataModelDetailComponent implements OnInit {
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
-
-  getModelGraph = (modelId) => {
-    this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(
-      (res) => {
-        this.currentBranch = this.dataModel.branchName;
-        this.branchGraph = res.body;
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem getting the Model Version Tree.',
-          error
-        );
-      }
-    );
-  };
-
-  onModelChange = () => {
-    for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branch === this.currentBranch) {
-        this.stateHandler.Go(
-          'datamodel',
-          { id: this.branchGraph[val].modelId },
-          { reload: true, location: true }
-        );
-      }
-    }
-  };
 
   delete(permanent) {
     if (!this.access.showDelete) {

@@ -21,7 +21,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { Title } from '@angular/platform-browser';
 import { CatalogueItem, Modelable, ForkModelPayload, CatalogueItemDomainType, MdmResponse, BranchModelPayload } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService, MessageHandlerService, ElementTypesService, Type } from '@mdm/services';
+import { StateHandlerService, MessageHandlerService, ElementTypesService, CatalogueElementType } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
@@ -34,7 +34,7 @@ import { catchError, finalize } from 'rxjs/operators';
 export class NewVersionComponent implements OnInit {
   catalogueItem: CatalogueItem & Modelable;
   domainType: CatalogueItemDomainType;
-  domainElementType: Type;
+  domainElementType: CatalogueElementType;
   processing: boolean;
   setupForm: FormGroup;
 

@@ -63,8 +63,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
   exportError = null;
   exportList = [];
   addedToFavourite = false;
-  currentBranch = '';
-  branchGraph = [];
   compareToList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
@@ -93,8 +91,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   ReferenceModelDetails(): any {
-    this.getModelGraph(this.refDataModel.id);
-
     if (this.refDataModel.semanticLinks) {
       this.refDataModel.semanticLinks.forEach((link) => {
         if (link.linkType === 'New Version Of') {
@@ -231,47 +227,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
         }
       );
   }
-
-  getModelGraph = (modelId) => {
-    this.currentBranch = this.refDataModel.branchName;
-    this.branchGraph = [
-      {
-        branch: 'main',
-        label: this.refDataModel.label,
-        modelId,
-        newBranchModelVersion: false,
-        newDocumentationVersion: false,
-        newFork: false
-      }
-    ];
-
-    this.resourcesService.referenceDataModel
-      .modelVersionTree(modelId)
-      .subscribe(
-        (res) => {
-          this.currentBranch = this.refDataModel.branchName;
-          this.branchGraph = res.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem getting the Model Version Tree.',
-            error
-          );
-        }
-      );
-  };
-
-  onModelChange = () => {
-    for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branch === this.currentBranch) {
-        this.stateHandler.Go(
-          'referenceDataModels',
-          { id: this.branchGraph[val].modelId },
-          { reload: true, location: true }
-        );
-      }
-    }
-  };
 
   askForSoftDelete() {
     if (!this.access.showSoftDelete) {

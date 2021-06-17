@@ -63,8 +63,6 @@ export class TerminologyDetailsComponent implements OnInit {
   deleteInProgress = false;
   errorMessage: string;
   exporting: boolean;
-  currentBranch = '';
-  branchGraph = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
   editMode = false;
@@ -93,34 +91,7 @@ export class TerminologyDetailsComponent implements OnInit {
     this.originalTerminology = Object.assign({},this.mcTerminology);
     this.access = this.securityHandler.elementAccess(this.mcTerminology);
     this.loadExporterList();
-    this.getModelGraph(this.mcTerminology.id);
     this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
-  }
-
-  getModelGraph(modelId) {
-    this.currentBranch = this.mcTerminology.branchName;
-    this.branchGraph = [
-      {
-        branch: 'main',
-        label: this.mcTerminology.label,
-        modelId,
-        newBranchModelVersion: false,
-        newDocumentationVersion: false,
-        newFork: false
-      }
-    ];
-  }
-
-  onModelChange() {
-    for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branch === this.currentBranch) {
-        this.stateHandler.Go(
-          'terminology',
-          { id: this.branchGraph[val].id },
-          { reload: true, location: true }
-        );
-      }
-    }
   }
 
   save(){

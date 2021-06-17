@@ -43,7 +43,7 @@ export interface TestModuleConfiguration {
 }
 
 export interface TestComponentConfiguration {
-  detectChangesOnCreation?: boolean
+  detectChangesOnCreation?: boolean;
 }
 
 /**

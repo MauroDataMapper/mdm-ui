@@ -77,7 +77,7 @@ export class NewVersionComponent implements OnInit {
 
     // Setup first key field in form first, remaining form fields depend on the type selected
     this.setupForm = new FormGroup({
-      type: new FormControl('', Validators.required)
+      type: new FormControl('', Validators.required)  // eslint-disable-line @typescript-eslint/unbound-method
     });
 
     this.resources[this.domainElementType.resourceName]
@@ -102,13 +102,15 @@ export class NewVersionComponent implements OnInit {
         new FormControl(
           '',
           [
-            Validators.required,
+            Validators.required,  // eslint-disable-line @typescript-eslint/unbound-method
             this.forbiddenName(this.catalogueItem.label)
           ]));
     }
 
     if (this.typeValue === 'Branch') {
-      this.setupForm.addControl('branchName', new FormControl('', Validators.required));
+      this.setupForm.addControl(
+        'branchName',
+        new FormControl('', Validators.required));  // eslint-disable-line @typescript-eslint/unbound-method
     }
   }
 

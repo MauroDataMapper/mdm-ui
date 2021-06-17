@@ -46,8 +46,8 @@ export class NewVersionComponent implements OnInit {
     return this.type.value;
   }
 
-  get modelName() {
-    return this.setupForm.get('modelName');
+  get label() {
+    return this.setupForm.get('label');
   }
 
   get branchName() {
@@ -88,8 +88,8 @@ export class NewVersionComponent implements OnInit {
   }
 
   typeChanged() {
-    if (this.modelName) {
-      this.setupForm.removeControl('modelName');
+    if (this.label) {
+      this.setupForm.removeControl('label');
     }
 
     if (this.branchName) {
@@ -98,7 +98,7 @@ export class NewVersionComponent implements OnInit {
 
     if (this.typeValue === 'Fork') {
       this.setupForm.addControl(
-        'modelName',
+        'label',
         new FormControl(
           '',
           [
@@ -134,7 +134,7 @@ export class NewVersionComponent implements OnInit {
 
     if (this.typeValue === 'Fork') {
       const resource: ForkModelPayload = {
-        label: this.modelName.value,
+        label: this.label.value,
         copyPermissions: false,
         copyDataFlows: false
       };

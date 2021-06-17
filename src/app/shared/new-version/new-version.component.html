@@ -130,11 +130,11 @@ SPDX-License-Identifier: Apache-2.0
 
                 <div *ngIf="typeValue === 'Fork'">
                   <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Model name</mat-label>
+                    <mat-label>New label</mat-label>
                     <input
                       matInput
                       type="text"
-                      formControlName="modelName"
+                      formControlName="label"
                       required
                     />
                     <mat-hint
@@ -142,11 +142,11 @@ SPDX-License-Identifier: Apache-2.0
                         catalogueItem.label
                       }}'</mat-hint
                     >
-                    <mat-error *ngIf="setupForm && modelName?.errors?.required">
-                      Please enter a model name
+                    <mat-error *ngIf="setupForm && label?.errors?.required">
+                      Please enter a label
                     </mat-error>
-                    <mat-error *ngIf="setupForm && modelName?.errors?.forbiddenName">
-                      Please choose a different model name than '{{catalogueItem.label}}'
+                    <mat-error *ngIf="setupForm && label?.errors?.forbiddenName">
+                      Please choose a different label than '{{catalogueItem.label}}'
                     </mat-error>
                   </mat-form-field>
                 </div>

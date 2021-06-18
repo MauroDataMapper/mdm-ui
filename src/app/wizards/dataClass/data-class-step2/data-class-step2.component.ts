@@ -200,7 +200,9 @@ export class DataClassStep2Component
   };
 
   ngOnDestroy() {
-    this.formChangesSubscription.unsubscribe();
+    if (this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
   }
 
   saveCopiedDataClasses = () => {

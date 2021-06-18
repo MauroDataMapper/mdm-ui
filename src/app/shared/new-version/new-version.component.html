@@ -47,88 +47,42 @@ SPDX-License-Identifier: Apache-2.0
                 </h4>
 
                 <div class="mt-2">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Type</mat-label>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Action</mat-label>
                     <mat-select
-                      formControlName="type"
+                      formControlName="action"
                       required
-                      (selectionChange)="typeChanged()"
+                      (selectionChange)="actionChanged()"
                     >
+                      <mat-select-trigger>
+                        {{actionSelectedName}}
+                      </mat-select-trigger>
                       <mat-option
-                        class="mdm-new-version__type"
-                        [value]="'Fork'"
+                        *ngFor="let availableAction of availableActions"
+                        class="mdm-new-version__type__option"
+                        [value]="availableAction.value"
                       >
-                        <i class="fas fa-list"></i> New Fork
-                      </mat-option>
-                      <mat-option
-                        class="mdm-new-version__type"
-                        [value]="'Version'"
-                      >
-                        <i class="fas fa-file-alt"></i> New Version
-                      </mat-option>
-                      <mat-option
-                        class="mdm-new-version__type"
-                        [value]="'Branch'"
-                      >
-                        <i class="fas fa-code-branch"></i> New Branch
+                        <h5>
+                          <i class="fas {{ availableAction.icon }}"></i>
+                          {{ availableAction.name }}
+                        </h5>
+                        <p>
+                          <small
+                            [innerHTML]="
+                              availableAction.getDescription(domainType, catalogueItem)
+                            "
+                          >
+                          </small>
+                        </p>
                       </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="setupForm && type.errors?.required">
-                      Please select the type to continue
+                    <mat-error *ngIf="setupForm && action.errors?.required">
+                      Please select the action to continue
                     </mat-error>
                   </mat-form-field>
                 </div>
 
-                <mdm-alert
-                  alertStyle="info"
-                  [showIcon]="true"
-                  *ngIf="typeValue === 'Fork'"
-                >
-                  <p>
-                    This will create a copy of
-                    <b>{{ catalogueItem.label }}</b> with a new name, and a new
-                    'main' branch.
-                  </p>
-                  <p>
-                    Use this option if you are planning on taking this
-                    {{ domainType === 'VersionedFolder' ? 'folder' : 'model' }}
-                    in a new direction, or under a new authority.
-                  </p>
-                </mdm-alert>
-
-                <mdm-alert
-                  alertStyle="info"
-                  [showIcon]="true"
-                  *ngIf="typeValue === 'Version'"
-                >
-                  <p>
-                    This will create a draft copy of
-                    <b>{{ catalogueItem.label }}</b> under the 'main' branch.
-                  </p>
-                  <p>
-                    Use this option if you want to create the next iteration of
-                    this
-                    {{ domainType === 'VersionedFolder' ? 'folder' : 'model' }}.
-                  </p>
-                </mdm-alert>
-
-                <mdm-alert
-                  alertStyle="info"
-                  [showIcon]="true"
-                  *ngIf="typeValue === 'Branch'"
-                >
-                  <p>
-                    This will create a copy of
-                    <b>{{ catalogueItem.label }}</b> in a new branch. You may
-                    choose the name of the new branch.
-                  </p>
-                  <p>
-                    Use this option if you want to make some changes that you
-                    subsequently wish to merge back into 'main'.
-                  </p>
-                </mdm-alert>
-
-                <div *ngIf="typeValue === 'Fork'">
+                <div *ngIf="actionValue === 'Fork'">
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>New label</mat-label>
                     <input
@@ -145,13 +99,17 @@ SPDX-License-Identifier: Apache-2.0
                     <mat-error *ngIf="setupForm && label?.errors?.required">
                       Please enter a label
                     </mat-error>
-                    <mat-error *ngIf="setupForm && label?.errors?.forbiddenName">
-                      Please choose a different label than '{{catalogueItem.label}}'
+                    <mat-error
+                      *ngIf="setupForm && label?.errors?.forbiddenName"
+                    >
+                      Please choose a different label than '{{
+                        catalogueItem.label
+                      }}'
                     </mat-error>
                   </mat-form-field>
                 </div>
 
-                <div *ngIf="typeValue === 'Branch'">
+                <div *ngIf="actionValue === 'Branch'">
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Branch name</mat-label>
                     <input
@@ -168,7 +126,7 @@ SPDX-License-Identifier: Apache-2.0
                   </mat-form-field>
                 </div>
 
-                <div *ngIf="typeValue" class="mt-4">
+                <div *ngIf="actionValue" class="mt-4">
                   <button
                     mat-button
                     color="warn"

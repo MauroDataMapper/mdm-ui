@@ -26,6 +26,14 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
+interface NewVersionAction {
+  name: string;
+  value: 'Fork' | 'Branch' | 'Version';
+  selectedName: string;
+  icon: string;
+  getDescription(domainType: CatalogueItemDomainType, item: CatalogueItem & Modelable): string;
+}
+
 @Component({
   selector: 'mdm-new-version',
   templateUrl: './new-version.component.html',
@@ -38,12 +46,49 @@ export class NewVersionComponent implements OnInit {
   processing: boolean;
   setupForm: FormGroup;
 
-  get type() {
-    return this.setupForm.get('type');
+  availableActions: NewVersionAction[] = [
+    {
+      name: 'New Fork',
+      value: 'Fork',
+      selectedName: 'Creating a new fork',
+      icon: 'fa-list',
+      getDescription: (domainType, item) => {
+        return `This will create a copy of <b>${item.label}</b> with a new name, and a new 'main' branch.
+          Use this option if you are planning on taking this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'} in a new direction, or under a new authority.`
+      }
+    },
+    {
+      name: 'New Version',
+      value: 'Version',
+      selectedName: 'Creating a new version',
+      icon: 'fa-file-alt',
+      getDescription: (domainType, item) => {
+        return `This will create a draft copy of <b>${item.label }</b> under the 'main' branch.
+          Use this option if you want to create the next iteration of this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'}.`
+      }
+    },
+    {
+      name: 'New Branch',
+      value: 'Branch',
+      selectedName: 'Creating a new branch',
+      icon: 'fa-code-branch',
+      getDescription: (_, item) => {
+        return `This will create a copy of <b>${item.label}</b> in a new branch. You may choose the name of the new branch.
+          Use this option if you want to make some changes that you subsequently wish to merge back into 'main'.`
+      }
+    },
+  ];
+
+  get action() {
+    return this.setupForm.get('action');
   }
 
-  get typeValue(): 'Fork' | 'Branch' | 'Version' | undefined {
-    return this.type.value;
+  get actionValue(): 'Fork' | 'Branch' | 'Version' | undefined {
+    return this.action.value;
+  }
+
+  get actionSelectedName() {
+    return this.availableActions.find(a => a.value === this.actionValue)?.selectedName;
   }
 
   get label() {
@@ -77,7 +122,7 @@ export class NewVersionComponent implements OnInit {
 
     // Setup first key field in form first, remaining form fields depend on the type selected
     this.setupForm = new FormGroup({
-      type: new FormControl('', Validators.required)  // eslint-disable-line @typescript-eslint/unbound-method
+      action: new FormControl('', Validators.required)  // eslint-disable-line @typescript-eslint/unbound-method
     });
 
     this.resources[this.domainElementType.resourceName]
@@ -87,7 +132,7 @@ export class NewVersionComponent implements OnInit {
       });
   }
 
-  typeChanged() {
+  actionChanged() {
     if (this.label) {
       this.setupForm.removeControl('label');
     }
@@ -96,7 +141,7 @@ export class NewVersionComponent implements OnInit {
       this.setupForm.removeControl('branchName');
     }
 
-    if (this.typeValue === 'Fork') {
+    if (this.actionValue === 'Fork') {
       this.setupForm.addControl(
         'label',
         new FormControl(
@@ -107,7 +152,7 @@ export class NewVersionComponent implements OnInit {
           ]));
     }
 
-    if (this.typeValue === 'Branch') {
+    if (this.actionValue === 'Branch') {
       this.setupForm.addControl(
         'branchName',
         new FormControl('', Validators.required));  // eslint-disable-line @typescript-eslint/unbound-method
@@ -134,7 +179,7 @@ export class NewVersionComponent implements OnInit {
     this.processing = true;
     this.setupForm.disable();
 
-    if (this.typeValue === 'Fork') {
+    if (this.actionValue === 'Fork') {
       const resource: ForkModelPayload = {
         label: this.label.value,
         copyPermissions: false,
@@ -149,7 +194,7 @@ export class NewVersionComponent implements OnInit {
         'New forked version created successfully.',
         'There was a problem creating the new forked version.');
     }
-    else if (this.typeValue === 'Version') {
+    else if (this.actionValue === 'Version') {
       const request = this.resources[this.domainElementType.resourceName]
         .newBranchModelVersion(this.catalogueItem.id, {});
 
@@ -158,7 +203,7 @@ export class NewVersionComponent implements OnInit {
         'New version created successfully.',
         'There was a problem creating the new version.');
     }
-    else if (this.typeValue === 'Branch') {
+    else if (this.actionValue === 'Branch') {
       const resource: BranchModelPayload = {
         branchName: this.branchName.value
       };

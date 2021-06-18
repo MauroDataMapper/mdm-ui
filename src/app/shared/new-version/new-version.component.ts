@@ -54,7 +54,7 @@ export class NewVersionComponent implements OnInit {
       icon: 'fa-list',
       getDescription: (domainType, item) => {
         return `This will create a copy of <b>${item.label}</b> with a new name, and a new 'main' branch.
-          Use this option if you are planning on taking this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'} in a new direction, or under a new authority.`
+          Use this option if you are planning on taking this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'} in a new direction, or under a new authority.`;
       }
     },
     {
@@ -64,7 +64,7 @@ export class NewVersionComponent implements OnInit {
       icon: 'fa-file-alt',
       getDescription: (domainType, item) => {
         return `This will create a draft copy of <b>${item.label }</b> under the 'main' branch.
-          Use this option if you want to create the next iteration of this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'}.`
+          Use this option if you want to create the next iteration of this ${domainType === CatalogueItemDomainType.VersionedFolder ? 'folder' : 'model'}.`;
       }
     },
     {
@@ -74,7 +74,7 @@ export class NewVersionComponent implements OnInit {
       icon: 'fa-code-branch',
       getDescription: (_, item) => {
         return `This will create a copy of <b>${item.label}</b> in a new branch. You may choose the name of the new branch.
-          Use this option if you want to make some changes that you subsequently wish to merge back into 'main'.`
+          Use this option if you want to make some changes that you subsequently wish to merge back into 'main'.`;
       }
     },
   ];

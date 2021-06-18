@@ -26,7 +26,7 @@ import { BroadcastService } from '../services/broadcast.service';
 import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { SharedService } from '@mdm/services';
 
 @Component({
@@ -91,6 +91,12 @@ export class ImportModelsComponent implements OnInit {
     }
 
     this.loadImporters();
+  }
+
+  folderFilter(item: MdmTreeItem): boolean {
+    // Only allow folders to be selected when they have the 'createModel' permission. e.g.
+    // finalised Versioned Folders will not have this permission, locking them out of further imports
+    return item.availableActions.includes('createModel');
   }
 
   loadImporters() {

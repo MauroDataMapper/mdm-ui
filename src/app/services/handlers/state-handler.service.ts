@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,6 +38,7 @@ export class StateHandlerService {
         enumerationvalues: 'appContainer.mainApp.twoSidePanel.catalogue.enumerationValues',
         dataelement: 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
         folder: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
+        versionedfolder: 'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
         classification: 'appContainer.mainApp.twoSidePanel.catalogue.classification',
         diagram: 'appContainer.mainApp.diagram',
 
@@ -54,6 +56,7 @@ export class StateHandlerService {
         newclassification: 'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
         newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
         newversionreferencedatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
+        newversionmodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
         newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
         newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
                 modelsmerginggraph: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
@@ -70,6 +73,7 @@ export class StateHandlerService {
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
         modelsmerging: 'appContainer.mainApp.modelsMerging',
+        mergediff: 'appContainer.mainApp.mergeDiff',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
         export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
         import: 'appContainer.mainApp.twoSidePanel.catalogue.import',
@@ -91,6 +95,7 @@ export class StateHandlerService {
     let state = name;
     const needsRedirect = [
       'appContainer.mainapp.twoSidePanel.catalogue.folder', 'folder',
+      'appContainer.mainapp.twoSidePanel.catalogue.versionedFolder', 'versionedfolder',
       'appContainer.mainapp.twoSidePanel.catalogue.datamodel', 'datamodel',
       'appContainer.mainapp.twoSidePanel.catalogue.referencedatamodel', 'referencedatamodel',
       'appContainer.mainapp.twoSidePanel.catalogue.dataclass', 'dataclass',

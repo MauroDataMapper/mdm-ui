@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,7 +51,7 @@ export class ProfilesDashboardComponent implements AfterViewInit {
   filter: {};
   dynamicProfileRecords: any[] = [];
   hideFilters = true;
-  displayedColumns = ['displayName', 'namespace', 'version'];
+  displayedColumns = ['displayName', 'metadataNamespace', 'version'];
 
   constructor(
     private resourcesService: MdmResourcesService,

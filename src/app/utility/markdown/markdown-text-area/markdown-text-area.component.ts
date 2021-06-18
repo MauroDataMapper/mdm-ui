@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +30,6 @@ export class MarkdownTextAreaComponent implements OnInit {
   @Output() descriptionChange = new EventEmitter<string>();
   @Input() inEditMode: boolean;
   @Input() hideHelpText: boolean;
-  @Input() editableForm: any;
   @Input() rows: number;
   @Input() property: string;
   @Input() element: any;
@@ -53,6 +53,10 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.descriptionChange.emit(this.descriptionVal);
   }
 
+  get isEditorVisible(): boolean {
+    return this.inEditMode;
+  }
+
   elementDialogue;
   lastWasShiftKey: any;
   formData: any = {
@@ -73,12 +77,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   ngOnInit() {
     this.lastWasShiftKey = null;
     this.formData.showMarkDownPreview = false;
-    if (!this.editableForm) {
-      this.formData.description = this.description;
-    } else {
-      this.formData.description = this.editableForm.description;
-    }
-
+    this.formData.description = this.description;
     this.elementSelected();
   }
 
@@ -116,11 +115,7 @@ export class MarkdownTextAreaComponent implements OnInit {
 
             this.editableTextArea.nativeElement.selectionStart = startPos;
             this.editableTextArea.nativeElement.focus();
-            if (this.editableForm) {
-              this.editableForm.description = this.editableTextArea.nativeElement.value;
-            } else {
-              this.description = this.editableTextArea.nativeElement.value;
-            }
+            this.description = this.editableTextArea.nativeElement.value;
           }
         });
       }
@@ -128,8 +123,6 @@ export class MarkdownTextAreaComponent implements OnInit {
   }
 
   onDescriptionChange = () => {
-    if (!this.editableForm) {
       this.description = this.formData.description;
-    }
   };
 }

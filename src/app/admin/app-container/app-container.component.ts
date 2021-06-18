@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,30 +16,44 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-app-container',
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.sass']
 })
-export class AdminAppContainerComponent implements OnInit {
+export class AdminAppContainerComponent implements OnInit, OnDestroy {
   pendingUsersCount = 0;
   features = this.sharedService.features;
 
-  constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService, private broadcastSvc: BroadcastService) {}
+  private unsubscribe$ = new Subject();
+
+  constructor(
+    private sharedService: SharedService,
+    private securityHandler: SecurityHandlerService,
+    private broadcast: BroadcastService) {}
 
   ngOnInit() {
     if (this.isAdmin()) {
       this.getPendingUsers();
-      this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-        this.getPendingUsers();
-      });
+      this.broadcast
+        .on('pendingUserUpdated')
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => this.getPendingUsers());
     }
   }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   isAdmin = () => {
     return this.securityHandler.isAdmin();
   };

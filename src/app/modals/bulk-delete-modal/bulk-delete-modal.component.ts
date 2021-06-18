@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +44,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
   ) { }
 
@@ -84,7 +85,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   };
 
   closeAndRefresh = () => {
-    this.broadcastSvc.broadcast('$reloadFoldersTree');
+    this.broadcast.reloadCatalogueTree();
     this.dialogRef.close({ status: 'ok' });
   };
 

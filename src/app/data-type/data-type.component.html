@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="full-width">
   <mdm-data-type-detail
     *ngIf="dataType"
-    [hideEditButton]="true"
-    [mcDataTypeObject]="dataType"
+    [dataType]="dataType"
     [mcParentDataModel]="dataModel"
   ></mdm-data-type-detail>
 </div>
@@ -39,7 +39,11 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <div>
-  <mat-tab-group #tab>
+  <mat-tab-group
+    #tab
+    [selectedIndex]="activeTab"
+    (selectedIndexChange)="tabSelected($event)"
+  >
     <mat-tab label="Description">
       <ng-template matTabContent>
         <div *ngIf="dataType" class="mb-2 full-width">
@@ -81,8 +85,14 @@ SPDX-License-Identifier: Apache-2.0
                     >
                     <mat-divider></mat-divider>
                     <mat-option value="other">Other properties</mat-option>
-                    <mat-divider *ngIf="access && access.canAddMetadata"></mat-divider>
-                    <mat-option *ngIf="access && access.canAddMetadata" value="addnew">Add new profile...</mat-option>
+                    <mat-divider
+                      *ngIf="access && access.canAddMetadata"
+                    ></mat-divider>
+                    <mat-option
+                      *ngIf="access && access.canAddMetadata"
+                      value="addnew"
+                      >Add new profile...</mat-option
+                    >
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -96,47 +106,55 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign="flex-end center"
                 fxLayoutAlign.xs="flex-start center"
               >
-              <button
-              mat-flat-button
-              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
-              color="primary"
-              type="button"
-              class="mr-1"
-              (click)="editProfile(false)"
-            >
-              <i class="fas fa-pencil-alt"></i> Edit
-            </button>
+                <button
+                  mat-flat-button
+                  *ngIf="
+                    this.descriptionView !== 'default' &&
+                    this.descriptionView !== 'other' &&
+                    this.descriptionView !== 'addNew'
+                  "
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  (click)="editProfile(false)"
+                >
+                  <i class="fas fa-pencil-alt"></i> Edit
+                </button>
 
-            <button
-            mat-flat-button
-            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
-            color="warn"
-            type="button"
-            class="mr-1"
-            (click)="deleteProfile()"
-          >
-            <i class="fas fa-trash-alt"></i> Delete
-          </button>
+                <button
+                  mat-flat-button
+                  *ngIf="
+                    this.descriptionView !== 'default' &&
+                    this.descriptionView !== 'other' &&
+                    this.descriptionView !== 'addNew'
+                  "
+                  color="warn"
+                  type="button"
+                  class="mr-1"
+                  (click)="deleteProfile()"
+                >
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
 
-            <button
-              mat-flat-button
-              *ngIf="this.descriptionView === 'default'"
-              color="primary"
-              type="button"
-              class="mr-1"
-              [matMenuTriggerFor]="editMenu"
-            >
-              Edit
-            </button>
+                <button
+                  mat-flat-button
+                  *ngIf="this.descriptionView === 'default'"
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  [matMenuTriggerFor]="editMenu"
+                >
+                  Edit
+                </button>
 
-            <mat-menu #editMenu="matMenu">
-              <button mat-menu-item (click)="showDescription()">
-                <i class="fas fa-pencil-alt"></i> Edit Description
-              </button>
-              <button mat-menu-item (click)="edit()">
-                <i class="fas fa-pencil-alt"></i>Edit
-              </button>
-            </mat-menu>
+                <mat-menu #editMenu="matMenu">
+              <button mat-menu-item (click)="edit(true)">
+                    <i class="fas fa-pencil-alt"></i> Edit Description
+                  </button>
+              <button mat-menu-item (click)="edit(false)">
+                    <i class="fas fa-pencil-alt"></i>Edit
+                  </button>
+                </mat-menu>
               </div>
             </div>
           </div>
@@ -155,115 +173,7 @@ SPDX-License-Identifier: Apache-2.0
               [domainType]="'dataTypes'"
             ></mdm-data-set-metadata>
           </div>
-          <form
-            editable-form
-            name="form"
-            (ngSubmit)="formBeforeSave()"
-            disable-submit-on-enter
-          >
-            <table
-              *ngIf="this.descriptionView === 'default'"
-              class="table table-bordered mdm--table-fixed"
-            >
-              <tbody>
-                <tr>
-                  <td class="detailsRowHeader">Aliases</td>
-                  <td>
-                    <mdm-element-alias
-                      [aliases]="dataType?.aliases"
-                      [inEditMode]="editableForm?.visible"
-                      [editableForm]="editableForm"
-                      [property]="'aliases'"
-                      [readOnly]="showEditDescription"
-                    ></mdm-element-alias>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Description</th>
-                  <td class="elementDetailDescription">
-                    <mdm-content-editor
-                      [editableForm]="editableForm"
-                      [element]="dataType"
-                      [property]="'description'"
-                    >
-                    </mdm-content-editor>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Type</th>
-                  <td>
-                    <div
-                      *ngIf="allDataTypesMap[dataType.domainType]?.displayLabel"
-                    >
-                      {{ allDataTypesMap[dataType.domainType]?.displayLabel }}
-                    </div>
-
-                    <div
-                      *ngIf="
-                        !allDataTypesMap[dataType?.domainType]?.displayLabel
-                      "
-                    >
-                      {{
-                        allDataTypesMap[dataType.modelResourceDomainType]
-                          ?.displayLabel
-                      }}
-                    </div>
-
-                    <mdm-element-data-type
-                      [elementDataType]="dataType"
-                      [hideName]="true"
-                      [showTypeName]="true"
-                      [onlyShowRefDataClass]="true"
-                      [hideEnumList]="true"
-                    >
-                    </mdm-element-data-type>
-
-                    <div *ngIf="dataType.domainType === 'ModelDataType'">
-                      <small
-                        ><span
-                          *ngIf="!elementType?.finalised"
-                          class="badge badge-warning"
-                          >Draft</span
-                        ></small
-                      >
-                      <small
-                        ><span
-                          *ngIf="elementType?.finalised"
-                          class="badge badge-success"
-                          >Finalised</span
-                        >
-                      </small>
-                      <mdm-element-link
-                        [element]="elementType"
-                        [showLink]="true"
-                        [newWindow]="false"
-                      ></mdm-element-link>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Classifications</th>
-                  <td>
-                    <mdm-element-classifications
-                      [classifications]="dataType.classifiers"
-                      [editableForm]="editableForm"
-                      [readOnly]="showEditDescription"
-                    ></mdm-element-classifications>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
-          </form>
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default' && dataType" [catalogueItem]="dataType"></mdm-default-profile>
         </div>
       </ng-template>
     </mat-tab>
@@ -278,6 +188,32 @@ SPDX-License-Identifier: Apache-2.0
           ></mdm-element-child-data-elements-list>
         </div>
       </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Rules
+        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ rulesItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-constraints-rules
+          *ngIf="dataType"
+          [parent]="dataType"
+          [domainType]="'dataTypes'"
+          (totalCount)="rulesCountEmitter($event)"
+        ></mdm-constraints-rules>
+      </div>
     </mat-tab>
     <mat-tab label="Comments">
       <ng-template matTabContent>
@@ -312,31 +248,5 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Rules
-        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
-        ({{ rulesItemCount }})
-      </ng-template>
-      <div class="full-width">
-        <mdm-constraints-rules
-          *ngIf="dataType"
-          [parent]="dataType"
-          [domainType]="'dataTypes'"
-          (totalCount)="rulesCountEmitter($event)"
-        ></mdm-constraints-rules>
-      </div>
-    </mat-tab>
   </mat-tab-group>
-</div> 
+</div>

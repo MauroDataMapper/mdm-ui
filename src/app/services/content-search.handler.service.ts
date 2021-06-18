@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -97,7 +98,7 @@ export class ContentSearchHandlerService {
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {
-          return this.resources.tree.search(ContainerDomainType.FOLDERS, searchText,
+          return this.resources.tree.search(ContainerDomainType.Folders, searchText,
               {
                   searchTerm: searchText,
                   limit,

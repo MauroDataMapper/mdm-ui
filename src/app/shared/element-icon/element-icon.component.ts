@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-element-icon',
@@ -23,7 +26,15 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./element-icon.component.sass']
 })
 export class ElementIconComponent {
-  @Input() element: any;
+  @Input() element: CatalogueItem;
 
   constructor() { }
+
+  getIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType);
+  }
+
+  hasIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
+  }
 }

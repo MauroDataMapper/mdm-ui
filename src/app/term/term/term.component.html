@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -92,7 +93,7 @@ SPDX-License-Identifier: Apache-2.0
                 *ngIf="
                   this.descriptionView !== 'default' &&
                   this.descriptionView !== 'other' &&
-                  this.descriptionView !== 'addNew' && 
+                  this.descriptionView !== 'addNew' &&
                   showEdit
                 "
                 color="primary"
@@ -131,10 +132,10 @@ SPDX-License-Identifier: Apache-2.0
               </button>
 
               <mat-menu #editMenu="matMenu">
-                <button mat-menu-item (click)="showDescription()">
+                <button mat-menu-item (click)="edit(true)">
                   <i class="fas fa-pencil-alt"></i> Edit Description
                 </button>
-                <button mat-menu-item (click)="edit()">
+                <button mat-menu-item (click)="edit(false)">
                   <i class="fas fa-pencil-alt"></i>Edit
                 </button>
               </mat-menu>
@@ -156,114 +157,10 @@ SPDX-License-Identifier: Apache-2.0
           ></mdm-data-set-metadata>
         </div>
 
-        <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-        >
-          <table
-            class="table table-bordered mdm--table-fixed"
-            *ngIf="this.descriptionView === 'default' && editableForm"
-          >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Aliases</td>
-                <td>
-                  <div style="width: 50%" *ngIf="term">
-                    <mdm-element-alias
-                      [readOnly]="showEditDescription"
-                      [inEditMode]="editableForm.visible"
-                      [aliases]="term.aliases"
-                      [editableForm]="editableForm"
-                      [property]="'aliases'"
-                    ></mdm-element-alias>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Terminology</td>
-                <td *ngIf="term?.terminology">
-                  <span *ngIf="term.terminology">
-                    <small
-                      ><span
-                        *ngIf="!term.terminology.finalised"
-                        class="badge badge-warning ml-1"
-                        >Draft</span
-                      ></small
-                    >
-                    <small
-                      ><span
-                        *ngIf="term.terminology.finalised"
-                        class="badge badge-success ml-1"
-                        >Finalised</span
-                      >
-                    </small>
-                  </span>
-                  <mdm-element-link
-                    [element]="term.terminology"
-                    [showLink]="true"
-                    [newWindow]="false"
-                  ></mdm-element-link>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <div *ngIf="hasResult">
-                    <mdm-content-editor
-                      [editableForm]="editableForm"
-                      [element]="term"
-                      [property]="'description'"
-                    >
-                    </mdm-content-editor>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">URL</td>
-                <td>
-                  <mdm-inline-text-edit
-                    [readOnly]="showEditDescription"
-                    [inEditMode]="editableForm.visible"
-                    [(ngModel)]="term.url"
-                    [name]="'moduleNameUrl'"
-                    size="20"
-                    [styleCss]="'dataModelDetailsLabel'"
-                  >
-                  </mdm-inline-text-edit>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="detailsRowHeader">Classifications</td>
-                <td *ngIf="term?.classifiers">
-                  <mdm-element-classifications
-                    [readOnly]="showEditDescription"
-                    [classifications]="term.classifiers"
-                    [editableForm]="editableForm"
-                    [element]="term"
-                    [property]="'classifiers'"
-                  >
-                  </mdm-element-classifications>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-            *ngIf="editableForm"
-            [hidden]="!editableForm.visible"
-            [onCancelEdit]="onCancelEdit"
-            [editable]="editableForm"
-            [textLocation]="'left'"
-            [hideDelete]="true"
-            [hideCancel]="false"
-          ></mdm-editable-form-buttons>
-        </form>
+        <mdm-default-profile  *ngIf="this.descriptionView === 'default' && term" [catalogueItem]="term"></mdm-default-profile>
       </div>
     </ng-template>
   </mat-tab>
-
   <mat-tab label="Links">
     <ng-template matTabContent>
       <div class="full-width">
@@ -272,17 +169,6 @@ SPDX-License-Identifier: Apache-2.0
           [parent]="term"
           [domainType]="'terms'"
         ></mdm-element-link-list>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Attachments">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-attachment-list
-          *ngIf="term"
-          [parent]="term"
-          [domainType]="'terms'"
-        ></mdm-attachment-list>
       </div>
     </ng-template>
   </mat-tab>
@@ -311,5 +197,77 @@ SPDX-License-Identifier: Apache-2.0
         (totalCount)="rulesCountEmitter($event)"
       ></mdm-constraints-rules>
     </div>
+  </mat-tab>
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
+
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="term"
+            [parent]="term"
+            [domainType]="'terms'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="term"
+              [parent]="term"
+              [domainType]="'terms'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>

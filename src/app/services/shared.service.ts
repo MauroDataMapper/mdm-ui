@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ export class SharedService {
   appVersion = environment.version;
   appTitle = environment.appTitle;
   youTrack = environment.youTrack;
-  wiki = environment.wiki;
+  documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
   simpleViewSupport = environment.simpleViewSupport;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
@@ -51,11 +52,17 @@ export class SharedService {
     private resources: MdmResourcesService
   ) {
     this.isAdmin = this.securityHandler.isAdmin();
-   }
+  }
 
-  logout = () => {
+  logout() {
     this.securityHandler.logout();
   };
+
+  handleRequiredToLogin()
+  {
+    this.securityHandler.loginRequired();
+    this.toaster.info('Please log in to continue.');
+  }
 
   isLoggedIn = (checkServerSession?) => {
     if (checkServerSession !== undefined) {
@@ -89,7 +96,7 @@ export class SharedService {
 
         this.securityHandler.logout();
       });
-  };
+  }
 
   pendingUsersCount = () => {
     return this.resources.catalogueUser.pending({ disabled: false });

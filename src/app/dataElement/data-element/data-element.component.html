@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +20,6 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-data-element-details
     [parentDataModel]="dataModel"
     [parentDataClass]="dataClass"
-    [afterSave]="afterSave"
   ></mdm-data-element-details>
 </div>
 <mat-tab-group
@@ -117,10 +117,10 @@ SPDX-License-Identifier: Apache-2.0
           </button>
 
           <mat-menu #editMenu="matMenu">
-            <button mat-menu-item (click)="showDescription()">
+            <button mat-menu-item (click)="edit(true)">
               <i class="fas fa-pencil-alt"></i> Edit Description
             </button>
-            <button mat-menu-item (click)="edit()">
+            <button mat-menu-item (click)="edit(false)">
               <i class="fas fa-pencil-alt"></i>Edit
             </button>
           </mat-menu>
@@ -141,255 +141,7 @@ SPDX-License-Identifier: Apache-2.0
             [domainType]="'dataElements'"
           ></mdm-data-set-metadata>
         </div>
-        <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-          *ngIf="editableForm"
-        >
-          <table
-            *ngIf="this.descriptionView === 'default'"
-            class="table table-bordered mdm--table-fixed"
-          >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Aliases</td>
-                <td>
-                  <div>
-                    <mdm-element-alias
-                      [readOnly]="showEditDescription"
-                      [inEditMode]="editableForm.visible"
-                      [aliases]="aliases"
-                      [element]="dataElementOutput"
-                      [editableForm]="editableForm"
-                      [property]="'aliases'"
-                    >
-                    </mdm-element-alias>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <div *ngIf="dataElementOutput">
-                    <mdm-content-editor
-                      [editableForm]="editableForm"
-                      [element]="dataElementOutput"
-                      [property]="'description'"
-                    >
-                    </mdm-content-editor>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th class="detailsRowHeader">Data Type</th>
-                <td>
-                  <div
-                    *ngIf="
-                      (!editableForm.visible && dataElementOutput) ||
-                      (editableForm.visible && showEditDescription)
-                    "
-                  >
-                    <mdm-element-data-type
-                      [elementDataType]="dataElementOutput.dataType"
-                      [mcParentDataModel]="dataModel"
-                    >
-                    </mdm-element-data-type>
-                  </div>
-
-                  <div *ngIf="editableForm.visible && !showEditDescription">
-                    <div *ngIf="!showNewInlineDataType">
-                      Please select a Data Type below or
-                      <button
-                        mat-stroked-button
-                        color="primary"
-                        (click)="toggleShowNewInlineDataType()"
-                      >
-                        Add a new Data Type
-                      </button>
-                    </div>
-                    <div *ngIf="showNewInlineDataType">
-                      Please
-                      <button
-                        mat-stroked-button
-                        color="primary"
-                        (click)="toggleShowNewInlineDataType()"
-                      >
-                        select a Data Type
-                      </button>
-                      or Add a new Data Type by completing the form below:
-                    </div>
-
-                    <div *ngIf="showNewInlineDataType">
-                      <mdm-data-type-inline
-                        [model]="newlyAddedDataType"
-                        [parentDataModel]="dataModel"
-                        [showClassification]="false"
-                        [showParentDataModel]="false"
-                      >
-                      </mdm-data-type-inline>
-                    </div>
-                    <div *ngIf="!showNewInlineDataType">
-                      <mdm-select
-                        [width]="'100%'"
-                        [acceptTypedInput]="true"
-                        [valueType]="'dynamic'"
-                        [defaultValue]="dataElementOutput.dataType"
-                        [hasError]="dataTypeErrors"
-                        [loadDynamicValues]="fetchDataTypes"
-                        [loadAllOnClick]="true"
-                        [record]="dataElementOutput"
-                        [minInputLength]="1"
-                        [idProperty]="'id'"
-                        [pagination]="pagination"
-                        [displayProperty]="'label'"
-                        [searchProperty]="'label'"
-                        (selectEvent)="onDataTypeSelect($event[0])"
-                      >
-                        <ng-template
-                          #lineContent
-                          let-item="item"
-                          let-searchTerm="inputText"
-                        >
-                          <div
-                            [innerHTML]="item.label | mchighlighter: searchTerm"
-                          ></div>
-                          <div>
-                            <mdm-element-link
-                              [element]="item"
-                              [showTypeTitle]="true"
-                              [showLink]="false"
-                            ></mdm-element-link>
-                            <mdm-element-link
-                              [element]="item"
-                              [showTypeTitle]="true"
-                              [showLink]="false"
-                            >
-                            </mdm-element-link>
-                          </div>
-                        </ng-template>
-                      </mdm-select>
-                    </div>
-                    <span class="help-block errorMessage" *ngIf="dataTypeErrors"
-                      ><small>{{ dataTypeErrors }}</small></span
-                    >
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th class="detailsRowHeader">Multiplicity</th>
-                <td class="dataClassDetailsModelPath">
-                  <div
-                    *ngIf="
-                      (!editableForm.visible && dataElementOutput) ||
-                      (editableForm.visible && showEditDescription)
-                    "
-                  >
-                    <mdm-multiplicity
-                      [min]="dataElementOutput.minMultiplicity"
-                      [max]="dataElementOutput.maxMultiplicity"
-                    ></mdm-multiplicity>
-                  </div>
-                  <div *ngIf="dataElementOutput && !showEditDescription">
-                    <div style="float: left">
-                      <div *ngIf="editableForm.visible">
-                        <div
-                          *ngIf="editableForm.visible"
-                          style="padding-left: 8px"
-                        >
-                          Min
-                        </div>
-                        <mdm-inline-text-edit
-                          [readOnly]="showEditDescription"
-                          [inEditMode]="editableForm.visible"
-                          [(ngModel)]="min"
-                          [styleCss]="'dataModelDetailsLabel'"
-                          name="moduleNameMinText"
-                        >
-                        </mdm-inline-text-edit>
-                        <small class="block"> Use numbers only </small>
-                      </div>
-                      <span
-                        *ngIf="
-                          !editableForm.visible &&
-                          dataElementOutput.minMultiplicity && dataElementOutput.minMultiplicity == 0
-                        "
-                        >..</span
-                      >
-                      <span
-                        *ngIf="editableForm.visible"
-                        style="padding-right: 10px"
-                      ></span>
-                    </div>
-
-                    <div style="float: left; margin-right: 13px">
-                      <div
-                        *ngIf="editableForm.visible"
-                        style="padding-left: 6px"
-                      >
-                        Max
-                        <mdm-inline-text-edit
-                          [readOnly]="showEditDescription"
-                          [inEditMode]="editableForm.visible"
-                          [(ngModel)]="max"
-                          [styleCss]="'dataModelDetailsLabel'"
-                          name="moduleNameMaxText"
-                        >
-                        </mdm-inline-text-edit>
-                        <small class="block">
-                          User numbers or <strong>*</strong> for unbound
-                          multiplicity
-                        </small>
-                      </div>
-                    </div>
-                    <div
-                      style="clear: both"
-                      [ngClass]="{ 'has-error': true }"
-                      *ngIf="error != ''"
-                    >
-                      <small class="warning">{{ error }}</small>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Classifications</td>
-                <td *ngIf="dataElementOutput">
-                  <mdm-element-classifications
-                    [readOnly]="showEditDescription"
-                    [classifications]="dataElementOutput.classifiers"
-                    [editableForm]="editableForm"
-                    [element]="dataElementOutput"
-                    [property]="'classifiers'"
-                  >
-                  </mdm-element-classifications>
-                </td>
-              </tr>
-              
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-            *ngIf="editableForm"
-            [hidden]="!editableForm.visible"
-            (onCancelEdit)="onCancelEdit"
-            [editable]="editableForm"
-            [textLocation]="'left'"
-            [hideDelete]="true"
-            [hideCancel]="false"
-          ></mdm-editable-form-buttons>
-        </form>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Comments">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-annotation-list
-          *ngIf="dataElementOutput"
-          [parent]="dataElementOutput"
-          [domainType]="'dataElements'"
-        ></mdm-annotation-list>
+        <mdm-default-profile *ngIf="this.descriptionView === 'default' && dataElementOutput" [catalogueItem]="dataElementOutput"></mdm-default-profile>
       </div>
     </ng-template>
   </mat-tab>
@@ -412,17 +164,6 @@ SPDX-License-Identifier: Apache-2.0
           [parent]="dataElementOutput"
           [domainType]="'dataElements'"
         ></mdm-summary-metadata-table>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Attachments" *ngIf="showExtraTabs">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-attachment-list
-          *ngIf="dataElementOutput"
-          [parent]="dataElementOutput"
-          [domainType]="'dataElements'"
-        ></mdm-attachment-list>
       </div>
     </ng-template>
   </mat-tab>
@@ -451,5 +192,77 @@ SPDX-License-Identifier: Apache-2.0
         (totalCount)="rulesCountEmitter($event)"
       ></mdm-constraints-rules>
     </div>
+  </mat-tab>
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
+
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="dataElementOutput"
+            [parent]="dataElementOutput"
+            [domainType]="'dataElements'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="dataElementOutput"
+              [parent]="dataElementOutput"
+              [domainType]="'dataElements'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>

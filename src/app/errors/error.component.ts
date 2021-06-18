@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -81,7 +82,7 @@ export class ErrorComponent implements OnInit {
     const summary = this.lastError.error.message;
     const description = JSON.stringify(this.lastError, null, 2);
 
-    this.youtrackService.reportIssueToYouTrack(summary, description).subscribe(() => {
+    this.youtrackService.reportIssue(summary, description).subscribe(() => {
         this.successfulReport();
       }, () => {
         this.errorReport();

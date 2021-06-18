@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,46 +20,31 @@ import {
   Component,
   OnInit,
   Input,
-  ViewChildren,
-  QueryList,
-  ChangeDetectorRef,
-  AfterViewInit,
 } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MatDialog } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-type-detail',
   templateUrl: './data-type-detail.component.html',
   styleUrls: ['./data-type-detail.component.scss']
 })
-export class DataTypeDetailComponent implements OnInit, AfterViewInit {
-  @Input() mcDataTypeObject: any;
+export class DataTypeDetailComponent implements OnInit {
+  @Input() dataType: DataTypeDetail;
   @Input() mcParentDataModel: any;
-  @Input() afterSave: any;
-  @Input() openEditForm: any;
-  @Input() hideEditButton: any;
-  @ViewChildren('editableText') editForm: QueryList<any>;
 
-  allDataTypes = this.elementTypes.getAllDataTypesArray();
-  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
-  editableForm: EditableDataModel;
-  errorMessage: any;
-
-  showDelete: boolean;
-  showEdit: boolean;
-  canEditDescription = true;
-  showEditDescription = false;
+  originalDataType : DataTypeDetail;
   elementType: any;
+  access: Access;
+  editMode = false;
 
   constructor(
     private dialog: MatDialog,
@@ -67,150 +53,51 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
-    private changeRef: ChangeDetectorRef,
-    private title: Title,
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService
   ) { }
 
 
   ngOnInit() {
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-    this.editableForm.description = this.mcDataTypeObject.description;
-    this.editableForm.label = this.mcDataTypeObject.label;
-    this.title.setTitle(`Data Type - ${this.mcDataTypeObject?.label}`);
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({
-        editing: true,
-        focus: x.name === 'moduleName' ? true : false,
-      }));
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.editableForm.description = this.mcDataTypeObject.description;
-      this.editableForm.label = this.mcDataTypeObject.label;
-      if (this.mcDataTypeObject.classifiers) {
-        this.mcDataTypeObject.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.mcDataTypeObject.aliases) {
-        this.mcDataTypeObject.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
-    this.watchDataTypeObject();
+    this.originalDataType = Object.assign({}, this.dataType);
+    this.access = this.securityHandler.elementAccess(this.dataType);
   }
 
-  validateLabel = (data) => {
-    if (!data || (data && data.trim().length === 0)) {
-      return 'Data Type name can not be empty';
-    }
-  };
 
-  ngAfterViewInit(): void {
-    if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'Terminology') {
-      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe((result: TerminologyDetailResponse) => {
-        this.elementType = result.body;
-      });
-    } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'CodeSet') {
-      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe((result: CodeSetDetailResponse) => {
-        this.elementType = result.body;
-      });
-    } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'ReferenceDataModel') {
-      this.resources.referenceDataModel.get(this.mcDataTypeObject.modelResourceId).subscribe((result: ReferenceDataModelDetailResponse) => {
-        this.elementType = result.body;
-      });
-    }
 
-    this.editForm.changes.subscribe(() => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false,
-        })
-      );
-    });
-  }
-  watchDataTypeObject() {
-    const access: any = this.securityHandler.elementAccess(this.mcDataTypeObject);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-      this.canEditDescription = access.canEditDescription;
-    }
-  }
-
-  formBeforeSave = () => {
-    const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
-      aliases.push(alias);
-    });
-
+  save() {
     const resource: DataType = {
-      id: this.mcDataTypeObject.id,
-      label: this.editableForm.label,
-      domainType: this.mcDataTypeObject.domainType,
-      description: this.editableForm.description || ''
+      id: this.dataType.id,
+      label: this.dataType.label,
+      domainType: this.dataType.domainType
     };
 
-    if (!this.showEditDescription) {
-      resource.description = this.editableForm.description || '';
-      resource.aliases = aliases;
-      resource.domainType = this.mcDataTypeObject.domainType;
-      resource.classifiers = this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }));
-    }
-
-    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res: DataTypeDetailResponse) => {
-      const result = res.body;
-      if (this.afterSave) {
-        this.afterSave(resource);
-      }
-      this.mcDataTypeObject.aliases = Object.assign([], result.aliases);
-      this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
-      this.mcDataTypeObject.label = result.label;
-      this.mcDataTypeObject.description = result.description;
+      this.resources.dataType.update(this.mcParentDataModel.id, this.dataType.id, resource).subscribe((res: DataTypeDetailResponse) => {
+      this.dataType = res.body;
+      this.editMode = false;
       this.messageHandler.showSuccess('Data Type updated successfully.');
       this.editingService.stop();
-      this.editableForm.visible = false;
     }, error => {
       this.messageHandler.showError('There was a problem updating the Data Type.', error);
     }
     );
 
-    this.changeRef.detectChanges();
   };
 
-  openEditClicked = formName => {
-    if (this.openEditForm) {
-      this.showEditDescription = false;
-      this.openEditForm(formName);
-    }
-  };
+
   showForm() {
     this.editingService.start();
-    this.showEditDescription = false;
-    this.editableForm.show();
+    this.editMode = true;
   }
 
-  onCancelEdit = () => {
-    this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
-    this.showEditDescription = false;
-    this.changeRef.detectChanges();
-  };
+  cancel(){
+    this.editingService.stop();
+    this.dataType = Object.assign({}, this.originalDataType);
+    this.editMode = false;
+  }
 
-  delete = () => {
-    this.resources.dataType.remove(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
+  delete(){
+    this.resources.dataType.remove(this.mcParentDataModel.id, this.dataType.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Type deleted successfully.');
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
@@ -218,13 +105,13 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     });
   };
 
-  askToDelete = () => {
+  askToDelete(){
     if (!this.sharedService.isAdminUser()) {
       return;
     }
 
     // check if it has DataElements
-    this.resources.dataElement.listWithDataType(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe((res) => {
+    this.resources.dataElement.listWithDataType(this.mcParentDataModel.id, this.dataType.id).subscribe((res) => {
       const result = res.body;
       const dataElementsCount = result.count;
 
@@ -252,11 +139,5 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         })
         .subscribe(() => this.delete());
     });
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
   };
 }

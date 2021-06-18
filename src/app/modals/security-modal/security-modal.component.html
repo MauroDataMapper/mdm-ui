@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +16,26 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<button mat-icon-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
+<button
+  mat-icon-button
+  color="warn"
+  type="button"
+  (click)="close()"
+  class="close-modal paddingless"
+>
+  <i class="fas fa-times"></i>
+</button>
 <div class="userAccess full-width" style="margin: 30px 0px 50px 0px">
-   <mdm-share-with [mcElement]='element' [mcDomainType]='domainType'></mdm-share-with>
-   <div class="mt-2">
-      <mdm-group-access-new [parent]='element' [parentType]='domainType'></mdm-group-access-new>
-   </div>
+  <mdm-share-with
+    [catalogueItemId]="element.id"
+    [resource]="resource"
+    [(readableByEveryone)]="element.readableByEveryone"
+    [(readableByAuthenticatedUsers)]="element.readableByAuthenticatedUsers"
+  ></mdm-share-with>
+  <div class="mt-2">
+    <mdm-group-access-new
+      [catalogueItem]="element"
+      [canAddGroups]="canAddGroups"
+    ></mdm-group-access-new>
+  </div>
 </div>

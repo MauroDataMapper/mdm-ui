@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +31,11 @@ export class ForgotPasswordModalComponent implements OnInit {
   username: string;
   message: string;
 
-  constructor(public broadcastService: BroadcastService, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: MdmResourcesService) {}
+  constructor(
+    public broadcast: BroadcastService,
+    public dialogRef: MatDialogRef<ForgotPasswordModalComponent>,
+    private securityHandler: SecurityHandlerService,
+    private resources: MdmResourcesService) {}
 
   ngOnInit() {
     this.username = this.securityHandler.getEmailFromStorage();
@@ -47,7 +52,7 @@ export class ForgotPasswordModalComponent implements OnInit {
 
   login() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openLoginModalDialog');
+    this.broadcast.dispatch('openLoginModalDialog');
   }
   close = () => {
     this.securityHandler.loginModalDisplayed = false;

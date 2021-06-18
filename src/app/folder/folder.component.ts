@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Editable } from '../model/folderModel';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
 import { MessageService } from '../services/message.service';
@@ -25,17 +25,32 @@ import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import {
+  BroadcastService,
+  MessageHandlerService,
+  SecurityHandlerService
+} from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
-import { FolderDetail, FolderDetailResponse, PermissionsResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  FolderDetail,
+  FolderDetailResponse,
+  PermissionsResponse,
+  SecurableDomainType
+} from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
+import { TabCollection } from '@mdm/model/ui.model';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-folder',
   templateUrl: './folder.component.html',
-  styleUrls: ['./folder.component.css'],
+  styleUrls: ['./folder.component.css']
 })
-export class FolderComponent extends ProfileBaseComponent implements OnInit, OnDestroy {
+export class FolderComponent
+  extends ProfileBaseComponent
+  implements OnInit, OnDestroy {
+
 
   readonly domainType = 'folders';
 
@@ -44,10 +59,9 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  editableForm: Editable;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
-  activeTab: any;
+  activeTab: number;
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
@@ -56,7 +70,9 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
   isLoadingHistory = true;
   rulesItemCount = 0;
   isLoadingRules = true;
-  access: any;
+  access: Access;
+  annotationsView = 'default';
+  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
 
   constructor(
     private resources: MdmResourcesService,
@@ -65,7 +81,7 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private title: Title,
     dialog: MatDialog,
     editingService: EditingService,
@@ -75,7 +91,10 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
   }
 
   ngOnInit() {
-    if (this.isGuid(this.uiRouterGlobals.params.id) && !this.uiRouterGlobals.params.id) {
+    if (
+      this.isGuid(this.uiRouterGlobals.params.id) &&
+      !this.uiRouterGlobals.params.id
+    ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
@@ -86,33 +105,25 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
     this.title.setTitle('Folder');
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
-    this.editableForm = new Editable();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.setEditableForm();
-      this.editingService.start();
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.setEditableForm();
-    };
-
     this.folderDetails(this.uiRouterGlobals.params.id);
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-      this.showSecuritySection = message;
-    });
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
-    this.afterSave = (result: { body: { id: any } }) => this.folderDetails(result.body.id);
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
+      (message: boolean) => {
+        this.showSecuritySection = message;
+      }
+    );
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
+    this.afterSave = (result: { body: { id: any } }) =>
+      this.folderDetails(result.body.id);
 
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.tabs
+      .getByName(this.uiRouterGlobals.params.tabView)
+      .index;
+
+    this.tabSelected(this.activeTab);
   }
 
   folderDetails(id: string) {
@@ -124,26 +135,23 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
 
       this.access = this.securityHandler.elementAccess(this.folder);
       this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
 
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);
-      } else {
-        this.messageService.FolderSendMessage(this.folder);
-        this.messageService.dataChanged(this.folder);
       }
     });
   }
 
   folderPermissions(id: any) {
-    this.resourcesService.security.permissions(SecurableDomainType.Folders, id).subscribe((permissions: PermissionsResponse) => {
-      Object.keys(permissions.body).forEach((attrname) => {
-        this.folder[attrname] = permissions.body[attrname];
+    this.resourcesService.security
+      .permissions(SecurableDomainType.Folders, id)
+      .subscribe((permissions: PermissionsResponse) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.folder[attrname] = permissions.body[attrname];
+        });
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.folder);
-      this.messageService.dataChanged(this.folder);
-    });
   }
 
   toggleShowSearch() {
@@ -157,86 +165,35 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
     }
   }
 
-  tabSelected(itemsName) {
-    const tab = this.getTabDetail(itemsName);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'folder',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
   }
 
-  getTabDetail(tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'access' };
-      case 1:
-        return { index: 1, name: 'history' };
-      default:
-        return { index: 0, name: 'access' };
-    }
-  }
+  save(folderUpdates: Array<DefaultProfileItem>) {
 
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'access':
-        return { index: 0, name: 'access' };
-      case 'history':
-        return { index: 1, name: 'history' };
-      default:
-        return { index: 0, name: 'access' };
-    }
-  }
-
-  setEditableForm() {
-    this.editableForm.description = this.folder.description;
-  }
-
-  showDescription() {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  edit() {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
-  onCancelEdit() {
-    if (this.folder) {
-      this.showEditDescription = false;
-    }
-  };
-
-  formBeforeSave() {
-    let resource: any = {};
-    this.editingService.stop();
-
-    if (!this.showEditDescription) {
-      resource = {
+    const resource = {
         id: this.folder.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
+        label: this.folder.label,
         domainType: this.folder.domainType
-      };
-    }
-    else {
-      resource = {
-        id: this.folder.id,
-        description: this.editableForm.description || ''
-      };
-    }
+    };
+
+    folderUpdates.forEach((item) => {
+      resource[item.propertyName] = item.value;
+    });
 
     this.resourcesService.folder.update(resource.id, resource).subscribe(
       (res) => {
         this.folder = res.body;
-
-        this.editableForm.visible = false;
+        this.catalogueItem = res.body;
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Folder updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
       },
       (error) => {
         this.messageHandler.showError(
@@ -257,5 +214,3 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
     this.rulesItemCount = $event;
   }
 }
-
-

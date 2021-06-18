@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="!editableForm">
+<div>
     <textarea class="markdownTextArea form-control outlined-block mb-1"
               *ngIf="inEditMode"
               [(ngModel)]="formData.description"
@@ -36,44 +37,12 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 
     <div *ngIf="!hideHelpText">
-        <div style="float: left; margin-bottom: 10px; margin-right: 15px;" *ngIf="inEditMode">
-            [Alt text](attachment.png)&nbsp;&nbsp;**Strong**&nbsp;&nbsp;#Heading
+        <div style="float: left; margin-top: 8px; margin-right: 15px;" *ngIf="inEditMode || isEditorVisible">
+            <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
         </div>
     </div>
     <div style="clear: both;">
-        <span mdmMarkdown [markdown]="formData.description" *ngIf="(formData.showMarkDownPreview && inEditMode) || !inEditMode" makdown></span>
+        <span mdmMarkdown [markdown]="formData.description" *ngIf="(formData.showMarkDownPreview && inEditMode) || !inEditMode"></span>
     </div>
 </div>
 
-<div *ngIf="editableForm">
-    <div class="xeditableTextArea">
-        <textarea *ngIf="editableForm.visible"
-                  [(ngModel)]="editableForm[property]"
-                  name="{{ property }}"
-                  class="full-width"
-                  rows="{{ rows ? rows : '6' }}"
-                  class="form-control outlined-block mb-1"
-                  #editableTextArea
-                  (keyup)="descriptionKeyUp($event)"></textarea>
-
-        <div style="float: right; margin-bottom: 10px;" *ngIf="editableForm.visible">
-            <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="position: relative;">
-              Preview
-            </mat-checkbox>
-            <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px; margin-left: 4px;">
-                <i class="fas fa-plus"></i>
-                Add Element
-            </button>
-        </div>
-        <div *ngIf="!hideHelpText">
-            <div style="float: left; margin-top: 8px; margin-right: 15px;" *ngIf="inEditMode || editableForm.visible">
-                <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
-            </div>
-        </div>
-
-        <div style="clear: both;">
-            <span mdmMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
-            <span mdmMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
-        </div>
-    </div>
-</div>

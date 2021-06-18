@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -302,7 +303,7 @@ export class ModelMergingComponent implements OnInit {
     objects.modified = tempMod;
 
     return objects;
-  };
+  }
 
   createDataTypesElements(model: any) {
     const objects: any = {};
@@ -342,7 +343,7 @@ export class ModelMergingComponent implements OnInit {
     objects.modified = tempMod;
 
     return objects;
-  };
+  }
 
   createDataElementsElements(model: any) {
     const objects: any = {};
@@ -714,7 +715,7 @@ export class ModelMergingComponent implements OnInit {
     }
 
     this.diffs = this.mergeArrays(tempDiffTarget, tempDiffsSource);
-  };
+  }
 
   mergeArrays(source, target) {
     const jointArray = {};

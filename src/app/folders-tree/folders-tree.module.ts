@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,12 +26,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { FoldersTreeComponent } from './folders-tree.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HighlighterPipe } from '../pipes/highlighter.pipe';
 import { StringifyPipe } from '../pipes/stringify.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './folder.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -45,10 +46,10 @@ import { MatInputModule } from '@angular/material/input';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
+    PipesModule
   ],
   declarations: [
     FoldersTreeComponent,
-    HighlighterPipe,
     StringifyPipe
   ],
   entryComponents: [
@@ -56,7 +57,6 @@ import { MatInputModule } from '@angular/material/input';
   ],
   exports: [
     FoldersTreeComponent,
-    HighlighterPipe,
     StringifyPipe,
     MatFormFieldModule,
     MatInputModule,

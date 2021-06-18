@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +28,6 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddMetadata" class="mt-1">
-                <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltip="Help" style="margin-right: 12px;"></i>
                 <button mat-flat-button color="primary" type="button" (click)="add()">
                     <i class="fas fa-plus" aria-hidden="true"></i>
                     Add Property
@@ -126,8 +126,8 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div *ngIf="record.inEdit" style="margin-top: 8px;">
                     <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-                        <mdm-content-editor [(description)]="record.edit.value" 
-                                            [inEditMode]="true" 
+                        <mdm-content-editor [(content)]="record.edit.value"
+                                            [inEditMode]="true"
                                             [markdownOptions]="{ showHelpText: false }"
                                             [htmlOptions]="{ useBasicButtons: true }">
                         </mdm-content-editor>

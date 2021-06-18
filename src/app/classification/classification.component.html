@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="full-width">
+<div class="full-width" *ngIf="result">
   <mdm-classification-details
-    [mcClassification]="classifier"
-    [afterSave]="afterSave"
+    [classification]="result"
   ></mdm-classification-details>
 </div>
 
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
               <i class="fas fa-times"></i>
             </button>
           </div>
-        </div>        
+        </div>
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
@@ -129,7 +129,7 @@ SPDX-License-Identifier: Apache-2.0
                 mat-flat-button
                 color="primary"
                 type="button"
-                (click)="edit()"
+                (click)="edit(false)"
                 class="mr-1"
               >
                 <i class="fas fa-pencil-alt"></i>
@@ -138,42 +138,8 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </div>
         </div>
-        <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-        >
-          <table
-            *ngIf="this.descriptionView === 'default'"
-            class="table table-bordered mdm--table-fixed"
-          >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <div *ngIf="result">
-                    <mdm-markdown-text-area
-                      [editableForm]="editableForm"
-                      [element]="result"
-                      [property]="'description'"
-                    >
-                    </mdm-markdown-text-area>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-            [hidden]="!editableForm.visible"
-            [onCancelEdit]="onCancelEdit"
-            [editable]="editableForm"
-            [textLocation]="'left'"
-            [hideDelete]="true"
-            [hideCancel]="false"
-          >
-          </mdm-editable-form-buttons>
-        </form>
+       
+        <mdm-default-profile  *ngIf="this.descriptionView === 'default' && result" [catalogueItem]="result"></mdm-default-profile>
       </div>
     </ng-template>
   </mat-tab>
@@ -211,6 +177,78 @@ SPDX-License-Identifier: Apache-2.0
         </ng-template>
     </mat-tab> -->
 
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
+
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="result"
+            [parent]="result"
+            [domainType]="'classifiers'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="result"
+              [parent]="result"
+              [domainType]="'classifiers'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </mat-tab>
   <mat-tab label="History">
     <ng-template matTabContent>
       <div class="full-width">
@@ -224,4 +262,4 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </ng-template>
   </mat-tab>
- </mat-tab-group>
+</mat-tab-group>

@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,13 +33,16 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   ]
 })
 export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
-  @Output() editableFormChanged = new EventEmitter<any>();
+  @Output() saveClicked = new EventEmitter();
+  @Output() cancelClicked = new EventEmitter();
 
   @Input() inEditMode: boolean;
   @Input() readOnly = true;
   @Input() isRequired: boolean;
-  @Input() styleCss: any;
-  @Input() name: any;
+  @Input() styleCss: string;
+  @Input() name: string;
+  @Input() showButtons = false;
+
   val: any;
   constructor() { }
 
@@ -68,6 +72,16 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
 
   get ngValue() {
     return this.val;
+  }
+
+  save()
+  {
+    this.saveClicked.emit();
+  }
+
+  cancel()
+  {
+    this.cancelClicked.emit();
   }
 
   propChange: any = () => { };

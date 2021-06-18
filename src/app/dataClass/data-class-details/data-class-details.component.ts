@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,17 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  AfterViewInit,
   Component,
   Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
-import { EditableDataClass } from '@mdm/model/dataClassModel';
-import { Subscription } from 'rxjs';
-import { MessageService } from '@mdm/services/message.service';
+  OnInit} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -36,370 +29,201 @@ import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataClass, DataClassDetail, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  DataClass,
+  DataClassDetail,
+  DataClassDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-class-details',
   templateUrl: './data-class-details.component.html',
   styleUrls: ['./data-class-details.component.sass']
 })
-export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @Input() editMode = false;
-  result: DataClassDetail;
+export class DataClassDetailsComponent implements OnInit {
+  @Input() dataClass: DataClassDetail;
+  editMode = false;
+  originalDataClass: DataClassDetail;
   hasResult = false;
-  subscription: Subscription;
-  editableForm: EditableDataClass;
-  errorMessage = '';
-  error = '';
-  newMinText: any;
-  newMaxText: any;
-  showEdit: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
   deleteInProgress: boolean;
-  exporting: boolean;
-  showEditMode = false;
-  processing = false;
-  aliases: any[] = [];
-  max: any;
-  min: any;
   exportError: any;
-  canEditDescription = true;
-  showEditDescription = false;
   parentLabel = '';
+  access: Access;
 
   constructor(
-    private messageService: MessageService,
     private resourcesService: MdmResourcesService,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private stateHandler: StateHandlerService,
     private title: Title,
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    this.DataClassDetails();
-    this.editableForm = new EditableDataClass();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-      if (this.min === '*') {
-        this.min = '-1';
-      }
-
-      if (this.max === '*') {
-        this.max = '-1';
-      }
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.error = '';
-
-      this.setEditableForm();
-
-      if (this.result.classifiers) {
-        this.result.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      this.editableForm.aliases = [];
-      this.aliases = [];
-      if (this.result.aliases) {
-        this.result.aliases.forEach(item => {
-          this.aliases.push(item);
-          this.editableForm.aliases.push(item);
-        });
-      }
-
-      if (this.min === '-1') {
-        this.min = '*';
-      }
-
-      if (this.max === '-1') {
-        this.max = '*';
-      }
-    };
+    this.originalDataClass = Object.assign({}, this.dataClass);
+    this.dataClassDetails();
   }
 
+  dataClassDetails(): any {
+    this.resourcesService.dataModel
+      .get(this.dataClass.model)
+      .subscribe((dataClass) => {
+        this.parentLabel = dataClass.body.label;
+      });
 
-  ngAfterViewInit(): void {
-    this.error = '';
-    this.editForm.changes.subscribe(() => {
-      this.invokeInlineEditor();
-      if (this.editMode) {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x.name === 'moduleName' ? true : false
-          })
-        );
-
-        this.showForm();
-      }
-    });
-  }
-
-
-  DataClassDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-      this.result = serverResult;
-
-      if(this.result.domainType === 'DataClass') {
-        this.resourcesService.dataModel.get(this.result.model).subscribe(result => {
-          this.parentLabel = result.body.label;
-        });
-      }
-
-      this.editableForm.description = this.result.description;
-      this.editableForm.label = this.result.label;
-
-      if (this.result.classifiers) {
-        this.result.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      this.aliases = [];
-      if (this.result.aliases) {
-        this.result.aliases.forEach(item => {
-          this.aliases.push(item);
-        });
-      }
-
-      if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
-        this.min = '*';
-      } else {
-        this.min = this.result.minMultiplicity;
-      }
-
-      if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
-        this.max = '*';
-      } else {
-        this.max = this.result.maxMultiplicity;
-      }
-
-      if (this.result != null) {
-        this.hasResult = true;
-      }
-      this.title.setTitle(`Data Class - ${this.result?.label}`);
-      this.watchDataClassObject();
-    });
-  }
-
-  watchDataClassObject() {
-    const access: any = this.securityHandler.elementAccess(this.result);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-      this.canEditDescription = access.canEditDescription;
-    }
-  }
-
-
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
+    this.title.setTitle(`Data Class - ${this.dataClass?.label}`);
+    this.access = this.securityHandler.elementAccess(this.dataClass);
   }
 
   askForPermanentDelete() {
     this.dialog
-      .openDoubleConfirmationAsync({
-        data: {
-          title: 'Permanent deletion',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
-                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Class.</p>`
+      .openDoubleConfirmationAsync(
+        {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.dataClass.label}</i></strong> Data Class.</p>`
+          }
+        },
+        {
+          data: {
+            title: 'Confirm permanent deletion',
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message:
+              '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
+          }
         }
-      }, {
-        data: {
-          title: 'Confirm permanent deletion',
-          okBtnTitle: 'Confirm deletion',
-          btnType: 'warn',
-          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-        }
-      })
+      )
       .subscribe(() => this.delete());
   }
 
   delete() {
-    if (!this.result.parentDataClass) {
-      this.resourcesService.dataClass.remove(this.result.model, this.result.id).subscribe(() => {
-        this.messageHandler.showSuccess('Data Class deleted successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-      }, error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting this Data Class.', error);
-      });
+    if (!this.dataClass.parentDataClass) {
+      this.resourcesService.dataClass
+        .remove(this.dataClass.model, this.dataClass.id)
+        .subscribe(
+          () => {
+            this.messageHandler.showSuccess('Data Class deleted successfully.');
+            this.broadcast.reloadCatalogueTree();
+            this.stateHandler.Go(
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            );
+          },
+          (error) => {
+            this.deleteInProgress = false;
+            this.messageHandler.showError(
+              'There was a problem deleting this Data Class.',
+              error
+            );
+          }
+        );
     } else {
-      this.resourcesService.dataClass.removeChildDataClass(this.result.model, this.result.parentDataClass, this.result.id).subscribe(() => {
-        this.messageHandler.showSuccess('Data Class deleted successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-      }, error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting this Data Class.', error);
-      });
+      this.resourcesService.dataClass
+        .removeChildDataClass(
+          this.dataClass.model,
+          this.dataClass.parentDataClass,
+          this.dataClass.id
+        )
+        .subscribe(
+          () => {
+            this.messageHandler.showSuccess('Data Class deleted successfully.');
+            this.broadcast.reloadCatalogueTree();
+            this.stateHandler.Go(
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            );
+          },
+          (error) => {
+            this.deleteInProgress = false;
+            this.messageHandler.showError(
+              'There was a problem deleting this Data Class.',
+              error
+            );
+          }
+        );
     }
   }
 
-  formBeforeSave = () => {
-    this.error = '';
-    this.editMode = false;
-    this.errorMessage = '';
+  save() {
 
-    const classifiers = [];
-    this.editableForm.classifiers.forEach(cls => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
-      aliases.push(alias);
-    });
-    if (this.validateLabel(this.result.label) && this.validateMultiplicity(this.min, this.max)) {
-      if (this.min != null && this.min !== '' && this.max != null && this.max !== '') {
-        if (this.newMinText === '*') {
-          this.newMinText = -1;
-        }
-
-        if (this.max === '*') {
-          this.max = -1;
-        }
-      }
+    if (
+      this.validator.validateLabel(this.dataClass.label)) {
 
       const resource: DataClass = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        domainType: this.result.domainType,
-        description: this.editableForm.description || ''
+        id: this.dataClass.id,
+        label: this.dataClass.label,
+        domainType: this.dataClass.domainType
       };
 
-      if (!this.showEditDescription) {
-        resource.aliases = aliases;
-        resource.classifiers = classifiers;
-        resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);
-      }
-
-      if (!this.result.parentDataClass) {
-        this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe((result: DataClassDetailResponse) => {
-          this.messageHandler.showSuccess('Data Class updated successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.editingService.stop();
-          this.messageService.dataChanged(result.body);
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Data Class.', error);
-        });
+      if (!this.dataClass.parentDataClass) {
+        this.resourcesService.dataClass
+          .update(this.dataClass.model, this.dataClass.id, resource)
+          .subscribe(
+            (dataClass: DataClassDetailResponse) => {
+              this.messageHandler.showSuccess(
+                'Data Class updated successfully.'
+              );
+              this.originalDataClass = dataClass.body;
+              this.editMode = false;
+              this.broadcast.reloadCatalogueTree();
+              this.editingService.stop();
+           },
+            (error) => {
+              this.messageHandler.showError(
+                'There was a problem updating the Data Class.',
+                error
+              );
+            }
+          );
       } else {
-        this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe((result: DataClassDetailResponse) => {
-          this.messageHandler.showSuccess('Data Class updated successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.editingService.stop();
-          this.messageService.dataChanged(result.body);
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Data Class.', error);
-        });
+        this.resourcesService.dataClass
+          .updateChildDataClass(
+            this.dataClass.model,
+            this.dataClass.parentDataClass,
+            this.dataClass.id,
+            resource
+          )
+          .subscribe(
+            (dataClass: DataClassDetailResponse) => {
+              this.messageHandler.showSuccess(
+                'Data Class updated successfully.'
+              );
+              this.editMode = false;
+              this.editingService.stop();
+              this.dataClass = dataClass.body;
+              this.broadcast.reloadCatalogueTree();
+            },
+            (error) => {
+              this.messageHandler.showError(
+                'There was a problem updating the Data Class.',
+                error
+              );
+            }
+          );
       }
     }
-  };
-
-  validateMultiplicity(minVal, maxVal) {
-    let min = '';
-    if (minVal != null && minVal !== undefined) {
-      min = `${minVal}`;
-    }
-    let max = '';
-    if (maxVal != null && maxVal !== undefined) {
-      max = `${maxVal}`;
-    }
-
-    const errorMessage = this.validator.validateMultiplicities(min, max);
-    if (errorMessage) {
-      this.error = errorMessage;
-      return false;
-    }
-    return true;
   }
 
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
-  }
-
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = 'DataClass name can not be empty';
-      return false;
-    } else {
-      return true;
-    }
-  }
 
   showForm() {
     this.editingService.start();
-    this.showEditDescription = false;
-    this.editableForm.show();
+    this.editMode = true;
   }
 
-  onCancelEdit() {
-    this.errorMessage = '';
-    this.error = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
+  cancel() {
+    this.dataClass = Object.assign({}, this.originalDataClass);
+    this.editMode = false;
+    this.editingService.stop();
   }
 
-  onLabelChange(value: any) {
-    if (!this.validateLabel(value)) {
-      this.editableForm.validationError = true;
-    } else {
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-    }
-  }
 
-  isAdmin = () => {
+  isAdmin() {
     return this.securityHandler.isAdmin();
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  private setEditableForm() {
-    this.editableForm.description = this.result.description;
-    this.editableForm.label = this.result.label;
-    this.min = this.result.minMultiplicity;
-    this.max = this.result.maxMultiplicity;
-  }
-
-  private invokeInlineEditor(): void {
-    this.editForm.find((inlineEditorComponent: any) => {
-      return inlineEditorComponent.name === 'editableText';
-    });
   }
 }

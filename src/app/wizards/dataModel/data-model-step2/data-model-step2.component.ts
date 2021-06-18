@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +20,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataModelDefaultDataTypesResponse, DataTypeProvider } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { WizardStep } from '@mdm/wizards/wizards.model';
+import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
 
 @Component({
   selector: 'mdm-data-model-step2',
@@ -29,7 +32,8 @@ export class DataModelStep2Component implements OnInit {
   loadingData: any;
   defaultDataTypeProviders: DataTypeProvider[];
   dataTypes: any;
-  step: any;
+  step: WizardStep<DataModelMainComponent>;
+  selectedDataTypeProvider?: DataTypeProvider;
 
   constructor(
     private resources: MdmResourcesService,
@@ -37,7 +41,6 @@ export class DataModelStep2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.resources.dataModel.defaultDataTypes()
       .subscribe(
         (result: DataModelDefaultDataTypesResponse) => this.defaultDataTypeProviders = result.body,
@@ -51,9 +54,9 @@ export class DataModelStep2Component implements OnInit {
       return;
     }
     this.loadingData = true;
-    this.step.scope.model.selectedDataTypeProvider = dataTypeProvider[0];
+    this.selectedDataTypeProvider = dataTypeProvider[0];
     this.dataTypes = {
-      items: this.step.scope.model.selectedDataTypeProvider.dataTypes
+      items: this.selectedDataTypeProvider.dataTypes
     };
     this.loadingData = false;
   }

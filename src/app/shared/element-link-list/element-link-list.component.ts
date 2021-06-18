@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -65,7 +67,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
   records: any[] = [];
 
-  access: any;
+  access: Access;
 
   constructor(
     public elementTypes: ElementTypesService,

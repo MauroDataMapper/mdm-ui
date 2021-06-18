@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,50 +17,70 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-        <div class="panel-body">
-            <div class="full-width" style="clear: both;" *ngIf="mcTerm">
-                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px; bottom: 6px;">
-                  <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
-                </button>
-    
-                <!--First level Menu-->
-                <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-                   <button mat-menu-item type="button" *ngIf="showEdit"(click)="showForm()">
-                      <i class="fas fa-pencil-alt"></i> Edit Title
-                   </button>
-                   <mat-divider></mat-divider>
-                   <button mat-menu-item *ngIf="showDelete" color="warn" type="button" (click)="askForPermanentDelete()" class="warning">
-                      <i class="far fa-trash-alt warning"></i> Delete
-                   </button>
-                </mat-menu>
-               <!-- End of first level menu -->
-           
-             </div>
+  <form name="form" disable-submit-on-enter>
+    <div class="panel-body">
+      <div class="full-width" style="clear: both" *ngIf="mcTerm">
+        <button
+          type="button"
+          mat-icon-button
+          [matMenuTriggerFor]="userActions"
+          style="
+            position: relative;
+            float: right;
+            margin-right: 4px;
+            bottom: 6px;
+          "
+        >
+          <i class="fas fa-ellipsis-v"></i>
+          <span style="display: none">Menu</span>
+        </button>
 
-             <div *ngIf="mcTerm">
-                <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                   <h4 class="inline-block marginless">
-                     {{ parentLabel }}:
-                      <mdm-inline-text-edit  [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="this.mcTerm.definition" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"> </mdm-inline-text-edit>
-                      <mdm-editable-form-buttons
-                      *ngIf="editableForm"
-                      [hidden]="!editableForm.visible"
-                      [onCancelEdit]="onCancelEdit"
-                      [editable]="editableForm"
-                      [textLocation]="'left'"
-                      [hideDelete]="true"
-                      [hideCancel]="false"
-                    ></mdm-editable-form-buttons>
-                     </h4>
-                   <td>
-                      <mdm-model-path [path]="mcTerm.breadcrumbs"></mdm-model-path>
-                    </td>
-                </div>
-                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                   <span class="help-block">{{errorMessage}}</span>
-                </div>
-             </div>
-        </div>       
-    </form>
+        <!--First level Menu-->
+        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="showForm()"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit Title
+          </button>
+          <mat-divider></mat-divider>
+          <button
+            mat-menu-item
+            *ngIf="access.showPermanentDelete"
+            color="warn"
+            type="button"
+            (click)="askForPermanentDelete()"
+            class="warning"
+          >
+            <i class="far fa-trash-alt warning"></i> Delete
+          </button>
+        </mat-menu>
+        <!-- End of first level menu -->
+      </div>
+
+      <div *ngIf="mcTerm">
+        <h4 class="inline-block marginless">
+          {{ parentLabel }}:
+          <mdm-inline-text-edit
+            [showButtons]="true"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+            [readOnly]="false"
+            [isRequired]="true"
+            [inEditMode]="editMode"
+            [(ngModel)]="this.mcTerm.definition"
+            [styleCss]="'dataModelDetailsLabel'"
+            name="moduleName"
+            size="20"
+          >
+          </mdm-inline-text-edit>
+        </h4>
+        <td>
+          <mdm-model-path [path]="mcTerm.breadcrumbs"></mdm-model-path>
+        </td>
+      </div>
+    </div>
+  </form>
 </div>

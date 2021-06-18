@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,6 +39,14 @@ export class ElementTypesService {
       title: 'Folder',
       markdown: 'fd',
       baseTitle: 'Folder',
+      isBase: true
+    },
+    {
+      id: 'VersionedFolder',
+      link: 'versionedFolder',
+      title: 'VersionedFolder',
+      markdown: 'vfd',
+      baseTitle: 'VersionedFolder',
       isBase: true
     },
     {
@@ -186,7 +195,7 @@ export class ElementTypesService {
     },
   ];
 
-  private baseTypes: any = {
+  private baseTypes: { [key: string]: Type } = {
     DataModel: {
       id: 'DataModel',
       link: 'dataModel',
@@ -260,6 +269,15 @@ export class ElementTypesService {
       title: 'Folder',
       resourceName: 'folder',
       markdown: 'fd',
+      classifiable: true
+    },
+
+    VersionedFolder: {
+      id: 'VersionedFolder',
+      link: 'versionedFolder',
+      title: 'VersionedFolder',
+      resourceName: 'versionedFolder',
+      markdown: 'vfd',
       classifiable: true
     },
 
@@ -337,7 +355,7 @@ export class ElementTypesService {
     return array;
   }
 
-  getBaseTypes = () => {
+  getBaseTypes() {
     return this.baseTypes;
   };
 

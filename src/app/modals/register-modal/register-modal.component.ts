@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +38,7 @@ export class RegisterModalComponent implements OnInit {
   message: any;
 
   constructor(
-    public broadcastService: BroadcastService,
+    public broadcast: BroadcastService,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<RegisterModalComponent>,
     private resources: MdmResourcesService,
@@ -97,7 +98,7 @@ export class RegisterModalComponent implements OnInit {
 
   login() {
     this.dialogRef.close();
-    this.broadcastService.broadcast('openLoginModalDialog');
+    this.broadcast.dispatch('openLoginModalDialog');
   }
 
   close() {

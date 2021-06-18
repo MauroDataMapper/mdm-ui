@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,10 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="panel panel-default mdm--shadow-block">
   <form
-    editable-form
-    name="editableForm"
-    onaftersave="onAfterSave()"
-    (ngSubmit)="formBeforeSave()"
+    name="form"
+    (ngSubmit)="save()"
     onkeypress="return event.keyCode != 13;"
   >
     <div class="panel-body">
@@ -37,13 +36,13 @@ SPDX-License-Identifier: Apache-2.0
         </button>
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-          <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+          <button mat-menu-item type="button" *ngIf="access.showFinalise" class="has-text-green" (click)="finalise()">
                       <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
-                   </button> -->
+                   </button>
           <button
             mat-menu-item
             type="button"
-            *ngIf="showEdit || canEditDescription"
+            *ngIf="access.showEdit || access.canEditDescription"
             (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
@@ -51,29 +50,43 @@ SPDX-License-Identifier: Apache-2.0
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
                    </button> -->
-          <!-- <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
+          <button mat-menu-item type="button" *ngIf="access.showNewVersion" (click)="newVersion()">
                       <i class="fas fa-copy"></i> Create a New Version
-                   </button> -->
+                   </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
                       <i class="fas fa-code-branch"></i> Merge
                    </button>
      -->
-          <!-- <mat-divider></mat-divider>
-                   <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
-                      <i class="far fa-trash-alt warning"></i> Delete
-                   </button> -->
+          <mat-divider></mat-divider>
+          <button
+            mat-menu-item
+            type="button"
+            [matMenuTriggerFor]="userActionsDelete"
+            *ngIf="access.showDelete"
+            class="warning"
+          >
+            <i class="far fa-trash-alt warning"></i> Delete
+          </button>
         </mat-menu>
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <!-- <mat-menu #userActionsDelete="matMenu">
-                   <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
-                      Mark as deleted
-                   </button>
-                   <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                      Delete <span class="warning">permanently</span>
-                   </button>
-                </mat-menu> -->
+        <mat-menu #userActionsDelete="matMenu">
+          <button
+            mat-menu-item
+            (click)="askForSoftDelete()"
+            *ngIf="access.showSoftDelete && !mcTerminology.deleted"
+          >
+            Mark as deleted
+          </button>
+          <button
+            mat-menu-item
+            (click)="askForPermanentDelete()"
+            *ngIf="access.showPermanentDelete"
+          >
+            Delete <span class="warning">permanently</span>
+          </button>
+        </mat-menu>
 
         <!-- <mat-menu #compareMenu="matMenu">
                    <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
@@ -100,9 +113,9 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of second level sub menu -->
 
         <div
-          *ngIf="showPermission"
+          *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -119,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <div
           style="position: relative; float: right; margin-right: 8px"
-          *ngIf="!editableForm.visible && !editableForm.deletePending"
+          *ngIf="!editMode && !deleteInProgress"
         >
           <button
             mat-icon-button
@@ -151,7 +164,7 @@ SPDX-License-Identifier: Apache-2.0
             margin-right: 8px;
             margin-left: 8px;
           "
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -172,12 +185,6 @@ SPDX-License-Identifier: Apache-2.0
         <div [ngClass]="{ 'has-error': errorMessage != '' }">
           <div class="detail-icons--cta">
             <i
-              class="fas fa-info-circle helpIcon"
-              matTooltip="Help"
-              (click)="loadHelp()"
-            ></i>
-
-            <i
               style="position: relative; float: right; margin-left: 8px"
               [ngClass]="{
                 'fas fa-star favouritesIcon': true,
@@ -196,33 +203,38 @@ SPDX-License-Identifier: Apache-2.0
               <i matTooltip="Terminology" class="fas fa-book"></i>
             </span>
             <mdm-inline-text-edit
-              [readOnly]="!showEditDescription"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="editableForm.label"
+              [readOnly]="false"
+              [inEditMode]="editMode"
+              [showButtons]="true"
+              (saveClicked)="save()"
+              (cancelClicked)="cancel()"
+              [isRequired]="true"
+              [(ngModel)]="mcTerminology.label"
               [name]="'moduleName'"
               size="20"
               [styleCss]="'dataModelDetailsLabel'"
             >
             </mdm-inline-text-edit>
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
             <sup
-              *ngIf="mcTerminology?.readableByEveryone"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-globe-europe globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Publicly Available"
-              ></i
-            ></sup>
+            *ngIf="mcTerminology?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+          <sup
+            *ngIf="mcTerminology?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
           </h4>
           <mdm-element-status [result]="mcTerminology"></mdm-element-status>
           <span class="inline-block">
@@ -234,17 +246,6 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div class="detail-icons">
-        <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-
         <div class="text-muted">
           <small>
             <i class="fas fa-cube" matTooltip="Item type"></i>
@@ -256,7 +257,26 @@ SPDX-License-Identifier: Apache-2.0
             >
           </small>
         </div>
-
+        <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
+          <small>
+            <i
+              class="fas fa-globe-europe globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="mcTerminology?.readableByAuthenticatedUsers">
+          <small>
+            <i
+              class="fas fa-users globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Authenticated users only</span>
+          </small>
+        </div>
         <div class="text-muted" *ngIf="mcTerminology?.authority">
           <small>
             <i class="far fa-building" matTooltip="Authority"></i>
@@ -295,10 +315,10 @@ SPDX-License-Identifier: Apache-2.0
                 (ngModelChange)="onModelChange()"
               >
                 <option
-                  [value]="item.branchName"
+                  [value]="item.branch"
                   *ngFor="let item of branchGraph"
                 >
-                  {{ item.branchName }}
+                {{ item.branch ? item.branch : 'main' }}
                 </option>
               </select>
             </span>
@@ -308,9 +328,8 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </form>
 </div>
-<div>
-  <div id="exportFileDownload" #aLink></div>
-</div>
+<mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
+
 <div style="text-align: left" *ngIf="exportError">
   <div style="padding-top: 25px">
     <div class="alert alert-danger">
@@ -325,22 +344,4 @@ SPDX-License-Identifier: Apache-2.0
     color="accent"
     mode="indeterminate"
   ></mat-progress-bar>
-</div>
-<div
-  class="userAccess"
-  *ngIf="securitySection"
-  style="margin: 10px 0px 50px 0px"
->
-  <mdm-share-with
-    [mcElement]="mcTerminology"
-    [mcDomainType]="'Terminology'"
-  ></mdm-share-with>
-  <div>
-    <div style="margin-top: 10px">
-      <mdm-group-access-new
-        [parent]="mcTerminology"
-        [parentType]="'Terminology'"
-      ></mdm-group-access-new>
-    </div>
-  </div>
 </div>

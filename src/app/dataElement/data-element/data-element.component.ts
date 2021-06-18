@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +20,8 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import {
-  EditableDataElement
-} from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -37,7 +35,10 @@ import {
 } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
+import { TabCollection } from '@mdm/model/ui.model';
+
 
 @Component({
   selector: 'mdm-data-element',
@@ -47,6 +48,7 @@ import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maur
 export class DataElementComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataElementOutput: DataElementDetail;
   showSecuritySection: boolean;
@@ -69,8 +71,8 @@ export class DataElementComponent
   newMinText: any;
   newMaxText: any;
   pagination: McSelectPagination;
-  editableForm: EditableDataElement;
   descriptionView = 'default';
+  annotationsView = 'default';
   showEditDescription = false;
   showNewInlineDataType = false;
   dataTypeErrors = '';
@@ -78,6 +80,7 @@ export class DataElementComponent
   rulesItemCount = 0;
   isLoadingRules = true;
   access:any;
+  tabs = new TabCollection(['description', 'links', 'summaryMetadata', 'rules', 'annotations']);
   newlyAddedDataType = {
     label: '',
     description: '',
@@ -93,11 +96,11 @@ export class DataElementComponent
   constructor(
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
+    private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
-    private stateService: StateService,
     private stateHandler: StateHandlerService,
     dialog: MatDialog,
-    private validator: ValidatorService,
+    validator: ValidatorService,
     messageHandler: MessageHandlerService,
     private gridService: GridService,
     private title: Title,
@@ -105,55 +108,48 @@ export class DataElementComponent
     editingService: EditingService
   ) {
     super(resourcesService, dialog, editingService, messageHandler);
-    // tslint:disable-next-line: deprecation
     if (
-      this.isGuid(this.stateService.params.id) &&
-      (!this.stateService.params.id ||
-        !this.stateService.params.dataModelId ||
-        !this.stateService.params.dataClassId)
+      this.isGuid(this.uiRouterGlobals.params.id) &&
+      (!this.uiRouterGlobals.params.id ||
+        !this.uiRouterGlobals.params.dataModelId ||
+        !this.uiRouterGlobals.params.dataClassId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
     if (
-      this.stateService.params.id &&
-      this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() !== ''
+      this.uiRouterGlobals.params.id &&
+      this.uiRouterGlobals.params.dataModelId &&
+      this.uiRouterGlobals.params.dataModelId.trim() !== ''
     ) {
-      // tslint:disable-next-line: deprecation
-      this.dataModel = { id: this.stateService.params.dataModelId };
+      this.dataModel = { id: this.uiRouterGlobals.params.dataModelId };
     }
 
-    // tslint:disable-next-line: deprecation
     if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id &&
+      this.uiRouterGlobals.params.dataClassId &&
+      this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
-      // tslint:disable-next-line: deprecation
-      this.dataClass = { id: this.stateService.params.dataClassId };
+      this.dataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Data Element');
-    // tslint:disable-next-line: deprecation
+
     this.dataElementDetails(
-      this.stateService.params.dataModelId,
+      this.uiRouterGlobals.params.dataModelId,
       this.dataClass.id,
-      this.stateService.params.id
+      this.uiRouterGlobals.params.id
     );
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -185,168 +181,72 @@ export class DataElementComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'links':
         return { index: 2, name: 'links' };
       case 'summaryMetadata':
         return { index: 3, name: 'summaryMetadata' };
-      case 'attachments':
-        return { index: 4, name: 'attachments' };
       case 'rules':
-        return { index: 5, name: 'rules' };
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
   }
 
-  validate() {
-    let isValid = true;
 
-    if (!this.showNewInlineDataType) {
-      return true;
-    }
-    if (
-      !this.newlyAddedDataType.label ||
-      this.newlyAddedDataType.label.trim().length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for EnumerationType, at least one value is added
-    if (
-      this.newlyAddedDataType.domainType === 'EnumerationType' &&
-      this.newlyAddedDataType.enumerationValues.length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.newlyAddedDataType.domainType === 'ReferenceType' &&
-      !this.newlyAddedDataType.referencedDataClass
-    ) {
-      isValid = false;
-    }
 
-    // Check if for TerminologyType, the terminology is selected
-    if (
-      this.newlyAddedDataType.domainType === 'TerminologyType' &&
-      !this.newlyAddedDataType.referencedTerminology
-    ) {
-      isValid = false;
-    }
+  save(saveItems: Array<DefaultProfileItem>) {
 
-    this.isValid = isValid;
-    if (!this.isValid) {
-      this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
-      return false;
-    } else {
-      return true;
-    }
-  }
+    const resource: DataElement = {
+      id: this.dataElementOutput.id,
+      label: this.dataElementOutput.label,
+      domainType: this.dataElementOutput.domainType
+    };
 
-  onDataTypeSelect(dataType) {
-    this.dataElementOutput.dataType = dataType;
-  }
-
-  formBeforeSave() {
-    if (!this.validate()) {
-      return;
-    }
-
-    this.editingService.stop();
-    this.editMode = false;
-    const classifiers = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
-    if (this.validateMultiplicity(this.min, this.max)) {
-      if (
-        this.min != null &&
-        this.min !== '' &&
-        this.max != null &&
-        this.max !== ''
-      ) {
-        if (this.newMinText === '*') {
-          this.newMinText = -1;
+    saveItems.forEach((item: DefaultProfileItem) => {
+      if (item.controlType === ProfileControlTypes.multiplicity) {
+        if ((item.minMultiplicity as string) === '*') {
+          item.minMultiplicity = -1;
         }
 
-        if (this.max === '*') {
-          this.max = -1;
+        if ((item.maxMultiplicity as string) === '*') {
+          item.maxMultiplicity = -1;
         }
+
+        resource.minMultiplicity = item.minMultiplicity as number;
+        resource.maxMultiplicity = item.maxMultiplicity;
+      } else if (item.controlType === ProfileControlTypes.dataType) {
+        resource.dataType = item.value as DataTypeReference;
       }
-
-      let dataType;
-      if (!this.showNewInlineDataType) {
-        dataType = { id: this.dataElementOutput.dataType['id'] };
-      } else {
-        dataType = this.newlyAddedDataType;
+      else {
+        resource[item.displayName.toLocaleLowerCase()] = item.value;
       }
+    });
 
-      const resource: DataElement = {
-        id: this.dataElementOutput.id,
-        label: this.editableForm.label,
-        domainType: this.dataElementOutput.domainType,
-        description: this.editableForm.description || ''
-      };
 
-      if (!this.showEditDescription) {
-        resource.aliases = aliases;
-        resource.dataType = dataType;
-        resource.classifiers = classifiers;
-        resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);
-      }
-
-      this.resourcesService.dataElement
-        .update(
-          this.dataModel.id,
-          this.dataClass.id,
-          this.dataElementOutput.id,
-          resource
-        )
-        .subscribe(
-          (result: DataElementDetailResponse) => {
-            this.editingService.stop();
-            this.dataElementOutput = result.body;
-            this.setValues();
-            this.messageHandler.showSuccess(
-              'Data Element updated successfully.'
-            );
-            this.editableForm.visible = false;
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the Data Element.',
-              error
-            );
-          }
-        );
-    }
-  }
-
-  validateMultiplicity(minVal, maxVal) {
-    let min = '';
-    if (minVal != null && minVal !== undefined) {
-      min = `${minVal}`;
-    }
-    let max = '';
-    if (maxVal != null && maxVal !== undefined) {
-      max = `${maxVal}`;
-    }
-
-    const errorMessage = this.validator.validateMultiplicities(min, max);
-    if (errorMessage) {
-      this.error = errorMessage;
-      return false;
-    }
-    return true;
+    this.resourcesService.dataElement
+      .update(
+        this.dataModel.id,
+        this.dataClass.id,
+        this.dataElementOutput.id,
+        resource
+      )
+      .subscribe(
+        (result: DataElementDetailResponse) => {
+          this.dataElementOutput = result.body;
+          this.catalogueItem = result.body;
+          this.messageHandler.showSuccess(
+            'Data Element updated successfully.'
+          );
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Element.',
+            error
+          );
+        }
+      );
   }
 
   dataElementDetails(dataModelId: any, dataClassId, id) {
@@ -354,55 +254,6 @@ export class DataElementComponent
       .get(dataModelId, dataClassId, id)
       .subscribe((result: DataElementDetailResponse) => {
         this.dataElementOutput = result.body;
-
-        this.editableForm = new EditableDataElement();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-
-        this.setValues();
-
-        this.editableForm.show = () => {
-          this.editingService.start();
-          this.editableForm.visible = true;
-          if (this.min === '*') {
-            this.min = '-1';
-          }
-
-          if (this.max === '*') {
-            this.max = '-1';
-          }
-        };
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.onCancelEdit();
-
-          this.editableForm.label = this.dataElementOutput.label;
-          this.editableForm.description = this.dataElementOutput.description;
-          if (this.dataElementOutput.classifiers) {
-            this.dataElementOutput.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          this.editableForm.aliases = [];
-          this.aliases = [];
-          if (this.dataElementOutput.aliases) {
-            this.dataElementOutput.aliases.forEach((item) => {
-              this.aliases.push(item);
-              this.editableForm.aliases.push(item);
-            });
-          }
-
-          if (this.min === '-1') {
-            this.min = '*';
-          }
-
-          if (this.max === '-1') {
-            this.max = '*';
-          }
-        };
 
         this.catalogueItem = result.body;
         this.dataModel.id = result.body.model;
@@ -418,7 +269,7 @@ export class DataElementComponent
         if (this.dataElementOutput) {
           // tslint:disable-next-line: deprecation
           this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
+            this.uiRouterGlobals.params.tabView
           ).index;
           this.tabSelected(this.activeTab);
         }
@@ -432,40 +283,6 @@ export class DataElementComponent
     this.rulesItemCount = $event;
   }
 
-  setValues() {
-    this.editableForm.label = this.dataElementOutput.label;
-    this.editableForm.description = this.dataElementOutput.description;
-    if (this.dataElementOutput.classifiers) {
-      this.dataElementOutput.classifiers.forEach((item) => {
-        this.editableForm.classifiers.push(item);
-      });
-    }
-    this.aliases = [];
-    if (this.dataElementOutput.aliases) {
-      this.dataElementOutput.aliases.forEach((item) => {
-        this.aliases.push(item);
-      });
-    }
-
-    if (
-      this.dataElementOutput.minMultiplicity &&
-      this.dataElementOutput.minMultiplicity === -1
-    ) {
-      this.min = '*';
-    } else {
-      this.min = this.dataElementOutput.minMultiplicity;
-    }
-
-    if (
-      this.dataElementOutput.maxMultiplicity &&
-      this.dataElementOutput.maxMultiplicity === -1
-    ) {
-      this.max = '*';
-    } else {
-      this.max = this.dataElementOutput.maxMultiplicity;
-    }
-  }
-
   toggleShowNewInlineDataType() {
     this.showNewInlineDataType = !this.showNewInlineDataType;
     this.dataTypeErrors = '';
@@ -475,46 +292,14 @@ export class DataElementComponent
     this.messageService.toggleSearch();
   }
 
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'comments' };
-      case 2:
-        return { index: 2, name: 'links' };
-      case 3:
-        return { index: 3, name: 'summaryMetadata' };
-      case 4:
-        return { index: 4, name: 'attachments' };
-      case 5:
-        return { index: 5, name: 'rules' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'dataElement',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-    this.activeTab = tab.index;
   }
-
-  onCancelEdit() {
-    this.error = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
-  }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
 
   watchDataElementObject() {
     this.access = this.securityHandler.elementAccess(
@@ -525,9 +310,4 @@ export class DataElementComponent
       this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-   };
 }

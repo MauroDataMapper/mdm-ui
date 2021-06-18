@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +33,6 @@ import { ExportModelsComponent } from '@mdm/export-models/export-models.componen
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
@@ -64,7 +64,6 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
-import { NewVersionDataModelComponent } from '@mdm/dataModel/new-version-data-model/new-version-data-model.component';
 import { DataClassComponent } from '@mdm/dataClass/data-class/data-class.component';
 import { DataClassDetailsComponent } from '@mdm/dataClass/data-class-details/data-class-details.component';
 import { ShowIfRolesWritableDirective } from '@mdm/directives/show-if-roles-writable.directive';
@@ -151,7 +150,7 @@ import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
 import { SummaryMetadataPopupComponent } from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
-import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
@@ -182,8 +181,12 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
 import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
-import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
+import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
+import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
+import { AlertComponent } from '@mdm/shared/alert/alert.component';
+import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -198,7 +201,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     DiagramToolbarComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
     ModelPathComponent,
@@ -233,7 +235,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ElementLinkListComponent,
     AttachmentListComponent,
     FileSizePipe,
-    NewVersionDataModelComponent,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -311,7 +312,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     CodeSetComponent,
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
-    NewVersionCodeSetComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
     ModelMergingComponent,
@@ -343,7 +343,10 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
     ProfileDetailsComponent,
-    NewVersionReferenceDataModelComponent
+    VersionedFolderComponent,
+    VersionedFolderDetailComponent,
+    AlertComponent,
+    DefaultProfileComponent
   ],
   imports: [
     AdminModule,
@@ -368,7 +371,8 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    JoditAngularModule
+    JoditAngularModule,
+    PipesModule
   ],
   exports: [
     MarkedPipe,
@@ -379,7 +383,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ExportModelsComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
     ModelPathComponent,
@@ -413,7 +416,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ElementLinkListComponent,
     AttachmentListComponent,
     FileSizePipe,
-    NewVersionDataModelComponent,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -491,7 +493,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     CodeSetComponent,
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
-    NewVersionCodeSetComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
     ModelMergingComponent,
@@ -518,7 +519,8 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
-    NewVersionReferenceDataModelComponent
+    DefaultProfileComponent,
+    AlertComponent
   ]
 })
 export class CatalogueModule { }

@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -116,7 +117,7 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        const access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.elementAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -133,7 +134,7 @@ export class LinkSuggestionComponent implements OnInit {
       const data = result.body;
       this.model.source = data;
       this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-      const access = this.securityHandler.dataModelAccess(this.model.source);
+      const access = this.securityHandler.elementAccess(this.model.source);
       this.model.sourceEditable = access.showEdit;
       this.model.loadingSource = false;
     });

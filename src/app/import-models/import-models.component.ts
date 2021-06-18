@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,6 +25,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { BroadcastService } from '../services/broadcast.service';
 import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
   selector: 'mdm-import',
@@ -68,8 +70,9 @@ export class ImportModelsComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
+    private modelTree: ModelTreeService
   ) {}
 
   ngOnInit() {
@@ -127,12 +130,11 @@ export class ImportModelsComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
+    this.importerHelp = this.helpDialogueHandler.getImporterHelpTopic(
       selectedItem.name
     );
 
-    const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe((res) => {
+    this.resources.importer.get(selectedItem.namespace,selectedItem.name,selectedItem.version).subscribe((res) => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
@@ -151,6 +153,11 @@ export class ImportModelsComponent implements OnInit {
           if (option.type === 'Boolean' || option.type === 'boolean') {
             option.optional = true;
             option.value = false;
+          }
+
+          // If the model tree currently has a folder selected, default to that one initially
+          if (option.type === 'Folder' && this.modelTree.currentNode && this.modelTree.currentNode.domainType === 'Folder') {
+            option.value = [this.modelTree.currentNode];
           }
         });
       });
@@ -229,7 +236,7 @@ export class ImportModelsComponent implements OnInit {
         this.importHasError = false;
         this.importErrors = [];
         this.messageHandler.showSuccess('Models imported successfully!');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcast.reloadCatalogueTree();
         if (result && result.body.count === 1) {
           this.stateHandler.Go(
             ModelDomainRequestType[this.importType],

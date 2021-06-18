@@ -1,5 +1,6 @@
 /*
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,6 +33,7 @@ const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataType',
   'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
   'appContainer.mainApp.twoSidePanel.catalogue.folder',
+  'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
   'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
   'appContainer.adminArea.user',
   'appContainer.adminArea.group',

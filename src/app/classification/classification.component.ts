@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +24,6 @@ import {
   ViewChild,
   AfterViewInit
 } from '@angular/core';
-import { Editable } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -36,7 +36,9 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
+import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-classification',
@@ -46,6 +48,7 @@ import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from 
 export class ClassificationComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   @Input() afterSave: any;
@@ -59,16 +62,17 @@ export class ClassificationComponent
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  activeTab: any;
+  activeTab: number;
   catalogueItemsCount: any;
   terminologiesCount: any;
   termsCount: any;
   codeSetsCount: any;
   loading = false;
   catalogueItems: any;
+  tabs = new TabCollection(['description', 'classifiedElements', 'annotations', 'history']);
 
+  annotationsView = 'default';
   descriptionView = 'default';
-  editableForm: Editable;
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -94,22 +98,6 @@ export class ClassificationComponent
       this.editMode = true;
     }
 
-    this.editableForm = new Editable();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editingService.start();
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.label = this.result.label;
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.editableForm.description = this.result.description;
-    };
 
     this.title.setTitle('Classifier');
     this.classifierDetails(this.uiRouterGlobals.params.id);
@@ -133,31 +121,24 @@ export class ClassificationComponent
     this.afterSave = (result: { body: { id: any } }) =>
       this.classifierDetails(result.body.id);
 
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  showForm() {
-    this.editingService.start();
-    this.editableForm.show();
-  }
-
-  onCancelEdit() {
-    this.editMode = false; // Use Input editor whe adding a new folder.
-  }
 
   classifierDetails(id: any) {
     this.resourcesService.classifier
       .get(id)
       .subscribe((response: ClassifierDetailResponse) => {
         this.result = response.body;
+        this.result.domainType = CatalogueItemDomainType.Classification;
         this.catalogueItem = this.result;
 
         this.parentId = this.result.id;
-        this.editableForm.description = this.result.description;
 
         // Will Be added later
         // this.ClassifierUsedProfiles(this.result.id);
@@ -171,6 +152,7 @@ export class ClassificationComponent
         }
       });
   }
+
   classifierPermissions(id: any) {
     this.resourcesService.security
       .permissions(SecurableDomainType.Classifiers, id)
@@ -195,30 +177,28 @@ export class ClassificationComponent
     }
   }
 
-  tabSelected(itemsName) {
-    this.getTabDetail(itemsName);
-    // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
+    this.stateHandler.Go('classification', { tabView: tab.name }, { notify: false });
   }
 
-  edit = () => {
-     this.editableForm.show();
-  };
-
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.editingService.stop();
+  save(saveItems: Array<DefaultProfileItem>) {
 
     const resource = {
-      id: this.result.id,
-      description: this.editableForm.description
+      id: this.result.id
     };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
+
 
     this.resourcesService.classifier.update(this.result.id, resource).subscribe(
       (result: ClassifierDetailResponse) => {
         this.messageHandler.showSuccess('Classifier updated successfully.');
         this.editingService.stop();
-        this.editableForm.visible = false;
         this.result = result.body;
+        this.catalogueItem = result.body;
       },
       (error) => {
         this.messageHandler.showError(
@@ -227,44 +207,5 @@ export class ClassificationComponent
         );
       }
     );
-  };
-
-  getTabDetail(tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'classifiedElements' };
-      case 2:
-        return { index: 2, name: 'history' };
-      default:
-        return { index: 0, name: 'access' };
-    }
-  }
-
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'classifiedElements':
-        return { index: 1, name: 'classifiedElements' };
-      case 'history':
-        return { index: 2, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'classifiedElements' };
-      case 2:
-        return { index: 2, name: 'history' };
-      default:
-        return { index: 0, name: 'description' };
-    }
   }
 }

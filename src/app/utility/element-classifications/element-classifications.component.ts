@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Classifier, ClassifierIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
+import {
+  Classifier,
+  ClassifierIndexResponse,
+  DataModelDetail
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-classifications',
@@ -26,8 +31,6 @@ import { Classifier, ClassifierIndexResponse, DataModelDetail } from '@maurodata
   styleUrls: ['./element-classifications.component.sass']
 })
 export class ElementClassificationsComponent implements OnInit {
-
-  @Input() editableForm: any;
   @Input() readOnly = true;
   @Input() inEditMode: boolean;
   @Input() property: string;
@@ -35,64 +38,48 @@ export class ElementClassificationsComponent implements OnInit {
   @Input() newWindow = false;
 
   @Output() classificationsChanged = new EventEmitter<any[]>();
-  @Input() get classifications() {
-    return this.classificationsVal;
-  }
-
-  set classifications(val) {
-
-    this.classificationsVal = val;
-    this.classificationsChanged.emit(this.classificationsVal);
-  }
-
-  classificationsVal: any[];
+  @Input() classifications: any[];
 
   target: string;
   lastWasShiftKey: any;
-  formData: any = {
-    showMarkDownPreview: Boolean,
-    classifiers: []
-  };
   allClassifications: Classifier[];
   selectedClassification = [];
-  constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService) { }
+  constructor(
+    private elementTypes: ElementTypesService,
+    private resourceService: MdmResourcesService
+  ) {}
 
   ngOnInit() {
     this.getAllClassifications();
-    if (!this.editableForm.visible) {
-      if (this.newWindow) {
-        this.target = '_blank';
-      }
-      if (this.classifications !== undefined) {
-        this.formData.classifiers = this.classifications;
-        this.formData.classifiers.forEach((classification) => {
-          classification.domainType = 'Classifier';
-          classification.link = this.elementTypes.getLinkUrl(classification);
-        });
-      }
-    } else {
-      this.formData.classifiers = this.editableForm.classifiers;
-    }
 
+    if (this.newWindow) {
+      this.target = '_blank';
+    }
+    if (this.classifications !== undefined) {
+      this.classifications.forEach((classification) => {
+        classification.domainType = 'Classifier';
+        classification.link = this.elementTypes.getLinkUrl(classification);
+      });
+    }
   }
   getAllClassifications() {
-    this.resourceService.classifier.list().subscribe((result: ClassifierIndexResponse) => {
-      this.allClassifications = result.body.items;
-      const selectedList: any[] = [];
-      if (this.classifications !== undefined) {
-        this.classifications.forEach((classification) => {
-          const selected = this.allClassifications.find(c => c.id === classification.id);
-          selectedList.push(selected);
-        });
-        this.selectedClassification = selectedList;
-        this.formData.classifiers = selectedList;
-        this.editableForm.classifiers = selectedList;
-      }
-    });
+    this.resourceService.classifier
+      .list()
+      .subscribe((result: ClassifierIndexResponse) => {
+        this.allClassifications = result.body.items;
+        const selectedList: any[] = [];
+        if (this.classifications !== undefined) {
+          this.classifications.forEach((classification) => {
+            const selected = this.allClassifications.find(
+              (c) => c.id === classification.id
+            );
+            selectedList.push(selected);
+          });
+          this.selectedClassification = selectedList;
+        }
+      });
   }
   onModelChanged() {
-    this.formData.classifiers = this.selectedClassification;
-    this.editableForm.classifiers = this.selectedClassification;
-    this.classifications = this.selectedClassification;
+    this.classificationsChanged.emit(this.selectedClassification);
   }
 }

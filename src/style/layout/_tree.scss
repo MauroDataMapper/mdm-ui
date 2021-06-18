@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +28,7 @@ mat-tree-node.mat-tree-node {
     display: flex;
     flex-direction: row;
     align-items: center;
+    min-height: 28px;
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -60,10 +62,15 @@ mat-tree-node.mat-tree-node {
     cursor: pointer;
     line-height: 1.5;
   }
+
+  div.mat-tree-node-inactive {
+    padding: 1px;
+  }
+
   div.mat-tree-node-active
   {
     background: #e5eeff;
-    padding: 2px 8px 2px 6px;
+    padding-right: 6px;
     border-radius: 5px;
     border: 1px solid #b1ccff;
     color: #002147;
@@ -117,7 +124,7 @@ mat-tree-node.mat-tree-node {
   color: #f19e3f;
 }
 i.favouritesIcon.addedToFavourite {
-  color: #ffa743;
+  color: $defaultFavoritesColor;
 }
 i.subscribedIcon {
   color: #028821;
@@ -256,15 +263,24 @@ ul.favourites li:focus {
 .favourites.nodeLabel.selected {
   font-weight: bold;
 }
+
+.is-not-favourite {
+  color: #aaa;
+}
+
+.is-favourite {
+  color: $defaultFavoritesColor;
+}
+
 /*****************************************************************/
 .detail-icons--cta {
   .favouritesIcon {
-    color: #aaa;
+    @extend .is-not-favourite;
     cursor: pointer;
   }
 
   .favouritesIcon.addedToFavourite {
-    color: #ff9933;
+    @extend .is-favourite;
   }
 }
 .detail-icons {

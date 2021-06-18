@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +27,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
 import { FooterComponent } from '@mdm/shared/footer/footer.component';
-import { ComparisonTreeComponent } from '@mdm/shared/comparison-tree/comparison-tree.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
 import { EnumerationCompareComponent } from '@mdm/shared/enumeration-compare/enumeration-compare.component';
 import { MaterialModule } from '../material/material.module';
@@ -38,9 +38,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+import { GroupAccessNewComponent } from '@mdm/access/group-access-new/group-access-new.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { DownloadLinkComponent } from '@mdm/utility/download-link/download-link.component';
+import { NewVersionComponent } from '@mdm/shared/new-version/new-version.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,6 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
-    ComparisonTreeComponent,
     MetadataCompareComponent,
     EnumerationCompareComponent,
     ErrorComponent,
@@ -58,7 +59,9 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
-    ElementLinkComponent
+    ElementLinkComponent,
+    DownloadLinkComponent,
+    NewVersionComponent
   ],
   imports: [
     CommonModule,
@@ -83,7 +86,6 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     MatPasswordStrengthModule,
     InlineTextEditComponent,
     FooterComponent,
-    ComparisonTreeComponent,
     MetadataCompareComponent,
     EnumerationCompareComponent,
     NgxJsonViewerModule,
@@ -97,7 +99,9 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     GroupAccessNewComponent,
     TextDiffComponent,
     ElementLinkComponent,
-    TextDiffComponent
+    TextDiffComponent,
+    DownloadLinkComponent,
+    NewVersionComponent
   ]
 })
 export class SharedModule {}

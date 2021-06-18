@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
-import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageService } from '@mdm/services/message.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
@@ -32,7 +30,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 @Component({
   selector: 'mdm-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.sass']
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
@@ -42,6 +40,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   imageThumb: any = '';
   imageSource: any = '';
   isImageLoaded = false;
+  isChangingProfileImage = false;
   profileImagePath: string;
   imageChangedEvent: any = '';
   trustedUrl: any;
@@ -51,15 +50,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private helpDialogueService: HelpDialogueHandlerService,
     private sanitizer: DomSanitizer,
-    private broadcastService: BroadcastService
+    private broadcast: BroadcastService
   ) {
     this.currentUser = this.securityHandler.getCurrentUser();
   }
@@ -101,7 +97,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
       this.isImageLoaded = null;
-      this.broadcastService.broadcast('profileImgUndated');
+      this.isChangingProfileImage = false;
+      this.broadcast.dispatch('profileImageUpdated');
       this.userDetails();
     }, error => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
@@ -120,6 +117,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     const file: File = inputValue.files[0];
     const myReader: FileReader = new FileReader();
     myReader.onloadend = () => {
+      this.isChangingProfileImage = true;
       this.imageSource = myReader.result;
     };
     myReader.readAsDataURL(file);
@@ -132,7 +130,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.imageVersion++;
       this.isImageLoaded = null;
       this.userDetails();
-      this.broadcastService.broadcast('profileImgUndated');
+      this.broadcast.dispatch('profileImageUpdated');
     },
       error => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);
@@ -143,6 +141,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   // Cancel the add image process
   public clear() {
     this.isImageLoaded = false;
+    this.isChangingProfileImage = false;
   }
 
   public loadHelp() {

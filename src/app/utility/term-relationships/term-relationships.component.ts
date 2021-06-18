@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input } from '@angular/core';
 import { TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -37,7 +37,6 @@ export class TermRelationshipsComponent implements OnInit {
   relations = {};
   constructor(
     private resources: MdmResourcesService,
-    private helpDialogueService: HelpDialogueHandlerService,
   ) {
   }
 
@@ -63,9 +62,5 @@ export class TermRelationshipsComponent implements OnInit {
           this.loading = false;
         });
     }
-  }
-
-  public loadHelp() {
-    this.helpDialogueService.open('Editing_properties');
   }
 }

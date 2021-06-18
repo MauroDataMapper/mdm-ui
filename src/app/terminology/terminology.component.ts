@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,10 +24,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { Subscription } from 'rxjs';
 import {
@@ -37,9 +37,16 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ModelUpdatePayload,
+  TerminologyDetail,
+  TerminologyDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
+import { Access } from '@mdm/model/access';
+
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 
 @Component({
   selector: 'mdm-terminology',
@@ -53,14 +60,14 @@ export class TerminologyComponent
 
   terminology: TerminologyDetail;
   diagram: any;
-  activeTab: any;
+  activeTab: number;
   loadingData: boolean;
   searchTerm: any;
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
   descriptionView = 'default';
-  editableForm: EditableDataModel;
+  annotationsView = 'default';
   showSearch = false;
   subscription: Subscription;
   rulesItemCount = 0;
@@ -70,15 +77,15 @@ export class TerminologyComponent
   showEdit = false;
   showDelete = false;
   showEditDescription = false;
-  access:any;
+  access: Access;
+  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
 
   constructor(
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private title: Title,
     resources: MdmResourcesService,
-    private broadcastSvc: BroadcastService,
     private messageService: MessageService,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
@@ -88,61 +95,37 @@ export class TerminologyComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    const id = this.stateService.params.id;
+    const id = this.uiRouterGlobals.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetail(this.stateService.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
-
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.setEditableForm();
-      this.editingService.start();
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.setEditableForm();
-    };
 
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resourcesService.terminology.get(id).subscribe((result: TerminologyDetailResponse) => {
-      const data = result.body;
-      this.catalogueItem = data;
+    this.resourcesService.terminology
+      .get(id)
+      .subscribe((result: TerminologyDetailResponse) => {
+        const data = result.body;
+        this.catalogueItem = data;
 
-      this.access = this.securityHandler.elementAccess(data);
-      this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+        this.access = this.securityHandler.elementAccess(data);
+        this.showEdit = this.access.showEdit;
+        this.showDelete =
+          this.access.showPermanentDelete || this.access.showSoftDelete;
 
-      this.UsedProfiles('terminology', id);
-      this.UnUsedProfiles('terminology', id);
+        this.UsedProfiles('terminology', id);
+        this.UnUsedProfiles('terminology', id);
 
-      this.terminology = data;
-      this.terminology.classifiers = this.terminology.classifiers || [];
-
-      this.editableForm.description = this.terminology.description;
-
-      if (this.terminology.aliases) {
-        this.terminology.aliases.forEach((item) => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-      this.messageService.FolderSendMessage(data);
-      this.messageService.dataChanged(data);
-    });
+        this.terminology = data;
+        this.terminology.classifiers = this.terminology.classifiers || [];
+      });
 
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -151,140 +134,50 @@ export class TerminologyComponent
     );
   }
 
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
-  setEditableForm() {
-    this.editableForm.description = this.terminology.description;
-    if (this.terminology.classifiers) {
-      this.terminology.classifiers.forEach((item) => {
-        this.editableForm.classifiers.push(item);
-      });
-    }
-  }
-
-  formBeforeSave = () => {
-    const resource: ModelUpdatePayload = {
-      id: this.terminology.id,
-      domainType: CatalogueItemDomainType.Terminology,
-      description: this.editableForm.description || ''
-    };
-
-    this.editingService.stop();
-
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.terminology.type;
-      resource.classifiers = this.terminology.classifiers;
-      resource.aliases = this.editableForm.aliases;
-    }
-
-    this.resourcesService.terminology.update(resource.id, resource).subscribe(
-      (res: TerminologyDetailResponse) => {
-        const result = res.body;
-
-        this.terminology = result;
-        this.terminology.aliases = Object.assign({}, result.aliases || []);
-        this.terminology.editAliases = Object.assign(
-          {},
-          this.terminology.aliases
-        );
-
-        this.editableForm.visible = false;
-        this.editingService.stop();
-
-        this.messageHandler.showSuccess('Terminology updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Terminology.',
-          error
-        );
-      }
-    );
-  };
-
-  onCancelEdit = () => {
-    if (this.terminology) {
-      this.terminology.editAliases = Object.assign(
-        {},
-        this.terminology.aliases
-      );
-      this.showEditDescription = false;
-    }
-  };
-
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  getTabDetail = (tabName) => {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
-      case 'attachments':
-        return { index: 2, name: 'attachments' };
-      case 'history':
-        return { index: 3, name: 'history' };
-      case 'rules':
-        return { index: 4, name: 'rules' };
-      default:
-        return { index: 0, name: 'properties' };
-    }
-  };
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType
+    };
 
-  getTabDetailIndex = (tabIndex) => {
-    switch (tabIndex) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'comments' };
-      case 2:
-        return { index: 2, name: 'attachments' };
-      case 3:
-        return { index: 3, name: 'history' };
-      case 4:
-        return { index: 4, name: 'rules' };
-      default:
-        return { index: 0, name: 'description' };
-    }
-  };
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
 
-  save = (updatedResource?) => {
-    this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
-  };
+    this.resourcesService.terminology
+      .update(this.catalogueItem.id, resource)
+      .subscribe(
+        (res: TerminologyDetailResponse) => {
+          this.messageHandler.showSuccess('Terminology updated successfully.');
+          this.catalogueItem = res.body;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Terminology.',
+            error
+          );
+        }
+      );
+  }
 
-  tabSelected = (tabIndex) => {
-    const tab = this.getTabDetailIndex(tabIndex);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go(
       'terminology',
       { tabView: tab.name },
       { notify: false }
     );
-  };
-
-  openEditForm = (formName) => {
-    this.showEditForm = true;
-    this.editForm = formName;
-  };
+  }
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
 
-  closeEditForm = () => {
-    this.showEditForm = false;
-    this.editForm = null;
-  };
-
-  fetch = (text, loadAll, offset, limit) => {
+  fetch(text, loadAll, offset, limit) {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {
@@ -298,15 +191,15 @@ export class TerminologyComponent
       limit,
       offset
     });
-  };
+  }
 
-  onTermSelect = (term) => {
+  onTermSelect(term) {
     this.stateHandler.Go(
       'term',
       { terminologyId: term.model, id: term.id },
       null
     );
-  };
+  }
 
   ngOnDestroy() {
     if (this.subscription) {
@@ -324,10 +217,4 @@ export class TerminologyComponent
     this.isLoadingHistory = false;
     this.historyItemCount = $event;
   }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
 }

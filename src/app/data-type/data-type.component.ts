@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,22 +17,23 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
 import {
   ElementTypesService,
   MessageHandlerService,
-  SecurityHandlerService
+  SecurityHandlerService,
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { TabCollection } from '@mdm/model/ui.model';
 
 @Component({
   selector: 'mdm-data-type',
@@ -47,8 +49,7 @@ export class DataTypeComponent
   dataModelId: any;
   dataModel: any;
   id: any;
-  tabView: any;
-  activeTab: any;
+  activeTab: number;
   showExtraTabs: boolean;
   showEditForm = false;
 
@@ -59,12 +60,20 @@ export class DataTypeComponent
   contextView = 'default';
   rulesItemCount = 0;
   isLoadingRules = true;
-  editableForm: EditableDataModel;
   errorMessage: any;
   elementType: any;
   showEdit: boolean;
   showEditDescription = false;
-  access:any;
+  access: any;
+
+  tabs = new TabCollection([
+    'description',
+    'dataElements',
+    'rules',
+    'comments',
+    'links',
+    'attachments'
+  ]);
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -72,6 +81,7 @@ export class DataTypeComponent
   constructor(
     private title: Title,
     private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     resource: MdmResourcesService,
     private sharedService: SharedService,
@@ -79,18 +89,14 @@ export class DataTypeComponent
     private securityHandler: SecurityHandlerService,
     dialog: MatDialog,
     private elementTypes: ElementTypesService,
-    editingService: EditingService
+    editingService: EditingService,
   ) {
     super(resource, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.id = this.stateService.params.id;
-    // tslint:disable-next-line: deprecation
-    this.dataModelId = this.stateService.params.dataModelId;
-    // tslint:disable-next-line: deprecation
-    this.tabView = this.stateService.params.tabView;
+    this.id = this.uiRouterGlobals.params.id;
+    this.dataModelId = this.uiRouterGlobals.params.dataModelId;
 
     if (this.isGuid(this.id) && (!this.id || !this.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
@@ -98,6 +104,12 @@ export class DataTypeComponent
     }
 
     this.title.setTitle('Data Type');
+
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
+    this.tabSelected(this.activeTab);
+
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
@@ -117,68 +129,10 @@ export class DataTypeComponent
 
         this.watchDataTypeObject();
 
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-        this.editableForm.description = this.dataType.description;
-        this.editableForm.label = this.dataType.label;
         this.title.setTitle(`Data Type - ${this.dataType?.label}`);
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.errorMessage = '';
-          this.editableForm.description = this.dataType.description;
-          this.editableForm.label = this.dataType.label;
-          if (this.dataType.classifiers) {
-            this.dataType.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.dataType.aliases) {
-            this.dataType.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
-
-        this.editableForm.show = () => {
-          this.editableForm.visible = true;
-        };
-
-        if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'Terminology'
-        ) {
-          this.resourcesService.terminology
-            .get(this.dataModelId.modelResourceId)
-            .subscribe((termResult: TerminologyDetailResponse) => {
-              this.elementType = termResult.body;
-            });
-        } else if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'CodeSet'
-        ) {
-          this.resourcesService.codeSet
-            .get(this.dataType.modelResourceId)
-            .subscribe((elmResult: CodeSetDetailResponse) => {
-              this.elementType = elmResult.body;
-            });
-        } else if (
-          this.dataType.domainType === 'ModelDataType' &&
-          this.dataType.modelResourceDomainType === 'ReferenceDataModel'
-        ) {
-          this.resourcesService.referenceDataModel
-            .get(this.dataType.modelResourceId)
-            .subscribe((dataTypeResult: ReferenceDataModelDetailResponse) => {
-              this.elementType = dataTypeResult.body;
-            });
-        }
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
-        this.activeTab = this.getTabDetail(this.tabView);
         this.showExtraTabs =
           !this.sharedService.isLoggedIn() || !this.dataType.editable;
       },
@@ -199,101 +153,30 @@ export class DataTypeComponent
     }
   }
 
-  tabSelected = (itemsName) => {
-    const tab = this.getTabDetail(itemsName);
-    this.stateHandler.Go(
-      'dataType',
-      { tabView: itemsName },
-      { notify: false, location: tab.index !== 0 }
-    );
-    this[itemsName] = [];
-
-    this.activeTab = this.getTabDetail(itemsName);
-    if (this.activeTab && this.activeTab.fetchUrl) {
-      this[this.activeTab.name] = [];
-      this.loadingData = true;
-      this.resourcesService.dataType
-        .get(this.dataModelId, this.id)
-        .subscribe((data) => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
-    }
-  };
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  getTabDetail = (tabName) => {
-    switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
-      case 'dataElements':
-        return { index: 1, name: 'dataElements' };
-      case 'comments':
-        return { index: 2, name: 'comments' };
-      case 'links':
-        return { index: 3, name: 'links' };
-      case 'attachments':
-        return { index: 4, name: 'attachments' };
-      case 'history':
-        return { index: 5, name: 'history', fetchUrl: null };
-      default:
-        return { index: 0, name: 'properties' };
-    }
-  };
-
-  rulesCountEmitter($event) {
-    this.isLoadingRules = false;
-    this.rulesItemCount = $event;
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
+    this.stateHandler.Go('dataType', { tabView: tab.name }, { notify: false });
   }
 
-  onCancelEdit = () => {
-    this.dataType.editAliases = Object.assign([], this.dataType.aliases);
-    this.showEditDescription = false;
-  };
-
-  formBeforeSave = () => {
-    const aliases = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
+  save(saveItems: Array<DefaultProfileItem>) {
     const resource: DataType = {
-      id: this.dataType.id,
-      label: this.editableForm.label,
-      domainType: this.dataType.domainType,
-      description: this.editableForm.description || ''
+      id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType,
+      label: this.catalogueItem.label
     };
 
-    if (!this.showEditDescription) {
-      resource.description = this.editableForm.description || '';
-      resource.aliases = aliases;
-      resource.domainType = this.dataType.domainType;
-      resource.classifiers = this.dataType.classifiers.map(cls => ({ id: cls.id }));
-    }
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.displayName.toLocaleLowerCase()] = item.value;
+    });
 
     this.resourcesService.dataType
       .update(this.dataModel.id, this.dataType.id, resource)
       .subscribe(
         (res: DataTypeDetailResponse) => {
-          const result = res.body;
-
-          this.dataType.aliases = Object.assign([], result.aliases);
-          this.dataType.editAliases = Object.assign([], this.dataType.aliases);
-          this.dataType.label = result.label;
-          this.dataType.description = result.description;
+          this.dataType = res.body;
+          this.catalogueItem = res.body;
           this.messageHandler.showSuccess('Data Type updated successfully.');
           this.editingService.stop();
-          this.editableForm.visible = false;
         },
         (error) => {
           this.messageHandler.showError(
@@ -302,5 +185,10 @@ export class DataTypeComponent
           );
         }
       );
-  };
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
 }

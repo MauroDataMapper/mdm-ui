@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,41 +19,53 @@ SPDX-License-Identifier: Apache-2.0
 <div class="heading-container" style="max-width: 800px;">
     <h4 class="marginless">New Code Set</h4>
 </div>
-<form class="mdm--form mdm--form-configuration">
+<form class="mdm--form mdm--form-configuration" [formGroup]="setupForm">
     <div class="mb-2 mt-2">
         <strong>Selected folder: </strong>
-        <mdm-element-link [showTypeTitle]="true" [newWindow]="true" [element]="model.parentFolder"></mdm-element-link>
+        <mdm-element-link [showTypeTitle]="true" [showTypeIcon]="true" [newWindow]="true" [element]="parentFolder"></mdm-element-link>
     </div>
 
     <span>Please enter the Code Set details:</span>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Label</mat-label>
-            <input matInput type="text" [(ngModel)]="model.label" name="label" required>
+            <input matInput type="text" formControlName="label" name="label" required>
+            <mat-error *ngIf="setupForm && label.errors?.required">
+              Label is required
+            </mat-error>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Author</mat-label>
-            <input matInput type="text" [(ngModel)]="model.author" name="author" required>
+            <input matInput type="text" formControlName="author" name="author" required>
+            <mat-error *ngIf="setupForm && author.errors?.required">
+              Author is required
+            </mat-error>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Organisation</mat-label>
-            <input matInput type="text" [(ngModel)]="model.organisation" name="organisation" required>
+            <input matInput type="text" formControlName="organisation" name="organisation" required>
+            <mat-error *ngIf="setupForm && organisation.errors?.required">
+              Organisation is required
+            </mat-error>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
+            <textarea matInput type="text" name="description" formControlName="description"></textarea>
         </mat-form-field>
     </div>
-    <mdm-element-classifications [readOnly]="false" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}" class="mb-2"></mdm-element-classifications>
-    <mdm-multiple-terms-selector (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
+    <mdm-element-classifications [readOnly]="false" (classificationsChanged)="classifiersValue = $event" class="mb-2"></mdm-element-classifications>
+    <mdm-multiple-terms-selector (selectedTermsChange)="termsValue = $event"></mdm-multiple-terms-selector>
+    <mat-error *ngIf="setupForm && terms.errors?.required">
+      At least one term is required
+    </mat-error>
 </form>
-<button mat-flat-button type="button" color="primary" class="custom" [disabled]="!(model.label.length && model.author.length && model.organisation.length && model.terms.length > 0)" (click)="save()">Submit Code Set</button>
+<button mat-flat-button type="button" color="primary" class="custom" [disabled]="setupForm.invalid" (click)="save()">Submit Code Set</button>

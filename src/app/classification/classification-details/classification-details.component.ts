@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,163 +19,67 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
-  Input,
-  QueryList,
-  ViewChildren,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
+  Input} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { Editable } from '@mdm/model/folderModel';
-import { Subscription } from 'rxjs';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
-import { ClassifierDetail, ClassifierDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ClassifierDetail,
+  ClassifierDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { ValidatorService } from '@mdm/services';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-classification-details',
   templateUrl: './classification-details.component.html',
   styleUrls: ['./classification-details.component.sass']
 })
-export class ClassificationDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  @Input() mcClassification = false;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  result: ClassifierDetail;
-  hasResult = false;
-  subscription: Subscription;
-  showSecuritySection: boolean;
-  showUserGroupAccess: boolean;
-  showEdit: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
-  showSoftDelete: boolean;
-  showPermDelete: boolean;
-  isAdminUser: boolean;
-  isLoggedIn: boolean;
-  deleteInProgress: boolean;
-  exporting: boolean;
-  editableForm: Editable;
+export class ClassificationDetailsComponent implements OnInit {
+  @Input() classification: ClassifierDetail;
+  originalClassification: ClassifierDetail;
+  editMode = false;
   errorMessage = '';
-  showEditMode = false;
-  processing = false;
+  access: Access;
 
   constructor(
-    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
-    private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private folderHandler: FolderHandlerService,
-    private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcaseSvc: BroadcastService,
+    private stateHandler: StateHandlerService,
     private title: Title,
     private dialog: MatDialog,
-    private editingService: EditingService
+    private validator: ValidatorService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private editing: EditingService,
+    private broadcast: BroadcastService
   ) {
-    // securitySection = false;
-    this.isAdminUser = this.sharedService.isAdmin;
-    this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.ClassifierDetails();
   }
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open(
-      'Search_Help',
-      'left' as DialogPosition
-    );
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
   ngOnInit() {
-    this.editableForm = new Editable();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.errorMessage = '';
-      this.editableForm.label = this.result.label;
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.editableForm.description = this.result.description;
-    };
-
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
-      (message: boolean) => {
-        this.showSecuritySection = message;
-      }
-    );
-  }
-
-  ngAfterViewInit(): void {
-    this.editForm.changes.subscribe(() => {
-      this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
-      if (this.editMode) {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x.name === 'moduleName' ? true : false
-          })
-        );
-        this.showForm();
-      }
-    });
+    this.originalClassification = Object.assign({}, this.classification);
+    this.ClassifierDetails();
   }
 
   ClassifierDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
-        this.result = serverResult;
-        this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result.description;
-        const access: any = this.securityHandler.folderAccess(this.result);
-        this.showEdit = access.showEdit;
-        this.showPermission = access.showPermission;
-        this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-        this.showPermDelete = access.showPermanentDelete;
-        this.showSoftDelete = access.showSoftDelete;
-        if (this.result != null) {
-          this.hasResult = true;
-          this.watchClassificationObject();
-        }
-        this.title.setTitle(`Classifier - ${this.result?.label}`);
-      }
-    );
-  }
-
-  watchClassificationObject() {
-    const access = this.securityHandler.folderAccess(this.result);
-    this.showEdit = access.showEdit;
-    this.showPermission = access.showPermission;
-    this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-    this.showPermDelete = access.showPermanentDelete;
-    this.showSoftDelete = access.showSoftDelete;
+    this.access = this.securityHandler.elementAccess(this.classification);
+    this.title.setTitle(`Classifier - ${this.classification.label}`);
   }
 
   toggleSecuritySection() {
@@ -184,113 +89,106 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     this.messageService.toggleSearch();
   }
 
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
-  }
-
   askForSoftDelete() {
     if (!this.securityHandler.isAdmin()) {
       return;
     }
 
-    this.folderHandler.askForSoftDelete(this.result.id).subscribe(() => {
-      this.stateHandler.reload();
-    });
+    this.folderHandler
+      .askForSoftDelete(this.classification.id)
+      .subscribe(() => {
+        this.stateHandler.reload();
+      });
   }
 
   askForPermanentDelete() {
-    if (!this.showPermDelete) {
+    if (!this.access.showPermanentDelete) {
       return;
     }
 
     this.dialog
-      .openDoubleConfirmationAsync({
-        data: {
-          title: 'Permanent deletion',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Classifier?</p>
-                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> classifier.</p>`
+      .openDoubleConfirmationAsync(
+        {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Classifier?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.classification.label}</i></strong> classifier.</p>`
+          }
+        },
+        {
+          data: {
+            title: 'Confirm permanent deletion',
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message:
+              '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
+          }
         }
-      }, {
-        data: {
-          title: 'Confirm permanent deletion',
-          okBtnTitle: 'Confirm deletion',
-          btnType: 'warn',
-          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-        }
-      })
+      )
       .subscribe(() => this.delete());
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.errorMessage = '';
-    this.editForm.forEach(x => (this.result.label = x.getHotState().value));
+  save() {
+    if (this.validator.validateLabel(this.classification.label)) {
+      this.editMode = false;
+      this.errorMessage = '';
 
-    const resource = {
-      id: this.result.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description
-    };
 
-    if (this.validateLabel(this.editableForm.label)) {
-      this.resourcesService.classifier.update(this.result.id, resource).subscribe((result: ClassifierDetailResponse) => {
-        if (this.afterSave) {
-          this.afterSave(result);
-        }
-        this.messageHandler.showSuccess('Classifier updated successfully.');
-        this.editingService.stop();
-        this.editableForm.visible = false;
-        this.editForm.forEach(x => x.edit({ editing: false }));
-      }, error => {
-        this.messageHandler.showError('There was a problem updating the Classifier.', error);
-      });
-    }
-  };
+      const resource = {
+        id: this.classification.id,
+        label: this.classification.label
+      };
 
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = 'Classification Label can not be empty';
-      return false;
-    } else {
-      return true;
+      this.resources.classifier
+        .update(this.classification.id, resource)
+        .subscribe(
+          (result: ClassifierDetailResponse) => {
+            this.messageHandler.showSuccess('Classifier updated successfully.');
+            this.editing.stop();
+            this.originalClassification = result.body;
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the Classifier.',
+              error
+            );
+          }
+        );
     }
   }
 
   showForm() {
-    this.editingService.start();
-    this.editableForm.show();
+    this.editing.start();
+    this.editMode = true;
   }
 
-  onCancelEdit() {
+  cancel() {
+    this.classification = Object.assign({}, this.originalClassification);
     this.editMode = false; // Use Input editor whe adding a new folder.
     this.errorMessage = '';
   }
 
-  onLabelChange(value: any) {
-    if (!this.validateLabel(value)) {
-      this.editableForm.validationError = true;
-    } else {
-      this.editableForm.validationError = false;
-    }
-  }
-
   delete() {
-    this.resourcesService.classifier.remove(this.result.id, { permanent: true }).subscribe(() => {
-      this.messageHandler.showSuccess('Classifier deleted successfully.');
-      this.broadcaseSvc.broadcast('$reloadFoldersTree');
-      this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
-    }, error => {
-      this.messageHandler.showError('There was a problem deleting this Classification.', error);
-    }
-    );
-  }
-
-  private invokeInlineEditor(): void {
-    this.editForm.find((inlineEditorComponent: any) => {
-      return inlineEditorComponent.name === 'editableText';
-    });
+    this.resources.classifier
+      .remove(this.classification.id, { permanent: true })
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Classifier deleted successfully.');
+          this.broadcast.reloadCatalogueTree();
+          this.stateHandler.Go(
+            'allDataModel',
+            { reload: true, location: true },
+            null
+          );
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem deleting this Classification.',
+            error
+          );
+        }
+      );
   }
 }

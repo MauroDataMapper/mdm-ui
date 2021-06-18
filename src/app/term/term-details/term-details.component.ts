@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,254 +16,182 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
-import { EditableTerm } from '@mdm/model/termModel';
-import { Subscription } from 'rxjs';
-import { MessageService } from '@mdm/services/message.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { SharedService } from '@mdm/services/shared.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { CatalogueItemDomainType, TermDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  TermDetail,
+  TermDetailResponse,
+  TerminologyDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { ValidatorService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import { UIRouterGlobals } from '@uirouter/angular';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-term-details',
   templateUrl: './term-details.component.html',
   styleUrls: ['./term-details.component.scss']
 })
-export class TermDetailsComponent implements OnInit, AfterViewInit {
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  @Input() mcTerminology: any;
+export class TermDetailsComponent implements OnInit {
   @Input() hideEditButton: any;
   @Input() openEditForm: any;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  download: any;
-  downloadLink: any;
-  urlText: any;
 
+  editMode = false;
   mcTerm: TermDetail;
-  securitySection = false;
-  processing = false;
-  exportError = null;
-  exportList = [];
-  exportedFileIsReady = false;
-  addedToFavourite = false;
-  hasResult = false;
-  subscription: Subscription;
-  showSecuritySection: boolean;
-  showUserGroupAccess: boolean;
-  showEdit: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
-  isAdminUser: boolean;
-  isLoggedIn: boolean;
-  deleteInProgress: boolean;
-  editableForm: EditableTerm;
-  errorMessage = '';
-  showEditMode = false;
-  parentLabel = '';
+  originalTerm: TermDetail;
+  terminologyId: string;
 
-  showNewVersion = false;
+  addedToFavourite = false;
+
+  deleteInProgress: boolean;
+
+  parentLabel = '';
+  access: Access;
+
   compareToList = [];
 
   constructor(
-    private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
-    private sharedService: SharedService,
-    private helpDialogueService: HelpDialogueHandlerService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService,
-    private editingService: EditingService) {
-    this.isAdminUser = this.sharedService.isAdmin;
-    this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.TermDetails();
-  }
+    private broadcast: BroadcastService,
+    private editingService: EditingService,
+    private validatorServive: ValidatorService,
+    private uiRouterGlobals: UIRouterGlobals,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-    this.editableForm = new EditableTerm();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.editableForm.description = this.mcTerm.description;
-      this.editableForm.url = this.mcTerm.url;
-      if (this.mcTerm.classifiers) {
-        this.mcTerm.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.mcTerm.aliases) {
-        this.mcTerm.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
+    this.termDetails();
   }
 
-  TermDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-      this.mcTerm = serverResult;
+  termDetails(): any {
+    const termId = this.uiRouterGlobals.params.id;
+    this.terminologyId = this.uiRouterGlobals.params.terminologyId;
+    this.resourcesService.term
+      .get(this.terminologyId, termId)
+      .subscribe((termDetailResult: TermDetailResponse) => {
+        this.mcTerm = termDetailResult.body;
 
-      this.editableForm.url = this.mcTerm.url;
-      this.editableForm.description = this.mcTerm.description;
+        this.resourcesService.terminology
+          .get(this.mcTerm.model)
+          .subscribe((result: TerminologyDetailResponse) => {
+            this.parentLabel = result.body.label;
+          });
 
-      if(this.mcTerm.domainType === CatalogueItemDomainType.Term) {
-        this.resourcesService.terminology.get(this.mcTerm.model).subscribe((result: TerminologyDetailResponse) => {
-          this.parentLabel = result.body.label;
-        });
-      }
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach((link) => {
+            if (link.linkType === 'New Version Of') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
 
-      if (this.mcTerm.classifiers) {
-        this.mcTerm.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.mcTerm.aliases) {
-        this.mcTerm.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-      if (this.mcTerm.semanticLinks) {
-        this.mcTerm.semanticLinks.forEach(link => {
-          if (link.linkType === 'New Version Of') {
-            this.compareToList.push(link.target);
-          }
-        });
-      }
-
-      if (this.mcTerm.semanticLinks) {
-        this.mcTerm.semanticLinks.forEach(link => {
-          if (link.linkType === 'Superseded By') {
-            this.compareToList.push(link.target);
-          }
-        });
-      }
-
-      if (this.mcTerm != null) {
-        this.hasResult = true;
-        this.watchDataModelObject();
-      }
-      this.title.setTitle(`Term - ${this.mcTerm?.label}`);
-    }
-    );
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach((link) => {
+            if (link.linkType === 'Superseded By') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
+        this.access = this.securityHandler.elementAccess(this.mcTerm);
+        this.originalTerm = Object.assign({}, this.mcTerm);
+        this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+      });
   }
 
-  onCancelEdit() {
-    this.errorMessage = '';
+  cancel() {
+    this.editingService.stop();
+    this.mcTerm = Object.assign({}, this.originalTerm);
     this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
-  watchDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.mcTerm);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showPermission = access.showPermission;
-      this.showDelete = access.showDelete;
-      this.showFinalise = access.showFinalise;
-      this.showNewVersion = access.showNewVersion;
-    }
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
-  }
+  save() {
+    if (this.validatorServive.validateLabel(this.mcTerm.definition)) {
 
-  ngAfterViewInit(): void {
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe(() => {
-      this.invokeInlineEditor();
-
-      if (this.editMode) {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x._name === 'moduleName' ? true : false
-          })
+      this.resourcesService.term
+        .update(this.terminologyId, this.mcTerm.id, this.mcTerm)
+        .subscribe(
+          (res: TermDetailResponse) => {
+            this.messageHandler.showSuccess('Term updated successfully.');
+            this.editingService.stop();
+            this.originalTerm = res.body;
+            this.editMode = false;
+            this.broadcast.reloadCatalogueTree();
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the Term.',
+              error
+            );
+          }
         );
-        this.showForm();
-      }
-    });
+    } else {
+      this.messageHandler.showError(
+        'There is an error with the label please correct and try again'
+      );
+    }
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.errorMessage = '';
+  askForPermanentDelete() {
+    this.dialog
+      .openDoubleConfirmationAsync(
+        {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Term?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.mcTerm.label}</i></strong> Term.</p>`
+          }
+        },
+        {
+          data: {
+            title: 'Confirm permanent deletion',
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message:
+              '<strong>Note: </strong> All its contents will be deleted <span class="warning">permanently</span>.'
+          }
+        }
+      )
+      .subscribe(() => this.delete());
+  }
 
-    const classifiers = [];
-    this.editableForm.classifiers.forEach(cls => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
-      aliases.push(alias);
-    });
-
-    this.mcTerm['aliases'] = aliases;
-    this.mcTerm['classifiers'] = classifiers;
-
-    this.resourcesService.term.update(this.mcTerm.terminology.id, this.mcTerm.id, this.mcTerm).subscribe(() => {
-      if (this.afterSave) {
-        this.afterSave(this.mcTerm);
-      }
-      this.messageHandler.showSuccess('Term updated successfully.');
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }, error => {
-      this.messageHandler.showError('There was a problem updating the Term.', error);
-    }
-    );
-  };
+  delete() {
+    this.resourcesService.term
+      .remove(this.terminologyId, this.mcTerm.id)
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Term deleted successfully.');
+        },
+        (error) => {
+          this.deleteInProgress = false;
+          this.messageHandler.showError(
+            'There was a problem deleting the Term.',
+            error
+          );
+        }
+      );
+  }
 
   showForm() {
     this.editingService.start();
-    this.editableForm.show();
-  }
-
-  askForPermanentDelete(){
+    this.editMode = true;
   }
 
   toggleFavourite() {
     if (this.favouriteHandler.toggle(this.mcTerm)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
     }
-  }
-
-  public loadHelp() {
-    this.helpDialogueService.open('Term_details');
-  }
-
-  private invokeInlineEditor(): void {
-    this.editForm.find((inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
   }
 }

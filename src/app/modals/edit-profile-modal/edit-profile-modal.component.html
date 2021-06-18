@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0
            
 
             <mdm-content-editor
-            [(description)]="field.currentValue"
+            [(content)]="field.currentValue"
               id="{{ field.fieldName }}"                         
               [inEditMode]="true"
               *ngIf="field.dataType === 'text'"

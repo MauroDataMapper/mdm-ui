@@ -1,5 +1,6 @@
 <!--
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-    <form editable-form name="form" disable-submit-on-enter>
+    <form name="form" disable-submit-on-enter>
         <div class="panel-body">
             <h4 class="inline-block marginless">
                 <span class="dataModelTypeIcon">
                     <i matTooltip="Data Standard" class="fas fa-external-link-alt"></i>
                 </span>
-                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
-                    [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
+                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="dataModel.label" name="labelName"
+                    [inEditMode]="false" [styleCss]="'dataTypeDetailsLabel'">
                 </mdm-inline-text-edit>
             </h4>
             <small *ngIf="dataModel.isSubscribed">
@@ -50,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-                        <mdm-content-editor [editableForm]="editable.form" [element]="dataModel"
+                        <mdm-content-editor  [inEditMode]="false" [(content)]="dataModel.description" [element]="dataModel"
                             [property]="'description'">
                         </mdm-content-editor>
                     </td>
@@ -58,8 +59,8 @@ SPDX-License-Identifier: Apache-2.0
                 <tr *ngIf="dataModel.folderId">
                     <th class="detailsRowHeader">Folder</th>
                     <td class="elementDetailDescription">
-                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="editable.isEditing"
-                            [(ngModel)]="editable.form.folderLabel" class="dataModelDetailsLabel" name="folder">
+                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="false"
+                            [(ngModel)]="dataModel.folderLabel" class="dataModelDetailsLabel" name="folder">
                         </mdm-inline-text-edit>
                     </td>
                 </tr>

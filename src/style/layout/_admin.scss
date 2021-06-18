@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -139,18 +140,5 @@ aside.menu {
     background-color: rgba(77, 114, 156, 0.1);
     color: #1157a9;
     font-weight: 600;
-  }
-}
-
-
-.mdm--profile-block {
-  position: relative;
-  > button {
-    position: absolute;
-    top: 40px;
-    left: 12px;
-    background: #fff;
-    border-radius: 100%;
-    min-width: 40px;
   }
 }

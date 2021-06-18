@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
 			<tr *ngIf="showClassification">
 				<td class="detailsRowHeader">Classifications</td>
 				<td>
-					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}">
+					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event">
 					</mdm-element-classifications>
 				</td>
 			</tr>

@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @Component({
@@ -26,7 +28,7 @@ export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
   @Input() justShowCodeForTerm: boolean;
   @Input() showTypeTitle: boolean;
-  // @Input() element: any;
+  @Input() showTypeIcon = false;
   @Input() newWindow: boolean;
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;
@@ -121,5 +123,13 @@ export class ElementLinkComponent implements OnInit {
     ) {
       this.showLink = true;
     }
+  }
+
+  getIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType);
+  }
+
+  hasIcon() {
+    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
   }
 }

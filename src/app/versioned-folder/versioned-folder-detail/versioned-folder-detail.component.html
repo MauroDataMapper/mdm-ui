@@ -1,0 +1,285 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+  <form name="form" (ngSubmit)="save()" disable-submit-on-enter>
+    <div class="panel-body">
+      <div class="full-width" style="clear: both" *ngIf="detail">
+        <button
+          type="button"
+          mat-icon-button
+          [matMenuTriggerFor]="userActions"
+          style="position: relative; float: right; margin-right: 4px"
+        >
+          <i class="fas fa-ellipsis-v"></i>
+          <span style="display: none">Menu</span>
+        </button>
+        <!--First level Menu-->
+        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+          <button
+          mat-menu-item
+          type="button"
+          *ngIf="access.showFinalise"
+          class="has-text-green"
+          (click)="finalise()"
+        >
+          <i
+            class="fas fa-check-circle has-text-green"
+            aria-hidden="true"
+          ></i>
+          Finalise
+        </button>
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.showEdit && !isEditing"
+            (click)="showForm()"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit Title
+          </button>
+          <mat-divider></mat-divider>
+          <button
+            mat-menu-item
+            type="button"
+            [matMenuTriggerFor]="userActionsDelete"
+            *ngIf="access.showSoftDelete || access.showPermanentDelete"
+            class="warning"
+          >
+            <i class="far fa-trash-alt warning"></i> Delete
+          </button>
+        </mat-menu>
+        <!-- End of first level menu -->
+
+        <!--Second level sub Menu-->
+        <mat-menu #userActionsDelete="matMenu">
+          <button
+            mat-menu-item
+            (click)="askForSoftDelete()"
+            *ngIf="access.showSoftDelete && !detail.deleted"
+          >
+            Mark as deleted
+          </button>
+          <button
+            mat-menu-item
+            (click)="askForPermanentDelete()"
+            *ngIf="access.showPermanentDelete"
+          >
+            Delete <span class="warning">permanently</span>
+          </button>
+        </mat-menu>
+        <!-- End of Second level sub Menu-->
+
+        <div
+          *ngIf="access.showPermission"
+          style="position: relative; float: right; margin-right: 8px"
+          [hidden]="isEditing"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            class="paddingless"
+            (click)="showSecurityDialog()"
+            matTooltip="User & Group Access"
+            aria-label="User & Group Access"
+          >
+            <i class="fas fa-user-lock"></i>
+          </button>
+        </div>
+
+        <div
+          style="
+            position: relative;
+            float: right;
+            margin-right: 8px;
+            margin-left: 8px;
+          "
+          [hidden]="isEditing"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            class="paddingless"
+            (click)="toggleShowSearch()"
+            [disabled]="processing"
+            matTooltip="Search"
+            aria-label="Search"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="detail">
+        <div class="data-model-header">
+          <h4
+            class="inline-block marginless"
+            [ngClass]="{ deletedDataModelTitle: detail?.deleted }"
+          >
+            <span class="dataModelTypeIcon">
+              <i
+                matTooltip="Versioned Folder"
+                class="fas fa-box"
+              ></i>
+            </span>
+            <mdm-inline-text-edit
+              [readOnly]="false"
+              [inEditMode]="isEditing"
+              [(ngModel)]="detail.label"
+              [isRequired]="true"
+              [showButtons]="true"
+              (saveClicked)="save()"
+              (cancelClicked)="cancel()"
+              [name]="'moduleName'"
+              size="20"
+              [styleCss]="'dataModelDetailsLabel'"
+            >
+            </mdm-inline-text-edit>
+            <sup
+            *ngIf="detail?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+          <sup
+            *ngIf="detail?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
+          </h4>
+          <span class="inline-block" *ngIf="detail?.deleted">
+            <small class="warning"> | Deleted</small>
+          </span>
+
+          <mdm-element-status [result]="detail"></mdm-element-status>
+        </div>
+      </div>
+
+      <div class="detail-icons">
+        <div class="text-muted">
+          <small>
+            <i class="fas fa-cube" matTooltip="Item type"></i>
+            <span>
+              <strong>Item type: </strong>
+              <span class="item-type">Versioned Folder</span>
+            </span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="detail?.readableByEveryone">
+          <small>
+            <i
+              class="fas fa-globe-europe globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="detail?.readableByAuthenticatedUsers">
+          <small>
+            <i
+              class="fas fa-users globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Authenticated users only</span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="detail?.documentationVersion">
+          <small>
+            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+            <span
+              ><strong>Documentation Version: </strong
+              >{{ detail.documentationVersion }}</span
+            >
+          </small>
+        </div>
+        <div
+          class="text-muted"
+          *ngIf="detail?.modelVersion && detail?.finalised"
+        >
+          <small>
+            <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+            <span> <strong>Version: </strong>{{ detail.modelVersion }} </span>
+            <span *ngIf="detail.modelVersionTag" class="tag-name">
+              <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+              <span>{{ detail.modelVersionTag }}</span>
+            </span>
+          </small>
+        </div>
+        <!-- <div class="text-muted" *ngIf="catalogueItem">
+          <small>
+            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+            <span><strong>Branch: </strong></span>
+            <span>
+              <select
+                class="form-control"
+                style="
+                  display: inline;
+                  max-width: 120px;
+                  height: 30px;
+                  line-height: 1;
+                  padding: 0 0.35em;
+                  width: auto;
+                "
+                [(ngModel)]="currentBranch"
+                name="currentBranch"
+                (ngModelChange)="onModelChange()"
+              >
+                <option
+                  [value]="item.branch"
+                  *ngFor="let item of branchGraph"
+                >
+                  {{ item.branch ? item.branch : 'main' }}
+                </option>
+              </select>
+            </span>
+          </small>
+        </div> -->
+        <div class="text-muted" *ngIf="detail">
+          <small>
+            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+            <span>
+              <strong>Last update: </strong>
+              {{ detail.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div style="clear: both" *ngIf="processing">
+  <mat-progress-bar
+    value="50"
+    bufferValue="75"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

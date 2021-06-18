@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,14 +35,30 @@ export const environment = {
     url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
     project: 'MC'
   },
-  wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
+  documentation: {
+    url: 'https://maurodatamapper.github.io/',
+    pages: {
+      Create_a_new_model: 'user-guides/create-a-data-model/create-a-data-model/',
+      Edit_model_details: 'user-guides/create-a-data-model/create-a-data-model/#3-complete-new-data-model-form',
+      Exporting_models: 'user-guides/exporting-data-models/exporting-data-models/',
+      Importing_DataModels_Using_Excel: 'user-guides/import-data-model-from-excel/import-data-model-from-excel/',
+      Preferences: 'user-guides/user-profile/user-profile/#3-update-preferences',
+      Search_Help: 'user-guides/how-to-search/how-to-search/',
+      User_profile: 'user-guides/user-profile/user-profile/'
+    },
+    importers: {
+      DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
+    }
+  },
   simpleViewSupport: false,
   name: 'development',
   appIsEditable: true,
   checkSessionExpiryTimeout: 300000,
   features: {
     useSubscribedCatalogues: true,
-    useDynamicProfiles: true
+    useDynamicProfiles: true,
+    useVersionedFolders: true,
+    useMergeUiV2: true
   }
 };
 

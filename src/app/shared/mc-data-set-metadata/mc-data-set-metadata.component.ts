@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +29,6 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
@@ -36,6 +36,7 @@ import { MatInput } from '@angular/material/input';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-data-set-metadata',
@@ -59,7 +60,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
   namespaces: any[];
   metadataKeys: any[];
-  access: any;
+  access: Access;
   loading = false;
   records: any[];
   metadata: any;
@@ -74,7 +75,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private helpService: HelpDialogueHandlerService,
     private changeDetectorRefs: ChangeDetectorRef,
     private gridService: GridService,
     private editingService: EditingService
@@ -395,10 +395,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         this.messageHandler.showError('There was a problem deleting the property.', error);
       });
   }
-
-  loadHelp = () => {
-    this.helpService.open('Editing_properties');
-  };
 
   filterClick() {
     this.hideFilters = !this.hideFilters;

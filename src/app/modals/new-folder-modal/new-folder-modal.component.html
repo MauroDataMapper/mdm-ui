@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,27 +16,55 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="modal-header pxy-2">
-    <h4 class='modal-title marginless'>{{ modalTitle }}</h4>
-</div>
-<div class="modal-body pxy-2">
+<form [formGroup]="folderForm">
+  <div class="modal-header pxy-2">
+    <h4 class="modal-title marginless">{{ modalTitle }}</h4>
+  </div>
+  <div class="modal-body pxy-2">
     <p [innerHtml]="message"></p>
+    <mdm-alert *ngIf="createRootFolder" alertStyle="info" [showIcon]="true">
+      This will be added at the top of the tree.
+    </mdm-alert>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline" class="full-width paddingless">
-            <mat-label>{{inputLabel}}</mat-label>
-            <input matInput [(ngModel)]="inputValue.label">
-        </mat-form-field>
-        <!-- TODO ADD BACK IN ONCE FEATURE ADDED -->
-        <!-- <mat-form-field appearance="outline" class="full-width paddingless">
-            <mat-label>Choose a Group</mat-label>
-            <mat-select name="groupList" (selectionChange)="onGroupSelect($event)" multiple [(ngModel)]="selectedGroups">
-              <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>    -->
+      <mat-form-field appearance="outline" class="full-width mb-2">
+        <mat-label>{{ inputLabel }}</mat-label>
+        <input matInput formControlName="label" required />
+        <mat-error *ngIf="label.errors?.required">
+          Label is required
+        </mat-error>
+      </mat-form-field>
+      <div *ngIf="useVersionedFolders">
+        <mat-checkbox formControlName="isVersioned">Version control this folder</mat-checkbox>
+        <br />
+        <small
+          >Create a <em>versioned</em> folder to control the version of all contents of
+          this folder. This will also allow branching/forking of this folder.</small
+        >
+        <mdm-alert *ngIf="isVersioned.value" alertStyle="warning" [showIcon]="true"
+          >This option can not be changed after the folder has been
+          created.</mdm-alert
+        >
+      </div>
     </div>
-
-</div>
-<div class="modal-footer pxy-2">
-    <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">{{cancelBtn}}</button>
-    <button mat-flat-button color="{{btnType}}" type="button" (click)="confirm()">{{okBtn}}</button>
-</div>
+  </div>
+  <div class="modal-footer pxy-2">
+    <button
+      mat-button
+      color="warn"
+      class="mr-1"
+      type="button"
+      (click)="cancel()"
+    >
+      {{ cancelBtn }}
+    </button>
+    <button
+      mat-flat-button
+      color="{{ btnType }}"
+      type="button"
+      (click)="confirm()"
+      [disabled]="!folderForm.valid"
+    >
+      {{ okBtn }}
+    </button>
+  </div>
+</form>

@@ -1,7 +1,6 @@
-import { Classifier } from '@maurodatamapper/mdm-resources';
-
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { Classifier } from '@maurodatamapper/mdm-resources';
+
 export class EditableDataModel {
   deletePending: boolean;
   label: string;

@@ -1,5 +1,6 @@
 /*
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,15 +40,13 @@ export interface ContentEditorHtmlOptions {
 export class ContentEditorComponent implements OnInit {
 
   @Input() contentFormat: ContentEditorFormat = ContentEditorFormat.Html;
-  ContentFormatType = ContentEditorFormat;
 
   /* Inputs/outputs for manual properties */
   @Input() inEditMode: boolean;
-  @Input() description: string;
-  @Output() descriptionChange = new EventEmitter<string>();
+  @Input() content: string;
+  @Output() contentChange = new EventEmitter<string>();
 
   /* Inputs for model binding */
-  @Input() editableForm: any;
   @Input() element: any;
   @Input() property: string;
 
@@ -55,6 +54,7 @@ export class ContentEditorComponent implements OnInit {
   @Input() htmlOptions: ContentEditorHtmlOptions;
 
   ButtonModeTypes = HtmlButtonMode;
+  ContentFormatType = ContentEditorFormat;
 
   constructor() { }
 
@@ -79,25 +79,21 @@ export class ContentEditorComponent implements OnInit {
   }
 
   isInEditMode() : boolean {
-    if (!this.editableForm) {
       return this.inEditMode;
-    }
-
-    return this.editableForm.visible;
   }
 
   onEditorDescriptionChanged(value: string) {
-    this.description = value;
-    this.descriptionChange.emit(value);
+    this.content = value;
+    this.contentChange.emit(value);
   }
 
   isHtmlContent() {
-    const content = this.editableForm ? this.editableForm[this.property] : this.description;
-    if (!content) {
+
+    if (!this.content) {
       return false;
     }
 
     const expression = /<([A-Z][A-Z0-9]*)\b[^>]*>(.*?)<\/\1>/gmi;
-    return expression.test(content);
+    return expression.test(this.content);
   }
 }

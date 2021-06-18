@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-  <mdm-data-class-details></mdm-data-class-details>
+  <mdm-data-class-details *ngIf="dataClass" [dataClass]="dataClass"></mdm-data-class-details>
 </div>
 <div *ngIf="showSearch">
   <div class="mdm--shadow-block">
@@ -37,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
               <i class="fas fa-times"></i>
             </button>
           </div>
-        </div>        
+        </div>
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
@@ -154,10 +155,10 @@ SPDX-License-Identifier: Apache-2.0
             </button>
 
             <mat-menu #editMenu="matMenu">
-              <button mat-menu-item (click)="showDescription()">
+              <button mat-menu-item (click)="edit(true)">
                 <i class="fas fa-pencil-alt"></i> Edit Description
               </button>
-              <button mat-menu-item (click)="edit()">
+              <button mat-menu-item (click)="edit(false)">
                 <i class="fas fa-pencil-alt"></i>Edit
               </button>
             </mat-menu>
@@ -179,146 +180,7 @@ SPDX-License-Identifier: Apache-2.0
               [isProfileView]="true"
             ></mdm-data-set-metadata>
           </div>
-          <form
-            editable-form
-            name="form"
-            (ngSubmit)="formBeforeSave()"
-            disable-submit-on-enter
-          >
-            <table
-              *ngIf="this.descriptionView === 'default' && editableForm"
-              class="table table-bordered mdm--table-fixed"
-            >
-              <tbody>
-                <tr>
-                  <td class="detailsRowHeader">Aliases</td>
-                  <td>
-                    <mdm-element-alias                     
-                      [inEditMode]="editableForm?.visible"
-                      [aliases]="aliases"
-                      [element]="dataClass"
-                      [editableForm]="editableForm"
-                      [property]="'aliases'"
-                      [readOnly]="showEditDescription"
-                    >
-                    </mdm-element-alias>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="detailsRowHeader">Description</td>
-                  <td class="elementDetailDescription">
-                    <div *ngIf="dataClass">
-                      <mdm-markdown-text-area
-                        [editableForm]="editableForm"
-                        [element]="dataClass"
-                        [property]="'description'"
-                      ></mdm-markdown-text-area>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">Multiplicity</th>
-                  <td class="dataClassDetailsModelPath">
-                    <div
-                      *ngIf="
-                        (!editableForm?.visible && dataClass) ||
-                        (editableForm?.visible && showEditDescription)
-                      "
-                    >
-                      <mdm-multiplicity
-                        [min]="dataClass.minMultiplicity"
-                        [max]="dataClass.maxMultiplicity"
-                      ></mdm-multiplicity>
-                    </div>
-                    <div *ngIf="dataClass && !showEditDescription">
-                      <div style="float: left">
-                        <div *ngIf="editableForm?.visible">
-                          <div
-                            *ngIf="editableForm?.visible"
-                            style="padding-left: 8px"
-                          >
-                            Min
-                          </div>
-                          <mdm-inline-text-edit
-                            [readOnly]="showEditDescription"
-                            [inEditMode]="editableForm?.visible"
-                            [(ngModel)]="min"
-                            [styleCss]="'dataModelDetailsLabel'"
-                            name="moduleNameMinText"
-                            size="20"
-                            size="5"
-                          >
-                          </mdm-inline-text-edit>
-                          <small class="block"> Use numbers only </small>
-                        </div>
-                        <span
-                          *ngIf="
-                            !editableForm?.visible &&
-                            dataClass.minMultiplicity &&
-                              dataClass.minMultiplicity == 0
-                          "
-                          >..</span
-                        >
-                        <span
-                          *ngIf="editableForm?.visible"
-                          style="padding-right: 10px"
-                        ></span>
-                      </div>
-
-                      <div style="float: left; margin-right: 13px">
-                        <div
-                          *ngIf="editableForm?.visible"
-                          style="padding-left: 6px"
-                        >
-                          Max
-                          <mdm-inline-text-edit
-                            [readOnly]="showEditDescription"
-                            [inEditMode]="editableForm?.visible"
-                            [(ngModel)]="max"
-                            [styleCss]="'dataModelDetailsLabel'"
-                            name="moduleNameMaxText"
-                          >
-                          </mdm-inline-text-edit>
-                          <small class="block">
-                            User numbers or <strong>*</strong> for unbound
-                            multiplicity
-                          </small>
-                        </div>
-                      </div>
-                      <div
-                        style="clear: both"
-                        [ngClass]="{ 'has-error': true }"
-                        *ngIf="error != ''"
-                      >
-                        <small class="warning">{{ error }}</small>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="detailsRowHeader">Classifications</td>
-                  <td *ngIf="dataClass">
-                    <mdm-element-classifications
-                      [readOnly]="showEditDescription"
-                      [classifications]="dataClass.classifiers"
-                      [editableForm]="editableForm"
-                      [element]="dataClass"
-                      [property]="'classifiers'"
-                    ></mdm-element-classifications>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
-          </form>
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default' && dataClass" [catalogueItem]="dataClass"></mdm-default-profile>
         </div>
       </ng-template>
     </mat-tab>
@@ -357,19 +219,6 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </ng-template>
     </mat-tab>
-    <mat-tab label="History">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-history
-            *ngIf="dataClass"
-            [parent]="'dataModel'"
-            [parentType]="'DataModel'"
-            [parentId]="dataClass.id"
-            [domainType]="'dataClasses'"
-          ></mdm-history>
-        </div>
-      </ng-template>
-    </mat-tab>
     <mat-tab label="Data" *ngIf="showExtraTabs">
       <ng-template matTabContent>
         <div class="full-width">
@@ -389,6 +238,91 @@ SPDX-License-Identifier: Apache-2.0
             [parent]="dataClass"
             [domainType]="'dataClasses'"
           ></mdm-constraints-rules>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Annotations">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <div class="heading-container">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.md="row"
+              fxLayout.sm="row"
+              fxLayout.xs="column"
+              fxLayoutAlign="space-around"
+            >
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-start center"
+                fxLayoutAlign.xs="flex-start center"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  class="paddingless"
+                  style="max-width: 230px; width: 100%"
+                >
+                  <mat-select
+                    [(ngModel)]="annotationsView"
+                    name="annotationsView"
+                  >
+                    <mat-option value="default">Comments</mat-option>
+                    <mat-option value="attachments">Attachments</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-end center"
+                fxLayoutAlign.xs="flex-start center"
+              ></div>
+            </div>
+          </div>
+
+          <div *ngIf="annotationsView === 'default'">
+            <mdm-annotation-list
+              *ngIf="dataClass"
+              [parent]="dataClass"
+              [domainType]="'dataClasses'"
+            ></mdm-annotation-list>
+          </div>
+
+          <div
+            class="mdm--shadow-block bordered"
+            *ngIf="annotationsView === 'attachments'"
+          >
+            <div class="pxy-2">
+              <mdm-attachment-list
+                *ngIf="dataClass"
+                [parent]="dataClass"
+                [domainType]="'dataClasses'"
+              ></mdm-attachment-list>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="History">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-history
+            *ngIf="dataClass"
+            [parent]="'dataModel'"
+            [parentType]="'DataModel'"
+            [parentId]="dataClass.id"
+            [domainType]="'dataClasses'"
+          ></mdm-history>
         </div>
       </ng-template>
     </mat-tab>

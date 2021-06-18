@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,9 +31,9 @@ const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxf
 })
 export class FooterComponent implements OnInit {
   copyright: string = defaultFooterCopyright;
-  showWikiLink = true;
+  showDocumentationLink = true;
   showYouTrackLink = true;
-  wiki = this.sharedService.wiki;
+  documentation = this.sharedService.documentation;
   youTrack = this.sharedService.youTrack;
 
   constructor(
@@ -44,7 +45,7 @@ export class FooterComponent implements OnInit {
       this.sharedService.simpleViewSupport &&
       !this.sharedService.isLoggedIn()
     ) {
-      this.showWikiLink = false;
+      this.showDocumentationLink = false;
     }
 
     if (

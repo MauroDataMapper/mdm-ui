@@ -1,0 +1,154 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+  <div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+      <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100"
+        fxLayoutAlign="flex-start center">
+        <h4 class="marginless">
+          Restrict user access based on group(s)
+          <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
+        </h4>
+      </div>
+      <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+        <div *ngIf="canAddGroups" class="mt-1">
+          <button mat-flat-button color="primary" type="button" (click)="add()">
+            <i class="fas fa-plus"></i>
+            Add Group
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form>
+    <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
+        <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+          <div *ngIf="!record.inEdit">
+            {{ record.userGroup.name }}
+          </div>
+
+          <div *ngIf="record.inEdit">
+            <div *ngIf="!record.isNew">
+              {{ record.userGroup.name }}
+            </div>
+            <div *ngIf="record.isNew">
+              <mdm-select [width]="'100%'"
+                          [acceptTypedInput]="false"
+                          [valueType]="'static'"
+                          [defaultValue]="record.group"
+                          [staticValues]="allGroups"
+                          [minInputLength]="1"
+                          [hasError]="record.edit.errors && record.edit.errors['group']"
+                          [record]="record"
+                          [idProperty]="'id'"
+                          [displayProperty]="'name'"
+                          [searchProperty]="'name'"
+                          (selectEvent)="onGroupSelect($event[0], $event[1])">
+                <ng-template #lineContent let-item>
+                  <div>{{ item.name }}</div>
+                </ng-template>
+              </mdm-select>
+              <small *ngIf="record.edit.errors && record.edit.errors['group']" class="warning">{{ record.edit.errors['group'] }}</small>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="access">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Access Level</th>
+        <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+          <div *ngIf="!record.inEdit">
+            {{ record.groupRole.displayName }}
+          </div>
+
+          <div *ngIf="record.inEdit">
+            <div *ngIf="!record.isNew">
+              {{ record.groupRole.displayName }}
+            </div>
+            <div *ngIf="record.isNew">
+              <mdm-select [width]="'100%'"
+                          [acceptTypedInput]="false"
+                          [valueType]="'static'"
+                          [defaultValue]="record.groupLevelId"
+                          [staticValues]="accessLevels"
+                          [minInputLength]="1"
+                          [record]="record"
+                          [idProperty]="'id'"
+                          [displayProperty]="'displayName'"
+                          [searchProperty]="'displayName'"
+                          (selectEvent)="onGroupAccessSelect($event[0], $event[1])">
+                <ng-template #lineContent let-item>
+                  <div>{{ item.displayName }}</div>
+                </ng-template>
+              </mdm-select>
+              <small *ngIf="record.edit.errors && record.edit.errors['group']"
+                class="warning">{{ record.edit.errors['group'] }}</small>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <td mat-header-cell *matHeaderCellDef></td>
+        <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
+          <div *ngIf="!record.isNew">
+            <button mat-icon-button color="warn" (click)="deleteRecord(record)" type="button" aria-label="Cancel edit">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+          <div *ngIf="record.isNew">
+            <div>
+              <button mat-icon-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
+                <i class="fas fa-times"></i>
+              </button>
+              <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record)" type="button" aria-label="Save record">
+                <i class="fas fa-check"></i>
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </form>
+
+  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !loading}">
+    <p class="marginless">There are no groups this repository.</p>
+  </div>
+
+  <div class="item" *ngIf="loading">
+    <table class="mdm--mat-table mdm--skeleton-table">
+      <tr>
+        <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 11.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+    </tr>
+    <tr>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      </tr>
+    </table>
+</div>
+
+  <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
+    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+  </div>

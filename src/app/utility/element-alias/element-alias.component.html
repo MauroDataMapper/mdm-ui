@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div>
-    <div mdmProperties [aliases]="editableForm[property]" *ngFor="let alias of aliases">
+    <div *ngFor="let alias of aliases">
         <div style="float: left;">
             <ul class="alias">
                 <li>
                     <span>{{alias}}</span>
-                    <span class="aliasButton" *ngIf="inEditMode" (click)="remove(alias)">
+                    <span class="aliasButton" *ngIf="!readOnly" (click)="remove(alias)">
                         <i class="fas fa-times"></i>
                     </span>
                 </li>
@@ -29,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 
-    <div *ngIf="inEditMode && !readOnly" style="clear: both;">
+    <div *ngIf="!readOnly" style="clear: both;">
         <div class="input-group" style="max-width: 40%;">
             <input type="text" #typedAliasId id="aliasInput" (keypress)="onKeyPress($event)" [(ngModel)]="typedAlias" name="typedAlias" class="outlined-input form-control">
             <button mat-flat-button color="accent" type="button" class="paddingless" [disabled]="!typedAlias" (click)="add()" aria-label="Add alias" style="margin-left: 5px;">

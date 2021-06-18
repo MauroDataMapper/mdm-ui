@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +21,8 @@ SPDX-License-Identifier: Apache-2.0
   <div class="panel">
     <mdm-terminology-details
       *ngIf="terminology"
-      [hideEditButton]="true"
       [mcTerminology]="terminology"
-      (afterSave)="save()"
-      [openEditForm]="openEditForm"
-    ></mdm-terminology-details>
+   ></mdm-terminology-details>
 
     <div class="panel-body" *ngIf="showSearch">
       <h4 class="marginless">Find Terms</h4>
@@ -162,10 +160,10 @@ SPDX-License-Identifier: Apache-2.0
               </button>
 
               <mat-menu #editMenu="matMenu">
-                <button mat-menu-item (click)="showDescription()">
+                <button mat-menu-item (click)="edit(true)">
                   <i class="fas fa-pencil-alt"></i> Edit Description
                 </button>
-                <button mat-menu-item (click)="edit()">
+                <button mat-menu-item (click)="edit(false)">
                   <i class="fas fa-pencil-alt"></i>Edit
                 </button>
               </mat-menu>
@@ -187,93 +185,105 @@ SPDX-License-Identifier: Apache-2.0
               [isProfileView]="true"
             ></mdm-data-set-metadata>
           </div>
-          <form
-          editable-form
-          name="form"
-          (ngSubmit)="formBeforeSave()"
-          disable-submit-on-enter
-        >
-          <table
-            *ngIf="this.descriptionView === 'default' && terminology"
-            class="mdm--mat-table table-striped mdm--table-fixed"
+          <mdm-default-profile  *ngIf="this.descriptionView === 'default' && catalogueItem" [catalogueItem]="catalogueItem"></mdm-default-profile>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Rules
+        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ rulesItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-constraints-rules
+          *ngIf="terminology"
+          [parent]="terminology"
+          [domainType]="'terminologies'"
+          (totalCount)="rulesCountEmitter($event)"
+        ></mdm-constraints-rules>
+      </div>
+    </mat-tab>
+    <mat-tab label="Annotations">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <div class="heading-container">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.md="row"
+              fxLayout.sm="row"
+              fxLayout.xs="column"
+              fxLayoutAlign="space-around"
+            >
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-start center"
+                fxLayoutAlign.xs="flex-start center"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  class="paddingless"
+                  style="max-width: 230px; width: 100%"
+                >
+                  <mat-select
+                    [(ngModel)]="annotationsView"
+                    name="annotationsView"
+                  >
+                    <mat-option value="default">Comments</mat-option>
+                    <mat-option value="attachments">Attachments</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-end center"
+                fxLayoutAlign.xs="flex-start center"
+              ></div>
+            </div>
+          </div>
+
+          <div *ngIf="annotationsView === 'default'">
+            <mdm-annotation-list
+              *ngIf="terminology"
+              [parent]="terminology"
+              [domainType]="'terminologies'"
+            ></mdm-annotation-list>
+          </div>
+
+          <div
+            class="mdm--shadow-block bordered"
+            *ngIf="annotationsView === 'attachments'"
           >
-            <tbody>
-              <tr>
-                <td class="detailsRowHeader">Aliases</td>
-                <td>
-                  <mdm-element-alias
-                    [readOnly]="showEditDescription"
-                    [inEditMode]="editableForm.visible"
-                    [aliases]="editableForm?.aliases"
-                    [editableForm]="editableForm"
-                    [property]="'aliases'"
-                  ></mdm-element-alias>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Author</td>
-                <td>{{ terminology.author }}</td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Organisation</td>
-                <td>{{ terminology.organisation }}</td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Description</td>
-                <td class="elementDetailDescription">
-                  <mdm-markdown-text-area
-                    [editableForm]="editableForm"
-                    [element]="terminology"
-                    [property]="'description'"
-                  >
-                  </mdm-markdown-text-area>
-                </td>
-              </tr>
-              <tr>
-                <td class="detailsRowHeader">Classifications</td>
-                <td>
-                  <mdm-element-classifications
-                    [readOnly]="showEditDescription"
-                    [classifications]="terminology.classifiers"
-                    [editableForm]="editableForm"
-                  >
-                  </mdm-element-classifications>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <mdm-editable-form-buttons
-          *ngIf="editableForm"
-          [hidden]="!editableForm.visible"
-          [onCancelEdit]="onCancelEdit"
-          [editable]="editableForm"
-          [textLocation]="'left'"
-          [hideDelete]="true"
-          [hideCancel]="false"
-        ></mdm-editable-form-buttons>
-      </form>
-        </div>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Comments">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-annotation-list
-            *ngIf="terminology"
-            [parent]="terminology"
-            [domainType]="'terminologies'"
-          ></mdm-annotation-list>
-        </div>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Attachments">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-attachment-list
-            *ngIf="terminology"
-            [parent]="terminology"
-            [domainType]="'terminologies'"
-          ></mdm-attachment-list>
+            <div class="pxy-2">
+              <mdm-attachment-list
+                *ngIf="terminology"
+                [parent]="terminology"
+                [domainType]="'terminologies'"
+              ></mdm-attachment-list>
+            </div>
+          </div>
         </div>
       </ng-template>
     </mat-tab>
@@ -303,32 +313,6 @@ SPDX-License-Identifier: Apache-2.0
           [parentType]="'Terminology'"
           [domainType]="'terminologies'"
         ></mdm-history>
-      </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Rules
-        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
-        ({{ rulesItemCount }})
-      </ng-template>
-      <div class="full-width">
-        <mdm-constraints-rules
-          *ngIf="terminology"
-          [parent]="terminology"
-          [domainType]="'terminologies'"
-          (totalCount)="rulesCountEmitter($event)"
-        ></mdm-constraints-rules>
       </div>
     </mat-tab>
   </mat-tab-group>

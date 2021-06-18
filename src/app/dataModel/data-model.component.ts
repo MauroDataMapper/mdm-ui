@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,13 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-AfterViewInit,
+  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ViewChildren,
-  QueryList
+  ViewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -30,14 +29,25 @@ import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  SecurityHandlerService
+} from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataModelDetail, DataModelDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  DataModelDetail,
+  DataModelDetailResponse,
+  ModelUpdatePayload,
+  SecurableDomainType
+} from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
+import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { TabCollection } from '@mdm/model/ui.model';
+
 
 @Component({
   selector: 'mdm-data-model',
@@ -48,27 +58,20 @@ export class DataModelComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  dataModel: DataModelDetail;
-  showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
   parentId: string;
 
-  afterSave: (result: { body: { id: any } }) => void;
+  dataModel: DataModelDetail;
   editMode = false;
-  isEditable: boolean;
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
   activeTab: any;
-  dataModel4Diagram: any;
-  cells: any;
-  rootCell: any;
   semanticLinks: any[] = [];
-  access:any;
+  access: Access;
+  tabs = new TabCollection(['description', 'schema', 'types', 'context', 'rules', 'annotations', 'history']);
 
-  editableForm: EditableDataModel;
   errorMessage = '';
 
   schemaView = 'list';
@@ -112,7 +115,7 @@ export class DataModelComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
@@ -124,7 +127,33 @@ export class DataModelComponent
         this.showSearch = message;
       }
     );
-    // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
+  }
+
+  save(saveItems: Array<DefaultProfileItem>) {
+    const resource: ModelUpdatePayload = {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
+    };
+
+    saveItems.forEach((item: DefaultProfileItem) => {
+      resource[item.propertyName] = item.value;
+    });
+
+    this.resourcesService.dataModel
+      .update(this.catalogueItem.id, resource)
+      .subscribe(
+        (res: DataModelDetailResponse) => {
+          this.messageHandler.showSuccess('Data Model updated successfully.');
+          this.dataModel = res.body;
+          this.catalogueItem = res.body;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Model.',
+            error
+          );
+        }
+      );
   }
 
   ngAfterViewInit(): void {
@@ -132,35 +161,33 @@ export class DataModelComponent
   }
 
   watchDataModelObject() {
-    this.access = this.securityHandler.elementAccess(this.dataModel);
-    if ( this.access !== undefined) {
-      this.showEdit =  this.access.showEdit;
-      this.showDelete =  this.access.showPermanentDelete ||  this.access.showSoftDelete;
+    this.access = this.securityHandler.elementAccess(this.catalogueItem);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
-  dataModelDetails(id: any) {
+  dataModelDetails(id: string) {
     let arr = [];
 
     this.resourcesService.dataModel
       .get(id)
       .subscribe(async (result: DataModelDetailResponse) => {
-        console.log(result.body);
         this.dataModel = result.body;
-        this.catalogueItem = this.dataModel;
-        this.watchDataModelObject();
-        id = result.body.id;
+        this.catalogueItem = result.body;
 
-        this.isEditable = this.dataModel.availableActions?.includes('update');
-        this.parentId = this.dataModel.id;
+        this.watchDataModelObject();
+        this.parentId = this.catalogueItem.id;
 
         await this.resourcesService.versionLink
-          .list('dataModels', this.dataModel.id)
+          .list('dataModels', this.catalogueItem.id)
           .subscribe((response) => {
             if (response.body.count > 0) {
               arr = response.body.items;
               for (const val in arr) {
-                if (this.dataModel.id !== arr[val].targetModel.id) {
+                if (this.catalogueItem.id !== arr[val].targetModel.id) {
                   this.semanticLinks.push(arr[val]);
                 }
               }
@@ -171,55 +198,6 @@ export class DataModelComponent
           this.DataModelPermissions(id);
           this.UsedProfiles('dataModels', id);
           this.UnUsedProfiles('dataModels', id);
-        } else {
-          this.messageService.FolderSendMessage(this.dataModel);
-          this.messageService.dataChanged(this.dataModel);
-        }
-
-        this.editableForm = new EditableDataModel();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
-        this.setEditableFormData();
-
-        this.editableForm.show = () => {
-          this.editingService.start();
-          this.editForm.forEach((x) =>
-            x.edit({
-              editing: true,
-              focus: x.name === 'moduleName' ? true : false
-            })
-          );
-          this.editableForm.visible = true;
-        };
-
-        this.editableForm.cancel = () => {
-          this.editForm.forEach((x) => x.edit({ editing: false }));
-          this.editableForm.visible = false;
-          this.editableForm.validationError = false;
-          this.editingService.stop();
-          this.errorMessage = '';
-          this.setEditableFormData();
-          if (this.dataModel.classifiers) {
-            this.dataModel.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.dataModel.aliases) {
-            this.dataModel.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-        };
-
-        if (this.dataModel.classifiers) {
-          this.dataModel.classifiers.forEach((item) => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.dataModel.aliases) {
-          this.dataModel.aliases.forEach((item) => {
-            this.editableForm.aliases.push(item);
-          });
         }
       });
   }
@@ -229,63 +207,9 @@ export class DataModelComponent
       .permissions(SecurableDomainType.DataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
-          this.dataModel[attrname] = permissions.body[attrname];
+          this.catalogueItem[attrname] = permissions.body[attrname];
         });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.dataModel);
-        this.messageService.dataChanged(this.dataModel);
-      });
-  }
-
-  formBeforeSave = () => {
-    this.editMode = false;
-    this.errorMessage = '';
-    this.editingService.stop();
-
-    const classifiers = [];
-    this.editableForm.classifiers.forEach(cls => {
-      classifiers.push(cls);
-    });
-    const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
-      aliases.push(alias);
-    });
-
-    const resource: ModelUpdatePayload = {
-      id: this.dataModel.id,
-      domainType: this.dataModel.domainType,
-      description: this.editableForm.description || ''
-    };
-
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.dataModel.type;
-      resource.aliases = aliases;
-      resource.classifiers = classifiers;
-    }
-
-    this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe((res: DataModelDetailResponse) => {
-      this.messageHandler.showSuccess('Data Model updated successfully.');
-      this.editableForm.visible = false;
-      this.dataModel.description = res.body.description;
-        this.editForm.forEach((x) => x.edit({ editing: false }));
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Data Model.',
-          error
-        );
-      }
-    );
-  };
-
-
-  onCancelEdit() {
-    this.errorMessage = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
+        });
   }
 
   toggleShowSearch() {
@@ -319,71 +243,16 @@ export class DataModelComponent
     this.historyItemCount = $event;
   }
 
-  addDataClass = () => {
-    this.stateHandler.Go('newDataClass', { parentDataModelId: this.dataModel.id, parentDataClassId: null }, null);
-  };
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-  edit = () => {
-    this.showEditDescription = false;
-    this.editableForm.show();
-   };
-
-  getTabDetailByName(tabName) {
-    switch (tabName) {
-      case 'description':
-        return { index: 0, name: 'description' };
-      case 'schema':
-        return { index: 1, name: 'schema' };
-      case 'types':
-        return { index: 2, name: 'types' };
-      case 'context':
-        return { index: 3, name: 'context' };
-      case 'history':
-        return { index: 4, name: 'history' };
-      case 'rulesConstraints' : {
-        return { index: 5, name: 'rulesConstraints' };
-      }
-      default:
-        return { index: 0, name: 'description' };
-    }
+  addDataClass() {
+    this.stateHandler.Go(
+      'newDataClass',
+      { parentDataModelId: this.catalogueItem.id, parentDataClassId: null },
+      null
+    );
   }
 
-  getTabDetailByIndex(index) {
-    switch (index) {
-      case 0:
-        return { index: 0, name: 'description' };
-      case 1:
-        return { index: 1, name: 'schema' };
-      case 2:
-        return { index: 2, name: 'types' };
-      case 3:
-        return { index: 3, name: 'context' };
-      case 4: {
-        return { index: 4, name: 'history' };
-      }
-      case 5 : {
-        return { index: 5, name: 'rulesConstraints' };
-      }
-      default:
-        return { index: 0, name: 'description' };
-    }
-  }
-
-  tabSelected(index) {
-    const tab = this.getTabDetailByIndex(index);
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
-  }
-
-  private setEditableFormData() {
-    this.editableForm.description = this.dataModel.description;
-    this.editableForm.label = this.dataModel.label;
-    this.editableForm.organisation = this.dataModel.organisation;
-    this.editableForm.author = this.dataModel.author;
   }
 }

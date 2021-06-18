@@ -1,5 +1,6 @@
 <!--
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="!editableForm">
+<div *ngIf="!element">
    <jodit-editor *ngIf="inEditMode" 
                   [(ngModel)]="description" 
                   name="{{property}}"
@@ -28,13 +29,13 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
-<div *ngIf="editableForm">
-   <jodit-editor *ngIf="editableForm.visible" 
-                  [(ngModel)]="editableForm[property]" 
+<div *ngIf="element">
+   <jodit-editor *ngIf="inEditMode" 
+                  [(ngModel)]="element[property]" 
                   name="{{property}}"
                   [config]="editorConfig">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!editableForm.visible"></span>
+      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!inEditMode"></span>
    </div>
 </div>

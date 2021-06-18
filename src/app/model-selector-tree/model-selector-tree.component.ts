@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +32,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -68,7 +69,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
-  selectedElementsVal: any;
+  selectedElementsVal: MdmTreeItem[];
   @Input()
   get ngModel() {
     return this.selectedElements;
@@ -90,7 +91,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   rootNode: any;
   filteredRootNode: any;
   markChildren: any;
-  selectedElements: any[] = [];
+  selectedElements: MdmTreeItem[] = [];
   searchCriteria: any;
   hasValidationError: boolean;
   inSearchMode: any;
@@ -145,7 +146,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
+        this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
           this.filteredRootNode = {
             children: result.body,
             isRoot: true
@@ -181,7 +182,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
         if (this.searchCriteria.trim().length > 0) {
           this.inSearchMode = true;
-          this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
+          this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
               isRoot: true
@@ -212,13 +213,20 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.tree.list('folders', {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
+      this.resources.tree.list(ContainerDomainType.Folders, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
         this.loading = false;
         this.rootNode = {
           children: data.body,
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
+
+        if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
+          // If a node has already been initially selected, update the input field to
+          // display it
+          this.searchCriteria = this.selectedElements[0].label;
+        }
+
       }, () => {
         this.loading = false;
       });
@@ -247,7 +255,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list('folders', options);
+    let method = this.resources.tree.list(ContainerDomainType.Folders, options);
 
 
     if (id) {
@@ -331,15 +339,15 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
 
-  onNodeClick = (node) => {
-    this.click(node);
-  };
+  onNodeClick(node: MdmTreeItem) {
+    this.selectNode(node);
+  }
 
-  onNodeDbClick = (node) => {
-    this.click(node);
-  };
+  onNodeDbClick(node: MdmTreeItem) {
+    this.selectNode(node);
+  }
 
-  click = (node) => {
+  selectNode(node: MdmTreeItem) {
     this.hasValidationError = false;
 
     if (this.accepts && this.accepts.indexOf(node.domainType) === -1) {
@@ -381,7 +389,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     this.ngModel = this.selectedElements;
     this.checkValidationError();
-  };
+  }
 
   onNodeChecked(node, parent, checkedList) {
     if (this.onCheck) {

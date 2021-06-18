@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -162,7 +163,7 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list('folders', { domainType: 'dataModels' }).subscribe((data) => {
+    this.resourceService.tree.list(ContainerDomainType.Folders, { domainType: 'dataModels' }).subscribe((data) => {
       this.rootNode = {
         children: data.body,
         isRoot: true
@@ -455,7 +456,7 @@ export class ElementSelectorComponent implements OnInit {
       domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search(ContainerDomainType.FOLDERS, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
+    this.resourceService.tree.search(ContainerDomainType.Folders, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

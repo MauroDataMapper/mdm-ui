@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -109,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0
                                 matTooltip="Previous level"
                                 aria-label="Previous level"
                                 [disabled]="levels.current === 0"
-                                (click)="levels.folders()">
+                                (click)="levels.backToTree()">
                             <i class="fas fa-arrow-left"></i>
                         </button>
 
@@ -120,7 +121,7 @@ SPDX-License-Identifier: Apache-2.0
                                 matTooltip="Next level"
                                 aria-label="Next level"
                                 [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
-                                (click)="levels.focusedElement()">
+                                (click)="levels.focusTreeItem(null)">
                             <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -135,15 +136,9 @@ SPDX-License-Identifier: Apache-2.0
                                         (loadModelsToCompareEvent)="loadModelsToCompare($event)"
                                         [enableDragAndDrop]="true"
                                         [enableContextMenu]="true"
-                                        (addFolderEvent)="onAddFolder($event)"
-                                        (deleteFolderEvent)="onDeleteFolder($event)"
-                                        (addDataModelEvent)="onAddDataModel($event)"
-                                        (addCodeSetEvent)="onAddCodeSet($event)"
-                                        (addChildDataClassEvent)="onAddChildDataClass($event)"
-                                        (addChildDataElementEvent)="onAddChildDataElement($event)"
-                                        (addChildDataTypeEvent)="onAddChildDataType($event)"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)">
+                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
+                                        (nodeAdded)="onNodeAdded()">
                             </mdm-folders-tree>
                     </div>
                     <div class="loading-spinner" *ngIf="reloading">

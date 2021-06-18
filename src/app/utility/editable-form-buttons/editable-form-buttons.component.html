@@ -1,5 +1,6 @@
 <!--
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="{{displayEditTitle}}"
             class="paddingless"
             [disabled]="processing"
-            *ngIf="!editable.visible && !editable.deletePending && !hideEdit"
+            *ngIf="!isEditorVisible && !editable.deletePending && !hideEdit"
             (click)="editClicked()"
             aria-label="Edit">
         <i class="fas fa-pencil-alt editButton"></i>
@@ -73,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
             color="warn"
             type="button"
             [disabled]="editable.waiting || processing"
-            *ngIf="editable.visible && !hideCancel"
+            *ngIf="isEditorVisible && !hideCancel"
             (click)="cancelEditClicked()"
             aria-label="Cancel edit">
             Cancel edit
@@ -85,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
             type="submit"
             class="custom"
             [disabled]="editable.waiting || editable.validationError"
-            *ngIf="editable.visible"
+            *ngIf="isEditorVisible"
             (click)="saveClicked()"
             aria-label="Save">
             Save changes

@@ -1,5 +1,6 @@
 /*
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
-import { Editable } from '@mdm/model/editable-forms';
-import { SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
 
 @Component({
   selector: 'mdm-subscribed-catalogue-detail',
@@ -30,7 +29,7 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   @Input() subscribedCatalogue: SubscribedCatalogue;
 
-  editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
+
   processing = false;
 
   constructor(
@@ -38,9 +37,5 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
-
-    this.editable = new Editable(
-      this.subscribedCatalogue,
-      new SubscribedCatalogueForm());
   }
 }

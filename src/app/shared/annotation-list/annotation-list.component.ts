@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,12 +20,14 @@ import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetecto
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { merge } from 'rxjs';
+import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
+import { GridService } from '@mdm/services';
+import { CatalogueItem, ModelDomainType, Securable } from '@maurodatamapper/mdm-resources';
+import { UserDetails } from '@mdm/services/handlers/security-handler.model';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -32,18 +35,17 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./annotation-list.component.sass']
 })
 export class AnnotationListComponent implements AfterViewInit {
-  @Input() parent: any;
-  @Input() domainType: any;
+  @Input() parent: CatalogueItem & Securable;
+  @Input() domainType: ModelDomainType;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  @ViewChild('childEditor', { static: false })
 
-  currentUser: any;
+  currentUser: UserDetails;
   displayedColumns: string[] = ['lastUpdated'];
   totalItemCount = 0;
   isLoadingResults = true;
-  childEditor: MarkdownTextAreaComponent;
-  reloadEvent = new EventEmitter<string>();
+  reloadEvent = new EventEmitter<void>();
   records: any[];
   canAddAnnotation = false;
 
@@ -52,12 +54,8 @@ export class AnnotationListComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
-    private editingService: EditingService) { }
-
-
-  set content(content: MarkdownTextAreaComponent) {
-    this.childEditor = content;
-  }
+    private editingService: EditingService,
+    private gridService: GridService) { }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -66,32 +64,54 @@ export class AnnotationListComponent implements AfterViewInit {
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
-      this.changeRef.detectChanges();
+    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeRef.detectChanges();
 
-      return this.annotationFetch();
-    }), map((data: any) => {
-      this.totalItemCount = data.body.count;
-      this.isLoadingResults = false;
-      this.changeRef.detectChanges();
-      return data.body.items;
-    }), catchError(() => {
-      this.isLoadingResults = false;
-      return [];
-    })
-    ).subscribe(data => {
-      this.records = data;
-    });
+          return this.annotationFetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction
+          );
+        }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          this.changeRef.detectChanges();
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return EMPTY;
+        })
+      )
+      .subscribe(data => {
+        this.records = data;
+      });
   }
 
-  // annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-  // const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-  annotationFetch() {
-    return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
+  annotationFetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,): Observable<any> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType);
+
+    return this.resources.catalogueItem.listAnnotations(
+      this.domainType,
+      this.parent.id,
+      options);
   }
 
-  add = () => {
+  add() {
     const newRecord = {
       id: '',
       label: '',
@@ -110,12 +130,12 @@ export class AnnotationListComponent implements AfterViewInit {
       inEdit: true,
       isNew: true
     };
+
     this.records = [].concat([newRecord]).concat(this.records);
-
     this.editingService.setFromCollection(this.records);
-  };
+  }
 
-  cancelEdit(record, index) {
+  cancelEdit(record: any, index: number) {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (!confirm) {
         return;
@@ -130,47 +150,56 @@ export class AnnotationListComponent implements AfterViewInit {
     });
   }
 
-  saveParent = (record) => {
+  saveParent(record: any) {
     const resource = {
       label: record.edit.label,
       description: record.edit.description
     };
-    this.resources.catalogueItem.saveAnnotations(this.domainType, this.parent.id, resource).subscribe(() => {
-      record.inEdit = false;
-      this.editingService.setFromCollection(this.records);
-      this.messageHandler.showSuccess('Comment saved successfully.');
-      this.reloadEvent.emit();
-    }, error => {
-      this.messageHandler.showError('There was a problem adding the comment.', error);
-    });
-  };
 
-  addChild = annotation => {
+    this.resources.catalogueItem
+      .saveAnnotations(this.domainType, this.parent.id, resource)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem adding the comment.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
+        this.messageHandler.showSuccess('Comment saved successfully.');
+        this.reloadEvent.emit();
+      });
+  }
+
+  addChild(annotation: any) {
     const resource = {
       description: annotation.newChildText
     };
 
-    this.resources.catalogueItem.saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource).toPromise().then(response => {
-      annotation.childAnnotations = annotation.childAnnotations || [];
-      annotation.childAnnotations.push(response.body);
-      annotation.newChildText = '';
-      this.messageHandler.showSuccess('Comment saved successfully.');
-    }, error => {
-      this.messageHandler.showError('There was a problem saving the comment.', error);
-      // element not found
-      if (error.status === 400) {
-        // viewError
-      }
-    }
-    );
-  };
+    this.resources.catalogueItem
+      .saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem saving the comment.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        annotation.childAnnotations = annotation.childAnnotations || [];
+        annotation.childAnnotations.push(response.body);
+        annotation.newChildText = '';
+        this.messageHandler.showSuccess('Comment saved successfully.');
+      });
+  }
 
-  showChildren = annotation => {
+  showChildren(annotation: any) {
     if (annotation.show) {
       annotation.show = false;
-    } else {
+    }
+    else {
       annotation.newChildText = '';
       annotation.show = true;
     }
-  };
+  }
 }

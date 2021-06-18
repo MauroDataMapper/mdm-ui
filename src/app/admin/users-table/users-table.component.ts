@@ -1,5 +1,6 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,7 +57,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService,
+    private broadcast: BroadcastService,
     private title: Title,
     private gridService: GridService
   ) { }
@@ -126,7 +127,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     row.disabled = !row.disabled;
     from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
       this.messageHandler.showSuccess('User details updated successfully.');
-      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.broadcast.dispatch('pendingUserUpdated');
     }, error => {
       this.messageHandler.showError('There was a problem updating the user.', error);
     });

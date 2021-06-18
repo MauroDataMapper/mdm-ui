@@ -1,5 +1,6 @@
 /*
-Copyright 2021 University of Oxford
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,23 +17,26 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-export enum ModelDomainType {
-    FOLDERS = 'folders',
-    DATA_MODELS = 'dataModels',
-    DATA_CLASSES = 'dataClasses',
-    DATA_TYPES = 'dataTypes',
-    TERMINOLOGIES = 'terminologies',
-    REFERENCEDATAMODELS = 'referenceDataModels',
-    TERMS = 'terms',
-    ALL = 'all'
-}
-
-export enum ModelDomainRequestType {
+export enum  ModelDomainRequestType {
     folders = 'folder',
     dataModels = 'dataModel',
     dataClasses = 'dataClass',
     dataTypes = 'dataType',
     terminologies = 'terminology',
     referenceDataModels = 'referenceDataModel',
-    terms = 'term'
+    terms = 'term',
+    Folders = 'folder',
+    DataModels = 'dataModel',
+    DataClasses = 'dataClass',
+    DataTypes = 'dataType',
+    Terminologies = 'terminology',
+    ReferenceDataModels = 'referenceDataModel',
+    Terms = 'term',
+    Folder = 'folder',
+    DataModel = 'dataModel',
+    DataClass = 'dataClass',
+    DataType = 'dataType',
+    Terminology = 'terminology',
+    ReferenceDataModel = 'referenceDataModel',
+    Term = 'term',
 }

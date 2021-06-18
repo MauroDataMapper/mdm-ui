@@ -32,7 +32,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { CatalogueItemDomainType, ContainerDomainType, Folder, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -204,7 +204,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.loading = true;
     if (folder?.id) {
       this.resources.folder.get(id).subscribe((data: FolderIndexResponse) => {
-        let children = data.body.items;
+        const children = data.body.items;
         this.loading = false;
         this.rootNode = {
           children,

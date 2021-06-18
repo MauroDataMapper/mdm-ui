@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { SharedService, StateHandlerService } from '@mdm/services';
+import { UIRouterGlobals } from '@uirouter/angular';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -32,9 +33,13 @@ import { SharedService, StateHandlerService } from '@mdm/services';
 })
 export class MergeDiffContainerComponent implements OnInit {
 
+  loaded = false;
+  domainType: string;
+
   constructor(
     private shared: SharedService,
-    private stateHandler: StateHandlerService) { }
+    private stateHandler: StateHandlerService,
+    private uiRouterGlobals: UIRouterGlobals) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useMergeUiV2) {
@@ -43,7 +48,17 @@ export class MergeDiffContainerComponent implements OnInit {
       return;
     }
 
+    const sourceId = this.uiRouterGlobals.params.sourceId;
+    const targetId = this.uiRouterGlobals.params.targetId;
+    this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
+
+
+    this.loaded = true;
     // TODO: load UI...
+  }
+
+  onCommitChanges(): void{
+    // TODO
   }
 
 }

@@ -16,4 +16,72 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<p>merge-diff-container works!</p>
+<div class="loading-spinner" *ngIf="!loaded">
+  <div>
+    <i class="fas fa-sync-alt fa-spin"></i>
+  </div>
+</div>
+<div  *ngIf="loaded">
+  <div class="heading-container">
+    <div fxLayout="row">
+      <h4
+        fxFlex
+        fxLayout="row"
+        fxFlex="75"
+        fxFlexOffset="15"
+        fxFlex.md="50"
+        fxFlex.sm="100"
+        fxFlex.xs="100"
+        fxLayoutAlign="center center"
+        fxLayoutAlign.xs="center center"
+      >
+        Merge BRANCH NAME into TARGET BRANCH
+      </h4>
+
+      <div fxFlex>
+        <span style="margin-top: auto; margin-bottom: auto"
+          ><strong>Target: </strong></span
+        >
+        <span>
+          <select
+            class="form-control"
+            style="
+              display: inline;
+              max-width: 120px;
+              line-height: 1;
+              padding: 0 0.35em;
+              margin-right: 20px;
+              width: auto;
+            "
+            name="currentBranch"
+          ></select>
+        </span>
+
+        <button
+          mat-flat-button
+          color="primary"
+          style="text-align: right"
+          type="button"
+          matToolTip="Commit Changes"
+          aria-label="Commit Changes"
+          (click)="onCommitChanges()"
+          fxFlex
+        >
+          Commit Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="div1" mdmResizable>
+      <div>Changes</div>
+      <div>
+        Committed dsssssss ssss sss s sssssss sssssssssssss ssssssss ssss
+      </div>
+    </div>
+    <div class="div2">
+      <span>Content</span>
+    </div>
+  </div>
+</div>

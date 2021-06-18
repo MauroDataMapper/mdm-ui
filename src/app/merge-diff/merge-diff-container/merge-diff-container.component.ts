@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { SharedService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
 
@@ -39,7 +41,8 @@ export class MergeDiffContainerComponent implements OnInit {
   constructor(
     private shared: SharedService,
     private stateHandler: StateHandlerService,
-    private uiRouterGlobals: UIRouterGlobals) { }
+    private uiRouterGlobals: UIRouterGlobals,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useMergeUiV2) {
@@ -58,6 +61,11 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   onCommitChanges(): void{
+    this.dialog.open(CheckInModalComponent, {
+      data: {
+        deleteSourceBranch: false
+      }
+    }).afterClosed().subscribe(() => {});
     // TODO
   }
 

@@ -29,13 +29,13 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div *ngIf="!editExisting && systemProperties && systemProperties.length > 0">
         Select the property to add
-        <mat-form-field  appearance="outline">        
+        <mat-form-field  appearance="outline">
             <mat-select [(value)]="selectedSystemProperty" name="systemProperty" placeholder="Create a new property" (selectionChange)="systemPropertyChanged($event)">
                 <mat-option>Create a new property</mat-option>
                 <mat-option [value]="systemProperty.key" *ngFor="let systemProperty of systemProperties">{{systemProperty.key}}</mat-option>
             </mat-select>
         </mat-form-field>
-    </div>    
+    </div>
     <mat-form-field appearance="outline">
         <mat-label>Key</mat-label>
         <input matInput formControlName="key" required [readOnly]="property.metadata.isSystem">
@@ -53,16 +53,20 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mdm-api-property__checkbox">
         <mat-checkbox name="publiclyVisible" color="primary" formControlName="publiclyVisible" labelPosition="after">
             Publicly visible
-        </mat-checkbox>    
+        </mat-checkbox>
     </div>
     <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Html" appearance="outline">
         <mat-label>Value</mat-label>
         <input *ngIf="property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
-        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>                
+        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
+        <mat-select *ngIf="property.metadata.editType === EditTypes.Boolean" formControlName="value" required>
+          <mat-option [value]="'true'">Yes</mat-option>
+          <mat-option [value]="'false'">No</mat-option>
+        </mat-select>
         <mat-error *ngIf="value?.errors?.required">
             Value is required
         </mat-error>
-    </mat-form-field>    
+    </mat-form-field>
     <div *ngIf="property.metadata.editType === EditTypes.Html" class="mdm-api-property__html-container">
         <mdm-html-editor [description]="value.value" (descriptionChange)="htmlValueChanged($event)" [inEditMode]="true">
         </mdm-html-editor>
@@ -79,4 +83,4 @@ SPDX-License-Identifier: Apache-2.0
     <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!editExisting">
         Add property
     </button>
-</form> 
+</form>

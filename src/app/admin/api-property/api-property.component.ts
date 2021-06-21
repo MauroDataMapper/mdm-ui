@@ -23,7 +23,7 @@ import { Title } from '@angular/platform-browser';
 import { ApiProperty, ApiPropertyIndexResponse, ApiPropertyResponse } from '@maurodatamapper/mdm-resources';
 import { ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyMetadata, propertyMetadata } from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { catchError, map } from 'rxjs/operators';
@@ -67,6 +67,7 @@ export class ApiPropertyComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
+    private broadcast: BroadcastService,
     private editing: EditingService,
     private title: Title) { }
 
@@ -88,10 +89,10 @@ export class ApiPropertyComponent implements OnInit {
 
   private createFormGroup() {
     this.formGroup = new FormGroup({
-      key: new FormControl(this.property.metadata.key, [ Validators.required ]),  // eslint-disable-line @typescript-eslint/unbound-method
-      category: new FormControl(this.property.metadata.category, [ Validators.required ]),  // eslint-disable-line @typescript-eslint/unbound-method
+      key: new FormControl(this.property.metadata.key, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
+      category: new FormControl(this.property.metadata.category, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
       publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
-      value: new FormControl(this.property.original?.value, [ Validators.required ])  // eslint-disable-line @typescript-eslint/unbound-method
+      value: new FormControl(this.property.original?.value, [Validators.required])  // eslint-disable-line @typescript-eslint/unbound-method
     });
   }
 
@@ -210,6 +211,9 @@ export class ApiPropertyComponent implements OnInit {
         )
         .subscribe(() => {
           this.messageHandler.showSuccess('Property was updated successfully.');
+          this.broadcast.apiPropertyUpdated({
+            key: this.key.value,
+            value: this.value.value });
           this.navigateToParent();
         });
     }
@@ -231,6 +235,9 @@ export class ApiPropertyComponent implements OnInit {
         )
         .subscribe(() => {
           this.messageHandler.showSuccess('Property was saved successfully.');
+          this.broadcast.apiPropertyUpdated({
+            key: this.key.value,
+            value: this.value.value });
           this.navigateToParent();
         });
     }
@@ -238,6 +245,14 @@ export class ApiPropertyComponent implements OnInit {
 
   private navigateToParent() {
     this.editing.stop();
-    this.stateHandler.Go('appContainer.adminArea.configuration', { tabView: 'properties' });
+    this.stateHandler.Go(
+      'appContainer.adminArea.configuration',
+      {
+        tabView: 'properties'
+      },
+      {
+        reload: this.property.metadata.requiresReload,
+        inherit: false
+      });
   }
 }

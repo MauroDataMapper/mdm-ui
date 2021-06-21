@@ -16,10 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { FeaturesService } from './features.service';
 
-export interface Features {
-  useSubscribedCatalogues: boolean;
-  useDynamicProfiles: boolean;
-  useVersionedFolders: boolean;
-  useMergeUiV2: boolean;
-}
+describe('FeaturesService', () => {
+  let service: FeaturesService;
+
+  beforeEach(() => {
+    service = setupTestModuleForService(FeaturesService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

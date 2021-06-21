@@ -22,8 +22,8 @@ import { SecurityHandlerService } from './handlers/security-handler.service';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Features } from './shared.model';
 import { filter } from 'rxjs/operators';
+import { FeaturesService } from './features.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,6 @@ export class SharedService {
   simpleViewSupport = environment.simpleViewSupport;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
-  features: Features = environment.features;
   isAdmin;
   applicationOffline = new Subject<any>();
   current;
@@ -47,6 +46,7 @@ export class SharedService {
   lastDigestRun = new Date();
 
   constructor(
+    public features: FeaturesService,
     private securityHandler: SecurityHandlerService,
     private toaster: ToastrService,
     private resources: MdmResourcesService

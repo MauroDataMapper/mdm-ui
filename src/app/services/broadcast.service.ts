@@ -20,7 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
+import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
 
 /**
  * Service to broadcast events and data payloads to any other part of the application that subscribes to those events.
@@ -134,5 +134,20 @@ export class BroadcastService {
    */
   onCatalogueTreeNodeSelected(): Observable<CatalogueTreeNodeSelectedBroadcastData> {
     return this.on<CatalogueTreeNodeSelectedBroadcastData>('catalogueTreeNodeSelected');
+  }
+
+  /**
+   * Notify that an API property has been added, modified or removed.
+   * @param data The data associated with the change.
+   */
+  apiPropertyUpdated(data: ApiPropertyUpdatedBroadcastData) {
+    this.dispatch('apiPropertyUpdated', data);
+  }
+
+  /**
+   * Get an observable to watch for the `apiPropertyUpdated` {@link BroadcastEvent}.
+   */
+  onApiProperyUpdated(): Observable<ApiPropertyUpdatedBroadcastData> {
+    return this.on<ApiPropertyUpdatedBroadcastData>('apiPropertyUpdated');
   }
 }

@@ -56,7 +56,6 @@ export const environment = {
   checkSessionExpiryTimeout: 300000,
   features: {
     useSubscribedCatalogues: true,
-    useDynamicProfiles: true,
     useVersionedFolders: true,
     useMergeUiV2: true
   }

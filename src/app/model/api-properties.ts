@@ -22,7 +22,8 @@ import { ApiProperty } from '@maurodatamapper/mdm-resources';
 export enum ApiPropertyEditType {
   Value,
   Text,
-  Html
+  Html,
+  Boolean
 }
 
 export interface ApiPropertyMetadata {
@@ -31,6 +32,7 @@ export interface ApiPropertyMetadata {
   editType: ApiPropertyEditType;
   publiclyVisible?: boolean;
   isSystem: boolean;
+  requiresReload?: boolean;
 }
 
 export interface ApiPropertyEditableState {
@@ -191,20 +193,47 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     category: 'Content',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
-    publiclyVisible: true
+    publiclyVisible: true,
+    requiresReload: true
   },
   {
     key: 'theme.logo.url',
     category: 'Theme',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
-    publiclyVisible: true
+    publiclyVisible: true,
+    requiresReload: true
   },
   {
     key: 'theme.logo.width',
     category: 'Theme',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
-    publiclyVisible: true
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'feature.use_subscribed_catalogues',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'feature.use_versioned_folders',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'feature.use_merge_diff_ui',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

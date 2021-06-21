@@ -138,6 +138,7 @@ export class BroadcastService {
 
   /**
    * Notify that an API property has been added, modified or removed.
+   *
    * @param data The data associated with the change.
    */
   apiPropertyUpdated(data: ApiPropertyUpdatedBroadcastData) {

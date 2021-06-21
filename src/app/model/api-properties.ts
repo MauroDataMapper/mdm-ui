@@ -23,7 +23,7 @@ export enum ApiPropertyEditType {
   Value,
   Text,
   Html,
-  Boolean
+  Boolean // eslint-disable-line id-blacklist
 }
 
 export interface ApiPropertyMetadata {

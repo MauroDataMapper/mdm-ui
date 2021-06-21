@@ -33,6 +33,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from './modules/resources';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FeaturesService } from './services/features.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -52,7 +53,11 @@ describe('AppComponent', () => {
       providers: [
         {
           provide: MdmResourcesService,
-          useValue: {}
+          useValue: {},
+        },
+        {
+          provide: FeaturesService,
+          useValue: jest.fn()
         }
       ],
       declarations: [

@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { FeaturesService } from '@mdm/services/features.service';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { MergeDiffContainerComponent } from './merge-diff-container.component';
 
@@ -23,7 +24,16 @@ describe('MergeDiffContainerComponent', () => {
   let harness: ComponentHarness<MergeDiffContainerComponent>;
 
   beforeEach(async() => {
-    harness = await setupTestModuleForComponent(MergeDiffContainerComponent);
+    harness = await setupTestModuleForComponent(
+      MergeDiffContainerComponent,
+      {
+        providers: [
+          {
+            provide: FeaturesService,
+            useValue: jest.fn()
+          }
+        ]
+      });
   });
 
   it('should create', () => {

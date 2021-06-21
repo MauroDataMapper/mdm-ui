@@ -16,14 +16,42 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { of } from 'rxjs';
 import { FeaturesService } from './features.service';
+
+interface MdmApiPropertiesStub {
+  listPublic: jest.Mock;
+}
+
+interface MdmResourcesServiceStub {
+  apiProperties: MdmApiPropertiesStub;
+}
 
 describe('FeaturesService', () => {
   let service: FeaturesService;
 
+  const resourcesStub: MdmResourcesServiceStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    }
+  };
+
   beforeEach(() => {
-    service = setupTestModuleForService(FeaturesService);
+    // Default endpoint call
+    resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
+
+    service = setupTestModuleForService(
+      FeaturesService,
+      {
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: resourcesStub
+          }
+        ]
+      });
   });
 
   it('should be created', () => {

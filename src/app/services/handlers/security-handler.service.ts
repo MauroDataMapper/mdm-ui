@@ -287,7 +287,8 @@ export class SecurityHandlerService {
 
     if((element as Finalisable).finalised !== undefined)
     {
-      baseRtn.showNewVersion = (element as Finalisable).finalised;
+      const isFinalised = (element as Finalisable).finalised;
+      baseRtn.showNewVersion = isFinalised && element.availableActions?.includes('createNewVersions');
     }
 
     return baseRtn;

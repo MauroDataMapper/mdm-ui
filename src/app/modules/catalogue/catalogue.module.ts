@@ -184,7 +184,6 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
 import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
-import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
 
@@ -345,7 +344,6 @@ import { PipesModule } from '../pipes/pipes.module';
     ProfileDetailsComponent,
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
-    AlertComponent,
     DefaultProfileComponent
   ],
   imports: [
@@ -519,8 +517,7 @@ import { PipesModule } from '../pipes/pipes.module';
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
-    DefaultProfileComponent,
-    AlertComponent
+    DefaultProfileComponent
   ]
 })
 export class CatalogueModule { }

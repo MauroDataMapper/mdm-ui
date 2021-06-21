@@ -57,8 +57,6 @@ export class CodeSetDetailsComponent implements OnInit {
   deleteInProgress: boolean;
   processing = false;
   addedToFavourite = false;
-  currentBranch = '';
-  branchGraph = [];
   access: Access;
 
   constructor(
@@ -90,7 +88,6 @@ export class CodeSetDetailsComponent implements OnInit {
 
   codeSetDetails(): any {
     this.access = this.securityHandler.elementAccess(this.codeSetDetail);
-    this.getModelGraph(this.codeSetDetail.id);
     this.title.setTitle(`Code Set - ${this.codeSetDetail?.label}`);
   }
 
@@ -210,45 +207,6 @@ export class CodeSetDetailsComponent implements OnInit {
       });
   }
 
-  getModelGraph (codesetId : string) {
-    this.currentBranch = this.codeSetDetail.branchName;
-    this.branchGraph = [
-      {
-        branch: 'main',
-        label: this.codeSetDetail.label,
-        codesetId,
-        newBranchModelVersion: false,
-        newDocumentationVersion: false,
-        newFork: false
-      }
-    ];
-
-    this.resourcesService.codeSet.modelVersionTree(codesetId).subscribe(
-      (res) => {
-        this.currentBranch = this.codeSetDetail.branchName;
-        this.branchGraph = res.body;
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem getting the Model Version Tree.',
-          error
-        );
-      }
-    );
-  }
-
-  onModelChange() {
-    for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branch === this.currentBranch) {
-        this.stateHandler.Go(
-          'codeset',
-          { id: this.branchGraph[val].modelId },
-          { reload: true, location: true }
-        );
-      }
-    }
-  }
-
   save() {
     if (this.validatorService.validateLabel(this.codeSetDetail.label)) {
       const resource: CodeSetUpdatePayload = {
@@ -351,8 +309,10 @@ export class CodeSetDetailsComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newVersionModel',
-      { id: this.codeSetDetail.id, domainType: 'codeSet' },
-      { location: true }
+      {
+        id: this.codeSetDetail.id,
+        domainType: this.codeSetDetail.domainType
+      }
     );
   }
 }

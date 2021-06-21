@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { SharedService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -51,8 +52,8 @@ export class MergeDiffContainerComponent implements OnInit {
       return;
     }
 
-    const sourceId = this.uiRouterGlobals.params.sourceId;
-    const targetId = this.uiRouterGlobals.params.targetId;
+    // const sourceId = this.uiRouterGlobals.params.sourceId;
+    // const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
 
 
@@ -61,7 +62,7 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   onCommitChanges(): void{
-    this.dialog.open(CheckInModalComponent, {
+    this.dialog.open<CheckInModalComponent,CheckinModelPayload>(CheckInModalComponent, {
       data: {
         deleteSourceBranch: false
       }

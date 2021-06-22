@@ -32,10 +32,13 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
   // Color codes for the diagram shapes
   fontColorBlack = '#000000';
+  fontColorWhite = '#ffffff';
+  darkOrange = '#f27954';
   lightOrange = '#f7a900';
   shadedOrange = '#fec994';
 
   getDiagramContent(params: any): Observable<any> {
+    this.parentId = params.parent.id;
     return this.resourcesService.dataModel.modelVersionTree(params.parent.id);
   }
 
@@ -43,7 +46,10 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     this.changeComponent(null);
 
     result.body.forEach((item: any) => {
-      if (item.isNewFork) {
+      if (item.id === this.parentId) {
+        this.addColoredRectangleCell(this.fontColorWhite, this.darkOrange, item.id, `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`, 300, 100, 288);
+      }
+      else if (item.isNewFork) {
         this.addRectangleCell(item.id,  `Fork \n\n ${item.label} \n\n  ${item.branch} branch`, 300, 100, 288);
       }
       else if (item.isNewDocumentationVersion) {

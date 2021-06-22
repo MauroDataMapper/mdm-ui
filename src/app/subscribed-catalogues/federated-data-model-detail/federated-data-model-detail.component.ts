@@ -77,6 +77,7 @@ export class FederatedDataModelDetailComponent implements OnInit {
             this.dataModel.catalogueId,
             {
               subscribedModelId: this.dataModel.modelId,
+              subscribedModelType: this.dataModel.modelType,
               folderId: response.folder.id
             });
         }),

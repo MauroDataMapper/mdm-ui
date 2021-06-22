@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 /**
@@ -29,15 +28,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 })
 export class MergeDiffAdapterService {
 
-  source: any;
-
   constructor(private resources : MdmResourcesService) { }
-
-  loadCatalogueItem(id: string, domainType: ModelDomainRequestType)
-  {
-   return this.resources[domainType.toString()].get(domainType,id);
-
-  }
   /*
   TODO: add in adapter functions when required here.
 

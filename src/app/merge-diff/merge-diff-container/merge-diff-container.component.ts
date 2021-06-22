@@ -59,8 +59,6 @@ export class MergeDiffContainerComponent implements OnInit {
     // const sourceId = this.uiRouterGlobals.params.sourceId;
    //  const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-    this.source = this.mergeService.source;
-
 
     this.loaded = true;
     // TODO: load UI...

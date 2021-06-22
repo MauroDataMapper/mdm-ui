@@ -353,7 +353,6 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    this.mergeDiffService.source = this.dataModel;
     if (this.sharedService.features.useMergeUiV2) {
       return this.stateHandler.Go(
         'mergediff',

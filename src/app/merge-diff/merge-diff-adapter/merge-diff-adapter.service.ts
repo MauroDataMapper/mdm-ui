@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { domain } from 'process';
 
 /**
  * Adapter service around {@link MdmResourcesService} to wrap around

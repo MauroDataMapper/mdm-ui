@@ -18,10 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { SharedService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
+import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -37,12 +39,14 @@ import { UIRouterGlobals } from '@uirouter/angular';
 export class MergeDiffContainerComponent implements OnInit {
 
   loaded = false;
-  domainType: string;
+  domainType: CatalogueItemDomainType;
+  source: any;
 
   constructor(
     private shared: SharedService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
+    private mergeService: MergeDiffAdapterService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -53,8 +57,9 @@ export class MergeDiffContainerComponent implements OnInit {
     }
 
     // const sourceId = this.uiRouterGlobals.params.sourceId;
-    // const targetId = this.uiRouterGlobals.params.targetId;
+   //  const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
+    this.source = this.mergeService.source;
 
 
     this.loaded = true;

@@ -21,9 +21,8 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-sync-alt fa-spin"></i>
   </div>
 </div>
-<div  *ngIf="loaded">
-  <div class="heading-container">
-    <div fxLayout="row">
+<div  *ngIf="loaded && source" class="container">
+    <div fxLayout="row"  class="headerContainer">
       <h4
         fxFlex
         fxLayout="row"
@@ -35,32 +34,17 @@ SPDX-License-Identifier: Apache-2.0
         fxLayoutAlign="center center"
         fxLayoutAlign.xs="center center"
       >
-        Merge BRANCH NAME into TARGET BRANCH
+        Merge {{source.branchName}} into TARGET BRANCH
       </h4>
 
-      <div fxFlex>
+   
         <span style="margin-top: auto; margin-bottom: auto"
           ><strong>Target: </strong></span
         >
-        <span>
-          <select
-            class="form-control"
-            style="
-              display: inline;
-              max-width: 120px;
-              line-height: 1;
-              padding: 0 0.35em;
-              margin-right: 20px;
-              width: auto;
-            "
-            name="currentBranch"
-          ></select>
-        </span>
-
+     
         <button
           mat-flat-button
           color="primary"
-          style="text-align: right"
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
@@ -69,11 +53,9 @@ SPDX-License-Identifier: Apache-2.0
         >
           Commit
         </button>
-      </div>
-    </div>
   </div>
 
-  <div class="container">
+  <div class="resizableContainer">
     <div class="div1" mdmResizable>
       <div>Changes Control Here</div>
       <div>

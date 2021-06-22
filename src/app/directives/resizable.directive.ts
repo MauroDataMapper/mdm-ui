@@ -22,26 +22,23 @@ import { Directive, ElementRef, OnInit, Input, Renderer2 } from '@angular/core';
 @Directive({
   selector: '[mdmResizable]' // Attribute selector
 })
-
 export class ResizableDirective implements OnInit {
-
-
   @Input() resizableGrabWidth = 4;
   @Input() resizableMinWidth = 10;
 
   dragging = false;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
-
-
-
     const newWidth = (wid) => {
       const newWidthCalc = Math.max(this.resizableMinWidth, wid);
-      this.renderer.setStyle(this.el.nativeElement,'width',`${newWidthCalc}px`);
+      this.renderer.setStyle(
+        this.el.nativeElement,
+        'width',
+        `${newWidthCalc}px`
+      );
     };
 
-
-    const mouseMoveG = (evt) => {
+    const mouseMoveGlobal = (evt) => {
       if (!this.dragging) {
         return;
       }
@@ -49,7 +46,7 @@ export class ResizableDirective implements OnInit {
       evt.stopPropagation();
     };
 
-    const mouseUpG = (evt) => {
+    const mouseUpGlobal = (evt) => {
       if (!this.dragging) {
         return;
       }
@@ -74,32 +71,32 @@ export class ResizableDirective implements OnInit {
       }
     };
 
-
-    document.addEventListener('mousemove', mouseMoveG, true);
-    document.addEventListener('mouseup', mouseUpG, true);
+    document.addEventListener('mousemove', mouseMoveGlobal, true);
+    document.addEventListener('mouseup', mouseUpGlobal, true);
     el.nativeElement.addEventListener('mousedown', mouseDown, true);
     el.nativeElement.addEventListener('mousemove', mouseMove, true);
   }
 
-
-preventGlobalMouseEvents() {
+  preventGlobalMouseEvents() {
     document.body.style['pointer-events'] = 'none';
   }
 
- restoreGlobalMouseEvents() {
+  restoreGlobalMouseEvents() {
     document.body.style['pointer-events'] = 'auto';
   }
 
-
   ngOnInit(): void {
-    this.renderer.setStyle(this.el.nativeElement,'border-right',`${this.resizableGrabWidth}px solid darkgrey`);
+    this.renderer.setStyle(
+      this.el.nativeElement,
+      'border-right',
+      `${this.resizableGrabWidth}px solid darkgrey`
+    );
   }
 
   inDragRegion(evt) {
-    const cw : number = this.el.nativeElement.clientWidth;
-    const cx : number = evt.clientX;
+    const cw: number = this.el.nativeElement.clientWidth;
+    const cx: number = evt.clientX;
     const osl: number = this.el.nativeElement.offsetLeft;
-    return cw -cx + osl < this.resizableGrabWidth;
+    return cw - cx + osl < this.resizableGrabWidth;
   }
-
 }

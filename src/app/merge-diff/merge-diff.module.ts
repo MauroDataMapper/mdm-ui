@@ -22,13 +22,10 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { MergeDiffContainerComponent } from '@mdm/merge-diff/merge-diff-container/merge-diff-container.component';
-import { ResizableDirective } from '@mdm/directives/resizable.directive';
-
 
 @NgModule({
   declarations: [
-    MergeDiffContainerComponent,
-    ResizableDirective
+    MergeDiffContainerComponent
   ],
   imports: [
     CommonModule,

@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 /**
  * Adapter service around {@link MdmResourcesService} to wrap around
@@ -27,8 +28,7 @@ import { Injectable } from '@angular/core';
 })
 export class MergeDiffAdapterService {
 
-  constructor() { }
-
+  constructor(private resources : MdmResourcesService) { }
   /*
   TODO: add in adapter functions when required here.
 

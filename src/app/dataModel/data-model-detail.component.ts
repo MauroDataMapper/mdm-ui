@@ -46,6 +46,7 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
+import { MergeDiffAdapterService } from '@mdm/merge-diff/merge-diff-adapter/merge-diff-adapter.service';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -81,7 +82,8 @@ export class DataModelDetailComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService
+    private validatorService: ValidatorService,
+    private mergeDiffService: MergeDiffAdapterService
   ) {}
 
   ngOnInit() {

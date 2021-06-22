@@ -45,6 +45,7 @@ import { DownloadLinkComponent } from '@mdm/utility/download-link/download-link.
 import { NewVersionComponent } from '@mdm/shared/new-version/new-version.component';
 import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-selector.component';
+import { ResizableDirective } from '@mdm/directives/resizable.directive';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-sele
     DownloadLinkComponent,
     NewVersionComponent,
     AlertComponent,
-    BranchSelectorComponent
+    BranchSelectorComponent,
+    ResizableDirective
   ],
   imports: [
     CommonModule,
@@ -107,7 +109,8 @@ import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-sele
     DownloadLinkComponent,
     NewVersionComponent,
     AlertComponent,
-    BranchSelectorComponent
+    BranchSelectorComponent,
+    ResizableDirective
   ]
 })
 export class SharedModule {}

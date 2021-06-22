@@ -16,36 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-  
-  .headerContainer{    
-    justify-content:flex-start;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
-  }
 
-  
-.resizableContainer {
-  @extend .headerContainer;
-  border: 1px solid black;
-  margin-top: 5px;
+export interface CheckinModelPayload
+{
+    deleteSourceBranch : boolean;
+    comment? : string;
+   changes? : Array<any>; // Replace with type when added;
 }
-
-  .div1 {
-    position: relative;
-    width:20%;
-    margin: 2.5px;
-   }
-  
-  .div2 {
-    position: relative;
-    width:80%;
-    margin: 2.5px;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  

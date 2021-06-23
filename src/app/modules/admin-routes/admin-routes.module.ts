@@ -31,7 +31,7 @@ import { GroupComponent } from '@mdm/admin/group/group.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
 import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
-import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table/openid-connect-provider-table.component';
+import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [

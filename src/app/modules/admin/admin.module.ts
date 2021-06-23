@@ -25,7 +25,7 @@ import { EmailsComponent } from '@mdm/admin/emails/emails.component';
 import { GroupMemberTableComponent } from '@mdm/admin/group-member-table/group-member-table.component';
 import { UserComponent } from '@mdm/admin/user/user.component';
 import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
-import { OpenidConnectProviderTableComponent } from '../../admin/openid-connect-provider-table/openid-connect-provider-table/openid-connect-provider-table.component';
+import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 
 @NgModule({
   declarations: [

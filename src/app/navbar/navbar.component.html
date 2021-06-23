@@ -99,6 +99,10 @@ SPDX-License-Identifier: Apache-2.0
                                     <i class="fas fa-users" aria-hidden="true"></i>
                                     <span>Manage groups</span>
                                 </a>
+                                <a mat-menu-item *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders">
+                                    <i class="fab fa-openid" aria-hidden="true"></i>
+                                    <span>OpenID Connect</span>
+                                </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.configuration">
                                     <i class="fas fa-cog" aria-hidden="true"></i>
                                     <span>Configuration</span>
@@ -188,6 +192,10 @@ SPDX-License-Identifier: Apache-2.0
                     <i class="fas fa-list" aria-hidden="true"></i>
                     <span>Model management</span>
                 </a>
+                <a mat-menu-item *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues" (click)="sidenav.toggle()" uiSrefActive="active">
+                  <i class="fas fa-rss" aria-hidden="true"></i>
+                  <span>Subscribed catalogues</span>
+                </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.emails" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-envelope" aria-hidden="true"></i>
                     <span>Emails</span>
@@ -203,6 +211,10 @@ SPDX-License-Identifier: Apache-2.0
                 <a mat-menu-item uiSref="appContainer.adminArea.groups" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-users" aria-hidden="true"></i>
                     <span>Manage groups</span>
+                </a>
+                <a mat-menu-item *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders" (click)="sidenav.toggle()" uiSrefActive="active">
+                    <i class="fab fa-openid" aria-hidden="true"></i>
+                    <span>OpenID Connect</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.configuration" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-cog" aria-hidden="true"></i>

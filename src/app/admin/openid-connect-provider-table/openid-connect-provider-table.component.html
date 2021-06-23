@@ -16,4 +16,64 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<p>openid-connect-provider-table works!</p>
+<div class="mdm--shadow-block">
+  <div class="heading-container">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayout.md="row"
+      fxLayout.sm="row"
+      fxLayout.xs="column"
+      fxLayoutAlign="space-around"
+    >
+      <div
+        fxFlex
+        fxLayout="row"
+        fxFlex="80"
+        fxFlex.md="80"
+        fxFlex.sm="80"
+        fxFlex.xs="100"
+        fxLayoutAlign="flex-start center"
+      >
+        <h4 class="marginless">
+          OpenID Connect Providers
+          <!-- <span class="mdm--badge mdm--element-count">{{
+            totalItemCount
+          }}</span> -->
+        </h4>
+      </div>
+      <div
+        fxFlex
+        fxLayout="row"
+        fxFlex="20"
+        fxFlex.md="20"
+        fxFlex.sm="25"
+        fxFlex.xs="100"
+        fxLayoutAlign="flex-end center"
+        fxLayoutAlign.xs="flex-start center"
+      >
+        <!-- <mdm-data-type-list-buttons
+          [displayRecords]="records"
+          [showContentDropdown]="false"
+          [showDeleteButton]="false"
+          [add]="addSubscription"
+        ></mdm-data-type-list-buttons> -->
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div *ngIf="loading">
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div *ngIf="!loading">
+      <mdm-alert *ngIf="!moduleLoaded" alertStyle="warning" [showIcon]="true">
+        Administration of OpenID Connect providers requires the Mauro OpenID
+        Connect Authentication plugin to be installed on this Mauro instance.
+        Please contact your administrator for further information.
+      </mdm-alert>
+      <div *ngIf="moduleLoaded">
+        <p>openid-connect-provider-table works!</p>
+      </div>
+    </div>
+  </div>
+</div>

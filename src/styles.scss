@@ -22,6 +22,9 @@ SPDX-License-Identifier: Apache-2.0
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
 
+// Include Bootstrap.
+@import '~bootstrap';
+
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat-core();
 

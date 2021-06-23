@@ -17,12 +17,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { ModulesResponse } from '@maurodatamapper/mdm-resources';
+import { MatTableDataSource } from '@angular/material/table';
+import { ModulesResponse, OpenIdConnectProvider, OpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
 import { OpenIdConnectModuleName } from '@mdm/model/openid-connect.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EMPTY } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, map } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-openid-connect-provider-table',
@@ -33,6 +34,9 @@ export class OpenidConnectProviderTableComponent implements OnInit {
 
   loading = false;
   moduleLoaded = false;
+  totalItemCount = 0;
+  dataSource = new MatTableDataSource<OpenIdConnectProvider>();
+  displayedColumns = ['label', 'standardProvider', 'lastUpdated', 'icons'];
 
   constructor(
     private shared: SharedService,
@@ -42,7 +46,7 @@ export class OpenidConnectProviderTableComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.shared.features.useOpenIdConnect) {
-      this.stateHandler.Go('home');
+      this.stateHandler.Go('alldatamodel');
       return;
     }
 
@@ -66,6 +70,24 @@ export class OpenidConnectProviderTableComponent implements OnInit {
   }
 
   private initialise() {
+    this.refreshList();
+  }
 
+  private refreshList() {
+    this.loading = true;
+    this.resources.pluginOpenIdConnect
+      .list()
+      .pipe(
+        map((response: OpenIdConnectProvidersIndexResponse) => {
+          this.totalItemCount = response.body.count;
+          return response.body.items;
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the list of OpenID Connect providers.', error);
+          return EMPTY;
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe((data: OpenIdConnectProvider[]) => this.dataSource.data = data);
   }
 }

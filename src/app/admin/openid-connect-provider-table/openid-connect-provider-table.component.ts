@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
@@ -41,7 +42,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
   moduleLoaded = false;
   totalItemCount = 0;
   dataSource = new MatTableDataSource<OpenIdConnectProvider>([]);
-  displayedColumns = ['label', 'standardProvider', 'lastUpdated', 'icons'];
+  displayedColumns = ['label', 'standardProvider', 'icons'];
 
   constructor(
     private shared: SharedService,
@@ -49,6 +50,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private grid: GridService,
+    private dialog: MatDialog,
     private title: Title) { }
 
   ngOnInit(): void {
@@ -80,6 +82,41 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
         if (this.moduleLoaded) {
           this.initialise();
         }
+      });
+  }
+
+  addProvider = () => {
+    this.stateHandler.Go('appContainer.adminArea.openIdConnectProvider', { id: null });
+  };
+
+  editProvider(record: OpenIdConnectProvider) {
+    if (!record) {
+      return;
+    }
+
+    this.stateHandler.Go('appContainer.adminArea.openIdConnectProvider', { id: record.id });
+  }
+
+  deleteProvider(record: OpenIdConnectProvider) {
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Are you sure you want to delete this OpenID Connect provider?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: 'Once deleted, the provider cannot be retrieved.',
+        }
+      })
+      .pipe(
+        switchMap(() => this.resources.pluginOpenIdConnect.remove(record.id)),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem deleting the OpenID Connect provider.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('OpenID Connect provider deleted successfully.');
+        this.refreshList();
       });
   }
 

@@ -26,6 +26,7 @@ import { GroupMemberTableComponent } from '@mdm/admin/group-member-table/group-m
 import { UserComponent } from '@mdm/admin/user/user.component';
 import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
+import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-p
     GroupMemberTableComponent,
     UserComponent,
     ProfilesDashboardComponent,
-    OpenidConnectProviderTableComponent
+    OpenidConnectProviderTableComponent,
+    OpenidConnectProviderComponent
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [

@@ -32,6 +32,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
 import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
 import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
+import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
@@ -70,6 +71,14 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.adminArea.openIdConnectProviders',
       url: '/openidConnectProviders',
       component: OpenidConnectProviderTableComponent
+    },
+    {
+      name: 'appContainer.adminArea.openIdConnectProvider',
+      url: '/openidConnectProviders/:id',
+      component: OpenidConnectProviderComponent,
+      params: {
+        id: { value: null, squash: true }
+      }
     },
     {
       name: 'appContainer.adminArea.users',

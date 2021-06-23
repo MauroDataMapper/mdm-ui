@@ -74,7 +74,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.adminArea.openIdConnectProvider',
-      url: '/openidConnectProviders/:id',
+      url: '/openidConnectProvider/:id',
       component: OpenidConnectProviderComponent,
       params: {
         id: { value: null, squash: true }

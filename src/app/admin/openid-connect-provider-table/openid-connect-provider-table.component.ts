@@ -16,39 +16,53 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
 import { ModulesResponse, OpenIdConnectProvider, OpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
 import { OpenIdConnectModuleName } from '@mdm/model/openid-connect.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
-import { EMPTY } from 'rxjs';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { GridService, MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { EMPTY, merge, Observable } from 'rxjs';
+import { catchError, finalize, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-openid-connect-provider-table',
   templateUrl: './openid-connect-provider-table.component.html',
   styleUrls: ['./openid-connect-provider-table.component.scss']
 })
-export class OpenidConnectProviderTableComponent implements OnInit {
+export class OpenidConnectProviderTableComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   loading = false;
   moduleLoaded = false;
   totalItemCount = 0;
-  dataSource = new MatTableDataSource<OpenIdConnectProvider>();
+  dataSource = new MatTableDataSource<OpenIdConnectProvider>([]);
   displayedColumns = ['label', 'standardProvider', 'lastUpdated', 'icons'];
 
   constructor(
     private shared: SharedService,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService,
+    private grid: GridService,
+    private title: Title) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useOpenIdConnect) {
       this.stateHandler.Go('alldatamodel');
       return;
     }
+
+    this.title.setTitle('OpenID Connect poviders');
+  }
+
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.dataSource.sort = this.sort;
 
     this.loading = true;
 
@@ -74,20 +88,44 @@ export class OpenidConnectProviderTableComponent implements OnInit {
   }
 
   private refreshList() {
-    this.loading = true;
-    this.resources.pluginOpenIdConnect
-      .list()
+    merge(
+      this.sort.sortChange,
+      this.paginator.page)
       .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.loading = true;
+          return this.fetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction);
+        }),
         map((response: OpenIdConnectProvidersIndexResponse) => {
+          this.loading = false;
           this.totalItemCount = response.body.count;
           return response.body.items;
         }),
         catchError(error => {
+          this.loading = false;
           this.messageHandler.showError('There was a problem getting the list of OpenID Connect providers.', error);
           return EMPTY;
-        }),
-        finalize(() => this.loading = false)
+        })
       )
       .subscribe((data: OpenIdConnectProvider[]) => this.dataSource.data = data);
+  }
+
+  private fetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection): Observable<OpenIdConnectProvidersIndexResponse> {
+    const options = this.grid.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType);
+
+    return this.resources.pluginOpenIdConnect.list(options);
   }
 }

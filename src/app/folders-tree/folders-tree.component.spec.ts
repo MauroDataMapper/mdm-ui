@@ -20,6 +20,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { FeaturesService } from '@mdm/services/features.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { FoldersTreeComponent } from './folders-tree.component';
@@ -41,7 +42,11 @@ describe('mdm-folders-tree', () => {
           ToastrModule.forRoot()
         ],
         providers: [
-          { provide: MdmResourcesService, useValue: {} }
+          { provide: MdmResourcesService, useValue: {} },
+          {
+            provide: FeaturesService,
+            useValue: jest.fn()
+          }
         ]
       })
       .compileComponents();

@@ -16,32 +16,42 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { of } from 'rxjs';
+import { FeaturesService } from './features.service';
 
-import { ModelTreeService } from './model-tree.service';
+interface MdmApiPropertiesStub {
+  listPublic: jest.Mock;
+}
 
-describe('ModelTreeService', () => {
-  let service: ModelTreeService;
+interface MdmResourcesServiceStub {
+  apiProperties: MdmApiPropertiesStub;
+}
+
+describe('FeaturesService', () => {
+  let service: FeaturesService;
+
+  const resourcesStub: MdmResourcesServiceStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    }
+  };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot(),
-        MatDialogModule
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: { }
-        }
-      ]
-    });
-    service = TestBed.inject(ModelTreeService);
+    // Default endpoint call
+    resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
+
+    service = setupTestModuleForService(
+      FeaturesService,
+      {
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: resourcesStub
+          }
+        ]
+      });
   });
 
   it('should be created', () => {

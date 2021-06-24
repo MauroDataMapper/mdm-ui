@@ -35,7 +35,8 @@ export type BroadcastEvent =
   | 'favoritesChanged'
   | 'elementDetailsUpdated'
   | 'elementDeleted'
-  | 'profileImageUpdated';
+  | 'profileImageUpdated'
+  | 'apiPropertyUpdated';
 
 /**
  * Represents a message to broadcast with an optional data payload.
@@ -64,4 +65,24 @@ export interface CatalogueTreeNodeSelectedBroadcastData {
    * The node that was selected.
    */
   node: FlatNode;
+}
+
+/**
+ * Data to broadcast for the `apiPropertyUpdated` {@link BroadcastEvent}.
+ */
+export interface ApiPropertyUpdatedBroadcastData {
+  /**
+   * The key of the property updated.
+   */
+  key: string;
+
+  /**
+   * The value of the property updated.
+   */
+  value: string;
+
+  /**
+   * State if the update involved deleting the API property.
+   */
+  deleted?: boolean;
 }

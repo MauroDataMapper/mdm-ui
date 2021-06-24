@@ -28,7 +28,7 @@ export class MdmValidators {
    * @returns An error map with the `required` property if `predicate()` returns `true` and the validation
    * check fails, otherwise `null`.
    */
-  static requiredConditional(predicate: () => boolean): ValidatorFn {
+  static requiredConditional(predicate: (() => boolean)): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       return predicate() ? Validators.required(control) : null;
     };

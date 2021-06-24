@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { OpenIdConnectProviderDetail } from "@maurodatamapper/mdm-resources";
+import { OpenIdAuthorizationEndpointParametersPayload, OpenIdConnectProviderDetail, OpenIdConnectProviderUpdatePayload } from "@maurodatamapper/mdm-resources";
 import { MdmValidators } from "@mdm/utility/mdm-validators";
 
 export class OpenIdConnectProviderForm {
@@ -26,25 +26,41 @@ export class OpenIdConnectProviderForm {
 
   constructor(provider?: OpenIdConnectProviderDetail) {
     this.group = new FormGroup({
-      label: new FormControl(provider?.label, Validators.required),
+      label: new FormControl(provider?.label, [
+        Validators.required
+      ]),
       imageUrl: new FormControl(provider?.imageUrl),
       security: new FormGroup({
-        clientId: new FormControl(provider?.clientId, Validators.required),
-        clientSecret: new FormControl(provider?.clientSecret, Validators.required)
+        clientId: new FormControl(provider?.clientId, [
+          Validators.required
+        ]),
+        clientSecret: new FormControl(provider?.clientSecret, [
+          Validators.required
+        ])
       }),
       discovery: new FormGroup({
-        standardProvider: new FormControl(provider?.standardProvider),
-        discoveryDocumentUrl: new FormControl(provider?.discoveryDocumentUrl, MdmValidators.requiredConditional(() => this.useStandardProvider)),
-        issuer: new FormControl(provider?.discoveryDocument?.issuer, MdmValidators.requiredConditional(() => !this.useStandardProvider)),
-        authorizationEndpoint: new FormControl(provider?.discoveryDocument?.authorizationEndpoint, MdmValidators.requiredConditional(() => !this.useStandardProvider)),
-        tokenEndpoint: new FormControl(provider?.discoveryDocument?.tokenEndpoint, MdmValidators.requiredConditional(() => !this.useStandardProvider)),
+        standardProvider: new FormControl(provider?.standardProvider ?? true),
+        discoveryDocumentUrl: new FormControl(provider?.discoveryDocumentUrl, [
+          MdmValidators.requiredConditional(() => this.useStandardProvider)
+        ]),
+        issuer: new FormControl(provider?.discoveryDocument?.issuer, [
+          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+        ]),
+        authorizationEndpoint: new FormControl(provider?.discoveryDocument?.authorizationEndpoint, [
+          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+        ]),
+        tokenEndpoint: new FormControl(provider?.discoveryDocument?.tokenEndpoint, [
+          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+        ]),
         userinfoEndpoint: new FormControl(provider?.discoveryDocument?.userinfoEndpoint),
         endSessionEndpoint: new FormControl(provider?.discoveryDocument?.endSessionEndpoint),
-        jwksUri: new FormControl(provider?.discoveryDocument?.jwksUri, MdmValidators.requiredConditional(() => !this.useStandardProvider)),
+        jwksUri: new FormControl(provider?.discoveryDocument?.jwksUri, [
+          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+        ]),
       }),
       authorizationEndpointParams: new FormGroup({
-        scope: new FormControl(provider?.authorizationEndpointParameters?.scope),
-        responseType: new FormControl(provider?.authorizationEndpointParameters?.responseType),
+        scope: new FormControl(provider?.authorizationEndpointParameters?.scope ?? 'openid email profile'),
+        responseType: new FormControl(provider?.authorizationEndpointParameters?.responseType ?? 'code'),
         responseMode: new FormControl(provider?.authorizationEndpointParameters?.responseMode),
         display: new FormControl(provider?.authorizationEndpointParameters?.display),
         prompt: new FormControl(provider?.authorizationEndpointParameters?.prompt),
@@ -54,6 +70,16 @@ export class OpenIdConnectProviderForm {
         loginHint: new FormControl(provider?.authorizationEndpointParameters?.loginHint),
         acrValues: new FormControl(provider?.authorizationEndpointParameters?.acrValues)
       })
+    });
+
+    // When the standardProvider field is changed, update the conditional validity of related
+    // fields
+    this.standardProvider.valueChanges.subscribe(() => {
+      this.discoveryDocumentUrl.updateValueAndValidity();
+      this.issuer.updateValueAndValidity();
+      this.authorizationEndpoint.updateValueAndValidity();
+      this.tokenEndpoint.updateValueAndValidity();
+      this.jwksUri.updateValueAndValidity();
     });
   }
 
@@ -107,5 +133,52 @@ export class OpenIdConnectProviderForm {
 
   get jwksUri() {
     return this.group.get('discovery.jwksUri');
+  }
+
+  createPayload(): OpenIdConnectProviderUpdatePayload {
+    if (this.useStandardProvider) {
+      return {
+        label: this.label.value,
+        clientId: this.clientId.value,
+        clientSecret: this.clientSecret.value,
+        imageUrl: this.imageUrl.value,
+        authorizationEndpointParameters: this.createAuthorizationEndpointParametersPayload(),
+        standardProvider: true,
+        discoveryDocumentUrl: this.discoveryDocumentUrl.value
+      };
+    }
+    else {
+      return {
+        label: this.label.value,
+        clientId: this.clientId.value,
+        clientSecret: this.clientSecret.value,
+        imageUrl: this.imageUrl.value,
+        authorizationEndpointParameters: this.createAuthorizationEndpointParametersPayload(),
+        standardProvider: false,
+        discoveryDocument: {
+          issuer: this.issuer.value,
+          authorizationEndpoint: this.authorizationEndpoint.value,
+          tokenEndpoint: this.tokenEndpoint.value,
+          jwksUri: this.jwksUri.value,
+          userinfoEndpoint: this.userinfoEndpoint.value,
+          endSessionEndpoint: this.endSessionEndpoint.value
+        }
+      };
+    }
+  }
+
+  private createAuthorizationEndpointParametersPayload(): OpenIdAuthorizationEndpointParametersPayload {
+    return {
+      scope: this.group.get('authorizationEndpointParams.scope').value ,
+      responseType: this.group.get('authorizationEndpointParams.responseType').value,
+      responseMode: this.group.get('authorizationEndpointParams.responseMode').value,
+      display: this.group.get('authorizationEndpointParams.display').value,
+      prompt: this.group.get('authorizationEndpointParams.prompt').value,
+      maxAge: this.group.get('authorizationEndpointParams.maxAge').value,
+      uiLocales: this.group.get('authorizationEndpointParams.uiLocales').value,
+      idTokenHint: this.group.get('authorizationEndpointParams.idTokenHint').value,
+      loginHint: this.group.get('authorizationEndpointParams.loginHint').value,
+      acrValues: this.group.get('authorizationEndpointParams.acrValues').value
+    }
   }
 }

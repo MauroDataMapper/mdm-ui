@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
           matInput
           type="url"
           formControlName="discoveryDocumentUrl"
-          required
+          [required]="form.useStandardProvider"
         />
         <mat-hint
           >Use discovery documents to automatically configure the required
@@ -129,7 +129,7 @@ SPDX-License-Identifier: Apache-2.0
           type="url"
           formControlName="issuer"
           [readonly]="form.useStandardProvider"
-          required
+          [required]="!form.useStandardProvider"
         />
         <mat-error *ngIf="form.issuer?.errors?.required"
           >This is required</mat-error
@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0
           type="url"
           formControlName="authorizationEndpoint"
           [readonly]="form.useStandardProvider"
-          required
+          [required]="!form.useStandardProvider"
         />
         <mat-error *ngIf="form.authorizationEndpoint?.errors?.required"
           >This is required</mat-error
@@ -155,7 +155,7 @@ SPDX-License-Identifier: Apache-2.0
           type="url"
           formControlName="tokenEndpoint"
           [readonly]="form.useStandardProvider"
-          required
+          [required]="!form.useStandardProvider"
         />
         <mat-error *ngIf="form.tokenEndpoint?.errors?.required"
           >This is required</mat-error
@@ -168,7 +168,6 @@ SPDX-License-Identifier: Apache-2.0
           type="url"
           formControlName="userinfoEndpoint"
           [readonly]="form.useStandardProvider"
-          required
         />
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -178,7 +177,6 @@ SPDX-License-Identifier: Apache-2.0
           type="url"
           formControlName="endSessionEndpoint"
           [readonly]="form.useStandardProvider"
-          required
         />
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -186,9 +184,9 @@ SPDX-License-Identifier: Apache-2.0
         <input
           matInput
           type="url"
-          formControlName="authorizationEndpoint"
+          formControlName="jwksUri"
           [readonly]="form.useStandardProvider"
-          required
+          [required]="!form.useStandardProvider"
         />
         <mat-error *ngIf="form.jwksUri?.errors?.required"
           >This is required</mat-error
@@ -272,7 +270,6 @@ SPDX-License-Identifier: Apache-2.0
       mat-flat-button
       color="primary"
       type="submit"
-      [disabled]="form.group.invalid"
       (click)="save()"
       *ngIf="editExisting"
     >
@@ -282,7 +279,6 @@ SPDX-License-Identifier: Apache-2.0
       mat-flat-button
       color="primary"
       type="submit"
-      [disabled]="form.group.invalid"
       (click)="save()"
       *ngIf="!editExisting"
     >

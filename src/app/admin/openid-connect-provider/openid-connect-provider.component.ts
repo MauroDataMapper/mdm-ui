@@ -23,7 +23,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OpenIdConnectProviderForm } from './openid-connect-provider.model';
 
@@ -84,6 +84,23 @@ export class OpenidConnectProviderComponent implements OnInit {
     if (this.form.group.invalid) {
       return;
     }
+
+    const payload = this.form.createPayload();
+    const request: Observable<OpenIdConnectProvidersDetailResponse> = this.editExisting
+      ? this.resources.pluginOpenIdConnect.update(this.id, payload)
+      : this.resources.pluginOpenIdConnect.save(payload);
+
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem saving the OpenID Connect provider.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Property was updated successfully.');
+        this.navigateToParent();
+      });
   }
 
   private createForm(provider?: OpenIdConnectProviderDetail) {

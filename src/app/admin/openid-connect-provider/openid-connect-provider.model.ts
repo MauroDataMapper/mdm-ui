@@ -41,6 +41,18 @@ export class OpenIdConnectProviderForm {
         userinfoEndpoint: new FormControl(provider?.discoveryDocument?.userinfoEndpoint),
         endSessionEndpoint: new FormControl(provider?.discoveryDocument?.endSessionEndpoint),
         jwksUri: new FormControl(provider?.discoveryDocument?.jwksUri, MdmValidators.requiredConditional(() => !this.useStandardProvider)),
+      }),
+      authorizationEndpointParams: new FormGroup({
+        scope: new FormControl(provider?.authorizationEndpointParameters?.scope),
+        responseType: new FormControl(provider?.authorizationEndpointParameters?.responseType),
+        responseMode: new FormControl(provider?.authorizationEndpointParameters?.responseMode),
+        display: new FormControl(provider?.authorizationEndpointParameters?.display),
+        prompt: new FormControl(provider?.authorizationEndpointParameters?.prompt),
+        maxAge: new FormControl(provider?.authorizationEndpointParameters?.maxAge),
+        uiLocales: new FormControl(provider?.authorizationEndpointParameters?.uiLocales),
+        idTokenHint: new FormControl(provider?.authorizationEndpointParameters?.idTokenHint),
+        loginHint: new FormControl(provider?.authorizationEndpointParameters?.loginHint),
+        acrValues: new FormControl(provider?.authorizationEndpointParameters?.acrValues)
       })
     });
   }

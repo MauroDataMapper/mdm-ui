@@ -29,11 +29,19 @@ SPDX-License-Identifier: Apache-2.0
     padding-bottom: 16px;
   }
 
+  &__buttons {
+    margin-top: 16px;
+  }
+
   fieldset {
     padding-top: 16px;
 
     legend {
       padding-top: 16px;
     }
+  }
+
+  mat-expansion-panel {
+    margin-bottom: 12px;
   }
 }

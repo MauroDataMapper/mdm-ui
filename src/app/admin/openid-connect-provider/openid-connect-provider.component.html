@@ -113,9 +113,14 @@ SPDX-License-Identifier: Apache-2.0
       <mat-expansion-panel-header>
         <mat-panel-title> Discovery configuration </mat-panel-title>
       </mat-expansion-panel-header>
-      <mdm-alert *ngIf="!form.useStandardProvider" alertStyle="info" [showIcon]="true">
-        If not using discovery documents, the following endpoints must be manually configured to ensure correct
-        connectivity to the OpenID Connect provider.
+      <mdm-alert
+        *ngIf="!form.useStandardProvider"
+        alertStyle="info"
+        [showIcon]="true"
+      >
+        If not using discovery documents, the following endpoints must be
+        manually configured to ensure correct connectivity to the OpenID Connect
+        provider.
       </mdm-alert>
       <mat-form-field appearance="outline">
         <mat-label>Issuer</mat-label>
@@ -191,27 +196,97 @@ SPDX-License-Identifier: Apache-2.0
       </mat-form-field>
     </mat-expansion-panel>
   </fieldset>
-  <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
-    Cancel
-  </button>
-  <button
-    mat-flat-button
-    color="primary"
-    type="submit"
-    [disabled]="form.group.invalid"
-    (click)="save()"
-    *ngIf="editExisting"
-  >
-    Update provider
-  </button>
-  <button
-    mat-flat-button
-    color="primary"
-    type="submit"
-    [disabled]="form.group.invalid"
-    (click)="save()"
-    *ngIf="!editExisting"
-  >
-    Add provider
-  </button>
+  <fieldset>
+    <legend>Advanced</legend>
+    <mat-expansion-panel formGroupName="authorizationEndpointParams">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Authorization endpoint parameters</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="outline">
+        <mat-label>Scope</mat-label>
+        <input matInput formControlName="scope" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Response type</mat-label>
+        <input matInput formControlName="responseType" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Response mode</mat-label>
+        <input matInput formControlName="responseMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Display</mat-label>
+        <mat-select formControlName="display">
+          <mat-option></mat-option>
+          <mat-option value="PAGE">Page</mat-option>
+          <mat-option value="POPUP">Popup</mat-option>
+          <mat-option value="TOUCH">Touch</mat-option>
+          <mat-option value="WRAP">Wrap</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Prompt</mat-label>
+        <mat-select formControlName="prompt">
+          <mat-option></mat-option>
+          <mat-option value="NONE">None</mat-option>
+          <mat-option value="LOGIN">Login</mat-option>
+          <mat-option value="CONSENT">Consent</mat-option>
+          <mat-option value="SELECT_ACCOUNT">Select account</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Max age</mat-label>
+        <input matInput type="number" formControlName="maxAge" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>UI locales</mat-label>
+        <input matInput formControlName="uiLocales" />
+        <mat-hint>Use a space-separated list for multiple locales</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ID token hint</mat-label>
+        <input matInput formControlName="idTokenHint" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Login hint</mat-label>
+        <input matInput formControlName="loginHint" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ACR values</mat-label>
+        <input matInput formControlName="acrValues" />
+        <mat-hint>Use a space-separated list for multiple values</mat-hint>
+      </mat-form-field>
+    </mat-expansion-panel>
+  </fieldset>
+  <div class="mdm-openid-connect-provider__buttons">
+    <button
+      mat-button
+      color="warn"
+      type="button"
+      class="mr-1"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="form.group.invalid"
+      (click)="save()"
+      *ngIf="editExisting"
+    >
+      Update provider
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="form.group.invalid"
+      (click)="save()"
+      *ngIf="!editExisting"
+    >
+      Add provider
+    </button>
+  </div>
 </form>

@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { FeaturesService } from '@mdm/services/features.service';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { OpenidConnectProviderTableComponent } from './openid-connect-provider-table.component';
 
@@ -23,7 +24,16 @@ describe('OpenidConnectProviderTableComponent', () => {
   let harness: ComponentHarness<OpenidConnectProviderTableComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(OpenidConnectProviderTableComponent);
+    harness = await setupTestModuleForComponent(
+      OpenidConnectProviderTableComponent,
+      {
+        providers: [
+          {
+            provide: FeaturesService,
+            useValue: jest.fn()
+          }
+        ]
+      });
   });
 
   it('should create', () => {

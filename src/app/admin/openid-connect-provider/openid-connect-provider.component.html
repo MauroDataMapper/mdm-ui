@@ -25,27 +25,21 @@ SPDX-License-Identifier: Apache-2.0
 <form
   name="providerForm"
   class="mdm--form mb-2 mdm-openid-connect-provider"
-  *ngIf="formGroup"
-  [formGroup]="formGroup"
+  *ngIf="form"
+  [formGroup]="form.group"
 >
   <mat-form-field appearance="outline">
     <mat-label>Label</mat-label>
     <input matInput formControlName="label" required />
-    <mat-error *ngIf="label?.errors?.required">A label is required</mat-error>
-  </mat-form-field>
-  <div class="mdm-openid-connect-provider__checkbox">
-    <mat-checkbox
-      name="standardProvider"
-      color="primary"
-      formControlName="standardProvider"
-      labelPosition="after"
+    <mat-hint>This label will appear in the login form</mat-hint>
+    <mat-error *ngIf="form.label?.errors?.required"
+      >A label is required</mat-error
     >
-      Standard provider
-    </mat-checkbox>
-  </div>
+  </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Image URL</mat-label>
-    <input matInput formControlName="imageUrl" />
+    <input matInput type="url" formControlName="imageUrl" />
+    <mat-hint>If provided, this image will appear in the login form</mat-hint>
   </mat-form-field>
   <div class="mdm-openid-connect-provider__image-preview">
     <h5>Preview</h5>
@@ -60,25 +54,143 @@ SPDX-License-Identifier: Apache-2.0
       color="primary"
       class="ml-3"
       matTooltip="Enter an image URL and refresh the preview"
-      [disabled]="!imageUrl?.value"
+      [disabled]="!form.imageUrl?.value"
       (click)="refreshImagePreview()"
     >
       Preview
     </button>
   </div>
-  <div class="mdm-openid-connect-provider__section" formGroupName="security">
-    <h4>Security</h4>
+  <fieldset formGroupName="security">
+    <legend>Security</legend>
     <mat-form-field appearance="outline">
       <mat-label>Client ID</mat-label>
       <input matInput formControlName="clientId" required />
-      <mat-error *ngIf="clientId?.errors?.required">A provider client ID is required</mat-error>
+      <mat-hint>This is supplied by the OpenID Connect provider</mat-hint>
+      <mat-error *ngIf="form.clientId?.errors?.required"
+        >A provider client ID is required</mat-error
+      >
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Client secret</mat-label>
       <input matInput type="password" formControlName="clientSecret" required />
-      <mat-error *ngIf="clientSecret?.errors?.required">A provider client secret is required</mat-error>
+      <mat-hint>This is supplied by the OpenID Connect provider</mat-hint>
+      <mat-error *ngIf="form.clientSecret?.errors?.required"
+        >A provider client secret is required</mat-error
+      >
     </mat-form-field>
-  </div>
+  </fieldset>
+  <fieldset formGroupName="discovery">
+    <legend>Discovery</legend>
+    <div class="mdm-openid-connect-provider__checkbox">
+      <mat-checkbox
+        name="standardProvider"
+        color="primary"
+        formControlName="standardProvider"
+        labelPosition="after"
+      >
+        Use discovery document for endpoints
+      </mat-checkbox>
+    </div>
+    <div *ngIf="form.useStandardProvider">
+      <mat-form-field appearance="outline">
+        <mat-label>Discovery document URL</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="discoveryDocumentUrl"
+          required
+        />
+        <mat-hint
+          >Use discovery documents to automatically configure the required
+          endpoints</mat-hint
+        >
+        <mat-error *ngIf="form.discoveryDocumentUrl?.errors?.required"
+          >A discovery document URL is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <mat-expansion-panel [expanded]="!form.useStandardProvider">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Discovery configuration </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mdm-alert *ngIf="!form.useStandardProvider" alertStyle="info" [showIcon]="true">
+        If not using discovery documents, the following endpoints must be manually configured to ensure correct
+        connectivity to the OpenID Connect provider.
+      </mdm-alert>
+      <mat-form-field appearance="outline">
+        <mat-label>Issuer</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="issuer"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+        <mat-error *ngIf="form.issuer?.errors?.required"
+          >This is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Authorization endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="authorizationEndpoint"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+        <mat-error *ngIf="form.authorizationEndpoint?.errors?.required"
+          >This is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Token endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="tokenEndpoint"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+        <mat-error *ngIf="form.tokenEndpoint?.errors?.required"
+          >This is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>User info endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="userinfoEndpoint"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>End session endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="endSessionEndpoint"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>JSON Web Key Set (JWKS) URI</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="authorizationEndpoint"
+          [readonly]="form.useStandardProvider"
+          required
+        />
+        <mat-error *ngIf="form.jwksUri?.errors?.required"
+          >This is required</mat-error
+        >
+      </mat-form-field>
+    </mat-expansion-panel>
+  </fieldset>
   <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
     Cancel
   </button>
@@ -86,18 +198,20 @@ SPDX-License-Identifier: Apache-2.0
     mat-flat-button
     color="primary"
     type="submit"
+    [disabled]="form.group.invalid"
     (click)="save()"
     *ngIf="editExisting"
   >
-    Update property
+    Update provider
   </button>
   <button
     mat-flat-button
     color="primary"
     type="submit"
+    [disabled]="form.group.invalid"
     (click)="save()"
     *ngIf="!editExisting"
   >
-    Add property
+    Add provider
   </button>
 </form>

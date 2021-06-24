@@ -42,7 +42,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
   moduleLoaded = false;
   totalItemCount = 0;
   dataSource = new MatTableDataSource<OpenIdConnectProvider>([]);
-  displayedColumns = ['label', 'standardProvider', 'icons'];
+  displayedColumns = ['label', 'icons'];
 
   constructor(
     private shared: SharedService,

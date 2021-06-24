@@ -61,7 +61,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
   </div>
-  <div class="container">
+  <div >
     <div *ngIf="loading">
       <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
@@ -82,7 +82,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-header-cell
             *matHeaderCellDef
             mat-sort-header
-            style="cursor: pointer; max-width: 70%"
+            style="cursor: pointer; max-width: 50%"
             columnName="label"
           >
             <span>Label</span>
@@ -94,29 +94,11 @@ SPDX-License-Identifier: Apache-2.0
           >
             <img
               *ngIf="record.imageUrl"
-              class="mdm-openid-connect-icon"
+              class="mdm-openid-connect-icon mr-4"
               [src]="record.imageUrl"
               [alt]="record.label"
             />
             <span>{{ record.label }}</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="standardProvider">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            style="cursor: pointer; max-width: 20%"
-            columnName="standardProvider"
-          >
-            <span>Is standard</span>
-          </th>
-          <td
-            mat-cell
-            *matCellDef="let record"
-            style="text-align: left; word-wrap: break-word"
-          >
-            {{ record.standardProvider ? 'Yes' : 'No' }}
           </td>
         </ng-container>
         <ng-container matColumnDef="icons">

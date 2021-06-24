@@ -19,17 +19,21 @@ SPDX-License-Identifier: Apache-2.0
 
 .mdm-openid-connect-provider {
   &__checkbox {
-    padding: 0 0.75em 0.75em;
-    margin-top: -0.25em;
+    margin: 0.25em 0;
+    padding-bottom: 1.34375em;
     position: relative;
   }
 
   &__image-preview {
-    margin: 0px 8px 8px 8px;
+    margin: 0px 8px 8px 16px;
     padding-bottom: 16px;
   }
 
-  &__section {
-    padding-top: 32px;
+  fieldset {
+    padding-top: 16px;
+
+    legend {
+      padding-top: 16px;
+    }
   }
 }

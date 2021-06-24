@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { OpenIdConnectProviderDetail, OpenIdConnectProvidersDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -26,6 +25,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { OpenIdConnectProviderForm } from './openid-connect-provider.model';
 
 @Component({
   selector: 'mdm-openid-connect-provider',
@@ -35,24 +35,8 @@ import { catchError } from 'rxjs/operators';
 export class OpenidConnectProviderComponent implements OnInit {
   id: Uuid;
   editExisting = false;
-  formGroup: FormGroup;
+  form: OpenIdConnectProviderForm;
   previewImageUrl?: string;
-
-  get label() {
-    return this.formGroup.get('label');
-  }
-
-  get imageUrl() {
-    return this.formGroup.get('imageUrl');
-  }
-
-  get clientId() {
-    return this.formGroup.get('security.clientId');
-  }
-
-  get clientSecret() {
-    return this.formGroup.get('security.clientSecret');
-  }
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -80,12 +64,12 @@ export class OpenidConnectProviderComponent implements OnInit {
     }
     else {
       this.title.setTitle('OpenID Connect - Add provider');
-      this.createFormGroup();
+      this.createForm();
     }
   }
 
   refreshImagePreview() {
-    this.previewImageUrl = this.imageUrl.value;
+    this.previewImageUrl = this.form.imageUrl.value;
   }
 
   cancel() {
@@ -97,23 +81,14 @@ export class OpenidConnectProviderComponent implements OnInit {
   }
 
   save() {
-    if (this.formGroup.invalid) {
+    if (this.form.group.invalid) {
       return;
     }
   }
 
-  private createFormGroup(provider?: OpenIdConnectProviderDetail) {
+  private createForm(provider?: OpenIdConnectProviderDetail) {
     this.previewImageUrl = provider?.imageUrl;
-
-    this.formGroup = new FormGroup({
-      label: new FormControl(provider?.label, Validators.required),
-      standardProvider: new FormControl(provider?.standardProvider, Validators.required),
-      imageUrl: new FormControl(provider?.imageUrl),
-      security: new FormGroup({
-        clientId: new FormControl(provider?.clientId, Validators.required),
-        clientSecret: new FormControl(provider?.clientSecret, Validators.required)
-      })
-    });
+    this.form = new OpenIdConnectProviderForm(provider);
   }
 
   private loadExistingProvider() {
@@ -126,7 +101,7 @@ export class OpenidConnectProviderComponent implements OnInit {
         })
       )
       .subscribe((response: OpenIdConnectProvidersDetailResponse) => {
-        this.createFormGroup(response.body);
+        this.createForm(response.body);
       })
   }
 

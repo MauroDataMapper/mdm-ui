@@ -40,6 +40,9 @@ SPDX-License-Identifier: Apache-2.0
     <mat-label>Image URL</mat-label>
     <input matInput type="url" formControlName="imageUrl" />
     <mat-hint>If provided, this image will appear in the login form</mat-hint>
+    <mat-error *ngIf="form.imageUrl?.errors?.url">
+      Please provide a valid URL
+    </mat-error>
   </mat-form-field>
   <div class="mdm-openid-connect-provider__image-preview">
     <h5>Preview</h5>
@@ -54,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
       color="primary"
       class="ml-3"
       matTooltip="Enter an image URL and refresh the preview"
-      [disabled]="!form.imageUrl?.value"
+      [disabled]="!form.imageUrl?.value || form.imageUrl?.invalid"
       (click)="refreshImagePreview()"
     >
       Preview
@@ -107,6 +110,9 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="form.discoveryDocumentUrl?.errors?.required"
           >A discovery document URL is required</mat-error
         >
+        <mat-error *ngIf="form.discoveryDocumentUrl?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
     </div>
     <mat-expansion-panel [expanded]="!form.useStandardProvider">
@@ -134,6 +140,9 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="form.issuer?.errors?.required"
           >This is required</mat-error
         >
+        <mat-error *ngIf="form.issuer?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Authorization endpoint</mat-label>
@@ -147,6 +156,9 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="form.authorizationEndpoint?.errors?.required"
           >This is required</mat-error
         >
+        <mat-error *ngIf="form.authorizationEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Token endpoint</mat-label>
@@ -160,6 +172,9 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="form.tokenEndpoint?.errors?.required"
           >This is required</mat-error
         >
+        <mat-error *ngIf="form.tokenEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>User info endpoint</mat-label>
@@ -169,6 +184,9 @@ SPDX-License-Identifier: Apache-2.0
           formControlName="userinfoEndpoint"
           [readonly]="form.useStandardProvider"
         />
+        <mat-error *ngIf="form.userinfoEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>End session endpoint</mat-label>
@@ -178,6 +196,9 @@ SPDX-License-Identifier: Apache-2.0
           formControlName="endSessionEndpoint"
           [readonly]="form.useStandardProvider"
         />
+        <mat-error *ngIf="form.endSessionEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>JSON Web Key Set (JWKS) URI</mat-label>
@@ -191,6 +212,9 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="form.jwksUri?.errors?.required"
           >This is required</mat-error
         >
+        <mat-error *ngIf="form.jwksUri?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
       </mat-form-field>
     </mat-expansion-panel>
   </fieldset>

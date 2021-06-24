@@ -29,7 +29,9 @@ export class OpenIdConnectProviderForm {
       label: new FormControl(provider?.label, [
         Validators.required
       ]),
-      imageUrl: new FormControl(provider?.imageUrl),
+      imageUrl: new FormControl(provider?.imageUrl, [
+        MdmValidators.url
+      ]),
       security: new FormGroup({
         clientId: new FormControl(provider?.clientId, [
           Validators.required
@@ -41,21 +43,30 @@ export class OpenIdConnectProviderForm {
       discovery: new FormGroup({
         standardProvider: new FormControl(provider?.standardProvider ?? true),
         discoveryDocumentUrl: new FormControl(provider?.discoveryDocumentUrl, [
-          MdmValidators.requiredConditional(() => this.useStandardProvider)
+          MdmValidators.requiredConditional(() => this.useStandardProvider),
+          MdmValidators.url
         ]),
         issuer: new FormControl(provider?.discoveryDocument?.issuer, [
-          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+          MdmValidators.requiredConditional(() => !this.useStandardProvider),
+          MdmValidators.url
         ]),
         authorizationEndpoint: new FormControl(provider?.discoveryDocument?.authorizationEndpoint, [
-          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+          MdmValidators.requiredConditional(() => !this.useStandardProvider),
+          MdmValidators.url
         ]),
         tokenEndpoint: new FormControl(provider?.discoveryDocument?.tokenEndpoint, [
-          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+          MdmValidators.requiredConditional(() => !this.useStandardProvider),
+          MdmValidators.url
         ]),
-        userinfoEndpoint: new FormControl(provider?.discoveryDocument?.userinfoEndpoint),
-        endSessionEndpoint: new FormControl(provider?.discoveryDocument?.endSessionEndpoint),
+        userinfoEndpoint: new FormControl(provider?.discoveryDocument?.userinfoEndpoint, [
+          MdmValidators.url
+        ]),
+        endSessionEndpoint: new FormControl(provider?.discoveryDocument?.endSessionEndpoint, [
+          MdmValidators.url
+        ]),
         jwksUri: new FormControl(provider?.discoveryDocument?.jwksUri, [
-          MdmValidators.requiredConditional(() => !this.useStandardProvider)
+          MdmValidators.requiredConditional(() => !this.useStandardProvider),
+          MdmValidators.url
         ]),
       }),
       authorizationEndpointParams: new FormGroup({

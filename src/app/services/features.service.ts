@@ -32,6 +32,7 @@ export class FeaturesService implements OnDestroy {
   useSubscribedCatalogues: boolean;
   useVersionedFolders: boolean;
   useMergeUiV2: boolean;
+  useOpenIdConnect: boolean;
 
   private unsubscribe$ = new Subject();
 
@@ -83,6 +84,11 @@ export class FeaturesService implements OnDestroy {
       properties,
       'feature.use_merge_diff_ui',
       environment.features.useMergeUiV2);
+
+    this.useOpenIdConnect = this.getBooleanValue(
+      properties,
+      'feature.use_open_id_connect',
+      environment.features.useOpenIdConnect);
   }
 
   private getBooleanValue(properties: ApiProperty[], key: string, defaultValue: boolean): boolean {

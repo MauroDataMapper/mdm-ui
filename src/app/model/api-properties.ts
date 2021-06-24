@@ -235,5 +235,13 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true
+  },
+  {
+    key: 'feature.use_open_id_connect',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

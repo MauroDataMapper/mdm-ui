@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 /**
  * Custom validator functions to compliment {@link Validators} from `@angular/forms`
@@ -24,6 +24,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@ang
 export class MdmValidators {
   /**
    * Validator that requires a control value to be non-empty only if a condition is met.
+   *
    * @param predicate The predicate to return true, meaning the value is required.
    * @returns An error map with the `required` property if `predicate()` returns `true` and the validation
    * check fails, otherwise `null`.
@@ -36,6 +37,7 @@ export class MdmValidators {
 
   /**
    * Validator that requires a control value to be a valid URL.
+   *
    * @returns An error map with the `url` property returning `true` if the validation
    * check fails, otherwise `null`.
    */

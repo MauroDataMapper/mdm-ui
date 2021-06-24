@@ -17,13 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { OpenIdAuthorizationEndpointParametersPayload, OpenIdConnectProviderDetail, OpenIdConnectProviderUpdatePayload } from "@maurodatamapper/mdm-resources";
-import { MdmValidators } from "@mdm/utility/mdm-validators";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OpenIdAuthorizationEndpointParametersPayload, OpenIdConnectProviderDetail, OpenIdConnectProviderUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { MdmValidators } from '@mdm/utility/mdm-validators';
 
 export class OpenIdConnectProviderForm {
   group: FormGroup;
 
+  /* eslint-disable @typescript-eslint/unbound-method */
   constructor(provider?: OpenIdConnectProviderDetail) {
     this.group = new FormGroup({
       label: new FormControl(provider?.label, [
@@ -93,6 +94,7 @@ export class OpenIdConnectProviderForm {
       this.jwksUri.updateValueAndValidity();
     });
   }
+  /* eslint-enable @typescript-eslint/unbound-method */
 
   get label() {
     return this.group.get('label');
@@ -190,6 +192,6 @@ export class OpenIdConnectProviderForm {
       idTokenHint: this.group.get('authorizationEndpointParams.idTokenHint').value,
       loginHint: this.group.get('authorizationEndpointParams.loginHint').value,
       acrValues: this.group.get('authorizationEndpointParams.acrValues').value
-    }
+    };
   }
 }

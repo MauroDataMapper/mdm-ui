@@ -119,7 +119,7 @@ export class OpenidConnectProviderComponent implements OnInit {
       )
       .subscribe((response: OpenIdConnectProvidersDetailResponse) => {
         this.createForm(response.body);
-      })
+      });
   }
 
   private navigateToParent() {

@@ -26,17 +26,22 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { PublicOpenIdConnectProvider, PublicOpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.sass'],
+  styleUrls: ['./login-modal.component.scss'],
 })
 export class LoginModalComponent implements OnInit {
   message = '';
   authenticating = false;
 
   signInForm!: FormGroup;
+
+  openIdConnectProviders?: PublicOpenIdConnectProvider[];
+  readonly maxProvidersWithoutScroll = 4;
 
   get userName() {
     return this.signInForm.get('userName');
@@ -51,8 +56,8 @@ export class LoginModalComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginModalComponent>,
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
-    private validator: ValidatorService
-  ) { }
+    private validator: ValidatorService,
+    private resources: MdmResourcesService) { }
 
   ngOnInit() {
     this.signInForm = new FormGroup({
@@ -64,6 +69,16 @@ export class LoginModalComponent implements OnInit {
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ])
     });
+
+    // TODO: add feature guard
+    this.resources.pluginOpenIdConnect
+      .listPublic()
+      .pipe(
+        catchError(() => EMPTY)
+      )
+      .subscribe((response: PublicOpenIdConnectProvidersIndexResponse) => {
+        this.openIdConnectProviders = response.body;
+      });
   }
 
   login() {

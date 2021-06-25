@@ -36,6 +36,7 @@ import {
   Finalisable,
   LoginPayload,
   LoginResponse,
+  PublicOpenIdConnectProvider,
   Securable
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -183,6 +184,15 @@ export class SecurityHandlerService {
     this.broadcast.userLoggedOut();
     this.messageService.loggedInChanged(false);
     this.stateHandler.Go('appContainer.mainApp.home');
+  }
+
+  authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
+    localStorage.setItem('openIdConnectProviderId', provider.id);
+
+    const authUrl = new URL(provider.authorizationEndpoint);
+    authUrl.searchParams.append('redirect_uri', 'https://www.bbc.co.uk');
+
+    window.open(authUrl.toString(), '_self');
   }
 
   expireToken() {

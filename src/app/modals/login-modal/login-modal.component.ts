@@ -28,7 +28,7 @@ import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-ha
 import { EMPTY } from 'rxjs';
 import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { PublicOpenIdConnectProvider, PublicOpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
-import { SharedService } from '@mdm/services';
+import { MessageHandlerService, SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-login-modal',
@@ -59,7 +59,8 @@ export class LoginModalComponent implements OnInit {
     private messageService: MessageService,
     private validator: ValidatorService,
     private resources: MdmResourcesService,
-    private shared: SharedService) { }
+    private shared: SharedService,
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit() {
     this.signInForm = new FormGroup({
@@ -141,8 +142,18 @@ export class LoginModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcast.dispatch('openRegisterModalDialog');
   }
-  close = () => {
+
+  close() {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  };
+  }
+
+  authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
+    if (!provider.authorizationEndpoint) {
+      this.messageHandler.showError(`Unable to authenticate with ${provider.label} because of a missing endpoint. Please contact your administrator for further support.`);
+      return;
+    }
+
+    this.securityHandler.authenticateWithOpenIdConnect(provider);
+  }
 }

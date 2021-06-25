@@ -126,6 +126,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-stroked-button
         color="primary"
         class="custom mdm--form-button"
+        (click)="authenticateWithOpenIdConnect(provider)"
       >
         <img *ngIf="provider.imageUrl" class="mdm-openid-connect-icon--small" [src]="provider.imageUrl" [alt]="provider.label" />
         {{provider.label}}

@@ -39,7 +39,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   loading = false;
-  moduleLoaded = false;
+  moduleLoaded = true;
   totalItemCount = 0;
   dataSource = new MatTableDataSource<OpenIdConnectProvider>([]);
   displayedColumns = ['label', 'icons'];

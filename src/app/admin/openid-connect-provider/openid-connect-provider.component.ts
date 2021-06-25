@@ -98,7 +98,7 @@ export class OpenidConnectProviderComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Property was updated successfully.');
+        this.messageHandler.showSuccess('The OpenID Connect provider was updated successfully.');
         this.navigateToParent();
       });
   }

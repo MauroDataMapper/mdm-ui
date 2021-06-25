@@ -53,6 +53,7 @@ SPDX-License-Identifier: Apache-2.0
         fxLayoutAlign.xs="flex-start center"
       >
         <mdm-data-type-list-buttons
+          *ngIf="moduleLoaded"
           [displayRecords]="dataSource.data"
           [showContentDropdown]="false"
           [showDeleteButton]="false"

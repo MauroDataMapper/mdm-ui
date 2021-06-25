@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { ModelDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 
@@ -31,16 +31,22 @@ import { Observable } from 'rxjs';
 export class MergeDiffAdapterService {
   constructor(private resources: MdmResourcesService) {}
 
-  loadCatalogueItemDetails(id: string, domainType: CatalogueItemDomainType) : Observable<any> {
+  loadCatalogueItemDetails(id: Uuid, domainType: ModelDomainType) : Observable<any> {
     switch (domainType) {
-      case CatalogueItemDomainType.DataModel:
+      case ModelDomainType.DataModels:
         return this.resources.dataModel.get(id);
-      case CatalogueItemDomainType.ReferenceDataModel:
+      case ModelDomainType.ReferenceDataModels:
         return this.resources.referenceDataModel.get(id);
       default:
         break;
     }
   }
+
+  retrieveMainBranch(domainType: ModelDomainType, sourceId: Uuid)
+  {
+    return this.resources.versioning.currentMainBranch(domainType, sourceId);
+  }
+
   /*
   TODO: add in adapter functions when required here.
 

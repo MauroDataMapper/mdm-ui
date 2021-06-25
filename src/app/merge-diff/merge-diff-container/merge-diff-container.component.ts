@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItem, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { Title } from '@angular/platform-browser';
+import { ModelDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
@@ -41,7 +42,8 @@ import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapte
 export class MergeDiffContainerComponent implements OnInit {
 
   loaded = false;
-  domainType: CatalogueItemDomainType;
+  targetLoaded = false;
+  domainType: ModelDomainType;
   source: any;
   target: any;
 
@@ -51,7 +53,8 @@ export class MergeDiffContainerComponent implements OnInit {
     private uiRouterGlobals: UIRouterGlobals,
     private mergeService: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private title: Title) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useMergeUiV2) {
@@ -60,8 +63,10 @@ export class MergeDiffContainerComponent implements OnInit {
       return;
     }
 
+    this.title.setTitle('Merge Changes');
+
      const sourceId = this.uiRouterGlobals.params.sourceId;
-   //  const targetId = this.uiRouterGlobals.params.targetId;
+     const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
 
     this.mergeService.loadCatalogueItemDetails(sourceId,this.domainType)
@@ -78,24 +83,45 @@ export class MergeDiffContainerComponent implements OnInit {
       })
     ).subscribe((result) => {
         this.source = result.body;
-        this.target = result.body;
+        if(targetId)
+        {
+          this.setTarget(targetId);
+        }
+        else{
+          this.loadMainAndSetTarget();
+        }
     });
   }
 
-  setTarget(item : CatalogueItem)
+  loadMainAndSetTarget()
   {
-    this.loaded = false;
-    this.mergeService.loadCatalogueItemDetails(item.id,item.domainType)
+    this.mergeService.retrieveMainBranch(this.domainType,this.source.id)
     .pipe(
       catchError((error) => {
         this.messageHandler.showError(
-          'There was a problem restoring the Data Model.',
+          'There was a problem loading main', error
+        );
+        return EMPTY;
+      })
+    ).subscribe((result) => {
+      this.setTarget(result.body.id);
+    });
+  }
+
+  setTarget(id : Uuid)
+  {
+    this.targetLoaded = false;
+    this.mergeService.loadCatalogueItemDetails(id, this.domainType)
+    .pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'There was a problem loading Target',
           error
         );
         return EMPTY;
       }),
       finalize(() => {
-        this.loaded = true;
+        this.targetLoaded = true;
       })
     ).subscribe((result) => {
         this.target = result.body;
@@ -109,6 +135,10 @@ export class MergeDiffContainerComponent implements OnInit {
       }
     }).afterClosed().subscribe(() => {});
     // TODO
+  }
+
+  onCancelChanges(): void {
+    this.stateHandler.GoPrevious();
   }
 
 }

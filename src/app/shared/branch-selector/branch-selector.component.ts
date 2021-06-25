@@ -41,7 +41,7 @@ import { catchError } from 'rxjs/operators';
 export class BranchSelectorComponent implements OnInit {
   @Input() catalogueItem: CatalogueItem;
   @Input() forMerge: boolean;
-  @Output() selectedCatalogueItemChanged = new EventEmitter<CatalogueItem>();
+  @Output() selectedCatalogueItemChanged = new EventEmitter<Uuid>();
 
   versionList: BasicModelVersionItem[];
   currentVersionId: Uuid;
@@ -81,7 +81,7 @@ export class BranchSelectorComponent implements OnInit {
 
   currentVersionIdChanged() {
     if (this.forMerge) {
-      this.selectedCatalogueItemChanged.emit(this.catalogueItem);
+      this.selectedCatalogueItemChanged.emit(this.currentVersionId);
     } else {
       this.stateHandler.Go(
         this.catalogueItem.domainType,

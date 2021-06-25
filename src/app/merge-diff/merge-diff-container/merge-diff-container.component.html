@@ -22,32 +22,72 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 <div *ngIf="loaded" class="container">
-  <div fxLayout="row" class="headerContainer">
-    <h4>
-      <span class="dataModelTypeIcon">
-        <i matTooltip="Folder" class="fas fa-folder"></i>
-      </span>
-      {{ source.label }}
-    </h4>
-    <h4>Merge {{ source.branchName }} into {{ target.branchName }}</h4>
-
-    <div class="row">
-      <div style="margin-bottom: auto; margin-top: auto">
-        <span><strong>Target: </strong></span>
-        <mdm-branch-selector [forMerge]="true" [catalogueItem]="target" (selectedCatalogueItemChanged)="setTarget($event)"></mdm-branch-selector>
-      </div>
-
+  <div fxLayout="row" class="panel panel-default mdm--shadow-block">
+    <div class="full-width" style="clear: both">
       <button
-        mat-flat-button
-        color="primary"
         type="button"
-        matToolTip="Commit Changes"
-        aria-label="Commit Changes"
-        (click)="onCommitChanges()"
-        style="margin-left: 15px"
+        mat-icon-button
+        [matMenuTriggerFor]="userActions"
+        style="position: relative; float: right; margin-right: 4px"
       >
-        Commit
+        <i class="fas fa-ellipsis-v"></i>
+        <span style="display: none">Menu</span>
       </button>
+      <!--First level Menu-->
+      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <button
+          mat-menu-item
+          type="button"
+          matToolTip="Commit Changes"
+          aria-label="Commit Changes"
+          (click)="onCommitChanges()"
+        >
+          <i class="fas fa-check-circle" aria-hidden="true"></i>
+          Commit Changes
+        </button>
+        <button
+        mat-menu-item
+        type="button"
+        matToolTip="Cancel Changes"
+        aria-label="Cancel Changes"
+        (click)="onCancelChanges()"
+      >
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+      Cancel
+      </button>
+      </mat-menu>
+      <!-- End of first level menu -->
+      
+
+      <h4 class="inline-block marginless">
+        <span class="dataModelTypeIcon">
+          <i matTooltip="Folder" class="fas fa-folder"></i>
+        </span>
+        <span class="dataModelDetailsLabel">{{ source.label }}</span>
+      </h4>
+      <div class="detail-icons">
+        <div class="text-muted">
+          <small>
+            <i class="fas fa-forward" matTooltip="Source Branch"></i>
+            <span
+              ><strong>Source Branch : {{ source.branchName }} </strong></span
+            >
+          </small>
+        </div>
+        <div *ngIf="targetLoaded" class="text-muted">
+          <small>
+            <i class="fas fa-backward" matTooltip="Target Branch"></i>
+            <span><strong>Target Branch : </strong></span>
+            <span>
+              <mdm-branch-selector
+                [forMerge]="true"
+                [catalogueItem]="target"
+                (selectedCatalogueItemChanged)="setTarget($event)"
+              ></mdm-branch-selector>
+            </span>
+          </small>
+        </div>
+      </div>
     </div>
   </div>
 

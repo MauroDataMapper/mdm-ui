@@ -36,6 +36,7 @@ import {
   Finalisable,
   LoginPayload,
   LoginResponse,
+  OpenIdConnectLoginPayload,
   PublicOpenIdConnectProvider,
   Securable
 } from '@maurodatamapper/mdm-resources';
@@ -190,9 +191,34 @@ export class SecurityHandlerService {
     localStorage.setItem('openIdConnectProviderId', provider.id);
 
     const authUrl = new URL(provider.authorizationEndpoint);
-    authUrl.searchParams.append('redirect_uri', 'https://www.bbc.co.uk');
+    // TODO: fix redirect URL
+    authUrl.searchParams.append('redirect_uri', 'http://localhost:4200/#/open-id-connect/authorize');
 
     window.open(authUrl.toString(), '_self');
+  }
+
+  /**
+   * Sign in a user to the Mauro system.
+   *
+   * @param credentials The sign-in credentials to use.
+   * @returns An observable to return a `UserDetails` object representing the signed in user.
+   * @throws `SignInError` in the observable chain if sign-in failed.
+   */
+   authorizeOpenIdConnectSession(params: { state: string, sessionState: string, code: string }): Observable<UserDetails> {
+    const providerId = localStorage.getItem('openIdConnectProviderId');
+    if (!providerId) {
+      return throwError('Cannot retrieve OpenID Connect provider identifier.');
+    }
+
+    const payload: OpenIdConnectLoginPayload = {
+      openidConnectProviderId: providerId,
+      state: params.state,
+      sessionState: params.sessionState,
+      code: params.code,
+      redirectUrl: 'http://localhost:4200/#/open-id-connect/authorize'  // TODO: fix redirect URL
+    };
+
+    return this.signIn(payload);
   }
 
   expireToken() {

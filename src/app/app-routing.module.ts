@@ -63,6 +63,7 @@ import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.c
 import { NewVersionComponent } from './shared/new-version/new-version.component';
 import { VersionedFolderComponent } from './versioned-folder/versioned-folder/versioned-folder.component';
 import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
+import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -176,6 +177,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.default',
       url: '',
       component: HomeComponent
+    },
+    {
+      name: 'appContainer.mainApp.openIdConnectAuthorizing',
+      url: '/open-id-connect/authorize',
+      component: OpenIdConnectAuthorizeComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.search',

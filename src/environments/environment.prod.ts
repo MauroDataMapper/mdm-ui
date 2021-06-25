@@ -53,6 +53,7 @@ export const environment = {
   features: {
     useSubscribedCatalogues: true,
     useVersionedFolders: false,
-    useMergeUiV2: false
+    useMergeUiV2: false,
+    useOpenIdConnect: false
   }
 };

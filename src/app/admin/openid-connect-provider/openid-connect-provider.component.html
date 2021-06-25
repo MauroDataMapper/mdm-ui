@@ -1,0 +1,312 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container mb-2 forms-heading-container">
+  <h4>
+    <span *ngIf="editExisting">Edit OpenID Connect Provider</span>
+    <span *ngIf="!editExisting">Add OpenID Connect Provider</span>
+  </h4>
+</div>
+<form
+  name="providerForm"
+  class="mdm--form mb-2 mdm-openid-connect-provider"
+  *ngIf="form"
+  [formGroup]="form.group"
+>
+  <mat-form-field appearance="outline">
+    <mat-label>Label</mat-label>
+    <input matInput formControlName="label" required />
+    <mat-hint>This label will appear in the login form</mat-hint>
+    <mat-error *ngIf="form.label?.errors?.required"
+      >A label is required</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Image URL</mat-label>
+    <input matInput type="url" formControlName="imageUrl" />
+    <mat-hint>If provided, this image will appear in the login form</mat-hint>
+    <mat-error *ngIf="form.imageUrl?.errors?.url">
+      Please provide a valid URL
+    </mat-error>
+  </mat-form-field>
+  <div class="mdm-openid-connect-provider__image-preview">
+    <h5>Preview</h5>
+    <img
+      *ngIf="previewImageUrl"
+      class="mdm-openid-connect-icon"
+      [src]="previewImageUrl"
+      alt="Preview image"
+    />
+    <button
+      mat-flat-button
+      color="primary"
+      class="ml-3"
+      matTooltip="Enter an image URL and refresh the preview"
+      [disabled]="!form.imageUrl?.value || form.imageUrl?.invalid"
+      (click)="refreshImagePreview()"
+    >
+      Preview
+    </button>
+  </div>
+  <fieldset formGroupName="security">
+    <legend>Security</legend>
+    <mat-form-field appearance="outline">
+      <mat-label>Client ID</mat-label>
+      <input matInput formControlName="clientId" required />
+      <mat-hint>This is supplied by the OpenID Connect provider</mat-hint>
+      <mat-error *ngIf="form.clientId?.errors?.required"
+        >A provider client ID is required</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Client secret</mat-label>
+      <input matInput type="password" formControlName="clientSecret" required />
+      <mat-hint>This is supplied by the OpenID Connect provider</mat-hint>
+      <mat-error *ngIf="form.clientSecret?.errors?.required"
+        >A provider client secret is required</mat-error
+      >
+    </mat-form-field>
+  </fieldset>
+  <fieldset formGroupName="discovery">
+    <legend>Discovery</legend>
+    <div class="mdm-openid-connect-provider__checkbox">
+      <mat-checkbox
+        name="standardProvider"
+        color="primary"
+        formControlName="standardProvider"
+        labelPosition="after"
+      >
+        Use discovery document for endpoints
+      </mat-checkbox>
+    </div>
+    <div *ngIf="form.useStandardProvider">
+      <mat-form-field appearance="outline">
+        <mat-label>Discovery document URL</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="discoveryDocumentUrl"
+          [required]="form.useStandardProvider"
+        />
+        <mat-hint
+          >Use discovery documents to automatically configure the required
+          endpoints</mat-hint
+        >
+        <mat-error *ngIf="form.discoveryDocumentUrl?.errors?.required"
+          >A discovery document URL is required</mat-error
+        >
+        <mat-error *ngIf="form.discoveryDocumentUrl?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-expansion-panel [expanded]="!form.useStandardProvider">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Discovery configuration </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mdm-alert
+        *ngIf="!form.useStandardProvider"
+        alertStyle="info"
+        [showIcon]="true"
+      >
+        If not using discovery documents, the following endpoints must be
+        manually configured to ensure correct connectivity to the OpenID Connect
+        provider.
+      </mdm-alert>
+      <mat-form-field appearance="outline">
+        <mat-label>Issuer</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="issuer"
+          [readonly]="form.useStandardProvider"
+          [required]="!form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.issuer?.errors?.required"
+          >This is required</mat-error
+        >
+        <mat-error *ngIf="form.issuer?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Authorization endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="authorizationEndpoint"
+          [readonly]="form.useStandardProvider"
+          [required]="!form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.authorizationEndpoint?.errors?.required"
+          >This is required</mat-error
+        >
+        <mat-error *ngIf="form.authorizationEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Token endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="tokenEndpoint"
+          [readonly]="form.useStandardProvider"
+          [required]="!form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.tokenEndpoint?.errors?.required"
+          >This is required</mat-error
+        >
+        <mat-error *ngIf="form.tokenEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>User info endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="userinfoEndpoint"
+          [readonly]="form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.userinfoEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>End session endpoint</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="endSessionEndpoint"
+          [readonly]="form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.endSessionEndpoint?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>JSON Web Key Set (JWKS) URI</mat-label>
+        <input
+          matInput
+          type="url"
+          formControlName="jwksUri"
+          [readonly]="form.useStandardProvider"
+          [required]="!form.useStandardProvider"
+        />
+        <mat-error *ngIf="form.jwksUri?.errors?.required"
+          >This is required</mat-error
+        >
+        <mat-error *ngIf="form.jwksUri?.errors?.url">
+          Please provide a valid URL
+        </mat-error>
+      </mat-form-field>
+    </mat-expansion-panel>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <mat-expansion-panel formGroupName="authorizationEndpointParams">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Authorization endpoint parameters</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="outline">
+        <mat-label>Scope</mat-label>
+        <input matInput formControlName="scope" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Response type</mat-label>
+        <input matInput formControlName="responseType" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Response mode</mat-label>
+        <input matInput formControlName="responseMode" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Display</mat-label>
+        <mat-select formControlName="display">
+          <mat-option></mat-option>
+          <mat-option value="PAGE">Page</mat-option>
+          <mat-option value="POPUP">Popup</mat-option>
+          <mat-option value="TOUCH">Touch</mat-option>
+          <mat-option value="WRAP">Wrap</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Prompt</mat-label>
+        <mat-select formControlName="prompt">
+          <mat-option></mat-option>
+          <mat-option value="NONE">None</mat-option>
+          <mat-option value="LOGIN">Login</mat-option>
+          <mat-option value="CONSENT">Consent</mat-option>
+          <mat-option value="SELECT_ACCOUNT">Select account</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Max age</mat-label>
+        <input matInput type="number" formControlName="maxAge" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>UI locales</mat-label>
+        <input matInput formControlName="uiLocales" />
+        <mat-hint>Use a space-separated list for multiple locales</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ID token hint</mat-label>
+        <input matInput formControlName="idTokenHint" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Login hint</mat-label>
+        <input matInput formControlName="loginHint" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ACR values</mat-label>
+        <input matInput formControlName="acrValues" />
+        <mat-hint>Use a space-separated list for multiple values</mat-hint>
+      </mat-form-field>
+    </mat-expansion-panel>
+  </fieldset>
+  <div class="mdm-openid-connect-provider__buttons">
+    <button
+      mat-button
+      color="warn"
+      type="button"
+      class="mr-1"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      (click)="save()"
+      *ngIf="editExisting"
+    >
+      Update provider
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      (click)="save()"
+      *ngIf="!editExisting"
+    >
+      Add provider
+    </button>
+  </div>
+</form>

@@ -28,8 +28,8 @@ SPDX-License-Identifier: Apache-2.0
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat-core();
 
-/* 
-Themes 
+/*
+Themes
 Import more theme SASS files here to make them available to the app
 */
 @import "style/themes/default.scss";
@@ -44,6 +44,7 @@ Import more theme SASS files here to make them available to the app
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
 @import "@fortawesome/fontawesome-free/scss/solid";
 @import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/brands";
 
 @import "style/main";
 @import "style/default";

@@ -26,8 +26,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { PublicOpenIdConnectProvider, PublicOpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
+import { SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-login-modal',
@@ -57,7 +58,8 @@ export class LoginModalComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
     private validator: ValidatorService,
-    private resources: MdmResourcesService) { }
+    private resources: MdmResourcesService,
+    private shared: SharedService) { }
 
   ngOnInit() {
     this.signInForm = new FormGroup({
@@ -70,15 +72,21 @@ export class LoginModalComponent implements OnInit {
       ])
     });
 
-    // TODO: add feature guard
-    this.resources.pluginOpenIdConnect
-      .listPublic()
-      .pipe(
-        catchError(() => EMPTY)
-      )
-      .subscribe((response: PublicOpenIdConnectProvidersIndexResponse) => {
-        this.openIdConnectProviders = response.body;
-      });
+    if (this.shared.features.useOpenIdConnect) {
+      // If unable to get OpenID Connect providers, silently fail and ignore
+      const requestOptions: MdmHttpHandlerOptions = {
+        handleGetErrors: false
+      };
+
+      this.resources.pluginOpenIdConnect
+        .listPublic({}, requestOptions)
+        .pipe(
+          catchError(() => EMPTY)
+        )
+        .subscribe((response: PublicOpenIdConnectProvidersIndexResponse) => {
+          this.openIdConnectProviders = response.body;
+        });
+    }
   }
 
   login() {
@@ -117,7 +125,7 @@ export class LoginModalComponent implements OnInit {
           this.signInForm.enable();
         })
       )
-      .subscribe(user =>  {
+      .subscribe(user => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
         this.messageService.loggedInChanged(true);

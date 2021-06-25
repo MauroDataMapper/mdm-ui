@@ -110,7 +110,6 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 
   <div *ngIf="openIdConnectProviders?.length > 0" class="mdm-login-modal__providers">
-    <mat-divider></mat-divider>
     <p class="mt-2 mb-2 text-center">
       Or, login using an account from one of these providers
     </p>
@@ -129,7 +128,7 @@ SPDX-License-Identifier: Apache-2.0
         class="custom mdm--form-button"
       >
         <img *ngIf="provider.imageUrl" class="mdm-openid-connect-icon--small" [src]="provider.imageUrl" [alt]="provider.label" />
-        Continue with {{provider.label}}
+        {{provider.label}}
       </button>
     </div>
   </div>

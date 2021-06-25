@@ -18,11 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
-import { SharedService, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
+import { EMPTY } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
 
 /**
@@ -41,12 +43,14 @@ export class MergeDiffContainerComponent implements OnInit {
   loaded = false;
   domainType: CatalogueItemDomainType;
   source: any;
+  target: any;
 
   constructor(
     private shared: SharedService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private mergeService: MergeDiffAdapterService,
+    private messageHandler: MessageHandlerService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -56,12 +60,46 @@ export class MergeDiffContainerComponent implements OnInit {
       return;
     }
 
-    // const sourceId = this.uiRouterGlobals.params.sourceId;
+     const sourceId = this.uiRouterGlobals.params.sourceId;
    //  const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
 
-    this.loaded = true;
-    // TODO: load UI...
+    this.mergeService.loadCatalogueItemDetails(sourceId,this.domainType)
+    .pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'There was a problem restoring the Data Model.',
+          error
+        );
+        return EMPTY;
+      }),
+      finalize(() => {
+        this.loaded = true;
+      })
+    ).subscribe((result) => {
+        this.source = result.body;
+        this.target = result.body;
+    });
+  }
+
+  setTarget(item : CatalogueItem)
+  {
+    this.loaded = false;
+    this.mergeService.loadCatalogueItemDetails(item.id,item.domainType)
+    .pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'There was a problem restoring the Data Model.',
+          error
+        );
+        return EMPTY;
+      }),
+      finalize(() => {
+        this.loaded = true;
+      })
+    ).subscribe((result) => {
+        this.target = result.body;
+    });
   }
 
   onCommitChanges(): void{

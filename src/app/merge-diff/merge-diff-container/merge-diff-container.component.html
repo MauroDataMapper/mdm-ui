@@ -21,48 +21,41 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-sync-alt fa-spin"></i>
   </div>
 </div>
-<div  *ngIf="loaded && source" class="container">
-    <div fxLayout="row"  class="headerContainer">
-      <h4
-        fxFlex
-        fxLayout="row"
-        fxFlex="75"
-        fxFlexOffset="15"
-        fxFlex.md="50"
-        fxFlex.sm="100"
-        fxFlex.xs="100"
-        fxLayoutAlign="center center"
-        fxLayoutAlign.xs="center center"
-      >
-        Merge {{source.branchName}} into TARGET BRANCH
-      </h4>
+<div *ngIf="loaded" class="container">
+  <div fxLayout="row" class="headerContainer">
+    <h4>
+      <span class="dataModelTypeIcon">
+        <i matTooltip="Folder" class="fas fa-folder"></i>
+      </span>
+      {{ source.label }}
+    </h4>
+    <h4>Merge {{ source.branchName }} into {{ target.branchName }}</h4>
 
-   
-        <span style="margin-top: auto; margin-bottom: auto"
-          ><strong>Target: </strong></span
-        >
-     
-        <button
-          mat-flat-button
-          color="primary"
-          type="button"
-          matToolTip="Commit Changes"
-          aria-label="Commit Changes"
-          (click)="onCommitChanges()"
-          fxFlex
-        >
-          Commit
-        </button>
+    <div class="row">
+      <div style="margin-bottom: auto; margin-top: auto">
+        <span><strong>Target: </strong></span>
+        <mdm-branch-selector [forMerge]="true" [catalogueItem]="target" (selectedCatalogueItemChanged)="setTarget($event)"></mdm-branch-selector>
+      </div>
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        matToolTip="Commit Changes"
+        aria-label="Commit Changes"
+        (click)="onCommitChanges()"
+        style="margin-left: 15px"
+      >
+        Commit
+      </button>
+    </div>
   </div>
 
   <div class="resizableContainer">
     <div class="div1" mdmResizable>
-      <div>Changes Control Here</div>
-      <div>
-        Committed Control Here
-      </div>
+      <mdm-merge-item-selector style="display: flex"></mdm-merge-item-selector>
     </div>
-    <div class="div2">
+    <div class="div2" style="display: flex">
       <span>Content</span>
     </div>
   </div>

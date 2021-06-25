@@ -16,10 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { BasicModelVersionItem, BasicModelVersionTreeResponse, CatalogueItem, Uuid } from '@maurodatamapper/mdm-resources';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  BasicModelVersionItem,
+  BasicModelVersionTreeResponse,
+  CatalogueItem,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ElementTypesService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import {
+  ElementTypesService,
+  MessageHandlerService,
+  StateHandlerService
+} from '@mdm/services';
+
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -30,6 +40,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class BranchSelectorComponent implements OnInit {
   @Input() catalogueItem: CatalogueItem;
+  @Input() forMerge: boolean;
+  @Output() selectedCatalogueItemChanged = new EventEmitter<CatalogueItem>();
 
   versionList: BasicModelVersionItem[];
   currentVersionId: Uuid;
@@ -38,37 +50,49 @@ export class BranchSelectorComponent implements OnInit {
     private resources: MdmResourcesService,
     private elementTypes: ElementTypesService,
     private messageHandler: MessageHandlerService,
-    private stateHandler: StateHandlerService) { }
+    private stateHandler: StateHandlerService
+  ) {}
 
   ngOnInit(): void {
     this.currentVersionId = this.catalogueItem.id;
 
-    const domainElementType = this.elementTypes.getBaseTypeForDomainType(this.catalogueItem.domainType);
+    const domainElementType = this.elementTypes.getBaseTypeForDomainType(
+      this.catalogueItem.domainType
+    );
 
     this.resources[domainElementType.resourceName]
       .simpleModelVersionTree(this.catalogueItem.id)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem fetching the branch list.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem fetching the branch list.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe((response: BasicModelVersionTreeResponse) => {
         this.versionList = response.body;
-        this.versionList.sort((a, b) => a.displayName.localeCompare(b.displayName));
+        this.versionList.sort((a, b) =>
+          a.displayName.localeCompare(b.displayName)
+        );
       });
   }
 
   currentVersionIdChanged() {
-    this.stateHandler.Go(
-      this.catalogueItem.domainType,
-      {
-        id: this.currentVersionId
-      },
-      {
-        reload: true,
-        location: true
-      }
-    );
+    if (this.forMerge) {
+      this.selectedCatalogueItemChanged.emit(this.catalogueItem);
+    } else {
+      this.stateHandler.Go(
+        this.catalogueItem.domainType,
+        {
+          id: this.currentVersionId
+        },
+        {
+          reload: true,
+          location: true
+        }
+      );
+    }
   }
 }

@@ -16,42 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-  
-  .headerContainer{    
-    justify-content:space-between;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
+
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { MergeItem } from '@mdm/merge-diff/types/merge-item-type';
+
+@Component({
+  selector: 'mdm-merge-diff-items',
+  templateUrl: './merge-diff-items.component.html',
+  styleUrls: ['./merge-diff-items.component.scss']
+})
+export class MergeDiffItemsComponent implements OnInit {
+
+  @Input() mergeItems : Array<MergeItem>;
+
+  @Output() selectedMergeItem : MergeItem;
+
+  constructor() { }
+
+  ngOnInit(): void {
   }
 
-  
-.resizableContainer {
-  @extend .headerContainer;
-  border: 1px solid black;
-  margin-top: 5px;
-  height: 100%;
 }
-
-  .div {
-    position: relative;
-    margin: 2.5px;
-   }
-
-   .div1 {
-     @extend .div;
-     width:20%;
-     overflow-x: auto;
-     overflow-y: hidden;
-   }
-  
-  .div2 {
-    @extend .div;
-    width:80%;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  

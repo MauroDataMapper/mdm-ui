@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,43 +15,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-  
-  .headerContainer{    
-    justify-content:space-between;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
-  }
-
-  
-.resizableContainer {
-  @extend .headerContainer;
-  border: 1px solid black;
-  margin-top: 5px;
-  height: 100%;
-}
-
-  .div {
-    position: relative;
-    margin: 2.5px;
-   }
-
-   .div1 {
-     @extend .div;
-     width:20%;
-     overflow-x: auto;
-     overflow-y: hidden;
-   }
-  
-  .div2 {
-    @extend .div;
-    width:80%;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  
+-->
+<div class="container" >
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <h4>Changes</h4>
+            </div>
+            <div class="row">
+                 <mdm-merge-diff-items [mergeItems]="changesList"></mdm-merge-diff-items>
+            </div>           
+        </div>
+    </div>
+    <div class="row itemBorder">
+        <div class="col">
+            <div class="row">
+                <h4>Committing</h4>
+            </div>
+            <div class="row">
+                <mdm-merge-diff-items  [mergeItems]="committingList"></mdm-merge-diff-items>
+            </div>           
+        </div>
+    </div>
+</div>

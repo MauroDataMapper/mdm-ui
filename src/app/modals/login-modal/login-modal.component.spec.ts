@@ -28,9 +28,24 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SecurityHandlerService } from '@mdm/services';
 import { of } from 'rxjs';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { FeaturesService } from '@mdm/services/features.service';
 
 interface SecurityHandlerServiceStub {
   signIn: jest.Mock;
+  isAdmin: jest.Mock;
+}
+
+interface PluginOpenIdConnectServiceStub {
+  listPublic: jest.Mock;
+}
+
+interface MdmResourcesServiceStub {
+  pluginOpenIdConnect: PluginOpenIdConnectServiceStub;
+}
+
+interface FeaturesServiceStub {
+  useOpenIdConnect: boolean;
 }
 
 describe('LoginModalComponent', () => {
@@ -38,7 +53,18 @@ describe('LoginModalComponent', () => {
   let fixture: ComponentFixture<LoginModalComponent>;
 
   const securityHandler: SecurityHandlerServiceStub = {
-    signIn: jest.fn()
+    signIn: jest.fn(),
+    isAdmin: jest.fn()
+  };
+
+  const resources: MdmResourcesServiceStub = {
+    pluginOpenIdConnect: {
+      listPublic: jest.fn()
+    }
+  };
+
+  const features: FeaturesServiceStub = {
+    useOpenIdConnect: false
   };
 
   beforeEach(async () => {
@@ -60,6 +86,14 @@ describe('LoginModalComponent', () => {
         {
           provide: SecurityHandlerService,
           useValue: securityHandler
+        },
+        {
+          provide: MdmResourcesService,
+          useValue: resources
+        },
+        {
+          provide: FeaturesService,
+          useValue: features
         }
       ],
       declarations: [

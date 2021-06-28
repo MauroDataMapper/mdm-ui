@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,9 +15,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
+-->
 
-.changesArea
-{
-    padding-bottom: 10px;
-}
+<div class="container">
+  <div class="row">
+    <div class="col sourceCol">
+      <div class="row">
+        <h4>Source</h4>
+      </div>
+      <mdm-content-editor
+        [content]="mergeItem.sourceValue"
+        [inEditMode]="false"
+        *ngIf="mergeItem.sourceValue"
+      ></mdm-content-editor>
+    </div>
+  </div>
+  <div class="row itemBorder">
+    <div class="col sourceCol">
+      <div class="row">
+        <h4>Target</h4>
+      </div>
+      <mdm-content-editor
+        [content]="mergeItem.targetValue"
+        [inEditMode]="false"
+        *ngIf="mergeItem.targetValue"
+      ></mdm-content-editor>
+    </div>
+  </div>
+</div>

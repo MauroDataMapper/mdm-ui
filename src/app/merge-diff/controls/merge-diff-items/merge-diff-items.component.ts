@@ -17,8 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { MergeItem } from '@mdm/merge-diff/types/merge-item-type';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { MergeItem } from '@maurodatamapper/mdm-resources';
+
 
 @Component({
   selector: 'mdm-merge-diff-items',
@@ -29,11 +30,16 @@ export class MergeDiffItemsComponent implements OnInit {
 
   @Input() mergeItems : Array<MergeItem>;
 
-  @Output() selectedMergeItem : MergeItem;
+  @Output() selectedMergeItemChanged = new EventEmitter<MergeItem>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  selectedItem(item:MergeItem)
+  {
+    this.selectedMergeItemChanged.emit(item);
   }
 
 }

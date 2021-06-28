@@ -16,8 +16,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { Component, Input, OnInit } from '@angular/core';
+import { MergeItem } from '@maurodatamapper/mdm-resources';
 
-.changesArea
-{
-    padding-bottom: 10px;
+@Component({
+  selector: 'mdm-merge-comparison',
+  templateUrl: './merge-comparison.component.html',
+  styleUrls: ['./merge-comparison.component.scss']
+})
+export class MergeComparisonComponent implements OnInit {
+
+  @Input() mergeItem : MergeItem;
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
 }

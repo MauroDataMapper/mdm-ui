@@ -17,9 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ModelDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { ModelDomainType, Uuid, Merge } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
 
 /**
  * Adapter service around {@link MdmResourcesService} to wrap around
@@ -29,7 +31,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MergeDiffAdapterService {
-  constructor(private resources: MdmResourcesService) {}
+  constructor(private resources: MdmResourcesService, private http: HttpClient ) {}
 
   loadCatalogueItemDetails(id: Uuid, domainType: ModelDomainType) : Observable<any> {
     switch (domainType) {
@@ -45,6 +47,21 @@ export class MergeDiffAdapterService {
   retrieveMainBranch(domainType: ModelDomainType, sourceId: Uuid)
   {
     return this.resources.versioning.currentMainBranch(domainType, sourceId);
+  }
+
+  // getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MergeItem[]> {
+  //   return this.resources.
+  //      versioning.
+  //      mergeDiff(sourceId, targetId,targetId)
+  //     .pipe(
+  //       catchError(() => {return EMPTY;}),  // Common error handling (maybe)
+  //       map((response: VersioningResponse) => response.body)  // Map to types we care about
+  //     );
+  // }
+
+  getMergeDiff() : Observable<any>
+  {
+    return this.http.get('../../../assets/newStyle.json');
   }
 
   /*

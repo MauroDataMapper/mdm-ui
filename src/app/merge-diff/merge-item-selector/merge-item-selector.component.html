@@ -18,12 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="container" >
     <div class="row">
-        <div class="col">
+        <div class="col changesArea">
             <div class="row">
                 <h4>Changes</h4>
             </div>
             <div class="row">
-                 <mdm-merge-diff-items [mergeItems]="changesList"></mdm-merge-diff-items>
+                 <mdm-merge-diff-items (selectedMergeItemChanged)="selectedItem($event)" [mergeItems]="changesList"></mdm-merge-diff-items>
             </div>           
         </div>
     </div>

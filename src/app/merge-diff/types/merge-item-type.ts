@@ -18,12 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 
-export interface MergeItem
-{
-    path : string;
-    selectSource?: MergeItemSource;
-}
-
 export enum MergeItemSource {
     Source = 'SOURCE',
     Target = 'TARGET',

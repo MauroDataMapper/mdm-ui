@@ -19,6 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="container">
     <li *ngFor="let item of mergeItems" style="list-style-type:none;">
-        <span>{{item.path}} <b>{{item.selectSource}}</b></span>
+         <span (click)="selectedItem(item)">{{item.path}} <b>{{item.selectSource}}</b></span>
     </li>
 </div>

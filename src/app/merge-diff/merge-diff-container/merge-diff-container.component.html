@@ -93,10 +93,15 @@ SPDX-License-Identifier: Apache-2.0
 
   <div class="resizableContainer">
     <div class="div1" mdmResizable>
-      <mdm-merge-item-selector style="display: flex"></mdm-merge-item-selector>
+      <mdm-merge-item-selector *ngIf="diff" (selectedMergeItemChanged)="setSelectedMergeItem($event)" [diffs]="diff" style="display: flex"></mdm-merge-item-selector>
     </div>
-    <div class="div2" style="display: flex">
-      <span>Content</span>
+    <div class="div2">
+      <div class="loading-spinner" *ngIf="loadingContent">
+        <div>
+          <i class="fas fa-sync-alt fa-spin"></i>
+        </div>
+      </div>
+      <mdm-merge-comparison  style="display: flex" *ngIf="!loadingContent && selectedItem" [mergeItem]="selectedItem"> </mdm-merge-comparison>
     </div>
   </div>
 </div>

@@ -215,7 +215,7 @@ export class SecurityHandlerService {
       state: params.state,
       sessionState: params.sessionState,
       code: params.code,
-      redirectUrl: redirectUri.toString()
+      redirectUri: redirectUri.toString()
     };
 
     return this.signIn(payload);

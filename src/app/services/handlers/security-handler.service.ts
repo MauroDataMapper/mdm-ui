@@ -187,6 +187,7 @@ export class SecurityHandlerService {
 
   /**
    * Authenticate a user by redirecting to an external OpenID Connect provider to initiate authentication.
+   *
    * @param provider The OpenID Connect provider to redirect to.
    *
    * @see {@link SecurityHandlerService.authorizeOpenIdConnectSession}
@@ -213,7 +214,7 @@ export class SecurityHandlerService {
    *
    * @see {@link SecurityHandlerService.authenticateWithOpenIdConnect}
    */
-  authorizeOpenIdConnectSession(params: { state: string, sessionState: string, code: string }): Observable<UserDetails> {
+  authorizeOpenIdConnectSession(params: { state: string; sessionState: string; code: string }): Observable<UserDetails> {
     const providerId = localStorage.getItem('openIdConnectProviderId');
     if (!providerId) {
       return throwError('Cannot retrieve OpenID Connect provider identifier.');

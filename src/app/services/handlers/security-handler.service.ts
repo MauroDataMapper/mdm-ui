@@ -185,10 +185,19 @@ export class SecurityHandlerService {
     this.stateHandler.Go('appContainer.mainApp.home');
   }
 
+  /**
+   * Authenticate a user by redirecting to an external OpenID Connect provider to initiate authentication.
+   * @param provider The OpenID Connect provider to redirect to.
+   *
+   * @see {@link SecurityHandlerService.authorizeOpenIdConnectSession}
+   */
   authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
+    // Track which provider was used, will be needed once redirected back to Mauro
     localStorage.setItem('openIdConnectProviderId', provider.id);
 
     const authUrl = new URL(provider.authorizationEndpoint);
+
+    // Set the page URL to come back to once the provider has authenticated the user
     const redirectUri = this.getOpenIdAuthorizeUrl();
     authUrl.searchParams.append('redirect_uri', redirectUri.toString());
 
@@ -196,11 +205,13 @@ export class SecurityHandlerService {
   }
 
   /**
-   * Sign in a user to the Mauro system.
+   * Sign in a user that was authenticated via an OpenID Connect provider.
    *
-   * @param credentials The sign-in credentials to use.
+   * @param params The session state parameters provided by the OpenID Connect provider.
    * @returns An observable to return a `UserDetails` object representing the signed in user.
    * @throws `SignInError` in the observable chain if sign-in failed.
+   *
+   * @see {@link SecurityHandlerService.authenticateWithOpenIdConnect}
    */
   authorizeOpenIdConnectSession(params: { state: string, sessionState: string, code: string }): Observable<UserDetails> {
     const providerId = localStorage.getItem('openIdConnectProviderId');

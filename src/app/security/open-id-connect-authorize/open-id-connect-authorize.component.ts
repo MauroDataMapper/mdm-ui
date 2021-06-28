@@ -23,6 +23,23 @@ import { UrlService } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
+/**
+ * Component to authorize a user session authenticated via an OpenID Connect provider.
+ *
+ * This acts as the landing page when an OpenID Connect provider redirects back to Mauro after authenticating a user.
+ * This page will complete the authorization of a Mauro user session to complete login.
+ *
+ * The component has 3 states that occur (in order):
+ *
+ * 1. A user is not signed into Mauro yet - capture the parameters from the OpenID Connect redirect URL containing the
+ * authentication session state. Pass those parameters to Mauro's login endpoint.
+ *
+ * 2. When successfully logged into Mauro, the component will redirect back to itself. The reason why is to remove
+ * the extraneous query parameters from the current location URL (a full redirect seems to be the only way to
+ * do this, UIRouter does not update browser state).
+ *
+ * 3. If logged into Mauro - update internal state with logged in broadcast messages and navigate to the start page.
+ */
 @Component({
   selector: 'mdm-open-id-connect-authorize',
   templateUrl: './open-id-connect-authorize.component.html',
@@ -83,6 +100,9 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
         finalize(() => this.authorizing = false)
       )
       .subscribe(() => {
+        // Redirect back to this page location but removing/stripping out the query parameters
+        // that came from the OpenID Connect provider. This seems to be the only affective way of
+        // doing this.
         const currentUrl = `#${this.url.path()}`;
         const baseUrl = `${window.location.protocol}//${window.location.host}`;
         const redirectUrl = new URL(currentUrl, baseUrl);

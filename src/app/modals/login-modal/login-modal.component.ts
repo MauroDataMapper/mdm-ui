@@ -42,7 +42,6 @@ export class LoginModalComponent implements OnInit {
   signInForm!: FormGroup;
 
   openIdConnectProviders?: PublicOpenIdConnectProvider[];
-  readonly maxProvidersWithoutScroll = 4;
 
   get userName() {
     return this.signInForm.get('userName');

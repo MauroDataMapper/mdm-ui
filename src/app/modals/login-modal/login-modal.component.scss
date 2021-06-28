@@ -26,8 +26,8 @@ SPDX-License-Identifier: Apache-2.0
   &__providers {
 
     &--scrollable {
-      max-height: 200px;
-      overflow-y: scroll;
+      max-height: 9em;
+      overflow-y: auto;
     }
 
     button {

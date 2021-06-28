@@ -113,13 +113,7 @@ SPDX-License-Identifier: Apache-2.0
     <p class="mt-2 mb-2 text-center">
       Or, login using an account from one of these providers
     </p>
-    <div
-      class="text-center marginless"
-      [ngClass]="{
-        'mdm-login-modal__providers--scrollable':
-          openIdConnectProviders?.length > maxProvidersWithoutScroll
-      }"
-    >
+    <div class="text-center marginless mdm-login-modal__providers--scrollable">
       <button
         *ngFor="let provider of openIdConnectProviders"
         type="button"

@@ -26,17 +26,22 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
+import { PublicOpenIdConnectProvider, PublicOpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
+import { MessageHandlerService, SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.sass'],
+  styleUrls: ['./login-modal.component.scss'],
 })
 export class LoginModalComponent implements OnInit {
   message = '';
   authenticating = false;
 
   signInForm!: FormGroup;
+
+  openIdConnectProviders?: PublicOpenIdConnectProvider[];
 
   get userName() {
     return this.signInForm.get('userName');
@@ -51,8 +56,10 @@ export class LoginModalComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginModalComponent>,
     private securityHandler: SecurityHandlerService,
     private messageService: MessageService,
-    private validator: ValidatorService
-  ) { }
+    private validator: ValidatorService,
+    private resources: MdmResourcesService,
+    private shared: SharedService,
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit() {
     this.signInForm = new FormGroup({
@@ -64,6 +71,22 @@ export class LoginModalComponent implements OnInit {
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ])
     });
+
+    if (this.shared.features.useOpenIdConnect) {
+      // If unable to get OpenID Connect providers, silently fail and ignore
+      const requestOptions: MdmHttpHandlerOptions = {
+        handleGetErrors: false
+      };
+
+      this.resources.pluginOpenIdConnect
+        .listPublic({}, requestOptions)
+        .pipe(
+          catchError(() => EMPTY)
+        )
+        .subscribe((response: PublicOpenIdConnectProvidersIndexResponse) => {
+          this.openIdConnectProviders = response.body;
+        });
+    }
   }
 
   login() {
@@ -102,7 +125,7 @@ export class LoginModalComponent implements OnInit {
           this.signInForm.enable();
         })
       )
-      .subscribe(user =>  {
+      .subscribe(user => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
         this.messageService.loggedInChanged(true);
@@ -118,8 +141,18 @@ export class LoginModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcast.dispatch('openRegisterModalDialog');
   }
-  close = () => {
+
+  close() {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  };
+  }
+
+  authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
+    if (!provider.authorizationEndpoint) {
+      this.messageHandler.showError(`Unable to authenticate with ${provider.label} because of a missing endpoint. Please contact your administrator for further support.`);
+      return;
+    }
+
+    this.securityHandler.authenticateWithOpenIdConnect(provider);
+  }
 }

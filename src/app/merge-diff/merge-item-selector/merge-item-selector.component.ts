@@ -17,19 +17,20 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeItem, Merge } from '@maurodatamapper/mdm-resources';
-import { MergeItemSource } from '../types/merge-item-type';
+import { Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { MergeItem, Merge, MergeType } from '@maurodatamapper/mdm-resources';
+import { MergeItemSelection } from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
   templateUrl: './merge-item-selector.component.html',
-  styleUrls: ['./merge-item-selector.component.scss']
+  styleUrls: ['./merge-item-selector.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MergeItemSelectorComponent implements OnInit {
 
   @Input() diffs : Merge;
-  @Output() selectedMergeItemChanged = new EventEmitter<MergeItem>();
+  @Output() selectedMergeItemChanged = new EventEmitter<MergeItemSelection>();
 
    changesList = new Array<MergeItem>();
    committingList = new Array<MergeItem>();
@@ -50,9 +51,14 @@ export class MergeItemSelectorComponent implements OnInit {
     });
   }
 
-  selectedItem(item: MergeItem)
+  selectedItem(mergeItem: MergeItem, isCommitting? :boolean)
   {
-    this.selectedMergeItemChanged.emit(item);
+    this.selectedMergeItemChanged.emit({mergeItem, isCommitting});
+  }
+
+  public get mergeType()
+  {
+    return MergeType;
   }
 
 }

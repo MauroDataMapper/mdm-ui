@@ -27,6 +27,7 @@ import { MergeItem } from '@maurodatamapper/mdm-resources';
 export class MergeComparisonComponent implements OnInit {
 
   @Input() mergeItem : MergeItem;
+  @Input() isCommitting: boolean;
 
   constructor() { }
 

@@ -18,7 +18,49 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <div class="container">
-  <div class="row">
+  <div fxLayout="row" class="panel panel-default mdm--shadow-block">
+    <div class="full-width" style="clear: both">
+        <button
+        type="button"
+        mat-icon-button
+        [matMenuTriggerFor]="userActions"
+        style="position: relative; float: right; margin-right: 75px"
+      >       
+        <span>Actions </span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <button
+          mat-menu-item
+          type="button"
+          matToolTip="Use Source"
+          aria-label="Use Source"    
+        >
+          <i class="fas fa-forward" aria-hidden="true"></i>
+          Use Source
+        </button>
+        <button
+        mat-menu-item
+        type="button"
+        matToolTip="Use Target"
+        aria-label="Use Target"  
+           >
+        <i class="fas fa-backward" aria-hidden="true"></i>
+        Use Target
+      </button>
+      <button
+      mat-menu-item
+      type="button"
+      matToolTip="Open Editor"
+      aria-label="Open Editor"
+    >
+      <i class="fas fa-edit" aria-hidden="true"></i>
+      Open Editor
+    </button>
+      </mat-menu>
+    </div>
+  </div>
+  <div class="panel panel-default" fxLayout="row">
     <div class="col sourceCol">
       <div class="row">
         <h4>Source</h4>
@@ -30,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
       ></mdm-content-editor>
     </div>
   </div>
-  <div class="row itemBorder">
+  <div  class="panel panel-default" *ngIf="!isCommitting" class="row itemBorder text area">
     <div class="col sourceCol">
       <div class="row">
         <h4>Target</h4>

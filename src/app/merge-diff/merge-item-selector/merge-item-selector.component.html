@@ -16,25 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container" >
-    <div class="row">
-        <div class="col changesArea">
-            <div class="row">
-                <h4>Changes</h4>
-            </div>
-            <div class="row">
-                 <mdm-merge-diff-items (selectedMergeItemChanged)="selectedItem($event)" [mergeItems]="changesList"></mdm-merge-diff-items>
-            </div>           
-        </div>
-    </div>
-    <div class="row itemBorder">
-        <div class="col">
-            <div class="row">
-                <h4>Committing</h4>
-            </div>
-            <div class="row">
-                <mdm-merge-diff-items  [mergeItems]="committingList"></mdm-merge-diff-items>
-            </div>           
-        </div>
-    </div>
-</div>
+
+<mat-selection-list [multiple]="false">
+  <div mat-subheader>Changes</div>
+  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of changesList" [value]="item" (click)="selectedItem(item)">
+    {{ item.path }}
+  </mat-list-option>
+  <div mat-subheader>Committing</div>
+  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of committingList" [value]="item" (click)="selectedItem(item, true)">
+    {{ item.path }} <b>{{ item.selectSource }}</b>
+  </mat-list-option>
+</mat-selection-list>

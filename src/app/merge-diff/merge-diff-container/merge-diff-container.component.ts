@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ModelDomainType, Uuid, Merge, MergeItem } from '@maurodatamapper/mdm-resources';
+import { ModelDomainType, Uuid, Merge } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
@@ -31,6 +31,7 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
+import { MergeItemSelection } from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -51,7 +52,7 @@ export class MergeDiffContainerComponent implements OnInit {
   source: any;
   target: any;
   diff: Merge;
-  selectedItem: MergeItem;
+  selectedItem: MergeItemSelection;
 
   constructor(
     private shared: SharedService,
@@ -161,7 +162,7 @@ export class MergeDiffContainerComponent implements OnInit {
     });
   }
 
-  setSelectedMergeItem(item: MergeItem)
+  setSelectedMergeItem(item: MergeItemSelection)
   {
     this.loadingContent = true;
     this.selectedItem = item;

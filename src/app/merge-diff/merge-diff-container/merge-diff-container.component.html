@@ -101,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0
           <i class="fas fa-sync-alt fa-spin"></i>
         </div>
       </div>
-      <mdm-merge-comparison  style="display: flex" *ngIf="!loadingContent && selectedItem" [mergeItem]="selectedItem"> </mdm-merge-comparison>
+      <mdm-merge-comparison  style="display: flex" *ngIf="!loadingContent && selectedItem" [mergeItem]="selectedItem.mergeItem" [isCommitting]="selectedItem.isCommitting"> </mdm-merge-comparison>
     </div>
   </div>
 </div>

@@ -26,22 +26,3 @@ export class UserDetailsResult {
   groups: any[];
   emailAddress: any;
 }
-
-export class EditableUserDetails {
-  id: string;
-  deletePending: boolean;
-  username: string;
-  firstName: string;
-  lastName: string;
-  organisation: string;
-  jobTitle: string;
-  visible: boolean;
-  validationError: boolean;
-
-  show() {}
-
-  cancel() {}
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save(parent: any) {}
-}

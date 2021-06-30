@@ -26,6 +26,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ElementTypesService, StateHandlerService } from '@mdm/services';
 import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
+import { ModelDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-merging',
@@ -70,7 +71,7 @@ export class ModelMergingComponent implements OnInit {
   DIFF_LOC = {Source : 'source', Target : 'target'};
   MERGE_DOMAIN_TYPE = {DataClass : 'dataClass', DataElement : 'dataElement', Enumeration : 'enumeration', DataType : 'dataType', Property : 'property',  Metadata : 'metadata', DataModel: 'dataModel'};
 
-  domainType: string;
+  domainType: ModelDomainType;
 
   constructor(
     private messageHandler: MessageHandlerService,
@@ -645,6 +646,10 @@ export class ModelMergingComponent implements OnInit {
   };
 
   removeNonConflicts(arr: any) {
+    if (!arr) {
+      return;
+    }
+
     for (let i = arr.length - 1; i >= 0; i -= 1) {
       const element = arr[i];
       if (!element.modified && !element.created && !element.deleted) {

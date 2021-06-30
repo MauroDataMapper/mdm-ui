@@ -60,7 +60,8 @@
       "path": "dm:Functional Test Model|dc:existingClass|dc:addLeftToExistingClass",
       "isMergeConflict": false,
       "isSourceModificationAndTargetDeletion": false,
-      "type": "creation"
+      "type": "creation",
+	  "used": "source"
     },
     {
       "path": "dm:Functional Test Model|dc:existingClass|dc:deleteLeftOnlyFromExistingClass",

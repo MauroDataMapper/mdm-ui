@@ -61,7 +61,7 @@ export class BranchSelectorComponent implements OnInit {
     );
 
     this.resources[domainElementType.resourceName]
-      .simpleModelVersionTree(this.catalogueItem.id)
+      .simpleModelVersionTree(this.catalogueItem.id,{branchesOnly : this.forMerge})
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(

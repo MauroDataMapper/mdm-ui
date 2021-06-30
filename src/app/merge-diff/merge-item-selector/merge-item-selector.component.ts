@@ -17,48 +17,34 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, Input, OnInit, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { MergeItem, Merge, MergeType } from '@maurodatamapper/mdm-resources';
-import { MergeItemSelection } from '../types/merge-item-type';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { MergeItem, MergeType } from '@maurodatamapper/mdm-resources';
+import {
+  CommittingMergeItem} from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
   templateUrl: './merge-item-selector.component.html',
-  styleUrls: ['./merge-item-selector.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./merge-item-selector.component.scss']
 })
 export class MergeItemSelectorComponent implements OnInit {
+  @Output() selectedMergeItemChanged = new EventEmitter<MergeItem>();
+  @Input() mergeItems : Array<MergeItem & CommittingMergeItem>;
+  @Input() isCommitting: boolean;
 
-  @Input() diffs : Merge;
-  @Output() selectedMergeItemChanged = new EventEmitter<MergeItemSelection>();
+  changesList = new Array<MergeItem>();
 
-   changesList = new Array<MergeItem>();
-   committingList = new Array<MergeItem>();
 
-  constructor() {
-   }
+  constructor() {}
 
   ngOnInit(): void {
-
-    this.diffs.diffs.forEach((diff : MergeItem) => {
-      if(diff.isMergeConflict)
-      {
-        this.changesList.push(diff);
-      }
-      else{
-        this.committingList.push(diff);
-      }
-    });
   }
 
-  selectedItem(mergeItem: MergeItem, isCommitting? :boolean)
-  {
-    this.selectedMergeItemChanged.emit({mergeItem, isCommitting});
+  selectedItem(mergeItem: MergeItem) {
+    this.selectedMergeItemChanged.emit( mergeItem);
   }
 
-  public get mergeType()
-  {
+  public get mergeType() {
     return MergeType;
   }
-
 }

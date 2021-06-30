@@ -25,12 +25,11 @@ SPDX-License-Identifier: Apache-2.0
   }
 
   
-.resizableContainer {
-  @extend .headerContainer;
-  border: 1px solid black;
-  margin-top: 5px;
-  height: 100%;
+.tabContainer{
+  height: 20%;
+  min-height:300px
 }
+
 
   .div {
     position: relative;

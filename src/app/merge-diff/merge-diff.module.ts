@@ -23,7 +23,6 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { MergeDiffContainerComponent } from '@mdm/merge-diff/merge-diff-container/merge-diff-container.component';
 import { MergeItemSelectorComponent } from './merge-item-selector/merge-item-selector.component';
-import { MergeDiffItemsComponent } from './controls/merge-diff-items/merge-diff-items.component';
 import { MergeComparisonComponent } from './merge-comparsion/merge-comparsion.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 
@@ -31,7 +30,6 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
   declarations: [
     MergeDiffContainerComponent,
     MergeItemSelectorComponent,
-    MergeDiffItemsComponent,
     MergeComparisonComponent
   ],
   imports: [

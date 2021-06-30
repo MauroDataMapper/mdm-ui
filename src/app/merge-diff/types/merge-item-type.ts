@@ -30,3 +30,9 @@ export interface MergeItemSelection
     mergeItem: MergeItem;
     isCommitting: boolean;
 }
+
+
+export interface CommittingMergeItem
+{
+    branchSelected : MergeItemSource;
+}

@@ -18,12 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <mat-selection-list [multiple]="false">
-  <div mat-subheader>Changes</div>
-  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of changesList" [value]="item" (click)="selectedItem(item)">
-    {{ item.path }}
-  </mat-list-option>
-  <div mat-subheader>Committing</div>
-  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of committingList" [value]="item" (click)="selectedItem(item, true)">
-    {{ item.path }} <b>{{ item.selectSource }}</b>
+  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of mergeItems" [value]="item" (click)="selectedItem(item)">
+    <i  mat-list-icon class="fas" [ngClass]="{'fa-plus-square' : item.type === mergeType.Creation , 'fa-minus-square' : item.type === mergeType.Deletion, 'fa-pen-square' : item.type === mergeType.Modification }"></i> {{ item.path }} {{ item.branchSelected | uppercase }}
   </mat-list-option>
 </mat-selection-list>

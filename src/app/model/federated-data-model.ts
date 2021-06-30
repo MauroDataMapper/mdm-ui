@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AvailableDataModel, CatalogueItemDomainType, SubscribedDataModel } from '@maurodatamapper/mdm-resources';
-import { Resetable } from '@mdm/model/editable-forms';
 
 export class FederatedDataModel {
   catalogueId: string;
@@ -46,20 +45,3 @@ export class FederatedDataModel {
     return this.subscriptionId !== undefined;
   }
 }
-
-/**
- * Represents the editable form state of a `FederatedDataModel`
- */
-export class FederatedDataModelForm implements Resetable<FederatedDataModel> {
-  label: string;
-  description: string;
-  folderId?: string;
-  folderLabel?: string;
-
-  reset(original: FederatedDataModel) {
-    this.label = original.label;
-    this.description = original.description;
-    this.folderId = original.folderId;
-  }
-}
-

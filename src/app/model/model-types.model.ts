@@ -17,41 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Classifier } from '@maurodatamapper/mdm-resources';
-
-export class EditableTerm {
-  id: string;
-  terminology: string;
-  terminologyLabel: string;
-  code: string;
-  definition: string;
-  label: string;
-  description: string;
-  url: string;
-  dateCreated: string;
-  domainType: string;
-  editable: boolean;
-  deletePending: boolean;
-  classifiers: Classifier[] = [];
-  aliases: any[] = [];
-  finalised: boolean;
-  visible: boolean;
-  waiting: boolean;
-  validationError: boolean;
-
-  constructor() { }
-
-  show() {
-
-  }
-  cancel() {
-
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save(parent: any) { }
-
-}
-
 export class Categories {
   index: number;
   id: string;

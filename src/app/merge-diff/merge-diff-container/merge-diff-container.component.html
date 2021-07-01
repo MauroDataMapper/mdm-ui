@@ -108,7 +108,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="tabContainer" fxLayout="row">
       <div class="full-width" style="clear: both">
-        <mat-tab-group>
+        <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
           <mat-tab label="Changes">
             <div class="full-width" style="clear: both">
               <button
@@ -160,6 +160,9 @@ SPDX-License-Identifier: Apache-2.0
               [mergeItems]="committingList"
               style="display: flex"
             ></mdm-merge-item-selector>
+            <div class="noContent">
+              <h4 style="margin-top: 75px;" *ngIf="committingList.length === 0">No Pending Commits</h4>
+            </div>         
           </mat-tab>
         </mat-tab-group>
       </div>

@@ -64,6 +64,7 @@ export class MergeDiffContainerComponent implements OnInit {
   selectedItem: MergeItemSelection;
   changesList: Array<FullMergeItem>;
   committingList: Array<FullMergeItem>;
+  activeTab: any;
 
   constructor(
     private shared: SharedService,
@@ -87,6 +88,7 @@ export class MergeDiffContainerComponent implements OnInit {
     const sourceId = this.uiRouterGlobals.params.sourceId;
     const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
+
 
     this.mergeService
       .loadCatalogueItemDetails(sourceId, this.domainType)
@@ -197,6 +199,7 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   selectAll(branchUsed: MergeUsed) {
+    this.selectedItem = null;
     this.changesList.forEach((item) => {
       item.branchSelected = branchUsed;
       this.committingList.push(item);
@@ -209,10 +212,12 @@ export class MergeDiffContainerComponent implements OnInit {
    const index = this.committingList.findIndex(x => x === item);
    if(index >= 0)
    {
+     this.selectedItem = null;
      this.committingList.splice(index,1);
      item.branchSelected = null;
      this.changesList.push(item);
-     this.selectedItem = null;
+     this.activeTab = 0;
+     this.setSelectedMergeItem(item,false);
    }
   }
 
@@ -225,5 +230,9 @@ export class MergeDiffContainerComponent implements OnInit {
       this.committingList.push(item);
       this.selectedItem = null;
     }
+  }
+
+  tabSelected(index: number) {
+    this.activeTab = index;
   }
 }

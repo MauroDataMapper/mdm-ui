@@ -16,41 +16,22 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-  
-  .headerContainer{    
-    justify-content:space-between;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
+import { Component, Input, OnInit } from '@angular/core';
+import { MergeItem } from '@maurodatamapper/mdm-resources';
+
+@Component({
+  selector: 'mdm-merge-comparison',
+  templateUrl: './merge-comparison.component.html',
+  styleUrls: ['./merge-comparison.component.scss']
+})
+export class MergeComparisonComponent implements OnInit {
+
+  @Input() mergeItem : MergeItem;
+  @Input() isCommitting: boolean;
+
+  constructor() { }
+
+  ngOnInit(): void {
   }
 
-  
-.tabContainer{
-  height: 20%;
-  min-height:300px
 }
-
-
-  .div {
-    position: relative;
-    margin: 2.5px;
-   }
-
-   .div1 {
-     @extend .div;
-     width:20%;
-     overflow-x: auto;
-     overflow-y: hidden;
-   }
-  
-  .div2 {
-    @extend .div;
-    width:80%;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  

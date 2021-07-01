@@ -358,7 +358,7 @@ export class DataModelDetailComponent implements OnInit {
         'mergediff',
         {
           sourceId: this.dataModel.id,
-          catalogueDomainType: this.dataModel.domainType
+          catalogueDomainType:  ModelDomainType.DataModels
         });
     }
 

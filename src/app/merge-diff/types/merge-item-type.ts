@@ -16,41 +16,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-  
-  .headerContainer{    
-    justify-content:space-between;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
-  }
+import { MergeItem } from '@maurodatamapper/mdm-resources';
 
-  
-.tabContainer{
-  height: 20%;
-  min-height:300px
+
+export enum MergeItemSource {
+    Source = 'SOURCE',
+    Target = 'TARGET',
+    Mixed = 'MIXED'
+}
+
+export interface MergeItemSelection
+{
+    mergeItem: MergeItem;
+    isCommitting: boolean;
 }
 
 
-  .div {
-    position: relative;
-    margin: 2.5px;
-   }
-
-   .div1 {
-     @extend .div;
-     width:20%;
-     overflow-x: auto;
-     overflow-y: hidden;
-   }
-  
-  .div2 {
-    @extend .div;
-    width:80%;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  
+export interface CommittingMergeItem
+{
+    branchSelected : MergeItemSource;
+}

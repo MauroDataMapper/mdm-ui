@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,18 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
-import { MergeDiffAdapterService } from './merge-diff-adapter.service';
+-->
 
-describe('MergeDiffAdapterService', () => {
-  let service: MergeDiffAdapterService;
-
-  beforeEach(() => {
-    service = setupTestModuleForService(MergeDiffAdapterService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+<mat-selection-list [multiple]="false">
+  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of mergeItems" [value]="item" (click)="selectedItem(item)">
+    <i  mat-list-icon class="fas" [ngClass]="{'fa-plus-square' : item.type === mergeType.Creation , 'fa-minus-square' : item.type === mergeType.Deletion, 'fa-pen-square' : item.type === mergeType.Modification }"></i> {{ item.path }} {{ item.branchSelected | uppercase }}
+  </mat-list-option>
+</mat-selection-list>

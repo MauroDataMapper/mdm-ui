@@ -21,49 +21,110 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-sync-alt fa-spin"></i>
   </div>
 </div>
-<div  *ngIf="loaded && source" class="container">
-    <div fxLayout="row"  class="headerContainer">
-      <h4
-        fxFlex
-        fxLayout="row"
-        fxFlex="75"
-        fxFlexOffset="15"
-        fxFlex.md="50"
-        fxFlex.sm="100"
-        fxFlex.xs="100"
-        fxLayoutAlign="center center"
-        fxLayoutAlign.xs="center center"
+<div *ngIf="loaded" class="container">
+  <div fxLayout="row" class="panel panel-default mdm--shadow-block">
+    <div class="full-width" style="clear: both">
+      <button
+        type="button"
+        mat-icon-button
+        [matMenuTriggerFor]="userActions"
+        style="position: relative; float: right; margin-right: 4px"
       >
-        Merge {{source.branchName}} into TARGET BRANCH
-      </h4>
-
-   
-        <span style="margin-top: auto; margin-bottom: auto"
-          ><strong>Target: </strong></span
-        >
-     
+        <i class="fas fa-ellipsis-v"></i>
+        <span style="display: none">Menu</span>
+      </button>
+      <!--First level Menu-->
+      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
         <button
-          mat-flat-button
-          color="primary"
+          mat-menu-item
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
           (click)="onCommitChanges()"
-          fxFlex
         >
-          Commit
+          <i class="fas fa-check-circle" aria-hidden="true"></i>
+          Commit Changes
         </button>
-  </div>
+        <button
+          mat-menu-item
+          type="button"
+          matToolTip="Cancel Changes"
+          aria-label="Cancel Changes"
+          (click)="onCancelChanges()"
+        >
+          <i class="fas fa-times-circle" aria-hidden="true"></i>
+          Cancel
+        </button>
+      </mat-menu>
+      <!-- End of first level menu -->
 
-  <div class="resizableContainer">
-    <div class="div1" mdmResizable>
-      <div>Changes Control Here</div>
-      <div>
-        Committed Control Here
+      <h4 class="inline-block marginless">
+        <span class="dataModelTypeIcon">
+          <i matTooltip="Folder" class="fas fa-folder"></i>
+        </span>
+        <span class="dataModelDetailsLabel">{{ source.label }}</span>
+      </h4>
+      <div class="detail-icons">
+        <div class="text-muted">
+          <small>
+            <i class="fas fa-forward" matTooltip="Source Branch"></i>
+            <span
+              ><strong>Source Branch : {{ source.branchName }} </strong></span
+            >
+          </small>
+        </div>
+        <div *ngIf="targetLoaded" class="text-muted">
+          <small>
+            <i class="fas fa-backward" matTooltip="Target Branch"></i>
+            <span><strong>Target Branch : </strong></span>
+            <span>
+              <mdm-branch-selector
+                [forMerge]="true"
+                [catalogueItem]="target"
+                (selectedCatalogueItemChanged)="setTarget($event)"
+              ></mdm-branch-selector>
+            </span>
+          </small>
+        </div>
       </div>
     </div>
-    <div class="div2">
-      <span>Content</span>
+  </div>
+  <div>
+    <div fxLayout="row">
+      <div class="loading-spinner" *ngIf="loadingContent">
+        <div>
+          <i class="fas fa-sync-alt fa-spin"></i>
+        </div>
+      </div>
+      <mdm-merge-comparison
+        style="display: flex"
+        *ngIf="!loadingContent && selectedItem"
+        [mergeItem]="selectedItem.mergeItem"
+        [isCommitting]="selectedItem.isCommitting"
+      >
+      </mdm-merge-comparison>
+    </div>
+    <div class="tabContainer" fxLayout="row">
+      <div class="full-width" style="clear: both">
+        <mat-tab-group>
+          <mat-tab label="Changes">
+            <mdm-merge-item-selector
+              *ngIf="changesList"
+              (selectedMergeItemChanged)="setSelectedMergeItem($event, false)"
+              [mergeItems]="changesList"
+              style="display: flex"
+            ></mdm-merge-item-selector>
+          </mat-tab>
+          <mat-tab label="Committing">
+            <mdm-merge-item-selector
+              *ngIf="committingList"
+              (selectedMergeItemChanged)="setSelectedMergeItem($event, true)"
+              [mergeItems]="committingList"
+              style="display: flex"
+            ></mdm-merge-item-selector>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
   </div>
 </div>

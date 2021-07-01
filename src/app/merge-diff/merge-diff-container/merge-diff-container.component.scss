@@ -53,4 +53,26 @@ SPDX-License-Identifier: Apache-2.0
       text-align: center;
   }
 
+  .noContent
+  {
+    height: 250px;
+    text-align: center;
+  }
+
+  .selectBtn
+  {
+    position: relative; 
+    float: right;
+     margin-right: 75px;     
+     margin-top: 15px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .button {
+    padding-right: 120px;
+    font-size: small;
+  }
   

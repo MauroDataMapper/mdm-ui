@@ -17,27 +17,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.changesArea
-{
-    padding-bottom: 10px;
-}
+import { Pipe, PipeTransform } from '@angular/core';
+import { FullMergeItem } from '../types/merge-item-type';
 
-.mat-list-option
-{
-    font-size: smaller !important;
-    height: 25px !important;
-}
-
-.mat-subheader{
-    font-weight: bold !important;
-}
-
-.creation
-{
-    color:green !important ;
-}
-
-.deletion
-{ 
-    color: darkred !important;
+@Pipe({ name: 'mergeFilter' })
+export class MergeFilterPipe implements PipeTransform {
+  public transform(items: FullMergeItem[], searchText: string): FullMergeItem[] {
+    if (searchText === '') {
+      return items;
+    }
+    return items.filter(item => item.path.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
+  }
 }

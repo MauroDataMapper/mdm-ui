@@ -26,11 +26,15 @@ SPDX-License-Identifier: Apache-2.0
     <div class="compare-view">
       <div class="source diff-area">
         <h5>Source</h5>
-        <div [innerHTML]="sourceText | safe:'html'"></div>
+        <i class="fas fa-forward" matTooltip="Target Branch"></i>
+        <span><strong>{{ data.source.branchName }}</strong></span>
+        <div [innerHTML]="sourceText | safe: 'html'"></div>
       </div>
       <div class="target diff-area">
         <h5>Target</h5>
-        <div [innerHTML]="targetText | safe:'html'"></div>
+        <i class="fas fa-backward" matTooltip="Target Branch"></i>
+        <span><strong>{{ data.target.branchName }}</strong></span>
+        <div [innerHTML]="targetText | safe: 'html'"></div>
       </div>
       <div class="merged">
         <h5>Resolved</h5>

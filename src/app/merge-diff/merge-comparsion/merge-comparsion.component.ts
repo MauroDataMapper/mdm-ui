@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
+import { Branchable, MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
 import { FullMergeItem } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -32,6 +32,8 @@ import { CompareEditorModalData, CompareEditorModalResult } from '../compare-edi
 })
 export class MergeComparisonComponent implements OnInit {
 
+  @Input() source: Branchable;
+  @Input() target: Branchable;
   @Input() mergeItem : FullMergeItem;
   @Input() isCommitting: boolean;
 
@@ -65,6 +67,8 @@ export class MergeComparisonComponent implements OnInit {
           maxHeight: '90%',
           maxWidth: '98%',
           data: {
+            source: this.source,
+            target: this.target,
             item: this.mergeItem
           }
         }

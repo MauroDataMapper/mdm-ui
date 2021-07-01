@@ -17,10 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { MergeItem } from "@maurodatamapper/mdm-resources";
+import { Branchable, MergeItem } from "@maurodatamapper/mdm-resources";
 import { ModalDialogStatus } from "@mdm/constants/modal-dialog-status";
 
 export interface CompareEditorModalData {
+  source: Branchable;
+  target: Branchable;
   item: MergeItem;
 }
 

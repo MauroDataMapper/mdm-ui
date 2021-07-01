@@ -36,6 +36,8 @@ import {
   Finalisable,
   LoginPayload,
   LoginResponse,
+  OpenIdConnectLoginPayload,
+  PublicOpenIdConnectProvider,
   Securable
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -92,10 +94,8 @@ export class SecurityHandlerService {
     return localStorage.getItem('email');
   }
 
-  loginRequired()
-  {
-    if(this.isLoggedIn)
-    {
+  loginRequired() {
+    if (this.isLoggedIn) {
       this.logout();
     }
     this.stateHandler.Go('appContainer.mainApp.home');
@@ -183,6 +183,54 @@ export class SecurityHandlerService {
     this.broadcast.userLoggedOut();
     this.messageService.loggedInChanged(false);
     this.stateHandler.Go('appContainer.mainApp.home');
+  }
+
+  /**
+   * Authenticate a user by redirecting to an external OpenID Connect provider to initiate authentication.
+   *
+   * @param provider The OpenID Connect provider to redirect to.
+   *
+   * @see {@link SecurityHandlerService.authorizeOpenIdConnectSession}
+   */
+  authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
+    // Track which provider was used, will be needed once redirected back to Mauro
+    localStorage.setItem('openIdConnectProviderId', provider.id);
+
+    const authUrl = new URL(provider.authorizationEndpoint);
+
+    // Set the page URL to come back to once the provider has authenticated the user
+    const redirectUri = this.getOpenIdAuthorizeUrl();
+    authUrl.searchParams.append('redirect_uri', redirectUri.toString());
+
+    window.open(authUrl.toString(), '_self');
+  }
+
+  /**
+   * Sign in a user that was authenticated via an OpenID Connect provider.
+   *
+   * @param params The session state parameters provided by the OpenID Connect provider.
+   * @returns An observable to return a `UserDetails` object representing the signed in user.
+   * @throws `SignInError` in the observable chain if sign-in failed.
+   *
+   * @see {@link SecurityHandlerService.authenticateWithOpenIdConnect}
+   */
+  authorizeOpenIdConnectSession(params: { state: string; sessionState: string; code: string }): Observable<UserDetails> {
+    const providerId = localStorage.getItem('openIdConnectProviderId');
+    if (!providerId) {
+      return throwError('Cannot retrieve OpenID Connect provider identifier.');
+    }
+
+    const redirectUri = this.getOpenIdAuthorizeUrl();
+
+    const payload: OpenIdConnectLoginPayload = {
+      openidConnectProviderId: providerId,
+      state: params.state,
+      sessionState: params.sessionState,
+      code: params.code,
+      redirectUri: redirectUri.toString()
+    };
+
+    return this.signIn(payload);
   }
 
   expireToken() {
@@ -285,11 +333,17 @@ export class SecurityHandlerService {
       canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder')
     };
 
-    if((element as Finalisable).finalised !== undefined)
-    {
-      baseRtn.showNewVersion = (element as Finalisable).finalised;
+    if ((element as Finalisable).finalised !== undefined) {
+      const isFinalised = (element as Finalisable).finalised;
+      baseRtn.showNewVersion = isFinalised && element.availableActions?.includes('createNewVersions');
     }
 
     return baseRtn;
+  }
+
+  public getOpenIdAuthorizeUrl() {
+    const authorizationUrl = this.stateHandler.getURL('appContainer.mainApp.openIdConnectAuthorizing');
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    return new URL(authorizationUrl, baseUrl);
   }
 }

@@ -16,173 +16,148 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="catalogueItem">
+<div *ngIf="catalogueItem" class="mdm-new-version">
   <div class="mdm--shadow-block">
     <div class="panel">
       <div class="panel-heading">
         <div class="heading-container">
-          <h4>New {{ catalogueItem.label }} version</h4>
+          <h4>New version of "{{ catalogueItem.label }}"</h4>
         </div>
-       
+
+        <div class="panel-body">
           <div class="mb-2 mt-2">
             <p>
-              A new version of <b>{{ catalogueItem.label }}</b> keeps all
-              Classes, Types, Elements and Properties of the original model.
+              A new version of <b>{{ catalogueItem.label }}</b> keeps all of the
+              following:
             </p>
+            <ul>
+              <li *ngIf="domainType === 'VersionedFolder'">Models</li>
+              <li *ngIf="domainType === 'VersionedFolder'">Folders</li>
+              <li>Classes</li>
+              <li>Types</li>
+              <li>Elements</li>
+              <li>Properties</li>
+            </ul>
           </div>
-          <div class="mb-2">
+          <form [formGroup]="setupForm">
             <div class="mb-2">
-              <h4 class="mat-h4 marginless">
-                Select the type of the new version that you want to create:
-              </h4>
-
-              <div class="mb-2 mt-2">
-                <mat-radio-group
-                  class="marginless"
-                  [(ngModel)]="versionType"
-                  (click)="versionTypeChecked()"
-                  [disabled]="processing"
-                >
-                  <mat-radio-button value="Fork" checked="true"
-                    ><i class="fas fa-list"></i> New Fork</mat-radio-button
-                  >
-                </mat-radio-group>
-                <small>
-                  This will create a copy of
-                  <b>{{ catalogueItem.label }}</b> with a new name, and a new
-                  'main' branch. Use this option if you are planning on taking
-                  this model in a new direction, or under a new authority.
-                </small>
-              </div>
-
               <div class="mb-2">
-                <mat-radio-group
-                  class="marginless"
-                  [(ngModel)]="versionType"
-                  (click)="versionTypeChecked()"
-                  [disabled]="processing"
-                >
-                  <mat-radio-button value="Version"
-                    ><i class="fas fa-file-alt"></i> New
-                    Version</mat-radio-button
-                  >
-                </mat-radio-group>
-                <small
-                  >This will create a copy of
-                  <b>{{ catalogueItem.label }}</b> under the 'main' branch. Use
-                  this option if you want to create the next iteration of this
-                  model.
-                </small>
-              </div>
+                <h4 class="mat-h4 marginless">
+                  Select the type of the new version that you want to create:
+                </h4>
 
-              <div class="mb-2">
-                <mat-radio-group
-                  class="marginless"
-                  [(ngModel)]="versionType"
-                  (click)="versionTypeChecked()"
-                  [disabled]="processing"
-                >
-                  <mat-radio-button value="Branch"
-                    ><i class="fas fa-code-branch"></i> New
-                    Branch</mat-radio-button
-                  >
-                </mat-radio-group>
-                <small
-                  >This will create a copy of
-                  <b>{{ catalogueItem.label }}</b> in a new branch. You may
-                  choose the name of the new branch. Use this option if you want
-                  to make some changes that you subsequently wish to merge back
-                  into 'main'.
-                </small>
-              </div>
-            </div>
-
-            <div *ngIf="versionType === 'Fork'">
-              <div class="mdm--form-input mb-2">
-                <h4 class="mat-h4 marginless">Additional details:</h4>
-
-                <div
-                  [ngClass]="{
-                    'form-group': true,
-                    'has-error': errors && errors.label
-                  }"
-                >
+                <div class="mt-2">
                   <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Model name</mat-label>
+                    <mat-label>Action</mat-label>
+                    <mat-select
+                      formControlName="action"
+                      required
+                      (selectionChange)="actionChanged()"
+                    >
+                      <mat-select-trigger>
+                        {{actionSelectedName}}
+                      </mat-select-trigger>
+                      <mat-option
+                        *ngFor="let availableAction of availableActions"
+                        class="mdm-new-version__type__option"
+                        [value]="availableAction.value"
+                      >
+                        <h5>
+                          <i class="fas {{ availableAction.icon }}"></i>
+                          {{ availableAction.name }}
+                        </h5>
+                        <p>
+                          <small
+                            [innerHTML]="
+                              availableAction.getDescription(domainType, catalogueItem)
+                            "
+                          >
+                          </small>
+                        </p>
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="setupForm && action.errors?.required">
+                      Please select the action to continue
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="actionValue === 'Fork'">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>New label</mat-label>
                     <input
                       matInput
-                      [(ngModel)]="form.label"
-                      [disabled]="processing"
+                      type="text"
+                      formControlName="label"
                       required
                     />
                     <mat-hint
-                      >The name should be different from the current version
-                      name '{{ catalogueItem.label }}'</mat-hint
+                      >The name should be different from the current name '{{
+                        catalogueItem.label
+                      }}'</mat-hint
                     >
+                    <mat-error *ngIf="setupForm && label?.errors?.required">
+                      Please enter a label
+                    </mat-error>
+                    <mat-error
+                      *ngIf="setupForm && label?.errors?.forbiddenName"
+                    >
+                      Please choose a different label than '{{
+                        catalogueItem.label
+                      }}'
+                    </mat-error>
                   </mat-form-field>
-                  <span
-                    class="help-block warning"
-                    *ngIf="errors && errors.label"
-                    style="margin-left: 16px"
-                    ><small>{{ errors.label }}</small></span
+                </div>
+
+                <div *ngIf="actionValue === 'Branch'">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Branch name</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="branchName"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="setupForm && branchName?.errors?.required"
+                    >
+                      Please enter a branch name
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="actionValue" class="mt-4">
+                  <button
+                    mat-button
+                    color="warn"
+                    (click)="cancel()"
+                    [disabled]="setupForm.disabled"
                   >
+                    Cancel
+                  </button>
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="custom"
+                    (click)="create()"
+                    [disabled]="!setupForm.valid || setupForm.disabled"
+                  >
+                    Create
+                  </button>
+
+                  <div style="margin-top: 5px" *ngIf="processing">
+                    <mat-progress-bar
+                      value="50"
+                      bufferValue="75"
+                      color="accent"
+                      mode="indeterminate"
+                    ></mat-progress-bar>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div *ngIf="versionType === 'Branch'">
-              <div
-                [ngClass]="{
-                  'form-group': true,
-                  'has-error': errors && errors.label
-                }"
-              >
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Branch name</mat-label>
-                  <input
-                    matInput
-                    [(ngModel)]="form.label"
-                    [disabled]="processing"
-                    required
-                  />
-                </mat-form-field>
-                <span
-                  class="help-block warning"
-                  *ngIf="errors && errors.label"
-                  style="margin-left: 16px"
-                  ><small>{{ errors.label }}</small></span
-                >
-              </div>
-            </div>
-            <div *ngIf="step > 1">
-              <button
-                mat-button
-                color="warn"
-                (click)="cancel()"
-                [disabled]="processing"
-              >
-                Cancel
-              </button>
-              <button
-                mat-flat-button
-                color="primary"
-                class="custom"
-                (click)="save()"
-                [disabled]="processing"
-              >
-                Add {{ versionType }}
-              </button>
-
-              <div style="margin-top: 5px" *ngIf="processing">
-                <mat-progress-bar
-                  value="50"
-                  bufferValue="75"
-                  color="accent"
-                  mode="indeterminate"
-                ></mat-progress-bar>
-              </div>
-            </div>
-          </div>     
+          </form>
+        </div>
       </div>
     </div>
   </div>

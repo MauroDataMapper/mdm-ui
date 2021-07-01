@@ -94,6 +94,12 @@ SPDX-License-Identifier: Apache-2.0
                     </a>
                 </li>
                 <li>
+                  <a role="menuitem" *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders" uiSrefActive="active">
+                      <i class="fab fa-openid" aria-hidden="true"></i>
+                      <span>OpenID Connect</span>
+                  </a>
+                </li>
+                <li>
                     <a role="menuitem" uiSref="appContainer.adminArea.configuration" uiSrefActive="active">
                         <i class="fas fa-cog" aria-hidden="true"></i>
                         <span>Configuration</span>

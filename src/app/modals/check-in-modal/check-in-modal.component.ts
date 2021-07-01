@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CheckinModelPayload } from './check-in-modal-payload';
 
 @Component({
   selector: 'mdm-check-in-modal',
@@ -31,7 +32,7 @@ export class CheckInModalComponent implements OnInit {
 
 
   constructor(
-    private dialogRef: MatDialogRef<CheckInModalComponent>,
+    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelPayload>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 

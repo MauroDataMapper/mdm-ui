@@ -42,6 +42,10 @@ export interface TestModuleConfiguration {
   providers?: any[];
 }
 
+export interface TestComponentConfiguration {
+  detectChangesOnCreation?: boolean;
+}
+
 /**
  * Represents a created component for testing plus a fixture.
  *
@@ -54,7 +58,10 @@ export class ComponentHarness<T> {
     return !!this.component;
   }
 
-  detectChanges() {
+  detectChanges(setter?: (component: T) => void) {
+    if (setter) {
+      setter(this.component);
+    }
     this.fixture.detectChanges();
   }
 }
@@ -80,23 +87,31 @@ export const setupTestModuleForService = <T>(service: Type<T>, configuration?: T
  *
  * @typedef T The type of the component under test.
  * @param componentType The type of the component under test.
- * @param configuration Optionally provide additional configuration for the test module.
+ * @param moduleConfig Optionally provide additional configuration for the test module.
+ * @param componentConfig Optionally provide additional configuration for the component under test.
  * @returns A new `ComponentHarness<T>` containing an instance of the component under test with a fixture.
  */
-export const setupTestModuleForComponent = async <T>(componentType: Type<T>, configuration?: TestModuleConfiguration) => {
+export const setupTestModuleForComponent = async <T>(
+  componentType: Type<T>,
+  moduleConfig?: TestModuleConfiguration,
+  componentConfig?: TestComponentConfiguration) => {
   await TestBed
     .configureTestingModule({
-      imports: [TestingModule, ...configuration?.imports ?? []],
+      imports: [TestingModule, ...moduleConfig?.imports ?? []],
       declarations: [
         componentType,
         MockComponent(NgxSkeletonLoaderComponent),
-        ...configuration?.declarations ?? []],
-      providers: configuration?.providers ?? []
+        ...moduleConfig?.declarations ?? []],
+      providers: moduleConfig?.providers ?? []
     })
     .compileComponents();
 
   const fixture = TestBed.createComponent(componentType);
   const component = fixture.componentInstance;
-  fixture.detectChanges();
+
+  if (componentConfig?.detectChangesOnCreation) {
+    fixture.detectChanges();
+  }
+
   return new ComponentHarness(component, fixture);
 };

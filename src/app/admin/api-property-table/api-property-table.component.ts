@@ -23,7 +23,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiPropertyEditableState, ApiPropertyEditType } from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { catchError, switchMap } from 'rxjs/operators';
 
 export interface ApiPropertyTableViewChange {
@@ -60,7 +60,8 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
@@ -108,7 +109,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
           title: 'Are you sure?',
           okBtnTitle: 'Yes',
           btnType: 'warn',
-          message: `<p>Are you sure you want to delete the property "${record.metadata.key}"?</p>
+          message: `<p>Are you sure you want to delete the property "${record.original.key}"?</p>
           <p>Once deleted, this property and value cannot be retrieved.</p>`
         }
       })
@@ -120,12 +121,23 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`Successfully deleted the property ${record.metadata.key}.`);
-        this.viewChange.emit({
-          category: this.selectedCategory,
-          sortBy: this.sort.active,
-          sortType: this.sort.direction
-        });
+        this.messageHandler.showSuccess(`Successfully deleted the property ${record.original.key}.`);
+
+        this.broadcast.apiPropertyUpdated({
+          key: record.original.key,
+          value: record.original.value,
+          deleted: true });
+
+        if (record.metadata.requiresReload) {
+          this.stateHandler.reload();
+        }
+        else {
+          this.viewChange.emit({
+            category: this.selectedCategory,
+            sortBy: this.sort.active,
+            sortType: this.sort.direction
+          });
+        }
       });
   }
 }

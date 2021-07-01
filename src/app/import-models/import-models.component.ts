@@ -26,6 +26,8 @@ import { BroadcastService } from '../services/broadcast.service';
 import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
+import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-import',
@@ -64,6 +66,8 @@ export class ImportModelsComponent implements OnInit {
   };
   importType: any;
 
+  allowedFolderTreeDomainTypes = [CatalogueItemDomainType.Folder];
+
   constructor(
     private title: Title,
     private resources: MdmResourcesService,
@@ -72,7 +76,8 @@ export class ImportModelsComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
-    private modelTree: ModelTreeService
+    private modelTree: ModelTreeService,
+    private shared: SharedService
   ) {}
 
   ngOnInit() {
@@ -80,7 +85,18 @@ export class ImportModelsComponent implements OnInit {
       ? this.uiRouterGlobals.params.importType
       : 'dataModels';
     this.title.setTitle('Import');
+
+    if (this.shared.features.useVersionedFolders) {
+      this.allowedFolderTreeDomainTypes.push(CatalogueItemDomainType.VersionedFolder);
+    }
+
     this.loadImporters();
+  }
+
+  folderFilter(item: MdmTreeItem): boolean {
+    // Only allow folders to be selected when they have the 'createModel' permission. e.g.
+    // finalised Versioned Folders will not have this permission, locking them out of further imports
+    return item.availableActions.includes('createModel');
   }
 
   loadImporters() {

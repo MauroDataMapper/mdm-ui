@@ -56,7 +56,6 @@ import { ElementClassificationsComponent } from '@mdm/utility/element-classifica
 import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
 import { PropertiesDirective } from '@mdm/directives/properties.directive';
 import { ElementDataTypeComponent } from '@mdm/shared/element-data-type/element-data-type.component';
-import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 import { MultiplicityComponent } from '@mdm/shared/multiplicity/multiplicity.component';
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
@@ -184,9 +183,9 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
 import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
-import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
+import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 
 @NgModule({
   declarations: [
@@ -230,7 +229,6 @@ import { PipesModule } from '../pipes/pipes.module';
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
-    DataTypeListButtonsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -345,8 +343,8 @@ import { PipesModule } from '../pipes/pipes.module';
     ProfileDetailsComponent,
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
-    AlertComponent,
-    DefaultProfileComponent
+    DefaultProfileComponent,
+    OpenIdConnectAuthorizeComponent
   ],
   imports: [
     AdminModule,
@@ -411,7 +409,6 @@ import { PipesModule } from '../pipes/pipes.module';
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
-    DataTypeListButtonsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -520,7 +517,7 @@ import { PipesModule } from '../pipes/pipes.module';
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
     DefaultProfileComponent,
-    AlertComponent
+    OpenIdConnectAuthorizeComponent
   ]
 })
 export class CatalogueModule { }

@@ -32,7 +32,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -54,7 +54,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() justShowFolders: any;
   @Input() placeholder: any;
   @Output() placeholderChange = new EventEmitter<any>();
-  @Input() accepts: any;
+  @Input() accepts: CatalogueItemDomainType[];
   @Input() treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
   @Input() readOnlySearchInput: any;
   @Input() multiple: any;
@@ -65,6 +65,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() propagateCheckbox: any;
   @Input() usedInModalDialogue: any;
   @Input() doNotApplySettingsFilter: any;
+  @Input() folderFilterFn: (f: MdmTreeItem) => boolean;
   @Output() checkChange = new EventEmitter<any>();
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
@@ -203,9 +204,10 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.loading = true;
     if (folder?.id) {
       this.resources.folder.get(id).subscribe((data: FolderIndexResponse) => {
+        const children = data.body.items;
         this.loading = false;
         this.rootNode = {
-          children: data.body.items,
+          children,
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
@@ -214,9 +216,14 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       });
     } else {
       this.resources.tree.list(ContainerDomainType.Folders, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
+        // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
+        // outside the component and passed into this component as an @Input(), making this a "dumb" component.
+        // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for
+        // the future.
+        const children = this.folderFilterFn ? this.filterFolderTreeItems(data.body) : data.body;
         this.loading = false;
         this.rootNode = {
-          children: data.body,
+          children,
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
@@ -410,4 +417,16 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
   // TODO
   onAddFolder = () => { };
+
+  private filterFolderTreeItems(folders?: MdmTreeItem[]): MdmTreeItem[] {
+    // Recursively filter the folder items and their children
+    return folders.filter(folder => {
+      if (folder.children && folder.children.length > 0) {
+        folder.children = this.filterFolderTreeItems(folder.children);
+        folder.hasChildFolders = folder.children && folder.children.length > 0;
+      }
+
+      return this.folderFilterFn(folder);
+    });
+  }
 }

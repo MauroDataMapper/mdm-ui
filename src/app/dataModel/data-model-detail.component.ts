@@ -46,6 +46,7 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
+import { MergeDiffAdapterService } from '@mdm/merge-diff/merge-diff-adapter/merge-diff-adapter.service';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -65,8 +66,6 @@ export class DataModelDetailComponent implements OnInit {
   compareToList = [];
   exportList = [];
   addedToFavourite = false;
-  branchGraph = [];
-  currentBranch = '';
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
 
@@ -83,7 +82,8 @@ export class DataModelDetailComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService
+    private validatorService: ValidatorService,
+    private mergeDiffService: MergeDiffAdapterService
   ) {}
 
   ngOnInit() {
@@ -96,8 +96,6 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   dataModelDetails(): any {
-    this.getModelGraph(this.dataModel.id);
-
     if (this.dataModel.semanticLinks) {
       this.dataModel.semanticLinks.forEach((link) => {
         if (link.linkType === 'New Version Of') {
@@ -124,33 +122,6 @@ export class DataModelDetailComponent implements OnInit {
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
-
-  getModelGraph = (modelId) => {
-    this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(
-      (res) => {
-        this.currentBranch = this.dataModel.branchName;
-        this.branchGraph = res.body;
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem getting the Model Version Tree.',
-          error
-        );
-      }
-    );
-  };
-
-  onModelChange = () => {
-    for (const val in this.branchGraph) {
-      if (this.branchGraph[val].branch === this.currentBranch) {
-        this.stateHandler.Go(
-          'datamodel',
-          { id: this.branchGraph[val].modelId },
-          { reload: true, location: true }
-        );
-      }
-    }
-  };
 
   delete(permanent) {
     if (!this.access.showDelete) {
@@ -363,8 +334,10 @@ export class DataModelDetailComponent implements OnInit {
   newVersion() {
     this.stateHandler.Go(
       'newVersionModel',
-      { id: this.dataModel.id, domainType: 'dataModel' },
-      { location: true }
+      {
+        id: this.dataModel.id,
+        domainType: this.dataModel.domainType
+      }
     );
   }
 
@@ -385,7 +358,7 @@ export class DataModelDetailComponent implements OnInit {
         'mergediff',
         {
           sourceId: this.dataModel.id,
-          catalogueDomainType: this.dataModel.domainType
+          catalogueDomainType:  ModelDomainType.DataModels
         });
     }
 

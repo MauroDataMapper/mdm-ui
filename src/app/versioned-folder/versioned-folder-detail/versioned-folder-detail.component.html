@@ -52,6 +52,14 @@ SPDX-License-Identifier: Apache-2.0
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
           </button>
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.showNewVersion"
+            (click)="newVersion()"
+          >
+            <i class="fas fa-copy"></i> Create a New Version
+          </button>
           <mat-divider></mat-divider>
           <button
             mat-menu-item
@@ -133,10 +141,7 @@ SPDX-License-Identifier: Apache-2.0
             [ngClass]="{ deletedDataModelTitle: detail?.deleted }"
           >
             <span class="dataModelTypeIcon">
-              <i
-                matTooltip="Versioned Folder"
-                class="fas fa-box"
-              ></i>
+              <i matTooltip="Versioned Folder" class="fas fa-box"></i>
             </span>
             <mdm-inline-text-edit
               [readOnly]="false"
@@ -152,25 +157,25 @@ SPDX-License-Identifier: Apache-2.0
             >
             </mdm-inline-text-edit>
             <sup
-            *ngIf="detail?.readableByEveryone"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-globe-europe globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Publicly Available"
-            ></i
-          ></sup>
-          <sup
-            *ngIf="detail?.readableByAuthenticatedUsers"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-users globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Authenticated users only"
-            ></i
-          ></sup>
+              *ngIf="detail?.readableByEveryone"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-globe-europe globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Publicly Available"
+              ></i
+            ></sup>
+            <sup
+              *ngIf="detail?.readableByAuthenticatedUsers"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-users globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Authenticated users only"
+              ></i
+            ></sup>
           </h4>
           <span class="inline-block" *ngIf="detail?.deleted">
             <small class="warning"> | Deleted</small>
@@ -232,35 +237,15 @@ SPDX-License-Identifier: Apache-2.0
             </span>
           </small>
         </div>
-        <!-- <div class="text-muted" *ngIf="catalogueItem">
+        <div class="text-muted" *ngIf="detail">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>
             <span>
-              <select
-                class="form-control"
-                style="
-                  display: inline;
-                  max-width: 120px;
-                  height: 30px;
-                  line-height: 1;
-                  padding: 0 0.35em;
-                  width: auto;
-                "
-                [(ngModel)]="currentBranch"
-                name="currentBranch"
-                (ngModelChange)="onModelChange()"
-              >
-                <option
-                  [value]="item.branch"
-                  *ngFor="let item of branchGraph"
-                >
-                  {{ item.branch ? item.branch : 'main' }}
-                </option>
-              </select>
+              <mdm-branch-selector [catalogueItem]="detail"></mdm-branch-selector>
             </span>
           </small>
-        </div> -->
+        </div>
         <div class="text-muted" *ngIf="detail">
           <small>
             <i class="far fa-calendar-alt" matTooltip="Last update"></i>

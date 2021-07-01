@@ -21,7 +21,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { from } from 'rxjs';
 import { groupBy, mergeMap, toArray } from 'rxjs/operators';
-import { Categories } from '@mdm/model/dataModelModel';
+import { Categories } from '@mdm/model/model-types.model';
 
 @Component({
   selector: 'mdm-element-data-type',

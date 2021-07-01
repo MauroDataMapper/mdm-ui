@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { StateHandlerService } from './handlers/state-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +33,7 @@ export class ElementTypesService {
     'New Version Of': { title: 'New Version Of', editable: false }
   };
 
-  private allTypes: Type[] = [
+  private allTypes: CatalogueElementType[] = [
     {
       id: 'Folder',
       link: 'folder',
@@ -195,7 +196,7 @@ export class ElementTypesService {
     },
   ];
 
-  private baseTypes: { [key: string]: Type } = {
+  private baseTypes: { [key: string]: CatalogueElementType } = {
     DataModel: {
       id: 'DataModel',
       link: 'dataModel',
@@ -208,7 +209,7 @@ export class ElementTypesService {
       id: 'ReferenceDataModel',
       link: 'ReferenceDataModel',
       title: 'ReferenceDataModel',
-      resourceName: 'ReferenceDataModel',
+      resourceName: 'referenceDataModel',
       markdown: 'rdm',
       classifiable: true
     },
@@ -357,7 +358,11 @@ export class ElementTypesService {
 
   getBaseTypes() {
     return this.baseTypes;
-  };
+  }
+
+  getBaseTypeForDomainType(domainType: CatalogueItemDomainType): CatalogueElementType {
+    return this.baseTypes[domainType];
+  }
 
   getLinkUrl(element, mode?) {
     if (!element || !element.id) {
@@ -425,7 +430,7 @@ export class ElementTypesService {
   }
 }
 
-export class Type {
+export class CatalogueElementType {
   id: string;
   link: string;
   title: string;

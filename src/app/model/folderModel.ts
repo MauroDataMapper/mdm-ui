@@ -36,17 +36,3 @@ export class HistoryPropertiesModel {
   userRole: string;
   disabled: boolean;
 }
-
-export class Editable {
-  deletePending: boolean;
-  label: string;
-  description: string;
-  visible: boolean;
-  waiting: boolean;
-  validationError: boolean;
-
-  constructor() {}
-  show() {}
-  cancel() {}
-  save() {}
-}

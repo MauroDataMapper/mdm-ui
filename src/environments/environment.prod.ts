@@ -51,9 +51,9 @@ export const environment = {
   appIsEditable: false,
   checkSessionExpiryTimeout: 300000,
   features: {
-    useSubscribedCatalogues: $ENV.useFeaureSubscribedCatalogues ?? true,
-    useDynamicProfiles: true,
-    useVersionedFolders: $ENV.useVersionedFolders ?? false,
-    useMergeUiV2: $ENV.useMergeUiV2 ?? false
+    useSubscribedCatalogues: true,
+    useVersionedFolders: false,
+    useMergeUiV2: false,
+    useOpenIdConnect: false
   }
 };

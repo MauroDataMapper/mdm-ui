@@ -16,55 +16,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-  
-  .headerContainer{    
-    justify-content:space-between;
-    flex-direction: row;   
-    margin-top: 5px;
-    display:flex;
-  }
 
-  
-.tabContainer{
-  height: 20%;
-  min-height:300px
+import { Pipe, PipeTransform } from '@angular/core';
+import { FullMergeItem } from '../types/merge-item-type';
+
+@Pipe({ name: 'mergeFilter' })
+export class MergeFilterPipe implements PipeTransform {
+  public transform(items: FullMergeItem[], searchText: string): FullMergeItem[] {
+    if (searchText === '') {
+      return items;
+    }
+    return items.filter(item => item.path.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
+  }
 }
-
-
-  .div {
-    position: relative;
-    margin: 2.5px;
-   }
-
-   .div1 {
-     @extend .div;
-     width:20%;
-     overflow-x: auto;
-     overflow-y: hidden;
-   }
-  
-  .div2 {
-    @extend .div;
-    width:80%;
-  }
-
-  .title
-  {
-      text-align: center;
-  }
-
-  .noContent
-  {
-    height: 250px;
-    text-align: center;
-  }
-
-  .selectBtn
-  {
-    position: relative; 
-    float: right;
-     margin-right: 75px;     
-     margin-top: 15px;
-  }
-
-  

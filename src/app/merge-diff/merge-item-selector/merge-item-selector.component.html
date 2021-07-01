@@ -16,9 +16,30 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-
-<mat-selection-list [multiple]="false">
-  <mat-list-option [ngClass]="{'creation' : item.type === mergeType.Creation , 'deletion' : item.type === mergeType.Deletion }" *ngFor="let item of mergeItems" [value]="item" (click)="selectedItem(item)">
-    <i  mat-list-icon class="fas" [ngClass]="{'fa-plus-square' : item.type === mergeType.Creation , 'fa-minus-square' : item.type === mergeType.Deletion, 'fa-pen-square' : item.type === mergeType.Modification }"></i> {{ item.path }} {{ item.branchSelected | uppercase }}
-  </mat-list-option>
-</mat-selection-list>
+<div class="container">
+  <mat-form-field>
+    <input matInput #mergeItemSearch placeholder="Filter" />
+  </mat-form-field>
+  <mat-selection-list [multiple]="false">
+    <mat-list-option
+      [ngClass]="{
+        creation: item.type === mergeType.Creation,
+        deletion: item.type === mergeType.Deletion
+      }"
+      *ngFor="let item of (mergeItems | mergeFilter:mergeItemSearch.value)"
+      [value]="item"
+      (click)="selectedItem(item)"
+    >
+      <i
+        mat-list-icon
+        class="fas"
+        [ngClass]="{
+          'fa-plus-square': item.type === mergeType.Creation,
+          'fa-minus-square': item.type === mergeType.Deletion,
+          'fa-pen-square': item.type === mergeType.Modification
+        }"
+      ></i>
+      {{ item.path }} {{ item.branchSelected | uppercase }}
+    </mat-list-option>
+  </mat-selection-list>
+</div>

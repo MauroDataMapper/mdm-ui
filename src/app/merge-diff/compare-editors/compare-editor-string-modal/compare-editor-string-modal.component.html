@@ -17,28 +17,36 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 
 -->
-<div class="modal-header pxy-2">
-  <h4 class="modal-title marginless">Conflict Editor</h4>
-</div>
-<div class="modal-body pxy-2">
-  <!-- <div class="mdm--form-input">
-      <mat-form-field appearance="outline" required  class="full-width paddingless">
-          <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="data.name">
-      </mat-form-field>
+<div class="mdm-compare-editor-string">
+  <div class="modal-header pxy-2">
+    <h4 class="modal-title marginless">Conflict Editor</h4>
+    Path: {{ item.path }}
   </div>
-  <div class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width paddingless">
-          <mat-label>Description</mat-label>
-          <input matInput [(ngModel)]="data.description">
-      </mat-form-field>
-  </div>  -->
-</div>
-<div class="modal-footer pxy-2">
-  <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">
-    Cancel
-  </button>
-  <button mat-flat-button color="primary" type="button">
-    Resolve conflict
-  </button>
+  <div class="modal-body pxy-2">
+    <div class="compare-view">
+      <div class="source">
+        Source
+      </div>
+      <div class="target">
+        Target
+      </div>
+      <div class="merged">
+        Merged
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer pxy-2">
+    <button
+      mat-button
+      color="warn"
+      class="mr-1"
+      type="button"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" type="button">
+      Resolve conflict
+    </button>
+  </div>
 </div>

@@ -52,6 +52,7 @@ SPDX-License-Identifier: Apache-2.0
         aria-label="Open Editor"
         *ngIf="!isCommitting"
         class="button"
+        (click)="openEditor()"
       >
         <i class="fas fa-edit" aria-hidden="true"></i>
         Open Editor

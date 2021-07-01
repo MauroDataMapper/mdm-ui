@@ -19,6 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
 import { FullMergeItem } from '../types/merge-item-type';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { filter } from 'rxjs/operators';
+import { CompareEditorStringModalComponent } from '../compare-editors/compare-editor-string-modal/compare-editor-string-modal.component';
+import { CompareEditorModalData, CompareEditorModalResult } from '../compare-editors/compare-editors.model';
 
 @Component({
   selector: 'mdm-merge-comparison',
@@ -33,7 +38,7 @@ export class MergeComparisonComponent implements OnInit {
   @Output() cancelCommitEvent = new EventEmitter<MergeItem>();
   @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -47,6 +52,29 @@ export class MergeComparisonComponent implements OnInit {
   {
      this.mergeItem.branchSelected = branchUsed;
      this.acceptCommitEvent.emit(this.mergeItem);
+  }
+
+  openEditor() {
+    // TODO: add in possible other editors, not just strings
+    this.dialog
+      .open<CompareEditorStringModalComponent, CompareEditorModalData, CompareEditorModalResult>(
+        CompareEditorStringModalComponent,
+        {
+          disableClose: true,
+          height: '90%',
+          width: '98%',
+          data: {
+            item: this.mergeItem
+          }
+        }
+      )
+      .afterClosed()
+      .pipe(
+        filter(result => result.status === ModalDialogStatus.Ok)
+      )
+      .subscribe(result => {
+        // TODO: handle merge conflict result
+      });
   }
 
   public get MergeUsed()

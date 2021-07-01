@@ -26,13 +26,15 @@ import { MergeItemSelectorComponent } from './merge-item-selector/merge-item-sel
 import { MergeComparisonComponent } from './merge-comparsion/merge-comparsion.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { MergeFilterPipe } from './pipes/merge-filter.pipe';
+import { CompareEditorStringModalComponent } from '@mdm/merge-diff/compare-editors/compare-editor-string-modal/compare-editor-string-modal.component';
 
 @NgModule({
   declarations: [
     MergeDiffContainerComponent,
     MergeItemSelectorComponent,
     MergeComparisonComponent,
-    MergeFilterPipe
+    MergeFilterPipe,
+    CompareEditorStringModalComponent
   ],
   imports: [
     CommonModule,

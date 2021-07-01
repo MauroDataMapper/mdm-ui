@@ -28,6 +28,15 @@ SPDX-License-Identifier: Apache-2.0
   *ngIf="form"
   [formGroup]="form.group"
 >
+  <mdm-alert alertStyle="info" [showIcon]="true">
+    <p>
+      It may be necessary to provide information about Mauro to this OpenID
+      Connect provider. Here are some details which you may require:
+    </p>
+    <ul>
+      <li><code>redirect_uri</code>: <strong>{{redirectUri}}</strong></li>
+    </ul>
+  </mdm-alert>
   <mat-form-field appearance="outline">
     <mat-label>Label</mat-label>
     <input matInput formControlName="label" required />

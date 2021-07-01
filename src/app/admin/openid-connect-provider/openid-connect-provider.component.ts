@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { OpenIdConnectProviderDetail, OpenIdConnectProvidersDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Observable } from 'rxjs';
@@ -37,6 +37,7 @@ export class OpenidConnectProviderComponent implements OnInit {
   editExisting = false;
   form: OpenIdConnectProviderForm;
   previewImageUrl?: string;
+  redirectUri: string;
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -45,13 +46,16 @@ export class OpenidConnectProviderComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private editing: EditingService,
     private shared: SharedService,
-    private title: Title) { }
+    private title: Title,
+    private securityHandler: SecurityHandlerService) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useOpenIdConnect) {
       this.stateHandler.Go('alldatamodel');
       return;
     }
+
+    this.redirectUri = this.securityHandler.getOpenIdAuthorizeUrl().toString();
 
     this.editing.start();
 

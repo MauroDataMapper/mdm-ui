@@ -341,7 +341,7 @@ export class SecurityHandlerService {
     return baseRtn;
   }
 
-  private getOpenIdAuthorizeUrl() {
+  public getOpenIdAuthorizeUrl() {
     const authorizationUrl = this.stateHandler.getURL('appContainer.mainApp.openIdConnectAuthorizing');
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     return new URL(authorizationUrl, baseUrl);

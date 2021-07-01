@@ -61,8 +61,9 @@ export class MergeComparisonComponent implements OnInit {
         CompareEditorStringModalComponent,
         {
           disableClose: true,
-          height: '90%',
-          width: '98%',
+          minWidth: '50%',
+          maxHeight: '90%',
+          maxWidth: '98%',
           data: {
             item: this.mergeItem
           }

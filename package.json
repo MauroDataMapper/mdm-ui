@@ -88,6 +88,7 @@
     "@angular/language-service": "9.1.12",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@types/backbone": "1.4.5",
+    "@types/diff-match-patch": "^1.0.32",
     "@types/jest": "26.0.14",
     "@types/jquery": "3.5.2",
     "@types/lodash": "^4.14.161",

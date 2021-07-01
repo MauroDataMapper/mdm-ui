@@ -24,14 +24,17 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="modal-body pxy-2">
     <div class="compare-view">
-      <div class="source">
-        Source
+      <div class="source diff-area">
+        <h5>Source</h5>
+        <div [innerHTML]="sourceText | safe:'html'"></div>
       </div>
-      <div class="target">
-        Target
+      <div class="target diff-area">
+        <h5>Target</h5>
+        <div [innerHTML]="targetText | safe:'html'"></div>
       </div>
       <div class="merged">
-        Merged
+        <h5>Resolved</h5>
+        <textarea [(ngModel)]="item.sourceValue"></textarea>
       </div>
     </div>
   </div>

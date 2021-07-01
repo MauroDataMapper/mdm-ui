@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import DiffMatchPatch from 'diff-match-patch';
+import DiffMatchPatch, { diff_match_patch } from 'diff-match-patch';
 
 @Component({
   selector: 'mdm-resolve-merge-conflict-modal',
@@ -143,7 +143,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   };
 
   diffLineMode(text1, text2) {
-    const dmp = new DiffMatchPatch();
+    const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
     const lineText2 = a.chars2;

@@ -21,6 +21,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MergeItem } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { CompareEditorModalData, CompareEditorModalResult } from '../compare-editors.model';
+import { Diff, diff_match_patch } from 'diff-match-patch';
 
 @Component({
   selector: 'mdm-compare-editor-string-modal',
@@ -29,6 +30,8 @@ import { CompareEditorModalData, CompareEditorModalResult } from '../compare-edi
 })
 export class CompareEditorStringModalComponent implements OnInit {
   item: MergeItem;
+  sourceText: string;
+  targetText: string;
 
   constructor(
     private dialogRef: MatDialogRef<CompareEditorStringModalComponent, CompareEditorModalResult>,
@@ -36,9 +39,46 @@ export class CompareEditorStringModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.item = this.data.item;
+
+    const dmp = new diff_match_patch();
+    const sourceDiffs = dmp.diff_main(this.item.sourceValue, this.item.targetValue);
+    dmp.diff_cleanupSemantic(sourceDiffs);
+    //this.sourceText = this.diffPrettyPlain(sourceDiffs); //dmp.diff_prettyHtml(sourceDiffs);
+    this.sourceText = dmp.diff_prettyHtml(sourceDiffs);
+
+    const targetDiffs = dmp.diff_main(this.item.targetValue, this.item.sourceValue);
+    dmp.diff_cleanupSemantic(targetDiffs);
+    //this.targetText = this.diffPrettyPlain(targetDiffs); //dmp.diff_prettyHtml(targetDiffs);
+    this.targetText = dmp.diff_prettyHtml(targetDiffs);
   }
 
   cancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  private diffPrettyPlain(diffs: Diff[]) {
+    const diffDelete = -1;
+    const diffEqual = 0;
+
+    const html = [];
+    for (let x = 0; x < diffs.length; x++) {
+      const op = diffs[x][0];    // Operation (insert, delete, equal)
+      const data = diffs[x][1];  // Text of change.
+      const text = data;
+      switch (op) {
+        case diffDelete: {
+          const encodedText = encodeURI(text);
+          const obj = { id: x, loc: 'left', value: encodedText };
+          html[x] = `<button id="${x}" test="${JSON.stringify(obj)}" class="diffAdded"><ins>${text}</ins></button>`;
+          //html[x] = `<ins>${text}</ins>`;
+          break;
+        }
+        case diffEqual: {
+          html[x] = `<span>${text}</span>`;
+          break;
+        }
+      }
+    }
+    return html.join('');
   }
 }

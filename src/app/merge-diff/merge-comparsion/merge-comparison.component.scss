@@ -26,3 +26,12 @@ SPDX-License-Identifier: Apache-2.0
 {
     border: 1px black solid;
 }
+
+.spacer {
+    flex: 1 1 auto;
+  }
+  
+  .button {
+    padding-right: 100px;
+    font-size: small;
+  }

@@ -17,87 +17,81 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div class="container">
-  <div fxLayout="row" class="panel panel-default mdm--shadow-block">
-    <div class="full-width" style="clear: both">
+<div class="full-width panel panel-default mdm--shadow-block">
+  <div fxLayout="row" style="clear: both">
+    <mat-toolbar style="height: 50%">
+      <span class="spacer"></span>
       <button
-        type="button"
         mat-icon-button
-        [matMenuTriggerFor]="userActions"
-        style="position: relative; float: right; margin-right: 75px"
+        type="button"
+        matToolTip="Use Source"
+        aria-label="Use Source"
+        (click)="acceptCommit(MergeUsed.Source)"
+        *ngIf="!isCommitting"
+        class="button"
       >
-        <span>Actions </span>
-        <i class="fas fa-chevron-down"></i>
+        <i class="fas fa-forward" aria-hidden="true"></i>
+        Use Source
       </button>
-      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Use Source"
-          aria-label="Use Source"
-          (click)="acceptCommit(MergeUsed.Source)"
-          *ngIf="!isCommitting"
-        >
-          <i class="fas fa-forward" aria-hidden="true"></i>
-          Use Source
-        </button>
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Use Target"
-          aria-label="Use Target"
-          (click)="acceptCommit(MergeUsed.Target)"
-          *ngIf="!isCommitting"
-        >
-          <i class="fas fa-backward" aria-hidden="true"></i>
-          Use Target
-        </button>
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Open Editor"
-          aria-label="Open Editor"
-          *ngIf="!isCommitting"
-        >
-          <i class="fas fa-edit" aria-hidden="true"></i>
-          Open Editor
-        </button>
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Open Editor"
-          aria-label="Open Editor"
-          *ngIf="isCommitting"
-          (click)="cancelCommit()"
-        >
-          <i class="fas fa-edit" aria-hidden="true"></i>
-          Cancel Commit
-        </button>
-      </mat-menu>
-    </div>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Use Target"
+        aria-label="Use Target"
+        (click)="acceptCommit(MergeUsed.Target)"
+        *ngIf="!isCommitting"
+        class="button"
+      >
+        <i class="fas fa-backward" aria-hidden="true"></i>
+        Use Target
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Open Editor"
+        aria-label="Open Editor"
+        *ngIf="!isCommitting"
+        class="button"
+      >
+        <i class="fas fa-edit" aria-hidden="true"></i>
+        Open Editor
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Open Editor"
+        aria-label="Open Editor"
+        *ngIf="isCommitting"
+        (click)="cancelCommit()"
+        class="button"
+      >
+        <i class="fas fa-edit" aria-hidden="true"></i>
+        Cancel Commit
+      </button>
+    </mat-toolbar>
   </div>
-  <div class="panel panel-default" fxLayout="row">
-    <div class="col sourceCol">
-      <div class="row">
-        <h4>Source</h4>
-      </div>
-      <mdm-content-editor
-        [content]="mergeItem.sourceValue"
-        [inEditMode]="false"
-        *ngIf="mergeItem.sourceValue"
-      ></mdm-content-editor>
+</div>
+<div class="panel panel-default" fxLayout="row">
+  <div class="col sourceCol">
+    <div class="row">
+      <h4>Source</h4>
     </div>
+    <mdm-content-editor
+      [content]="mergeItem.sourceValue"
+      [inEditMode]="false"
+      *ngIf="mergeItem.sourceValue"
+    ></mdm-content-editor>
   </div>
-  <div class="panel panel-default" *ngIf="!isCommitting" fxLayout="row">
-    <div class="col sourceCol">
-      <div class="row">
-        <h4>Target</h4>
-      </div>
-      <mdm-content-editor
-        [content]="mergeItem.targetValue"
-        [inEditMode]="false"
-        *ngIf="mergeItem.targetValue"
-      ></mdm-content-editor>
+</div>
+<div class="panel panel-default" *ngIf="!isCommitting" fxLayout="row">
+  <div class="col sourceCol">
+    <div class="row">
+      <h4>Target</h4>
     </div>
+    <mdm-content-editor
+      [content]="mergeItem.targetValue"
+      [inEditMode]="false"
+      *ngIf="mergeItem.targetValue"
+    ></mdm-content-editor>
   </div>
 </div>

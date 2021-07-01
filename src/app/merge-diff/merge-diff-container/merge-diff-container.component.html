@@ -24,27 +24,7 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="loaded" class="container">
   <div fxLayout="row" class="panel panel-default mdm--shadow-block">
     <div class="full-width" style="clear: both">
-      <button
-        type="button"
-        mat-icon-button
-        [matMenuTriggerFor]="userActions"
-        style="position: relative; float: right; margin-right: 4px"
-      >
-        <i class="fas fa-ellipsis-v"></i>
-        <span style="display: none">Menu</span>
-      </button>
-      <!--First level Menu-->
-      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Commit Changes"
-          aria-label="Commit Changes"
-          (click)="onCommitChanges()"
-        >
-          <i class="fas fa-check-circle" aria-hidden="true"></i>
-          Commit Changes
-        </button>
+      <div style="position: relative; float: right; margin-right: 8px">
         <button
           mat-menu-item
           type="button"
@@ -52,11 +32,31 @@ SPDX-License-Identifier: Apache-2.0
           aria-label="Cancel Changes"
           (click)="onCancelChanges()"
         >
-          <i class="fas fa-times-circle" aria-hidden="true"></i>
+          <i
+            class="fas fa-times-circle"
+            style="color: red"
+            aria-hidden="true"
+          ></i>
           Cancel
         </button>
-      </mat-menu>
-      <!-- End of first level menu -->
+      </div>
+
+      <div style="position: relative; float: right; margin-right: 8px">
+        <button
+          mat-menu-item
+          type="button"
+          matToolTip="Commit Changes"
+          aria-label="Commit Changes"
+          (click)="onCommitChanges()"
+        >
+          <i
+            class="fas fa-check-circle"
+            style="color: green"
+            aria-hidden="true"
+          ></i>
+          Commit Changes
+        </button>
+      </div>
 
       <h4 class="inline-block marginless">
         <span class="dataModelTypeIcon">
@@ -90,14 +90,9 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div>
-    <div fxLayout="row">
-      <div class="loading-spinner" *ngIf="loadingContent">
-        <div>
-          <i class="fas fa-sync-alt fa-spin"></i>
-        </div>
-      </div>
+    <div fxLayout="row" class="panel panel-default mdm--shadow-block">
       <mdm-merge-comparison
-        style="display: flex"
+        class="full-width"
         *ngIf="!loadingContent && selectedItem"
         [mergeItem]="selectedItem.mergeItem"
         [isCommitting]="selectedItem.isCommitting"
@@ -114,40 +109,32 @@ SPDX-License-Identifier: Apache-2.0
         >
           <mat-tab label="Changes" *ngIf="changesList">
             <div class="full-width" style="clear: both">
-              <button
-                type="button"
-                mat-icon-button
-                [disabled]="changesList.length === 0"
-                [matMenuTriggerFor]="userActionsItemsList"
-                class="selectBtn"
-              >
-                Select All
-              </button>
-              <mat-menu
-                #userActionsItemsList="matMenu"
-                class="mdm--mat-menu--actions"
-              >
+              <mat-toolbar style="height: 50%" *ngIf="changesList.length > 0">
+                <span class="spacer"></span>
                 <button
-                  mat-menu-item
+                  mat-icon-button
                   type="button"
                   matToolTip="Commit all changes from the source branch"
                   aria-label="Commit Changes from source branch"
                   (click)="selectAll(MergeUsed.Source)"
+                  class="button"
                 >
                   <i class="fas fa-forward" aria-hidden="true"></i>
-                  From Source
+                  Use All Source
                 </button>
                 <button
-                  mat-menu-item
+                  mat-icon-button
                   type="button"
                   matToolTip="Commit all changes from the target branch"
                   aria-label="Commit Changes from target branch"
                   (click)="selectAll(MergeUsed.Target)"
+                  class="button"
                 >
                   <i class="fas fa-backward" aria-hidden="true"></i>
-                  From Target
+                  Use All Target
                 </button>
-              </mat-menu>
+              </mat-toolbar>
+
               <mdm-merge-item-selector
                 (selectedMergeItemChanged)="setSelectedMergeItem($event, false)"
                 [mergeItems]="changesList"

@@ -101,6 +101,8 @@ SPDX-License-Identifier: Apache-2.0
         *ngIf="!loadingContent && selectedItem"
         [mergeItem]="selectedItem.mergeItem"
         [isCommitting]="selectedItem.isCommitting"
+        (cancelCommitEvent)="cancelCommit($event)"
+        (acceptCommitEvent)="acceptCommit($event)"
       >
       </mdm-merge-comparison>
     </div>
@@ -108,12 +110,48 @@ SPDX-License-Identifier: Apache-2.0
       <div class="full-width" style="clear: both">
         <mat-tab-group>
           <mat-tab label="Changes">
+            <div class="full-width" style="clear: both">
+              <button
+                type="button"
+                mat-icon-button
+                [disabled]="changesList.length === 0"
+                [matMenuTriggerFor]="userActionsItemsList"
+                style="position: relative; float: right; margin-right: 75px"
+              >
+              Select All
+              </button>
+              <mat-menu #userActionsItemsList="matMenu" class="mdm--mat-menu--actions">
+                <button
+                  mat-menu-item
+                  type="button"
+                  matToolTip="Commit all changes from the source branch"
+                  aria-label="Commit Changes from source branch"
+                  (click)="selectAll(MergeUsed.Source)"
+                >
+                  <i class="fas fa-forward" aria-hidden="true"></i>
+                  From Source
+                </button>
+                <button
+                  mat-menu-item
+                  type="button"
+                  matToolTip="Commit all changes from the target branch"
+                  aria-label="Commit Changes from target branch"
+                  (click)="selectAll(MergeUsed.Target)"
+                >
+                  <i class="fas fa-backward" aria-hidden="true"></i>
+                  From Target
+                </button>
+              </mat-menu>
+            </div>          
             <mdm-merge-item-selector
               *ngIf="changesList"
               (selectedMergeItemChanged)="setSelectedMergeItem($event, false)"
               [mergeItems]="changesList"
               style="display: flex"
             ></mdm-merge-item-selector>
+            <div class="noContent">
+              <h4 style="margin-top: 75px;" *ngIf="changesList.length === 0">No Changes to Commit</h4>
+            </div>           
           </mat-tab>
           <mat-tab label="Committing">
             <mdm-merge-item-selector

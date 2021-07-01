@@ -19,7 +19,13 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ModelDomainType, Uuid, Merge, MergeItem } from '@maurodatamapper/mdm-resources';
+import {
+  ModelDomainType,
+  Uuid,
+  Merge,
+  MergeItem,
+  MergeUsed
+} from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
@@ -31,7 +37,10 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import { CommittingMergeItem, MergeItemSelection, MergeItemSource } from '../types/merge-item-type';
+import {
+  FullMergeItem,
+  MergeItemSelection
+} from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -53,8 +62,8 @@ export class MergeDiffContainerComponent implements OnInit {
   target: any;
   diff: Merge;
   selectedItem: MergeItemSelection;
-  changesList: Array<MergeItem>;
-  committingList :Array<MergeItem & CommittingMergeItem>;
+  changesList: Array<FullMergeItem>;
+  committingList: Array<FullMergeItem>;
 
   constructor(
     private shared: SharedService,
@@ -161,29 +170,60 @@ export class MergeDiffContainerComponent implements OnInit {
   runDiff() {
     this.resetLists();
     this.mergeService.getMergeDiff().subscribe((data) => {
-       data.diffs.forEach((mergeItem : MergeItem & CommittingMergeItem) => {
-         if(mergeItem.isMergeConflict)
-         {
-           this.changesList.push(mergeItem);
-         }
-         else{
-           mergeItem.branchSelected = MergeItemSource.Source;
-           this.committingList.push(mergeItem);
-         }
-       });
+      data.diffs.forEach((mergeItem: FullMergeItem) => {
+        if (mergeItem.isMergeConflict) {
+          this.changesList.push(mergeItem);
+        } else {
+          mergeItem.branchSelected = MergeUsed.Source;
+          this.committingList.push(mergeItem);
+        }
+      });
     });
   }
 
-  setSelectedMergeItem(item: MergeItem, isCommitting :boolean)
-  {
+  setSelectedMergeItem(item: MergeItem, isCommitting: boolean) {
     this.loadingContent = true;
-    this.selectedItem = {mergeItem: item, isCommitting};
+    this.selectedItem = { mergeItem: item, isCommitting };
     this.loadingContent = false;
   }
 
-  resetLists()
+  resetLists() {
+    this.changesList = Array<FullMergeItem>();
+    this.committingList = Array<FullMergeItem>();
+  }
+
+  public get MergeUsed() {
+    return MergeUsed;
+  }
+
+  selectAll(branchUsed: MergeUsed) {
+    this.changesList.forEach((item) => {
+      item.branchSelected = branchUsed;
+      this.committingList.push(item);
+    });
+    this.changesList = new  Array<FullMergeItem>();
+  }
+
+  cancelCommit(item: FullMergeItem)
   {
-    this.changesList = Array<MergeItem>();
-    this.committingList = Array<MergeItem & CommittingMergeItem>();
+   const index = this.committingList.findIndex(x => x === item);
+   if(index >= 0)
+   {
+     this.committingList.splice(index,1);
+     item.branchSelected = null;
+     this.changesList.push(item);
+     this.selectedItem = null;
+   }
+  }
+
+  acceptCommit(item: FullMergeItem)
+  {
+    const index = this.changesList.findIndex(x => x === item);
+    if(index >= 0)
+    {
+      this.changesList.splice(index,1);
+      this.committingList.push(item);
+      this.selectedItem = null;
+    }
   }
 }

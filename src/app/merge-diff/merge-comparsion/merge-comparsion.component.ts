@@ -16,8 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { MergeItem } from '@maurodatamapper/mdm-resources';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
+import { FullMergeItem } from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-comparison',
@@ -26,12 +27,31 @@ import { MergeItem } from '@maurodatamapper/mdm-resources';
 })
 export class MergeComparisonComponent implements OnInit {
 
-  @Input() mergeItem : MergeItem;
+  @Input() mergeItem : FullMergeItem;
   @Input() isCommitting: boolean;
+
+  @Output() cancelCommitEvent = new EventEmitter<MergeItem>();
+  @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  cancelCommit()
+  {
+    this.cancelCommitEvent.emit(this.mergeItem);
+  }
+
+  acceptCommit(branchUsed: MergeUsed)
+  {
+     this.mergeItem.branchSelected = branchUsed;
+     this.acceptCommitEvent.emit(this.mergeItem);
+  }
+
+  public get MergeUsed()
+  {
+    return MergeUsed;
   }
 
 }

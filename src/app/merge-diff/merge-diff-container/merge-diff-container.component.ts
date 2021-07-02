@@ -28,6 +28,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
+import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import {
   MessageHandlerService,
   SharedService,
@@ -37,10 +38,7 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import {
-  FullMergeItem,
-  MergeItemSelection
-} from '../types/merge-item-type';
+import { FullMergeItem, MergeItemSelection } from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -88,7 +86,6 @@ export class MergeDiffContainerComponent implements OnInit {
     const sourceId = this.uiRouterGlobals.params.sourceId;
     const targetId = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-
 
     this.mergeService
       .loadCatalogueItemDetails(sourceId, this.domainType)
@@ -157,11 +154,21 @@ export class MergeDiffContainerComponent implements OnInit {
     this.dialog
       .open<CheckInModalComponent, CheckinModelPayload>(CheckInModalComponent, {
         data: {
-          deleteSourceBranch: false
+          deleteSourceBranch: false,
+          mergeItems: this.committingList
         }
       })
       .afterClosed()
-      .subscribe(() => {});
+      .subscribe((result) => {
+        if (result) {
+          this.messageHandler.showSuccess('Commit Successful');
+          this.stateHandler.Go(
+            ModelDomainRequestType[this.domainType],
+            { id: this.target.id, reload: true, location: true },
+            null
+          );
+        }
+      });
     // TODO
   }
 
@@ -204,29 +211,25 @@ export class MergeDiffContainerComponent implements OnInit {
       item.branchSelected = branchUsed;
       this.committingList.push(item);
     });
-    this.changesList = new  Array<FullMergeItem>();
+    this.changesList = new Array<FullMergeItem>();
   }
 
-  cancelCommit(item: FullMergeItem)
-  {
-   const index = this.committingList.findIndex(x => x === item);
-   if(index >= 0)
-   {
-     this.selectedItem = null;
-     this.committingList.splice(index,1);
-     item.branchSelected = null;
-     this.changesList.push(item);
-     this.activeTab = 0;
-     this.setSelectedMergeItem(item,false);
-   }
+  cancelCommit(item: FullMergeItem) {
+    const index = this.committingList.findIndex((x) => x === item);
+    if (index >= 0) {
+      this.selectedItem = null;
+      this.committingList.splice(index, 1);
+      item.branchSelected = null;
+      this.changesList.push(item);
+      this.activeTab = 0;
+      this.setSelectedMergeItem(item, false);
+    }
   }
 
-  acceptCommit(item: FullMergeItem)
-  {
-    const index = this.changesList.findIndex(x => x === item);
-    if(index >= 0)
-    {
-      this.changesList.splice(index,1);
+  acceptCommit(item: FullMergeItem) {
+    const index = this.changesList.findIndex((x) => x === item);
+    if (index >= 0) {
+      this.changesList.splice(index, 1);
       this.committingList.push(item);
       this.selectedItem = null;
     }

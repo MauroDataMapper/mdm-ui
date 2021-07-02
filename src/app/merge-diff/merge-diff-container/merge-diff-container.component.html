@@ -90,17 +90,6 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div>
-    <div fxLayout="row" class="panel panel-default mdm--shadow-block">
-      <mdm-merge-comparison
-        class="full-width"
-        *ngIf="!loadingContent && selectedItem"
-        [mergeItem]="selectedItem.mergeItem"
-        [isCommitting]="selectedItem.isCommitting"
-        (cancelCommitEvent)="cancelCommit($event)"
-        (acceptCommitEvent)="acceptCommit($event)"
-      >
-      </mdm-merge-comparison>
-    </div>
     <div class="tabContainer" fxLayout="row">
       <div class="full-width" style="clear: both">
         <mat-tab-group
@@ -162,5 +151,17 @@ SPDX-License-Identifier: Apache-2.0
         </mat-tab-group>
       </div>
     </div>
+    <div fxLayout="row" class="panel panel-default mdm--shadow-block">
+      <mdm-merge-comparison
+        class="full-width"
+        *ngIf="!loadingContent && selectedItem"
+        [mergeItem]="selectedItem.mergeItem"
+        [isCommitting]="selectedItem.isCommitting"
+        (cancelCommitEvent)="cancelCommit($event)"
+        (acceptCommitEvent)="acceptCommit($event)"
+      >
+      </mdm-merge-comparison>
+    </div>
+    
   </div>
 </div>

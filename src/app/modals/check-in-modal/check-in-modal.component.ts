@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MergeType } from '@maurodatamapper/mdm-resources';
+import { FullMergeItem } from '@mdm/merge-diff/types/merge-item-type';
+import { SharedService } from '@mdm/services';
 import { CheckinModelPayload } from './check-in-modal-payload';
 
 @Component({
@@ -29,17 +32,26 @@ export class CheckInModalComponent implements OnInit {
 
   commitComment: string;
   deleteSourceBranch: boolean;
+  isV2: boolean;
+  mergeItems: Array<FullMergeItem>;
 
 
   constructor(
     private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelPayload>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: CheckinModelPayload,
+    private sharedService: SharedService
   ) { }
 
   ngOnInit(): void {
-    this.commitComment = this.data.commitComment ? this.data.commitComment : '';
-    this.deleteSourceBranch = this.data.deleteSourceBranch ? this.data.deleteSourceBranch : false;
+    this.commitComment = this.data.commitComment ?? '';
+    this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
+    this.mergeItems = this.data.mergeItems ?? Array<FullMergeItem>();
+    this.isV2 = this.sharedService.features.useMergeUiV2;
+  }
 
+  public get mergeType()
+  {
+    return MergeType;
   }
 
 }

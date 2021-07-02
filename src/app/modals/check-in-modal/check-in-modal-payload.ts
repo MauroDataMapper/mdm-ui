@@ -17,9 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { FullMergeItem } from '@mdm/merge-diff/types/merge-item-type';
+
 export interface CheckinModelPayload
 {
     deleteSourceBranch : boolean;
-    comment? : string;
-   changes? : Array<any>; // Replace with type when added;
+    commitComment? : string;
+    changes? : Array<any>; // Replace with type when added;
+    mergeItems? : Array<FullMergeItem>;
 }

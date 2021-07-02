@@ -20,23 +20,23 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MergeItem } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { CompareEditorModalData, CompareEditorModalResult } from '../compare-editors.model';
 import { diff_match_patch } from 'diff-match-patch';
+import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 
 @Component({
-  selector: 'mdm-compare-editor-string-modal',
-  templateUrl: './compare-editor-string-modal.component.html',
-  styleUrls: ['./compare-editor-string-modal.component.scss']
+  selector: 'mdm-conflict-editor-modal',
+  templateUrl: './conflict-editor-modal.component.html',
+  styleUrls: ['./conflict-editor-modal.component.scss']
 })
-export class CompareEditorStringModalComponent implements OnInit {
+export class ConflictEditorModalComponent implements OnInit {
   item: MergeItem;
   sourceText: string;
   targetText: string;
   dmp = new diff_match_patch();
 
   constructor(
-    private dialogRef: MatDialogRef<CompareEditorStringModalComponent, CompareEditorModalResult>,
-    @Inject(MAT_DIALOG_DATA) public data: CompareEditorModalData) { }
+    private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
+    @Inject(MAT_DIALOG_DATA) public data: ConflictEditorModalData) { }
 
   ngOnInit(): void {
     this.item = this.data.item;

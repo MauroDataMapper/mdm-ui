@@ -16,16 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { ConflictEditorModalComponent } from './conflict-editor-modal.component';
 
-import { Branchable, MergeItem } from "@maurodatamapper/mdm-resources";
-import { ModalDialogStatus } from "@mdm/constants/modal-dialog-status";
+describe('ConflictEditorModalComponent', () => {
+  let harness: ComponentHarness<ConflictEditorModalComponent>;
 
-export interface CompareEditorModalData {
-  source: Branchable;
-  target: Branchable;
-  item: MergeItem;
-}
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(ConflictEditorModalComponent);
+  });
 
-export interface CompareEditorModalResult {
-  status: ModalDialogStatus;
-}
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

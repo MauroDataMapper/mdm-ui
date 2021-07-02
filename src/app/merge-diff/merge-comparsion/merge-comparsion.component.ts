@@ -22,8 +22,8 @@ import { FullMergeItem } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { filter } from 'rxjs/operators';
-import { CompareEditorStringModalComponent } from '../compare-editors/compare-editor-string-modal/compare-editor-string-modal.component';
-import { CompareEditorModalData, CompareEditorModalResult } from '../compare-editors/compare-editors.model';
+import { ConflictEditorModalComponent } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
+import { ConflictEditorModalData, ConflictEditorModalResult } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.model';
 
 @Component({
   selector: 'mdm-merge-comparison',
@@ -59,8 +59,8 @@ export class MergeComparisonComponent implements OnInit {
   openEditor() {
     // TODO: add in possible other editors, not just strings
     this.dialog
-      .open<CompareEditorStringModalComponent, CompareEditorModalData, CompareEditorModalResult>(
-        CompareEditorStringModalComponent,
+      .open<ConflictEditorModalComponent, ConflictEditorModalData, ConflictEditorModalResult>(
+        ConflictEditorModalComponent,
         {
           disableClose: true,
           minWidth: '50%',

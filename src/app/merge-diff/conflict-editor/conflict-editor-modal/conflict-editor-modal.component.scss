@@ -16,17 +16,31 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
-import { CompareEditorStringModalComponent } from './compare-editor-string-modal.component';
 
-describe('CompareEditorStringModalComponent', () => {
-  let harness: ComponentHarness<CompareEditorStringModalComponent>;
+.mdm-conflict-editor-string {
+  .compare-view {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "source target"
+      "merged merged";
+    gap: 16px 16px;
+  }
 
-  beforeEach(async () => {
-    harness = await setupTestModuleForComponent(CompareEditorStringModalComponent);
-  });
+  .source {
+    grid-area: source;
+  }
 
-  it('should create', () => {
-    expect(harness?.isComponentCreated).toBeTruthy();
-  });
-});
+  .target {
+    grid-area: target;
+  }
+
+  .merged {
+    grid-area: merged;
+
+    textarea {
+      width: 100%;
+    }
+  }
+}

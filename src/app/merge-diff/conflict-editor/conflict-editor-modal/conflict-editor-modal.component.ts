@@ -18,9 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MergeItem } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { diff_match_patch } from 'diff-match-patch';
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 
 @Component({
@@ -29,29 +27,14 @@ import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-e
   styleUrls: ['./conflict-editor-modal.component.scss']
 })
 export class ConflictEditorModalComponent implements OnInit {
-  item: MergeItem;
-  sourceText: string;
-  targetText: string;
-  dmp = new diff_match_patch();
-
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
     @Inject(MAT_DIALOG_DATA) public data: ConflictEditorModalData) { }
 
   ngOnInit(): void {
-    this.item = this.data.item;
-    this.sourceText = this.getDiffPrettyHtml(this.item.targetValue, this.item.sourceValue);
-    this.targetText = this.getDiffPrettyHtml(this.item.sourceValue, this.item.targetValue);
   }
 
   cancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-  }
-
-  private getDiffPrettyHtml(text1: string, text2: string) {
-    const diffs = this.dmp.diff_main(text1, text2);
-    this.dmp.diff_cleanupSemantic(diffs);
-    // Prettify and remove pilcrow (¶ paragraph marks) from the output
-    return this.dmp.diff_prettyHtml(diffs).replace(/&para;/g, '');
   }
 }

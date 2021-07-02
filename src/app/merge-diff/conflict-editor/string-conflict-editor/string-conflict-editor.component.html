@@ -16,30 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="mdm-conflict-editor">
-  <div class="modal-header pxy-2">
-    <h4 class="modal-title marginless">Conflict Editor</h4>
-    Path: {{ data.item.path }}
+<div class="mdm-string-conflict-editor">
+  <div class="source">
+    <h5>Source</h5>
+    <div *ngIf="source">
+      <i class="fas fa-forward" matTooltip="Source Branch"></i>
+      <strong>{{ source.branchName }}</strong>
+    </div>
+    <div [innerHTML]="sourceText | safe: 'html'"></div>
   </div>
-  <div class="modal-body pxy-2">
-    <mdm-string-conflict-editor
-      [source]="data.source"
-      [target]="data.target"
-      [item]="data.item"
-    ></mdm-string-conflict-editor>
+  <div class="target">
+    <h5>Target</h5>
+    <div *ngIf="target">
+      <i class="fas fa-backward" matTooltip="Target Branch"></i>
+      <strong>{{ target.branchName }}</strong>
+      <div [innerHTML]="targetText | safe: 'html'"></div>
+    </div>
   </div>
-  <div class="modal-footer pxy-2">
-    <button
-      mat-button
-      color="warn"
-      class="mr-1"
-      type="button"
-      (click)="cancel()"
-    >
-      Cancel
-    </button>
-    <button mat-flat-button color="primary" type="button">
-      Resolve conflict
-    </button>
+  <div class="resolved">
+    <h5>Resolved</h5>
+    <textarea [(ngModel)]="item.sourceValue"></textarea>
   </div>
 </div>

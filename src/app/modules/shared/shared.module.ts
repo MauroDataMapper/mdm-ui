@@ -47,6 +47,7 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-selector.component';
 import { ResizableDirective } from '@mdm/directives/resizable.directive';
 import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
+import { ModelIconComponent } from '@mdm/shared/model-icon/model-icon.component';
 import { PathNameComponent } from '../../shared/path-name/path-name.component';
 
 @NgModule({
@@ -71,6 +72,7 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
     BranchSelectorComponent,
     ResizableDirective,
     DataTypeListButtonsComponent,
+    ModelIconComponent,
     PathNameComponent
   ],
   imports: [
@@ -116,7 +118,8 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
     BranchSelectorComponent,
     ResizableDirective,
     DataTypeListButtonsComponent,
-    PathNameComponent
+    PathNameComponent,
+    ModelIconComponent
   ]
 })
 export class SharedModule {}

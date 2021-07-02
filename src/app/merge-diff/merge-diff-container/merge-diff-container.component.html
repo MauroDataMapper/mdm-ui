@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
 
       <h4 class="inline-block marginless">
         <span class="dataModelTypeIcon">
-          <i matTooltip="Folder" class="fas fa-folder"></i>
+          <mdm-model-icon [domainType]="domainType" [isDataAsset]="sourceModel?.type === 'Data Asset'"></mdm-model-icon>
         </span>
         <span class="dataModelDetailsLabel">{{ source.label }}</span>
       </h4>

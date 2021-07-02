@@ -23,14 +23,22 @@ SPDX-License-Identifier: Apache-2.0
       <i class="fas fa-forward" matTooltip="Source Branch"></i>
       <strong>{{ source.branchName }}</strong>
     </div>
-    <div [innerHTML]="sourceText | safe: 'html'"></div>
+    <div
+      #sourceView
+      class="diff-view"
+      [innerHTML]="sourceText | safe: 'html'"
+    ></div>
   </div>
   <div class="target">
     <h5>Target</h5>
     <div *ngIf="target">
       <i class="fas fa-backward" matTooltip="Target Branch"></i>
       <strong>{{ target.branchName }}</strong>
-      <div [innerHTML]="targetText | safe: 'html'"></div>
+      <div
+        #targetView
+        class="diff-view"
+        [innerHTML]="targetText | safe: 'html'"
+      ></div>
     </div>
   </div>
   <div class="resolved">

@@ -16,19 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Branchable, MergeItem } from '@maurodatamapper/mdm-resources';
-import { diff_match_patch } from 'diff-match-patch';
+import { Diff, diff_match_patch } from 'diff-match-patch';
+
+const diffType = 0;
+const diffValue = 1;
+const deletedText = -1;
+const equalText = 0;
+const insertedText = 1;
+const insertedTextBackgroundColor = '#e6ffe6'
 
 @Component({
   selector: 'mdm-string-conflict-editor',
   templateUrl: './string-conflict-editor.component.html',
   styleUrls: ['./string-conflict-editor.component.scss']
 })
-export class StringConflictEditorComponent implements OnInit {
+export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   @Input() source: Branchable;
   @Input() target: Branchable;
   @Input() item: MergeItem;
+
+  @ViewChild('sourceView') sourceView: ElementRef;
+  @ViewChild('targetView') targetView: ElementRef;
 
   sourceText: string;
   targetText: string;
@@ -38,14 +48,60 @@ export class StringConflictEditorComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.sourceText = this.getDiffPrettyHtml(this.item.targetValue, this.item.sourceValue);
-    this.targetText = this.getDiffPrettyHtml(this.item.sourceValue, this.item.targetValue);
+    this.sourceText = this.getDiffViewHtml(this.item.targetValue, this.item.sourceValue);
+    this.targetText = this.getDiffViewHtml(this.item.sourceValue, this.item.targetValue);
   }
 
-  private getDiffPrettyHtml(text1: string, text2: string) {
+  ngAfterViewInit(): void {
+    this.setDiffViewEventListeners(this.sourceView);
+    this.setDiffViewEventListeners(this.targetView);
+  }
+
+  private getDiffViewHtml(text1: string, text2: string) {
+    const diffs = this.getDiff(text1, text2);
+    return this.getDiffPrettyHtml(diffs);
+  }
+
+  private setDiffViewEventListeners(view: ElementRef) {
+    view.nativeElement
+      .querySelectorAll('ins')
+      .forEach(ins => ins.addEventListener('click', this.test.bind(this)));
+  }
+
+  private getDiff(text1: string, text2: string) {
     const diffs = this.dmp.diff_main(text1, text2);
     this.dmp.diff_cleanupSemantic(diffs);
-    // Prettify and remove pilcrow (¶ paragraph marks) from the output
-    return this.dmp.diff_prettyHtml(diffs).replace(/&para;/g, '');
+    return diffs.filter(d => d[diffType] !== deletedText);
+  }
+
+  test() {
+    alert('Hello');
+  }
+
+  private getDiffPrettyHtml(diffs: Diff[]) {
+    return diffs
+      .map((diff, index) => {
+        const type = diff[diffType];
+        const value = this.sanitizeForHtml(diff[diffValue]);
+
+        switch (type) {
+          case insertedText: {
+            const obj = { id: index, loc: 'left', value: encodeURI(value) };
+            return `<ins id="${index}" data-diff="${JSON.stringify(obj)}" title="Click to include in resolved text"
+            style="background-color:${insertedTextBackgroundColor};cursor:pointer">${value}</ins>`;
+          }
+          case equalText: {
+            return value;
+          }
+          default: {
+            return '';
+          }
+        }
+      })
+      .join('');
+  }
+
+  private sanitizeForHtml(value: string) {
+    return value.replace(/\n/g, '<br/>');
   }
 }

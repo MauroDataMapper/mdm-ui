@@ -24,11 +24,13 @@ import {
   Uuid,
   Merge,
   MergeItem,
-  MergeUsed
+  MergeUsed,
+  CommitMergePayload
 } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   MessageHandlerService,
   SharedService,
@@ -71,7 +73,8 @@ export class MergeDiffContainerComponent implements OnInit {
     private mergeService: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private title: Title
+    private title: Title,
+    private resources: MdmResourcesService
   ) {}
 
   ngOnInit(): void {
@@ -161,12 +164,29 @@ export class MergeDiffContainerComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.messageHandler.showSuccess('Commit Successful');
-          this.stateHandler.Go(
-            ModelDomainRequestType[this.domainType],
-            { id: this.target.id, reload: true, location: true },
-            null
-          );
+
+          const data : CommitMergePayload = {
+            patch : {
+              sourceId : this.source.id,
+              targetId : this.target.id,
+              patches : this.committingList.filter(x => x.branchSelected !== MergeUsed.Target)
+            }
+          };
+
+          this.resources.merge.mergeInto(this.domainType,this.source.id, this.target.id,data).
+          pipe(
+            catchError((error) => {
+              this.messageHandler.showError('There was an error committing the changes', error);
+              return EMPTY;
+            })
+          ).subscribe(() => {
+            this.messageHandler.showSuccess('Commit Successful');
+            this.stateHandler.Go(
+              ModelDomainRequestType[this.domainType],
+              { id: this.target.id, reload: true, location: true },
+              null
+            );
+          });
         }
       });
     // TODO

@@ -55,7 +55,8 @@ import {
   MdmSubscribedCataloguesResource,
   MdmProfileResource,
   MdmVersionedFolderResource,
-  MdmPluginOpenIdConnectResource
+  MdmPluginOpenIdConnectResource,
+  MdmMergeResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -108,6 +109,7 @@ export class MdmResourcesService {
   apiProperties = new MdmApiPropertyResources(this.resourcesConfig, this.restHandler);
   subscribedCatalogues = new MdmSubscribedCataloguesResource(this.resourcesConfig, this.restHandler);
   pluginOpenIdConnect = new MdmPluginOpenIdConnectResource(this.resourcesConfig, this.restHandler);
+  merge = new MdmMergeResource(this.resourcesConfig, this.restHandler);
 
   constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

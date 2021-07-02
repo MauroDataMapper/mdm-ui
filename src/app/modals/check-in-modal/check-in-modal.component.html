@@ -17,22 +17,56 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="modal-header pxy-2">
-    <h4 class='modal-title marginless'>Check in Branch</h4>
+  <h4 class="modal-title marginless">Check in Branch</h4>
 </div>
 <div class="modal-body pxy-2">
-    <p>Are you sure you wish to commit these changes</p>
-    <div class="mdm--form-input">
-        <mat-form-field appearance="outline" class="full-width paddingless">
-            <mat-label>Commit Comment</mat-label>
-            <textarea matInput rows="4" [(ngModel)]="data.commitComment"> </textarea>    
-        </mat-form-field>
-    
+  <div *ngIf="isV2">
+    <p>The Following Changes will be committed</p>
+    <div class="mdm--form-input" class="mergeItemsList">
+      <mat-list>
+        <mat-list-item
+          [ngClass]="{
+            creation: item.type === mergeType.Creation,
+            deletion: item.type === mergeType.Deletion
+          }"
+          *ngFor="let item of mergeItems"     
+         >
+          <i
+            mat-list-icon
+            class="fas"
+            [ngClass]="{
+              'fa-plus-square': item.type === mergeType.Creation,
+              'fa-minus-square': item.type === mergeType.Deletion,
+              'fa-pen-square': item.type === mergeType.Modification
+            }"
+          ></i>
+          {{ item.path }} {{ item.branchSelected | uppercase }}
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+  <p>Are you sure you wish to commit these changes</p>
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width paddingless">
+      <mat-label>Commit Comment</mat-label>
+      <textarea matInput rows="4" [(ngModel)]="data.commitComment"> </textarea>
+    </mat-form-field>
 
-            <mat-checkbox [(ngModel)]="data.deleteSourceBranch">Delete Source Branch</mat-checkbox>
-   
-        </div>  
+    <mat-checkbox [(ngModel)]="data.deleteSourceBranch"
+      >Delete Source Branch</mat-checkbox
+    >
+  </div>
 </div>
 <div class="modal-footer pxy-2">
-    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>Cancel</button>
-    <button mat-flat-button color="primary" type="button" [mat-dialog-close]="data">Commit</button>
+  <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
+    Cancel
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    [mat-dialog-close]="data"
+  >
+    Commit
+  </button>
 </div>

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-string-conflict-editor">
-  <div class="source">
+  <div class="source-view">
     <h5>Source</h5>
     <div *ngIf="source">
       <i class="fas fa-forward" matTooltip="Source Branch"></i>
@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
       [innerHTML]="sourceText | safe: 'html'"
     ></div>
   </div>
-  <div class="target">
+  <div class="target-view">
     <h5>Target</h5>
     <div *ngIf="target">
       <i class="fas fa-backward" matTooltip="Target Branch"></i>
@@ -41,8 +41,12 @@ SPDX-License-Identifier: Apache-2.0
       ></div>
     </div>
   </div>
-  <div class="resolved">
+  <div class="resolved-view">
     <h5>Resolved</h5>
-    <textarea [(ngModel)]="item.sourceValue"></textarea>
+    <div>
+      Remaining conflicts:
+      <span class="mdm--badge mdm--element-count">{{ conflictCount }}</span>
+    </div>
+    <div [innerHTML]="resolvedText | safe: 'html'"></div>
   </div>
 </div>

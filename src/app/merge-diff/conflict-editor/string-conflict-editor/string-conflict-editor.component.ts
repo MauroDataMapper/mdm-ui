@@ -16,21 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Branchable, MergeItem } from '@maurodatamapper/mdm-resources';
 import { Diff, diff_match_patch } from 'diff-match-patch';
 
 const diffType = 0;
 const diffValue = 1;
-const deletedText = -1;
-const equalText = 0;
-const insertedText = 1;
-const insertedTextBackgroundColor = '#e6ffe6'
+const deletedType = -1;
+const equalType = 0;
+const insertedType = 1;
+const conflictText = '---';
+
+type DiffHtmlTransformFunction = (index: number, value: string) => string;
+type DiffHandlerFunction = (diffs: Diff[]) => void;
 
 @Component({
   selector: 'mdm-string-conflict-editor',
   templateUrl: './string-conflict-editor.component.html',
-  styleUrls: ['./string-conflict-editor.component.scss']
+  styleUrls: ['./string-conflict-editor.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   @Input() source: Branchable;
@@ -42,14 +46,31 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
   sourceText: string;
   targetText: string;
+  resolvedText: string;
+  conflictCount = 0;
 
   private dmp = new diff_match_patch();
 
   constructor() { }
 
   ngOnInit(): void {
-    this.sourceText = this.getDiffViewHtml(this.item.targetValue, this.item.sourceValue);
-    this.targetText = this.getDiffViewHtml(this.item.sourceValue, this.item.targetValue);
+    this.sourceText = this.getDiffViewHtml(
+      this.item.targetValue,
+      this.item.sourceValue,
+      this.createInsElement);
+
+    this.targetText = this.getDiffViewHtml(
+      this.item.sourceValue,
+      this.item.targetValue,
+      this.createInsElement);
+
+    // Initially the resolved text will look like the source text but with waiting conflict markers
+    // instead of highlights
+    this.resolvedText = this.getDiffViewHtml(
+      this.item.targetValue,
+      this.item.sourceValue,
+      this.createResolveMarker,
+      diffs => this.conflictCount = diffs.filter(d => d[diffType] !== equalType).length);
   }
 
   ngAfterViewInit(): void {
@@ -57,40 +78,63 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     this.setDiffViewEventListeners(this.targetView);
   }
 
-  private getDiffViewHtml(text1: string, text2: string) {
+  resolveDiffConflict(event: Event) {
+    const target = event.currentTarget as HTMLElement;
+    const id = JSON.parse(target.dataset.diffId) as number;
+    const value = decodeURI(target.dataset.diffValue);
+
+    const resolvedDocument = new DOMParser()
+      .parseFromString(this.resolvedText, 'text/html');
+
+    resolvedDocument.body
+      .querySelectorAll(`span.diff-marker[data-diff-id="${id}"`)
+      .forEach(element => {
+        element.innerHTML = value;
+        element.classList.replace('conflict', 'resolved');
+      });
+
+    this.resolvedText = resolvedDocument.body.innerHTML;
+
+    this.conflictCount = resolvedDocument.body
+      .querySelectorAll('span.diff-marker.conflict')
+      .length;
+  }
+
+  private getDiffViewHtml(
+    text1: string,
+    text2: string,
+    insertedTransformFn: DiffHtmlTransformFunction,
+    diffHandler?: DiffHandlerFunction) {
     const diffs = this.getDiff(text1, text2);
-    return this.getDiffPrettyHtml(diffs);
+    if (diffHandler) {
+      diffHandler(diffs);
+    }
+    return this.getDiffPrettyHtml(diffs, insertedTransformFn);
   }
 
   private setDiffViewEventListeners(view: ElementRef) {
     view.nativeElement
       .querySelectorAll('ins')
-      .forEach(ins => ins.addEventListener('click', this.test.bind(this)));
+      .forEach(elem => elem.addEventListener('click', this.resolveDiffConflict.bind(this)));
   }
 
   private getDiff(text1: string, text2: string) {
     const diffs = this.dmp.diff_main(text1, text2);
     this.dmp.diff_cleanupSemantic(diffs);
-    return diffs.filter(d => d[diffType] !== deletedText);
+    return diffs.filter(d => d[diffType] !== deletedType);
   }
 
-  test() {
-    alert('Hello');
-  }
-
-  private getDiffPrettyHtml(diffs: Diff[]) {
+  private getDiffPrettyHtml(diffs: Diff[], insertedTransformFn: DiffHtmlTransformFunction) {
     return diffs
       .map((diff, index) => {
         const type = diff[diffType];
         const value = this.sanitizeForHtml(diff[diffValue]);
 
         switch (type) {
-          case insertedText: {
-            const obj = { id: index, loc: 'left', value: encodeURI(value) };
-            return `<ins id="${index}" data-diff="${JSON.stringify(obj)}" title="Click to include in resolved text"
-            style="background-color:${insertedTextBackgroundColor};cursor:pointer">${value}</ins>`;
+          case insertedType: {
+            return insertedTransformFn(index, value);
           }
-          case equalText: {
+          case equalType: {
             return value;
           }
           default: {
@@ -99,6 +143,21 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
         }
       })
       .join('');
+  }
+
+  private createInsElement(index: number, value: string) {
+    // In read-only diff views, the <ins> element will be the highlight marker showing the change.
+    // Record the diff data and later a click handler will be attached to handle transitioning this
+    // diff to the resolved text
+    return `<ins id="${index}" data-diff-id="${index}" data-diff-value="${encodeURI(value)}"
+      title="Click to include in resolved text">${value}</ins>`;
+  }
+
+  private createResolveMarker(index: number, _: string) {
+    // In writeable diff views, this will acts as the placeholder/marker to inserting the resolved diff.
+    // Use the same diff ID as the readable views, and assign the "conflict" CSS class for now to highlight
+    // correctly (the click handler will swap this to "resolved").
+    return `<span class="diff-marker conflict" data-diff-id="${index}">${conflictText}</span>`;
   }
 
   private sanitizeForHtml(value: string) {

@@ -97,6 +97,14 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     this.resolvedText = resolvedDocument.body.innerHTML;
   }
 
+  allowResolvedContent() {
+    const resolvedDocument = new DOMParser()
+      .parseFromString(this.resolvedText, 'text/html');
+
+    const conflicts = resolvedDocument.body.querySelectorAll('span.diff-marker.conflict');
+    return conflicts.length === 0;
+  }
+
   private getDiffViewHtml(
     text1: string,
     text2: string) {

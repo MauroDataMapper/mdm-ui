@@ -28,18 +28,65 @@ SPDX-License-Identifier: Apache-2.0
       [item]="data.item"
     ></mdm-string-conflict-editor>
   </div>
-  <div class="modal-footer pxy-2">
+  <div *ngIf="state === 'working'" class="modal-footer pxy-2">
     <button
       mat-button
       color="warn"
       class="mr-1"
       type="button"
-      (click)="cancel()"
+      (click)="confirmCancel()"
     >
       Cancel
     </button>
-    <button mat-flat-button color="primary" type="button">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="startResolveConflict()"
+    >
       Resolve conflict
+    </button>
+  </div>
+  <div *ngIf="state === 'confirmCancel'" class="modal-footer pxy-2">
+    <p>Are you sure you want to cancel? Any changes made will be lost.</p>
+    <button
+      mat-button
+      color="primary"
+      class="mr-1"
+      type="button"
+      (click)="cancel()"
+    >
+      Yes
+    </button>
+    <button
+      mat-button
+      color="warn"
+      class="mr-1"
+      type="button"
+      (click)="abort()"
+    >
+      No
+    </button>
+  </div>
+  <div *ngIf="state === 'confirmResolve'" class="modal-footer pxy-2">
+    <p>Conflicts were still found in the content. Are you sure you want to resolve and commit these changes?</p>
+    <button
+      mat-button
+      color="primary"
+      class="mr-1"
+      type="button"
+      (click)="resolveConflict()"
+    >
+      Yes
+    </button>
+    <button
+      mat-button
+      color="warn"
+      class="mr-1"
+      type="button"
+      (click)="abort()"
+    >
+      No
     </button>
   </div>
 </div>

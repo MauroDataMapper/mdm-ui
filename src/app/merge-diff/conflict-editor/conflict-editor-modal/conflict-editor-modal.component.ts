@@ -16,9 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { StringConflictEditorComponent } from '../string-conflict-editor/string-conflict-editor.component';
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 
 @Component({
@@ -27,6 +28,10 @@ import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-e
   styleUrls: ['./conflict-editor-modal.component.scss']
 })
 export class ConflictEditorModalComponent implements OnInit {
+  @ViewChild(StringConflictEditorComponent) stringEditor: StringConflictEditorComponent;
+
+  state: 'working' | 'confirmCancel' | 'confirmResolve' = 'working';
+
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
     @Inject(MAT_DIALOG_DATA) public data: ConflictEditorModalData) { }
@@ -34,7 +39,28 @@ export class ConflictEditorModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  confirmCancel() {
+    this.state = 'confirmCancel';
+  }
+
+  abort() {
+    this.state = 'working';
+  }
+
   cancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  startResolveConflict() {
+    if (this.stringEditor.allowResolvedContent()) {
+      this.resolveConflict();
+      return;
+    }
+
+    this.state = 'confirmResolve';
+  }
+
+  resolveConflict() {
+    this.dialogRef.close({ status: ModalDialogStatus.Ok });
   }
 }

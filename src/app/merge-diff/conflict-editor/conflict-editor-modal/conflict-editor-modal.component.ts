@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { HelpDialogueHandlerService } from '@mdm/services';
 import { StringConflictEditorComponent } from '../string-conflict-editor/string-conflict-editor.component';
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 
@@ -34,9 +35,14 @@ export class ConflictEditorModalComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
-    @Inject(MAT_DIALOG_DATA) public data: ConflictEditorModalData) { }
+    @Inject(MAT_DIALOG_DATA) public data: ConflictEditorModalData,
+    private help: HelpDialogueHandlerService) { }
 
   ngOnInit(): void {
+  }
+
+  loadHelp() {
+    this.help.open('Merge_conflicts');
   }
 
   confirmCancel() {

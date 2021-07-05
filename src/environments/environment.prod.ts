@@ -40,7 +40,8 @@ export const environment = {
       Importing_DataModels_Using_Excel: 'user-guides/import-data-model-from-excel/import-data-model-from-excel/',
       Preferences: 'user-guides/user-profile/user-profile/#3-update-preferences',
       Search_Help: 'user-guides/how-to-search/how-to-search/',
-      User_profile: 'user-guides/user-profile/user-profile/'
+      User_profile: 'user-guides/user-profile/user-profile/',
+      Merge_conflicts: null
     },
     importers: {
       DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'

@@ -18,7 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-conflict-editor">
   <div class="modal-header pxy-2">
-    <h4 class="modal-title marginless">Conflict Editor</h4>
+    <h4 class="modal-title marginless">
+      Conflict Editor
+      <i
+        class="fas fa-info-circle helpIcon"
+        (click)="loadHelp()"
+        matTooltipPosition="below"
+        matTooltip="Help"
+      ></i>
+    </h4>
     Path: {{ data.item.path }}
   </div>
   <div class="modal-body pxy-2">
@@ -69,7 +77,10 @@ SPDX-License-Identifier: Apache-2.0
     </button>
   </div>
   <div *ngIf="state === 'confirmResolve'" class="modal-footer pxy-2">
-    <p>Conflicts were still found in the content. Are you sure you want to resolve and commit these changes?</p>
+    <p>
+      Conflicts were still found in the content. Are you sure you want to
+      resolve and commit these changes?
+    </p>
     <button
       mat-button
       color="primary"

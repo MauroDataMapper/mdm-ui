@@ -35,12 +35,10 @@ $conflictColor: #ffe6e6;
 
   .target-view {
     grid-area: target;
-    //max-height: 40%;
   }
 
   .resolved-view {
     grid-area: resolved;
-    //max-height: 40%;
 
     .conflict {
       background-color: $conflictColor;
@@ -54,7 +52,7 @@ $conflictColor: #ffe6e6;
   }
 
   .diff-view {
-    max-height: 35vh;
+    max-height: 30vh;
     overflow-y: auto;
 
     ins {

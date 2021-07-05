@@ -18,11 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-string-conflict-editor">
   <div class="source-view">
-    <h5>Source</h5>
-    <div *ngIf="source">
-      <i class="fas fa-forward" matTooltip="Source Branch"></i>
-      <strong>{{ source.branchName }}</strong>
-    </div>
+    <h5>
+      Source
+      <small *ngIf="source">
+        <i class="fas fa-forward" matTooltip="Source Branch"></i>
+        <strong>{{ source.branchName }}</strong>
+      </small>
+    </h5>
     <div
       #sourceView
       class="diff-view"
@@ -30,19 +32,24 @@ SPDX-License-Identifier: Apache-2.0
     ></div>
   </div>
   <div class="target-view">
-    <h5>Target</h5>
-    <div *ngIf="target">
-      <i class="fas fa-backward" matTooltip="Target Branch"></i>
-      <strong>{{ target.branchName }}</strong>
-      <div
-        #targetView
-        class="diff-view"
-        [innerHTML]="targetText | safe: 'html'"
-      ></div>
-    </div>
+    <h5>
+      Target
+      <small *ngIf="target">
+        <i class="fas fa-backward" matTooltip="Target Branch"></i>
+        <strong>{{ target.branchName }}</strong>
+      </small>
+    </h5>
+    <div
+      #targetView
+      class="diff-view"
+      [innerHTML]="targetText | safe: 'html'"
+    ></div>
   </div>
   <div class="resolved-view">
     <h5>Resolved</h5>
-    <mdm-content-editor [inEditMode]="true" [(content)]="resolvedText"></mdm-content-editor>
+    <mdm-content-editor
+      [inEditMode]="true"
+      [(content)]="resolvedText"
+    ></mdm-content-editor>
   </div>
 </div>

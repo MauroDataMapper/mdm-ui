@@ -64,8 +64,8 @@ export class MergeComparisonComponent implements OnInit {
         {
           disableClose: true,
           minWidth: '50%',
-          maxHeight: '90%',
-          maxWidth: '98%',
+          maxHeight: '98vh',
+          maxWidth: '98vw',
           data: {
             source: this.source,
             target: this.target,

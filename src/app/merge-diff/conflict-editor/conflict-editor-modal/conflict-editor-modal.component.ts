@@ -52,7 +52,7 @@ export class ConflictEditorModalComponent implements OnInit {
   }
 
   startResolveConflict() {
-    if (this.stringEditor.allowResolvedContent()) {
+    if (this.stringEditor.getCurrentConflictCount() === 0) {
       this.resolveConflict();
       return;
     }
@@ -61,6 +61,9 @@ export class ConflictEditorModalComponent implements OnInit {
   }
 
   resolveConflict() {
-    this.dialogRef.close({ status: ModalDialogStatus.Ok });
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      resolvedContent: this.stringEditor.getFinalResolvedContent()
+    });
   }
 }

@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Branchable, MergeItem } from '@maurodatamapper/mdm-resources';
 import { Diff, diff_match_patch } from 'diff-match-patch';
 
@@ -97,12 +97,26 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     this.resolvedText = resolvedDocument.body.innerHTML;
   }
 
-  allowResolvedContent() {
+  getCurrentConflictCount() {
     const resolvedDocument = new DOMParser()
       .parseFromString(this.resolvedText, 'text/html');
 
     const conflicts = resolvedDocument.body.querySelectorAll('span.diff-marker.conflict');
-    return conflicts.length === 0;
+    return conflicts.length;
+  }
+
+  getFinalResolvedContent() {
+    const resolvedDocument = new DOMParser()
+      .parseFromString(this.resolvedText, 'text/html');
+
+    resolvedDocument.body
+      .querySelectorAll('span.diff-marker')
+      .forEach(element => {
+        const newElement = resolvedDocument.createTextNode(element.innerHTML);
+        element.parentNode.replaceChild(newElement, element);
+      });
+
+    return resolvedDocument.body.innerHTML;
   }
 
   private getDiffViewHtml(

@@ -27,4 +27,5 @@ export interface ConflictEditorModalData {
 
 export interface ConflictEditorModalResult {
   status: ModalDialogStatus;
+  resolvedContent?: string;
 }

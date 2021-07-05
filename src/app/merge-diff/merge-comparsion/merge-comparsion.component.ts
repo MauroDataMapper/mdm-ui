@@ -78,7 +78,7 @@ export class MergeComparisonComponent implements OnInit {
         filter(result => result.status === ModalDialogStatus.Ok)
       )
       .subscribe(result => {
-        // TODO: handle merge conflict result
+        alert(result.resolvedContent);
       });
   }
 

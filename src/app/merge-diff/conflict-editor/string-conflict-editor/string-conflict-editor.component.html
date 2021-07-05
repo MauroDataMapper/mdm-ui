@@ -43,10 +43,6 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="resolved-view">
     <h5>Resolved</h5>
-    <div>
-      Remaining conflicts:
-      <span class="mdm--badge mdm--element-count">{{ conflictCount }}</span>
-    </div>
-    <div class="diff-view" [innerHTML]="resolvedText | safe: 'html'"></div>
+    <mdm-content-editor [inEditMode]="true" [(content)]="resolvedText"></mdm-content-editor>
   </div>
 </div>

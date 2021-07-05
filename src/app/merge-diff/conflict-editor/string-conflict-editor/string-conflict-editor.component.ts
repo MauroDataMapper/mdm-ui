@@ -27,8 +27,13 @@ const equalType = 0;
 const insertedType = 1;
 const conflictText = '---';
 
-type DiffHtmlTransformFunction = (index: number, value: string) => string;
-type DiffHandlerFunction = (diffs: Diff[]) => void;
+interface DiffTrackedItem {
+  diffs: Diff[];
+  index: number;
+  value: string;
+}
+
+type DiffHtmlTransformFunction = (item: DiffTrackedItem) => string;
 
 @Component({
   selector: 'mdm-string-conflict-editor',
@@ -47,7 +52,6 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   sourceText: string;
   targetText: string;
   resolvedText: string;
-  conflictCount = 0;
 
   private dmp = new diff_match_patch();
 
@@ -56,21 +60,17 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.sourceText = this.getDiffViewHtml(
       this.item.targetValue,
-      this.item.sourceValue,
-      this.createInsElement);
+      this.item.sourceValue);
 
     this.targetText = this.getDiffViewHtml(
       this.item.sourceValue,
-      this.item.targetValue,
-      this.createInsElement);
+      this.item.targetValue);
 
     // Initially the resolved text will look like the source text but with waiting conflict markers
     // instead of highlights
-    this.resolvedText = this.getDiffViewHtml(
+    this.resolvedText = this.initialiseResolvedDiffHtml(
       this.item.targetValue,
-      this.item.sourceValue,
-      this.createResolveMarker,
-      diffs => this.conflictCount = diffs.filter(d => d[diffType] !== equalType).length);
+      this.item.sourceValue);
   }
 
   ngAfterViewInit(): void {
@@ -90,26 +90,31 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .querySelectorAll(`span.diff-marker[data-diff-id="${id}"`)
       .forEach(element => {
         element.innerHTML = value;
+        element.setAttribute('title', 'resolved');
         element.classList.replace('conflict', 'resolved');
       });
 
     this.resolvedText = resolvedDocument.body.innerHTML;
-
-    this.conflictCount = resolvedDocument.body
-      .querySelectorAll('span.diff-marker.conflict')
-      .length;
   }
 
   private getDiffViewHtml(
     text1: string,
-    text2: string,
-    insertedTransformFn: DiffHtmlTransformFunction,
-    diffHandler?: DiffHandlerFunction) {
+    text2: string) {
     const diffs = this.getDiff(text1, text2);
-    if (diffHandler) {
-      diffHandler(diffs);
-    }
-    return this.getDiffPrettyHtml(diffs, insertedTransformFn);
+    return this.getDiffPrettyHtml(
+      diffs,
+      this.createInsElement.bind(this),
+      () => '');
+  }
+
+  private initialiseResolvedDiffHtml(
+    text1: string,
+    text2: string) {
+    const diffs = this.getDiff(text1, text2);
+    return this.getDiffPrettyHtml(
+      diffs,
+      this.checkInsertedTextForResolve.bind(this),
+      this.checkDeletedTextForResolve.bind(this));
   }
 
   private setDiffViewEventListeners(view: ElementRef) {
@@ -121,10 +126,13 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   private getDiff(text1: string, text2: string) {
     const diffs = this.dmp.diff_main(text1, text2);
     this.dmp.diff_cleanupSemantic(diffs);
-    return diffs.filter(d => d[diffType] !== deletedType);
+    return diffs;
   }
 
-  private getDiffPrettyHtml(diffs: Diff[], insertedTransformFn: DiffHtmlTransformFunction) {
+  private getDiffPrettyHtml(
+    diffs: Diff[],
+    insertedTransformFn: DiffHtmlTransformFunction,
+    deletedTransformFn: DiffHtmlTransformFunction) {
     return diffs
       .map((diff, index) => {
         const type = diff[diffType];
@@ -132,7 +140,10 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
         switch (type) {
           case insertedType: {
-            return insertedTransformFn(index, value);
+            return insertedTransformFn({ diffs, index, value });
+          }
+          case deletedType: {
+            return deletedTransformFn({ diffs, index, value });
           }
           case equalType: {
             return value;
@@ -145,19 +156,51 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .join('');
   }
 
-  private createInsElement(index: number, value: string) {
+  private createInsElement(item: DiffTrackedItem) {
     // In read-only diff views, the <ins> element will be the highlight marker showing the change.
     // Record the diff data and later a click handler will be attached to handle transitioning this
     // diff to the resolved text
-    return `<ins id="${index}" data-diff-id="${index}" data-diff-value="${encodeURI(value)}"
-      title="Click to include in resolved text">${value}</ins>`;
+    return `<ins data-diff-id="${item.index}" data-diff-value="${encodeURI(item.value)}"
+      title="Click to include in resolved text">${item.value}</ins>`;
   }
 
-  private createResolveMarker(index: number, _: string) {
-    // In writeable diff views, this will acts as the placeholder/marker to inserting the resolved diff.
-    // Use the same diff ID as the readable views, and assign the "conflict" CSS class for now to highlight
-    // correctly (the click handler will swap this to "resolved").
-    return `<span class="diff-marker conflict" data-diff-id="${index}">${conflictText}</span>`;
+  private checkInsertedTextForResolve(item: DiffTrackedItem) {
+    const previousIndex = item.index - 1;
+    if (previousIndex >= 0) {
+      const previousType = item.diffs[previousIndex][diffType];
+      if (previousType === deletedType) {
+        // Part of a diff pair of "delete" followed by "insert". This represents a conflict that
+        // must be manually resolved
+        return this.createResolveMarker('conflict', item.index);
+      }
+    }
+
+    // Otherwise, the inserted change only exists on the left side, so this can automatically be
+    // resolved.
+    return this.createResolveMarker('resolved', item.index, item.value);
+  }
+
+  private checkDeletedTextForResolve(item: DiffTrackedItem) {
+    const nextIndex = item.index + 1;
+    if (nextIndex < item.diffs.length) {
+      const nextType = item.diffs[nextIndex][diffType];
+      if (nextType === insertedType) {
+        // Part of a diff pair of "delete" followed by "insert". Return nothing here because
+        // checkInsertedTextForResolve() will handle this.
+        return '';
+      }
+    }
+
+    // Text only appears in left hand side, so may have been intentionally deleted from the target.
+    // Must get manual confirmation to resolve correctly
+    return this.createResolveMarker('conflict', item.index);
+  }
+
+  private createResolveMarker(markerType: 'conflict' | 'resolved', id: number, value?: string) {
+    // In writeable diff views, this acts as the placeholder/marker to inserting the resolved diff.
+    // Use the same diff ID as the readable views, and assign the correct CSS class for now to highlight
+    // correctly (the click handler will swap this to as appropriate).
+    return `<span class="diff-marker ${markerType}" data-diff-id="${id}" title="${markerType}">${markerType === 'conflict' ? conflictText : value}</span>`;
   }
 
   private sanitizeForHtml(value: string) {

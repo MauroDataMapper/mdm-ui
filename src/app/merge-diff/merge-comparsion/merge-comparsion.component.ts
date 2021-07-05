@@ -16,8 +16,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Branchable, MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { FullMergeItem } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -31,29 +39,30 @@ import { ConflictEditorModalData, ConflictEditorModalResult } from '../conflict-
   styleUrls: ['./merge-comparison.component.scss']
 })
 export class MergeComparisonComponent implements OnInit {
+  @ViewChild('sourceContent') sourceContent: ElementRef;
+  @ViewChild('targetContent') targetContent: ElementRef;
 
   @Input() source: Branchable;
   @Input() target: Branchable;
-  @Input() mergeItem : FullMergeItem;
+  @Input() mergeItem: FullMergeItem;
   @Input() isCommitting: boolean;
 
   @Output() cancelCommitEvent = new EventEmitter<MergeItem>();
   @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
+  currentElement: string;
+  linkScroll = false;
 
   constructor(private dialog: MatDialog) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  cancelCommit()
-  {
+  cancelCommit() {
     this.cancelCommitEvent.emit(this.mergeItem);
   }
 
-  acceptCommit(branchUsed: MergeUsed)
-  {
-     this.mergeItem.branchSelected = branchUsed;
-     this.acceptCommitEvent.emit(this.mergeItem);
+  acceptCommit(branchUsed: MergeUsed) {
+    this.mergeItem.branchSelected = branchUsed;
+    this.acceptCommitEvent.emit(this.mergeItem);
   }
 
   openEditor() {
@@ -87,4 +96,21 @@ export class MergeComparisonComponent implements OnInit {
     return MergeUsed;
   }
 
+  updateVerticalScroll(event): void {
+    if (this.linkScroll) {
+      if (this.currentElement === 'targetContent') {
+        this.sourceContent.nativeElement.scrollTop = event.target.scrollTop;
+      } else if (this.currentElement === 'sourceContent') {
+        this.targetContent.nativeElement.scrollTop = event.target.scrollTop;
+      }
+    }
+  }
+
+  updateCurrentElement(element: 'sourceContent' | 'targetContent') {
+    this.currentElement = element;
+  }
+
+  linkScrolls(link: boolean) {
+    this.linkScroll = link;
+  }
 }

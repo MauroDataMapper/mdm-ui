@@ -164,29 +164,35 @@ export class MergeDiffContainerComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-
-          const data : CommitMergePayload = {
-            patch : {
-              sourceId : this.source.id,
-              targetId : this.target.id,
-              patches : this.committingList.filter(x => x.branchSelected !== MergeUsed.Target)
+          const data: CommitMergePayload = {
+            patch: {
+              sourceId: this.source.id,
+              targetId: this.target.id,
+              patches: this.committingList.filter(
+                (x) => x.branchSelected !== MergeUsed.Target
+              )
             }
           };
 
-          this.resources.merge.mergeInto(this.domainType,this.source.id, this.target.id,data).
-          pipe(
-            catchError((error) => {
-              this.messageHandler.showError('There was an error committing the changes', error);
-              return EMPTY;
-            })
-          ).subscribe(() => {
-            this.messageHandler.showSuccess('Commit Successful');
-            this.stateHandler.Go(
-              ModelDomainRequestType[this.domainType],
-              { id: this.target.id, reload: true, location: true },
-              null
-            );
-          });
+          this.resources.merge
+            .mergeInto(this.domainType, this.source.id, this.target.id, data)
+            .pipe(
+              catchError((error) => {
+                this.messageHandler.showError(
+                  'There was an error committing the changes',
+                  error
+                );
+                return EMPTY;
+              })
+            )
+            .subscribe(() => {
+              this.messageHandler.showSuccess('Commit Successful');
+              this.stateHandler.Go(
+                ModelDomainRequestType[this.domainType],
+                { id: this.target.id, reload: true, location: true },
+                null
+              );
+            });
         }
       });
     // TODO
@@ -232,6 +238,24 @@ export class MergeDiffContainerComponent implements OnInit {
       this.committingList.push(item);
     });
     this.changesList = new Array<FullMergeItem>();
+  }
+
+  cancelAll() {
+    this.dialog
+      .openConfirmation({
+        data: { message: 'Are you sure? this will remove all pending commits', title: 'Cancel All Commits' }
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.selectedItem = null;
+          this.committingList.forEach((item) => {
+            item.branchSelected = null;
+            this.changesList.push(item);
+          });
+          this.committingList = new Array<FullMergeItem>();
+        }
+      });
   }
 
   cancelCommit(item: FullMergeItem) {

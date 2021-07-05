@@ -60,8 +60,32 @@ SPDX-License-Identifier: Apache-2.0
       <button
         mat-icon-button
         type="button"
-        matToolTip="Open Editor"
-        aria-label="Open Editor"
+        matToolTip="Link Scrolls"
+        aria-label="Link Scrolls"
+        *ngIf="!isCommitting && !linkScroll"
+        class="button"
+        (click)="linkScrolls(true)"
+      >
+        <i class="fas fa-link" aria-hidden="true"></i>
+        Link Scrolls
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Link Scrolls"
+        aria-label="Link Scrolls"
+        *ngIf="!isCommitting && linkScroll"
+        class="button"
+        (click)="linkScrolls(false)"
+      >
+        <i class="fas fa-unlink" aria-hidden="true"></i>
+        Unlink Scrolls
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Cancel commit"
+        aria-label="Cancel commit"
         *ngIf="isCommitting"
         (click)="cancelCommit()"
         class="button"
@@ -72,11 +96,14 @@ SPDX-License-Identifier: Apache-2.0
     </mat-toolbar>
   </div>
 </div>
-<div class="panel panel-default" fxLayout="row">
-  <div class="col sourceCol">
-    <div class="row">
-      <h4>Source</h4>
-    </div>
+<div fxLayout="row">
+  <h4>Source</h4>
+  <div
+    class="col sourceCol"
+    #sourceContent
+    (mouseenter)="updateCurrentElement('sourceContent')"
+    (scroll)="updateVerticalScroll($event)"
+  >
     <mdm-content-editor
       [content]="mergeItem.sourceValue"
       [inEditMode]="false"
@@ -84,11 +111,15 @@ SPDX-License-Identifier: Apache-2.0
     ></mdm-content-editor>
   </div>
 </div>
-<div class="panel panel-default" *ngIf="!isCommitting" fxLayout="row">
-  <div class="col sourceCol">
-    <div class="row">
-      <h4>Target</h4>
-    </div>
+<mat-divider *ngIf="!isCommitting"></mat-divider>
+<div style="margin-top: 10px" *ngIf="!isCommitting" fxLayout="row">
+  <h4>Target</h4>
+  <div
+    class="col targetCol"
+    #targetContent
+    (mouseenter)="updateCurrentElement('targetContent')"
+    (scroll)="updateVerticalScroll($event)"
+  >
     <mdm-content-editor
       [content]="mergeItem.targetValue"
       [inEditMode]="false"

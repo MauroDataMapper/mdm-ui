@@ -60,7 +60,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <h4 class="inline-block marginless">
         <span class="dataModelTypeIcon">
-          <mdm-model-icon [domainType]="domainType" [isDataAsset]="source?.type === 'Data Asset'"></mdm-model-icon>
+          <mdm-model-icon
+            [domainType]="domainType"
+            [isDataAsset]="source?.type === 'Data Asset'"
+          ></mdm-model-icon>
         </span>
         <span class="dataModelDetailsLabel">{{ source.label }}</span>
       </h4>
@@ -79,6 +82,7 @@ SPDX-License-Identifier: Apache-2.0
             <span><strong>Target Branch : </strong></span>
             <span>
               <mdm-branch-selector
+                [disabled]="this.committingList.length > 0"
                 [forMerge]="true"
                 [catalogueItem]="target"
                 (selectedCatalogueItemChanged)="setTarget($event)"
@@ -98,9 +102,10 @@ SPDX-License-Identifier: Apache-2.0
         >
           <mat-tab label="Changes" *ngIf="changesList">
             <div class="full-width" style="clear: both">
-              <mat-toolbar style="height: 50%" *ngIf="changesList.length > 0">
+              <mat-toolbar style="height: 50%">
                 <span class="spacer"></span>
                 <button
+                  *ngIf="changesList.length > 0"
                   mat-icon-button
                   type="button"
                   matToolTip="Commit all changes from the source branch"
@@ -112,6 +117,7 @@ SPDX-License-Identifier: Apache-2.0
                   Use All Source
                 </button>
                 <button
+                  *ngIf="changesList.length > 0"
                   mat-icon-button
                   type="button"
                   matToolTip="Commit all changes from the target branch"
@@ -137,15 +143,36 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </mat-tab>
           <mat-tab label="Committing" *ngIf="committingList">
-            <mdm-merge-item-selector
-              (selectedMergeItemChanged)="setSelectedMergeItem($event, true)"
-              [mergeItems]="committingList"
-              style="display: flex"
-            ></mdm-merge-item-selector>
-            <div class="noContent">
-              <h4 style="margin-top: 75px" *ngIf="committingList.length === 0">
-                No Pending Commits
-              </h4>
+            <div class="full-width" style="clear: both">
+              <mat-toolbar style="height: 50%">
+                <span class="spacer"></span>
+                <button
+                  *ngIf="committingList.length > 0"
+                  mat-icon-button
+                  type="button"
+                  matToolTip="Cancel All Changes"
+                  aria-label="Cancel All Changes"
+                  (click)="cancelAll()"
+                  class="cancelButton"
+                >
+                  <i class="fas fa-edit" aria-hidden="true"></i>
+                  Cancel All
+                </button>
+              </mat-toolbar>
+
+              <mdm-merge-item-selector
+                (selectedMergeItemChanged)="setSelectedMergeItem($event, true)"
+                [mergeItems]="committingList"
+                style="display: flex"
+              ></mdm-merge-item-selector>
+              <div class="noContent">
+                <h4
+                  style="margin-top: 75px"
+                  *ngIf="committingList.length === 0"
+                >
+                  No Pending Commits
+                </h4>
+              </div>
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -164,6 +191,5 @@ SPDX-License-Identifier: Apache-2.0
       >
       </mdm-merge-comparison>
     </div>
-
   </div>
 </div>

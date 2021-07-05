@@ -17,21 +17,24 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.sourceCol
-{
-        height: 25vh;;
+.sourceCol {
+  height: 25vh;
+  overflow-y: auto;
 }
 
-.textArea
-{
-    border: 1px black solid;
+.targetCol {
+  @extend .sourceCol;
+}
+
+.textArea {
+  border: 1px black solid;
 }
 
 .spacer {
-    flex: 1 1 auto;
-  }
-  
-  .button {
-    padding-right: 100px;
-    font-size: small;
-  }
+  flex: 1 1 auto;
+}
+
+.button {
+  padding-right: 100px;
+  font-size: small;
+}

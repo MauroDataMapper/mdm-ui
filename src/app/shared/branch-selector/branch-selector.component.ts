@@ -41,6 +41,7 @@ import { catchError } from 'rxjs/operators';
 export class BranchSelectorComponent implements OnInit {
   @Input() catalogueItem: CatalogueItem;
   @Input() forMerge: boolean;
+  @Input() disabled: boolean;
   @Output() selectedCatalogueItemChanged = new EventEmitter<Uuid>();
 
   versionList: BasicModelVersionItem[];
@@ -55,6 +56,7 @@ export class BranchSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentVersionId = this.catalogueItem.id;
+    this.disabled = this.disabled ?? false;
 
     const domainElementType = this.elementTypes.getBaseTypeForDomainType(
       this.catalogueItem.domainType

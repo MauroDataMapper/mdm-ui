@@ -88,8 +88,7 @@ SPDX-License-Identifier: Apache-2.0
               }"
               [required]="field.optional === false"
             />
-            <div style="display: flex;" *ngIf="field.dataType === 'date'">
-              
+            <div style="display: flex" *ngIf="field.dataType === 'date'">
               <input
                 matInput
                 [matDatepicker]="pickerDate"
@@ -107,25 +106,22 @@ SPDX-License-Identifier: Apache-2.0
               ></mat-datepicker-toggle>
               <mat-datepicker #pickerDate></mat-datepicker>
             </div>
-            <div style="display: flex;"  *ngIf="field.dataType === 'datetime'">
+            <div style="display: flex" *ngIf="field.dataType === 'datetime'">
               <input
                 matInput
-                [matDatepicker]="pickerDateTime"
-                name="{{ field.fieldName }} + {{ section.sectionName }} + date " 
-                [(ngModel)]="field.date"
-                 [ngClass]="{
+                [owlDateTime]="dt2"
+                name="{{ field.fieldName }} + {{ section.sectionName }} + date "
+                [(ngModel)]="field.currentValue"
+                [ngClass]="{
                   'outlined-input form-control':
                     formOptionsMap[field.dataType] != 'checkbox'
                 }"
                 [required]="field.optional === false"
               />
-              <mat-datepicker-toggle
-              matSuffix
-              [for]="pickerDateTime"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #pickerDateTime></mat-datepicker>
-              <ngx-timepicker-field #profileTimePicker [(ngModel)]="field.time" [format]="24" name="{{ field.fieldName }} + {{ section.sectionName }} + time"          
-              ></ngx-timepicker-field>
+              <span [owlDateTimeTrigger]="dt2"
+                ><i class="fa fa-calendar"></i
+              ></span>
+              <owl-date-time #dt2></owl-date-time>
             </div>
             <div *ngIf="field.dataType === 'datamodel'">
               <input

@@ -76,18 +76,18 @@ SPDX-License-Identifier: Apache-2.0
             [readonly]="true"
             name="{{ field.fieldName }} + {{ section.sectionName }}"
             style="background-color: #ffffff; width: 100%; border: hidden"
-            [ngModel]="field.currentValue | date:'fullDate'"     
+            [ngModel]="field.currentValue | date:'dd/MM/yyyy'"     
           />
         </div>
-        <input
-          style="background-color: #ffffff; border: hidden"
-          *ngIf="field.dataType === 'datetime'"
-          type="datetime-local"
-          [readonly]="true"
-          [(ngModel)]="field.currentValue"
-          value="{{ field.currentValue }}"
-          [required]="field.optional === false"
-        />
+        <div *ngIf="field.dataType === 'datetime'">
+          <input
+            matInput
+            [readonly]="true"
+            name="{{ field.fieldName }} + {{ section.sectionName }}"
+            style="background-color: #ffffff; width: 100%; border: hidden"
+            [ngModel]="field.currentValue | date:'dd/MM/yyyy, h:mm a'"     
+          />
+        </div>
         <div *ngIf="field.dataType === 'datamodel'">
           <mdm-more-description
             [description]="field.currentValue"

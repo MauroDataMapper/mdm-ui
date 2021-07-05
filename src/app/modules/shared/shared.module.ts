@@ -47,6 +47,7 @@ import { AlertComponent } from '@mdm/shared/alert/alert.component';
 import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-selector.component';
 import { ResizableDirective } from '@mdm/directives/resizable.directive';
 import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,9 @@ import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons
     FlexLayoutModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
-    CodemirrorModule
+    CodemirrorModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -113,7 +116,9 @@ import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons
     AlertComponent,
     BranchSelectorComponent,
     ResizableDirective,
-    DataTypeListButtonsComponent
+    DataTypeListButtonsComponent,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule
   ]
 })
 export class SharedModule {}

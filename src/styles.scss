@@ -59,3 +59,5 @@ Import more theme SASS files here to make them available to the app
 @import "style/layout/admin";
 @import "style/layout/browse";
 @import "style/layout/tree";
+/* datetime */
+@import "~ng-pick-datetime/assets/style/picker.min.css"

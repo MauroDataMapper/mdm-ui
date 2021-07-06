@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Branchable, MergeItem } from '@maurodatamapper/mdm-resources';
 import { Diff, diff_match_patch } from 'diff-match-patch';
 

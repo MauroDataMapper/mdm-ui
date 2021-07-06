@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import DiffMatchPatch, { diff_match_patch } from 'diff-match-patch';
+import { diff_match_patch } from 'diff-match-patch';
 
 @Component({
   selector: 'mdm-resolve-merge-conflict-modal',

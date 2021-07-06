@@ -19,9 +19,14 @@ SPDX-License-Identifier: Apache-2.0
 
 .mdm-markdown-text-area {
 
+  .spacer {
+    flex: 1 1 auto;
+  }
+
   &__preview {
     background-color: #f9f9f9;
-    padding: 10px;    
+    border: 1px solid #cecece;
+    padding: 10px;
   }
 
 }

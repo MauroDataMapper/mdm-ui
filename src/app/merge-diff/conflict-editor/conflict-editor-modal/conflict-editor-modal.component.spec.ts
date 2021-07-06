@@ -16,6 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FeaturesService } from '@mdm/services/features.service';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { ConflictEditorModalComponent } from './conflict-editor-modal.component';
 
@@ -23,7 +25,24 @@ describe('ConflictEditorModalComponent', () => {
   let harness: ComponentHarness<ConflictEditorModalComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(ConflictEditorModalComponent);
+    harness = await setupTestModuleForComponent(
+      ConflictEditorModalComponent,
+      {
+        providers: [
+          {
+            provide: MatDialogRef,
+            useValue: {}
+          },
+          {
+            provide: MAT_DIALOG_DATA,
+            useValue: {}
+          },
+          {
+            provide: FeaturesService,
+            useValue: {}
+          }
+        ]
+      });
   });
 
   it('should create', () => {

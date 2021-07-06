@@ -65,10 +65,6 @@ export class ContentEditorComponent implements OnInit {
     this.contentFormat = this.isHtmlContent() ? ContentEditorFormat.Html : ContentEditorFormat.Markdown;
   }
 
-  changeContentType(format: ContentEditorFormat) {
-    this.contentFormat = format;
-  }
-
   getContentFormatName() {
     switch (this.contentFormat)
     {

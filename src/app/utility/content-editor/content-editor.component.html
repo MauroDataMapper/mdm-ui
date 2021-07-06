@@ -16,42 +16,35 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mdm-markdown-text-area *ngIf="contentFormat === ContentFormatType.Markdown"
-    [element]="element" 
-    [property]="property"
-    [inEditMode]="inEditMode"
-    [description]="content"
-    [hideHelpText]="!markdownOptions.showHelpText"
-    (descriptionChange)="onEditorDescriptionChanged($event)">
+<mdm-markdown-text-area
+  *ngIf="contentFormat === ContentFormatType.Markdown"
+  [element]="element"
+  [property]="property"
+  [inEditMode]="inEditMode"
+  [description]="content"
+  [hideHelpText]="!markdownOptions.showHelpText"
+  (descriptionChange)="onEditorDescriptionChanged($event)"
+>
 </mdm-markdown-text-area>
 
-<mdm-html-editor *ngIf="contentFormat === ContentFormatType.Html"  
-    [element]="element" 
-    [property]="property"
-    [inEditMode]="inEditMode"
-    [description]="content"
-    [buttonMode]="htmlOptions.useBasicButtons ? ButtonModeTypes.Basic : ButtonModeTypes.Standard"
-    (descriptionChange)="onEditorDescriptionChanged($event)">
+<mdm-html-editor
+  *ngIf="contentFormat === ContentFormatType.Html"
+  [element]="element"
+  [property]="property"
+  [inEditMode]="inEditMode"
+  [description]="content"
+  [buttonMode]="
+    htmlOptions.useBasicButtons
+      ? ButtonModeTypes.Basic
+      : ButtonModeTypes.Standard
+  "
+  (descriptionChange)="onEditorDescriptionChanged($event)"
+>
 </mdm-html-editor>
 
 <div *ngIf="isInEditMode()">
-    <button mat-stroked-button
-            color="primary"
-            type="button"
-            class="ma-stroked-button dropdown-toggle"
-            matTooltip="Change format"
-            aria-label="Change format"
-            [matMenuTriggerFor]="contentTypeMenu">
-        <i class="fas fa-code"></i>
-        {{getContentFormatName()}}
-    </button>
-
-    <mat-menu #contentTypeMenu>
-        <button mat-menu-item (click)="changeContentType(ContentFormatType.Markdown)" *ngIf="contentFormat !== ContentFormatType.Markdown" >
-            Switch to Markdown
-        </button>
-        <button mat-menu-item (click)="changeContentType(ContentFormatType.Html)" *ngIf="contentFormat !== ContentFormatType.Html">
-            Switch to HTML
-        </button>
-    </mat-menu>
+  <mat-button-toggle-group name="format" aria-label="Format" [(ngModel)]="contentFormat">
+    <mat-button-toggle [value]="ContentFormatType.Markdown">Markdown</mat-button-toggle>
+    <mat-button-toggle [value]="ContentFormatType.Html">HTML</mat-button-toggle>
+  </mat-button-toggle-group>
 </div>

@@ -27,6 +27,7 @@ export interface MergeItemSelection
 export interface CommittingMergeItem
 {
     branchSelected : MergeUsed;
+    mixedContent? : string;
 }
 
 export type FullMergeItem =  MergeItem & CommittingMergeItem;

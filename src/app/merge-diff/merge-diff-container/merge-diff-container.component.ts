@@ -25,7 +25,8 @@ import {
   Merge,
   MergeItem,
   MergeUsed,
-  CommitMergePayload
+  CommitMergePayload,
+  MergeType
 } from '@maurodatamapper/mdm-resources';
 import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
@@ -233,17 +234,31 @@ export class MergeDiffContainerComponent implements OnInit {
 
   selectAll(branchUsed: MergeUsed) {
     this.selectedItem = null;
+    const tempArray = new Array<FullMergeItem>();
     this.changesList.forEach((item) => {
-      item.branchSelected = branchUsed;
-      this.committingList.push(item);
+      if (item.type === MergeType.Modification) {
+        item.branchSelected = branchUsed;
+        this.committingList.push(item);
+        return;
+      }
+      if (branchUsed === MergeUsed.Source) {
+        item.branchSelected = branchUsed;
+        this.committingList.push(item);
+      } else {
+        tempArray.push(item);
+      }
     });
     this.changesList = new Array<FullMergeItem>();
+    this.changesList = Object.assign([], tempArray);
   }
 
   cancelAll() {
     this.dialog
       .openConfirmation({
-        data: { message: 'Are you sure? this will remove all pending commits', title: 'Cancel All Commits' }
+        data: {
+          message: 'Are you sure? this will remove all pending commits',
+          title: 'Cancel All Commits'
+        }
       })
       .afterClosed()
       .subscribe((result) => {

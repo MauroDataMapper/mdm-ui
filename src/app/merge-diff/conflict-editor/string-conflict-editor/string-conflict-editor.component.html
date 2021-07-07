@@ -1,0 +1,55 @@
+<!--
+Copyright 2020-2021 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm-string-conflict-editor">
+  <div class="source-view">
+    <h5>
+      Source
+      <small *ngIf="source">
+        <i class="fas fa-forward" matTooltip="Source Branch"></i>
+        <strong>{{ source.branchName }}</strong>
+      </small>
+    </h5>
+    <div
+      #sourceView
+      class="diff-view"
+      [innerHTML]="sourceText | safe: 'html'"
+    ></div>
+  </div>
+  <div class="target-view">
+    <h5>
+      Target
+      <small *ngIf="target">
+        <i class="fas fa-backward" matTooltip="Target Branch"></i>
+        <strong>{{ target.branchName }}</strong>
+      </small>
+    </h5>
+    <div
+      #targetView
+      class="diff-view"
+      [innerHTML]="targetText | safe: 'html'"
+    ></div>
+  </div>
+  <div class="resolved-view">
+    <h5>Resolved</h5>
+    <mdm-content-editor
+      [inEditMode]="true"
+      [(content)]="resolvedText"
+    ></mdm-content-editor>
+  </div>
+</div>

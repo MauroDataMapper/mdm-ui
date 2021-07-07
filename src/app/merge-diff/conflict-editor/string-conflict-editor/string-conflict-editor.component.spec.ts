@@ -16,17 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { StringConflictEditorComponent } from './string-conflict-editor.component';
 
-.mdm-markdown-text-area {
+describe('StringConflictEditorComponent', () => {
+  let harness: ComponentHarness<StringConflictEditorComponent>;
 
-  .spacer {
-    flex: 1 1 auto;
-  }
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(StringConflictEditorComponent);
+  });
 
-  &__preview {
-    background-color: #f9f9f9;
-    border: 1px solid #cecece;
-    padding: 10px;
-  }
-
-}
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

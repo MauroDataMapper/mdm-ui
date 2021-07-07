@@ -17,8 +17,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
+import { Branchable, MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
 import { FullMergeItem } from '../types/merge-item-type';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { filter } from 'rxjs/operators';
+import { ConflictEditorModalComponent } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
+import { ConflictEditorModalData, ConflictEditorModalResult } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.model';
 
 @Component({
   selector: 'mdm-merge-comparison',
@@ -27,13 +32,15 @@ import { FullMergeItem } from '../types/merge-item-type';
 })
 export class MergeComparisonComponent implements OnInit {
 
+  @Input() source: Branchable;
+  @Input() target: Branchable;
   @Input() mergeItem : FullMergeItem;
   @Input() isCommitting: boolean;
 
   @Output() cancelCommitEvent = new EventEmitter<MergeItem>();
   @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -47,6 +54,32 @@ export class MergeComparisonComponent implements OnInit {
   {
      this.mergeItem.branchSelected = branchUsed;
      this.acceptCommitEvent.emit(this.mergeItem);
+  }
+
+  openEditor() {
+    // TODO: add in possible other editors, not just strings
+    this.dialog
+      .open<ConflictEditorModalComponent, ConflictEditorModalData, ConflictEditorModalResult>(
+        ConflictEditorModalComponent,
+        {
+          disableClose: true,
+          minWidth: '50%',
+          maxHeight: '98vh',
+          maxWidth: '98vw',
+          data: {
+            source: this.source,
+            target: this.target,
+            item: this.mergeItem
+          }
+        }
+      )
+      .afterClosed()
+      .pipe(
+        filter(result => result.status === ModalDialogStatus.Ok)
+      )
+      .subscribe(result => {
+        alert(result.resolvedContent);
+      });
   }
 
   public get MergeUsed()

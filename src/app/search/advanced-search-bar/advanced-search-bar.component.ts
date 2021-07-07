@@ -16,22 +16,40 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ElementRef,
+  EventEmitter
+} from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Observable, Subject, fromEvent } from 'rxjs';
-import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators';
-import { Classifier, ClassifierIndexResponse } from '@maurodatamapper/mdm-resources';
-
+import { Observable, Subject, fromEvent, merge } from 'rxjs';
+import {
+  debounceTime,
+  map,
+  filter,
+  distinctUntilChanged,
+  switchMap,
+  catchError,
+  startWith
+} from 'rxjs/operators';
+import {
+  CatalogueItemDomainType,
+  Classifier,
+  ClassifierIndexResponse
+} from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { EMPTY } from 'rxjs';
 @Component({
   selector: 'mdm-advanced-search-bar',
   templateUrl: './advanced-search-bar.component.html',
   styleUrls: ['./advanced-search-bar.component.sass']
 })
 export class AdvancedSearchBarComponent implements OnInit {
-
   @Input() placeholder: string;
   @Input() doNotDisplayModelPathStatus: boolean;
   @Input() doNotShowDataModelInModelPath: boolean;
@@ -40,14 +58,14 @@ export class AdvancedSearchBarComponent implements OnInit {
   @Input() showDomainTypes: string[];
   @Input() doNotOpenLinkInNewWindow: boolean;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   @ViewChild('searchInputControl', { static: true })
   searchInputControl: ElementRef;
 
   displayedColumns: string[] = ['label'];
   searchTerm = new Subject<string>();
 
-  pageIndex: any;
   advancedSearch: boolean;
   searchInput: string;
   lastDateUpdatedFrom: Date;
@@ -59,20 +77,18 @@ export class AdvancedSearchBarComponent implements OnInit {
   context: any;
   classifications: Classifier[];
   searchResults: any[];
+  searchEvent = new EventEmitter<any>();
 
   hideDM: boolean;
   hideDC: boolean;
   hideDE: boolean;
   hideDT: boolean;
   hideEV: boolean;
+  hideRDM: boolean;
 
   isLoading: boolean;
 
-  pageEvent: PageEvent;
-
-  // showDomainTypes: string[];
-
-  formData: any = {
+  formData = {
     showSearchResult: false,
     labelOnly: false,
     exactMatch: false,
@@ -81,7 +97,8 @@ export class AdvancedSearchBarComponent implements OnInit {
       DataClass: false,
       DataElement: false,
       DataType: false,
-      EnumerationValue: false
+      EnumerationValue: false,
+      ReferenceDataModel: false
     },
     classifiers: [],
 
@@ -96,52 +113,72 @@ export class AdvancedSearchBarComponent implements OnInit {
     private helpDialogueService: HelpDialogueHandlerService,
     private contextSearchHandler: ContentSearchHandlerService,
     private resources: MdmResourcesService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.advancedSearch = false;
 
-
-    this.resources.classifier.list().subscribe((result: ClassifierIndexResponse) => {
-      this.classifications = result.body.items;
-    });
+    this.resources.classifier
+      .list()
+      .subscribe((result: ClassifierIndexResponse) => {
+        this.classifications = result.body.items;
+      });
 
     this.context = this.parent;
 
     if (this.showDomainTypes) {
-      this.hideDM = this.showDomainTypes.indexOf('DataModel') === -1;
-      this.hideDC = this.showDomainTypes.indexOf('DataClass') === -1;
-      this.hideDE = this.showDomainTypes.indexOf('DataElement') === -1;
+      this.hideDM = this.showDomainTypes.indexOf(CatalogueItemDomainType.DataModel) === -1;
+      this.hideDC = this.showDomainTypes.indexOf(CatalogueItemDomainType.DataClass) === -1;
+      this.hideDE = this.showDomainTypes.indexOf(CatalogueItemDomainType.DataElement) === -1;
       this.hideDT = this.showDomainTypes.indexOf('DataType') === -1;
       this.hideEV = this.showDomainTypes.indexOf('EnumerationValue') === -1;
+      this.hideRDM = this.showDomainTypes.indexOf(CatalogueItemDomainType.ReferenceDataModel) === -1;
     }
 
-    this.placeHolderText = this.placeholder ? this.placeholder : 'Search for...';
+    this.placeHolderText = this.placeholder
+      ? this.placeholder
+      : 'Search for...';
 
-    fromEvent(this.searchInputControl.nativeElement, 'keyup').pipe(map((event: any) => {
-      return event.target.value;
-    }),
-      filter((res: any) => res.length >= 0),
-      debounceTime(500),
-      distinctUntilChanged()
-    ).subscribe((text: string) => {
-      if (text.length === 0) {
-        this.formData.showSearchResult = false;
-        this.searchResults = [];
-        this.isLoading = false;
-      } else {
-        this.formData.showSearchResult = true;
-        this.fetch(10, 0).subscribe(res => {
-          this.searchResults = res.body.items;
+    merge(this.searchEvent, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoading = true;
+          return this.fetch(this.paginator.pageSize, this.paginator.pageOffset);
+        }),
+        map((res: any) => {
+          this.totalItemCount = res.body.count;
           this.isLoading = false;
+          return res.body.items;
+        }),
+        catchError(() => {
+          this.isLoading = false;
+          return EMPTY;
+        })
+      )
+      .subscribe((data: any) => {
+        this.searchResults = data;
+      });
 
-          this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
-        }, () => {
+    fromEvent(this.searchInputControl.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res: any) => res.length >= 0),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        if (text.length === 0) {
+          this.formData.showSearchResult = false;
+          this.searchResults = [];
           this.isLoading = false;
+        } else {
+          this.formData.showSearchResult = true;
+          this.searchEvent.emit();
         }
-        );
-      }
-    });
+      });
   }
 
   loadHelp = () => {
@@ -152,16 +189,6 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.advancedSearch = !this.advancedSearch;
   }
 
-  getServerData($event) {
-    this.fetch($event.pageSize, $event.pageIndex).subscribe(res => {
-      this.searchResults = res.body.items;
-      this.totalItemCount = res.body.count;
-      this.isLoading = false;
-    }, () => {
-      this.isLoading = false;
-    });
-  }
-
   fetch(pageSize: number, offset: number): Observable<any> {
     this.isLoading = true;
 
@@ -170,13 +197,16 @@ export class AdvancedSearchBarComponent implements OnInit {
     }
     const filterDataTypes = [];
     if (this.formData.selectedDomainTypes.DataModel) {
-      filterDataTypes.push('DataModel');
+      filterDataTypes.push(CatalogueItemDomainType.DataModel);
+    }
+    if (this.formData.selectedDomainTypes.ReferenceDataModel) {
+      filterDataTypes.push(CatalogueItemDomainType.ReferenceDataModel);
     }
     if (this.formData.selectedDomainTypes.DataClass) {
-      filterDataTypes.push('DataClass');
+      filterDataTypes.push(CatalogueItemDomainType.DataClass);
     }
     if (this.formData.selectedDomainTypes.DataElement) {
-      filterDataTypes.push('DataElement');
+      filterDataTypes.push(CatalogueItemDomainType.DataElement);
     }
     if (this.formData.selectedDomainTypes.DataType) {
       filterDataTypes.push('DataType');
@@ -196,7 +226,7 @@ export class AdvancedSearchBarComponent implements OnInit {
     }
 
     const classifiersNames = [];
-    this.formData.classifiers.forEach(classifier => {
+    this.formData.classifiers.forEach((classifier) => {
       classifiersNames.push(classifier.label);
     });
 
@@ -221,16 +251,9 @@ export class AdvancedSearchBarComponent implements OnInit {
     if (this.searchInput !== undefined) {
       if (this.searchInput.trim().length !== 0) {
         if (resetPageIndex) {
-          this.pageIndex = 0;
+          this.paginator.pageIndex = 0;
         }
-        this.fetch(10, this.pageIndex).subscribe(res => {
-          this.isLoading = false;
-          this.searchResults = res.body.items;
-          this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
-        }, () => {
-          this.isLoading = false;
-        }
-        );
+        this.searchEvent.emit();
       }
     }
   }
@@ -251,7 +274,7 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.search(true);
   }
 
-  onContextSelected = selected => {
+  onContextSelected = (selected) => {
     this.context = null;
     if (selected && selected.length > 0) {
       this.context = selected[0];

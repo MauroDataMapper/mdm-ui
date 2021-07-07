@@ -56,6 +56,11 @@ SPDX-License-Identifier: Apache-2.0
                       Data Model
                   </mat-checkbox>
               </div>
+              <div style="margin-right: 10px;" *ngIf="!hideRDM">
+                <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.ReferenceDataModel" name="ReferenceDataModel" (change)="search(true)">
+                    Reference Data Model
+                </mat-checkbox>
+            </div>
               <div style="margin-right: 10px;" *ngIf="!hideDC">
                   <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataClass" name="DataClass" (change)="search(true)">
                       Data Class
@@ -125,7 +130,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </ng-template>
 <div class="mt-3">
-      <div *ngIf="totalItemCount > 0">
+      <div [hidden]="totalItemCount === 0">
           <div *ngIf="formData.showSearchResult === true">
             <div class="heading-container">
               <h4 class="marginless">Search result(s) <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> </h4>
@@ -168,15 +173,9 @@ SPDX-License-Identifier: Apache-2.0
                       <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
                   </mat-card>
 
-                  <div class="mdm--mat-pagination">
-                      <mat-paginator *ngIf="formData.showSearchResult"
-                                      [pageSizeOptions]="[5, 10, 20, 50]"
-                                      [length]="totalItemCount"
-                                      [pageSize]="10"
-                                      (page)="getServerData($event)"
-                                      showFirstLastButtons>
-                      </mat-paginator>
-                  </div>
+                  <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':!formData.showSearchResult}">
+                    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+                </div>
               </div>
           </div>
       </div>

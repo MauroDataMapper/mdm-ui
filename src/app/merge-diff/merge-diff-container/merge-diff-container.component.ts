@@ -256,7 +256,7 @@ export class MergeDiffContainerComponent implements OnInit {
     this.dialog
       .openConfirmation({
         data: {
-          message: 'Are you sure? this will remove all pending commits',
+          message: 'Are you sure? This will remove all pending commits',
           title: 'Cancel All Commits'
         }
       })

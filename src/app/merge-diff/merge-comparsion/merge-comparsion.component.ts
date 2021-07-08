@@ -130,11 +130,9 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
       .afterClosed()
       .pipe(filter((result) => result.status === ModalDialogStatus.Ok))
       .subscribe((result: ConflictEditorModalResult) => {
-        if (result.status === ModalDialogStatus.Ok) {
           this.mergeItem.mixedContent = result.resolvedContent;
           this.mergeItem.branchSelected = MergeUsed.Mixed;
           this.acceptCommitEvent.emit(this.mergeItem);
-        }
       });
   }
 

@@ -41,34 +41,34 @@ describe('PathNameService', () => {
       [
         'dm:Test Data Model',
         [
-          { type: PathElementType.DataModel, label: 'Test Data Model' }
+          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' }
         ]
       ],
       [
         'te:Test Terminology',
         [
-          { type: PathElementType.Terminology, label: 'Test Terminology' }
+          { type: PathElementType.Terminology, typeName: 'Terminology', label: 'Test Terminology' }
         ]
       ],
       [
         'cs:Test Code Set',
         [
-          { type: PathElementType.CodeSet, label: 'Test Code Set' }
+          { type: PathElementType.CodeSet, typeName: 'Code set', label: 'Test Code Set' }
         ]
       ],
       [
         'dm:Test Data Model|dc:Test Data Class',
         [
-          { type: PathElementType.DataModel, label: 'Test Data Model' },
-          { type: PathElementType.DataClass, label: 'Test Data Class' }
+          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' },
+          { type: PathElementType.DataClass, typeName: 'Data class', label: 'Test Data Class' }
         ]
       ],
       [
         'dm:Test Data Model|dc:Test Data Class|de:Test Data Element',
         [
-          { type: PathElementType.DataModel, label: 'Test Data Model' },
-          { type: PathElementType.DataClass, label: 'Test Data Class' },
-          { type: PathElementType.DataElement, label: 'Test Data Element' }
+          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' },
+          { type: PathElementType.DataClass, typeName: 'Data class', label: 'Test Data Class' },
+          { type: PathElementType.DataElement, typeName: 'Data element', label: 'Test Data Element' }
         ]
       ],
       [
@@ -76,6 +76,7 @@ describe('PathNameService', () => {
         [
           {
             type: PathElementType.DataModel,
+            typeName: 'Data model',
             label: 'Test Data Model',
             property: {
               name: 'description',
@@ -89,6 +90,7 @@ describe('PathNameService', () => {
         [
           {
             type: PathElementType.DataModel,
+            typeName: 'Data model',
             label: 'Test Data Model',
             property: {
               name: 'rule-representation',
@@ -102,10 +104,12 @@ describe('PathNameService', () => {
         [
           {
             type: PathElementType.DataModel,
+            typeName: 'Data model',
             label: 'Test Data Model'
           },
           {
             type: PathElementType.DataClass,
+            typeName: 'Data class',
             label: 'Test Data Class',
             property: {
               name: 'description',

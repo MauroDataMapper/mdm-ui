@@ -16,4 +16,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<p>path-name works!</p>
+<span *ngFor="let element of elements; let i = index">
+  <span *ngIf="i !== 0"> » </span>
+  <span class="path-element-type" [matTooltip]="element.typeName">{{element.type | uppercase}}</span>
+  {{element.label}}
+  <span *ngIf="element.property" class="path-property" matTooltip="Property">
+    <span *ngFor="let name of element.property.qualifiedName">
+      : {{name}}
+    </span>
+  </span>
+</span>
+<span *ngIf="suffixLabel" class="path-suffix" [matTooltip]="suffixTooltip">
+  <i [class]="suffixIcon"></i> {{suffixLabel}}
+</span>

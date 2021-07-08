@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { PathElement, PathElementType, PathProperty } from './path-name.model';
+import { PathElement, PathElementType, pathElementTypeNames, PathProperty } from './path-name.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +42,7 @@ export class PathNameService {
 
       const type = parts[0] as PathElementType;
       const label = parts[1];
+      const typeName = pathElementTypeNames.get(type);
 
       if (parts.length > 2) {
         const qualifiedName = parts.slice(2);
@@ -49,6 +50,7 @@ export class PathNameService {
 
         return {
           type,
+          typeName,
           label,
           property: {
             name,
@@ -59,6 +61,7 @@ export class PathNameService {
 
       return {
         type,
+        typeName,
         label
       };
     });

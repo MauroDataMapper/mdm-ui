@@ -16,7 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { PathElement } from './path-name.model';
+import { PathNameService } from './path-name.service';
 
 @Component({
   selector: 'mdm-path-name',
@@ -24,10 +26,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./path-name.component.scss']
 })
 export class PathNameComponent implements OnInit {
+  @Input() path: string;
+  @Input() suffixIcon?: string;
+  @Input() suffixLabel?: string;
+  @Input() suffixTooltip?: string;
 
-  constructor() { }
+  elements: PathElement[];
+
+  constructor(private pathNames: PathNameService) { }
 
   ngOnInit(): void {
+    this.elements = this.pathNames.parse(this.path);
   }
-
 }

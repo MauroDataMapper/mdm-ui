@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeItem, MergeType } from '@maurodatamapper/mdm-resources';
+import { MergeItem, MergeType, MergeUsed } from '@maurodatamapper/mdm-resources';
 import {
   CommittingMergeItem} from '../types/merge-item-type';
 
@@ -46,5 +46,44 @@ export class MergeItemSelectorComponent implements OnInit {
 
   public get mergeType() {
     return MergeType;
+  }
+
+  getBranchSelectedIcon(selected: MergeUsed) {
+    switch (selected) {
+      case MergeUsed.Source:
+        return 'fas fa-forward';
+      case MergeUsed.Target:
+        return 'fas fa-backward';
+      case MergeUsed.Mixed:
+        return 'fab fa-mixer';
+      default:
+        return '';
+    }
+  }
+
+  getBranchSelectedTooltip(selected: MergeUsed) {
+    switch (selected) {
+      case MergeUsed.Source:
+        return 'Take from Source';
+      case MergeUsed.Target:
+        return 'Take from Target';
+      case MergeUsed.Mixed:
+        return 'Mixed/combined content';
+      default:
+        return '';
+    }
+  }
+
+  getMergeTypeTooltip(type: MergeType) {
+    switch (type) {
+      case MergeType.Creation:
+        return 'Created';
+      case MergeType.Deletion:
+        return 'Deleted';
+      case MergeType.Modification:
+        return 'Modified';
+      default:
+        return '';
+    }
   }
 }

@@ -16,3 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+%path-element-part {
+  border-radius: 5%;
+  padding: 0px 2px;
+}
+
+.path-element-type {
+  @extend %path-element-part;
+  border-color: #885923;
+  font-weight: bold;
+}
+
+.path-property {
+  @extend %path-element-part;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.path-suffix {
+  @extend %path-element-part;
+  margin-left: 4px;
+  padding: 0px 4px;
+}

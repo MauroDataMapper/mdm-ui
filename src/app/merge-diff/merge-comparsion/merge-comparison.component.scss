@@ -16,37 +16,50 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+$changeColor: #e6ffe6;
 
 .sourceCol {
   height: 25vh;
   overflow-y: auto;
+  ins {
+    background-color: $changeColor;
+  }
 }
 
 .targetCol {
   @extend .sourceCol;
+  ins {
+    background-color: rgba(252, 9, 9, 0.364);
+  }
 }
 
-.textArea {
-  border: 1px black solid;
-}
+
 
 .spacer {
   flex: 1 1 auto;
 }
 
-.button {
-  padding-right: 100px;
-  font-size: small;
+.panel {
+  .button {
+    padding-right: 100px;
+    font-size: small;
+  }
+
+  .acceptButton {
+    padding-right: 70px;
+    font-size: small;
+  }
+
+  .deleteContent {
+    height: 25vh;
+    text-align: center;
+  }
+
+  .textArea {
+    border: 1px black solid;
+  }
+  
 }
 
-.deleteContent
-{
-  height: 25vh;
-  text-align: center;
-}
 
-.acceptButton
-{
-  padding-right: 70px;
-  font-size: small;
-}
+

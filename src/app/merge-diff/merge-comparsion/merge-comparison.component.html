@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="acceptButton"
         >
-        <i class="fas fa-check-square"></i>
+          <i class="fas fa-check-square"></i>
           Accept
         </button>
       </div>
@@ -122,11 +122,11 @@ SPDX-License-Identifier: Apache-2.0
         (mouseenter)="updateCurrentElement('sourceContent')"
         (scroll)="updateVerticalScroll($event)"
       >
-        <mdm-content-editor
-          [content]="mergeItem.sourceValue"
-          [inEditMode]="false"
+        <div
           *ngIf="mergeItem.sourceValue"
-        ></mdm-content-editor>
+          class="diff-view"
+          [innerHTML]="sourceText | safe: 'html'"
+        ></div>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -138,11 +138,11 @@ SPDX-License-Identifier: Apache-2.0
         (mouseenter)="updateCurrentElement('targetContent')"
         (scroll)="updateVerticalScroll($event)"
       >
-        <mdm-content-editor
-          [content]="mergeItem.targetValue"
-          [inEditMode]="false"
+        <div
           *ngIf="mergeItem.targetValue"
-        ></mdm-content-editor>
+          class="diff-view"
+          [innerHTML]="targetText | safe: 'html'"
+        ></div>
       </div>
     </div>
   </div>

@@ -31,7 +31,8 @@ import {
   ElementRef,
   ViewChild,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ViewEncapsulation
 } from '@angular/core';
 import { FullMergeItem } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,11 +43,13 @@ import {
   ConflictEditorModalData,
   ConflictEditorModalResult
 } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.model';
+import { StringConflictService } from '../services/string-conflict.service';
 
 @Component({
   selector: 'mdm-merge-comparison',
   templateUrl: './merge-comparison.component.html',
-  styleUrls: ['./merge-comparison.component.scss']
+  styleUrls: ['./merge-comparison.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MergeComparisonComponent implements OnInit, OnChanges {
   @ViewChild('sourceContent') sourceContent: ElementRef;
@@ -64,8 +67,10 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
 
   sourceUsed: string;
   committingContent: string;
+  sourceText: string;
+  targetText: string;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private stringConflict : StringConflictService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,6 +90,9 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
           this.sourceUsed = 'Source';
           break;
       }
+    }else{
+      this.targetText = this.stringConflict.getDiffViewHtml(this.mergeItem.sourceValue,this.mergeItem.targetValue);
+      this.sourceText = this.stringConflict.getDiffViewHtml(this.mergeItem.targetValue,this.mergeItem.sourceValue);
     }
   }
 

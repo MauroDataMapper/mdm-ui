@@ -220,7 +220,7 @@ export class DataElementComponent
         resource.dataType = item.value as DataTypeReference;
       }
       else {
-        resource[item.displayName.toLocaleLowerCase()] = item.value;
+        resource[item.propertyName] = item.value;
       }
     });
 

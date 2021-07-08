@@ -166,7 +166,7 @@ export class DataTypeComponent
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
-      resource[item.displayName.toLocaleLowerCase()] = item.value;
+      resource[item.propertyName] = item.value;
     });
 
     this.resourcesService.dataType

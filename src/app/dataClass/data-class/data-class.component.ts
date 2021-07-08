@@ -214,7 +214,7 @@ export class DataClassComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       } else {
-        resource[item.displayName.toLocaleLowerCase()] = item.value;
+        resource[item.propertyName] = item.value;
       }
     });
 

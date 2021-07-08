@@ -17,14 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { PathElement, PathElementType, pathElementTypeNames, PathProperty } from './path-name.model';
+import { PathElement, PathElementType, pathElementTypeNames } from './path-name.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PathNameService {
   private readonly elementSeparator = '|';
-  private readonly partSeparator = ':'
+  private readonly partSeparator = ':';
 
   constructor() { }
 

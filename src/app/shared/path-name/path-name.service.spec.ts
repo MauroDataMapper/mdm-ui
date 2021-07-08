@@ -140,7 +140,7 @@ describe('PathNameService', () => {
       'when parsing %p then an error is thrown',
       (path: string) => {
         expect(() => {
-          service.parse(path)
+          service.parse(path);
         }).toThrow();
       });
   });

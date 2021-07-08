@@ -91,8 +91,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   searchText: any;
 
-  private unsubscribe$ = new Subject();
-
   levels: MdmTreeLevelManager = {
     current: 0,
     currentFocusedElement: null,
@@ -144,7 +142,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
               };
               this.filteredModels = Object.assign({}, curModel);
               this.levels.current = 1;
-            });        
+            });
       }else{
         this.resources.tree
         .getFolder(
@@ -176,6 +174,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
   };
+
+  private unsubscribe$ = new Subject();
 
   constructor(
     private sharedService: SharedService,

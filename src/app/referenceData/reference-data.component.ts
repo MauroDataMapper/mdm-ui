@@ -145,7 +145,7 @@ export class ReferenceDataComponent
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
-      resource[item.displayName.toLocaleLowerCase()] = item.value;
+      resource[item.propertyName] = item.value;
     });
 
 

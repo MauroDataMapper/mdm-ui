@@ -40,7 +40,12 @@ SPDX-License-Identifier: Apache-2.0
               'fa-pen-square': item.type === mergeType.Modification
             }"
           ></i>
-          {{ item.path }} {{ item.branchSelected | uppercase }}
+          <mdm-path-name
+          [path]="item.path"
+          [suffixLabel]="item.branchNameSelected | uppercase"
+          [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
+          [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
+        ></mdm-path-name>
         </mat-list-item>
       </mat-list>
     </div>

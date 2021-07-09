@@ -16,14 +16,5 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<select
-  class="form-control mdm-branch-selector"
-  matTooltip="Switch to another branch"
-  [(ngModel)]="currentVersionId"
-  (ngModelChange)="currentVersionIdChanged()"
-  [disabled]="disabled"
->
-  <option [value]="item.id" *ngFor="let item of versionList">
-    {{ item.displayName ? item.displayName : 'main' }}
-  </option>
-</select>
+
+<i matTooltip="{domainType}" class="fas" [ngClass]="style"></i>

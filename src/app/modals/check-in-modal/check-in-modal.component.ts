@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MergeType } from '@maurodatamapper/mdm-resources';
+import { MergeType, MergeUsed } from '@maurodatamapper/mdm-resources';
 import { FullMergeItem } from '@mdm/merge-diff/types/merge-item-type';
 import { SharedService } from '@mdm/services';
 import { CheckinModelPayload } from './check-in-modal-payload';
@@ -47,6 +47,32 @@ export class CheckInModalComponent implements OnInit {
     this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
     this.mergeItems = this.data.mergeItems ?? Array<FullMergeItem>();
     this.isV2 = this.sharedService.features.useMergeUiV2;
+  }
+
+  getBranchSelectedIcon(selected: MergeUsed) {
+    switch (selected) {
+      case MergeUsed.Source:
+        return 'fas fa-file-export';
+      case MergeUsed.Target:
+        return 'fas fa-file-import';
+      case MergeUsed.Mixed:
+        return 'fab fa-mixer';
+      default:
+        return '';
+    }
+  }
+
+  getBranchSelectedTooltip(selected: MergeUsed) {
+    switch (selected) {
+      case MergeUsed.Source:
+        return 'Take from Source';
+      case MergeUsed.Target:
+        return 'Take from Target';
+      case MergeUsed.Mixed:
+        return 'Mixed/combined content';
+      default:
+        return '';
+    }
   }
 
   public get mergeType()

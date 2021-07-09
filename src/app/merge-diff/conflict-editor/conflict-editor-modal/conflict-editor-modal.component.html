@@ -27,9 +27,9 @@ SPDX-License-Identifier: Apache-2.0
         matTooltip="Help"
       ></i>
     </h4>
-    Path: {{ data.item.path }}
   </div>
   <div class="modal-body pxy-2">
+    <mdm-path-name [path]="data.item.path"></mdm-path-name>
     <mdm-string-conflict-editor
       [source]="data.source"
       [target]="data.target"

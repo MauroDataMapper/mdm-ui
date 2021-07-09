@@ -27,11 +27,12 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
-import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { EMPTY, fromEvent } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
-import { TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { Term, TermIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -63,6 +64,7 @@ export class MultipleTermsSelectorComponent {
     loading: false
   };
   loading = false;
+  addAllTerms = true;
 
   searchInputTerms: ElementRef;
   currentRecord: number;
@@ -106,7 +108,8 @@ export class MultipleTermsSelectorComponent {
     private resources: MdmResourcesService,
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef,
-    private gridService: GridService
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService
   ) {
     this.loadTerminologies();
   }
@@ -116,7 +119,7 @@ export class MultipleTermsSelectorComponent {
       this.selectorSection.terminologies = data.body.items;
     });
   };
-  onTerminologySelect = (terminology: any) => {
+  onTerminologySelect = (terminology: Terminology) => {
     this.dataSource = new MatTableDataSource<any>(null);
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
@@ -126,9 +129,11 @@ export class MultipleTermsSelectorComponent {
       this.currentRecord = 0;
     }
   };
+
   runTermSearch = () => {
     this.fetch(40, 0);
   };
+
   loadAllTerms = (terminology, pageSize, offset) => {
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
@@ -307,9 +312,29 @@ export class MultipleTermsSelectorComponent {
       this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
   };
-  addSelectedTerms = terms => {
-    if (this.onAddButtonClick) {
-      this.onAddButtonClick(terms);
+
+  addSelectedTerms() {
+    if (!this.onAddButtonClick) {
+      return;
     }
+
+    if (!this.addAllTerms) {
+      this.onAddButtonClick(this.selectorSection.selectedTermsArray);
+      return;
+    }
+
+    const options = this.gridService.constructOptions(this.totalItemCount);
+
+    this.resources.terms
+      .list(this.selectorSection.selectedTerminology.id, options)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting all the terms.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: TermIndexResponse) => {
+        this.onAddButtonClick(response.body.items);
+      });
   };
 }

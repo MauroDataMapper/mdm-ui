@@ -64,7 +64,7 @@ export class MultipleTermsSelectorComponent {
     loading: false
   };
   loading = false;
-  addAllTerms = true;
+  addAllTerms = false;
 
   searchInputTerms: ElementRef;
   currentRecord: number;

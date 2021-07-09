@@ -215,19 +215,19 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
 
   updateOrder(item, newPosition) {
     const resource: DataClass = {
-      ...item,
+      label: item.data.label,
+      domainType: item.data.domainType,
       index: newPosition
     };
-
     if (!this.parentDataClass.id) {
       this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(() => {
-        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+        this.messageHandler.showSuccess('Data Class reordered successfully.');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     } else {
       this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.data.id, resource).subscribe(() => {
-        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+        this.messageHandler.showSuccess('Data Class reordered successfully.');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });

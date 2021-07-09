@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 <div class="table-responsive">
-  <table mat-table #tableDataElements matSort [dataSource]="dataElementRecords" class="mdm--mat-table table-striped">
+  <table mat-table #tableDataElements matSort  cdkDropList (cdkDropListDropped)="dropItem($event)" [dataSource]="dataElementRecords" class="mdm--mat-table table-striped">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="max-width: 35%;width: 35%;" columnName="name">
          <span [hidden]="!hideFilters">Name</span>
@@ -115,7 +115,7 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'mdm--active-row ' : row.checked }"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row" [ngClass]="{ 'mdm--active-row ' : row.checked }"></tr>
   </table>
 </div>
 

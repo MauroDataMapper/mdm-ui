@@ -28,6 +28,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DataClass } from '@maurodatamapper/mdm-resources';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
    selector: 'mdm-data-classes-list',
@@ -66,7 +69,8 @@ export class DataClassesListComponent implements AfterViewInit {
       private stateHandler: StateHandlerService,
       private changeRef: ChangeDetectorRef,
       private dialog: MatDialog,
-      private gridService: GridService
+      private gridService: GridService,
+      private messageHandler: MessageHandlerService
    ) { }
    ngAfterViewInit() {
 
@@ -84,7 +88,7 @@ export class DataClassesListComponent implements AfterViewInit {
       this.changeRef.detectChanges();
    }
 
-   loadDataClasses = () => {
+   loadDataClasses() {
       merge(this.sort?.sortChange, this.paginator?.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
          this.isLoadingResults = true;
          return this.dataClassesFetch(this.paginator?.pageSize, this.paginator?.pageOffset, this.sort?.active, this.sort?.direction, this.filter);
@@ -100,7 +104,7 @@ export class DataClassesListComponent implements AfterViewInit {
       });
    };
 
-   openEdit = dataClass => {
+   openEdit(dataClass :DataClass){
       if (!dataClass || (dataClass && !dataClass.id)) {
          return '';
       }
@@ -111,7 +115,7 @@ export class DataClassesListComponent implements AfterViewInit {
       }, null);
    };
 
-   addDataClass = () => {
+   addDataClass() {
       this.stateHandler.Go('newDataClass', {
          parentDataModelId: this.parentDataModel.id,
          parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null,
@@ -119,7 +123,7 @@ export class DataClassesListComponent implements AfterViewInit {
       }, null);
    };
 
-   applyFilter = () => {
+   applyFilter() {
       const filter = {};
       this.filters.forEach((x: any) => {
          const name = x.nativeElement.name;
@@ -132,7 +136,7 @@ export class DataClassesListComponent implements AfterViewInit {
       this.filterEvent.emit(filter);
    };
 
-   filterClick = () => {
+   filterClick() {
       this.hideFilters = !this.hideFilters;
    };
 
@@ -143,12 +147,12 @@ export class DataClassesListComponent implements AfterViewInit {
       return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
    }
 
-   onChecked = () => {
+   onChecked() {
       this.dataClassRecords.forEach(x => (x.checked = this.checkAllCheckbox));
       this.listChecked();
    };
 
-   listChecked = () => {
+   listChecked() {
       let count = 0;
       for (const value of Object.values(this.dataClassRecords)) {
          if (value.checked) {
@@ -158,7 +162,43 @@ export class DataClassesListComponent implements AfterViewInit {
       this.bulkActionsVisible = count;
    };
 
-   bulkEdit = () => {
+   // Drag and drop
+  dropItem(event: CdkDragDrop<any[]>) {
+   moveItemInArray(
+     this.dataClassRecords,
+     event.previousIndex,
+     event.currentIndex
+   );
+   const prevRec = this.dataClassRecords[event.currentIndex];
+   if (prevRec === undefined) {
+     return;
+   }
+   this.updateOrder(event.item, event.currentIndex);
+   this.table.renderRows();
+ }
+
+ updateOrder(item, newPosition) {
+   const resource: DataClass = {
+     label: item.data.label,
+     domainType: item.data.domainType,
+     index: newPosition
+   };
+   if (!this.parentDataClass.id) {
+      this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reordered successfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    } else {
+      this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reordered successfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    }
+ }
+
+   bulkEdit() {
       const dataElementIdLst = [];
       this.dataClassRecords.forEach(record => {
          if (record.checked) {
@@ -168,7 +208,7 @@ export class DataClassesListComponent implements AfterViewInit {
             });
          }
       });
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise<void>((resolve, reject) => {
          const dialog = this.dialog.open(BulkEditModalComponent, {
             data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
             panelClass: 'bulk-edit-modal'
@@ -202,7 +242,7 @@ export class DataClassesListComponent implements AfterViewInit {
             });
          }
       });
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise<void>((resolve, reject) => {
          const dialog = this.dialog.open(BulkDeleteModalComponent, {
             data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
             panelClass: 'bulk-delete-modal'

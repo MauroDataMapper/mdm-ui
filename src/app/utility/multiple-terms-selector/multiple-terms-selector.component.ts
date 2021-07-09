@@ -41,10 +41,13 @@ import { MessageHandlerService } from '@mdm/services';
 })
 export class MultipleTermsSelectorComponent {
   @Input() hideAddButton = true;
+
   @Output() selectedTermsChange = new EventEmitter<any[]>();
   @Output() addingTerms = new EventEmitter<Term[]>();
+
   @ViewChild('searchInputTerms', { static: true })
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource<Term>();
+
   pageSize = 40;
   displayedColumns: string[] = ['label'];
   selectorSection = {
@@ -120,7 +123,7 @@ export class MultipleTermsSelectorComponent {
   }
 
   onTerminologySelect(terminology: Terminology) {
-    this.dataSource = new MatTableDataSource<any>(null);
+    this.dataSource = new MatTableDataSource<Term>(null);
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
       this.fetch(40, 0);
@@ -134,13 +137,13 @@ export class MultipleTermsSelectorComponent {
     this.fetch(40, 0);
   }
 
-  loadAllTerms(terminology, pageSize, offset) {
+  loadAllTerms(terminology: Terminology, pageSize: number, offset: number) {
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
     const options = this.gridService.constructOptions(pageSize, offset);
     this.selectorSection.loading = true;
 
-    this.resources.terms.list(terminology.id, options).subscribe(result => {
+    this.resources.terms.list(terminology.id, options).subscribe((result: TermIndexResponse) => {
       // make check=true if element is already selected
       result.body.items.forEach(item => {
         item.terminology = terminology;
@@ -166,7 +169,7 @@ export class MultipleTermsSelectorComponent {
     });
   }
 
-  fetch(pageSize, offset) {
+  fetch(pageSize: number, offset: number) {
     if (this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology) {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
       return this.loadAllTerms(this.selectorSection.selectedTerminology, pageSize, offset);

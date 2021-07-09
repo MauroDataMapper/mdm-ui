@@ -41,8 +41,9 @@ $changeColor: #e6ffe6;
 
 .panel {
   .button {
-    padding-right: 100px;
-    font-size: small;
+    padding-right: 10px !important;
+    font-size: small  !important;
+    width: fit-content !important;
   }
 
   .acceptButton {
@@ -57,6 +58,10 @@ $changeColor: #e6ffe6;
 
   .textArea {
     border: 1px black solid;
+  }
+
+  .branchHeader {
+    width: 150px;
   }
   
 }

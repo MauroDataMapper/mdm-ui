@@ -70,7 +70,7 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
         <div class="text-muted">
           <small>
-            <i class="fas fa-forward" matTooltip="Source Branch"></i>
+            <i class="fas fa-file-export" matTooltip="{{ source.branchName }}"></i>
             <span
               ><strong>Source Branch : {{ source.branchName }} </strong></span
             >
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div *ngIf="targetLoaded" class="text-muted">
           <small>
-            <i class="fas fa-backward" matTooltip="Target Branch"></i>
+            <i class="fas fa-file-import" matTooltip="{{target.branchName}}"></i>
             <span><strong>Target Branch : </strong></span>
             <span>
               <mdm-branch-selector
@@ -94,7 +94,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div>
-    <div class="tabContainer" fxLayout="row">
+    <div class="tabContainer panel panel-default mdm--shadow-block" fxLayout="row" >
       <div class="full-width" style="clear: both">
         <mat-tab-group
           [selectedIndex]="activeTab"
@@ -113,8 +113,8 @@ SPDX-License-Identifier: Apache-2.0
                   (click)="selectAll(MergeUsed.Source)"
                   class="button"
                 >
-                  <i class="fas fa-forward" aria-hidden="true"></i>
-                  Use All Source
+                  <i class="fas fa-file-export" aria-hidden="true"></i>
+                  Use all of {{source.branchName}}
                 </button>
                 <button
                   *ngIf="changesList.length > 0"
@@ -125,8 +125,8 @@ SPDX-License-Identifier: Apache-2.0
                   (click)="selectAll(MergeUsed.Target)"
                   class="button"
                 >
-                  <i class="fas fa-backward" aria-hidden="true"></i>
-                  Use All Target
+                  <i class="fas fa-file-import" aria-hidden="true"></i>
+                  Use all of {{target.branchName}}
                 </button>
               </mat-toolbar>
 

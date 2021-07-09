@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MergeItem, MergeType, MergeUsed } from '@maurodatamapper/mdm-resources';
 import {
-  CommittingMergeItem} from '../types/merge-item-type';
+   FullMergeItem} from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
@@ -29,7 +29,7 @@ import {
 })
 export class MergeItemSelectorComponent implements OnInit {
   @Output() selectedMergeItemChanged = new EventEmitter<MergeItem>();
-  @Input() mergeItems : Array<MergeItem & CommittingMergeItem>;
+  @Input() mergeItems : Array<FullMergeItem>;
   @Input() isCommitting: boolean;
 
   changesList = new Array<MergeItem>();
@@ -51,9 +51,9 @@ export class MergeItemSelectorComponent implements OnInit {
   getBranchSelectedIcon(selected: MergeUsed) {
     switch (selected) {
       case MergeUsed.Source:
-        return 'fas fa-forward';
+        return 'fas fa-file-export';
       case MergeUsed.Target:
-        return 'fas fa-backward';
+        return 'fas fa-file-import';
       case MergeUsed.Mixed:
         return 'fab fa-mixer';
       default:

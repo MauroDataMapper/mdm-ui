@@ -72,8 +72,9 @@ SPDX-License-Identifier: Apache-2.0
   }
   
   .button {
-    padding-right: 120px;
-    font-size: small;
+    padding-right: 10px !important;
+    font-size: small  !important;
+    width: fit-content !important;
   }
 
   .cancelButton

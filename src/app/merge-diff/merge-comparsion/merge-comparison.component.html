@@ -45,8 +45,8 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="button"
         >
-          <i class="fas fa-forward" aria-hidden="true"></i>
-          Use Source
+          <i class="fas fa-file-export" aria-hidden="true"></i>
+          Use {{ source.branchName }}
         </button>
         <button
           mat-icon-button
@@ -57,8 +57,8 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="button"
         >
-          <i class="fas fa-backward" aria-hidden="true"></i>
-          Use Target
+          <i class="fas fa-file-import" aria-hidden="true"></i>
+          Use {{ target.branchName }}
         </button>
         <button
           mat-icon-button
@@ -96,26 +96,26 @@ SPDX-License-Identifier: Apache-2.0
           <i class="fas fa-unlink" aria-hidden="true"></i>
           Unlink Scrolls
         </button>
-        <button
-          mat-icon-button
-          type="button"
-          matToolTip="Cancel commit"
-          aria-label="Cancel commit"
-          *ngIf="isCommitting"
-          (click)="cancelCommit()"
-          class="button"
-        >
-          <i class="fas fa-edit" aria-hidden="true"></i>
-          Cancel Commit
-        </button>
       </div>
+      <button
+        mat-icon-button
+        type="button"
+        matToolTip="Cancel commit"
+        aria-label="Cancel commit"
+        *ngIf="isCommitting"
+        (click)="cancelCommit()"
+        class="button"
+      >
+        <i class="fas fa-edit" aria-hidden="true"></i>
+        Cancel Commit
+      </button>
     </mat-toolbar>
   </div>
 </div>
 <div *ngIf="mergeItem.type === MergeType.Modification">
   <div *ngIf="!isCommitting">
     <div fxLayout="row">
-      <h4>Source</h4>
+      <h4>{{ source.branchName }}</h4>
       <div
         class="col sourceCol"
         #sourceContent
@@ -131,7 +131,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <mat-divider></mat-divider>
     <div style="margin-top: 10px" fxLayout="row">
-      <h4>Target</h4>
+      <h4 class="branchHeader">{{ target.branchName }}</h4>
       <div
         class="col targetCol"
         #targetContent
@@ -147,7 +147,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div *ngIf="isCommitting" style="margin-top: 10px" fxLayout="row">
-    <h4>{{ sourceUsed }}</h4>
+    <h4 class="branchHeader">{{ sourceUsed }}</h4>
     <div
       class="col targetCol"
       #targetContent
@@ -165,14 +165,14 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="mergeItem.type === MergeType.Deletion">
   <div class="deleteContent">
     <h4 style="margin-top: 75px; color: red">
-      {{ mergeItem.path }} will be deleted
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be deleted
     </h4>
   </div>
 </div>
 <div *ngIf="mergeItem.type === MergeType.Creation">
   <div class="deleteContent">
     <h4 style="margin-top: 75px; color: green">
-      {{ mergeItem.path }} will be created
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be created
     </h4>
   </div>
 </div>

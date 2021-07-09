@@ -211,6 +211,7 @@ export class MergeDiffContainerComponent implements OnInit {
           this.changesList.push(mergeItem);
         } else {
           mergeItem.branchSelected = MergeUsed.Source;
+          mergeItem.branchNameSelected = this.source.branchName;
           this.committingList.push(mergeItem);
         }
       });
@@ -238,11 +239,16 @@ export class MergeDiffContainerComponent implements OnInit {
     this.changesList.forEach((item) => {
       if (item.type === MergeType.Modification) {
         item.branchSelected = branchUsed;
+        item.branchNameSelected =
+          branchUsed === MergeUsed.Source
+            ? this.source.branchName
+            : this.target.branchName;
         this.committingList.push(item);
         return;
       }
       if (branchUsed === MergeUsed.Source) {
         item.branchSelected = branchUsed;
+        item.branchNameSelected = this.source.branchName;
         this.committingList.push(item);
       } else {
         tempArray.push(item);
@@ -279,6 +285,7 @@ export class MergeDiffContainerComponent implements OnInit {
       this.selectedItem = null;
       this.committingList.splice(index, 1);
       item.branchSelected = null;
+      item.branchNameSelected = null;
       this.changesList.push(item);
       this.activeTab = 0;
       this.setSelectedMergeItem(item, false);
@@ -289,6 +296,22 @@ export class MergeDiffContainerComponent implements OnInit {
     const index = this.changesList.findIndex((x) => x === item);
     if (index >= 0) {
       this.changesList.splice(index, 1);
+
+      switch (item.branchSelected) {
+        case MergeUsed.Source:
+          item.branchNameSelected = this.source.branchName;
+          break;
+        case MergeUsed.Target:
+          item.branchNameSelected = this.target.branchName;
+          break;
+        case MergeUsed.Mixed:
+          item.branchNameSelected = 'MIXED';
+          break;
+
+        default:
+          break;
+      }
+
       this.committingList.push(item);
       this.selectedItem = null;
     }

@@ -109,17 +109,17 @@ export class MultipleTermsSelectorComponent {
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef,
     private gridService: GridService,
-    private messageHandler: MessageHandlerService
-  ) {
+    private messageHandler: MessageHandlerService) {
     this.loadTerminologies();
   }
 
-  loadTerminologies = () => {
+  loadTerminologies() {
     this.resources.terminology.list().subscribe((data: TerminologyIndexResponse) => {
       this.selectorSection.terminologies = data.body.items;
     });
-  };
-  onTerminologySelect = (terminology: Terminology) => {
+  }
+
+  onTerminologySelect(terminology: Terminology) {
     this.dataSource = new MatTableDataSource<any>(null);
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
@@ -128,13 +128,13 @@ export class MultipleTermsSelectorComponent {
       this.totalItemCount = 0;
       this.currentRecord = 0;
     }
-  };
+  }
 
-  runTermSearch = () => {
+  runTermSearch() {
     this.fetch(40, 0);
-  };
+  }
 
-  loadAllTerms = (terminology, pageSize, offset) => {
+  loadAllTerms(terminology, pageSize, offset) {
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
     const options = this.gridService.constructOptions(pageSize, offset);
@@ -164,8 +164,9 @@ export class MultipleTermsSelectorComponent {
         this.loading = false;
       }
     });
-  };
-  fetch = (pageSize, offset) => {
+  }
+
+  fetch(pageSize, offset) {
     if (this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology) {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
       return this.loadAllTerms(this.selectorSection.selectedTerminology, pageSize, offset);
@@ -242,7 +243,8 @@ export class MultipleTermsSelectorComponent {
       }
     }
   }
-  calculateDisplayedSoFar = result => {
+
+  calculateDisplayedSoFar(result) {
     this.selectorSection.searchResultTotal = result.body.count;
     if (result.body.count >= this.selectorSection.searchResultPageSize) {
       const total =
@@ -256,8 +258,9 @@ export class MultipleTermsSelectorComponent {
     } else {
       this.selectorSection.searchResultDisplayedSoFar = result.body.count;
     }
-  };
-  termToggle = $item => {
+  }
+
+  termToggle($item) {
     if ($item.checked) {
       this.selectorSection.selectedTerms[$item.id] = $item;
       this.selectorSection.selectedTermsArray.push($item);
@@ -283,9 +286,9 @@ export class MultipleTermsSelectorComponent {
     }
 
     this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+  }
 
-  };
-  removeTerm = ($item) => {
+  removeTerm($item) {
     let i = this.selectorSection.selectedTermsArray.length - 1;
     while (i >= 0) {
       if (this.selectorSection.selectedTermsArray[i].id === $item.id) {
@@ -311,7 +314,7 @@ export class MultipleTermsSelectorComponent {
     if (this.selectedTermsChange) {
       this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
-  };
+  }
 
   addSelectedTerms() {
     if (!this.addAllTerms) {
@@ -332,5 +335,5 @@ export class MultipleTermsSelectorComponent {
       .subscribe((response: TermIndexResponse) => {
         this.addingTerms.emit(response.body.items);
       });
-  };
+  }
 }

@@ -35,7 +35,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
-import { CatalogueItemDomainType, CodeSetDetail, ModelUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, CodeSetDetail, ModelUpdatePayload, Term } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 
 @Component({
@@ -170,7 +170,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     return;
   };
 
-  addTerms(terms) {
+  addTerms(terms: Term[]) {
     this.codeSet.terms = this.records;
     // current terms
     const currentTerms = this.codeSet.terms.map((term) => {

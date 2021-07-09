@@ -42,7 +42,7 @@ import { MessageHandlerService } from '@mdm/services';
 export class MultipleTermsSelectorComponent {
   @Input() hideAddButton = true;
   @Output() selectedTermsChange = new EventEmitter<any[]>();
-  @Input() onAddButtonClick: any;
+  @Output() addingTerms = new EventEmitter<Term[]>();
   @ViewChild('searchInputTerms', { static: true })
   dataSource = new MatTableDataSource();
   pageSize = 40;
@@ -314,12 +314,8 @@ export class MultipleTermsSelectorComponent {
   };
 
   addSelectedTerms() {
-    if (!this.onAddButtonClick) {
-      return;
-    }
-
     if (!this.addAllTerms) {
-      this.onAddButtonClick(this.selectorSection.selectedTermsArray);
+      this.addingTerms.emit(this.selectorSection.selectedTermsArray);
       return;
     }
 
@@ -334,7 +330,7 @@ export class MultipleTermsSelectorComponent {
         })
       )
       .subscribe((response: TermIndexResponse) => {
-        this.onAddButtonClick(response.body.items);
+        this.addingTerms.emit(response.body.items);
       });
   };
 }

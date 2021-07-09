@@ -170,7 +170,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     return;
   };
 
-  addTerms = (terms: Term[]) => {
+  addTerms(terms: Term[]) {
     this.codeSet.terms = this.records;
     // current terms
     const currentTerms = this.codeSet.terms.map((term) => {

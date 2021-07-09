@@ -28,7 +28,14 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
-import { catchError, debounceTime, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  finalize,
+  map,
+  switchMap,
+  takeUntil
+} from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
@@ -39,8 +46,13 @@ import {
   ContainerDomainType,
   isContainerDomainType,
   MdmTreeItem,
-  MdmTreeItemListResponse} from '@maurodatamapper/mdm-resources';
-import { mapCatalogueDomainTypeToContainer, MdmTreeLevelManager } from './models.model';
+  MdmTreeItemListResponse,
+  ModelDomainType
+} from '@maurodatamapper/mdm-resources';
+import {
+  mapCatalogueDomainTypeToContainer,
+  MdmTreeLevelManager
+} from './models.model';
 
 @Component({
   selector: 'mdm-models',
@@ -79,8 +91,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   searchText: any;
 
-  private unsubscribe$ = new Subject();
-
   levels: MdmTreeLevelManager = {
     current: 0,
     currentFocusedElement: null,
@@ -95,37 +105,77 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.levels.currentFocusedElement = node;
       }
 
-      const containerType = mapCatalogueDomainTypeToContainer(this.levels.currentFocusedElement.domainType);
+      const containerType = mapCatalogueDomainTypeToContainer(
+        this.levels.currentFocusedElement.domainType
+      );
       if (containerType) {
         this.reloading = true;
 
+        if (
+          containerType !== ModelDomainType.Folders &&
+          containerType !== ModelDomainType.VersionedFolders
+        ) {
+          this.resources.tree
+            .get(
+              containerType,
+              this.levels.currentFocusedElement.domainType,
+              this.levels.currentFocusedElement.id
+            )
+            .pipe(
+              catchError((error) => {
+                this.messageHandler.showError(
+                  'There was a problem focusing the tree element.',
+                  error
+                );
+                return EMPTY;
+              }),
+              finalize(() => (this.reloading = false))
+            )
+            .subscribe((response: MdmTreeItemListResponse) => {
+              const children = response.body;
+              this.levels.currentFocusedElement.children = children;
+              this.levels.currentFocusedElement.open = true;
+              this.levels.currentFocusedElement.selected = true;
+              const curModel = {
+                children: [this.levels.currentFocusedElement],
+                isRoot: true
+              };
+              this.filteredModels = Object.assign({}, curModel);
+              this.levels.current = 1;
+            });
+      }else{
         this.resources.tree
-          .get(
-            containerType,
-            this.levels.currentFocusedElement.domainType,
-            this.levels.currentFocusedElement.id)
-          .pipe(
-            catchError(error => {
-              this.messageHandler.showError('There was a problem focusing the tree element.', error);
-              return EMPTY;
-            }),
-            finalize(() => this.reloading = false)
-          )
-          .subscribe((response: MdmTreeItemListResponse) => {
-            const children = response.body;
-            this.levels.currentFocusedElement.children = children;
-            this.levels.currentFocusedElement.open = true;
-            this.levels.currentFocusedElement.selected = true;
-            const curModel = {
-              children: [this.levels.currentFocusedElement],
-              isRoot: true
-            };
-            this.filteredModels = Object.assign({}, curModel);
-            this.levels.current = 1;
-          });
+        .getFolder(
+          this.levels.currentFocusedElement.id
+        )
+        .pipe(
+          catchError((error) => {
+            this.messageHandler.showError(
+              'There was a problem focusing the tree element.',
+              error
+            );
+            return EMPTY;
+          }),
+          finalize(() => (this.reloading = false))
+        )
+        .subscribe((response: MdmTreeItemListResponse) => {
+          const children = response.body;
+          this.levels.currentFocusedElement.children = children;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
+          const curModel = {
+            children: [this.levels.currentFocusedElement],
+            isRoot: true
+          };
+          this.filteredModels = Object.assign({}, curModel);
+          this.levels.current = 1;
+        });
       }
     }
+  }
   };
+
+  private unsubscribe$ = new Subject();
 
   constructor(
     private sharedService: SharedService,
@@ -139,7 +189,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
     private modelTree: ModelTreeService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.title.setTitle('Models');
@@ -232,38 +282,46 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.modelTree
       .getLocalCatalogueTreeNodes(noCache)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the model tree.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the model tree.',
+            error
+          );
           return EMPTY;
         }),
-        switchMap(local => {
-          return this.modelTree
-            .getSubscribedCatalogueTreeNodes()
-            .pipe(
-              map(subscribed => {
-                if ((subscribed?.length ?? 0) === 0) {
-                  // Display only local catalogue folders/models
-                  return this.modelTree.createRootNode(local);
-                }
-
-                // Combine sub tree nodes with new parent nodes to build up roots
-                const localParent = this.modelTree.createLocalCatalogueNode(local);
-                const externalParent = this.modelTree.createExternalCataloguesNode(
-                  subscribed
-                );
-                return this.modelTree.createRootNode([localParent, externalParent]);
-              }),
-              catchError(() => {
-                this.messageHandler.showWarning('There was a problem loading the model tree with subscribed catalogues. Showing only local instance models.');
-
+        switchMap((local) => {
+          return this.modelTree.getSubscribedCatalogueTreeNodes().pipe(
+            map((subscribed) => {
+              if ((subscribed?.length ?? 0) === 0) {
                 // Display only local catalogue folders/models
-                return of(this.modelTree.createRootNode(local));
-              }),
-            );
+                return this.modelTree.createRootNode(local);
+              }
+
+              // Combine sub tree nodes with new parent nodes to build up roots
+              const localParent = this.modelTree.createLocalCatalogueNode(
+                local
+              );
+              const externalParent = this.modelTree.createExternalCataloguesNode(
+                subscribed
+              );
+              return this.modelTree.createRootNode([
+                localParent,
+                externalParent
+              ]);
+            }),
+            catchError(() => {
+              this.messageHandler.showWarning(
+                'There was a problem loading the model tree with subscribed catalogues. Showing only local instance models.'
+              );
+
+              // Display only local catalogue folders/models
+              return of(this.modelTree.createRootNode(local));
+            })
+          );
         }),
-        finalize(() => this.reloading = false)
+        finalize(() => (this.reloading = false))
       )
-      .subscribe(node => {
+      .subscribe((node) => {
         this.allModels = node;
         this.filteredModels = node;
       });
@@ -288,9 +346,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
   }
 
   onNodeDbClick(node: MdmTreeItem) {
-    if (isContainerDomainType(node.domainType)
-      || node.domainType === CatalogueItemDomainType.DataModel
-      || node.domainType === CatalogueItemDomainType.Terminology) {
+    if (
+      isContainerDomainType(node.domainType) ||
+      node.domainType === CatalogueItemDomainType.DataModel ||
+      node.domainType === CatalogueItemDomainType.Terminology
+    ) {
       this.levels.focusTreeItem(node);
     }
   }
@@ -320,17 +380,22 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.modelTree
       .createNewFolder({ allowVersioning: true })
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem creating the Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem creating the Folder.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         const item = response.body;
         this.filteredModels.children.push(item);
 
         this.stateHandler.Go(item.domainType, { id: item.id, edit: false });
-        this.messageHandler.showSuccess(`Folder ${item.label} created successfully.`);
+        this.messageHandler.showSuccess(
+          `Folder ${item.label} created successfully.`
+        );
         this.folder = '';
         this.loadModelsTree();
       });
@@ -489,12 +554,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.modelTree
       .createNewClassifier()
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('Classification name can not be empty', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'Classification name can not be empty',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.messageHandler.showSuccess('Classifier saved successfully.');
         this.stateHandler.Go('classification', { id: response.body.id });
         this.loadClassifiers();

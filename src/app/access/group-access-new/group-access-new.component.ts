@@ -60,7 +60,7 @@ export class GroupAccessNewComponent implements OnInit {
 
   ngOnInit() {
     this.buildGroups();
-    this.loadAllGroups(0, 0);
+    this.loadAllGroups();
 
     this.dataSource = new MatTableDataSource(this.groups);
     this.dataSource.sort = this.sort;
@@ -78,7 +78,7 @@ export class GroupAccessNewComponent implements OnInit {
     };
   }
 
-  loadAllGroups(offset: number, limit: number) {
+  loadAllGroups() {
     this.allGroups = [];
 
     this.securityHandler
@@ -88,11 +88,8 @@ export class GroupAccessNewComponent implements OnInit {
           return;
         }
 
-        limit = limit ? limit : 10;
-        offset = offset ? offset : 0;
-
         this.resourceService.userGroups
-          .list()
+          .list({all:true})
           .pipe(
             catchError(error => {
               this.messageHandler.showError('There was a problem getting the group list.', error);

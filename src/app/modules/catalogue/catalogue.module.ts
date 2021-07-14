@@ -187,6 +187,7 @@ import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-pro
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { PluginsModule } from '@mdm/plugins/plugins.module';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 
 @NgModule({
   declarations: [
@@ -345,7 +346,8 @@ import { PluginsModule } from '@mdm/plugins/plugins.module';
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
     DefaultProfileComponent,
-    OpenIdConnectAuthorizeComponent
+    OpenIdConnectAuthorizeComponent,
+    ProfileDataViewComponent
   ],
   imports: [
     AdminModule,
@@ -519,7 +521,8 @@ import { PluginsModule } from '@mdm/plugins/plugins.module';
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
     DefaultProfileComponent,
-    OpenIdConnectAuthorizeComponent
+    OpenIdConnectAuthorizeComponent,
+    ProfileDataViewComponent
   ]
 })
 export class CatalogueModule { }

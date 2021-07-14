@@ -55,6 +55,7 @@ export const environment = {
     useSubscribedCatalogues: true,
     useVersionedFolders: false,
     useMergeUiV2: false,
-    useOpenIdConnect: false
+    useOpenIdConnect: false,
+    useDigitalObjectIdentifiers: false
   }
 };

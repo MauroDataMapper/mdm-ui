@@ -16,6 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
+<mdm-doi-profile-controls
+  *ngIf="isDoiProfile"
+  [profile]="currentProfileDetails"
+>
+</mdm-doi-profile-controls>
 <table *ngIf="this.currentProfileDetails" class="table table-bordered">
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>
@@ -31,19 +36,23 @@ SPDX-License-Identifier: Apache-2.0
           (click)="showInfo(field)"
           class="fas fa-info-circle helpIcon"
         ></i>
-   
       </td>
       <td class="elementDetailDescription">
         <mdm-content-editor
-        [(content)]="field.currentValue"
-          id="{{ field.fieldName }}"       
+          [(content)]="field.currentValue"
+          id="{{ field.fieldName }}"
           [inEditMode]="false"
           *ngIf="field.dataType === 'text'"
         ></mdm-content-editor>
         <input
           type="checkbox"
           *ngIf="formOptionsMap[field.dataType] === 'checkbox'"
-          style="width: 20px; height: 20px; position: relative; vertical-align: middle;"
+          style="
+            width: 20px;
+            height: 20px;
+            position: relative;
+            vertical-align: middle;
+          "
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
           name="{{ field.fieldName }} + {{ section.sectionName }}"

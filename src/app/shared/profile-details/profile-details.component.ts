@@ -21,6 +21,8 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/markup-display-modal.component';
 
+const doiPluginNamespace = `uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile`;
+
 @Component({
   selector: 'mdm-profile-details',
   templateUrl: './profile-details.component.html',
@@ -42,6 +44,10 @@ export class ProfileDetailsComponent implements AfterViewInit {
     });
   }
     this._currentProfileDetails = value;
+  }
+
+  get isDoiProfile() {
+    return this._currentProfileDetails?.namespace === doiPluginNamespace;
   }
 
   formOptionsMap = {

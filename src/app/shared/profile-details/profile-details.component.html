@@ -16,11 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mdm-doi-profile-controls
-  *ngIf="isDoiProfile"
-  [profile]="currentProfileDetails"
->
-</mdm-doi-profile-controls>
 <table *ngIf="this.currentProfileDetails" class="table table-bordered">
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>

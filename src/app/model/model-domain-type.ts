@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { CatalogueItemDomainType, ModelDomainType } from "@maurodatamapper/mdm-resources";
+
 export enum  ModelDomainRequestType {
     folders = 'folder',
     dataModels = 'dataModel',
@@ -39,4 +41,27 @@ export enum  ModelDomainRequestType {
     Terminology = 'terminology',
     ReferenceDataModel = 'referenceDataModel',
     Term = 'term',
+}
+
+export const mapCatalogueItemDomainTypeToModelDomainType = (source: CatalogueItemDomainType): ModelDomainType | undefined => {
+  switch (source) {
+    case CatalogueItemDomainType.Folder:
+      return ModelDomainType.Folders;
+    case CatalogueItemDomainType.DataModel:
+      return ModelDomainType.DataModels;
+    case CatalogueItemDomainType.DataClass:
+      return ModelDomainType.DataClasses;
+    case CatalogueItemDomainType.Terminology:
+      return ModelDomainType.Terminologies;
+    case CatalogueItemDomainType.ReferenceDataModel:
+      return ModelDomainType.ReferenceDataModels;
+    case CatalogueItemDomainType.Term:
+      return ModelDomainType.Terms;
+    case CatalogueItemDomainType.Classification:
+      return ModelDomainType.Classifiers;
+    case CatalogueItemDomainType.VersionedFolder:
+      return ModelDomainType.VersionedFolders;
+    default:
+      return undefined;
+  }
 }

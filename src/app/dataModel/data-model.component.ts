@@ -37,7 +37,6 @@ import {
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   DataModelDetail,
   DataModelDetailResponse,
@@ -47,6 +46,7 @@ import {
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 
 @Component({
@@ -55,7 +55,7 @@ import { TabCollection } from '@mdm/model/ui.model';
   styleUrls: ['./data-model.component.scss']
 })
 export class DataModelComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   subscription: Subscription;
@@ -89,18 +89,18 @@ export class DataModelComponent
   showEditDescription = false;
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    editingService: EditingService
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -196,8 +196,6 @@ export class DataModelComponent
 
         if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);
-          this.UsedProfiles('dataModels', id);
-          this.UnUsedProfiles('dataModels', id);
         }
       });
   }

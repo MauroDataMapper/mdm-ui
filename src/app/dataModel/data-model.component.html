@@ -17,7 +17,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-  <mdm-data-model-detail *ngIf="catalogueItem" [dataModel]="catalogueItem"></mdm-data-model-detail>
+  <mdm-data-model-detail
+    *ngIf="dataModel"
+    [dataModel]="dataModel"
+  ></mdm-data-model-detail>
 </div>
 <div *ngIf="showSearch" style="clear: both">
   <div class="mdm--shadow-block">
@@ -42,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
-          [parent]="catalogueItem"
+          [parent]="dataModel"
           [showRestrictTo]="false"
           [doNotShowDataModelInModelPath]="false"
           [doNotDisplayModelPathStatus]="false"
@@ -68,140 +71,11 @@ SPDX-License-Identifier: Apache-2.0
 >
   <mat-tab label="Description">
     <ng-template matTabContent>
-      <mdm-profile-data-view [catalogueItem]="dataModel">
+      <mdm-profile-data-view
+        [catalogueItem]="dataModel"
+        (savingDefault)="save($event)"
+      >
       </mdm-profile-data-view>
-
-      <div class="mb-2 full-width">
-        <div class="heading-container">
-          <div
-            fxFlex
-            fxLayout="row"
-            fxLayout.md="row"
-            fxLayout.sm="row"
-            fxLayout.xs="column"
-            fxLayoutAlign="space-around"
-          >
-            <div
-              fxFlex
-              fxLayout="row"
-              fxFlex="50"
-              fxFlex.md="50"
-              fxFlex.sm="100"
-              fxFlex.xs="100"
-              fxLayoutAlign="flex-start center"
-              fxLayoutAlign.xs="flex-start center"
-            >
-              <mat-form-field
-                appearance="outline"
-                class="paddingless"
-                style="max-width: 430px; width: 100%"
-              >
-                <mat-select
-                  [(ngModel)]="descriptionView"
-                  name="descriptionView"
-                  (ngModelChange)="changeProfile()"
-                >
-                  <mat-option value="default">Default profile</mat-option>
-                  <mat-divider></mat-divider>
-                  <mat-option
-                    *ngFor="let option of allUsedProfiles"
-                    [value]="option.value"
-                    >{{ option.display }}</mat-option
-                  >
-                  <mat-divider></mat-divider>
-                  <mat-option value="other">Other properties</mat-option>
-                  <mat-divider
-                    *ngIf="access && access.canAddMetadata"
-                  ></mat-divider>
-                  <mat-option
-                    *ngIf="access && access.canAddMetadata"
-                    value="addnew"
-                    >Add new profile...</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div
-              fxFlex
-              fxLayout="row"
-              fxFlex="50"
-              fxFlex.md="50"
-              fxFlex.sm="100"
-              fxFlex.xs="100"
-              fxLayoutAlign="flex-end center"
-              fxLayoutAlign.xs="flex-start center"
-            >
-              <button
-                mat-flat-button
-                *ngIf="
-                  this.descriptionView !== 'default' &&
-                  this.descriptionView !== 'other' &&
-                  this.descriptionView !== 'addNew' &&
-                  showEdit
-                "
-                color="primary"
-                type="button"
-                class="mr-1"
-                (click)="editProfile(false)"
-              >
-                <i class="fas fa-pencil-alt"></i> Edit
-              </button>
-
-              <button
-                mat-flat-button
-                *ngIf="
-                  this.descriptionView !== 'default' &&
-                  this.descriptionView !== 'other' &&
-                  this.descriptionView !== 'addNew' &&
-                  showDelete
-                "
-                color="warn"
-                type="button"
-                class="mr-1"
-                (click)="deleteProfile()"
-              >
-                <i class="fas fa-trash-alt"></i> Delete
-              </button>
-
-              <button
-                mat-flat-button
-                *ngIf="this.descriptionView === 'default' && showEdit"
-                color="primary"
-                type="button"
-                class="mr-1"
-                [matMenuTriggerFor]="editMenu"
-              >
-                Edit
-              </button>
-
-              <mat-menu #editMenu="matMenu">
-                <button mat-menu-item (click)="edit(true)">
-                  <i class="fas fa-pencil-alt"></i> Edit Description
-                </button>
-                <button mat-menu-item (click)="edit(false)">
-                  <i class="fas fa-pencil-alt"></i>Edit
-                </button>
-              </mat-menu>
-            </div>
-          </div>
-        </div>
-
-        <mdm-profile-details
-          *ngIf="this.currentProfileDetails"
-          [currentProfileDetails]="this.currentProfileDetails"
-        ></mdm-profile-details>
-
-        <div class="full-width">
-          <mdm-data-set-metadata
-            *ngIf="this.descriptionView === 'other'"
-            [parent]="catalogueItem"
-            [type]="'dynamic'"
-            [domainType]="'dataModels'"
-            [isProfileView]="true"
-          ></mdm-data-set-metadata>
-        </div>
-         <mdm-default-profile  *ngIf="this.descriptionView === 'default' && dataModel" [catalogueItem]="dataModel"></mdm-default-profile>
-      </div>
     </ng-template>
   </mat-tab>
   <mat-tab>
@@ -402,7 +276,9 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div
-          *ngIf="contextView === 'dataFlow' && catalogueItem.type === 'Data Asset'"
+          *ngIf="
+            contextView === 'dataFlow' && catalogueItem.type === 'Data Asset'
+          "
         >
           <mdm-diagram-tab
             [parent]="catalogueItem"

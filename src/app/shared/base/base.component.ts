@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { CodeSetDetail, DataElementDetail, DataModelDetail, FolderDetail, TermDetail, TerminologyDetail, VersionedFolderDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-base',
@@ -24,6 +25,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./base.component.scss']
 })
 export class BaseComponent {
+
+  catalogueItem:
+    | DataModelDetail
+    | TermDetail
+    | CodeSetDetail
+    | TerminologyDetail
+    | FolderDetail
+    | DataElementDetail
+    | VersionedFolderDetail;
 
   constructor() { }
 

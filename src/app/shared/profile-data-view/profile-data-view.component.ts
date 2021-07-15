@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
+import { DoiSubmissionResponse, DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
@@ -258,10 +258,37 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
                 panelClass: 'full-width-dialog'
               })
             .afterClosed();
-        })
+        }),
+        filter((result: EditProfileModalResult) => result.status === ModalDialogStatus.Ok),
+        switchMap((result: EditProfileModalResult) => {
+          const data = JSON.stringify(result.profile);
+          return this.resources.profile
+            .saveProfile(
+              this.catalogueItem.domainType,
+              this.catalogueItem.id,
+              selected.namespace,
+              selected.name,
+              data);
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem saving the profile.', error);
+          return EMPTY;
+        }),
+        switchMap(() => {
+          return this.resources.pluginDoi.save(
+            ModelDomainType.DataModels,
+            this.catalogueItem.id,
+            {
+              submissionType: state
+            });
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem submitting the profile to generate a Digital Object Identifier (DOI).', error);
+          return EMPTY;
+        }),
       )
-      .subscribe(() => {
-        // TODO
+      .subscribe((response: DoiSubmissionResponse) => {
+        this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
       });
   }
 

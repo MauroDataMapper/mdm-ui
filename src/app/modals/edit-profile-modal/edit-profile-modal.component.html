@@ -18,11 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <h4 mat-dialog-title>Edit Profile - {{ data.profileName }}</h4>
+<p *ngIf="description">
+  {{description}}
+</p>
 <mat-dialog-content class="mat-typography">
   <form
     #userForm="ngForm"
     id="userForm"
-    #]
     novalidate
     enctype="multipart/form-data"
     method="POST"
@@ -38,20 +40,17 @@ SPDX-License-Identifier: Apache-2.0
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
             <i
-            style="float: right"
-            (click)="showInfo(field)"
-            class="fas fa-info-circle helpIcon"
-          ></i>
-     
+              style="float: right"
+              (click)="showInfo(field)"
+              class="fas fa-info-circle helpIcon"
+            ></i>
           </td>
           <td class="elementDetailDescription">
-           
-
             <mdm-content-editor
-            [(content)]="field.currentValue"
-              id="{{ field.fieldName }}"                         
+              [(content)]="field.currentValue"
+              id="{{ field.fieldName }}"
               [inEditMode]="true"
-              *ngIf="field.dataType === 'text'"
+              *ngIf="field.dataType === 'TEXT'"
             ></mdm-content-editor>
 
             <input
@@ -70,17 +69,17 @@ SPDX-License-Identifier: Apache-2.0
             />
             <input
               *ngIf="
-                field.dataType !== 'folder' &&
-                field.dataType !== 'datamodel' &&
-                field.dataType != 'text' &&
-                field.dataType != 'date' &&
-                field.dataType != 'datetime' &&
-                field.dataType != 'boolean' &&
-                field.dataType != 'folder' &&
-                field.dataType != 'Boolean' &&
-                field.dataType != 'enumeration'
+                field.dataType !== 'FOLDER' &&
+                field.dataType !== 'DATAMODEL' &&
+                field.dataType != 'TEXT' &&
+                field.dataType != 'DATE' &&
+                field.dataType != 'DATETIME' &&
+                field.dataType != 'BOOLEAN' &&
+                field.dataType != 'FOLDER' &&
+                field.dataType != 'BOOLEAN' &&
+                field.dataType != 'ENUMERATION'
               "
-              matInput             
+              matInput
               type="{{ formOptionsMap[field.dataType] }}"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -92,8 +91,8 @@ SPDX-License-Identifier: Apache-2.0
               [required]="field.optional === false"
             />
             <input
-              *ngIf="field.dataType === 'date'"
-              matInput              
+              *ngIf="field.dataType === 'DATE'"
+              matInput
               type="date"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -105,8 +104,8 @@ SPDX-License-Identifier: Apache-2.0
               [required]="field.optional === false"
             />
             <input
-              *ngIf="field.dataType === 'datetime'"
-              matInput              
+              *ngIf="field.dataType === 'DATETIME'"
+              matInput
               type="datetime-local"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -117,7 +116,7 @@ SPDX-License-Identifier: Apache-2.0
               }"
               [required]="field.optional === false"
             />
-            <div *ngIf="field.dataType === 'datamodel'">
+            <div *ngIf="field.dataType === 'DATAMODEL'">
               <input
                 type="text"
                 matInput
@@ -142,14 +141,20 @@ SPDX-License-Identifier: Apache-2.0
                 Add Data Model
               </button>
             </div>
-            <div *ngIf="field.dataType === 'enumeration'">
-             <mat-select [(ngModel)]="field.currentValue" name="{{ field.fieldName }} + {{ section.sectionName }}">
-                <mat-option *ngFor="let value of field.allowedValues" [value]="value">
-                  {{value}}
+            <div *ngIf="field.dataType === 'ENUMERATION'">
+              <mat-select
+                [(ngModel)]="field.currentValue"
+                name="{{ field.fieldName }} + {{ section.sectionName }}"
+              >
+                <mat-option
+                  *ngFor="let value of field.allowedValues"
+                  [value]="value"
+                >
+                  {{ value }}
                 </mat-option>
               </mat-select>
             </div>
-            <div *ngIf="field.dataType === 'folder'">
+            <div *ngIf="field.dataType === 'FOLDER'">
               <mdm-model-selector-tree
                 [treeSearchDomainType]="'Folder'"
                 [justShowFolders]="true"
@@ -165,28 +170,13 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
-            <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
-            <!-- <div *ngIf="field.validationErrors.length > 0">
-              <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
-              <mat-error>Test error</mat-error> -->
-              <!-- <ul>
-                <li *ngFor="let error of field.validationErrors;">
-                  <span class="help-block">{{error}}</span>
-                </li>
-              </ul>               -->
-            <!-- </div>             -->
+            <mat-error *ngFor="let error of field.validationErrors">{{
+              error
+            }}</mat-error>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="full-width mt-2">
-      <div *ngIf="saveInProgress">
-        <mat-progress-bar
-          mode="indeterminate"
-          color="accent"
-        ></mat-progress-bar>
-      </div>
-    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="pt-2 pb-2">
@@ -194,30 +184,29 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-button
       color="warn"
-      [disabled]="saveInProgress"
       style="margin-right: 8px"
       (click)="onCancel()"
     >
       Cancel
     </button>
     <button
-    mat-flat-button
-    color="primary"
-    type="submit"
-    class="custom"
-    (click)="validate()"   
-  >
-    Validate Profile
-  </button>
+      mat-button
+      color="primary"
+      type="submit"
+      class="custom"
+      (click)="validate()"
+    >
+      Validate
+    </button>
     <button
       mat-flat-button
       color="primary"
       type="submit"
       class="custom"
       (click)="save()"
-      [disabled]="userForm.invalid || saveInProgress"
+      [disabled]="userForm.invalid"
     >
-      Save
+      {{ okBtnText }}
     </button>
   </div>
 </mat-dialog-actions>

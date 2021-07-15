@@ -18,11 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
+import { DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { EditProfileModalConfiguration, EditProfileModalResult } from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
 import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse } from '@mdm/model/defaultProfileModel';
 import { mapCatalogueItemDomainTypeToModelDomainType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -125,36 +126,36 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .concat(this.unusedProfiles)
       .find(item => item.value === this.currentView);
 
-    const [namespace, name] = this.getNamespaceAndName(selected.value);
-
     this.editing
-      .openDialog(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfile,
-          profileName: selected.display,
-          catalogueItem: this.catalogueItem,
-          isNew: isNew ?? false
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      })
+      .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
+        EditProfileModalComponent,
+        {
+          data: {
+            profile: this.currentProfile,
+            profileName: selected.display,
+            catalogueItem: this.catalogueItem,
+            isNew: isNew ?? false
+          },
+          disableClose: true,
+          panelClass: 'full-width-dialog'
+        })
       .afterClosed()
       .pipe(
         tap(result => {
-          if (!result && isNew) {
+          if (!result.profile && isNew) {
             this.currentView = 'default';
             this.changeProfile();
           }
         }),
-        filter(result => result),
+        filter(result => result.status === ModalDialogStatus.Ok),
         switchMap(result => {
-          const data = JSON.stringify(result);
+          const data = JSON.stringify(result.profile);
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
-              namespace,
-              name,
+              selected.namespace,
+              selected.name,
               data);
         }),
         catchError(error => {
@@ -164,8 +165,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe((response: ProfileResponse) => {
         this.currentProfile = response.body;
-        this.currentProfile.namespace = namespace;
-        this.currentProfile.name = name;
+        this.currentProfile.namespace = selected.namespace;
+        this.currentProfile.name = selected.name;
 
         if (isNew) {
           this.messageHandler.showSuccess('Profile added.');
@@ -217,6 +218,53 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       });
   }
 
+  submitForDoi(state: DoiSubmissionState) {
+    const selected = this.usedProfiles
+      .concat(this.unusedProfiles)
+      .find(item => item.namespace === doiProfileNamespace);
+
+    if (!selected) {
+      this.messageHandler.showWarning('Unable to find the Digital Object Identifier profile. Please check with your administrator if it is enabled.');
+      return;
+    }
+
+    const doiProfileInUse = this.usedProfiles.find(item => item.value === selected.value);
+
+    const description = doiProfileInUse
+      ? `Before submitting this object to receive a '${state}' Digital Object Identifier (DOI), please check all profile information below to ensure it is correct, then click the 'Submit' button.`
+      : `To receive a '${state}' Digital Object Identifier (DOI), please fill in the profile information below, then click the 'Submit' button.`;
+
+    this.resources.profile
+      .profile(this.catalogueItem.domainType, this.catalogueItem.id, selected.namespace, selected.name, '')
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the selected profile.', error);
+          return EMPTY;
+        }),
+        switchMap((response: ProfileResponse) => {
+          return this.editing
+            .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
+              EditProfileModalComponent,
+              {
+                data: {
+                  profile: response.body,
+                  profileName: selected.display,
+                  catalogueItem: this.catalogueItem,
+                  isNew: !doiProfileInUse,
+                  description,
+                  okBtn: 'Submit'
+                },
+                disableClose: true,
+                panelClass: 'full-width-dialog'
+              })
+            .afterClosed();
+        })
+      )
+      .subscribe(() => {
+        // TODO
+      });
+  }
+
   private setAccess() {
     const access = this.securityHandler.elementAccess(this.catalogueItem);
     this.canEdit = access.showEdit;
@@ -251,7 +299,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         return response.body.map(summary => {
           return {
             display: summary.displayName,
-            value: `${summary.namespace}/${summary.name}`
+            value: `${summary.namespace}/${summary.name}`,
+            namespace: summary.namespace,
+            name: summary.name
           };
         })
       })
@@ -330,8 +380,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
               this.currentProfile.namespace = namespace;
               this.currentProfile.name = name;
               this.editCustomProfile(true);
-            },
-            );
+            });
         }
         else {
           this.currentView = this.lastView;

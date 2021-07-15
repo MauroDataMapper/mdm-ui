@@ -148,6 +148,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             class="mr-1"
+            (click)="submitForDoi('draft')"
           >
             <i class="far fa-file"></i> Draft
           </button>
@@ -155,6 +156,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             class="mr-1"
+            (click)="submitForDoi('final')"
           >
             <i class="fas fa-check has-text-green"></i> Final
           </button>

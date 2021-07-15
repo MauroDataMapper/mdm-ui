@@ -37,7 +37,7 @@ export class ProfileDetailsComponent implements AfterViewInit {
     if(value.sections){
     value.sections.forEach((section) => {
       section.fields.forEach((field) => {
-        field.dataType = field.dataType.toLowerCase();
+        //field.dataType = field.dataType.toLowerCase();
       });
     });
   }
@@ -45,15 +45,14 @@ export class ProfileDetailsComponent implements AfterViewInit {
   }
 
   formOptionsMap = {
-    Integer: 'number',
-    String: 'text',
-    Boolean: 'checkbox',
-    boolean: 'checkbox',
-    int: 'number',
-    date: 'date',
-    time: 'time',
-    datetime: 'datetime',
-    decimal: 'number'
+    INTEGER: 'number',
+    STRING: 'text',
+    BOOLEAN: 'checkbox',
+    INT: 'number',
+    DATE: 'date',
+    TIME: 'time',
+    DATETIME: 'datetime',
+    DECIMAL: 'number'
   };
 
   constructor(private dialog: MatDialog) {}

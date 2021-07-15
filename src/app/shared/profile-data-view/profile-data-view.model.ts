@@ -27,6 +27,8 @@ export const doiProfileNamespace = 'uk.ac.ox.softeng.maurodatamapper.plugins.dig
 export interface ProfileSummaryListItem {
   display: string;
   value: string;
+  namespace: string;
+  name: string;
 }
 
 export const showControl = (controls: string[], controlName: string): boolean => {

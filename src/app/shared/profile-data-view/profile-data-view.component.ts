@@ -18,17 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItem, Container, DataTypeReference, ModelDomainType, Profile, ProfileSummary, Securable } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Container, DataTypeReference, ModelDomainType, Profile, ProfileResponse, ProfileSummary, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { DefaultProfileControls, DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 import { mapCatalogueItemDomainTypeToModelDomainType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { ProfileDataViewType } from './profile-data-view.model';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
 
 @Component({
   selector: 'mdm-profile-data-view',
@@ -39,7 +40,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   @Input() catalogueItem: CatalogueItem & Securable & { [key: string]: any };
 
   currentView: ProfileDataViewType | string = 'default';
-  allUsedProfiles: ProfileSummary[] = [];
+  lastView?: ProfileDataViewType | string;
+  usedProfiles: ProfileSummaryListItem[] = [];
+  unusedProfiles: ProfileSummaryListItem[] = [];
   currentProfile?: Profile;
   canEdit = false;
   canDeleteProfile = false;
@@ -62,11 +65,24 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
+      this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+      this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
     }
   }
 
   changeProfile() {
+    if (this.currentView === 'default' || this.currentView === 'other') {
+      this.lastView = this.currentView;
+      this.currentProfile = null;
+      return;
+    }
 
+    if (this.currentView === 'addnew') {
+      this.addNewProfile();
+      return;
+    }
+
+    this.selectCustomProfile();
   }
 
   editDefaultProfileDescription() {
@@ -112,14 +128,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .subscribe(() => {
         this.messageHandler.showSuccess('Profile deleted successfully');
         this.currentView = 'default';
-        // this.UsedProfiles(
-        //   this.catalogueItem.domainType,
-        //   this.catalogueItem.id
-        // );
-        // this.UnUsedProfiles(
-        //   this.catalogueItem.domainType,
-        //   this.catalogueItem.id
-        // );
+        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.changeProfile();
       });
   }
@@ -129,6 +139,40 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canEdit = access.showEdit;
     this.canDeleteProfile = access.showDelete;
     this.canAddMetadata = access.canAddMetadata;
+  }
+
+  private loadUsedProfiles(domainType: ModelDomainType | string, id: Uuid) {
+    this.loadProfileItems('used', domainType, id)
+      .subscribe(items => this.usedProfiles = items);
+  }
+
+  private loadUnusedProfiles(domainType: ModelDomainType | string, id: any) {
+    this.loadProfileItems('unused', domainType, id)
+      .subscribe(items => this.unusedProfiles = items);
+  }
+
+  private loadProfileItems(
+    type: 'used' | 'unused',
+    domainType: ModelDomainType | string,
+    id: any): Observable<ProfileSummaryListItem[]> {
+    const request: Observable<ProfileSummaryIndexResponse> = type === 'used'
+      ? this.resources.profile.usedProfiles(domainType, id)
+      : this.resources.profile.unusedProfiles(domainType, id);
+
+    return request.pipe(
+      catchError(error => {
+        this.messageHandler.showError('There was a problem getting the list of unused profiles.', error);
+        return EMPTY;
+      }),
+      map((response: ProfileSummaryIndexResponse) => {
+        return response.body.map(summary => {
+          return {
+            display: summary.displayName,
+            value: `${summary.namespace}/${summary.name}`
+          };
+        })
+      })
+    );
   }
 
   private editDefaultProfile(items: DefaultProfileItem[]) {
@@ -283,5 +327,70 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       value,
       propertyName
     };
+  }
+
+  private selectCustomProfile() {
+    this.lastView = this.currentView;
+
+    const [namespace, name] = this.getNamespaceAndName(this.currentView);
+
+    this.resources.profile
+      .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the selected profile.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: ProfileResponse) => {
+        this.currentProfile = response.body;
+        this.currentProfile.namespace = namespace;
+        this.currentProfile.name = name;
+      });
+  }
+
+  private addNewProfile() {
+    if (!this.lastView) {
+      this.lastView = 'default';
+    }
+
+    this.editing
+      .openDialog(AddProfileModalComponent, {
+        data: {
+          domainType: this.catalogueItem.domainType,
+          domainId: this.catalogueItem.id
+        }
+      })
+      .afterClosed()
+      .subscribe((newProfile) => {
+        if (newProfile) {
+          const [namespace, name] = this.getNamespaceAndName(newProfile);
+          this.resources.profile
+            .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name, '')
+            .pipe(
+              catchError(error => {
+                this.messageHandler.showError('There was a problem getting the selected profile.', error);
+                return EMPTY;
+              })
+            )
+            .subscribe((response: ProfileResponse) => {
+              this.currentView = newProfile;
+              this.currentProfile = response.body;
+              this.currentProfile.namespace = namespace;
+              this.currentProfile.name = name;
+              this.editCustomProfile();
+            },
+            );
+        }
+        else {
+          this.currentView = this.lastView;
+          this.changeProfile();
+        }
+      });
+  }
+
+  private getNamespaceAndName(viewName: string): [string, string] {
+    const split = viewName.split('/');
+    return [split[0], split[1]];
   }
 }

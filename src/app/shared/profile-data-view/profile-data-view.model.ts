@@ -17,4 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-export type ProfileDataViewType = 'default' | 'other' | 'addNew';
+export type ProfileDataViewType = 'default' | 'other' | 'addnew';
+
+export interface ProfileSummaryListItem {
+  display: string;
+  value: string;
+}

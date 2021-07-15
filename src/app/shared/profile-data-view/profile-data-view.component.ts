@@ -30,7 +30,7 @@ import { MessageHandlerService, SecurityHandlerService, SharedService } from '@m
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
-import { getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
+import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
 
 @Component({
   selector: 'mdm-profile-data-view',
@@ -50,6 +50,26 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   canEdit = false;
   canDeleteProfile = false;
   canAddMetadata = false;
+
+  get isCurrentViewCustomProfile() {
+    return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
+  }
+
+  get isDoiProfile() {
+    return this.shared.features.useDigitalObjectIdentifiers && this.currentProfile?.namespace === doiProfileNamespace;
+  }
+
+  get canSubmitForDoi() {
+    // TODO: add other conditions for submitting DOIs - finalised, public etc
+    // Wait for `availableActions` to send back correct values
+    return this.shared.features.useDigitalObjectIdentifiers;
+  }
+
+  get showAdditionalActions() {
+    const showDoiSubmitAction = this.canSubmitForDoi;
+    const showRemoveAction = this.isCurrentViewCustomProfile && this.canDeleteProfile;
+    return showRemoveAction || showDoiSubmitAction;
+  }
 
   get modelDomainType(): ModelDomainType {
     return mapCatalogueItemDomainTypeToModelDomainType(this.catalogueItem.domainType);
@@ -168,10 +188,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.dialog
       .openConfirmationAsync({
         data: {
-          title: 'Are you sure you want to delete this Profile?',
-          okBtnTitle: 'Yes, delete',
+          title: 'Are you sure you want to remove this Profile?',
+          okBtnTitle: 'Yes, remove',
           btnType: 'warn',
-          message: `<p class="marginless">${this.currentProfile.name} will be deleted, are you sure? </p>`
+          message: `<p class="marginless">${this.currentProfile.name} will be removed, are you sure? </p>`
         }
       })
       .pipe(
@@ -184,12 +204,12 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           );
         }),
         catchError(error => {
-          this.messageHandler.showError('Unable to Delete Profile', error);
+          this.messageHandler.showError('Unable to remove profile', error);
           return EMPTY;
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Profile deleted successfully');
+        this.messageHandler.showSuccess('Profile removed successfully');
         this.currentView = 'default';
         this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);

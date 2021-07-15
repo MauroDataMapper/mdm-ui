@@ -90,29 +90,23 @@ SPDX-License-Identifier: Apache-2.0
 
         <button
           mat-flat-button
-          *ngIf="
-            currentView !== 'default' &&
-            currentView !== 'other' &&
-            currentView !== 'addnew' &&
-            canDeleteProfile
-          "
-          color="warn"
-          type="button"
-          class="mr-1"
-          (click)="deleteCustomProfile()"
-        >
-          <i class="fas fa-trash-alt"></i> Delete
-        </button>
-
-        <button
-          mat-flat-button
           *ngIf="currentView === 'default' && canEdit"
           color="primary"
           type="button"
           class="mr-1"
           [matMenuTriggerFor]="editMenu"
         >
-          Edit
+          <i class="fas fa-pencil-alt"></i> Edit
+        </button>
+
+        <button
+          *ngIf="showAdditionalActions"
+          type="button"
+          mat-icon-button
+          [matMenuTriggerFor]="additionalActions"
+        >
+          <i class="fas fa-ellipsis-v"></i>
+          <span style="display: none">Menu</span>
         </button>
 
         <mat-menu #editMenu="matMenu">
@@ -121,6 +115,48 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button mat-menu-item (click)="editDefaultProfileFull()">
             <i class="fas fa-pencil-alt"></i> Edit
+          </button>
+        </mat-menu>
+
+        <mat-menu #additionalActions="matMenu" class="mdm--mat-menu--actions">
+          <button
+            mat-menu-item
+            *ngIf="canSubmitForDoi"
+            type="button"
+            class="mr-1"
+            matTooltip="Submit this catalogue item for generating a Digital Object Identifier (DOI)"
+            [matMenuTriggerFor]="doiSubmitActions"
+          >
+            <i class="fas fa-paper-plane has-text-green"></i> Submit for DOI
+          </button>
+          <mat-divider *ngIf="canSubmitForDoi">
+          </mat-divider>
+          <button
+            mat-menu-item
+            *ngIf="isCurrentViewCustomProfile && canDeleteProfile"
+            color="warn"
+            type="button"
+            class="mr-1"
+            (click)="deleteCustomProfile()"
+          >
+            <i class="fas fa-trash-alt warning"></i> Remove profile
+          </button>
+        </mat-menu>
+
+        <mat-menu #doiSubmitActions="matMenu" class="mdm--mat-menu--actions">
+          <button
+            mat-menu-item
+            type="button"
+            class="mr-1"
+          >
+            <i class="far fa-file"></i> Draft
+          </button>
+          <button
+            mat-menu-item
+            type="button"
+            class="mr-1"
+          >
+            <i class="fas fa-check has-text-green"></i> Final
           </button>
         </mat-menu>
       </div>

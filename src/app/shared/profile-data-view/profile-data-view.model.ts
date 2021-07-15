@@ -22,6 +22,8 @@ import { DefaultProfileControls, DefaultProfileItem, ProfileControlTypes } from 
 
 export type ProfileDataViewType = 'default' | 'other' | 'addnew';
 
+export const doiProfileNamespace = 'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
+
 export interface ProfileSummaryListItem {
   display: string;
   value: string;

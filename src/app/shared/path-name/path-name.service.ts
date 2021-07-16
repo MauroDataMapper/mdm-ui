@@ -25,6 +25,8 @@ import { PathElement, PathElementType, pathElementTypeNames } from './path-name.
 export class PathNameService {
   private readonly elementSeparator = '|';
   private readonly partSeparator = ':';
+  private readonly propSeparator = '|$';
+  private readonly branchSeparator = '@';
 
   constructor() { }
 
@@ -32,6 +34,8 @@ export class PathNameService {
     if (!path || path.length === 0) {
       return null;
     }
+
+    path = path.replace(this.propSeparator, this.partSeparator);
 
     const elements = path.split(this.elementSeparator);
     return elements.map(element => {
@@ -41,7 +45,7 @@ export class PathNameService {
       }
 
       const type = parts[0] as PathElementType;
-      const label = parts[1];
+      const label = parts[1].split(this.branchSeparator)[0];
       const typeName = pathElementTypeNames.get(type);
 
       if (parts.length > 2) {

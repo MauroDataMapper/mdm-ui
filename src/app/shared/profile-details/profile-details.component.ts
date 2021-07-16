@@ -35,11 +35,11 @@ export class ProfileDetailsComponent implements AfterViewInit {
 
   @Input() set currentProfileDetails(value: any) {
     if(value.sections){
-    value.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        //field.dataType = field.dataType.toLowerCase();
-      });
-    });
+    // value.sections.forEach((section) => {
+    //   section.fields.forEach((field) => {
+    //      field.dataType = field.dataType.toLowerCase();
+    //   });
+    // });
   }
     this._currentProfileDetails = value;
   }

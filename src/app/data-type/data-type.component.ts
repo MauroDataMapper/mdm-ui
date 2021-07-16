@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -29,19 +29,17 @@ import {
   MessageHandlerService,
   SecurityHandlerService,
 } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent
-  extends ProfileBaseComponent
+export class DataTypeComponent extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -80,18 +78,16 @@ export class DataTypeComponent
 
   constructor(
     private title: Title,
-    private stateService: StateService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    resource: MdmResourcesService,
+    private resources: MdmResourcesService,
     private sharedService: SharedService,
-    messageHandler: MessageHandlerService,
+    private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
-    dialog: MatDialog,
     private elementTypes: ElementTypesService,
-    editingService: EditingService,
+    private editingService: EditingService,
   ) {
-    super(resource, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -113,7 +109,7 @@ export class DataTypeComponent
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
-    this.resourcesService.dataType.get(this.dataModelId, this.id).subscribe(
+    this.resources.dataType.get(this.dataModelId, this.id).subscribe(
       (result) => {
         const data = result.body;
 
@@ -121,11 +117,7 @@ export class DataTypeComponent
         this.dataModelId = data.model;
         this.id = data.id;
 
-        this.UnUsedProfiles('dataType', data.id);
-        this.UsedProfiles('dataType', data.id);
-
         this.dataType = data;
-        this.catalogueItem = this.dataType;
 
         this.watchDataTypeObject();
 
@@ -160,21 +152,20 @@ export class DataTypeComponent
 
   save(saveItems: Array<DefaultProfileItem>) {
     const resource: DataType = {
-      id: this.catalogueItem.id,
-      domainType: this.catalogueItem.domainType,
-      label: this.catalogueItem.label
+      id: this.dataType.id,
+      domainType: this.dataType.domainType,
+      label: this.dataType.label
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
       resource[item.propertyName] = item.value;
     });
 
-    this.resourcesService.dataType
+    this.resources.dataType
       .update(this.dataModel.id, this.dataType.id, resource)
       .subscribe(
         (res: DataTypeDetailResponse) => {
           this.dataType = res.body;
-          this.catalogueItem = res.body;
           this.messageHandler.showSuccess('Data Type updated successfully.');
           this.editingService.stop();
         },

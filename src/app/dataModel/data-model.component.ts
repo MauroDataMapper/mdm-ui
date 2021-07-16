@@ -32,11 +32,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatDialog } from '@angular/material/dialog';
-import {
-  MessageHandlerService,
-  SecurityHandlerService
-} from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   DataModelDetail,
   DataModelDetailResponse,
@@ -47,7 +43,6 @@ import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-
 
 @Component({
   selector: 'mdm-data-model',
@@ -70,7 +65,15 @@ export class DataModelComponent
   activeTab: any;
   semanticLinks: any[] = [];
   access: Access;
-  tabs = new TabCollection(['description', 'schema', 'types', 'context', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'schema',
+    'types',
+    'context',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   errorMessage = '';
 
@@ -96,7 +99,6 @@ export class DataModelComponent
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService
   ) {
@@ -115,7 +117,9 @@ export class DataModelComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
@@ -207,7 +211,7 @@ export class DataModelComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];
         });
-        });
+      });
   }
 
   toggleShowSearch() {

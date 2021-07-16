@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DoiSubmissionResponse, DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
+import { DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
@@ -287,7 +287,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           return EMPTY;
         }),
       )
-      .subscribe((response: DoiSubmissionResponse) => {
+      .subscribe(() => {
         this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
       });
   }
@@ -330,7 +330,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             namespace: summary.namespace,
             name: summary.name
           };
-        })
+        });
       })
     );
   }

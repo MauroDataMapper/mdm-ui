@@ -26,12 +26,10 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatDialog } from '@angular/material/dialog';
 import {
   MessageHandlerService,
   SecurityHandlerService
   } from '@mdm/services';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   DataClass,
   DataClassDetail,
@@ -40,6 +38,7 @@ import {
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-class',
@@ -47,7 +46,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./data-class.component.sass']
 })
 export class DataClassComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassDetail;
@@ -75,18 +74,17 @@ export class DataClassComponent
   showEditDescription = false;
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    editingService: EditingService,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -148,8 +146,6 @@ export class DataClassComponent
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
 
-          this.UsedProfiles('dataClass', id);
-          this.UnUsedProfiles('dataClass', id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -184,8 +180,6 @@ export class DataClassComponent
 
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
-          this.UsedProfiles('dataClass', id);
-          this.UnUsedProfiles('dataClass', id);
           this.catalogueItem = this.dataClass;
           this.access = this.securityHandler.elementAccess(this.dataClass);
         });

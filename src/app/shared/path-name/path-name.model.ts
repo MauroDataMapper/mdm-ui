@@ -123,5 +123,6 @@ export interface PathElement {
   type: PathElementType;
   typeName: string;
   label: string;
+  version?: string;
   property?: PathProperty;
 }

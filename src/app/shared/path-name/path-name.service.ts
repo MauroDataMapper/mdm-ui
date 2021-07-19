@@ -41,11 +41,17 @@ export class PathNameService {
     return elements.map(element => {
       const parts = element.split(this.partSeparator).filter(p => p && p.length > 0);
       if (parts.length < 2) {
-        throw new Error(`Path element '${element}' should be in the format 'prefix:label'`);
+        throw new Error(`Path element '${element}' should be in the format 'prefix:label(@version)'`);
+      }
+
+      const labelAndVersion = parts[1].split(this.branchSeparator);
+      if (labelAndVersion.length < 1) {
+        throw new Error(`Path element '${element}' should be in the format 'prefix:label(@version)'`);
       }
 
       const type = parts[0] as PathElementType;
-      const label = parts[1].split(this.branchSeparator)[0];
+      const label = labelAndVersion[0];
+      const version = labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;
       const typeName = pathElementTypeNames.get(type);
 
       if (parts.length > 2) {
@@ -56,6 +62,7 @@ export class PathNameService {
           type,
           typeName,
           label,
+          version,
           property: {
             name,
             qualifiedName
@@ -66,7 +73,8 @@ export class PathNameService {
       return {
         type,
         typeName,
-        label
+        label,
+        version
       };
     });
   }

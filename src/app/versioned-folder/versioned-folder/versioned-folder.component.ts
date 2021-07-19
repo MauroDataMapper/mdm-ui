@@ -25,9 +25,9 @@ import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -37,7 +37,7 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './versioned-folder.component.html',
   styleUrls: ['./versioned-folder.component.scss']
 })
-export class VersionedFolderComponent extends ProfileBaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class VersionedFolderComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -61,17 +61,17 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    resources: MdmResourcesService,
+    private resources: MdmResourcesService,
     private messages: MessageService,
     private shared: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    editingService: EditingService) {
-    super(resources, dialog, editingService, messageHandler);
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -134,7 +134,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       resource[item.propertyName] = item.value;
     });
 
-    this.resourcesService.versionedFolder
+    this.resources.versionedFolder
       .update(this.detail.id,resource)
       .pipe(
         catchError(error => {
@@ -164,7 +164,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   }
 
   private loadDetails(id: Uuid) {
-    this.resourcesService.versionedFolder
+    this.resources.versionedFolder
       .get(id)
       .subscribe((response: VersionedFolderDetailResponse) => {
         this.setupDetails(response.body);

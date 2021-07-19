@@ -18,14 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DoiSubmissionState, Modelable, ModelableDetail, ModelDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiSubmissionState, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { EditProfileModalConfiguration, EditProfileModalResult } from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
 import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse } from '@mdm/model/defaultProfileModel';
-import { mapCatalogueItemDomainTypeToModelDomainType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -72,8 +71,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     return showRemoveAction || showDoiSubmitAction;
   }
 
-  get modelDomainType(): ModelDomainType {
-    return mapCatalogueItemDomainTypeToModelDomainType(this.catalogueItem.domainType);
+  get multiFacetAwareDomainType(): MultiFacetAwareDomainType {
+    return catalogueItemToMultiFacetAware(this.catalogueItem.domainType);
   }
 
   constructor(
@@ -276,7 +275,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         switchMap(() => {
           return this.resources.pluginDoi.save(
-            ModelDomainType.DataModels,
+            this.catalogueItem.domainType,
             this.catalogueItem.id,
             {
               submissionType: state
@@ -299,19 +298,19 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canAddMetadata = access.canAddMetadata;
   }
 
-  private loadUsedProfiles(domainType: ModelDomainType | string, id: Uuid) {
+  private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {
     this.loadProfileItems('used', domainType, id)
       .subscribe(items => this.usedProfiles = items);
   }
 
-  private loadUnusedProfiles(domainType: ModelDomainType | string, id: any) {
+  private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: any) {
     this.loadProfileItems('unused', domainType, id)
       .subscribe(items => this.unusedProfiles = items);
   }
 
   private loadProfileItems(
     type: 'used' | 'unused',
-    domainType: ModelDomainType | string,
+    domainType: CatalogueItemDomainType,
     id: any): Observable<ProfileSummaryListItem[]> {
     const request: Observable<ProfileSummaryIndexResponse> = type === 'used'
       ? this.resources.profile.usedProfiles(domainType, id)

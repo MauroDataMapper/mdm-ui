@@ -37,6 +37,7 @@ export class StateRoleAccessService {
         'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
         'appContainer.mainApp.home',
         'appContainer.mainApp.openIdConnectAuthorizing',
+        'appContainer.mainApp.doiRedirect',
         'appContainer.mainApp.twoSidePanel.catalogue.dataType',
         'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
         'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',

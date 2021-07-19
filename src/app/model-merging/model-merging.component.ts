@@ -68,8 +68,20 @@ export class ModelMergingComponent implements OnInit {
     dataElementFilter: null
   };
 
-  DIFF_LOC = {Source : 'source', Target : 'target'};
-  MERGE_DOMAIN_TYPE = {DataClass : 'dataClass', DataElement : 'dataElement', Enumeration : 'enumeration', DataType : 'dataType', Property : 'property',  Metadata : 'metadata', DataModel: 'dataModel'};
+  DIFF_LOC = {
+    Source : 'source',
+    Target : 'target'
+  };
+
+  MERGE_DOMAIN_TYPE = {
+    DataClass : 'dataClass',
+    DataElement : 'dataElement',
+    Enumeration : 'enumeration',
+    DataType : 'dataType',
+    Property : 'property',
+    Metadata : 'metadata',
+    DataModel: 'dataModel'
+  };
 
   domainType: ModelDomainType;
 

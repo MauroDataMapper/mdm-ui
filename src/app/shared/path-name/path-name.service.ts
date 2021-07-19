@@ -25,6 +25,8 @@ import { PathElement, PathElementType, pathElementTypeNames } from './path-name.
 export class PathNameService {
   private readonly elementSeparator = '|';
   private readonly partSeparator = ':';
+  private readonly propSeparator = '|$';
+  private readonly branchSeparator = '@';
 
   constructor() { }
 
@@ -33,15 +35,23 @@ export class PathNameService {
       return null;
     }
 
+    path = path.replace(this.propSeparator, this.partSeparator);
+
     const elements = path.split(this.elementSeparator);
     return elements.map(element => {
       const parts = element.split(this.partSeparator).filter(p => p && p.length > 0);
       if (parts.length < 2) {
-        throw new Error(`Path element '${element}' should be in the format 'prefix:label'`);
+        throw new Error(`Path element '${element}' should be in the format 'prefix:label(@version)'`);
+      }
+
+      const labelAndVersion = parts[1].split(this.branchSeparator);
+      if (labelAndVersion.length < 1) {
+        throw new Error(`Path element '${element}' should be in the format 'prefix:label(@version)'`);
       }
 
       const type = parts[0] as PathElementType;
-      const label = parts[1];
+      const label = labelAndVersion[0];
+      const version = labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;
       const typeName = pathElementTypeNames.get(type);
 
       if (parts.length > 2) {
@@ -52,6 +62,7 @@ export class PathNameService {
           type,
           typeName,
           label,
+          version,
           property: {
             name,
             qualifiedName
@@ -62,7 +73,8 @@ export class PathNameService {
       return {
         type,
         typeName,
-        label
+        label,
+        version
       };
     });
   }

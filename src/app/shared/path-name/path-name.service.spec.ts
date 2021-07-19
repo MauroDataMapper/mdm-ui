@@ -45,6 +45,18 @@ describe('PathNameService', () => {
         ]
       ],
       [
+        'dm:Test Data Model@another-branch',
+        [
+          { type: PathElementType.DataModel, typeName: 'Data model', version: 'another-branch', label: 'Test Data Model' }
+        ]
+      ],
+      [
+        'dm:Test Data Model@2.0.0',
+        [
+          { type: PathElementType.DataModel, typeName: 'Data model', version: '2.0.0', label: 'Test Data Model' }
+        ]
+      ],
+      [
         'te:Test Terminology',
         [
           { type: PathElementType.Terminology, typeName: 'Terminology', label: 'Test Terminology' }
@@ -72,7 +84,7 @@ describe('PathNameService', () => {
         ]
       ],
       [
-        'dm:Test Data Model:description',
+        'dm:Test Data Model|$:description',
         [
           {
             type: PathElementType.DataModel,
@@ -86,7 +98,22 @@ describe('PathNameService', () => {
         ]
       ],
       [
-        'dm:Test Data Model:rule:rule-representation',
+        'dm:Test Data Model@2.0.0|$:description',
+        [
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            label: 'Test Data Model',
+            version: '2.0.0',
+            property: {
+              name: 'description',
+              qualifiedName: ['description']
+            }
+          }
+        ]
+      ],
+      [
+        'dm:Test Data Model|$:rule:rule-representation',
         [
           {
             type: PathElementType.DataModel,
@@ -100,12 +127,32 @@ describe('PathNameService', () => {
         ]
       ],
       [
-        'dm:Test Data Model|dc:Test Data Class:description',
+        'dm:Test Data Model|dc:Test Data Class|$:description',
         [
           {
             type: PathElementType.DataModel,
             typeName: 'Data model',
             label: 'Test Data Model'
+          },
+          {
+            type: PathElementType.DataClass,
+            typeName: 'Data class',
+            label: 'Test Data Class',
+            property: {
+              name: 'description',
+              qualifiedName: ['description']
+            }
+          }
+        ]
+      ],
+      [
+        'dm:Test Data Model@test-branch|dc:Test Data Class|$:description',
+        [
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            label: 'Test Data Model',
+            version: 'test-branch'
           },
           {
             type: PathElementType.DataClass,

@@ -218,6 +218,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   submitForDoi(state: DoiSubmissionState) {
+    if (!this.shared.features.useDigitalObjectIdentifiers) {
+      return;
+    }
+
     const selected = this.usedProfiles
       .concat(this.unusedProfiles)
       .find(item => item.namespace === doiProfileNamespace);

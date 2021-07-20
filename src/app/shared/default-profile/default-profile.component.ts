@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit } from '@angular/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 import { DefaultProfileControls } from '@mdm/model/defaultProfileModel';
 
@@ -26,7 +27,7 @@ import { DefaultProfileControls } from '@mdm/model/defaultProfileModel';
   templateUrl: './default-profile.component.html'
 })
 export class DefaultProfileComponent implements OnInit {
-  @Input() catalogueItem: any;
+  @Input() catalogueItem: CatalogueItem & { [key: string]: any };
 
   controls: Array<string>;
 

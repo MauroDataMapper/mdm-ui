@@ -39,7 +39,6 @@ import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
-import { PluginsModule } from './plugins/plugins.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,8 +56,7 @@ import { PluginsModule } from './plugins/plugins.module';
       defaultHttpRequestOptions: { withCredentials: true },
       apiEndpoint: environment.apiEndpoint
     }),
-    MergeDiffModule,
-    PluginsModule
+    MergeDiffModule
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

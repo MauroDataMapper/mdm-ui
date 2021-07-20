@@ -145,6 +145,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <mat-menu #doiSubmitActions="matMenu" class="mdm--mat-menu--actions">
           <button
+            *ngIf="doiState === 'not applicable'"
             mat-menu-item
             type="button"
             class="mr-1"
@@ -153,12 +154,22 @@ SPDX-License-Identifier: Apache-2.0
             <i class="far fa-file"></i> Draft
           </button>
           <button
+            *ngIf="doiState === 'not applicable' || doiState === 'draft'"
             mat-menu-item
             type="button"
             class="mr-1"
-            (click)="submitForDoi('final')"
+            (click)="submitForDoi('finalise')"
           >
             <i class="fas fa-check has-text-green"></i> Final
+          </button>
+          <button
+            *ngIf="doiState === 'draft' || doiState === 'final'"
+            mat-menu-item
+            type="button"
+            class="mr-1"
+            (click)="submitForDoi('retire')"
+          >
+            <i class="far fa-stop-circle warning"></i> Retire
           </button>
         </mat-menu>
       </div>

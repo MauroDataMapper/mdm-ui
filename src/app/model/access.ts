@@ -42,4 +42,6 @@ export interface Access {
   canCreate: boolean;
   canMoveToFolder: boolean;
   canMoveToVersionedFolder: boolean;
+  isReadablePostFinalise: boolean;
+  isEditablePostFinalise: boolean;
 }

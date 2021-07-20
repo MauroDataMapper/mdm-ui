@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiSubmissionState, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, DoiSubmissionStatus, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, Securable, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
@@ -38,7 +38,7 @@ import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, Profil
   styleUrls: ['./profile-data-view.component.scss']
 })
 export class ProfileDataViewComponent implements OnInit, OnChanges {
-  @Input() catalogueItem: Modelable & ModelableDetail & Securable & { [key: string]: any };
+  @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & { [key: string]: any };
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();
 
@@ -50,6 +50,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   canEdit = false;
   canDeleteProfile = false;
   canAddMetadata = false;
+  isEditablePostFinalise = false;
+  doiState: DoiState = 'not applicable';
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -60,9 +62,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   get canSubmitForDoi() {
-    // TODO: add other conditions for submitting DOIs - finalised, public etc
-    // Wait for `availableActions` to send back correct values
-    return this.shared.features.useDigitalObjectIdentifiers;
+    // DOI profiles can only be submitted for finalised, public items
+    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.catalogueItem.readableByEveryone;
   }
 
   get showAdditionalActions() {
@@ -93,6 +94,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       if (this.shared.isLoggedIn(true)) {
         this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+      }
+
+      if (this.shared.features.useDigitalObjectIdentifiers) {
+        // TODO: add back when ready
+        //this.getDoiStatus();
       }
     }
   }
@@ -222,77 +228,12 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       return;
     }
 
-    const selected = this.usedProfiles
-      .concat(this.unusedProfiles)
-      .find(item => item.namespace === doiProfileNamespace);
-
-    if (!selected) {
-      this.messageHandler.showWarning('Unable to find the Digital Object Identifier profile. Please check with your administrator if it is enabled.');
+    if (state === 'retire') {
+      this.retireDoi();
       return;
     }
 
-    const doiProfileInUse = this.usedProfiles.find(item => item.value === selected.value);
-
-    const description = doiProfileInUse
-      ? `Before submitting this object to receive a '${state}' Digital Object Identifier (DOI), please check all profile information below to ensure it is correct, then click the 'Submit' button.`
-      : `To receive a '${state}' Digital Object Identifier (DOI), please fill in the profile information below, then click the 'Submit' button.`;
-
-    this.resources.profile
-      .profile(this.catalogueItem.domainType, this.catalogueItem.id, selected.namespace, selected.name, '')
-      .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the selected profile.', error);
-          return EMPTY;
-        }),
-        switchMap((response: ProfileResponse) => {
-          return this.editing
-            .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
-              EditProfileModalComponent,
-              {
-                data: {
-                  profile: response.body,
-                  profileName: selected.display,
-                  catalogueItem: this.catalogueItem,
-                  isNew: !doiProfileInUse,
-                  description,
-                  okBtn: 'Submit'
-                },
-                disableClose: true,
-                panelClass: 'full-width-dialog'
-              })
-            .afterClosed();
-        }),
-        filter((result: EditProfileModalResult) => result.status === ModalDialogStatus.Ok),
-        switchMap((result: EditProfileModalResult) => {
-          const data = JSON.stringify(result.profile);
-          return this.resources.profile
-            .saveProfile(
-              this.catalogueItem.domainType,
-              this.catalogueItem.id,
-              selected.namespace,
-              selected.name,
-              data);
-        }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem saving the profile.', error);
-          return EMPTY;
-        }),
-        switchMap(() => {
-          return this.resources.pluginDoi.save(
-            this.catalogueItem.domainType,
-            this.catalogueItem.id,
-            {
-              submissionType: state
-            });
-        }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem submitting the profile to generate a Digital Object Identifier (DOI).', error);
-          return EMPTY;
-        }),
-      )
-      .subscribe(() => {
-        this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
-      });
+    this.submitCatalogueItemForDoi(state);
   }
 
   private setAccess() {
@@ -300,6 +241,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canEdit = access.showEdit;
     this.canDeleteProfile = access.showDelete;
     this.canAddMetadata = access.canAddMetadata;
+    this.isEditablePostFinalise = access.isEditablePostFinalise;
   }
 
   private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {
@@ -422,5 +364,123 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private getNamespaceAndName(viewName: string): [string, string] {
     const split = viewName.split('/');
     return [split[0], split[1]];
+  }
+
+  private getDoiStatus() {
+    this.resources.pluginDoi
+      .get(this.catalogueItem.domainType, this.catalogueItem.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the status of this item\'s Digital Object Identifier (DOI).', error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: DoiStatusResponse) => {
+        this.doiState = response.body.state;
+      });
+  }
+
+  private submitCatalogueItemForDoi(state: DoiSubmissionState) {
+    const selected = this.usedProfiles
+      .concat(this.unusedProfiles)
+      .find(item => item.namespace === doiProfileNamespace);
+
+    if (!selected) {
+      this.messageHandler.showWarning('Unable to find the Digital Object Identifier profile. Please check with your administrator if it is enabled.');
+      return;
+    }
+
+    const doiProfileInUse = this.usedProfiles.find(item => item.value === selected.value);
+
+    const description = doiProfileInUse
+      ? `Before submitting this object to receive a '${state}' Digital Object Identifier (DOI), please check all profile information below to ensure it is correct, then click the 'Submit' button.`
+      : `To receive a '${state}' Digital Object Identifier (DOI), please fill in the profile information below, then click the 'Submit' button.`;
+
+    this.resources.profile
+      .profile(this.catalogueItem.domainType, this.catalogueItem.id, selected.namespace, selected.name, '')
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the selected profile.', error);
+          return EMPTY;
+        }),
+        switchMap((response: ProfileResponse) => {
+          return this.editing
+            .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
+              EditProfileModalComponent,
+              {
+                data: {
+                  profile: response.body,
+                  profileName: selected.display,
+                  catalogueItem: this.catalogueItem,
+                  isNew: !doiProfileInUse,
+                  description,
+                  okBtn: 'Submit'
+                },
+                disableClose: true,
+                panelClass: 'full-width-dialog'
+              })
+            .afterClosed();
+        }),
+        filter((result: EditProfileModalResult) => result.status === ModalDialogStatus.Ok),
+        switchMap((result: EditProfileModalResult) => {
+          const data = JSON.stringify(result.profile);
+          return this.resources.profile
+            .saveProfile(
+              this.catalogueItem.domainType,
+              this.catalogueItem.id,
+              selected.namespace,
+              selected.name,
+              data);
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem saving the profile.', error);
+          return EMPTY;
+        }),
+        switchMap(() => {
+          return this.resources.pluginDoi.save(
+            this.catalogueItem.domainType,
+            this.catalogueItem.id,
+            {
+              submissionType: state
+            });
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem submitting the profile to generate a Digital Object Identifier (DOI).', error);
+          return EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
+      });
+  }
+
+  private retireDoi() {
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Confirm',
+          message: 'Are you sure you want to retire the Digital Object Identifier (DOI) for this catalogue item?',
+          okBtnTitle: 'Yes, retire',
+          cancelBtnTitle: 'No',
+          btnType: 'warn'
+        }
+      })
+      .pipe(
+        switchMap(() => {
+          return this.resources.pluginDoi.save(
+            this.catalogueItem.domainType,
+            this.catalogueItem.id,
+            {
+              submissionType: 'retire'
+            });
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem retiring the Digital Object Identifier (DOI).', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('The Digital Object Identifier (DOI) was successfully retired.');
+      });
   }
 }

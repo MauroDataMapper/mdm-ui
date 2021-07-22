@@ -459,7 +459,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .openConfirmationAsync({
         data: {
           title: 'Confirm',
-          message: 'Are you sure you want to retire the Digital Object Identifier (DOI) for this catalogue item?',
+          message: 'Are you sure you want to retire the Digital Object Identifier (DOI) for this catalogue item? Once retired, this cannot be undone.',
           okBtnTitle: 'Yes, retire',
           cancelBtnTitle: 'No',
           btnType: 'warn'

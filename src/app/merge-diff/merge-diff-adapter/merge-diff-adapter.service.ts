@@ -17,9 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ModelDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, ModelDomainType, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -33,20 +33,25 @@ import { HttpClient } from '@angular/common/http';
 export class MergeDiffAdapterService {
   constructor(private resources: MdmResourcesService, private http: HttpClient ) {}
 
-  loadCatalogueItemDetails(id: Uuid, domainType: ModelDomainType) : Observable<any> {
+  getCatalogueItemDetails(
+    domainType: MergableMultiFacetAwareDomainType,
+    id: Uuid) : Observable<MdmResponse<MergableCatalogueItem>> {
     switch (domainType) {
-      case ModelDomainType.DataModels:
+      case MultiFacetAwareDomainType.DataModels:
         return this.resources.dataModel.get(id);
-      case ModelDomainType.ReferenceDataModels:
+      case MultiFacetAwareDomainType.ReferenceDataModels:
         return this.resources.referenceDataModel.get(id);
+      case MultiFacetAwareDomainType.Terminologies:
+        return this.resources.terminology.get(id);
+      case MultiFacetAwareDomainType.VersionedFolders:
+        return this.resources.versionedFolder.get(id);
       default:
-        break;
+        return throwError(`Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`);
     }
   }
 
-  retrieveMainBranch(domainType: ModelDomainType, sourceId: Uuid)
-  {
-    return this.resources.versioning.currentMainBranch(domainType, sourceId);
+  getMainBranch(domainType: MergableMultiFacetAwareDomainType, id: Uuid): Observable<MainBranchResponse> {
+    return this.resources.merge.currentMainBranch(domainType, id);
   }
 
   // getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MergeItem[]> {

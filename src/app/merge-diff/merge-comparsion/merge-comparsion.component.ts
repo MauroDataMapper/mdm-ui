@@ -18,9 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Branchable,
-  MergeItem,
-  MergeType,
-  MergeUsed
+  MergeDiffItem,
+  MergeDiffType,
+  MergeConflictResolution
 } from '@maurodatamapper/mdm-resources';
 import {
   Component,
@@ -60,7 +60,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
   @Input() mergeItem: FullMergeItem;
   @Input() isCommitting: boolean;
 
-  @Output() cancelCommitEvent = new EventEmitter<MergeItem>();
+  @Output() cancelCommitEvent = new EventEmitter<MergeDiffItem>();
   @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
   currentElement: string;
   linkScroll = false;
@@ -77,11 +77,11 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
     if (this.isCommitting) {
       this.sourceUsed = this.mergeItem.branchSelected;
       switch (this.mergeItem.branchSelected) {
-        case MergeUsed.Mixed:
+        case MergeConflictResolution.Mixed:
           this.committingContent = this.mergeItem.mixedContent;
           this.sourceUsed = 'Mixed';
           break;
-        case MergeUsed.Target:
+        case MergeConflictResolution.Target:
           this.committingContent = this.mergeItem.targetValue;
           this.sourceUsed = 'Target';
           break;
@@ -90,21 +90,20 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
           this.sourceUsed = 'Source';
           break;
       }
-    }else{
+    }
+    else{
       this.targetText = this.stringConflict.getDiffViewHtml(this.mergeItem.sourceValue,this.mergeItem.targetValue);
       this.sourceText = this.stringConflict.getDiffViewHtml(this.mergeItem.targetValue,this.mergeItem.sourceValue);
     }
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
   cancelCommit() {
     this.cancelCommitEvent.emit(this.mergeItem);
   }
 
-  acceptCommit(branchUsed: MergeUsed) {
+  acceptCommit(branchUsed: MergeConflictResolution) {
     this.mergeItem.branchSelected = branchUsed;
     this.acceptCommitEvent.emit(this.mergeItem);
   }
@@ -131,17 +130,17 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
       .pipe(filter((result) => result.status === ModalDialogStatus.Ok))
       .subscribe((result: ConflictEditorModalResult) => {
           this.mergeItem.mixedContent = result.resolvedContent;
-          this.mergeItem.branchSelected = MergeUsed.Mixed;
+          this.mergeItem.branchSelected = MergeConflictResolution.Mixed;
           this.acceptCommitEvent.emit(this.mergeItem);
       });
   }
 
   public get MergeUsed() {
-    return MergeUsed;
+    return MergeConflictResolution;
   }
 
   public get MergeType() {
-    return MergeType;
+    return MergeDiffType;
   }
 
   updateVerticalScroll(event): void {

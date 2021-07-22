@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MergeType, MergeUsed } from '@maurodatamapper/mdm-resources';
+import { MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 import { FullMergeItem } from '@mdm/merge-diff/types/merge-item-type';
 import { SharedService } from '@mdm/services';
 import { CheckinModelPayload } from './check-in-modal-payload';
@@ -49,26 +49,26 @@ export class CheckInModalComponent implements OnInit {
     this.isV2 = this.sharedService.features.useMergeUiV2;
   }
 
-  getBranchSelectedIcon(selected: MergeUsed) {
+  getBranchSelectedIcon(selected: MergeConflictResolution) {
     switch (selected) {
-      case MergeUsed.Source:
+      case MergeConflictResolution.Source:
         return 'fas fa-file-export';
-      case MergeUsed.Target:
+      case MergeConflictResolution.Target:
         return 'fas fa-file-import';
-      case MergeUsed.Mixed:
+      case MergeConflictResolution.Mixed:
         return 'fab fa-mixer';
       default:
         return '';
     }
   }
 
-  getBranchSelectedTooltip(selected: MergeUsed) {
+  getBranchSelectedTooltip(selected: MergeConflictResolution) {
     switch (selected) {
-      case MergeUsed.Source:
+      case MergeConflictResolution.Source:
         return 'Take from Source';
-      case MergeUsed.Target:
+      case MergeConflictResolution.Target:
         return 'Take from Target';
-      case MergeUsed.Mixed:
+      case MergeConflictResolution.Mixed:
         return 'Mixed/combined content';
       default:
         return '';
@@ -77,7 +77,7 @@ export class CheckInModalComponent implements OnInit {
 
   public get mergeType()
   {
-    return MergeType;
+    return MergeDiffType;
   }
 
 }

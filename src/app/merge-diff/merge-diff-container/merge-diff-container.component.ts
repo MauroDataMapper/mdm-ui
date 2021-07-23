@@ -28,14 +28,11 @@ import {
   MergeDiffType,
   MergableMultiFacetAwareDomainType,
   MergableCatalogueItem,
-  MdmResponse,
   MainBranchResponse
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
-import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
-import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   MessageHandlerService,
   SharedService,
@@ -43,7 +40,7 @@ import {
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, of } from 'rxjs';
-import { catchError, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
 import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
 

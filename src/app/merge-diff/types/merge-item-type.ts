@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { MergeDiffItem, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 
-export const branchNameField = "branchName";
+export const branchNameField = 'branchName';
 
 export type MergeItemValueType = 'undefined' | 'string' | 'number';
 

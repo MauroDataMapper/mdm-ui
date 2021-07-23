@@ -121,7 +121,6 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
   }
 
   openEditor() {
-    // TODO: add in possible other editors, not just strings
     this.dialog
       .open<
         ConflictEditorModalComponent,

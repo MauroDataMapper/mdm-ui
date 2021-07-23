@@ -21,7 +21,32 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="modal-body pxy-2">
   <div *ngIf="useMergeDiffModule">
-    <p>The following changes will be committed</p>
+    <p>The following changes will be committed:</p>
+    <h5 class="inline-block marginless">
+      <span class="dataModelTypeIcon">
+        <mdm-model-icon
+          [domainType]="domainType"
+          [isDataAsset]="isDataAsset"
+        ></mdm-model-icon>
+      </span>
+      <span class="dataModelDetailsLabel">{{ label }}</span>
+    </h5>
+    <h5 *ngIf="source" class="text-muted">
+      <small>
+        <i class="fas fa-file-export" matTooltip="{{ source.branchName }}"></i>
+        <span
+          ><strong>Source Branch : {{ source.branchName }} </strong></span
+        >
+      </small>
+    </h5>
+    <h5 *ngIf="target" class="text-muted">
+      <small>
+        <i class="fas fa-file-import" matTooltip="{{ target.branchName }}"></i>
+        <span
+          ><strong>Target Branch : {{ target.branchName }} </strong></span
+        >
+      </small>
+    </h5>
     <div class="mdm--form-input" class="mergeItemsList">
       <mat-list>
         <mat-list-item

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
+import { MergeDiffType, MergeConflictResolution, Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 import { SharedService } from '@mdm/services';
@@ -35,6 +35,11 @@ export class CheckInModalComponent implements OnInit {
   deleteSourceBranch: boolean;
   useMergeDiffModule: boolean;
   items: MergeDiffItemModel[];
+  label: string;
+  domainType: MergableMultiFacetAwareDomainType;
+  isDataAsset: boolean;
+  source: Branchable;
+  target: Branchable;
 
 
   constructor(
@@ -47,6 +52,11 @@ export class CheckInModalComponent implements OnInit {
     this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
     this.items = this.data.items ?? [];
     this.useMergeDiffModule = this.sharedService.features.useMergeUiV2;
+    this.label = this.data.label;
+    this.domainType = this.data.domainType;
+    this.isDataAsset = this.data.isDataAsset;
+    this.source = this.data.source;
+    this.target = this.data.target;
   }
 
   cancel() {

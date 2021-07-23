@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { CommitMergePayload, CommittedMergeResponse, MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, MergeDiff, MergeDiffResponse, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EMPTY, Observable, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { MessageHandlerService } from '@mdm/services';
 import { catchError, map } from 'rxjs/operators';
 
@@ -57,11 +56,6 @@ export class MergeDiffAdapterService {
   getMainBranch(domainType: MergableMultiFacetAwareDomainType, id: Uuid): Observable<MainBranchResponse> {
     return this.resources.merge.currentMainBranch(domainType, id);
   }
-
-  // getMergeDiff() : Observable<any>
-  // {
-  //   return this.http.get('../../../assets/newStyle.json');
-  // }
 
   getMergeDiff(
     domainType: MergableMultiFacetAwareDomainType,

@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 
@@ -25,6 +26,11 @@ export interface CheckinModelConfiguration
     deleteSourceBranch: boolean;
     commitComment?: string;
     items?: MergeDiffItemModel[];
+    label?: string;
+    domainType?: MergableMultiFacetAwareDomainType;
+    isDataAsset?: boolean;
+    source?: Branchable;
+    target?: Branchable;
 }
 
 export interface CheckinModelResult {

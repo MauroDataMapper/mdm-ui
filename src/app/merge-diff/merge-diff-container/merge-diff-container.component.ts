@@ -139,7 +139,12 @@ export class MergeDiffContainerComponent implements OnInit {
         {
           data: {
             deleteSourceBranch: false,
-            items: this.committingList
+            items: this.committingList,
+            label: this.source.label,
+            domainType: this.domainType,
+            isDataAsset: this.source?.type === 'Data Asset',
+            source: this.source,
+            target: this.target
           }
         })
       .afterClosed()

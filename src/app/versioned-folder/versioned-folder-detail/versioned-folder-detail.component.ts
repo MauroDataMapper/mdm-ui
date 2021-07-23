@@ -20,9 +20,10 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { MultiFacetAwareDomainType, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
@@ -216,6 +217,24 @@ export class VersionedFolderDetailComponent implements OnInit {
         domainType: this.detail.domainType
       }
     );
+  }
+
+  merge() {
+    return this.stateHandler.Go(
+      'mergediff',
+      {
+        sourceId: this.detail.id,
+        catalogueDomainType: MultiFacetAwareDomainType.VersionedFolders
+      });
+  }
+
+  showMergeGraph() {
+    this.dialog.open(VersioningGraphModalComponent, {
+      data: {
+        parentDataModel: this.detail.id
+      },
+      panelClass: 'versioning-graph-modal'
+    });
   }
 
   private delete(permanent: boolean) {

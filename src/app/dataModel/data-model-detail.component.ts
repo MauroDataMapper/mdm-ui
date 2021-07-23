@@ -41,7 +41,8 @@ import {
   DataModelDetail,
   DataModelDetailResponse,
   ModelDomainType,
-  ModelUpdatePayload
+  ModelUpdatePayload,
+  MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
@@ -84,7 +85,7 @@ export class DataModelDetailComponent implements OnInit {
     private editingService: EditingService,
     private validatorService: ValidatorService,
     private mergeDiffService: MergeDiffAdapterService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isAdminUser = this.sharedService.isAdmin;
@@ -259,7 +260,7 @@ export class DataModelDetailComponent implements OnInit {
             );
           }
         );
-    }else{
+    } else {
       this.messageHandler.showError('There is an error with the label please correct and try again');
     }
   }
@@ -358,7 +359,7 @@ export class DataModelDetailComponent implements OnInit {
         'mergediff',
         {
           sourceId: this.dataModel.id,
-          catalogueDomainType:  ModelDomainType.DataModels
+          catalogueDomainType: MultiFacetAwareDomainType.DataModels
         });
     }
 
@@ -374,21 +375,12 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   showMergeGraph() {
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(VersioningGraphModalComponent, {
-        data: { parentDataModel: this.dataModel.id },
-        panelClass: 'versioning-graph-modal'
-      });
-
-      dialog.afterClosed().subscribe((dataModel) => {
-        if (dataModel != null && dataModel.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
+    this.dialog.open(VersioningGraphModalComponent, {
+      data: {
+        parentDataModel: this.dataModel.id
+      },
+      panelClass: 'versioning-graph-modal'
     });
-    promise.then(() => {}).catch(() => {});
   }
 
   export(exporter) {

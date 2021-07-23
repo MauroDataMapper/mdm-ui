@@ -25,8 +25,8 @@ import { PathElement, PathElementType, pathElementTypeNames } from './path-name.
 export class PathNameService {
   private readonly elementSeparator = '|';
   private readonly partSeparator = ':';
-  private readonly propSeparator = '|$';
-  private readonly branchSeparator = '@';
+  private readonly propSeparator = '@';
+  private readonly branchSeparator = '$';
 
   constructor() { }
 

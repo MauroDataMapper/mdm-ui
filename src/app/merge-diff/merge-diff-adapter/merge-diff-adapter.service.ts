@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, MergeDiff, MergeDiffResponse, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { CommitMergePayload, CommittedMergeResponse, MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, MergeDiff, MergeDiffResponse, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -35,11 +35,11 @@ import { catchError, map } from 'rxjs/operators';
 export class MergeDiffAdapterService {
   constructor(
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService) {}
+    private messageHandler: MessageHandlerService) { }
 
   getCatalogueItemDetails(
     domainType: MergableMultiFacetAwareDomainType,
-    id: Uuid) : Observable<MdmResponse<MergableCatalogueItem>> {
+    id: Uuid): Observable<MdmResponse<MergableCatalogueItem>> {
     switch (domainType) {
       case MultiFacetAwareDomainType.DataModels:
         return this.resources.dataModel.get(id);
@@ -75,6 +75,22 @@ export class MergeDiffAdapterService {
           return EMPTY;
         }),
         map((response: MergeDiffResponse) => response.body)
+      );
+  }
+
+  commitMergePatches(
+    domainType: MergableMultiFacetAwareDomainType,
+    sourceId: Uuid,
+    targetId: Uuid,
+    data: CommitMergePayload): Observable<MergableCatalogueItem> {
+    return this.resources.merge
+      .mergeInto(domainType, sourceId, targetId, data)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem committing the changes to the target item.', error);
+          return EMPTY;
+        }),
+        map((response: CommittedMergeResponse) => response.body)
       );
   }
 }

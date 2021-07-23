@@ -31,7 +31,8 @@ import {
   MdmResponse,
   MainBranchResponse
 } from '@maurodatamapper/mdm-resources';
-import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -42,9 +43,9 @@ import {
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, of } from 'rxjs';
-import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import { MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
+import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -77,8 +78,7 @@ export class MergeDiffContainerComponent implements OnInit {
     private mergeDiff: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private title: Title,
-    private resources: MdmResourcesService) { }
+    private title: Title) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useMergeUiV2) {
@@ -134,47 +134,51 @@ export class MergeDiffContainerComponent implements OnInit {
 
   onCommitChanges(): void {
     this.dialog
-      .open<CheckInModalComponent, CheckinModelPayload>(CheckInModalComponent, {
-        data: {
-          deleteSourceBranch: false,
-          mergeItems: this.committingList
-        }
-      })
+      .open<CheckInModalComponent, CheckinModelConfiguration, CheckinModelResult>(
+        CheckInModalComponent,
+        {
+          data: {
+            deleteSourceBranch: false,
+            items: this.committingList
+          }
+        })
       .afterClosed()
-      .subscribe((result) => {
-        if (result) {
+      .pipe(
+        filter(result => result.status === ModalDialogStatus.Ok),
+        switchMap(result => {
+          const patches = this.committingList.filter(
+            item => item.branchSelected !== MergeConflictResolution.Target
+          );
+
           const data: CommitMergePayload = {
+            changeNotice: result.commitComment,
+            deleteBranch: result.deleteSourceBranch,
             patch: {
               sourceId: this.source.id,
               targetId: this.target.id,
-              patches: this.committingList.filter(
-                (x) => x.branchSelected !== MergeConflictResolution.Target
-              )
+              label: this.target.label,
+              count: patches.length,
+              patches
             }
           };
 
-          this.resources.merge
-            .mergeInto(this.domainType, this.source.id, this.target.id, data)
-            .pipe(
-              catchError((error) => {
-                this.messageHandler.showError(
-                  'There was an error committing the changes',
-                  error
-                );
-                return EMPTY;
-              })
-            )
-            .subscribe(() => {
-              this.messageHandler.showSuccess('Commit Successful');
-              this.stateHandler.Go(
-                ModelDomainRequestType[this.domainType],
-                { id: this.target.id, reload: true, location: true },
-                null
-              );
-            });
-        }
+          return this.mergeDiff.commitMergePatches(
+            this.domainType,
+            this.source.id,
+            this.target.id,
+            data);
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(`Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`);
+        this.stateHandler.Go(
+          this.target.domainType,
+          {
+            id: this.target.id,
+            reload: true,
+            location: true
+          });
       });
-    // TODO
   }
 
   onCancelChanges(): void {
@@ -187,6 +191,12 @@ export class MergeDiffContainerComponent implements OnInit {
       .getMergeDiff(this.domainType, this.source.id, this.target.id)
       .subscribe(data => {
         data.diffs.forEach((item: MergeDiffItemModel) => {
+          if (item.fieldName === branchNameField) {
+            // A merge diff item with the field name "branchName" should not be considered for the user
+            // to manage, this is a built-in field that Mauro manages
+            return;
+          }
+
           if (item.isMergeConflict) {
             this.changesList.push(item);
           }

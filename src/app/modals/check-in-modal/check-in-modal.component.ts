@@ -19,9 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 import { SharedService } from '@mdm/services';
-import { CheckinModelPayload } from './check-in-modal-payload';
+import { CheckinModelConfiguration, CheckinModelResult } from './check-in-modal-payload';
 
 @Component({
   selector: 'mdm-check-in-modal',
@@ -32,21 +33,32 @@ export class CheckInModalComponent implements OnInit {
 
   commitComment: string;
   deleteSourceBranch: boolean;
-  isV2: boolean;
-  mergeItems: Array<MergeDiffItemModel>;
+  useMergeDiffModule: boolean;
+  items: MergeDiffItemModel[];
 
 
   constructor(
-    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelPayload>,
-    @Inject(MAT_DIALOG_DATA) public data: CheckinModelPayload,
-    private sharedService: SharedService
-  ) { }
+    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelResult>,
+    @Inject(MAT_DIALOG_DATA) public data: CheckinModelConfiguration,
+    private sharedService: SharedService) { }
 
   ngOnInit(): void {
     this.commitComment = this.data.commitComment ?? '';
     this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
-    this.mergeItems = this.data.mergeItems ?? Array<MergeDiffItemModel>();
-    this.isV2 = this.sharedService.features.useMergeUiV2;
+    this.items = this.data.items ?? [];
+    this.useMergeDiffModule = this.sharedService.features.useMergeUiV2;
+  }
+
+  cancel() {
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  commit() {
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      deleteSourceBranch: this.deleteSourceBranch,
+      commitComment: this.commitComment
+    });
   }
 
   getBranchSelectedIcon(selected: MergeConflictResolution) {

@@ -17,12 +17,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 
-export interface CheckinModelPayload
+export interface CheckinModelConfiguration
 {
-    deleteSourceBranch : boolean;
-    commitComment? : string;
-    changes? : any[]; // Replace with type when added;
-    mergeItems? : MergeDiffItemModel[];
+    deleteSourceBranch: boolean;
+    commitComment?: string;
+    items?: MergeDiffItemModel[];
+}
+
+export interface CheckinModelResult {
+  status: ModalDialogStatus;
+  deleteSourceBranch?: boolean;
+  commitComment?: string;
 }

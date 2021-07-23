@@ -34,7 +34,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { MergeDiffItemModel } from '../types/merge-item-type';
+import { MergeDiffItemModel, MergeItemValueType } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { filter } from 'rxjs/operators';
@@ -69,6 +69,17 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
   committingContent: string;
   sourceText: string;
   targetText: string;
+  valueType: MergeItemValueType;
+
+  get hasSourceValue() {
+    // Possible that value is the number 0, which we don't want to consider to be "falsy"
+    return this.mergeItem.sourceValue !== undefined || this.mergeItem.sourceValue !== null;
+  }
+
+  get hasTargetValue() {
+    // Possible that value is the number 0, which we don't want to consider to be "falsy"
+    return this.mergeItem.targetValue !== undefined || this.mergeItem.targetValue !== null;
+  }
 
   constructor(private dialog: MatDialog, private stringConflict : StringConflictService) {}
 
@@ -91,9 +102,10 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
           break;
       }
     }
-    else{
-      this.targetText = this.stringConflict.getDiffViewHtml(this.mergeItem.sourceValue,this.mergeItem.targetValue);
-      this.sourceText = this.stringConflict.getDiffViewHtml(this.mergeItem.targetValue,this.mergeItem.sourceValue);
+    else {
+      this.valueType = this.identifyValueType();
+      this.sourceText = this.getComparisonDisplayText(this.mergeItem.sourceValue, this.mergeItem.targetValue);
+      this.targetText = this.getComparisonDisplayText(this.mergeItem.targetValue, this.mergeItem.sourceValue);
     }
   }
 
@@ -123,7 +135,8 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
         data: {
           source: this.source,
           target: this.target,
-          item: this.mergeItem
+          item: this.mergeItem,
+          valueType: this.valueType
         }
       })
       .afterClosed()
@@ -159,5 +172,36 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
 
   linkScrolls(link: boolean) {
     this.linkScroll = link;
+  }
+
+  private identifyValueType(): MergeItemValueType {
+    if (!this.hasSourceValue && !this.hasTargetValue) {
+      return 'undefined';
+    }
+
+    const value = this.hasSourceValue ? this.mergeItem.sourceValue : this.mergeItem.targetValue;
+    if (value === undefined || value === null) {
+      // Don't want "0" to be a "falsy" value
+      return 'undefined';
+    }
+
+    if (typeof value === 'number') {
+      return 'number';
+    }
+
+    return 'string';
+  }
+
+  private getComparisonDisplayText(value: string, other: string) {
+    if (this.valueType === 'undefined') {
+      return '<span>Not defined</span>';
+    }
+
+    if (this.valueType === 'number') {
+      return `${value}`;
+    }
+
+    // Assume the value is a string
+    return this.stringConflict.getDiffViewHtml(other, value);
   }
 }

@@ -16,18 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { Component, Input, OnInit } from '@angular/core';
 import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
-import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { MergeItemValueType } from '@mdm/merge-diff/types/merge-item-type';
 
-export interface ConflictEditorModalData {
-  source: Branchable;
-  target: Branchable;
-  item: MergeDiffItem;
-  valueType: MergeItemValueType;
-}
+@Component({
+  selector: 'mdm-number-conflict-editor',
+  templateUrl: './number-conflict-editor.component.html',
+  styleUrls: ['./number-conflict-editor.component.scss']
+})
+export class NumberConflictEditorComponent implements OnInit {
+  @Input() source: Branchable;
+  @Input() target: Branchable;
+  @Input() item: MergeDiffItem;
 
-export interface ConflictEditorModalResult {
-  status: ModalDialogStatus;
-  resolvedContent?: string;
+  resolvedValue: number;
+
+  constructor() { }
+
+  ngOnInit(): void {
+    this.resolvedValue = Number(this.item.sourceValue);
+  }
+
+  getFinalResolvedValue() {
+    return this.resolvedValue;
+  }
+
 }

@@ -20,6 +20,8 @@ import { MergeDiffItem, MergeConflictResolution } from '@maurodatamapper/mdm-res
 
 export const branchNameField = "branchName";
 
+export type MergeItemValueType = 'undefined' | 'string' | 'number';
+
 export interface MergeItemSelection {
   mergeItem: MergeDiffItem;
   isCommitting: boolean;

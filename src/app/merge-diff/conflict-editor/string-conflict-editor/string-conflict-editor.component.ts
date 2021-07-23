@@ -51,8 +51,6 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   targetText: string;
   resolvedText: string;
 
-
-
   constructor(private stringConflict : StringConflictService) { }
 
   ngOnInit(): void {

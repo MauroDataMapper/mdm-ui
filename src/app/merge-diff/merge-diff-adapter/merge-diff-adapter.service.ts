@@ -17,10 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, ModelDomainType, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, MergeDiff, MergeDiffResponse, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { MessageHandlerService } from '@mdm/services';
+import { catchError, map } from 'rxjs/operators';
 
 
 /**
@@ -31,7 +33,9 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class MergeDiffAdapterService {
-  constructor(private resources: MdmResourcesService, private http: HttpClient ) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService) {}
 
   getCatalogueItemDetails(
     domainType: MergableMultiFacetAwareDomainType,
@@ -54,50 +58,23 @@ export class MergeDiffAdapterService {
     return this.resources.merge.currentMainBranch(domainType, id);
   }
 
-  // getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MergeItem[]> {
-  //   return this.resources.
-  //      versioning.
-  //      mergeDiff(sourceId, targetId,targetId)
-  //     .pipe(
-  //       catchError(() => {return EMPTY;}),  // Common error handling (maybe)
-  //       map((response: VersioningResponse) => response.body)  // Map to types we care about
-  //     );
+  // getMergeDiff() : Observable<any>
+  // {
+  //   return this.http.get('../../../assets/newStyle.json');
   // }
 
-  getMergeDiff() : Observable<any>
-  {
-    return this.http.get('../../../assets/newStyle.json');
-  }
-
-  /*
-  TODO: add in adapter functions when required here.
-
-  Idea of the adapter is to:
-
-  1. Correctly map types from mdm-resources to the UI. The types for merge/diff data should be
-  defined in mdm-resources, but the adapter functions here can make them nicer to use, e.g.
-
-  ```
-  getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MdmMergeDiffItem[]> {
+  getMergeDiff(
+    domainType: MergableMultiFacetAwareDomainType,
+    sourceId: Uuid,
+    targetId: Uuid): Observable<MergeDiff> {
     return this.resources.merge
-      .mergeDiff(sourceId, targetId)
+      .mergeDiff(domainType, sourceId, targetId)
       .pipe(
-        catchError(error => ...),  // Common error handling (maybe)
-        map((response: MdmMergeDiffResponse) => response.body)  // Map to types we care about
+        catchError(error => {
+          this.messageHandler.showError('There was a problem analysing the differences between these two items.', error);
+          return EMPTY;
+        }),
+        map((response: MergeDiffResponse) => response.body)
       );
   }
-  ```
-
-  2. Act as proxies whilst the backend endpoints are being developed, allowing the UI to
-  define the low level functionality required for the UI components, but temporarily return fake
-  data. e.g.
-
-  ```
-  import * as data from './fake-data.json';
-
-  getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MdmMergeDiffItem[]> {
-    return of(data);
-  }
-  ```
-  */
 }

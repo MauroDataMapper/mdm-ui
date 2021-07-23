@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MergeDiffItem, MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 import {
-   FullMergeItem} from '../types/merge-item-type';
+   MergeDiffItemModel} from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
@@ -29,7 +29,7 @@ import {
 })
 export class MergeItemSelectorComponent implements OnInit {
   @Output() selectedMergeItemChanged = new EventEmitter<MergeDiffItem>();
-  @Input() mergeItems: FullMergeItem[];
+  @Input() mergeItems: MergeDiffItemModel[];
   @Input() isCommitting: boolean;
 
   changesList: MergeDiffItem[] = [];

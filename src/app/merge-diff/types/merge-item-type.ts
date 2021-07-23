@@ -23,10 +23,14 @@ export interface MergeItemSelection {
   isCommitting: boolean;
 }
 
-export interface CommittingMergeItem {
+export interface CommittingMergeDiffItem {
   branchSelected: MergeConflictResolution;
   branchNameSelected?: string;
   mixedContent?: string;
 }
 
-export type FullMergeItem = MergeDiffItem & CommittingMergeItem;
+/**
+ * View model representing the combination of a {@link MergeDiffItem} returned from the backend, and
+ * a {@link CommittingMergeDiffItem} to track user changes through the user interface.
+ */
+export type MergeDiffItemModel = MergeDiffItem & CommittingMergeDiffItem;

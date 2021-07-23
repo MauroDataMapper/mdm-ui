@@ -44,7 +44,7 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, of } from 'rxjs';
 import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import { FullMergeItem, MergeItemSelection } from '../types/merge-item-type';
+import { MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -66,8 +66,8 @@ export class MergeDiffContainerComponent implements OnInit {
   target: MergableCatalogueItem;
   diff: MergeDiff;
   selectedItem: MergeItemSelection;
-  changesList: FullMergeItem[];
-  committingList: FullMergeItem[];
+  changesList: MergeDiffItemModel[];
+  committingList: MergeDiffItemModel[];
   activeTab: number;
 
   constructor(
@@ -184,15 +184,17 @@ export class MergeDiffContainerComponent implements OnInit {
   runDiff() {
     this.resetLists();
     this.mergeDiff
-      .getMergeDiff()
-      .subscribe((data) => {
-        data.diffs.forEach((mergeItem: FullMergeItem) => {
-          if (mergeItem.isMergeConflict) {
-            this.changesList.push(mergeItem);
-          } else {
-            mergeItem.branchSelected = MergeConflictResolution.Source;
-            mergeItem.branchNameSelected = this.source.branchName;
-            this.committingList.push(mergeItem);
+      .getMergeDiff(this.domainType, this.source.id, this.target.id)
+      .subscribe(data => {
+        data.diffs.forEach((item: MergeDiffItemModel) => {
+          if (item.isMergeConflict) {
+            this.changesList.push(item);
+          }
+          else {
+            // This item can be merged automatically
+            item.branchSelected = MergeConflictResolution.Source;
+            item.branchNameSelected = this.source.branchName;
+            this.committingList.push(item);
           }
         });
       });
@@ -205,8 +207,8 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   resetLists() {
-    this.changesList = Array<FullMergeItem>();
-    this.committingList = Array<FullMergeItem>();
+    this.changesList = Array<MergeDiffItemModel>();
+    this.committingList = Array<MergeDiffItemModel>();
   }
 
   public get MergeUsed() {
@@ -215,7 +217,7 @@ export class MergeDiffContainerComponent implements OnInit {
 
   selectAll(branchUsed: MergeConflictResolution) {
     this.selectedItem = null;
-    const tempArray: FullMergeItem[] = [];
+    const tempArray: MergeDiffItemModel[] = [];
     this.changesList.forEach((item) => {
       if (item.type === MergeDiffType.Modification) {
         item.branchSelected = branchUsed;
@@ -234,7 +236,7 @@ export class MergeDiffContainerComponent implements OnInit {
         tempArray.push(item);
       }
     });
-    this.changesList = new Array<FullMergeItem>();
+    this.changesList = new Array<MergeDiffItemModel>();
     this.changesList = Object.assign([], tempArray);
   }
 
@@ -254,12 +256,12 @@ export class MergeDiffContainerComponent implements OnInit {
             item.branchSelected = null;
             this.changesList.push(item);
           });
-          this.committingList = new Array<FullMergeItem>();
+          this.committingList = new Array<MergeDiffItemModel>();
         }
       });
   }
 
-  cancelCommit(item: FullMergeItem) {
+  cancelCommit(item: MergeDiffItemModel) {
     const index = this.committingList.findIndex((x) => x === item);
     if (index >= 0) {
       this.selectedItem = null;
@@ -272,7 +274,7 @@ export class MergeDiffContainerComponent implements OnInit {
     }
   }
 
-  acceptCommit(item: FullMergeItem) {
+  acceptCommit(item: MergeDiffItemModel) {
     const index = this.changesList.findIndex((x) => x === item);
     if (index >= 0) {
       this.changesList.splice(index, 1);

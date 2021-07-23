@@ -34,7 +34,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { FullMergeItem } from '../types/merge-item-type';
+import { MergeDiffItemModel } from '../types/merge-item-type';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { filter } from 'rxjs/operators';
@@ -57,11 +57,11 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
 
   @Input() source: Branchable;
   @Input() target: Branchable;
-  @Input() mergeItem: FullMergeItem;
+  @Input() mergeItem: MergeDiffItemModel;
   @Input() isCommitting: boolean;
 
   @Output() cancelCommitEvent = new EventEmitter<MergeDiffItem>();
-  @Output() acceptCommitEvent = new EventEmitter<FullMergeItem>();
+  @Output() acceptCommitEvent = new EventEmitter<MergeDiffItemModel>();
   currentElement: string;
   linkScroll = false;
 

@@ -20,7 +20,9 @@ import { BasicDiagramService } from './basic-diagram.service';
 import { Injectable } from '@angular/core';
 import * as joint from 'jointjs';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { DiagramParameters } from '../diagram/diagram.model';
+import { CatalogueItemDomainType, ModelVersionItem, ModelVersionTreeResponse } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root'
@@ -35,15 +37,29 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
   lightOrange = '#f7a900';
   shadedOrange = '#fec994';
 
-  getDiagramContent(params: any): Observable<any> {
+  getDiagramContent(params: DiagramParameters): Observable<ModelVersionTreeResponse> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataModel.modelVersionTree(params.parent.id);
+
+    switch (params.parent.domainType) {
+      case CatalogueItemDomainType.DataModel:
+        return this.resourcesService.dataModel.modelVersionTree(params.parent.id);
+      case CatalogueItemDomainType.CodeSet:
+        return this.resourcesService.codeSet.modelVersionTree(params.parent.id);
+      case CatalogueItemDomainType.Terminology:
+        return this.resourcesService.terminology.modelVersionTree(params.parent.id);
+      case CatalogueItemDomainType.ReferenceDataModelType:
+        return this.resourcesService.referenceDataModel.modelVersionTree(params.parent.id);
+      case CatalogueItemDomainType.VersionedFolder:
+        return this.resourcesService.versionedFolder.modelVersionTree(params.parent.id);
+      default:
+        return throwError(`Cannot get merge graph content for '${params.parent.domainType} ${params.parent.id}' - not supported.`);
+    }
   }
 
-  render(result: any): void {
+  render(result: ModelVersionTreeResponse): void {
     this.changeComponent(null);
 
-    result.body.forEach((item: any) => {
+    result.body.forEach((item: ModelVersionItem) => {
       if (item.id === this.parentId) {
         this.addColoredRectangleCell(
           this.fontColorWhite,
@@ -98,7 +114,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     });
 
     // Adding the links in a separate loop, because it won't find the target otherwise
-    result.body.forEach((item: any) => {
+    result.body.forEach((item: ModelVersionItem) => {
       let link: any;
       item.targets.forEach((itmTarget) => {
         link = new joint.shapes.standard.Link({

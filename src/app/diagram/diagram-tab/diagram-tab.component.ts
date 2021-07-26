@@ -22,6 +22,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MatDialog } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
+import { DiagramCatalogueItem, DiagramMode } from '../diagram/diagram.model';
 
 @Component({
   selector: 'mdm-diagram-tab',
@@ -31,8 +32,8 @@ import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component'
 
 export class DiagramTabComponent {
 
-  @Input() mode: string;
-  @Input() parent: string;
+  @Input() mode: DiagramMode;
+  @Input() parent: DiagramCatalogueItem;
   @Input() isPopup: boolean;
   @Input() canMoveUp: boolean;
 

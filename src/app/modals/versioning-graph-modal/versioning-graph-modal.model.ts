@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,23 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<h4 mat-dialog-title>Versioning graph</h4>
-<button
-  mat-icon-button
-  color="warn"
-  type="button"
-  class="close-modal paddingless"
-  mat-dialog-close
->
-  <i class="fas fa-times"></i>
-</button>
-<mat-dialog-content class="mat-typography" *ngIf="catalogueItem">
-  <mdm-diagram-tab
-    [parent]="catalogueItem"
-    mode="model-merging-graph"
-    [isPopup]="false"
-    [canMoveUp]="false"
-    class="block"
-  ></mdm-diagram-tab>
-</mat-dialog-content>
+*/
+
+import { MergableCatalogueItem } from "@maurodatamapper/mdm-resources";
+
+export interface VersioningGraphModalConfiguration {
+  catalogueItem: MergableCatalogueItem;
+}

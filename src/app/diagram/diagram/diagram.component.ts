@@ -35,6 +35,7 @@ import { DataflowDataelementDiagramService } from '../services/dataflow-dataelem
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { ModelsMergingDiagramService } from '../services/models-merging-diagram.service';
 import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
+import { DiagramCatalogueItem, DiagramMode, DiagramParameters } from './diagram.model';
 
 @Component({
   selector: 'mdm-diagram',
@@ -42,9 +43,9 @@ import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
   styleUrls: ['./diagram.component.scss'],
 })
 export class DiagramComponent implements OnInit {
-  @Input() mode: string;
+  @Input() mode: DiagramMode;
 
-  @Input() parent: any;
+  @Input() parent: DiagramCatalogueItem;
 
   @Input() diagramComponent: DiagramComponent;
 
@@ -90,7 +91,7 @@ export class DiagramComponent implements OnInit {
     this.resetPaper();
   }
 
-  initializeDiagramService(params): void {
+  initializeDiagramService(params: DiagramParameters): void {
     switch (this.mode) {
       case 'dataflow-model':
         this.diagramService = new DataflowDatamodelDiagramService(

@@ -24,6 +24,7 @@ import { MultiFacetAwareDomainType, VersionedFolderDetail, VersionedFolderDetail
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
@@ -229,12 +230,14 @@ export class VersionedFolderDetailComponent implements OnInit {
   }
 
   showMergeGraph() {
-    this.dialog.open(VersioningGraphModalComponent, {
-      data: {
-        parentDataModel: this.detail.id
-      },
-      panelClass: 'versioning-graph-modal'
-    });
+    this.dialog.open<VersioningGraphModalComponent, VersioningGraphModalConfiguration>(
+      VersioningGraphModalComponent,
+      {
+        data: {
+          catalogueItem: this.detail
+        },
+        panelClass: 'versioning-graph-modal'
+      });
   }
 
   private delete(permanent: boolean) {

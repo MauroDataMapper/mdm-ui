@@ -34,7 +34,6 @@ import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
 import { TabCollection } from '@mdm/model/ui.model';
 import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';

@@ -28,6 +28,7 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { MergeFilterPipe } from './pipes/merge-filter.pipe';
 import { ConflictEditorModalComponent } from './conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
 import { StringConflictEditorComponent } from './conflict-editor/string-conflict-editor/string-conflict-editor.component';
+import { NumberConflictEditorComponent } from './conflict-editor/number-conflict-editor/number-conflict-editor.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { StringConflictEditorComponent } from './conflict-editor/string-conflict
     MergeComparisonComponent,
     MergeFilterPipe,
     ConflictEditorModalComponent,
-    StringConflictEditorComponent
+    StringConflictEditorComponent,
+    NumberConflictEditorComponent
   ],
   imports: [
     CommonModule,

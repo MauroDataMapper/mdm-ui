@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Branchable, MergeItem } from '@maurodatamapper/mdm-resources';
+import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
 import { StringConflictService } from '@mdm/merge-diff/services/string-conflict.service';
 import { Diff } from 'diff-match-patch';
 
@@ -42,7 +42,7 @@ interface DiffTrackedItem {
 export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   @Input() source: Branchable;
   @Input() target: Branchable;
-  @Input() item: MergeItem;
+  @Input() item: MergeDiffItem;
 
   @ViewChild('sourceView') sourceView: ElementRef;
   @ViewChild('targetView') targetView: ElementRef;
@@ -50,8 +50,6 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   sourceText: string;
   targetText: string;
   resolvedText: string;
-
-
 
   constructor(private stringConflict : StringConflictService) { }
 

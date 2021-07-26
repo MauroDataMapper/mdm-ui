@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
           class="button"
         >
           <i class="fas fa-file-export" aria-hidden="true"></i>
-          Use {{ source.branchName }}
+          Use "{{ source.branchName }}"
         </button>
         <button
           mat-icon-button
@@ -58,7 +58,7 @@ SPDX-License-Identifier: Apache-2.0
           class="button"
         >
           <i class="fas fa-file-import" aria-hidden="true"></i>
-          Use {{ target.branchName }}
+          Use "{{ target.branchName }}"
         </button>
         <button
           mat-icon-button
@@ -123,7 +123,7 @@ SPDX-License-Identifier: Apache-2.0
         (scroll)="updateVerticalScroll($event)"
       >
         <div
-          *ngIf="mergeItem.sourceValue"
+          *ngIf="hasSourceValue"
           class="diff-view"
           [innerHTML]="sourceText | safe: 'html'"
         ></div>
@@ -139,7 +139,7 @@ SPDX-License-Identifier: Apache-2.0
         (scroll)="updateVerticalScroll($event)"
       >
         <div
-          *ngIf="mergeItem.targetValue"
+          *ngIf="hasTargetValue"
           class="diff-view"
           [innerHTML]="targetText | safe: 'html'"
         ></div>
@@ -154,11 +154,10 @@ SPDX-License-Identifier: Apache-2.0
       (mouseenter)="updateCurrentElement('targetContent')"
       (scroll)="updateVerticalScroll($event)"
     >
-      <mdm-content-editor
-        [content]="committingContent"
-        [inEditMode]="false"
-        *ngIf="mergeItem.targetValue"
-      ></mdm-content-editor>
+      <div
+        class="diff-view"
+        [innerHTML]="committingContent | safe: 'html'"
+      ></div>
     </div>
   </div>
 </div>

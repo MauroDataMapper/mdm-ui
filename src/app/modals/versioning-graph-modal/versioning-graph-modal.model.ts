@@ -16,18 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
-import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { MergeItemValueType } from '@mdm/merge-diff/types/merge-item-type';
 
-export interface ConflictEditorModalData {
-  source: Branchable;
-  target: Branchable;
-  item: MergeDiffItem;
-  valueType: MergeItemValueType;
-}
+import { MergableCatalogueItem } from '@maurodatamapper/mdm-resources';
 
-export interface ConflictEditorModalResult {
-  status: ModalDialogStatus;
-  resolvedContent?: string;
+export interface VersioningGraphModalConfiguration {
+  catalogueItem: MergableCatalogueItem;
 }

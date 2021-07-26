@@ -18,10 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MergeType, MergeUsed } from '@maurodatamapper/mdm-resources';
-import { FullMergeItem } from '@mdm/merge-diff/types/merge-item-type';
+import { MergeDiffType, MergeConflictResolution, Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 import { SharedService } from '@mdm/services';
-import { CheckinModelPayload } from './check-in-modal-payload';
+import { CheckinModelConfiguration, CheckinModelResult } from './check-in-modal-payload';
 
 @Component({
   selector: 'mdm-check-in-modal',
@@ -32,43 +33,64 @@ export class CheckInModalComponent implements OnInit {
 
   commitComment: string;
   deleteSourceBranch: boolean;
-  isV2: boolean;
-  mergeItems: Array<FullMergeItem>;
+  useMergeDiffModule: boolean;
+  items: MergeDiffItemModel[];
+  label: string;
+  domainType: MergableMultiFacetAwareDomainType;
+  isDataAsset: boolean;
+  source: Branchable;
+  target: Branchable;
 
 
   constructor(
-    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelPayload>,
-    @Inject(MAT_DIALOG_DATA) public data: CheckinModelPayload,
-    private sharedService: SharedService
-  ) { }
+    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelResult>,
+    @Inject(MAT_DIALOG_DATA) public data: CheckinModelConfiguration,
+    private sharedService: SharedService) { }
 
   ngOnInit(): void {
     this.commitComment = this.data.commitComment ?? '';
     this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
-    this.mergeItems = this.data.mergeItems ?? Array<FullMergeItem>();
-    this.isV2 = this.sharedService.features.useMergeUiV2;
+    this.items = this.data.items ?? [];
+    this.useMergeDiffModule = this.sharedService.features.useMergeUiV2;
+    this.label = this.data.label;
+    this.domainType = this.data.domainType;
+    this.isDataAsset = this.data.isDataAsset;
+    this.source = this.data.source;
+    this.target = this.data.target;
   }
 
-  getBranchSelectedIcon(selected: MergeUsed) {
+  cancel() {
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  commit() {
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      deleteSourceBranch: this.deleteSourceBranch,
+      commitComment: this.commitComment
+    });
+  }
+
+  getBranchSelectedIcon(selected: MergeConflictResolution) {
     switch (selected) {
-      case MergeUsed.Source:
+      case MergeConflictResolution.Source:
         return 'fas fa-file-export';
-      case MergeUsed.Target:
+      case MergeConflictResolution.Target:
         return 'fas fa-file-import';
-      case MergeUsed.Mixed:
+      case MergeConflictResolution.Mixed:
         return 'fab fa-mixer';
       default:
         return '';
     }
   }
 
-  getBranchSelectedTooltip(selected: MergeUsed) {
+  getBranchSelectedTooltip(selected: MergeConflictResolution) {
     switch (selected) {
-      case MergeUsed.Source:
+      case MergeConflictResolution.Source:
         return 'Take from Source';
-      case MergeUsed.Target:
+      case MergeConflictResolution.Target:
         return 'Take from Target';
-      case MergeUsed.Mixed:
+      case MergeConflictResolution.Mixed:
         return 'Mixed/combined content';
       default:
         return '';
@@ -77,7 +99,7 @@ export class CheckInModalComponent implements OnInit {
 
   public get mergeType()
   {
-    return MergeType;
+    return MergeDiffType;
   }
 
 }

@@ -21,11 +21,11 @@ SPDX-License-Identifier: Apache-2.0
   <span class="path-element-type" [matTooltip]="element.typeName">{{element.type | uppercase}}</span>
   {{element.label}}
   <span *ngIf="element.version" class="version" matTooltip="Version or branch">
-    <small>@ {{element.version}}</small>
+    <small>$ {{element.version}}</small>
   </span>
   <span *ngIf="element.property" class="path-property" matTooltip="Property">
     <span *ngFor="let name of element.property.qualifiedName">
-      : {{name}}
+      : @{{name}}
     </span>
   </span>
 </span>

@@ -100,7 +100,10 @@ SPDX-License-Identifier: Apache-2.0
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >
-          <mat-tab label="Changes" *ngIf="changesList">
+          <mat-tab *ngIf="changesList">
+            <ng-template mat-tab-label>
+              Changes ({{changesList.length}})
+            </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">
                 <span class="spacer"></span>
@@ -114,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <i class="fas fa-file-export" aria-hidden="true"></i>
-                  Use all of {{source.branchName}}
+                  Use all of "{{source.branchName}}"
                 </button>
                 <button
                   *ngIf="changesList.length > 0"
@@ -126,7 +129,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <i class="fas fa-file-import" aria-hidden="true"></i>
-                  Use all of {{target.branchName}}
+                  Use all of "{{target.branchName}}"
                 </button>
               </mat-toolbar>
 
@@ -142,7 +145,10 @@ SPDX-License-Identifier: Apache-2.0
               </div>
             </div>
           </mat-tab>
-          <mat-tab label="Committing" *ngIf="committingList">
+          <mat-tab *ngIf="committingList">
+            <ng-template mat-tab-label>
+              Committing ({{committingList.length}})
+            </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">
                 <span class="spacer"></span>

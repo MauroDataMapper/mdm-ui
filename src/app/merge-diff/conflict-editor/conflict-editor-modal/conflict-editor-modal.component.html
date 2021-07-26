@@ -31,10 +31,18 @@ SPDX-License-Identifier: Apache-2.0
   <div class="modal-body pxy-2">
     <mdm-path-name [path]="data.item.path"></mdm-path-name>
     <mdm-string-conflict-editor
+      *ngIf="valueType === 'string'"
       [source]="data.source"
       [target]="data.target"
       [item]="data.item"
     ></mdm-string-conflict-editor>
+    <mdm-number-conflict-editor
+      *ngIf="valueType === 'number'"
+      [source]="data.source"
+      [target]="data.target"
+      [item]="data.item"
+    >
+    </mdm-number-conflict-editor>
   </div>
   <div *ngIf="state === 'working'" class="modal-footer pxy-2">
     <button

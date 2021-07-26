@@ -16,86 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateService } from '@uirouter/core';
-import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { VersioningGraphModalConfiguration } from './versioning-graph-modal.model';
+import { MergableCatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-versioning-graph-modal',
   templateUrl: './versioning-graph-modal.component.html',
   styleUrls: ['./versioning-graph-modal.component.scss']
 })
-export class VersioningGraphModalComponent implements OnInit, AfterViewInit {
+export class VersioningGraphModalComponent implements OnInit {
+  catalogueItem: MergableCatalogueItem;
 
-  @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
+  constructor(
+    public dialogRef: MatDialogRef<VersioningGraphModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: VersioningGraphModalConfiguration) { }
 
-  isDataLoaded: boolean;
-
-  sourceModel: any;
-  targetModel: any;
-  mode = 'model-merging-graph';
-
-  constructor(public dialogRef: MatDialogRef<VersioningGraphModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resources: MdmResourcesService,
-    private stateService: StateService,
-    protected matDialog: MatDialog) { }
-
-  async ngOnInit() {
-  }
-
-  async ngAfterViewInit() {
-
-    const sourceId = this.data.parentDataModel;
-
-    if (sourceId) {
-      this.sourceModel = await this.loadDataModelDetail(sourceId);
-    }
-  }
-
-  async loadDataModelDetail(modelId) {
-    if (!modelId) {
-      return null;
-    }
-
-    const response = await this.resources.dataModel.get(modelId).toPromise();
-    const model = response.body;
-    const children = await this.resources.tree.get('dataModels', model.domainType, model.id).toPromise();
-    model.children = children.body;
-    if (model.children?.length > 0) {
-      model.hasChildren = true;
-    }
-
-    this.isDataLoaded = true;
-
-    return model;
-  }
-
-  toolbarClick(buttonName: string) {
-    switch (buttonName) {
-      case 'popUp':
-        this.popUp();
-        break;
-      default:
-        this.diagramComponent.toolbarClick(buttonName);
-    }
-  }
-
-  popUp(): void {
-    const dialogRef = this.matDialog.open(DiagramPopupComponent, {
-      width: '100%',
-      height: '100%',
-      data: {
-        diagramComponent: this.diagramComponent
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      this.diagramComponent.diagramComponent = result.diagramComponent;
-      this.diagramComponent.diagramService = result.diagramComponent.diagramService;
-      this.diagramComponent.resetPaper();
-    });
+  ngOnInit() {
+    this.catalogueItem = this.data.catalogueItem;
   }
 }

@@ -19,7 +19,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MergeItemValueType } from '@mdm/merge-diff/types/merge-item-type';
 import { HelpDialogueHandlerService } from '@mdm/services';
+import { NumberConflictEditorComponent } from '../number-conflict-editor/number-conflict-editor.component';
 import { StringConflictEditorComponent } from '../string-conflict-editor/string-conflict-editor.component';
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 
@@ -30,8 +32,10 @@ import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-e
 })
 export class ConflictEditorModalComponent implements OnInit {
   @ViewChild(StringConflictEditorComponent) stringEditor: StringConflictEditorComponent;
+  @ViewChild(NumberConflictEditorComponent) numberEditor: NumberConflictEditorComponent;
 
   state: 'working' | 'confirmCancel' | 'confirmResolve' = 'working';
+  valueType: MergeItemValueType = 'string';
 
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
@@ -39,6 +43,7 @@ export class ConflictEditorModalComponent implements OnInit {
     private help: HelpDialogueHandlerService) { }
 
   ngOnInit(): void {
+    this.valueType = this.data.valueType;
   }
 
   loadHelp() {
@@ -58,7 +63,12 @@ export class ConflictEditorModalComponent implements OnInit {
   }
 
   startResolveConflict() {
-    if (this.stringEditor.getCurrentConflictCount() === 0) {
+    if (this.valueType === 'number') {
+      this.resolveConflict();
+      return;
+    }
+
+    if (this.valueType === 'string' && this.stringEditor.getCurrentConflictCount() === 0) {
       this.resolveConflict();
       return;
     }
@@ -67,9 +77,13 @@ export class ConflictEditorModalComponent implements OnInit {
   }
 
   resolveConflict() {
+    const resolvedValue: any = this.valueType === 'number'
+      ? this.numberEditor.getFinalResolvedValue()
+      : this.stringEditor.getFinalResolvedContent();
+
     this.dialogRef.close({
       status: ModalDialogStatus.Ok,
-      resolvedContent: this.stringEditor.getFinalResolvedContent()
+      resolvedContent: resolvedValue
     });
   }
 }

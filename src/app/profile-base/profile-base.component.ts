@@ -26,6 +26,7 @@ import {
   DataTypeReference,
   FolderDetail,
   ModelDomainType,
+  MultiFacetAwareDomainType,
   TermDetail,
   TerminologyDetail,
   VersionedFolderDetail
@@ -216,7 +217,7 @@ export abstract class ProfileBaseComponent extends BaseComponent {
 
   async UsedProfiles(domainType: ModelDomainType | string, id: any) {
     await this.resourcesService.profile
-      .usedProfiles(domainType, id)
+      .usedProfiles(domainType as MultiFacetAwareDomainType, id)  // TODO: temp fix
       .subscribe((profiles: { body: { [x: string]: any } }) => {
         this.allUsedProfiles = [];
         profiles.body.forEach((profile) => {
@@ -230,7 +231,7 @@ export abstract class ProfileBaseComponent extends BaseComponent {
 
   async UnUsedProfiles(domainType: ModelDomainType | string, id: any) {
     await this.resourcesService.profile
-      .unusedProfiles(domainType, id)
+      .unusedProfiles(domainType as MultiFacetAwareDomainType, id)  // TODO: temp fix
       .subscribe((profiles: { body: { [x: string]: any } }) => {
         profiles.body.forEach((profile) => {
           const prof: any = [];

@@ -17,10 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ModelDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { CommitMergePayload, CommittedMergeResponse, MainBranchResponse, MdmResponse, MergableCatalogueItem, MergableMultiFacetAwareDomainType, MergeDiff, MergeDiffResponse, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { EMPTY, Observable, throwError } from 'rxjs';
+import { MessageHandlerService } from '@mdm/services';
+import { catchError, map } from 'rxjs/operators';
 
 
 /**
@@ -31,68 +32,59 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class MergeDiffAdapterService {
-  constructor(private resources: MdmResourcesService, private http: HttpClient ) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService) { }
 
-  loadCatalogueItemDetails(id: Uuid, domainType: ModelDomainType) : Observable<any> {
+  getCatalogueItemDetails(
+    domainType: MergableMultiFacetAwareDomainType,
+    id: Uuid): Observable<MdmResponse<MergableCatalogueItem>> {
     switch (domainType) {
-      case ModelDomainType.DataModels:
+      case MultiFacetAwareDomainType.DataModels:
         return this.resources.dataModel.get(id);
-      case ModelDomainType.ReferenceDataModels:
+      case MultiFacetAwareDomainType.ReferenceDataModels:
         return this.resources.referenceDataModel.get(id);
+      case MultiFacetAwareDomainType.Terminologies:
+        return this.resources.terminology.get(id);
+      case MultiFacetAwareDomainType.VersionedFolders:
+        return this.resources.versionedFolder.get(id);
       default:
-        break;
+        return throwError(`Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`);
     }
   }
 
-  retrieveMainBranch(domainType: ModelDomainType, sourceId: Uuid)
-  {
-    return this.resources.versioning.currentMainBranch(domainType, sourceId);
+  getMainBranch(domainType: MergableMultiFacetAwareDomainType, id: Uuid): Observable<MainBranchResponse> {
+    return this.resources.merge.currentMainBranch(domainType, id);
   }
 
-  // getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MergeItem[]> {
-  //   return this.resources.
-  //      versioning.
-  //      mergeDiff(sourceId, targetId,targetId)
-  //     .pipe(
-  //       catchError(() => {return EMPTY;}),  // Common error handling (maybe)
-  //       map((response: VersioningResponse) => response.body)  // Map to types we care about
-  //     );
-  // }
-
-  getMergeDiff() : Observable<any>
-  {
-    return this.http.get('../../../assets/newStyle.json');
-  }
-
-  /*
-  TODO: add in adapter functions when required here.
-
-  Idea of the adapter is to:
-
-  1. Correctly map types from mdm-resources to the UI. The types for merge/diff data should be
-  defined in mdm-resources, but the adapter functions here can make them nicer to use, e.g.
-
-  ```
-  getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MdmMergeDiffItem[]> {
+  getMergeDiff(
+    domainType: MergableMultiFacetAwareDomainType,
+    sourceId: Uuid,
+    targetId: Uuid): Observable<MergeDiff> {
     return this.resources.merge
-      .mergeDiff(sourceId, targetId)
+      .mergeDiff(domainType, sourceId, targetId)
       .pipe(
-        catchError(error => ...),  // Common error handling (maybe)
-        map((response: MdmMergeDiffResponse) => response.body)  // Map to types we care about
+        catchError(error => {
+          this.messageHandler.showError('There was a problem analysing the differences between these two items.', error);
+          return EMPTY;
+        }),
+        map((response: MergeDiffResponse) => response.body)
       );
   }
-  ```
 
-  2. Act as proxies whilst the backend endpoints are being developed, allowing the UI to
-  define the low level functionality required for the UI components, but temporarily return fake
-  data. e.g.
-
-  ```
-  import * as data from './fake-data.json';
-
-  getMergeDiff(sourceId: Uuid, targetId: Uuid): Observable<MdmMergeDiffItem[]> {
-    return of(data);
+  commitMergePatches(
+    domainType: MergableMultiFacetAwareDomainType,
+    sourceId: Uuid,
+    targetId: Uuid,
+    data: CommitMergePayload): Observable<MergableCatalogueItem> {
+    return this.resources.merge
+      .mergeInto(domainType, sourceId, targetId, data)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem committing the changes to the target item.', error);
+          return EMPTY;
+        }),
+        map((response: CommittedMergeResponse) => response.body)
+      );
   }
-  ```
-  */
 }

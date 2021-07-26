@@ -16,19 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MergeItem, MergeUsed } from '@maurodatamapper/mdm-resources';
+import { MergeDiffItem, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 
+export const branchNameField = 'branchName';
 
-export interface MergeItemSelection
-{
-    mergeItem: MergeItem;
-    isCommitting: boolean;
-}
-export interface CommittingMergeItem
-{
-    branchSelected : MergeUsed;
-    branchNameSelected? : string;
-    mixedContent? : string;
+export type MergeItemValueType = 'undefined' | 'string' | 'number';
+
+export interface MergeItemSelection {
+  mergeItem: MergeDiffItem;
+  isCommitting: boolean;
 }
 
-export type FullMergeItem =  MergeItem & CommittingMergeItem;
+export interface CommittingMergeDiffItem {
+  branchSelected: MergeConflictResolution;
+  branchNameSelected?: string;
+  mixedContent?: string;
+}
+
+/**
+ * View model representing the combination of a {@link MergeDiffItem} returned from the backend, and
+ * a {@link CommittingMergeDiffItem} to track user changes through the user interface.
+ */
+export type MergeDiffItemModel = MergeDiffItem & CommittingMergeDiffItem;

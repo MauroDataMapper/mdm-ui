@@ -34,10 +34,8 @@ import {
   MessageService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   ModelUpdatePayload,
   TerminologyDetail,
@@ -54,7 +52,6 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./terminology.component.sass']
 })
 export class TerminologyComponent
-  extends ProfileBaseComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -85,13 +82,11 @@ export class TerminologyComponent
     private securityHandler: SecurityHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private title: Title,
-    resources: MdmResourcesService,
+    private resources: MdmResourcesService,
     private messageService: MessageService,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    editingService: EditingService
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService
   ) {
-    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -109,21 +104,17 @@ export class TerminologyComponent
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resourcesService.terminology
+    this.resources.terminology
       .get(id)
       .subscribe((result: TerminologyDetailResponse) => {
         const data = result.body;
-        this.catalogueItem = data;
 
         this.access = this.securityHandler.elementAccess(data);
         this.showEdit = this.access.showEdit;
         this.showDelete =
           this.access.showPermanentDelete || this.access.showSoftDelete;
 
-        this.UsedProfiles('terminology', id);
-        this.UnUsedProfiles('terminology', id);
-
-        this.terminology = data;
+          this.terminology = data;
         this.terminology.classifiers = this.terminology.classifiers || [];
       });
 
@@ -140,20 +131,20 @@ export class TerminologyComponent
 
   save(saveItems: Array<DefaultProfileItem>) {
     const resource: ModelUpdatePayload = {
-      id: this.catalogueItem.id,
-      domainType: this.catalogueItem.domainType
+      id: this.terminology.id,
+      domainType: this.terminology.domainType
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
       resource[item.propertyName] = item.value;
     });
 
-    this.resourcesService.terminology
-      .update(this.catalogueItem.id, resource)
+    this.resources.terminology
+      .update(this.terminology.id, resource)
       .subscribe(
         (res: TerminologyDetailResponse) => {
           this.messageHandler.showSuccess('Terminology updated successfully.');
-          this.catalogueItem = res.body;
+          this.terminology = res.body;
         },
         (error) => {
           this.messageHandler.showError(
@@ -186,7 +177,7 @@ export class TerminologyComponent
     };
 
     this.searchTerm = text;
-    return this.resourcesService.terms.search(this.terminology.id, {
+    return this.resources.terms.search(this.terminology.id, {
       search: encodeURIComponent(text),
       limit,
       offset

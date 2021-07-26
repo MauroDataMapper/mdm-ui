@@ -34,7 +34,6 @@ import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   CodeSetDetail,
   CodeSetDetailResponse,
@@ -45,6 +44,7 @@ import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { catchError } from 'rxjs/operators';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-code-set',
@@ -52,7 +52,7 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./code-set.component.scss']
 })
 export class CodeSetComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -83,18 +83,18 @@ export class CodeSetComponent
   tabs = new TabCollection(['description', 'terms', 'links', 'rules', 'annotations', 'history']);
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    editingService: EditingService,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService,
     private securityHandler: SecurityHandlerService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -132,8 +132,6 @@ export class CodeSetComponent
         this.codeSetModel = result.body;
         // this.parentId = this.codeSetModel.id;
         this.catalogueItem = this.codeSetModel;
-        this.UnUsedProfiles('codeSets', id);
-        this.UsedProfiles('codeSets', id);
 
         this.access = this.securityHandler.elementAccess(this.codeSetModel);
         this.showEdit = this.access.showEdit;

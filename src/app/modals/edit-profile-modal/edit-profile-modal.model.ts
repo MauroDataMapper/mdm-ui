@@ -16,10 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class ProfileModalDataModel
-{
- public profile: any;
- public profileName: string;
- public catalogueItem:any;
- public isNew:boolean;
+
+import { CatalogueItem, Profile } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+
+export interface EditProfileModalConfiguration {
+  profile: Profile;
+  profileName: string;
+  catalogueItem: CatalogueItem;
+  isNew: boolean;
+  description?: string;
+  okBtn?: string;
+}
+
+export interface EditProfileModalResult {
+  status: ModalDialogStatus;
+  profile?: Profile;
 }

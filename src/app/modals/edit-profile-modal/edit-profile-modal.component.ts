@@ -24,55 +24,47 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { ProfileModalDataModel } from '@mdm/model/profilerModalDataModel';
+import { Profile, ProfileField, ProfileResponse } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { MarkupDisplayModalComponent } from '../markup-display-modal/markup-display-modal.component';
+import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
   styleUrls: ['./edit-profile-modal.component.scss']
 })
 export class EditProfileModalComponent implements OnInit {
-  profileData: any;
-  elementDialogue: any;
-  selectedElement: any;
-  errors: any;
-
-  saveInProgress = false;
+  profileData: Profile;
+  description?: string;
+  okBtnText: string;
 
   formOptionsMap = {
-    Integer: 'number',
-    String: 'text',
-    Boolean: 'checkbox',
-    boolean: 'checkbox',
-    int: 'number',
-    date: 'date',
-    time: 'time',
-    datetime: 'datetime',
-    decimal: 'number'
+    INTEGER: 'number',
+    STRING: 'text',
+    BOOLEAN: 'checkbox',
+    INT: 'number',
+    DATE: 'date',
+    TIME: 'time',
+    DATETIME: 'datetime',
+    DECIMAL: 'number'
   };
 
   constructor(
-    public dialogRef: MatDialogRef<EditProfileModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProfileModalDataModel,
+    public dialogRef: MatDialogRef<EditProfileModalComponent, EditProfileModalResult>,
+    @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
     private markdownParser: MarkdownParserService,
-    protected resourcesSvc: MdmResourcesService,
-    private dialog: MatDialog
-  ) {
+    protected resources: MdmResourcesService,
+    private dialog: MatDialog) {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
-        if (field.dataType !== null) {
-          field.dataType = field.dataType.toLowerCase();
-        }
-        if (data.isNew) {
-          if (field.defaultValue) {
-            field.currentValue = field.defaultValue;
-          }
+        if (data.isNew && field.defaultValue) {
+          field.currentValue = field.defaultValue;
         }
 
-        if (field.dataType === 'folder') {
+        if (field.dataType === 'FOLDER') {
           if (
             field.currentValue === '[]' ||
             field.currentValue === '""' ||
@@ -87,19 +79,20 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     this.profileData = data.profile;
+    this.description = data.description;
+    this.okBtnText = data.okBtn ?? 'Save';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   save() {
     // Save Changes
-
-    const returnData = JSON.parse(JSON.stringify(this.profileData));
+    const returnData: Profile = JSON.parse(JSON.stringify(this.profileData));
 
     returnData.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (
-          field.dataType === 'folder' &&
+          field.dataType === 'FOLDER' &&
           field.currentValue &&
           field.currentValue.length > 0
         ) {
@@ -108,11 +101,14 @@ export class EditProfileModalComponent implements OnInit {
       });
     });
 
-    this.dialogRef.close(returnData);
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      profile: returnData
+    });
   }
 
   onCancel() {
-    this.dialogRef.close();
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
   }
 
   showInfo(field: any) {
@@ -126,7 +122,7 @@ export class EditProfileModalComponent implements OnInit {
 
   validate() {
     const data = JSON.parse(JSON.stringify(this.profileData));
-    this.resourcesSvc.profile
+    this.resources.profile
       .validateProfile(
         this.data.profile.namespace,
         this.data.profile.name,
@@ -134,19 +130,12 @@ export class EditProfileModalComponent implements OnInit {
         this.data.catalogueItem.id,
         data
       )
-      .subscribe((result) => {
-        result.body.sections.forEach((section) => {
-          section.fields.forEach((field) => {
-            if (field.dataType !== null) {
-              field.dataType = field.dataType.toLowerCase();
-            }
-          });
-        });
-        this.profileData = result.body;
+      .subscribe((response: ProfileResponse) => {
+        this.profileData = response.body;
       });
   }
 
-  showAddElementToMarkdown = (field) => {
+  showAddElementToMarkdown(field: ProfileField) {
     const dg = this.dialog.open(ElementSelectorComponent, {
       data: { validTypesToSelect: ['DataModel'], notAllowedToSelectIds: [] },
       panelClass: 'element-selector-modal'

@@ -34,11 +34,10 @@ import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { TabCollection } from '@mdm/model/ui.model';
 import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-classification',
@@ -46,7 +45,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./classification.component.sass']
 })
 export class ClassificationComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -75,17 +74,15 @@ export class ClassificationComponent
   descriptionView = 'default';
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
-    editingService: EditingService,
-    messageHandler: MessageHandlerService,
-    dialog: MatDialog
-  ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService) {
+    super();
   }
 
   ngOnInit() {

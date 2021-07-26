@@ -28,13 +28,10 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   Term,
   CatalogueItemDomainType,
@@ -53,7 +50,6 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./term.component.scss']
 })
 export class TermComponent
-  extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -81,19 +77,16 @@ export class TermComponent
   tabs = new TabCollection(['description', 'links', 'rules', 'annotations']);
 
   constructor(
-    resources: MdmResourcesService,
+    private resources: MdmResourcesService,
     private messageService: MessageService,
-    messageHandler: MessageHandlerService,
+    private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
-    private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
-    dialog: MatDialog,
-    editingService: EditingService,
+    private editingService: EditingService,
     private securityHandler: SecurityHandlerService
   ) {
-    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -132,27 +125,24 @@ export class TermComponent
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
 
     forkJoin([
-      this.resourcesService.terminology.get(terminologyId) as Observable<
+      this.resources.terminology.get(terminologyId) as Observable<
         TerminologyDetailResponse
       >,
-      this.resourcesService.terms.get(terminologyId, id) as Observable<
+      this.resources.terms.get(terminologyId, id) as Observable<
         TermDetailResponse
       >
     ]).subscribe(([terminology, term]) => {
       this.terminology = terminology.body;
       this.term = term.body;
 
-      this.resourcesService.catalogueItem
+      this.resources.catalogueItem
         .listSemanticLinks(CatalogueItemDomainType.Term, this.term.id)
         .subscribe((resp) => {
           this.term.semanticLinks = resp.body.items;
         });
 
-      this.catalogueItem = this.term;
-      this.watchTermObject();
 
-      this.UsedProfiles('term', this.term.id);
-      this.UnUsedProfiles('term', this.term.id);
+      this.watchTermObject();
 
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;
@@ -202,7 +192,7 @@ export class TermComponent
       resource[item.propertyName] = item.value;
     });
 
-    this.resourcesService.term
+    this.resources.term
     .update(this.term.terminology.id, this.term.id, resource)
     .subscribe(
       (result:TermDetailResponse) => {

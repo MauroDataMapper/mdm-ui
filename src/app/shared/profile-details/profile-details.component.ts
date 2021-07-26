@@ -17,8 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 /* eslint-disable id-blacklist */
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Profile } from '@maurodatamapper/mdm-resources';
 import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/markup-display-modal.component';
 
 @Component({
@@ -26,40 +27,21 @@ import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/ma
   templateUrl: './profile-details.component.html',
   styleUrls: ['./profile-details.component.scss']
 })
-export class ProfileDetailsComponent implements AfterViewInit {
-  _currentProfileDetails: any;
+export class ProfileDetailsComponent {
+  @Input() currentProfileDetails: Profile;
 
-  get currentProfileDetails(): any {
-    return this._currentProfileDetails;
-  }
-
-  @Input() set currentProfileDetails(value: any) {
-    if(value.sections){
-    value.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        field.dataType = field.dataType.toLowerCase();
-      });
-    });
-  }
-    this._currentProfileDetails = value;
-  }
-
-  formOptionsMap = {
-    Integer: 'number',
-    String: 'text',
-    Boolean: 'checkbox',
-    boolean: 'checkbox',
-    int: 'number',
-    date: 'date',
-    time: 'time',
-    datetime: 'datetime',
-    decimal: 'number'
+  readonly formOptionsMap = {
+    INTEGER: 'number',
+    STRING: 'text',
+    BOOLEAN: 'checkbox',
+    INT: 'number',
+    DATE: 'date',
+    TIME: 'time',
+    DATETIME: 'datetime',
+    DECIMAL: 'number'
   };
 
-  constructor(private dialog: MatDialog) {}
-
-  ngAfterViewInit(): void {
-  }
+  constructor(private dialog: MatDialog) { }
 
   showInfo(field: any) {
     this.dialog.open(MarkupDisplayModalComponent, {

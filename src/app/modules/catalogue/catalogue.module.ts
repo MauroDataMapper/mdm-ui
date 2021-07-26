@@ -186,6 +186,7 @@ import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 
 @NgModule({
   declarations: [
@@ -344,7 +345,8 @@ import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-
     VersionedFolderComponent,
     VersionedFolderDetailComponent,
     DefaultProfileComponent,
-    OpenIdConnectAuthorizeComponent
+    OpenIdConnectAuthorizeComponent,
+    ProfileDataViewComponent
   ],
   imports: [
     AdminModule,
@@ -517,7 +519,8 @@ import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-
     NewFederatedSubscriptionModalComponent,
     ProfileDetailsComponent,
     DefaultProfileComponent,
-    OpenIdConnectAuthorizeComponent
+    OpenIdConnectAuthorizeComponent,
+    ProfileDataViewComponent
   ]
 })
 export class CatalogueModule { }

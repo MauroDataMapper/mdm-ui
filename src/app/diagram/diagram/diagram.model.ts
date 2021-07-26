@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { CatalogueItem } from "@maurodatamapper/mdm-resources";
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 export type DiagramMode =
   'dataflow-model'

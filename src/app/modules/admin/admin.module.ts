@@ -27,6 +27,7 @@ import { UserComponent } from '@mdm/admin/user/user.component';
 import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
+import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provid
     UserComponent,
     ProfilesDashboardComponent,
     OpenidConnectProviderTableComponent,
-    OpenidConnectProviderComponent
+    OpenidConnectProviderComponent,
+    DoiRedirectComponent
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [

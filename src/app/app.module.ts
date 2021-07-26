@@ -23,7 +23,7 @@ import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dial
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '@env/environment';
-import { TransitionService, UIRouterModule } from '@uirouter/angular';
+import { UIRouterModule } from '@uirouter/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ROLES } from './constants/roles';
@@ -34,7 +34,6 @@ import { MdmResourcesModule } from './modules/resources/mdm-resources.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
 import { SharedService } from './services/shared.service';
-import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
@@ -73,15 +72,7 @@ import { MergeDiffModule } from './merge-diff/merge-diff.module';
 export class AppModule {
   latestError: any;
 
-  constructor(
-    private sharedService: SharedService,
-    private trans: TransitionService,
-    private rolesService: StateRoleAccessService) {
-    this.trans.onStart({}, state => {
-      this.sharedService.current = state.$to().name;
-      return this.rolesService.hasAccess(state.$to().name);
-    });
-
+  constructor(private sharedService: SharedService) {
     this.sharedService.handleExpiredSession(true);
   }
 }

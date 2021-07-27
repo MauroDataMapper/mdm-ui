@@ -101,7 +101,9 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .parseFromString(this.resolvedText, 'text/html');
 
     const conflicts = resolvedDocument.body.querySelectorAll('span.diff-marker.conflict');
-    return conflicts.length;
+    return Array.from(conflicts)
+      .filter(elem => elem.innerHTML === conflictText)
+      .length;
   }
 
   getFinalResolvedContent() {

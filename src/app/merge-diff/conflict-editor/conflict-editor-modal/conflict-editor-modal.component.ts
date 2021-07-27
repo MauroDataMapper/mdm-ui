@@ -34,8 +34,9 @@ export class ConflictEditorModalComponent implements OnInit {
   @ViewChild(StringConflictEditorComponent) stringEditor: StringConflictEditorComponent;
   @ViewChild(NumberConflictEditorComponent) numberEditor: NumberConflictEditorComponent;
 
-  state: 'working' | 'confirmCancel' | 'confirmResolve' = 'working';
+  state: 'working' | 'confirmCancel' | 'conflictsPending' = 'working';
   valueType: MergeItemValueType = 'string';
+  conflictCount: number = 0;
 
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,
@@ -68,12 +69,13 @@ export class ConflictEditorModalComponent implements OnInit {
       return;
     }
 
-    if (this.valueType === 'string' && this.stringEditor.getCurrentConflictCount() === 0) {
+    this.conflictCount = this.stringEditor.getCurrentConflictCount();
+    if (this.conflictCount === 0) {
       this.resolveConflict();
       return;
     }
 
-    this.state = 'confirmResolve';
+    this.state = 'conflictsPending';
   }
 
   resolveConflict() {

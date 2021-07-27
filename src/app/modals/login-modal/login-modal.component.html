@@ -16,115 +16,129 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<form
-  class="mdm--form mdm--form-modal mdm-login-modal"
-  [formGroup]="signInForm"
-  (keyup)="($event.keyCode != 13)"
-  role="form"
-  autocomplete="on"
-  name="loginForm"
->
+<div class="mdm-login-modal">
+  <h3 class="modal-title text-center">Login</h3>
+  <p class="mb-2 text-center">Please login to continue using Mauro</p>
   <button
     mat-icon-button
     color="warn"
     type="button"
     (click)="close()"
-    class="close-modal paddingless"
+    class="mdm-login-modal__close paddingless"
   >
     <i class="fas fa-times"></i>
   </button>
-  <h3 class="modal-title text-center">Login</h3>
-  <p class="mb-2 text-center">Please login to continue using Mauro</p>
-  <div class="mdm--form-input">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        type="email"
-        name="email"
-        formControlName="userName"
+  <mat-dialog-content class="mdm-login-modal__container ">
+    <div class="mdm-login-modal__form">
+      <form
+        class="mdm--form mdm--form-modal"
+        [formGroup]="signInForm"
+        (keyup)="($event.keyCode != 13)"
+        role="form"
         autocomplete="on"
-        placeholder="Enter your email"
-        required
-      />
-      <mat-error *ngIf="userName?.errors?.required">
-        Email is required
-      </mat-error>
-      <mat-error *ngIf="userName?.errors?.pattern">
-        Invalid email address
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div class="mdm--form-input">
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        name="password"
-        formControlName="password"
-        autocomplete="on"
-        placeholder="Enter your password"
-        required
-      />
-      <mat-error *ngIf="password?.errors?.required">
-        Password is required
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div class="mb-2 text-center">
-    <button
-      type="submit"
-      (click)="login()"
-      mat-flat-button
-      class="custom mdm--form-button"
-      color="primary"
-      [disabled]="authenticating"
-    >
-      Log in
-    </button>
-  </div>
-  <div class="text-center marginless">
-    <button
-      (click)="forgotPassword()"
-      mat-button
-      color="primary"
-      [disabled]="authenticating"
-    >
-      Forgot Password
-    </button>
-  </div>
-  <!-- <div class="text-center marginless">
+        name="loginForm"
+      >
+        <p class="mb-2 text-center">Use your email and password</p>
+        <div class="mdm--form-input">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              name="email"
+              formControlName="userName"
+              autocomplete="on"
+              placeholder="Enter your email"
+              required
+            />
+            <mat-error *ngIf="userName?.errors?.required">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="userName?.errors?.pattern">
+              Invalid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="mdm--form-input">
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              name="password"
+              formControlName="password"
+              autocomplete="on"
+              placeholder="Enter your password"
+              required
+            />
+            <mat-error *ngIf="password?.errors?.required">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="mb-2 text-center">
+          <button
+            type="submit"
+            (click)="login()"
+            mat-flat-button
+            class="custom mdm--form-button"
+            color="primary"
+            [disabled]="authenticating"
+          >
+            Log in
+          </button>
+        </div>
+        <div class="text-center marginless">
+          <button
+            (click)="forgotPassword()"
+            mat-button
+            color="primary"
+            [disabled]="authenticating"
+          >
+            Forgot Password
+          </button>
+        </div>
+        <!-- <div class="text-center marginless">
         <span>Don't have an account?</span>
         <button mat-button color="primary" (click)="signUp()">Sign up</button>
     </div> -->
 
-  <mat-progress-bar
-    *ngIf="authenticating"
-    color="accent"
-    mode="indeterminate"
-  ></mat-progress-bar>
+        <mat-progress-bar
+          *ngIf="authenticating"
+          color="accent"
+          mode="indeterminate"
+        ></mat-progress-bar>
 
-  <div *ngIf="message" class="alert alert-danger">
-    {{ message }}
-  </div>
-
-  <div *ngIf="openIdConnectProviders?.length > 0" class="mdm-login-modal__providers">
-    <p class="mt-2 mb-2 text-center">
-      Or, login using an account from one of these providers
-    </p>
-    <div class="text-center marginless mdm-login-modal__providers--scrollable">
-      <button
-        *ngFor="let provider of openIdConnectProviders"
-        type="button"
-        mat-stroked-button
-        color="primary"
-        class="custom mdm--form-button"
-        (click)="authenticateWithOpenIdConnect(provider)"
-      >
-        <img *ngIf="provider.imageUrl" class="mdm-openid-connect-icon--small" [src]="provider.imageUrl" [alt]="provider.label" />
-        {{provider.label}}
-      </button>
+        <div *ngIf="message" class="alert alert-danger">
+          {{ message }}
+        </div>
+      </form>
     </div>
-  </div>
-</form>
+    <div
+      class="mdm-login-modal__openid-providers mdm-login-modal--column"
+      *ngIf="openIdConnectProviders?.length > 0"
+    >
+      <p class="mb-2 text-center">
+        Or, login using an account from one of these providers
+      </p>
+      <div class="text-center marginless mdm-login-modal__openid-providers--container">
+        <button
+          *ngFor="let provider of openIdConnectProviders"
+          type="button"
+          mat-stroked-button
+          color="primary"
+          class="custom mdm--form-button"
+          (click)="authenticateWithOpenIdConnect(provider)"
+        >
+          <img
+            *ngIf="provider.imageUrl"
+            class="mdm-openid-connect-icon--small"
+            [src]="provider.imageUrl"
+            [alt]="provider.label"
+          />
+          {{ provider.label }}
+        </button>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>

@@ -266,6 +266,7 @@ export class MergeDiffContainerComponent implements OnInit {
           this.selectedItem = null;
           this.committingList.forEach((item) => {
             item.branchSelected = null;
+            item.branchNameSelected = null;
             this.changesList.push(item);
           });
           this.committingList = new Array<MergeDiffItemModel>();

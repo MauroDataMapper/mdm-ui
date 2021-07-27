@@ -24,6 +24,14 @@ SPDX-License-Identifier: Apache-2.0
         <i class="fas fa-file-export" matTooltip="Source Branch"></i>
         <strong>{{ source.branchName }}</strong>
       </small>
+      <button
+        mat-stroked-button
+        color="primary"
+        matTooltip="Take all changes from 'Source'"
+        (click)="copyAllToResolved('source')"
+      >
+        <i class="fas fa-angle-double-right"></i>
+      </button>
     </h5>
     <div
       #sourceView
@@ -38,6 +46,14 @@ SPDX-License-Identifier: Apache-2.0
         <i class="fas fa-file-import" matTooltip="Target Branch"></i>
         <strong>{{ target.branchName }}</strong>
       </small>
+      <button
+        mat-stroked-button
+        color="primary"
+        matTooltip="Take all changes from 'Target'"
+        (click)="copyAllToResolved('target')"
+      >
+        <i class="fas fa-angle-double-left"></i>
+      </button>
     </h5>
     <div
       #targetView

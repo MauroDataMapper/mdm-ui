@@ -36,7 +36,7 @@ export class ConflictEditorModalComponent implements OnInit {
 
   state: 'working' | 'confirmCancel' | 'conflictsPending' = 'working';
   valueType: MergeItemValueType = 'string';
-  conflictCount: number = 0;
+  conflictCount = 0;
 
   constructor(
     private dialogRef: MatDialogRef<ConflictEditorModalComponent, ConflictEditorModalResult>,

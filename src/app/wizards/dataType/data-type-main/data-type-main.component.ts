@@ -26,6 +26,7 @@ import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.compo
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 import { Title } from '@angular/platform-browser';
 import { CatalogueItemDomainType, DataModelDetailResponse, DataType } from '@maurodatamapper/mdm-resources';
+import { ElementTypesService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-type-main',
@@ -53,7 +54,7 @@ export class DataTypeMainComponent implements OnInit {
     enumerationValues: [],
     classifiers: [],
     referencedDataType: { id: '' },
-    referencedTerminology: { id: '' },
+    referencedModel: { id: '', domainType: '' },
     referencedDataClass: { id: '' },
     isProcessComplete: false,
   };
@@ -63,7 +64,8 @@ export class DataTypeMainComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private title: Title,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private elementTypes: ElementTypesService
   ) { }
 
   ngOnInit() {
@@ -130,8 +132,12 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
+    const domainType = this.elementTypes.isModelDataType(this.model.domainType)
+      ? CatalogueItemDomainType.ModelDataType
+      : this.model.domainType;
+
     const resource: DataType = {
-      domainType: this.model.domainType,
+      domainType,
       label: this.model.label,
       description: this.model.description,
       classifiers: this.model.classifiers.map((cls) => {
@@ -139,41 +145,9 @@ export class DataTypeMainComponent implements OnInit {
       })
     };
 
-    if (this.model.domainType === CatalogueItemDomainType.TerminologyType
-      || this.model.domainType === CatalogueItemDomainType.CodeSetType
-      || this.model.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
-      resource.domainType = CatalogueItemDomainType.ModelDataType;
-      resource.modelResourceId = this.model.referencedTerminology ? this.model.referencedTerminology.id : null;
-      resource.modelResourceDomainType = '';
-      if (this.model.domainType === CatalogueItemDomainType.TerminologyType) {
-        resource.modelResourceDomainType = CatalogueItemDomainType.Terminology;
-      }
-      else if (this.model.domainType === CatalogueItemDomainType.CodeSetType) {
-        resource.modelResourceDomainType = CatalogueItemDomainType.CodeSet;
-      }
-      else if (this.model.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
-        resource.modelResourceDomainType = CatalogueItemDomainType.ReferenceDataModel;
-      }
-
-      // resource = {
-      //   //domainType: CatalogueItemDomainType.ModelDataType,
-      //   //label: this.model.label,
-      //   //modelResourceId: this.model.referencedTerminology ? this.model.referencedTerminology.id : null,
-      //   //modelResourceDomainType: '',
-      //   // classifiers: this.model.classifiers.map((cls) => {
-      //   //   return { id: cls.id };
-      //   // }),
-      //   //description: this.model.description
-      // };
-      // if (this.model.domainType === 'TerminologyType') {
-      //   resource['modelResourceDomainType'] = 'Terminology';
-      // }
-      // else if (this.model.domainType === 'CodeSetType') {
-      //   resource['modelResourceDomainType'] = 'CodeSet';
-      // }
-      // else if (this.model.domainType === 'ReferenceDataModelType') {
-      //   resource['modelResourceDomainType'] = 'ReferenceDataModel';
-      // }
+    if (domainType === CatalogueItemDomainType.ModelDataType) {
+      resource.modelResourceDomainType = this.model.referencedModel?.domainType;
+      resource.modelResourceId = this.model.referencedModel?.id;
     }
     else {
       resource.organisation = this.model.organisation;
@@ -182,9 +156,6 @@ export class DataTypeMainComponent implements OnInit {
       };
       resource.referenceClass = {
         id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
-      };
-      resource.terminology = {
-        id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null
       };
       resource.enumerationValues = this.model.enumerationValues.map((m) => {
         return {
@@ -200,40 +171,6 @@ export class DataTypeMainComponent implements OnInit {
           namespace: m.namespace
         };
       });
-
-      // resource = {
-      //   //label: this.model.label,
-      //   //description: this.model.description,
-      //   //organisation: this.model.organisation,
-      //   //domainType: this.model.domainType,
-      //   // referenceDataType: {
-      //   //   id: this.model.referencedDataType ? this.model.referencedDataType.id : null
-      //   // },
-      //   // referenceClass: {
-      //   //   id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
-      //   // },
-      //   // terminology: {
-      //   //   id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null
-      //   // },
-
-      //   // classifiers: this.model.classifiers.map((cls) => {
-      //   //   return { id: cls.id };
-      //   // }),
-      //   enumerationValues: this.model.enumerationValues.map((m) => {
-      //     return {
-      //       key: m.key,
-      //       value: m.value,
-      //       category: m.category
-      //     };
-      //   }),
-      //   metadata: this.model.metadata.map((m) => {
-      //     return {
-      //       key: m.key,
-      //       value: m.value,
-      //       namespace: m.namespace
-      //     };
-      //   })
-      // };
     }
     this.resources.dataType.save(this.model.parent.id, resource).subscribe(response => {
       this.messageHandler.showSuccess('Data Type saved successfully.');

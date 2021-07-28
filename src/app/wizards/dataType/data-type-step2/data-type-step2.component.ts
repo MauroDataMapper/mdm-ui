@@ -85,7 +85,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
-    private validator: ValidatorService,
     private resourceService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,

@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
-import { domain } from 'process';
 import { StateHandlerService } from './handlers/state-handler.service';
 
 @Injectable({ providedIn: 'root' })

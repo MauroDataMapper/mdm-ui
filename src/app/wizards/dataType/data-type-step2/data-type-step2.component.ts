@@ -30,7 +30,6 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription, merge } from 'rxjs';
-import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';

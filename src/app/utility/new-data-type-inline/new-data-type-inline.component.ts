@@ -21,7 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { CatalogueItemDomainType, CodeSet, CodeSetIndexResponse, ReferenceDataModel, ReferenceDataModelIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { CodeSet, CodeSetIndexResponse, ReferenceDataModel, ReferenceDataModelIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-inline',

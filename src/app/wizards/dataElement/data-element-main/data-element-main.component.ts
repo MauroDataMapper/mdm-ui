@@ -75,7 +75,6 @@ export class DataElementMainComponent implements OnInit {
       classifiers: [],
       organisation: '',
       referencedDataType: { id: '' },
-      //referencedTerminology: { id: '' },
       referencedDataClass: { id: '' },
       referencedModel: { id: '', domainType: '' }
     },

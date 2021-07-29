@@ -114,15 +114,15 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
       isValid = true;
     }
     // Check if for TerminologyType, the terminology is selected
-    if (this.model.domainType === 'TerminologyType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+    if (this.model.domainType === 'TerminologyType' && (!this.model.referencedModel || this.model.referencedModel.id === '')) {
       isValid = false;
     }
 
-    if (this.model.domainType === 'CodeSetType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+    if (this.model.domainType === 'CodeSetType' && (!this.model.referencedModel || this.model.referencedModel.id === '')) {
       isValid = false;
     }
 
-    if (this.model.domainType === 'ReferenceDataModelType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+    if (this.model.domainType === 'ReferenceDataModelType' && (!this.model.referencedModel || this.model.referencedModel.id === '')) {
       isValid = false;
     }
     this.isValid = isValid;
@@ -150,9 +150,15 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onTerminologySelect(terminology: any) {
-    this.model.referencedTerminology = terminology;
-    this.model.terminology = terminology;
+  // onTerminologySelect(terminology: any) {
+  //   this.model.referencedTerminology = terminology;
+  //   this.model.terminology = terminology;
+  //   this.validate();
+  //   this.sendValidationStatus();
+  // }
+
+  modelDataTypeSelected(value: any) {
+    this.model.referencedModel = value;
     this.validate();
     this.sendValidationStatus();
   }

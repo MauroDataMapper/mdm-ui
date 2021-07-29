@@ -84,28 +84,18 @@ SPDX-License-Identifier: Apache-2.0
       No
     </button>
   </div>
-  <div *ngIf="state === 'confirmResolve'" class="modal-footer pxy-2">
+  <div *ngIf="state === 'conflictsPending'" class="modal-footer pxy-2">
     <p>
-      Conflicts were still found in the content. Are you sure you want to
-      resolve and commit these changes?
+      There are still {{conflictCount}} conflict(s). You cannot resolve until all conflicts are removed.
     </p>
     <button
       mat-button
       color="primary"
       class="mr-1"
       type="button"
-      (click)="resolveConflict()"
-    >
-      Yes
-    </button>
-    <button
-      mat-button
-      color="warn"
-      class="mr-1"
-      type="button"
       (click)="abort()"
     >
-      No
+      OK
     </button>
   </div>
 </div>

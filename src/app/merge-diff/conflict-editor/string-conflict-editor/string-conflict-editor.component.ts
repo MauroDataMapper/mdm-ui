@@ -74,8 +74,11 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     this.setDiffViewEventListeners(this.targetView);
   }
 
-  resolveDiffConflict(event: Event) {
-    const target = event.currentTarget as HTMLElement;
+  onResolveDiffConflict(event: Event) {
+    this.resolveDiffConflict(event.currentTarget as HTMLElement);
+  }
+
+  resolveDiffConflict(target: HTMLElement) {
     const id = JSON.parse(target.dataset.diffId) as number;
     const value = decodeURI(target.dataset.diffValue);
 
@@ -98,7 +101,9 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .parseFromString(this.resolvedText, 'text/html');
 
     const conflicts = resolvedDocument.body.querySelectorAll('span.diff-marker.conflict');
-    return conflicts.length;
+    return Array.from(conflicts)
+      .filter(elem => elem.innerHTML === conflictText)
+      .length;
   }
 
   getFinalResolvedContent() {
@@ -115,6 +120,14 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     return resolvedDocument.body.innerHTML;
   }
 
+  copyAllToResolved(branch: 'source' | 'target') {
+    const view = branch === 'source' ? this.sourceView : this.targetView;
+
+    view.nativeElement
+      .querySelectorAll('ins')
+      .forEach(elem => this.resolveDiffConflict(elem));
+  }
+
 
   private initialiseResolvedDiffHtml(
     text1: string,
@@ -129,13 +142,8 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   private setDiffViewEventListeners(view: ElementRef) {
     view.nativeElement
       .querySelectorAll('ins')
-      .forEach(elem => elem.addEventListener('click', this.resolveDiffConflict.bind(this)));
+      .forEach(elem => elem.addEventListener('click', this.onResolveDiffConflict.bind(this)));
   }
-
-
-
-
-
 
   private checkInsertedTextForResolve(item: DiffTrackedItem) {
     const previousIndex = item.index - 1;

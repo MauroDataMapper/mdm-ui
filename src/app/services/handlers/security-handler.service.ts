@@ -331,8 +331,8 @@ export class SecurityHandlerService {
         || element.availableActions?.includes('createModelItem'),
       canMoveToFolder: element.availableActions?.includes('moveToFolder'),
       canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder'),
-      isReadablePostFinalise: element.availableActions?.includes('postFinalisedReadable'),
-      isEditablePostFinalise: element.availableActions?.includes('postFinalisedEditable')
+      canReadAfterFinalised: element.availableActions?.includes('finalisedReadActions'),
+      canEditAfterFinalise: element.availableActions?.includes('finalisedEditActions')
     };
 
     if ((element as Finalisable).finalised !== undefined) {

@@ -241,7 +241,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canEdit = access.showEdit;
     this.canDeleteProfile = access.showDelete;
     this.canAddMetadata = access.canAddMetadata;
-    this.isEditablePostFinalise = access.isEditablePostFinalise;
+    this.isEditablePostFinalise = access.canEditAfterFinalise;
   }
 
   private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {

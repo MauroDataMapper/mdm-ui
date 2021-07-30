@@ -49,7 +49,7 @@ export class DataElementStep1Component implements OnInit {
       return;
     }
 
-    if (this.model?.createType === 'copy' && this.model?.copyFromDataClass.length === 0) {
+    if (['copy', 'import'].includes(this.model?.createType) && this.model?.copyFromDataClass.length === 0) {
       this.step.invalid = true;
       return;
     }

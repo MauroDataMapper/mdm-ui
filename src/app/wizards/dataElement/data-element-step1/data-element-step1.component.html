@@ -20,17 +20,16 @@ SPDX-License-Identifier: Apache-2.0
     <span>How do you want to add a new Data Element(s) to </span>
     <mdm-element-link [newWindow]="true" [element]="model.parent"></mdm-element-link>
     <span>?</span>
-    <mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('new')">
+    <mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">
         <mat-radio-button value="new">Create a New Data Element</mat-radio-button>
-    </mat-radio-group>
-    <mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('copy')">
         <mat-radio-button value="copy">Copy Data Element(s) from...</mat-radio-button>
+        <mat-radio-button value="import">Import Data Element(s) from...</mat-radio-button>
     </mat-radio-group>
     <mdm-model-selector-tree
             ngDefaultControl
             [onSelect]="onSelect"
             [placeholder]="'Select Data Class...'"
-            [processing]="model.createType != 'copy'"
+            [processing]="!['copy', 'import'].includes(model.createType)"
             [(ngModel)]="model.copyFromDataClass"
             [treeSearchDomainType]="'DataClass'"
             (ngModelChange)="model.copyFromDataClass = $event"

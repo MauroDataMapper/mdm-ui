@@ -82,6 +82,7 @@ export class DataClassesListComponent implements AfterViewInit {
     private gridService: GridService,
     private messageHandler: MessageHandlerService
   ) {}
+
   ngAfterViewInit() {
     if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['name', 'description', 'label', 'checkbox'];
@@ -112,7 +113,11 @@ export class DataClassesListComponent implements AfterViewInit {
           );
         }),
         map((data: any) => {
-          this.totalDataClassCount = data.body.count;
+          if (this.parentDataClass.extendsDataClasses) {
+            this.totalDataClassCount = parseInt(data.body.count, 10) + (this.parentDataClass.extendsDataClasses.length as number);
+          } else {
+            this.totalDataClassCount = data.body.count;
+          }
           this.isLoadingResults = false;
           return data.body.items;
         }),
@@ -122,7 +127,15 @@ export class DataClassesListComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => {
-        this.dataClassRecords = data;
+        if (this.parentDataClass.extendsDataClasses) {
+          const extendedDC = this.parentDataClass.extendsDataClasses.map(dc => {
+            dc['extended'] = true;
+            return dc;
+          });
+          this.dataClassRecords = [...data, ...extendedDC];
+        } else {
+          this.dataClassRecords = data;
+        }
       });
   }
 

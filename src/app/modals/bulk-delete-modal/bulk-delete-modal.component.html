@@ -31,20 +31,20 @@ SPDX-License-Identifier: Apache-2.0
     <table class="mdm--mat-table table-striped mdm--table-fixed">
         <thead>
             <tr>
-                <th style="width: 60%; max-width: 60%;">Name</th>
-                <th style="width: 20%; max-width: 20%; text-align: center;">Type</th>
+                <th style="width: 55%; max-width: 55%;">Name</th>
+                <th style="text-align: center;">Type</th>
                 <th style="width: 20%; max-width: 20%; text-align: center;">Status</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let record of records">
-                <td style="width: 60%; max-width: 60%;">
+                <td>
                   <span>{{record.label}}</span>
                 </td>
-                <td style="width: 20%; max-width: 20%; text-align: center;">
-                  <small class="item-type">{{record.domainType}}</small>
+                <td>
+                  <small class="item-type" [class.item-type-imported]="record.imported === true" [class.item-type-extended]="record.extended === true">{{record.imported ? 'Imported':''}}{{record.extended ? 'Extended':''}} {{record.domainType}}</small>
                 </td>
-                <td style="width: 20%; max-width: 20%; text-align: center;">
+                <td>
                     <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-2x warning"></i>

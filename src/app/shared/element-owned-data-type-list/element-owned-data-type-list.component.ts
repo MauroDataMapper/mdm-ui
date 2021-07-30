@@ -219,18 +219,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = [];
-    this.records.forEach(record => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          label: record.label,
-          dataModel: record.model,
-          domainType: 'DataType',
-          type: record.domainType
-        });
-      }
-    });
+    const dataElementIdLst = this.records.filter(record => record.checked === true);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },

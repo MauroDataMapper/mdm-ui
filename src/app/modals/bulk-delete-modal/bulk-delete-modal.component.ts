@@ -55,32 +55,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   }
 
   getData = () => {
-    this.data.dataElementIdLst.forEach((item: any) => {
-      if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
-          if (result !== undefined) {
-            this.records.push(result.body);
-          }
-        }, err => {
-          this.messageHandler.showError('There was a problem getting the Data Elements.', err);
-        });
-      } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
-          if (result !== undefined) {
-            this.records.push(result.body);
-          }
-        }, err => {
-          this.messageHandler.showError('There was a problem getting the Data Classes.', err);
-        });
-      } else if (item.domainType === 'DataType') {
-        this.records.push({
-          domainType: item.domainType,
-          label: item.label,
-          id: item.id,
-          dataModel: item.dataModel
-        });
-      }
-    });
+    this.records = this.data.dataElementIdLst;
     this.changeRef.detectChanges();
   };
 
@@ -101,14 +76,31 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           result: 'Success',
           hasError: false
         };
-        if (item.domainType === 'DataClass') {
-          return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
-        }
-        if (item.domainType === 'DataElement') {
-          return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
-        }
-        if (item.domainType === 'DataType') {
-          return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
+        switch (item.domainType) {
+          case 'DataClass':
+            if (item.imported && !this.parentDataClass) {
+              return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id, item.model, item.id).toPromise();
+            } else if (item.imported && this.parentDataClass) {
+              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
+            } else if (item.extended && this.parentDataClass) {
+              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
+            } else {
+              return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
+            }
+          case 'DataElement':
+            if (item.imported) {
+              return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id, this.parentDataClass.id, item.model, item.dataClass, item.id).toPromise();
+            } else {
+              return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
+            }
+          case 'PrimitiveType':
+          case 'ReferenceType':
+          case 'EnumerationType':
+            if (item.imported) {
+              return this.resources.dataModel.removeImportedDataType(this.parentDataModel, item.model, item.id).toPomise();
+            } else {
+              return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
+            }
         }
       }).catch(() => {
         this.failCount++;

@@ -117,6 +117,10 @@ export class EditingService {
     };
   }
 
+  isTabGroupClickEventHandled(tabGroup: MatTabGroup): boolean {
+    return !!tabGroup && tabGroup._handleClick !== null;
+  }
+
   /**
    * Configure a `MatDialogRef` to handle editing state tracking and confirmations.
    *

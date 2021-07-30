@@ -305,6 +305,19 @@ ul.favourites li:focus {
   padding: 1px 6px;
   display: inline-block;
   vertical-align: middle;
+  white-space: nowrap;
+
+  &.item-type-imported {
+    background-color: #028821;
+    color: #ffffff;
+    border: 1px solid #028821;
+  }
+
+  &.item-type-extended {
+    background-color: #007bff;
+    color: #ffffff;
+    border: 1px solid #007bff;
+  }
 }
 .detail-icons--cta {
   float: right;

@@ -76,11 +76,12 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           result: 'Success',
           hasError: false
         };
+
         switch (item.domainType) {
           case 'DataClass':
-            if (item.imported && !this.parentDataClass) {
+            if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
               return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id, item.model, item.id).toPromise();
-            } else if (item.imported && this.parentDataClass) {
+            } else if (item.imported && this.parentDataClass?.id !== null) {
               return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
             } else if (item.extended && this.parentDataClass) {
               return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
@@ -97,7 +98,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           case 'ReferenceType':
           case 'EnumerationType':
             if (item.imported) {
-              return this.resources.dataModel.removeImportedDataType(this.parentDataModel, item.model, item.id).toPomise();
+              return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();
             } else {
               return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
             }

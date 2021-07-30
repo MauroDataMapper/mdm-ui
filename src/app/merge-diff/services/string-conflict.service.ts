@@ -43,7 +43,7 @@ export class StringConflictService {
   constructor() {}
 
   getDiffViewHtml(text1: string, text2: string) {
-    const diffs = this.getDiff(text1, text2);
+    const diffs = this.getDiff(text1 ?? '', text2 ?? '');
     return this.getDiffPrettyHtml(
       diffs,
       this.createInsElement.bind(this),
@@ -80,7 +80,7 @@ export class StringConflictService {
   }
 
   getDiff(text1: string, text2: string) {
-    const diffs = this.dmp.diff_main(text1, text2);
+    const diffs = this.dmp.diff_main(text1 ?? '', text2 ?? '');
     this.dmp.diff_cleanupSemantic(diffs);
     return diffs;
   }

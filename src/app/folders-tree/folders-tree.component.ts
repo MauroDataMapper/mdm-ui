@@ -539,6 +539,38 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     });
   }
 
+  handleExtendDataClass(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
+  handleImportDataClass(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
+  handleImportDataType(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataType', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
+  handleImportDataElement(fnode: FlatNode) {
+    this.stateHandler.Go('NewDataElement', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
   openWindow(fnode: FlatNode) {
     const parameters: any = { id: fnode.id };
 

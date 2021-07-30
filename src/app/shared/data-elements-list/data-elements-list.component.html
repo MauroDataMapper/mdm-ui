@@ -66,7 +66,7 @@ SPDX-License-Identifier: Apache-2.0
           <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClassParent}"></mdm-element-link>
         </div>
         <div>
-          <small class="item-type ml-1">{{record.domainType}}</small>
+          <small class="item-type ml-1"[class.item-type-imported]="record.imported === true">{{record.imported ? 'Imported':''}} {{record.domainType}}</small>
         </div>
       </td>
     </ng-container>

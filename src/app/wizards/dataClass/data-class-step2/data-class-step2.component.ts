@@ -64,6 +64,7 @@ export class DataClassStep2Component
   failCount = 0;
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
+  copyMessage = '';
 
   formChangesSubscription: Subscription;
 
@@ -190,7 +191,14 @@ export class DataClassStep2Component
 
       invalid = this.myForm.invalid;
     }
-    if (this.model.createType === 'copy') {
+    if (['copy', 'import', 'extend'].includes(this.model.createType)) {
+      switch (this.model.createType) {
+        case 'copy': this.copyMessage = 'copy'; break;
+        case 'import': this.copyMessage = 'import'; break;
+        case 'extend': this.copyMessage = 'extend with'; break;
+        default: this.copyMessage = '';
+      }
+
       if (this.model.selectedDataClasses.length === 0) {
         this.step.invalid = true;
         return;
@@ -220,19 +228,18 @@ export class DataClassStep2Component
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass
-              .copyChildDataClass(
-                this.model.parent.model,
-                this.model.parent.id,
-                dc.modelId,
-                dc.id,
-                null
-              )
-              .toPromise();
+            switch (this.model.createType) {
+              case 'copy': return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'import': return this.resources.dataClass.importDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'extend': return this.resources.dataClass.addExtendDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+            }
+          } if (this.model.parent.domainType === 'DataModel') {
+            switch (this.model.createType) {
+              case 'copy': return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'import': return this.resources.dataModel.importDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+            }
           } else {
-            return this.resources.dataClass
-              .copyDataClass(this.model.parent.id, dc.modelId, dc.id, null)
-              .toPromise();
+            return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
           }
         })
         .catch((error) => {

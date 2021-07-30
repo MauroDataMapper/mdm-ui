@@ -61,6 +61,7 @@ SPDX-License-Identifier: Apache-2.0
             <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
                 <div>
                     <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link>
+                    <div *ngIf="record.imported"><small><em><span class="badge badge-success">imported</span></em></small></div>
                 </div>
             </td>
         </ng-container>

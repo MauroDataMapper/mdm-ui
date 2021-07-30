@@ -192,8 +192,8 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
   }
 
   private getComparisonDisplayText(value: string, other: string) {
-    if (this.valueType === 'undefined') {
-      return '<span>Not defined</span>';
+    if (this.valueType === 'undefined' || !value) {
+      return '<code>Not defined</code>';
     }
 
     if (this.valueType === 'number') {

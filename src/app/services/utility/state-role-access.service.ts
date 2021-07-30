@@ -55,6 +55,7 @@ export class StateRoleAccessService {
         'appContainer.mainApp.twoSidePanel.catalogue.notFound',
         'appContainer.mainApp.twoSidePanel.catalogue.search',
         'appContainer.mainApp.twoSidePanel.catalogue.folder',
+        'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
         'otherwise'
     ];
 

@@ -1,3 +1,4 @@
+import { StateHandlerService } from './../../services/handlers/state-handler.service';
 /*
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
@@ -45,6 +46,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcast: BroadcastService,
+    private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
   ) { }
 
@@ -60,7 +62,8 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   };
 
   closeAndRefresh = () => {
-    this.broadcast.reloadCatalogueTree();
+    this.stateHandler.reload();
+    // this.broadcast.reloadCatalogueTree();
     this.dialogRef.close({ status: 'ok' });
   };
 

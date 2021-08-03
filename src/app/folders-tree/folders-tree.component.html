@@ -58,9 +58,9 @@ SPDX-License-Identifier: Apache-2.0
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
       <i class="fas fa-plus"></i> Create
     </button>
-    <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="importMenu" [matMenuTriggerData]="{node: node}">
+    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="importMenu" [matMenuTriggerData]="{node: node}">
       <i class="fas fa-plus"></i> Import/Extend
-    </button> -->
+    </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
       <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
       <i *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></i>

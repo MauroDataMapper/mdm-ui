@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "dist": "ng build --prod --output-path=dist/mdm-ui-$npm_package_version && npm run dist-archive",
+    "dist-archive": "tar zcvf dist/mdm-ui-${npm_package_version}.tgz -C dist mdm-ui-$npm_package_version",
     "test": "jest",
     "test-with-coverage": "jest --coverage",
     "test-watch": "jest --watch",

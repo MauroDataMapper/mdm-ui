@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit } from '@angular/core';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import DiffMatchPatch from 'diff-match-patch';
+import { diff_match_patch } from 'diff-match-patch';
 
 @Component({
   selector: 'mdm-text-diff',
@@ -78,7 +78,7 @@ export class TextDiffComponent implements AfterViewInit {
 
 
   diffLineMode(text1, text2) {
-    const dmp = new DiffMatchPatch();
+    const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
     const lineText2 = a.chars2;

@@ -41,12 +41,14 @@ import {
   DataModelDetail,
   DataModelDetailResponse,
   ModelDomainType,
-  ModelUpdatePayload
+  ModelUpdatePayload,
+  MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 import { MergeDiffAdapterService } from '@mdm/merge-diff/merge-diff-adapter/merge-diff-adapter.service';
+import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -84,7 +86,7 @@ export class DataModelDetailComponent implements OnInit {
     private editingService: EditingService,
     private validatorService: ValidatorService,
     private mergeDiffService: MergeDiffAdapterService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isAdminUser = this.sharedService.isAdmin;
@@ -259,7 +261,7 @@ export class DataModelDetailComponent implements OnInit {
             );
           }
         );
-    }else{
+    } else {
       this.messageHandler.showError('There is an error with the label please correct and try again');
     }
   }
@@ -358,7 +360,7 @@ export class DataModelDetailComponent implements OnInit {
         'mergediff',
         {
           sourceId: this.dataModel.id,
-          catalogueDomainType:  ModelDomainType.DataModels
+          catalogueDomainType: MultiFacetAwareDomainType.DataModels
         });
     }
 
@@ -374,21 +376,14 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   showMergeGraph() {
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(VersioningGraphModalComponent, {
-        data: { parentDataModel: this.dataModel.id },
+    this.dialog.open<VersioningGraphModalComponent, VersioningGraphModalConfiguration>(
+      VersioningGraphModalComponent,
+      {
+        data: {
+          catalogueItem: this.dataModel
+        },
         panelClass: 'versioning-graph-modal'
       });
-
-      dialog.afterClosed().subscribe((dataModel) => {
-        if (dataModel != null && dataModel.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-    promise.then(() => {}).catch(() => {});
   }
 
   export(exporter) {

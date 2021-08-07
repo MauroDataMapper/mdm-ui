@@ -428,6 +428,12 @@ export class ElementTypesService {
         mode
       });
   }
+
+  isModelDataType(domainType: CatalogueItemDomainType) {
+    return domainType === CatalogueItemDomainType.CodeSetType
+      || domainType === CatalogueItemDomainType.TerminologyType
+      || domainType === CatalogueItemDomainType.ReferenceDataModelType;
+  }
 }
 
 export class CatalogueElementType {

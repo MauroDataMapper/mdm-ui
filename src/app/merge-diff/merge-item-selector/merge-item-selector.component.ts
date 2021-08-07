@@ -18,9 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeItem, MergeType } from '@maurodatamapper/mdm-resources';
+import { MergeDiffItem, MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 import {
-  CommittingMergeItem} from '../types/merge-item-type';
+   MergeDiffItemModel} from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
@@ -28,23 +28,61 @@ import {
   styleUrls: ['./merge-item-selector.component.scss']
 })
 export class MergeItemSelectorComponent implements OnInit {
-  @Output() selectedMergeItemChanged = new EventEmitter<MergeItem>();
-  @Input() mergeItems : Array<MergeItem & CommittingMergeItem>;
+  @Output() selectedMergeItemChanged = new EventEmitter<MergeDiffItem>();
+  @Input() mergeItems: MergeDiffItemModel[];
   @Input() isCommitting: boolean;
 
-  changesList = new Array<MergeItem>();
-
+  changesList: MergeDiffItem[] = [];
 
   constructor() {}
 
   ngOnInit(): void {
   }
 
-  selectedItem(mergeItem: MergeItem) {
+  selectedItem(mergeItem: MergeDiffItem) {
     this.selectedMergeItemChanged.emit( mergeItem);
   }
 
   public get mergeType() {
-    return MergeType;
+    return MergeDiffType;
+  }
+
+  getBranchSelectedIcon(selected: MergeConflictResolution) {
+    switch (selected) {
+      case MergeConflictResolution.Source:
+        return 'fas fa-file-export';
+      case MergeConflictResolution.Target:
+        return 'fas fa-file-import';
+      case MergeConflictResolution.Mixed:
+        return 'fab fa-mixer';
+      default:
+        return '';
+    }
+  }
+
+  getBranchSelectedTooltip(selected: MergeConflictResolution) {
+    switch (selected) {
+      case MergeConflictResolution.Source:
+        return 'Take from Source';
+      case MergeConflictResolution.Target:
+        return 'Take from Target';
+      case MergeConflictResolution.Mixed:
+        return 'Mixed/combined content';
+      default:
+        return '';
+    }
+  }
+
+  getMergeTypeTooltip(type: MergeDiffType) {
+    switch (type) {
+      case MergeDiffType.Creation:
+        return 'Created';
+      case MergeDiffType.Deletion:
+        return 'Deleted';
+      case MergeDiffType.Modification:
+        return 'Modified';
+      default:
+        return '';
+    }
   }
 }

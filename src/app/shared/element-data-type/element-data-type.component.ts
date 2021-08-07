@@ -19,9 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { Categories } from '@mdm/model/model-types.model';
+import { CatalogueItem, CatalogueItemDomainType, DataType, MdmResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Component({
   selector: 'mdm-element-data-type',
@@ -29,7 +31,7 @@ import { Categories } from '@mdm/model/model-types.model';
   styleUrls: ['./element-data-type.component.sass']
 })
 export class ElementDataTypeComponent implements OnInit {
-  @Input() elementDataType: any;
+  @Input() elementDataType: DataType;
   @Input() hideName: boolean;
   @Input() onlyShowRefDataClass: boolean;
   @Input() hideEnumList: boolean;
@@ -42,6 +44,7 @@ export class ElementDataTypeComponent implements OnInit {
   showing = false;
   referenceClass: any;
   referenceClassLink: any;
+  modelResource: CatalogueItem;
   link: any;
   categories: any[];
   allRecords: any[];
@@ -55,7 +58,8 @@ export class ElementDataTypeComponent implements OnInit {
 
   constructor(
     private stateHandler: StateHandlerService,
-    private elementTypes: ElementTypesService
+    private elementTypes: ElementTypesService,
+    private resources: MdmResourcesService
   ) {}
 
 
@@ -80,6 +84,10 @@ export class ElementDataTypeComponent implements OnInit {
       }
 
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
+    }
+
+    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType) {
+      this.loadModelResource();
     }
 
     if (this.elementDataType.enumerationValues) {
@@ -173,4 +181,28 @@ export class ElementDataTypeComponent implements OnInit {
   showEnums = () => {
     this.toggleShowEnums = !this.toggleShowEnums;
   };
+
+  private loadModelResource() {
+    const id: Uuid = this.elementDataType.modelResourceId;
+    const domainType: CatalogueItemDomainType = this.elementDataType.modelResourceDomainType;
+
+    let request: Observable<MdmResponse<CatalogueItem>>;
+    switch (domainType) {
+      case CatalogueItemDomainType.ReferenceDataModel:
+        request = this.resources.referenceDataModel.get(id);
+        break;
+      case CatalogueItemDomainType.CodeSet:
+        request = this.resources.codeSet.get(id);
+        break;
+      case CatalogueItemDomainType.Terminology:
+        request = this.resources.terminology.get(id);
+        break;
+    }
+
+    if (!request) {
+      return;
+    }
+
+    request.subscribe(response => this.modelResource = response.body);
+  }
 }

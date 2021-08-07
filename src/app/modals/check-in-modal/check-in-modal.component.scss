@@ -16,3 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+.mat-list-item
+{
+    font-size: smaller !important;
+    height: 25px !important;
+}
+
+.creation
+{
+    color:green !important ;
+}
+
+.deletion
+{ 
+    color: darkred !important;
+}
+
+.mergeItemsList
+{
+    border: 1px lightgray solid; border-radius: 5px; height : 200px; overflow-y: auto;
+}

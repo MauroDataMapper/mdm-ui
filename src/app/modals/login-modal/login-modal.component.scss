@@ -17,21 +17,49 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.mdm-login-modal {
+@import "../../../style/abstracts/variables";
 
-  mat-divider {
-    margin: 4px 0;
+.mdm-login-modal {
+  position: relative;
+
+  &__close {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
-  &__providers {
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
 
-    &--scrollable {
-      max-height: 9em;
-      overflow-y: auto;
+  @media (max-width: $mobile) {
+    &__container {
+      flex-direction: column;
     }
+  }
 
-    button {
-      margin: 4px 0;
+  &--column {
+    width: 600px;
+    padding: 24px 80px;
+
+    @media (max-width: $mobile) {
+      width: 100%;
+      padding: 12px 16px;
+    }
+  }
+
+  &__openid-providers {
+
+    &--container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      button {
+        margin: 8px;
+      }
     }
   }
 }

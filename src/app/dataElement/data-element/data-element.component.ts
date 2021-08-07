@@ -26,18 +26,15 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatDialog } from '@angular/material/dialog';
 import {
   GridService,
   MessageHandlerService,
-  SecurityHandlerService,
-  ValidatorService
-} from '@mdm/services';
+  SecurityHandlerService} from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 
 @Component({
@@ -46,7 +43,7 @@ import { TabCollection } from '@mdm/model/ui.model';
   styleUrls: ['./data-element.component.sass']
 })
 export class DataElementComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -94,20 +91,18 @@ export class DataElementComponent
   };
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private sharedService: SharedService,
     private stateHandler: StateHandlerService,
-    dialog: MatDialog,
-    validator: ValidatorService,
-    messageHandler: MessageHandlerService,
+    private messageHandler: MessageHandlerService,
     private gridService: GridService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
-    editingService: EditingService
+    private editingService: EditingService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super();
     if (
       this.isGuid(this.uiRouterGlobals.params.id) &&
       (!this.uiRouterGlobals.params.id ||
@@ -220,7 +215,7 @@ export class DataElementComponent
         resource.dataType = item.value as DataTypeReference;
       }
       else {
-        resource[item.displayName.toLocaleLowerCase()] = item.value;
+        resource[item.propertyName] = item.value;
       }
     });
 
@@ -259,8 +254,6 @@ export class DataElementComponent
         this.dataModel.id = result.body.model;
         this.dataClass.id = result.body.dataClass;
 
-        this.UnUsedProfiles('dataElements', id);
-        this.UsedProfiles('dataElements', id);
         this.watchDataElementObject();
 
         this.messageService.FolderSendMessage(this.dataElementOutput);

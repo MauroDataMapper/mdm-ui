@@ -87,4 +87,14 @@ SPDX-License-Identifier: Apache-2.0
       <mdm-element-link [element]="elementDataType.terminology" [newWindow]="newWindow"></mdm-element-link>
     </span>
   </span>
+  <span *ngIf="elementDataType.domainType == 'ModelDataType'">
+    <div>
+      <a href="{{link}}">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">({{elementDataType.modelResourceDomainType}})</span>
+    </div>
+    <div *ngIf="modelResource">
+      <span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span>
+        <mdm-element-link [element]="modelResource" [newWindow]="newWindow"></mdm-element-link>]
+      </span>
+    </div>
+  </span>
 </div>

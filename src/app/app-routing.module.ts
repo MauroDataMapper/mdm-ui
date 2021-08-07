@@ -55,7 +55,7 @@ import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
+import { HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
@@ -64,6 +64,8 @@ import { NewVersionComponent } from './shared/new-version/new-version.component'
 import { VersionedFolderComponent } from './versioned-folder/versioned-folder/versioned-folder.component';
 import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
+import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
+import { SharedService, StateRoleAccessService } from './services';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -182,6 +184,17 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.openIdConnectAuthorizing',
       url: '/open-id-connect/authorize',
       component: OpenIdConnectAuthorizeComponent
+    },
+    {
+      name: 'appContainer.mainApp.doiRedirect',
+      url: '/doi/:id',
+      component: DoiRedirectComponent,
+      params: {
+        id: {
+          type: 'string',
+          raw: true
+        }
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.search',
@@ -320,33 +333,59 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-const editingViewTransitionHooks = (transitionService: TransitionService, editingService: EditingService) => {
+const editingViewTransitionHooks = (transitions: TransitionService, editing: EditingService) => {
 
   /**
    * Check each state transition where the "from" view state is marked as editable.
    */
   const canLeaveStateCriteria = {
-    from: (state: StateObject) => state.name && editingService.isRouteEditable(state.name)
+    from: (state: StateObject) => state.name && editing.isRouteEditable(state.name)
   };
 
   /**
    * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
    */
-  const canLeaveStateAction = () => editingService.confirmLeaveAsync().toPromise();
+  const canLeaveStateAction = () => editing.confirmLeaveAsync().toPromise();
 
   /**
    * When entering each view, ensure that the global editing state of the app is reset.
    */
-  const onEnteringViewAction = () => editingService.stop();
+  const onEnteringViewAction = () => editing.stop();
 
-  transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
-  transitionService.onEnter({}, onEnteringViewAction);
+  transitions.onBefore(canLeaveStateCriteria, canLeaveStateAction);
+  transitions.onEnter({}, onEnteringViewAction);
 };
 
+/**
+ * Router transition hooks for checking role access before switching views.
+ *
+ * @see {@link StateRoleAccessService}
+ */
+const roleTransitionHooks = (transitions: TransitionService) => {
+
+  /**
+   * Before starting a transition, check if the user/role has access to this route.
+   */
+  const canAccessRoute = (transition: Transition): HookResult => {
+    const roleAccess = transition.injector().get<StateRoleAccessService>(StateRoleAccessService);
+    const shared = transition.injector().get<SharedService>(SharedService);
+    shared.current = transition.$to().name;
+    return roleAccess.hasAccess(transition.$to().name);
+  };
+
+  transitions.onStart({}, canAccessRoute);
+};
+
+/**
+ * Configuration of the `UIRouter`.
+ */
 const routerConfigFn = (router: UIRouter, injector: Injector) => {
-  const transitionService = router.transitionService;
-  const editingService = injector.get<EditingService>(EditingService);
-  editingViewTransitionHooks(transitionService, editingService);
+  const transitions = router.transitionService;
+
+  const editing = injector.get<EditingService>(EditingService);
+
+  editingViewTransitionHooks(transitions, editing);
+  roleTransitionHooks(transitions);
 };
 
 @NgModule({

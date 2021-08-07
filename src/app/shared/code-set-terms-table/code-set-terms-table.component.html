@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
                     <i class="fas fa-plus"></i>
                     Add Term
                 </button>
-                <button mat-button color="warn" (click)="toggleAddTermsSection()" *ngIf="showAddTerm">
+                <button mat-button color="warn" (click)="toggleAddTermsSection()" *ngIf="showAddTerm" matTooltip="Cancel adding terms">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 <div *ngIf="showAddTerm">
-    <mdm-multiple-terms-selector [onAddButtonClick]="addTerms" [hideAddButton]=false></mdm-multiple-terms-selector>
+    <mdm-multiple-terms-selector (addingTerms)="addTerms($event)" [hideAddButton]="false"></mdm-multiple-terms-selector>
 </div>
 <div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">

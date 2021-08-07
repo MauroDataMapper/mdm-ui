@@ -20,13 +20,18 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
-  ModelDomainType,
   Uuid,
-  Merge,
-  MergeItem,
-  MergeUsed
+  MergeDiff,
+  MergeDiffItem,
+  MergeConflictResolution,
+  CommitMergePayload,
+  MergeDiffType,
+  MergableMultiFacetAwareDomainType,
+  MergableCatalogueItem,
+  MainBranchResponse
 } from '@maurodatamapper/mdm-resources';
-import { CheckinModelPayload } from '@mdm/modals/check-in-modal/check-in-modal-payload';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
   MessageHandlerService,
@@ -34,13 +39,10 @@ import {
   StateHandlerService
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import {
-  FullMergeItem,
-  MergeItemSelection
-} from '../types/merge-item-type';
+import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -57,24 +59,23 @@ export class MergeDiffContainerComponent implements OnInit {
   loaded = false;
   loadingContent = false;
   targetLoaded = false;
-  domainType: ModelDomainType;
-  source: any;
-  target: any;
-  diff: Merge;
+  domainType: MergableMultiFacetAwareDomainType;
+  source: MergableCatalogueItem;
+  target: MergableCatalogueItem;
+  diff: MergeDiff;
   selectedItem: MergeItemSelection;
-  changesList: Array<FullMergeItem>;
-  committingList: Array<FullMergeItem>;
-  activeTab: any;
+  changesList: MergeDiffItemModel[];
+  committingList: MergeDiffItemModel[];
+  activeTab: number;
 
   constructor(
     private shared: SharedService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
-    private mergeService: MergeDiffAdapterService,
+    private mergeDiff: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private title: Title
-  ) {}
+    private title: Title) { }
 
   ngOnInit(): void {
     if (!this.shared.features.useMergeUiV2) {
@@ -85,84 +86,101 @@ export class MergeDiffContainerComponent implements OnInit {
 
     this.title.setTitle('Merge Changes');
 
-    const sourceId = this.uiRouterGlobals.params.sourceId;
-    const targetId = this.uiRouterGlobals.params.targetId;
+    const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
+    const targetId: Uuid = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
 
-
-    this.mergeService
-      .loadCatalogueItemDetails(sourceId, this.domainType)
+    this.mergeDiff
+      .getCatalogueItemDetails(this.domainType, sourceId)
       .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(
-            'There was a problem restoring the Data Model.',
-            error
-          );
+        catchError(error => {
+          this.messageHandler.showError('There was a problem loading the source item.', error);
           return EMPTY;
         }),
-        finalize(() => {
-          this.loaded = true;
-        })
-      )
-      .subscribe((result) => {
-        this.source = result.body;
-        if (targetId) {
-          this.setTarget(targetId);
-        } else {
-          this.loadMainAndSetTarget();
-        }
-      });
-  }
+        switchMap(response => {
+          this.source = response.body;
+          if (!targetId) {
+            return this.mergeDiff.getMainBranch(this.domainType, this.source.id);
+          }
 
-  loadMainAndSetTarget() {
-    this.mergeService
-      .retrieveMainBranch(this.domainType, this.source.id)
-      .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(
-            'There was a problem loading main',
-            error
-          );
+          return of(targetId);
+        }),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem finding the main branch.', error);
           return EMPTY;
-        })
+        }),
+        switchMap((response: MainBranchResponse | Uuid) => {
+          const actualTargetId: Uuid = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
+          return this.loadTarget(actualTargetId);
+        }),
+        finalize(() => this.loaded = true)
       )
-      .subscribe((result) => {
-        this.setTarget(result.body.id);
+      .subscribe(response => {
+        this.target = response.body;
+        this.runDiff();
       });
   }
 
   setTarget(id: Uuid) {
-    this.targetLoaded = false;
-    this.mergeService
-      .loadCatalogueItemDetails(id, this.domainType)
-      .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(
-            'There was a problem loading Target',
-            error
-          );
-          return EMPTY;
-        }),
-        finalize(() => {
-          this.targetLoaded = true;
-        })
-      )
-      .subscribe((result) => {
-        this.target = result.body;
+    this.loadTarget(id)
+      .subscribe(response => {
+        this.target = response.body;
         this.runDiff();
       });
   }
 
   onCommitChanges(): void {
     this.dialog
-      .open<CheckInModalComponent, CheckinModelPayload>(CheckInModalComponent, {
-        data: {
-          deleteSourceBranch: false
-        }
-      })
+      .open<CheckInModalComponent, CheckinModelConfiguration, CheckinModelResult>(
+        CheckInModalComponent,
+        {
+          data: {
+            deleteSourceBranch: false,
+            items: this.committingList,
+            label: this.source.label,
+            domainType: this.domainType,
+            isDataAsset: this.source?.type === 'Data Asset',
+            source: this.source,
+            target: this.target
+          }
+        })
       .afterClosed()
-      .subscribe(() => {});
-    // TODO
+      .pipe(
+        filter(result => result.status === ModalDialogStatus.Ok),
+        switchMap(result => {
+          const patches = this.committingList.filter(
+            item => item.branchSelected !== MergeConflictResolution.Target
+          );
+
+          const data: CommitMergePayload = {
+            changeNotice: result.commitComment,
+            deleteBranch: result.deleteSourceBranch,
+            patch: {
+              sourceId: this.source.id,
+              targetId: this.target.id,
+              label: this.target.label,
+              count: patches.length,
+              patches
+            }
+          };
+
+          return this.mergeDiff.commitMergePatches(
+            this.domainType,
+            this.source.id,
+            this.target.id,
+            data);
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(`Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`);
+        this.stateHandler.Go(
+          this.target.domainType,
+          {
+            id: this.target.id,
+            reload: true,
+            location: true
+          });
+      });
   }
 
   onCancelChanges(): void {
@@ -171,62 +189,124 @@ export class MergeDiffContainerComponent implements OnInit {
 
   runDiff() {
     this.resetLists();
-    this.mergeService.getMergeDiff().subscribe((data) => {
-      data.diffs.forEach((mergeItem: FullMergeItem) => {
-        if (mergeItem.isMergeConflict) {
-          this.changesList.push(mergeItem);
-        } else {
-          mergeItem.branchSelected = MergeUsed.Source;
-          this.committingList.push(mergeItem);
-        }
+    this.mergeDiff
+      .getMergeDiff(this.domainType, this.source.id, this.target.id)
+      .subscribe(data => {
+        data.diffs.forEach((item: MergeDiffItemModel) => {
+          if (item.fieldName === branchNameField) {
+            // A merge diff item with the field name "branchName" should not be considered for the user
+            // to manage, this is a built-in field that Mauro manages
+            return;
+          }
+
+          if (item.isMergeConflict) {
+            this.changesList.push(item);
+          }
+          else {
+            // This item can be merged automatically
+            item.branchSelected = MergeConflictResolution.Source;
+            item.branchNameSelected = this.source.branchName;
+            this.committingList.push(item);
+          }
+        });
       });
-    });
   }
 
-  setSelectedMergeItem(item: MergeItem, isCommitting: boolean) {
+  setSelectedMergeItem(item: MergeDiffItem, isCommitting: boolean) {
     this.loadingContent = true;
     this.selectedItem = { mergeItem: item, isCommitting };
     this.loadingContent = false;
   }
 
   resetLists() {
-    this.changesList = Array<FullMergeItem>();
-    this.committingList = Array<FullMergeItem>();
+    this.changesList = Array<MergeDiffItemModel>();
+    this.committingList = Array<MergeDiffItemModel>();
   }
 
   public get MergeUsed() {
-    return MergeUsed;
+    return MergeConflictResolution;
   }
 
-  selectAll(branchUsed: MergeUsed) {
+  selectAll(branchUsed: MergeConflictResolution) {
     this.selectedItem = null;
+    const tempArray: MergeDiffItemModel[] = [];
     this.changesList.forEach((item) => {
-      item.branchSelected = branchUsed;
-      this.committingList.push(item);
+      if (item.type === MergeDiffType.Modification) {
+        item.branchSelected = branchUsed;
+        item.branchNameSelected =
+          branchUsed === MergeConflictResolution.Source
+            ? this.source.branchName
+            : this.target.branchName;
+        this.committingList.push(item);
+        return;
+      }
+      if (branchUsed === MergeConflictResolution.Source) {
+        item.branchSelected = branchUsed;
+        item.branchNameSelected = this.source.branchName;
+        this.committingList.push(item);
+      } else {
+        tempArray.push(item);
+      }
     });
-    this.changesList = new  Array<FullMergeItem>();
+    this.changesList = new Array<MergeDiffItemModel>();
+    this.changesList = Object.assign([], tempArray);
   }
 
-  cancelCommit(item: FullMergeItem)
-  {
-   const index = this.committingList.findIndex(x => x === item);
-   if(index >= 0)
-   {
-     this.selectedItem = null;
-     this.committingList.splice(index,1);
-     item.branchSelected = null;
-     this.changesList.push(item);
-     this.activeTab = 0;
-     this.setSelectedMergeItem(item,false);
-   }
+  cancelAll() {
+    this.dialog
+      .openConfirmation({
+        data: {
+          message: 'Are you sure? This will remove all pending commits',
+          title: 'Cancel All Commits'
+        }
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.selectedItem = null;
+          this.committingList.forEach((item) => {
+            item.branchSelected = null;
+            item.branchNameSelected = null;
+            this.changesList.push(item);
+          });
+          this.committingList = new Array<MergeDiffItemModel>();
+        }
+      });
   }
 
-  acceptCommit(item: FullMergeItem)
-  {
-    const index = this.changesList.findIndex(x => x === item);
-    if(index >= 0)
-    {
-      this.changesList.splice(index,1);
+  cancelCommit(item: MergeDiffItemModel) {
+    const index = this.committingList.findIndex((x) => x === item);
+    if (index >= 0) {
+      this.selectedItem = null;
+      this.committingList.splice(index, 1);
+      item.branchSelected = null;
+      item.branchNameSelected = null;
+      this.changesList.push(item);
+      this.activeTab = 0;
+      this.setSelectedMergeItem(item, false);
+    }
+  }
+
+  acceptCommit(item: MergeDiffItemModel) {
+    const index = this.changesList.findIndex((x) => x === item);
+    if (index >= 0) {
+      this.changesList.splice(index, 1);
+
+      switch (item.branchSelected) {
+        case MergeConflictResolution.Source:
+          item.branchNameSelected = this.source.branchName;
+          break;
+        case MergeConflictResolution.Target:
+          item.branchNameSelected = this.target.branchName;
+          break;
+        case MergeConflictResolution.Mixed:
+          item.branchNameSelected = 'MIXED';
+          break;
+
+        default:
+          break;
+      }
+
       this.committingList.push(item);
       this.selectedItem = null;
     }
@@ -234,5 +314,18 @@ export class MergeDiffContainerComponent implements OnInit {
 
   tabSelected(index: number) {
     this.activeTab = index;
+  }
+
+  private loadTarget(id: Uuid) {
+    this.targetLoaded = false;
+    return this.mergeDiff
+      .getCatalogueItemDetails(this.domainType, id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem loading the target item.', error);
+          return EMPTY;
+        }),
+        finalize(() => this.targetLoaded = true)
+      );
   }
 }

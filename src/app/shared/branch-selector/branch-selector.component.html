@@ -21,6 +21,7 @@ SPDX-License-Identifier: Apache-2.0
   matTooltip="Switch to another branch"
   [(ngModel)]="currentVersionId"
   (ngModelChange)="currentVersionIdChanged()"
+  [disabled]="disabled"
 >
   <option [value]="item.id" *ngFor="let item of versionList">
     {{ item.displayName ? item.displayName : 'main' }}

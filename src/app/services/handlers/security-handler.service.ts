@@ -330,7 +330,9 @@ export class SecurityHandlerService {
         || element.availableActions?.includes('createModel')
         || element.availableActions?.includes('createModelItem'),
       canMoveToFolder: element.availableActions?.includes('moveToFolder'),
-      canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder')
+      canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder'),
+      canReadAfterFinalised: element.availableActions?.includes('finalisedReadActions'),
+      canEditAfterFinalise: element.availableActions?.includes('finalisedEditActions')
     };
 
     if ((element as Finalisable).finalised !== undefined) {

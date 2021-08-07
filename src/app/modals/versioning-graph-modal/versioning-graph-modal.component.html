@@ -17,9 +17,21 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <h4 mat-dialog-title>Versioning graph</h4>
-<button mat-icon-button color="warn" type="button" class="close-modal paddingless" mat-dialog-close>
+<button
+  mat-icon-button
+  color="warn"
+  type="button"
+  class="close-modal paddingless"
+  mat-dialog-close
+>
   <i class="fas fa-times"></i>
 </button>
-<mat-dialog-content class="mat-typography" *ngIf="isDataLoaded">
-  <mdm-diagram-tab [parent]="sourceModel" [mode]="mode" [isPopup]="false" [canMoveUp]="false" class="block"></mdm-diagram-tab>
+<mat-dialog-content class="mat-typography" *ngIf="catalogueItem">
+  <mdm-diagram-tab
+    [parent]="catalogueItem"
+    mode="model-merging-graph"
+    [isPopup]="false"
+    [canMoveUp]="false"
+    class="block"
+  ></mdm-diagram-tab>
 </mat-dialog-content>

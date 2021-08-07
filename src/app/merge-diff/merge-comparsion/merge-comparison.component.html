@@ -21,46 +21,87 @@ SPDX-License-Identifier: Apache-2.0
   <div fxLayout="row" style="clear: both">
     <mat-toolbar style="height: 50%">
       <span class="spacer"></span>
+      <div *ngIf="mergeItem.type !== MergeType.Modification">
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Use Source"
+          aria-label="Use Source"
+          (click)="acceptCommit(MergeUsed.Source)"
+          *ngIf="!isCommitting"
+          class="acceptButton"
+        >
+          <i class="fas fa-check-square"></i>
+          Accept
+        </button>
+      </div>
+      <div *ngIf="mergeItem.type === MergeType.Modification">
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Use Source"
+          aria-label="Use Source"
+          (click)="acceptCommit(MergeUsed.Source)"
+          *ngIf="!isCommitting"
+          class="button"
+        >
+          <i class="fas fa-file-export" aria-hidden="true"></i>
+          Use "{{ source.branchName }}"
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Use Target"
+          aria-label="Use Target"
+          (click)="acceptCommit(MergeUsed.Target)"
+          *ngIf="!isCommitting"
+          class="button"
+        >
+          <i class="fas fa-file-import" aria-hidden="true"></i>
+          Use "{{ target.branchName }}"
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Open Editor"
+          aria-label="Open Editor"
+          *ngIf="!isCommitting"
+          class="button"
+          (click)="openEditor()"
+        >
+          <i class="fas fa-edit" aria-hidden="true"></i>
+          Open Editor
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Link Scrolls"
+          aria-label="Link Scrolls"
+          *ngIf="!isCommitting && !linkScroll"
+          class="button"
+          (click)="linkScrolls(true)"
+        >
+          <i class="fas fa-link" aria-hidden="true"></i>
+          Link Scrolls
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          matToolTip="Link Scrolls"
+          aria-label="Link Scrolls"
+          *ngIf="!isCommitting && linkScroll"
+          class="button"
+          (click)="linkScrolls(false)"
+        >
+          <i class="fas fa-unlink" aria-hidden="true"></i>
+          Unlink Scrolls
+        </button>
+      </div>
       <button
         mat-icon-button
         type="button"
-        matToolTip="Use Source"
-        aria-label="Use Source"
-        (click)="acceptCommit(MergeUsed.Source)"
-        *ngIf="!isCommitting"
-        class="button"
-      >
-        <i class="fas fa-forward" aria-hidden="true"></i>
-        Use Source
-      </button>
-      <button
-        mat-icon-button
-        type="button"
-        matToolTip="Use Target"
-        aria-label="Use Target"
-        (click)="acceptCommit(MergeUsed.Target)"
-        *ngIf="!isCommitting"
-        class="button"
-      >
-        <i class="fas fa-backward" aria-hidden="true"></i>
-        Use Target
-      </button>
-      <button
-        mat-icon-button
-        type="button"
-        matToolTip="Open Editor"
-        aria-label="Open Editor"
-        *ngIf="!isCommitting"
-        class="button"
-      >
-        <i class="fas fa-edit" aria-hidden="true"></i>
-        Open Editor
-      </button>
-      <button
-        mat-icon-button
-        type="button"
-        matToolTip="Open Editor"
-        aria-label="Open Editor"
+        matToolTip="Cancel commit"
+        aria-label="Cancel commit"
         *ngIf="isCommitting"
         (click)="cancelCommit()"
         class="button"
@@ -71,27 +112,66 @@ SPDX-License-Identifier: Apache-2.0
     </mat-toolbar>
   </div>
 </div>
-<div class="panel panel-default" fxLayout="row">
-  <div class="col sourceCol">
-    <div class="row">
-      <h4>Source</h4>
+<div *ngIf="mergeItem.type === MergeType.Modification">
+  <div *ngIf="!isCommitting">
+    <div fxLayout="row">
+      <h4>{{ source.branchName }}</h4>
+      <div
+        class="col sourceCol"
+        #sourceContent
+        (mouseenter)="updateCurrentElement('sourceContent')"
+        (scroll)="updateVerticalScroll($event)"
+      >
+        <div
+          *ngIf="hasSourceValue"
+          class="diff-view"
+          [innerHTML]="sourceText | safe: 'html'"
+        ></div>
+      </div>
     </div>
-    <mdm-content-editor
-      [content]="mergeItem.sourceValue"
-      [inEditMode]="false"
-      *ngIf="mergeItem.sourceValue"
-    ></mdm-content-editor>
+    <mat-divider></mat-divider>
+    <div style="margin-top: 10px" fxLayout="row">
+      <h4 class="branchHeader">{{ target.branchName }}</h4>
+      <div
+        class="col targetCol"
+        #targetContent
+        (mouseenter)="updateCurrentElement('targetContent')"
+        (scroll)="updateVerticalScroll($event)"
+      >
+        <div
+          *ngIf="hasTargetValue"
+          class="diff-view"
+          [innerHTML]="targetText | safe: 'html'"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isCommitting" style="margin-top: 10px" fxLayout="row">
+    <h4 class="branchHeader">{{ sourceUsed }}</h4>
+    <div
+      class="col targetCol"
+      #targetContent
+      (mouseenter)="updateCurrentElement('targetContent')"
+      (scroll)="updateVerticalScroll($event)"
+    >
+      <div
+        class="diff-view"
+        [innerHTML]="committingContent | safe: 'html'"
+      ></div>
+    </div>
   </div>
 </div>
-<div class="panel panel-default" *ngIf="!isCommitting" fxLayout="row">
-  <div class="col sourceCol">
-    <div class="row">
-      <h4>Target</h4>
-    </div>
-    <mdm-content-editor
-      [content]="mergeItem.targetValue"
-      [inEditMode]="false"
-      *ngIf="mergeItem.targetValue"
-    ></mdm-content-editor>
+<div *ngIf="mergeItem.type === MergeType.Deletion">
+  <div class="deleteContent">
+    <h4 style="margin-top: 75px; color: red">
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be deleted
+    </h4>
+  </div>
+</div>
+<div *ngIf="mergeItem.type === MergeType.Creation">
+  <div class="deleteContent">
+    <h4 style="margin-top: 75px; color: green">
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be created
+    </h4>
   </div>
 </div>

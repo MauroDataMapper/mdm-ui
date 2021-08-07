@@ -24,6 +24,7 @@ import graphlib from 'graphlib';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import _ from 'lodash';
+import { DiagramParameters } from '../diagram/diagram.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +58,7 @@ export abstract class BasicDiagramService {
 
   abstract goUp(): void;
 
-  abstract getDiagramContent(params: any): Observable<any>;
+  abstract getDiagramContent(params: DiagramParameters): Observable<any>;
 
   abstract render(data: any): void;
 

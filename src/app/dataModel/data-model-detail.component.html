@@ -17,10 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    name="form"
-    disable-submit-on-enter
-  >
+  <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="dataModel">
         <button
@@ -72,10 +69,12 @@ SPDX-License-Identifier: Apache-2.0
           >
             <i class="fas fa-copy"></i> Create a New Version
           </button>
-          <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
-            <i class="fas fa-window-restore"></i> Merge
+          <button mat-menu-item type="button" (click)="merge()">
+            <i class="fas fa-window-restore"></i> Merge...
           </button>
-
+          <button mat-menu-item type="button" (click)="showMergeGraph()">
+            <i class="fas fa-code-branch"></i> Merge graph
+          </button>
           <mat-divider></mat-divider>
           <button
             mat-menu-item
@@ -136,13 +135,6 @@ SPDX-License-Identifier: Apache-2.0
               </button>
             </div>
           </div>
-        </mat-menu>
-
-        <mat-menu #mergeMenu>
-          <button mat-menu-item (click)="merge()">Merge Model</button>
-          <button mat-menu-item (click)="showMergeGraph()">
-            Show merge graph
-          </button>
         </mat-menu>
         <!-- End of second level sub menu -->
 
@@ -362,7 +354,9 @@ SPDX-License-Identifier: Apache-2.0
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>
             <span>
-              <mdm-branch-selector [catalogueItem]="dataModel"></mdm-branch-selector>
+              <mdm-branch-selector
+                [catalogueItem]="dataModel"
+              ></mdm-branch-selector>
             </span>
           </small>
         </div>

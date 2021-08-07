@@ -16,10 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class ProfileModalDataModel
-{
- public profile: any;
- public profileName: string;
- public catalogueItem:any;
- public isNew:boolean;
+
+import { MergableCatalogueItem } from '@maurodatamapper/mdm-resources';
+
+export interface VersioningGraphModalConfiguration {
+  catalogueItem: MergableCatalogueItem;
 }

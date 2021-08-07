@@ -34,8 +34,6 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   ModelUpdatePayload,
   ReferenceDataModelDetail,
@@ -52,7 +50,6 @@ import { TabCollection } from '@mdm/model/ui.model';
   styleUrls: ['./reference-data.component.scss']
 })
 export class ReferenceDataComponent
-  extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -84,18 +81,16 @@ export class ReferenceDataComponent
   isLoadingRules = true;
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private sharedService: SharedService,
     private messageService: MessageService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
-    editingService: EditingService,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService,
     private title: Title
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit(): void {
@@ -140,21 +135,20 @@ export class ReferenceDataComponent
 
   save(saveItems: Array<DefaultProfileItem>) {
     const resource: ModelUpdatePayload = {
-      id: this.catalogueItem.id,
-      domainType: this.catalogueItem.domainType
+      id: this.referenceModel.id,
+      domainType: this.referenceModel.domainType
     };
 
     saveItems.forEach((item: DefaultProfileItem) => {
-      resource[item.displayName.toLocaleLowerCase()] = item.value;
+      resource[item.propertyName] = item.value;
     });
 
 
     this.resourcesService.referenceDataModel
-    .update(this.catalogueItem.id, resource)
+    .update(this.referenceModel.id, resource)
     .subscribe(
       (res) => {
         this.referenceModel = res.body;
-        this.catalogueItem = res.body;
         this.messageHandler.showSuccess(
           'Reference Data Model updated successfully.'
         );
@@ -172,16 +166,12 @@ export class ReferenceDataComponent
     this.resourcesService.referenceDataModel
       .get(id)
       .subscribe((result: ReferenceDataModelDetailResponse) => {
-        this.catalogueItem = result.body;
         this.referenceModel = result.body;
-        this.isEditable = this.catalogueItem.availableActions.includes(
+        this.isEditable = this.referenceModel.availableActions.includes(
           'update'
         );
         this.parentId = this.referenceModel.id;
         this.watchRefDataModelObject();
-
-        this.UsedProfiles('referenceDataModels', this.referenceModel.id);
-        this.UnUsedProfiles('referenceDataModels', this.referenceModel.id);
 
         if (this.sharedService.isLoggedIn(true)) {
           this.ReferenceModelPermissions(id);
@@ -194,7 +184,7 @@ export class ReferenceDataComponent
       .permissions(SecurableDomainType.ReferenceDataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
-          this.catalogueItem[attrname] = permissions.body[attrname];
+          this.referenceModel[attrname] = permissions.body[attrname];
         });
       });
   }
@@ -219,7 +209,7 @@ export class ReferenceDataComponent
   }
 
   watchRefDataModelObject() {
-    this.access = this.securityHandler.elementAccess(this.catalogueItem);
+    this.access = this.securityHandler.elementAccess(this.referenceModel);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
       this.showDelete =

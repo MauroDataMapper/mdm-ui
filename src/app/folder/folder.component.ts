@@ -24,7 +24,6 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import {
   BroadcastService,
   MessageHandlerService,
@@ -41,6 +40,7 @@ import {
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-folder',
@@ -48,7 +48,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./folder.component.css']
 })
 export class FolderComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, OnDestroy {
 
 
@@ -83,11 +83,11 @@ export class FolderComponent
     private securityHandler: SecurityHandlerService,
     private broadcast: BroadcastService,
     private title: Title,
-    dialog: MatDialog,
-    editingService: EditingService,
-    messageHandler: MessageHandlerService
+    private dialog: MatDialog,
+    private  editingService: EditingService,
+    private messageHandler: MessageHandlerService
   ) {
-    super(resources, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -145,7 +145,7 @@ export class FolderComponent
   }
 
   folderPermissions(id: any) {
-    this.resourcesService.security
+    this.resources.security
       .permissions(SecurableDomainType.Folders, id)
       .subscribe((permissions: PermissionsResponse) => {
         Object.keys(permissions.body).forEach((attrname) => {
@@ -186,7 +186,7 @@ export class FolderComponent
       resource[item.propertyName] = item.value;
     });
 
-    this.resourcesService.folder.update(resource.id, resource).subscribe(
+    this.resources.folder.update(resource.id, resource).subscribe(
       (res) => {
         this.folder = res.body;
         this.catalogueItem = res.body;

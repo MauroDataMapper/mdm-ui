@@ -32,12 +32,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatDialog } from '@angular/material/dialog';
-import {
-  MessageHandlerService,
-  SecurityHandlerService
-} from '@mdm/services';
-import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   DataModelDetail,
   DataModelDetailResponse,
@@ -47,7 +42,7 @@ import {
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
-
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-model',
@@ -55,7 +50,7 @@ import { TabCollection } from '@mdm/model/ui.model';
   styleUrls: ['./data-model.component.scss']
 })
 export class DataModelComponent
-  extends ProfileBaseComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   subscription: Subscription;
@@ -70,7 +65,15 @@ export class DataModelComponent
   activeTab: any;
   semanticLinks: any[] = [];
   access: Access;
-  tabs = new TabCollection(['description', 'schema', 'types', 'context', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'schema',
+    'types',
+    'context',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   errorMessage = '';
 
@@ -89,18 +92,17 @@ export class DataModelComponent
   showEditDescription = false;
 
   constructor(
-    resourcesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    dialog: MatDialog,
-    messageHandler: MessageHandlerService,
-    editingService: EditingService
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService
   ) {
-    super(resourcesService, dialog, editingService, messageHandler);
+    super();
   }
 
   ngOnInit() {
@@ -115,7 +117,9 @@ export class DataModelComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
@@ -196,8 +200,6 @@ export class DataModelComponent
 
         if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);
-          this.UsedProfiles('dataModels', id);
-          this.UnUsedProfiles('dataModels', id);
         }
       });
   }
@@ -209,7 +211,7 @@ export class DataModelComponent
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];
         });
-        });
+      });
   }
 
   toggleShowSearch() {

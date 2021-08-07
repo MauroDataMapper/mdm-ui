@@ -18,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CheckinModelPayload } from './check-in-modal-payload';
+import { MergeDiffType, MergeConflictResolution, Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
+import { SharedService } from '@mdm/services';
+import { CheckinModelConfiguration, CheckinModelResult } from './check-in-modal-payload';
 
 @Component({
   selector: 'mdm-check-in-modal',
@@ -29,17 +33,73 @@ export class CheckInModalComponent implements OnInit {
 
   commitComment: string;
   deleteSourceBranch: boolean;
+  useMergeDiffModule: boolean;
+  items: MergeDiffItemModel[];
+  label: string;
+  domainType: MergableMultiFacetAwareDomainType;
+  isDataAsset: boolean;
+  source: Branchable;
+  target: Branchable;
 
 
   constructor(
-    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelPayload>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelResult>,
+    @Inject(MAT_DIALOG_DATA) public data: CheckinModelConfiguration,
+    private sharedService: SharedService) { }
 
   ngOnInit(): void {
-    this.commitComment = this.data.commitComment ? this.data.commitComment : '';
-    this.deleteSourceBranch = this.data.deleteSourceBranch ? this.data.deleteSourceBranch : false;
+    this.commitComment = this.data.commitComment ?? '';
+    this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
+    this.items = this.data.items ?? [];
+    this.useMergeDiffModule = this.sharedService.features.useMergeUiV2;
+    this.label = this.data.label;
+    this.domainType = this.data.domainType;
+    this.isDataAsset = this.data.isDataAsset;
+    this.source = this.data.source;
+    this.target = this.data.target;
+  }
 
+  cancel() {
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  commit() {
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      deleteSourceBranch: this.deleteSourceBranch,
+      commitComment: this.commitComment
+    });
+  }
+
+  getBranchSelectedIcon(selected: MergeConflictResolution) {
+    switch (selected) {
+      case MergeConflictResolution.Source:
+        return 'fas fa-file-export';
+      case MergeConflictResolution.Target:
+        return 'fas fa-file-import';
+      case MergeConflictResolution.Mixed:
+        return 'fab fa-mixer';
+      default:
+        return '';
+    }
+  }
+
+  getBranchSelectedTooltip(selected: MergeConflictResolution) {
+    switch (selected) {
+      case MergeConflictResolution.Source:
+        return 'Take from Source';
+      case MergeConflictResolution.Target:
+        return 'Take from Target';
+      case MergeConflictResolution.Mixed:
+        return 'Mixed/combined content';
+      default:
+        return '';
+    }
+  }
+
+  public get mergeType()
+  {
+    return MergeDiffType;
   }
 
 }

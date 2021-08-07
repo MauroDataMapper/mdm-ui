@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
         creation: item.type === mergeType.Creation,
         deletion: item.type === mergeType.Deletion
       }"
-      *ngFor="let item of (mergeItems | mergeFilter:mergeItemSearch.value)"
+      *ngFor="let item of mergeItems | mergeFilter: mergeItemSearch.value"
       [value]="item"
       (click)="selectedItem(item)"
     >
@@ -38,8 +38,14 @@ SPDX-License-Identifier: Apache-2.0
           'fa-minus-square': item.type === mergeType.Deletion,
           'fa-pen-square': item.type === mergeType.Modification
         }"
+        [matTooltip]="getMergeTypeTooltip(item.type)"
       ></i>
-      {{ item.path }} {{ item.branchSelected | uppercase }}
+      <mdm-path-name
+        [path]="item.path"
+        [suffixLabel]="item.branchNameSelected | uppercase"
+        [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
+        [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
+      ></mdm-path-name>
     </mat-list-option>
   </mat-selection-list>
 </div>

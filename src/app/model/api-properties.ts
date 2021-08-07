@@ -243,5 +243,13 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true
+  },
+  {
+    key: 'feature.use_digital_object_identifiers',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

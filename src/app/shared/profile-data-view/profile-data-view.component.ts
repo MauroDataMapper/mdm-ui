@@ -18,14 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, Finalisable, isDataType, MdmResponse, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { EditProfileModalConfiguration, EditProfileModalResult } from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
 import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse } from '@mdm/model/defaultProfileModel';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY, Observable } from 'rxjs';
@@ -38,7 +38,10 @@ import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, Profil
   styleUrls: ['./profile-data-view.component.scss']
 })
 export class ProfileDataViewComponent implements OnInit, OnChanges {
-  @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & { [key: string]: any };
+  @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & {
+    model?: Uuid;
+    [key: string]: any;
+  };
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();
 
@@ -51,6 +54,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   canDeleteProfile = false;
   canAddMetadata = false;
   isEditablePostFinalise = false;
+  isReadableByEveryone = false;
   doiState: DoiState = 'not applicable';
 
   get isCurrentViewCustomProfile() {
@@ -63,7 +67,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   get canSubmitForDoi() {
     // DOI profiles can only be submitted for finalised, public items
-    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.catalogueItem.readableByEveryone;
+    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.isReadableByEveryone;
   }
 
   get showAdditionalActions() {
@@ -97,8 +101,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       }
 
       if (this.shared.features.useDigitalObjectIdentifiers) {
-        // TODO: add back when ready
-        // this.getDoiStatus();
+        this.getDoiStatus();
+
+        if (this.catalogueItem.model) {
+          this.loadParentModelForDoiState();
+        }
       }
     }
   }
@@ -242,6 +249,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canDeleteProfile = access.showDelete;
     this.canAddMetadata = access.canAddMetadata;
     this.isEditablePostFinalise = access.canEditAfterFinalise;
+    this.isReadableByEveryone = this.catalogueItem.readableByEveryone;
   }
 
   private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {
@@ -252,6 +260,45 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: any) {
     this.loadProfileItems('unused', domainType, id)
       .subscribe(items => this.unusedProfiles = items);
+  }
+
+  private loadParentModelForDoiState() {
+    const request = this.getParentModel();
+    if (!request) {
+      return;
+    }
+
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the parent model.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        const parentModel = response.body;
+
+        // Fetch the parent model to find out if that is a public, finalised model. Required to know if
+        // DOI submission actions can be displayed. Overwrites the values set in setAccess()
+        // for `this.catalogueItem`
+        const access = this.securityHandler.elementAccess(parentModel);
+        this.isEditablePostFinalise = access.canEditAfterFinalise;
+        this.isReadableByEveryone = parentModel.readableByEveryone;
+      });
+  }
+
+  private getParentModel(): Observable<MdmResponse<CatalogueItem & SecurableModel & Finalisable>> | undefined {
+    if (isDataType(this.catalogueItem.domainType)
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataClass
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataElement) {
+      return this.resources.dataModel.get(this.catalogueItem.model);
+    }
+
+    if (this.catalogueItem.domainType === CatalogueItemDomainType.Term) {
+      return this.resources.terminology.get(this.catalogueItem.model);
+    }
+
+    return undefined;
   }
 
   private loadProfileItems(
@@ -367,11 +414,17 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private getDoiStatus() {
+    // A 404 will be returned if no DOI state information is available. Avoid triggering the
+    // "not found" route and handle this case manually
+    const options: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    };
+
     this.resources.pluginDoi
-      .get(this.catalogueItem.domainType, this.catalogueItem.id)
+      .get(this.catalogueItem.domainType, this.catalogueItem.id, { }, options)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the status of this item\'s Digital Object Identifier (DOI).', error);
+        catchError(() => {
+          this.doiState = 'not applicable';
           return EMPTY;
         })
       )

@@ -33,7 +33,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
 
-    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id, params.flowId);
+    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id, params.flowId, {all:true});
   }
 
   render(data: any): void {

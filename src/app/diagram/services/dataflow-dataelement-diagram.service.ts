@@ -41,7 +41,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
     this.changeComponent(null);
 
-    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
+    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId, {all:true});
     return (flowComponents).pipe(
       mergeMap(data => {
         this.dataFlows = data.body;

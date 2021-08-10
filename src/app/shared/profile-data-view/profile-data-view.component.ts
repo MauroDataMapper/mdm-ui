@@ -381,36 +381,41 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private submitCatalogueItemForDoi(state: DoiSubmissionState) {
-    const selected = this.usedProfiles
+    const doiProfileSummary = this.usedProfiles
       .concat(this.unusedProfiles)
       .find(item => item.namespace === doiProfileNamespace);
 
-    if (!selected) {
+    if (!doiProfileSummary) {
       this.messageHandler.showWarning('Unable to find the Digital Object Identifier profile. Please check with your administrator if it is enabled.');
       return;
     }
 
-    const doiProfileInUse = this.usedProfiles.find(item => item.value === selected.value);
+    const doiProfileInUse = this.usedProfiles.find(item => item.value === doiProfileSummary.value);
 
     const description = doiProfileInUse
       ? `Before submitting this object to receive a '${state}' Digital Object Identifier (DOI), please check all profile information below to ensure it is correct, then click the 'Submit' button.`
       : `To receive a '${state}' Digital Object Identifier (DOI), please fill in the profile information below, then click the 'Submit' button.`;
 
     this.resources.profile
-      .profile(this.catalogueItem.domainType, this.catalogueItem.id, selected.namespace, selected.name, '')
+      .profile(this.catalogueItem.domainType, this.catalogueItem.id, doiProfileSummary.namespace, doiProfileSummary.name, '')
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the selected profile.', error);
           return EMPTY;
         }),
         switchMap((response: ProfileResponse) => {
+          const profile = response.body;
+          // Namespace and name of profile are not supplied in response, but required for other components to work
+          profile.namespace = doiProfileSummary.namespace;
+          profile.name = doiProfileSummary.name;
+
           return this.editing
             .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
               EditProfileModalComponent,
               {
                 data: {
                   profile: response.body,
-                  profileName: selected.display,
+                  profileName: doiProfileSummary.display,
                   catalogueItem: this.catalogueItem,
                   isNew: !doiProfileInUse,
                   description,
@@ -428,8 +433,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
-              selected.namespace,
-              selected.name,
+              doiProfileSummary.namespace,
+              doiProfileSummary.name,
               data);
         }),
         catchError(error => {

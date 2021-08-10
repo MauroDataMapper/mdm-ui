@@ -161,7 +161,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         filter(result => result.status === ModalDialogStatus.Ok),
         switchMap(result => {
-          const data = JSON.stringify(result.profile);
+          const data = JSON.parse(JSON.stringify(result.profile));
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,

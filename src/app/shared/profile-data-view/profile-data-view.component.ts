@@ -94,11 +94,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
-
-      if (this.shared.isLoggedIn(true)) {
-        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
-        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
-      }
+      this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+      this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
 
       if (this.shared.features.useDigitalObjectIdentifiers) {
         this.getDoiStatus();

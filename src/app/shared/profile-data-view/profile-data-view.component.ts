@@ -186,9 +186,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         }
         else {
-          this.messageHandler.showSuccess(
-            'Profile edited successfully.'
-          );
+          this.messageHandler.showSuccess('Profile edited successfully.');
         }
       });
   }

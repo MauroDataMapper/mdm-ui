@@ -161,14 +161,13 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         filter(result => result.status === ModalDialogStatus.Ok),
         switchMap(result => {
-          const data = JSON.parse(JSON.stringify(result.profile));
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
               selected.namespace,
               selected.name,
-              data);
+              result.profile);
         }),
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profile.', error);
@@ -427,7 +426,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         })
       )
       .subscribe((response: DoiStatusResponse) => {
-        this.doiState = response.body.state;
+        this.doiState = response.body.status;
       });
   }
 
@@ -479,14 +478,13 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         filter((result: EditProfileModalResult) => result.status === ModalDialogStatus.Ok),
         switchMap((result: EditProfileModalResult) => {
-          const data = JSON.stringify(result.profile);
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
               doiProfileSummary.namespace,
               doiProfileSummary.name,
-              data);
+              result.profile);
         }),
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profile.', error);
@@ -507,6 +505,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
+        this.getDoiStatus();
       });
   }
 

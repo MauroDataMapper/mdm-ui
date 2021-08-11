@@ -121,14 +121,13 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   validate() {
-    const data = JSON.parse(JSON.stringify(this.profileData));
     this.resources.profile
       .validateProfile(
         this.data.profile.namespace,
         this.data.profile.name,
         this.data.catalogueItem.domainType,
         this.data.catalogueItem.id,
-        data
+        this.profileData
       )
       .subscribe((response: ProfileResponse) => {
         this.profileData = response.body;

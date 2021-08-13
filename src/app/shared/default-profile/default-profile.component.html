@@ -36,9 +36,10 @@ SPDX-License-Identifier: Apache-2.0
       <td class="elementDetailDescription">
         <div *ngIf="catalogueItem">
           <mdm-content-editor
-            [(content)]="catalogueItem.description"
+            [(content)]="description"
             [inEditMode]="false"
           ></mdm-content-editor>
+          <span *ngIf="showLessRequired" style="color: blue" (click)="updateDescription()">{{showMoreLessText}}</span>
         </div>
       </td>
     </tr>

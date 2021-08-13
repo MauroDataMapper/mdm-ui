@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 import { DefaultProfileControls } from '@mdm/model/defaultProfileModel';
@@ -26,20 +26,51 @@ import { DefaultProfileControls } from '@mdm/model/defaultProfileModel';
   selector: 'mdm-default-profile',
   templateUrl: './default-profile.component.html'
 })
-export class DefaultProfileComponent implements OnInit {
+export class DefaultProfileComponent implements OnInit, OnChanges {
   @Input() catalogueItem: CatalogueItem & { [key: string]: any };
 
   controls: Array<string>;
+  description: String;
+  showMoreLessText: String;
+  showMoreText = 'Show More';
+  showLessText = 'Show Less';
+  showLessRequired: boolean;
 
   constructor() {}
+  ngOnChanges(changes: SimpleChanges): void {
+     if(changes)
+     {
+       this.setShowMoreLess();
+     }
+  }
 
   ngOnInit(): void {
     this.controls = DefaultProfileControls.renderControls(
       this.catalogueItem.domainType
     );
+    this.setShowMoreLess();
+  }
+
+  setShowMoreLess() {
+    this.showLessRequired = this.catalogueItem.description.length >= 500;
+    this.showMoreLessText = this.showLessText;
+    this.updateDescription();
   }
 
   isInControlList(control: string): boolean {
     return this.controls.findIndex((x) => x === control) !== -1;
+  }
+
+  updateDescription(): void {
+    if (this.showMoreLessText === this.showLessText && this.showLessRequired) {
+      this.description = `${this.catalogueItem.description.substring(
+        0,
+        500
+      )}...`;
+      this.showMoreLessText = this.showMoreText;
+    } else {
+      this.description = this.catalogueItem.description;
+      this.showMoreLessText = this.showLessText;
+    }
   }
 }

@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { BroadcastService, MessageService, SecurityHandlerService } from '@mdm/services';
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
-import { UrlService } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
@@ -52,19 +51,19 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
   constructor(
     private securityHandler: SecurityHandlerService,
     private messages: MessageService,
-    private broadcast: BroadcastService,
-    private url: UrlService) { }
+    private broadcast: BroadcastService) { }
 
   ngOnInit(): void {
-    if (this.securityHandler.isLoggedIn()) {
-      this.messages.loggedInChanged(true);
-      this.broadcast.userLoggedIn({
-        nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
-      });
+    if (this.verifyLoggedIn()) {
       return;
     }
 
-    const params = new URLSearchParams(window.location.search);
+    let query = window.location.search;
+    if (!query || query.length === 0) {
+      query = window.location.hash.slice(window.location.hash.indexOf('?'));
+    }
+
+    const params = new URLSearchParams(query);
     const state = params.get('state');
     const sessionState = params.get('session_state');
     const code = params.get('code');
@@ -100,13 +99,19 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
         finalize(() => this.authorizing = false)
       )
       .subscribe(() => {
-        // Redirect back to this page location but removing/stripping out the query parameters
-        // that came from the OpenID Connect provider. This seems to be the only affective way of
-        // doing this.
-        const currentUrl = `#${this.url.path()}`;
-        const baseUrl = `${window.location.protocol}//${window.location.host}`;
-        const redirectUrl = new URL(currentUrl, baseUrl);
-        window.open(redirectUrl.toString(), '_self');
+        this.verifyLoggedIn();
       });
+  }
+
+  private verifyLoggedIn() {
+    if (this.securityHandler.isLoggedIn()) {
+      this.messages.loggedInChanged(true);
+      this.broadcast.userLoggedIn({
+        nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+      });
+      return true;
+    }
+
+    return false;
   }
 }

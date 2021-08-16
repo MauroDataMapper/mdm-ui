@@ -28,7 +28,12 @@
             "aot": true,
             "assets": [
               "src/assets/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "open-id-connect-redirect.html",
+                "input": "src/static-pages",
+                "output": "/redirects"
+              }
             ],
             "styles": [
               "src/styles.scss",

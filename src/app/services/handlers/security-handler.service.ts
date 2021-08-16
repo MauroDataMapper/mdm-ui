@@ -344,7 +344,17 @@ export class SecurityHandlerService {
   }
 
   public getOpenIdAuthorizeUrl() {
-    const authorizationUrl = this.stateHandler.getURL('appContainer.mainApp.openIdConnectAuthorizing');
+    // Redirect authorization URL refers to a static page route found in `/src/static-pages`. See the `assets`
+    // configuration in `angular.json`.
+    //
+    // The reason why a static page is used instead of a component route is to avoid the hash location strategy that all
+    // component routes use. An Angular component route would include a `#`, which represents a fragment in an absolute URI.
+    // URI fragments are not allowed according to [RFC3986] Section 4.3. This was discovered when adding Microsoft
+    // Azure Active Directory as an OpenID Connect endpoint.
+    //
+    // The static page is therefore a landing point so that it can immediately redirect to the correct authentication component
+    // route and do the real work.
+    const authorizationUrl = '/redirects/open-id-connect-redirect.html';
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     return new URL(authorizationUrl, baseUrl);
   }

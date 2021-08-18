@@ -39,10 +39,12 @@ SPDX-License-Identifier: Apache-2.0
         <tr *ngFor="let field of section.fields">
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
+            <span *ngIf="field.minMultiplicity > 0">*</span>
             <i
               style="float: right"
-              (click)="showInfo(field)"
               class="fas fa-info-circle helpIcon"
+              [matTooltip]="field.description"
+              matTooltipPosition="after"
             ></i>
           </td>
           <td class="elementDetailDescription">
@@ -65,7 +67,7 @@ SPDX-License-Identifier: Apache-2.0
               [checked]="field.currentValue === 'true'"
               (change)="field.currentValue = $event.target.checked"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
-              [required]="field.optional === false"
+              [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
 
             />
@@ -90,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
                 'outlined-input form-control':
                   formOptionsMap[field.dataType] != 'checkbox'
               }"
-              [required]="field.optional === false"
+              [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
             />
             <input
@@ -104,7 +106,7 @@ SPDX-License-Identifier: Apache-2.0
                 'outlined-input form-control':
                   formOptionsMap[field.dataType] != 'checkbox'
               }"
-              [required]="field.optional === false"
+              [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
             />
             <input
@@ -118,7 +120,7 @@ SPDX-License-Identifier: Apache-2.0
                 'outlined-input form-control':
                   formOptionsMap[field.dataType] != 'checkbox'
               }"
-              [required]="field.optional === false"
+              [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
             />
             <div *ngIf="field.dataType === 'model'">
@@ -133,7 +135,7 @@ SPDX-License-Identifier: Apache-2.0
                   'outlined-input form-control':
                     formOptionsMap[field.dataType] != 'checkbox'
                 }"
-                [required]="field.optional === false"
+                [required]="field.minMultiplicity > 0"
                 [disabled]="field.uneditable"
               />
               <button
@@ -149,18 +151,20 @@ SPDX-License-Identifier: Apache-2.0
               </button>
             </div>
             <div *ngIf="field.dataType === 'enumeration'">
-              <mat-select
-                [(ngModel)]="field.currentValue"
-                name="{{ field.fieldName }} + {{ section.sectionName }}"
-                [disabled]="field.uneditable"
-              >
-                <mat-option
-                  *ngFor="let value of field.allowedValues"
-                  [value]="value"
+              <mat-form-field appearance="outline">
+                <mat-select
+                  [(ngModel)]="field.currentValue"
+                  name="{{ field.fieldName }} + {{ section.sectionName }}"
+                  [disabled]="field.uneditable"
                 >
-                  {{ value }}
-                </mat-option>
-              </mat-select>
+                  <mat-option
+                    *ngFor="let value of field.allowedValues"
+                    [value]="value"
+                  >
+                    {{ value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
             <div *ngIf="field.dataType === 'folder'">
               <mdm-model-selector-tree
@@ -171,8 +175,8 @@ SPDX-License-Identifier: Apache-2.0
                 (ngModelChange)="field.currentValue = $event"
                 [accepts]="['Folder']"
                 ngDefaultControl
-                [showValidationError]="field.optional === false"
-                [isRequired]="field.optional == false"
+                [showValidationError]="field.minMultiplicity > 0"
+                [isRequired]="field.minMultiplicity > 0"
                 [multiple]="true"
                 [hideSelectedElements]="false"
               >

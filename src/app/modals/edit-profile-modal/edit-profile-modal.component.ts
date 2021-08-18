@@ -32,7 +32,6 @@ import { ElementSelectorComponent } from '@mdm/utility/element-selector.componen
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MarkupDisplayModalComponent } from '../markup-display-modal/markup-display-modal.component';
 import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
 @Component({
   selector: 'mdm-edit-profile-modal',
@@ -116,15 +115,6 @@ export class EditProfileModalComponent implements OnInit {
 
   onCancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-  }
-
-  showInfo(field: any) {
-    this.dialog.open(MarkupDisplayModalComponent, {
-      data: {
-        content: field.description,
-        title: field.fieldName
-      }
-    });
   }
 
   validate() {

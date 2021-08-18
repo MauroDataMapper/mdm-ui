@@ -25,7 +25,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { Profile, ProfileField, ProfileResponse, ProfileValidationError, ProfileValidationErrorList } from '@maurodatamapper/mdm-resources';
+import { Profile, ProfileField, ProfileValidationError, ProfileValidationErrorList } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
@@ -128,12 +128,11 @@ export class EditProfileModalComponent implements OnInit {
       )
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          this.validationErrors = error.error as ProfileValidationErrorList
+          this.validationErrors = error.error as ProfileValidationErrorList;
           return EMPTY;
         })
       )
-      .subscribe((response: ProfileResponse) => {
-        //this.profileData = response.body;
+      .subscribe(() => {
         this.validationErrors = {
           total: 0,
           errors: []

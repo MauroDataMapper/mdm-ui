@@ -18,17 +18,20 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 /* eslint-disable id-blacklist */
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { Profile, ProfileField, ProfileResponse } from '@maurodatamapper/mdm-resources';
+import { Profile, ProfileField, ProfileResponse, ProfileValidationError, ProfileValidationErrorList } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { MarkupDisplayModalComponent } from '../markup-display-modal/markup-display-modal.component';
 import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
 @Component({
@@ -40,16 +43,20 @@ export class EditProfileModalComponent implements OnInit {
   profileData: Profile;
   description?: string;
   okBtnText: string;
+  validationErrors: ProfileValidationErrorList = {
+    total: 0,
+    errors: []
+  };
 
   formOptionsMap = {
-    INTEGER: 'number',
-    STRING: 'text',
-    BOOLEAN: 'checkbox',
-    INT: 'number',
-    DATE: 'date',
-    TIME: 'time',
-    DATETIME: 'datetime',
-    DECIMAL: 'number'
+    integer: 'number',
+    string: 'text',
+    boolean: 'checkbox',
+    int: 'number',
+    date: 'date',
+    time: 'time',
+    datetime: 'datetime',
+    decimal: 'number'
   };
 
   constructor(
@@ -64,7 +71,7 @@ export class EditProfileModalComponent implements OnInit {
           field.currentValue = field.defaultValue;
         }
 
-        if (field.dataType === 'FOLDER') {
+        if (field.dataType === 'folder') {
           if (
             field.currentValue === '[]' ||
             field.currentValue === '""' ||
@@ -92,7 +99,7 @@ export class EditProfileModalComponent implements OnInit {
     returnData.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (
-          field.dataType === 'FOLDER' &&
+          field.dataType === 'folder' &&
           field.currentValue &&
           field.currentValue.length > 0
         ) {
@@ -129,9 +136,27 @@ export class EditProfileModalComponent implements OnInit {
         this.data.catalogueItem.id,
         this.profileData
       )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          this.validationErrors = error.error as ProfileValidationErrorList
+          return EMPTY;
+        })
+      )
       .subscribe((response: ProfileResponse) => {
-        this.profileData = response.body;
+        //this.profileData = response.body;
+        this.validationErrors = {
+          total: 0,
+          errors: []
+        };
       });
+  }
+
+  getValidationError(fieldName: string): ProfileValidationError | undefined {
+    if (this.validationErrors.total === 0) {
+      return undefined;
+    }
+
+    return this.validationErrors.errors.find(e => e.fieldName === fieldName);
   }
 
   showAddElementToMarkdown(field: ProfileField) {

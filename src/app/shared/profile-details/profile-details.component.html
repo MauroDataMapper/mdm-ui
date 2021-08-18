@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>
       <td [attr.colspan]="2" class="detailsRowHeader">
-        {{ section.sectionName }}
+        {{ section.name }}
       </td>
     </tr>
     <tr *ngFor="let field of section.fields">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
           "
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
-          name="{{ field.fieldName }} + {{ section.sectionName }}"
+          name="{{ field.fieldName }} + {{ section.name }}"
         />
 
         <input

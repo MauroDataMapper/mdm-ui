@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
       <tbody *ngFor="let section of this.profileData?.sections">
         <tr>
           <td [attr.colspan]="2" class="detailsRowHeader">
-            {{ section.sectionName }}
+            {{ section.name }}
           </td>
         </tr>
         <tr *ngFor="let field of section.fields">
@@ -66,7 +66,7 @@ SPDX-License-Identifier: Apache-2.0
               *ngIf="formOptionsMap[field.dataType] === 'checkbox'"
               [checked]="field.currentValue === 'true'"
               (change)="field.currentValue = $event.target.checked"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
+              name="{{ field.fieldName }} + {{ section.name }}"
               [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
 
@@ -85,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0
               "
               matInput
               type="{{ formOptionsMap[field.dataType] }}"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
+              name="{{ field.fieldName }} + {{ section.name }}"
               [(ngModel)]="field.currentValue"
               value="field.currentValue"
               [ngClass]="{
@@ -99,7 +99,7 @@ SPDX-License-Identifier: Apache-2.0
               *ngIf="field.dataType === 'date'"
               matInput
               type="date"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
+              name="{{ field.fieldName }} + {{ section.name }}"
               [(ngModel)]="field.currentValue"
               value="{{ field.currentValue }}"
               [ngClass]="{
@@ -113,7 +113,7 @@ SPDX-License-Identifier: Apache-2.0
               *ngIf="field.dataType === 'datetime'"
               matInput
               type="datetime-local"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
+              name="{{ field.fieldName }} + {{ section.name }}"
               [(ngModel)]="field.currentValue"
               value="{{ field.currentValue }}"
               [ngClass]="{
@@ -128,7 +128,7 @@ SPDX-License-Identifier: Apache-2.0
                 type="text"
                 matInput
                 type="text"
-                name="{{ field.fieldName }} + {{ section.sectionName }}"
+                name="{{ field.fieldName }} + {{ section.name }}"
                 [(ngModel)]="field.currentValue"
                 value="{{ field.currentValue }}"
                 [ngClass]="{
@@ -154,7 +154,7 @@ SPDX-License-Identifier: Apache-2.0
               <mat-form-field appearance="outline">
                 <mat-select
                   [(ngModel)]="field.currentValue"
-                  name="{{ field.fieldName }} + {{ section.sectionName }}"
+                  name="{{ field.fieldName }} + {{ section.name }}"
                   [disabled]="field.uneditable"
                 >
                   <mat-option

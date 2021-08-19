@@ -65,9 +65,28 @@ import { VersionedFolderComponent } from './versioned-folder/versioned-folder/ve
 import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
-import { SharedService, StateRoleAccessService } from './services';
+import { SecurityHandlerService, SharedService } from './services';
 
-
+/**
+ * Collection of all page state routes.
+ *
+ * To allow anonymous access to a route, add `allowAnonymous: true` to the `data` of a state:
+ *
+ * @example
+ *
+ * ```ts
+ * states: [
+ *  {
+ *    name: 'appContainer.mainApp.public',
+ *    component: PublicComponent,
+ *    url: '/public',
+ *    data: {
+ *      allowAnonymous: true
+ *    }
+ *  }
+ * ]
+ * ```
+ */
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
@@ -82,7 +101,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.about',
       url: '/about',
-      component: AboutComponent
+      component: AboutComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel',
@@ -91,6 +113,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue',
       url: '/catalogue',
+      data: {
+        allowAnonymous: true
+      },
       views: {
         left: {
           component: ModelsComponent
@@ -104,38 +129,58 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/folder/:id/{tabView:string}?edit',
       name: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
       component: FolderComponent,
-      params: { tabView: { value: null, squash: true, dynamic: true } }
+      params: { tabView: { value: null, squash: true, dynamic: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
       url: '/dataModel/all',
-      component: DataModelDefaultComponent
-      // params: { hideExpandBtn: true }
+      component: DataModelDefaultComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.notImplemented',
       url: '/notImplemented',
-      component: NotImplementedComponent
+      component: NotImplementedComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.notAuthorized',
       url: '/notAuthorized',
-      component: NotAuthorizedComponent
+      component: NotAuthorizedComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.serverError',
       url: '/serverError',
-      component: ServerErrorComponent
+      component: ServerErrorComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.serverTimeout',
       url: '/serverTimeout',
-      component: ServerTimeoutComponent
+      component: ServerTimeoutComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.notFound',
       url: '/notFound',
-      component: NotFoundComponent
+      component: NotFoundComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
@@ -146,7 +191,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
       url: '/dataModel/:id/{tabView:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
@@ -157,7 +205,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
       url: '/referenceDataModel/:id/{tabView:string}',
       component: ReferenceDataComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',
@@ -173,17 +224,26 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.home',
       url: '/home',
-      component: HomeComponent
+      component: HomeComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.default',
       url: '',
-      component: HomeComponent
+      component: HomeComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.openIdConnectAuthorizing',
       url: '/open-id-connect/authorize',
-      component: OpenIdConnectAuthorizeComponent
+      component: OpenIdConnectAuthorizeComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.doiRedirect',
@@ -194,37 +254,55 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
           type: 'string',
           raw: true
         }
+      },
+      data: {
+        allowAnonymous: true
       }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.search',
       url: '/search',
-      component: SearchComponent
+      component: SearchComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
       url: '/terminology/:id/{tabView:string}',
       component: TerminologyComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataClass',
       url: '/dataClass/:dataModelId/:dataClassId/:id/{tabView:string}',
       component: DataClassComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
       url:
         '/dataElement/:dataModelId/:dataClassId/:id/{tabView:string}?parentId',
       params: { tabView: { dynamic: true, value: null, squash: true } },
-      component: DataElementComponent
+      component: DataElementComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.classification',
       url: '/classification/:id/{tabView:string}',
       component: ClassificationComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.import',
@@ -246,7 +324,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/dataType/:dataModelId/:id/{tabView:string}',
       component: DataTypeComponent,
       params: {
-        tabView: { dynamic: true, value: null, squash: true }
+        tabView: { dynamic: true, value: null, squash: true },
+        data: {
+          allowAnonymous: true
+        }
       }
     },
     {
@@ -258,13 +339,19 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.resetPassword',
       url: '/resetpassword?uid&token',
-      component: ResetPasswordComponent
+      component: ResetPasswordComponent,
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.term',
       url: '/term/:terminologyId/:id/{tabView:string}',
       component: TermComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.linkSuggestion',
@@ -303,8 +390,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
       url: '/codeSet/:id/{tabView:string}',
       component: CodeSetComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
-
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
@@ -325,7 +414,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
       url: '/versionedFolder/:id/{tabView:string}',
       component: VersionedFolderComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: {
+        allowAnonymous: true
+      }
     }
   ]
 };
@@ -367,10 +459,16 @@ const roleTransitionHooks = (transitions: TransitionService) => {
    * Before starting a transition, check if the user/role has access to this route.
    */
   const canAccessRoute = (transition: Transition): HookResult => {
-    const roleAccess = transition.injector().get<StateRoleAccessService>(StateRoleAccessService);
+    const securityHandler = transition.injector().get<SecurityHandlerService>(SecurityHandlerService);
     const shared = transition.injector().get<SharedService>(SharedService);
-    shared.current = transition.$to().name;
-    return roleAccess.hasAccess(transition.$to().name);
+    const state = transition.$to();
+    shared.current = state.name;
+
+    if (state.data?.allowAnonymous) {
+      return true;
+    }
+
+    return securityHandler.isLoggedIn();
   };
 
   transitions.onStart({}, canAccessRoute);

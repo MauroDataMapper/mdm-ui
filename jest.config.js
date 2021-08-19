@@ -33,7 +33,7 @@ module.exports = {
   },
   globals: {
     'ts - jest': {
-      tsConfig: 'tsconfig.spec.json',
+      tsconfig: 'tsconfig.spec.json',
       stringifyContentPathRegex: '\\.html'
     }
   },
@@ -53,5 +53,6 @@ module.exports = {
   ],
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)' // Ignore files inside node_modules folder
-  ]
+  ],
+  cacheDirectory: '/tmp/jest_'+ (process.env.JOB_BASE_NAME || 'cache')
 };

@@ -55,7 +55,8 @@ pipeline {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'npm run test-with-coverage'
-            sh 'npm run test-clean'
+            sh 'npm run test-clearCache'
+            sh "rm -rf /tmp/jest_${JOB_BASE_NAME}"
           }
         }
       }

@@ -54,5 +54,5 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)' // Ignore files inside node_modules folder
   ],
-  cacheDirectory: '/tmp/jest_'+ (process.env.BUILD_TAG || 'cache')
+  cacheDirectory: '/tmp/jest_'+ (process.env.JOB_BASE_NAME || 'cache')
 };

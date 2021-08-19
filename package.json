@@ -10,7 +10,7 @@
     "test": "jest",
     "test-with-coverage": "jest --coverage",
     "test-watch": "jest --watch",
-    "test-clean": "jest --clearCache",
+    "test-clearCache": "jest --clearCache",
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --quiet --fix",
     "eslint-nofix": "tsc --noEmit && eslint . --ext ts --quiet",

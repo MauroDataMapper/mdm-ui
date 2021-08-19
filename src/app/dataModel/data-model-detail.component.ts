@@ -95,6 +95,7 @@ export class DataModelDetailComponent implements OnInit {
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
     this.title.setTitle(`${this.dataModel?.type} - ${this.dataModel?.label}`);
+    this.addedToFavourite = this.favouriteHandler.isAdded(this.dataModel);
   }
 
   dataModelDetails(): any {

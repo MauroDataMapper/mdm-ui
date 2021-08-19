@@ -106,6 +106,7 @@ export class TermDetailsComponent implements OnInit {
         this.access = this.securityHandler.elementAccess(this.mcTerm);
         this.originalTerm = Object.assign({}, this.mcTerm);
         this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+        this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
       });
   }
 

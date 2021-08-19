@@ -89,6 +89,7 @@ export class CodeSetDetailsComponent implements OnInit {
   codeSetDetails(): any {
     this.access = this.securityHandler.elementAccess(this.codeSetDetail);
     this.title.setTitle(`Code Set - ${this.codeSetDetail?.label}`);
+    this.addedToFavourite = this.favouriteHandler.isAdded(this.codeSetDetail);
   }
 
   toggleSecuritySection() {

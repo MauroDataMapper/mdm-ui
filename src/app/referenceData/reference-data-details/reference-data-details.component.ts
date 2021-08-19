@@ -111,6 +111,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
     this.title.setTitle(
       `${this.refDataModel?.type} - ${this.refDataModel?.label}`
     );
+    this.addedToFavourite = this.favouriteHandler.isAdded(this.refDataModel);
   }
 
   restore() {

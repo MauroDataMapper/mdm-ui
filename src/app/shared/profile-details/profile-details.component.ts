@@ -18,9 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 /* eslint-disable id-blacklist */
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Profile } from '@maurodatamapper/mdm-resources';
-import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/markup-display-modal.component';
 
 @Component({
   selector: 'mdm-profile-details',
@@ -31,24 +29,13 @@ export class ProfileDetailsComponent {
   @Input() currentProfileDetails: Profile;
 
   readonly formOptionsMap = {
-    INTEGER: 'number',
-    STRING: 'text',
-    BOOLEAN: 'checkbox',
-    INT: 'number',
-    DATE: 'date',
-    TIME: 'time',
-    DATETIME: 'datetime',
-    DECIMAL: 'number'
+    integer: 'number',
+    string: 'text',
+    boolean: 'checkbox',
+    int: 'number',
+    date: 'date',
+    time: 'time',
+    datetime: 'datetime',
+    decimal: 'number'
   };
-
-  constructor(private dialog: MatDialog) { }
-
-  showInfo(field: any) {
-    this.dialog.open(MarkupDisplayModalComponent, {
-      data: {
-        content: field.description,
-        title: field.fieldName
-      }
-    });
-  }
 }

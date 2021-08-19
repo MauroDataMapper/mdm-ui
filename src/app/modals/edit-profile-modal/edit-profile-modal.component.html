@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <h4 mat-dialog-title>Edit Profile - {{ data.profileName }}</h4>
 <p *ngIf="description">
-  {{description}}
+  {{ description }}
 </p>
 <mat-dialog-content class="mat-typography">
   <form
@@ -69,9 +69,8 @@ SPDX-License-Identifier: Apache-2.0
               name="{{ field.fieldName }} + {{ section.name }}"
               [required]="field.minMultiplicity > 0"
               [disabled]="field.uneditable"
-
             />
-            <input
+            <div
               *ngIf="
                 field.dataType !== 'folder' &&
                 field.dataType !== 'model' &&
@@ -83,18 +82,22 @@ SPDX-License-Identifier: Apache-2.0
                 field.dataType != 'boolean' &&
                 field.dataType != 'enumeration'
               "
-              matInput
-              type="{{ formOptionsMap[field.dataType] }}"
-              name="{{ field.fieldName }} + {{ section.name }}"
-              [(ngModel)]="field.currentValue"
-              value="field.currentValue"
-              [ngClass]="{
-                'outlined-input form-control':
-                  formOptionsMap[field.dataType] != 'checkbox'
-              }"
-              [required]="field.minMultiplicity > 0"
-              [disabled]="field.uneditable"
-            />
+            >
+              <span *ngIf="field.uneditable">{{field.currentValue}}</span>
+              <input
+                *ngIf="!field.uneditable"
+                matInput
+                type="{{ formOptionsMap[field.dataType] }}"
+                name="{{ field.fieldName }} + {{ section.name }}"
+                [(ngModel)]="field.currentValue"
+                value="field.currentValue"
+                [ngClass]="{
+                  'outlined-input form-control':
+                    formOptionsMap[field.dataType] != 'checkbox'
+                }"
+                [required]="field.minMultiplicity > 0"
+              />
+            </div>
             <input
               *ngIf="field.dataType === 'date'"
               matInput
@@ -183,7 +186,7 @@ SPDX-License-Identifier: Apache-2.0
               </mdm-model-selector-tree>
             </div>
             <mat-error *ngIf="getValidationError(field.fieldName)">
-              {{getValidationError(field.fieldName).message}}
+              {{ getValidationError(field.fieldName).message }}
             </mat-error>
           </td>
         </tr>

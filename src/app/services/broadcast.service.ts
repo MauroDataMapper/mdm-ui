@@ -20,7 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
+import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, FavouritesUpdatedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
 
 /**
  * Service to broadcast events and data payloads to any other part of the application that subscribes to those events.
@@ -150,5 +150,21 @@ export class BroadcastService {
    */
   onApiProperyUpdated(): Observable<ApiPropertyUpdatedBroadcastData> {
     return this.on<ApiPropertyUpdatedBroadcastData>('apiPropertyUpdated');
+  }
+
+  /**
+   * Notify that a favourite has been added or removed by a user.
+   *
+   * @param data The data associated with the change.
+   */
+  favouritesChanged(data: FavouritesUpdatedBroadcastData) {
+    this.dispatch('favoritesChanged', data);
+  }
+
+  /**
+   * Get an observable to watch for the `favoritesChanged` {@link BroadcastEvent}.
+   */
+  onFavouritesChanged(): Observable<FavouritesUpdatedBroadcastData> {
+    return this.on<FavouritesUpdatedBroadcastData>('favoritesChanged');
   }
 }

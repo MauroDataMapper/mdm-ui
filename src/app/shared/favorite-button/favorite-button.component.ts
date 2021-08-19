@@ -16,28 +16,56 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
-import { FavouriteHandlerService } from '@mdm/services';
+import { BroadcastService, FavouriteHandlerService, SecurityHandlerService } from '@mdm/services';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-favorite-button',
   templateUrl: './favorite-button.component.html',
   styleUrls: ['./favorite-button.component.scss']
 })
-export class FavoriteButtonComponent implements OnInit {
+export class FavoriteButtonComponent implements OnInit, OnDestroy {
   @Input() catalogueItem: CatalogueItem;
 
+  isLoggedIn = false;
   isFavorite = false;
 
-  constructor(private favorites: FavouriteHandlerService) { }
+  private $unsubscribe = new Subject();
+
+  constructor(
+    private securityHandler: SecurityHandlerService,
+    private favorites: FavouriteHandlerService,
+    private broadcast: BroadcastService) { }
 
   ngOnInit(): void {
     if (!this.catalogueItem) {
       return;
     }
 
+    this.isLoggedIn = this.securityHandler.isLoggedIn();
+    if (!this.isLoggedIn) {
+      return;
+    }
+
     this.isFavorite = this.favorites.isAdded(this.catalogueItem);
+
+    this.broadcast
+      .onFavouritesChanged()
+      .pipe(
+        takeUntil(this.$unsubscribe),
+        filter(data => data.element.id === this.catalogueItem.id)
+      )
+      .subscribe(data => {
+        this.isFavorite = data.name === 'add';
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
   }
 
   toggle() {

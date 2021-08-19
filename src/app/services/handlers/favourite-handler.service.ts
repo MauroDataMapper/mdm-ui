@@ -20,6 +20,7 @@ import { Injectable } from '@angular/core';
 import { UserSettingsHandlerService } from '../utility/user-settings-handler.service';
 import { MessageHandlerService } from '../utility/message-handler.service';
 import { BroadcastService } from '../broadcast.service';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 
 @Injectable({
@@ -33,7 +34,7 @@ export class FavouriteHandlerService {
     private broadcast: BroadcastService) {
   }
 
-  add(element) {
+  add(element: CatalogueItem) {
     const favorites = this.userSettingsHandler.get('favourites');
     let fvt = false;
     favorites.forEach(favorite => {
@@ -49,7 +50,7 @@ export class FavouriteHandlerService {
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess(`${element.domainType} added to Favorites successfully.`);
-      this.broadcast.dispatch('favoritesChanged', { name: 'add', element });
+      this.broadcast.favouritesChanged({ name: 'add', element });
     }, error => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
     });
@@ -60,7 +61,7 @@ export class FavouriteHandlerService {
     return this.userSettingsHandler.get('favourites');
   }
 
-  isAdded(element) {
+  isAdded(element: CatalogueItem) {
     const favorites = this.userSettingsHandler.get('favourites');
     let fvt = false;
     favorites.forEach(favorite => {
@@ -72,7 +73,7 @@ export class FavouriteHandlerService {
     return fvt ? true : false;
   }
 
-  remove(element) {
+  remove(element: CatalogueItem) {
     const favorites = this.userSettingsHandler.get('favourites');
     const index = favorites.findIndex(favorite =>
       favorite.id === element.id
@@ -85,13 +86,13 @@ export class FavouriteHandlerService {
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('Removed from Favorites successfully.');
-      this.broadcast.dispatch('favoritesChanged', { name: 'remove', element });
+      this.broadcast.favouritesChanged({ name: 'remove', element });
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
     });
   }
 
-  toggle(element) {
+  toggle(element: CatalogueItem) {
     const favorites = this.userSettingsHandler.get('favourites');
     let processFinish = false;
     let fvt = false;

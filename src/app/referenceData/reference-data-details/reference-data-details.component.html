@@ -196,14 +196,8 @@ SPDX-License-Identifier: Apache-2.0
             "
             class="detail-icons--cta"
           >
-            <i
-              [ngClass]="{
-                'fas fa-star favouritesIcon': true,
-                addedToFavourite: addedToFavourite
-              }"
-              (click)="toggleFavourite()"
-              matTooltip="Favourite"
-            ></i>
+            <mdm-favorite-button [catalogueItem]="refDataModel">
+            </mdm-favorite-button>
           </div>
           <h4
             class="inline-block marginless"

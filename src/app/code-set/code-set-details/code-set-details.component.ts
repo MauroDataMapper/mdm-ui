@@ -25,7 +25,6 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
@@ -56,7 +55,6 @@ export class CodeSetDetailsComponent implements OnInit {
   isAdminUser: boolean;
   deleteInProgress: boolean;
   processing = false;
-  addedToFavourite = false;
   access: Access;
 
   constructor(
@@ -69,7 +67,6 @@ export class CodeSetDetailsComponent implements OnInit {
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
-    private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private editingService: EditingService
   ) {
@@ -89,7 +86,6 @@ export class CodeSetDetailsComponent implements OnInit {
   codeSetDetails(): any {
     this.access = this.securityHandler.elementAccess(this.codeSetDetail);
     this.title.setTitle(`Code Set - ${this.codeSetDetail?.label}`);
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.codeSetDetail);
   }
 
   toggleSecuritySection() {
@@ -249,12 +245,6 @@ export class CodeSetDetailsComponent implements OnInit {
     this.editMode = false; // Use Input editor whe adding a new folder.
     this.editingService.stop();
     this.codeSetDetail = Object.assign({}, this.originalCodeSetDetail);
-  }
-
-  toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.codeSetDetail)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.codeSetDetail);
-    }
   }
 
   finalise() {

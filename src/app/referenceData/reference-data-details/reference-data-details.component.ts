@@ -23,7 +23,6 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -62,7 +61,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
   processing = false;
   exportError = null;
   exportList = [];
-  addedToFavourite = false;
   compareToList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
@@ -75,7 +73,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
     private sharedService: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
-    private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
@@ -111,7 +108,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
     this.title.setTitle(
       `${this.refDataModel?.type} - ${this.refDataModel?.label}`
     );
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.refDataModel);
   }
 
   restore() {
@@ -323,12 +319,6 @@ export class ReferenceDataDetailsComponent implements OnInit {
     this.errorMessage = '';
     this.editingService.stop();
     this.showEdit = false;
-  }
-
-  toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.refDataModel)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.refDataModel);
-    }
   }
 
   export(exporter) {

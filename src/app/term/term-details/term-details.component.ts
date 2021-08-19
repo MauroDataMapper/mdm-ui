@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -48,8 +47,6 @@ export class TermDetailsComponent implements OnInit {
   originalTerm: TermDetail;
   terminologyId: string;
 
-  addedToFavourite = false;
-
   deleteInProgress: boolean;
 
   parentLabel = '';
@@ -59,7 +56,6 @@ export class TermDetailsComponent implements OnInit {
 
   constructor(
     private securityHandler: SecurityHandlerService,
-    private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
@@ -106,7 +102,6 @@ export class TermDetailsComponent implements OnInit {
         this.access = this.securityHandler.elementAccess(this.mcTerm);
         this.originalTerm = Object.assign({}, this.mcTerm);
         this.title.setTitle(`Term - ${this.mcTerm?.label}`);
-        this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
       });
   }
 
@@ -188,11 +183,5 @@ export class TermDetailsComponent implements OnInit {
   showForm() {
     this.editingService.start();
     this.editMode = true;
-  }
-
-  toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.mcTerm)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
-    }
   }
 }

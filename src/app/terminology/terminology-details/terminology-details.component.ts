@@ -28,7 +28,6 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import {
   FinaliseModalComponent,
@@ -59,7 +58,6 @@ export class TerminologyDetailsComponent implements OnInit {
   isAdminUser = this.sharedService.isAdminUser();
   isLoggedIn = this.sharedService.isLoggedIn();
   exportedFileIsReady = false;
-  addedToFavourite = false;
   deleteInProgress = false;
   errorMessage: string;
   exporting: boolean;
@@ -76,7 +74,6 @@ export class TerminologyDetailsComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private securityHandler: SecurityHandlerService,
     private broadcast: BroadcastService,
-    private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private editingService: EditingService,
     private messageService: MessageService
@@ -91,7 +88,6 @@ export class TerminologyDetailsComponent implements OnInit {
     this.originalTerminology = Object.assign({},this.mcTerminology);
     this.access = this.securityHandler.elementAccess(this.mcTerminology);
     this.loadExporterList();
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
   }
 
   save(){
@@ -332,12 +328,6 @@ export class TerminologyDetailsComponent implements OnInit {
         }
       );
     });
-  }
-
-  toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.mcTerminology)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
-    }
   }
 
   showForm() {

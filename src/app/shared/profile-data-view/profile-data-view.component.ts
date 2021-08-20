@@ -67,7 +67,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   get canSubmitForDoi() {
     // DOI profiles can only be submitted for finalised, public items
-    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.isReadableByEveryone;
+    return this.shared.features.useDigitalObjectIdentifiers
+      && this.isEditablePostFinalise
+      && this.isReadableByEveryone
+      && this.doiState !== 'retired';
   }
 
   get showAdditionalActions() {

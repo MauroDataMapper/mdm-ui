@@ -65,10 +65,12 @@ export class DoiRedirectComponent implements OnInit {
       id: item.id
     };
 
+    let state: string = item.domainType;
+
     if (item.domainType === CatalogueItemDomainType.DataClass) {
       const dataClass = item as DataClass;
       params.dataModelId = dataClass.model;
-      params.dataClassId = dataClass.dataClass;
+      params.dataClassId = dataClass.dataClass ?? '';
     }
     else if (item.domainType === CatalogueItemDomainType.DataElement) {
       const dataElement = item as DataElement;
@@ -78,6 +80,7 @@ export class DoiRedirectComponent implements OnInit {
     else if (isDataType(item.domainType)) {
       const dataType = item as DataType;
       params.dataModelId = dataType.model;
+      state = 'appContainer.mainApp.twoSidePanel.catalogue.dataType';
     }
     else if (item.domainType === CatalogueItemDomainType.Term) {
       const term = item as Term;
@@ -85,7 +88,7 @@ export class DoiRedirectComponent implements OnInit {
     }
 
     this.stateHandler
-      .Go(item.domainType, params)
+      .Go(state, params)
       .catch(error => {
         this.errorMessage = `Unable to redirect to ${item.domainType} ${item.id}. ${error}`;
       });

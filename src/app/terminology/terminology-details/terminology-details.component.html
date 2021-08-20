@@ -176,15 +176,8 @@ SPDX-License-Identifier: Apache-2.0
       <div *ngIf="mcTerminology">
         <div [ngClass]="{ 'has-error': errorMessage != '' }">
           <div class="detail-icons--cta">
-            <i
-              style="position: relative; float: right; margin-left: 8px"
-              [ngClass]="{
-                'fas fa-star favouritesIcon': true,
-                addedToFavourite: addedToFavourite
-              }"
-              (click)="toggleFavourite()"
-              matTooltip="Favorite"
-            ></i>
+            <mdm-favorite-button [catalogueItem]="mcTerminology">
+            </mdm-favorite-button>
           </div>
 
           <h4

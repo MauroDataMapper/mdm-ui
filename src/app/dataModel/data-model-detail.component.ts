@@ -24,7 +24,6 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { SharedService } from '../services/shared.service';
-import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -67,7 +66,6 @@ export class DataModelDetailComponent implements OnInit {
   processing = false;
   compareToList = [];
   exportList = [];
-  addedToFavourite = false;
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
 
@@ -80,7 +78,6 @@ export class DataModelDetailComponent implements OnInit {
     private sharedService: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
-    private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
@@ -275,12 +272,6 @@ export class DataModelDetailComponent implements OnInit {
     this.editMode = false;
     this.editingService.stop();
     this.dataModel = Object.assign({}, this.originalDataModel);
-  }
-
-  toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.dataModel)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.dataModel);
-    }
   }
 
   finalise() {

@@ -93,6 +93,10 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div *ngIf="folder">
+        <div class="detail-icons--cta">
+          <mdm-favorite-button [catalogueItem]="folder">
+          </mdm-favorite-button>
+        </div>
         <h4
           class="inline-block marginless"
           [ngClass]="{ deletedDataModelTitle: folder?.deleted }"

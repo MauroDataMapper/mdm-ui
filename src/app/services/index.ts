@@ -16,7 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export * from './utility/state-role-access.service';
 export * from './utility/user-settings-handler.service';
 export * from './utility/message-handler.service';
 export * from './handlers/favourite-handler.service';

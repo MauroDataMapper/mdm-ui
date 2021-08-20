@@ -503,6 +503,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .subscribe(() => {
         this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
         this.getDoiStatus();
+        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         if (this.isDoiProfile) {
           // If the DOI profile is currently visible, refresh the view
           this.selectCustomProfile();

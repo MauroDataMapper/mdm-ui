@@ -41,6 +41,7 @@ SPDX-License-Identifier: Apache-2.0
             {{ field.fieldName }}
             <span *ngIf="field.minMultiplicity > 0">*</span>
             <i
+              *ngIf="field.description"
               style="float: right"
               class="fas fa-info-circle helpIcon"
               [matTooltip]="field.description"

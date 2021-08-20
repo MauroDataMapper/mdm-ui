@@ -27,6 +27,7 @@ SPDX-License-Identifier: Apache-2.0
       <td class="detailsRowHeader">
         {{ field.fieldName }}
         <i
+          *ngIf="field.description"
           style="float: right"
           class="fas fa-info-circle helpIcon"
           [matTooltip]="field.description"

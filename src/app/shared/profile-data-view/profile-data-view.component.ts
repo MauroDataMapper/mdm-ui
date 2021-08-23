@@ -55,7 +55,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   canAddMetadata = false;
   isEditablePostFinalise = false;
   isReadableByEveryone = false;
-  doiState: DoiState = 'not applicable';
+  doiState: DoiState = 'not submitted';
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -421,7 +421,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .get(this.catalogueItem.domainType, this.catalogueItem.id, { }, options)
       .pipe(
         catchError(() => {
-          this.doiState = 'not applicable';
+          this.doiState = 'not submitted';
           return EMPTY;
         })
       )
@@ -542,6 +542,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('The Digital Object Identifier (DOI) was successfully retired.');
+        this.getDoiStatus();
+        if (this.isDoiProfile) {
+          // If the DOI profile is currently visible, refresh the view
+          this.selectCustomProfile();
+        }
       });
   }
 }

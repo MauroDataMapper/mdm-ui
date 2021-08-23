@@ -67,7 +67,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   get canSubmitForDoi() {
     // DOI profiles can only be submitted for finalised, public items
-    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.isReadableByEveryone;
+    return this.shared.features.useDigitalObjectIdentifiers
+      && this.isEditablePostFinalise
+      && this.isReadableByEveryone
+      && this.doiState !== 'retired';
   }
 
   get showAdditionalActions() {
@@ -503,6 +506,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .subscribe(() => {
         this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
         this.getDoiStatus();
+        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         if (this.isDoiProfile) {
           // If the DOI profile is currently visible, refresh the view
           this.selectCustomProfile();

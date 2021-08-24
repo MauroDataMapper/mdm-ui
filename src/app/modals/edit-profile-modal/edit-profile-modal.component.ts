@@ -87,6 +87,8 @@ export class EditProfileModalComponent implements OnInit {
     this.profileData = data.profile;
     this.description = data.description;
     this.okBtnText = data.okBtn ?? 'Save';
+
+    this.validate();
   }
 
   ngOnInit(): void { }

@@ -76,7 +76,7 @@ pipeline {
       }
       post{
         always{
-          recordIssues tools: [esLint(pattern: '**/eslint_report.xml')]
+          recordIssues qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]], tools: [esLint(pattern: '**/eslint_report.xml')]
         }
       }
     }

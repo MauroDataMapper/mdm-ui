@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { FlatNode } from '@mdm/folders-tree/flat-node';
 
 /**
@@ -36,7 +37,8 @@ export type BroadcastEvent =
   | 'elementDetailsUpdated'
   | 'elementDeleted'
   | 'profileImageUpdated'
-  | 'apiPropertyUpdated';
+  | 'apiPropertyUpdated'
+  | 'favoritesChanged';
 
 /**
  * Represents a message to broadcast with an optional data payload.
@@ -85,4 +87,9 @@ export interface ApiPropertyUpdatedBroadcastData {
    * State if the update involved deleting the API property.
    */
   deleted?: boolean;
+}
+
+export interface FavouritesUpdatedBroadcastData {
+  name: 'add' | 'remove';
+  element: CatalogueItem;
 }

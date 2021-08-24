@@ -142,6 +142,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <div *ngIf="detail">
         <div class="data-model-header">
+          <div class="detail-icons--cta">
+            <mdm-favorite-button [catalogueItem]="detail">
+            </mdm-favorite-button>
+          </div>
           <h4
             class="inline-block marginless"
             [ngClass]="{ deletedDataModelTitle: detail?.deleted }"

@@ -209,14 +209,8 @@ SPDX-License-Identifier: Apache-2.0
 
       <div *ngIf="dataModel">
         <div class="detail-icons--cta">
-          <i
-            [ngClass]="{
-              'fas fa-star favouritesIcon': true,
-              addedToFavourite: addedToFavourite
-            }"
-            (click)="toggleFavourite()"
-            matTooltip="Favourite"
-          ></i>
+          <mdm-favorite-button [catalogueItem]="dataModel">
+          </mdm-favorite-button>
         </div>
         <h4
           class="inline-block marginless"

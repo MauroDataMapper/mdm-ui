@@ -18,14 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, Finalisable, isDataType, MdmResponse, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { EditProfileModalConfiguration, EditProfileModalResult } from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
 import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse } from '@mdm/model/defaultProfileModel';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY, Observable } from 'rxjs';
@@ -38,7 +38,10 @@ import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, Profil
   styleUrls: ['./profile-data-view.component.scss']
 })
 export class ProfileDataViewComponent implements OnInit, OnChanges {
-  @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & { [key: string]: any };
+  @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & {
+    model?: Uuid;
+    [key: string]: any;
+  };
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();
 
@@ -51,7 +54,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   canDeleteProfile = false;
   canAddMetadata = false;
   isEditablePostFinalise = false;
-  doiState: DoiState = 'not applicable';
+  isReadableByEveryone = false;
+  doiState: DoiState = 'not submitted';
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -63,7 +67,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   get canSubmitForDoi() {
     // DOI profiles can only be submitted for finalised, public items
-    return this.shared.features.useDigitalObjectIdentifiers && this.isEditablePostFinalise && this.catalogueItem.readableByEveryone;
+    return this.shared.features.useDigitalObjectIdentifiers
+      && this.isEditablePostFinalise
+      && this.isReadableByEveryone
+      && this.doiState !== 'retired';
   }
 
   get showAdditionalActions() {
@@ -90,15 +97,15 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
-
-      if (this.shared.isLoggedIn(true)) {
-        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
-        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
-      }
+      this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+      this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
 
       if (this.shared.features.useDigitalObjectIdentifiers) {
-        // TODO: add back when ready
-        // this.getDoiStatus();
+        this.getDoiStatus();
+
+        if (this.catalogueItem.model) {
+          this.loadParentModelForDoiState();
+        }
       }
     }
   }
@@ -154,14 +161,13 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         filter(result => result.status === ModalDialogStatus.Ok),
         switchMap(result => {
-          const data = JSON.stringify(result.profile);
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
               selected.namespace,
               selected.name,
-              data);
+              result.profile);
         }),
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profile.', error);
@@ -179,9 +185,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         }
         else {
-          this.messageHandler.showSuccess(
-            'Profile edited successfully.'
-          );
+          this.messageHandler.showSuccess('Profile edited successfully.');
         }
       });
   }
@@ -242,6 +246,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     this.canDeleteProfile = access.showDelete;
     this.canAddMetadata = access.canAddMetadata;
     this.isEditablePostFinalise = access.canEditAfterFinalise;
+    this.isReadableByEveryone = this.catalogueItem.readableByEveryone;
   }
 
   private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {
@@ -252,6 +257,45 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: any) {
     this.loadProfileItems('unused', domainType, id)
       .subscribe(items => this.unusedProfiles = items);
+  }
+
+  private loadParentModelForDoiState() {
+    const request = this.getParentModel();
+    if (!request) {
+      return;
+    }
+
+    request
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the parent model.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(response => {
+        const parentModel = response.body;
+
+        // Fetch the parent model to find out if that is a public, finalised model. Required to know if
+        // DOI submission actions can be displayed. Overwrites the values set in setAccess()
+        // for `this.catalogueItem`
+        const access = this.securityHandler.elementAccess(parentModel);
+        this.isEditablePostFinalise = access.canEditAfterFinalise;
+        this.isReadableByEveryone = parentModel.readableByEveryone;
+      });
+  }
+
+  private getParentModel(): Observable<MdmResponse<CatalogueItem & SecurableModel & Finalisable>> | undefined {
+    if (isDataType(this.catalogueItem.domainType)
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataClass
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataElement) {
+      return this.resources.dataModel.get(this.catalogueItem.model);
+    }
+
+    if (this.catalogueItem.domainType === CatalogueItemDomainType.Term) {
+      return this.resources.terminology.get(this.catalogueItem.model);
+    }
+
+    return undefined;
   }
 
   private loadProfileItems(
@@ -367,50 +411,61 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private getDoiStatus() {
+    // A 404 will be returned if no DOI state information is available. Avoid triggering the
+    // "not found" route and handle this case manually
+    const options: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    };
+
     this.resources.pluginDoi
-      .get(this.catalogueItem.domainType, this.catalogueItem.id)
+      .get(this.catalogueItem.domainType, this.catalogueItem.id, { }, options)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the status of this item\'s Digital Object Identifier (DOI).', error);
+        catchError(() => {
+          this.doiState = 'not submitted';
           return EMPTY;
         })
       )
       .subscribe((response: DoiStatusResponse) => {
-        this.doiState = response.body.state;
+        this.doiState = response.body.status;
       });
   }
 
   private submitCatalogueItemForDoi(state: DoiSubmissionState) {
-    const selected = this.usedProfiles
+    const doiProfileSummary = this.usedProfiles
       .concat(this.unusedProfiles)
       .find(item => item.namespace === doiProfileNamespace);
 
-    if (!selected) {
+    if (!doiProfileSummary) {
       this.messageHandler.showWarning('Unable to find the Digital Object Identifier profile. Please check with your administrator if it is enabled.');
       return;
     }
 
-    const doiProfileInUse = this.usedProfiles.find(item => item.value === selected.value);
+    const doiProfileInUse = this.usedProfiles.find(item => item.value === doiProfileSummary.value);
 
     const description = doiProfileInUse
       ? `Before submitting this object to receive a '${state}' Digital Object Identifier (DOI), please check all profile information below to ensure it is correct, then click the 'Submit' button.`
       : `To receive a '${state}' Digital Object Identifier (DOI), please fill in the profile information below, then click the 'Submit' button.`;
 
     this.resources.profile
-      .profile(this.catalogueItem.domainType, this.catalogueItem.id, selected.namespace, selected.name, '')
+      .profile(this.catalogueItem.domainType, this.catalogueItem.id, doiProfileSummary.namespace, doiProfileSummary.name, '')
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the selected profile.', error);
           return EMPTY;
         }),
         switchMap((response: ProfileResponse) => {
+          const profile = response.body;
+          // Namespace and name of profile are not supplied in response, but required for other components to work
+          profile.namespace = doiProfileSummary.namespace;
+          profile.name = doiProfileSummary.name;
+
           return this.editing
             .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
               EditProfileModalComponent,
               {
                 data: {
                   profile: response.body,
-                  profileName: selected.display,
+                  profileName: doiProfileSummary.display,
                   catalogueItem: this.catalogueItem,
                   isNew: !doiProfileInUse,
                   description,
@@ -423,14 +478,13 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         filter((result: EditProfileModalResult) => result.status === ModalDialogStatus.Ok),
         switchMap((result: EditProfileModalResult) => {
-          const data = JSON.stringify(result.profile);
           return this.resources.profile
             .saveProfile(
               this.catalogueItem.domainType,
               this.catalogueItem.id,
-              selected.namespace,
-              selected.name,
-              data);
+              doiProfileSummary.namespace,
+              doiProfileSummary.name,
+              result.profile);
         }),
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profile.', error);
@@ -451,6 +505,13 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('A Digital Object Identifier (DOI) was successfully stored in this profile.');
+        this.getDoiStatus();
+        this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+        this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+        if (this.isDoiProfile) {
+          // If the DOI profile is currently visible, refresh the view
+          this.selectCustomProfile();
+        }
       });
   }
 
@@ -481,6 +542,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('The Digital Object Identifier (DOI) was successfully retired.');
+        this.getDoiStatus();
+        if (this.isDoiProfile) {
+          // If the DOI profile is currently visible, refresh the view
+          this.selectCustomProfile();
+        }
       });
   }
 }

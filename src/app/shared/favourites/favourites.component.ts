@@ -21,21 +21,23 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subject } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { BroadcastService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-favourites',
   templateUrl: './favourites.component.html',
   styleUrls: ['./favourites.component.sass']
 })
-export class FavouritesComponent implements OnInit {
+export class FavouritesComponent implements OnInit, OnDestroy {
   @Output() favouriteClick = new EventEmitter<any>();
   @Output() favouriteDbClick = new EventEmitter<any>();
   @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
@@ -53,20 +55,34 @@ export class FavouritesComponent implements OnInit {
 
   contextMenuPosition = { x: '0px', y: '0px' };
 
+  private $unsubscribe = new Subject();
+
   constructor(
     private resources: MdmResourcesService,
     private elementTypes: ElementTypesService,
-    private favouriteHandler: FavouriteHandlerService
+    private favouriteHandler: FavouriteHandlerService,
+    private broadcast: BroadcastService
   ) {}
 
   ngOnInit() {
     this.loadFavourites();
+
+    this.broadcast
+      .onFavouritesChanged()
+      .pipe(takeUntil(this.$unsubscribe))
+      .subscribe(() => this.loadFavourites());
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
   }
 
   loadFavourites = () => {
     this.reloading = true;
     const queries = [];
     this.allFavourites = [];
+    this.favourites = [];
     this.storedFavourites = this.favouriteHandler.get();
 
     const domainTypes = this.elementTypes.getBaseTypes();

@@ -16,26 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* eslint-disable id-blacklist */
-import { Component, Input } from '@angular/core';
-import { Profile } from '@maurodatamapper/mdm-resources';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { FavoriteButtonComponent } from './favorite-button.component';
 
-@Component({
-  selector: 'mdm-profile-details',
-  templateUrl: './profile-details.component.html',
-  styleUrls: ['./profile-details.component.scss']
-})
-export class ProfileDetailsComponent {
-  @Input() currentProfileDetails: Profile;
+describe('FavoriteButtonComponent', () => {
+  let harness: ComponentHarness<FavoriteButtonComponent>;
 
-  readonly formOptionsMap = {
-    integer: 'number',
-    string: 'text',
-    boolean: 'checkbox',
-    int: 'number',
-    date: 'date',
-    time: 'time',
-    datetime: 'datetime',
-    decimal: 'number'
-  };
-}
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(FavoriteButtonComponent);
+  });
+
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

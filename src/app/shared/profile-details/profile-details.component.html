@@ -20,16 +20,18 @@ SPDX-License-Identifier: Apache-2.0
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>
       <td [attr.colspan]="2" class="detailsRowHeader">
-        {{ section.sectionName }}
+        {{ section.name }}
       </td>
     </tr>
     <tr *ngFor="let field of section.fields">
       <td class="detailsRowHeader">
         {{ field.fieldName }}
         <i
+          *ngIf="field.description"
           style="float: right"
-          (click)="showInfo(field)"
           class="fas fa-info-circle helpIcon"
+          [matTooltip]="field.description"
+          matTooltipPosition="after"
         ></i>
       </td>
       <td class="elementDetailDescription">
@@ -37,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
           [(content)]="field.currentValue"
           id="{{ field.fieldName }}"
           [inEditMode]="false"
-          *ngIf="field.dataType === 'TEXT'"
+          *ngIf="field.dataType === 'text'"
         ></mdm-content-editor>
         <input
           type="checkbox"
@@ -50,19 +52,19 @@ SPDX-License-Identifier: Apache-2.0
           "
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
-          name="{{ field.fieldName }} + {{ section.sectionName }}"
+          name="{{ field.fieldName }} + {{ section.name }}"
         />
 
         <input
           *ngIf="
-            field.dataType !== 'FOLDER' &&
-            field.dataType !== 'DATAMODEL' &&
-            field.dataType != 'TEXT' &&
-            field.dataType != 'DATE' &&
-            field.dataType != 'DATETIME' &&
-            field.dataType != 'BOOLEAN' &&
-            field.dataType != 'FOLDER' &&
-            field.dataType != 'BOOLEAN'
+            field.dataType !== 'folder' &&
+            field.dataType !== 'model' &&
+            field.dataType != 'text' &&
+            field.dataType != 'date' &&
+            field.dataType != 'datetime' &&
+            field.dataType != 'boolean' &&
+            field.dataType != 'folder' &&
+            field.dataType != 'boolean'
           "
           style="background-color: #ffffff; width: 100%; border: hidden"
           [readonly]="true"
@@ -71,30 +73,28 @@ SPDX-License-Identifier: Apache-2.0
           value="field.currentValue"
         />
         <input
-          *ngIf="field.dataType === 'DATE'"
+          *ngIf="field.dataType === 'date'"
           style="background-color: #ffffff; border: hidden"
           [readonly]="true"
           type="date"
           [(ngModel)]="field.currentValue"
           value="{{ field.currentValue }}"
-          [required]="field.optional === false"
         />
         <input
           style="background-color: #ffffff; border: hidden"
-          *ngIf="field.dataType === 'DATETIME'"
+          *ngIf="field.dataType === 'datetime'"
           type="datetime-local"
           [readonly]="true"
           [(ngModel)]="field.currentValue"
           value="{{ field.currentValue }}"
-          [required]="field.optional === false"
         />
-        <div *ngIf="field.dataType === 'DATAMODEL'">
+        <div *ngIf="field.dataType === 'model'">
           <mdm-more-description
             [description]="field.currentValue"
             [length]="100"
           ></mdm-more-description>
         </div>
-        <div *ngIf="field.dataType === 'FOLDER'">
+        <div *ngIf="field.dataType === 'folder'">
           {{ field.currentValue }}
         </div>
       </td>

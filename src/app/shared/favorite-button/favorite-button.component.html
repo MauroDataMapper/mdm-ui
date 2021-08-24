@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,27 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-/* eslint-disable id-blacklist */
-import { Component, Input } from '@angular/core';
-import { Profile } from '@maurodatamapper/mdm-resources';
-
-@Component({
-  selector: 'mdm-profile-details',
-  templateUrl: './profile-details.component.html',
-  styleUrls: ['./profile-details.component.scss']
-})
-export class ProfileDetailsComponent {
-  @Input() currentProfileDetails: Profile;
-
-  readonly formOptionsMap = {
-    integer: 'number',
-    string: 'text',
-    boolean: 'checkbox',
-    int: 'number',
-    date: 'date',
-    time: 'time',
-    datetime: 'datetime',
-    decimal: 'number'
-  };
-}
+-->
+<i
+  *ngIf="isLoggedIn"
+  class="fas fa-star favouritesIcon"
+  [ngClass]="{
+    addedToFavourite: isFavorite
+  }"
+  (click)="toggle()"
+  matTooltip="Favourite"
+></i>

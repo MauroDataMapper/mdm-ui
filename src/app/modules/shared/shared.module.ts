@@ -49,6 +49,7 @@ import { ResizableDirective } from '@mdm/directives/resizable.directive';
 import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 import { ModelIconComponent } from '@mdm/shared/model-icon/model-icon.component';
 import { PathNameComponent } from '../../shared/path-name/path-name.component';
+import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
     ResizableDirective,
     DataTypeListButtonsComponent,
     ModelIconComponent,
-    PathNameComponent
+    PathNameComponent,
+    FavoriteButtonComponent
   ],
   imports: [
     CommonModule,
@@ -119,7 +121,8 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
     ResizableDirective,
     DataTypeListButtonsComponent,
     PathNameComponent,
-    ModelIconComponent
+    ModelIconComponent,
+    FavoriteButtonComponent
   ]
 })
 export class SharedModule {}

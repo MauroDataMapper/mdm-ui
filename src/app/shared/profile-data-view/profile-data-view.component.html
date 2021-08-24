@@ -145,7 +145,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <mat-menu #doiSubmitActions="matMenu" class="mdm--mat-menu--actions">
           <button
-            *ngIf="doiState === 'not applicable'"
+            *ngIf="doiState === 'not submitted'"
             mat-menu-item
             type="button"
             class="mr-1"
@@ -154,7 +154,7 @@ SPDX-License-Identifier: Apache-2.0
             <i class="far fa-file"></i> Draft
           </button>
           <button
-            *ngIf="doiState === 'not applicable' || doiState === 'draft'"
+            *ngIf="doiState === 'not submitted' || doiState === 'draft'"
             mat-menu-item
             type="button"
             class="mr-1"

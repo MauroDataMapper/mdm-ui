@@ -164,6 +164,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       .onCatalogueTreeNodeSelected()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => this.selectedNode = data.node);
+
+    this.broadcast
+      .onFavouritesChanged()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.loadFavourites());
   }
 
 
@@ -442,7 +447,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   handleFavourites(fnode: FlatNode) {
     this.favouriteHandler.toggle(fnode.node);
-    this.loadFavourites();
   }
 
   handleAddFolder(fnode: FlatNode) {

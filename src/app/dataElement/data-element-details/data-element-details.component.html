@@ -17,8 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form    
-    name="form"   
+  <form
+    name="form"
     (ngSubmit)="save()"
     disable-submit-on-enter
   >
@@ -77,6 +77,9 @@ SPDX-License-Identifier: Apache-2.0
       <div *ngIf="result">
         <div [ngClass]="{ 'has-error': errorMessage != '' }">
           <h4 class="inline-block marginless">
+            <span class="dataModelTypeIcon">
+              <i matTooltip="Data Element" class="fas fa-atom"></i>
+            </span>
             {{ parentLabel }}:
             <mdm-inline-text-edit
               [readOnly]="false"

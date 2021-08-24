@@ -118,11 +118,6 @@ export class SubscribedCatalogueComponent implements OnInit {
     });
   }
 
-  private navigateToParent() {
-    this.editingService.stop();
-    this.stateHandler.Go('appContainer.adminArea.subscribedCatalogues');
-  }
-
   validate() {
     let isValid = true;
     this.errors = {};
@@ -143,5 +138,10 @@ export class SubscribedCatalogueComponent implements OnInit {
     }
 
     return isValid;
+  }
+
+  private navigateToParent() {
+    this.editingService.stop();
+    this.stateHandler.Go('appContainer.adminArea.subscribedCatalogues');
   }
 }

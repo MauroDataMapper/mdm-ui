@@ -177,14 +177,6 @@ export class EditingService {
    */
   confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');
 
-  private confirmStop(message: string): boolean {
-    if (!this._isEditing) {
-      return true;
-    }
-
-    return confirm(message);
-  }
-
   /**
    * Confirm if it is safe to leave a view to transition to another asynchronously.
    *
@@ -205,6 +197,14 @@ export class EditingService {
    * This confirmation uses the Angular Material `MatDialog` which returns observables.
    */
   confirmCancelAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to cancel? Any unsaved changes will be lost.');
+
+  private confirmStop(message: string): boolean {
+    if (!this._isEditing) {
+      return true;
+    }
+
+    return confirm(message);
+  }
 
   private confirmStopAsync(message: string): Observable<boolean> {
     if (!this._isEditing) {

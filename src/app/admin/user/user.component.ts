@@ -204,11 +204,6 @@ export class UserComponent implements OnInit {
     });
   };
 
-  private navigateToParent() {
-    this.editingService.stop();
-    this.stateHandler.Go('admin.users');
-  }
-
   onGroupSelect = (groups) => {
     this.user.groups = [];
     for (const val of this.allGroups) {
@@ -220,4 +215,9 @@ export class UserComponent implements OnInit {
       }
     }
   };
+
+  private navigateToParent() {
+    this.editingService.stop();
+    this.stateHandler.Go('admin.users');
+  }
 }

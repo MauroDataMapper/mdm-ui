@@ -39,8 +39,8 @@ import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, Profil
 })
 export class ProfileDataViewComponent implements OnInit, OnChanges {
   @Input() catalogueItem: Modelable & ModelableDetail & SecurableModel & {
-    model?: Uuid;
     [key: string]: any;
+    model?: Uuid;
   };
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();

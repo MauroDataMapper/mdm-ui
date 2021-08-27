@@ -332,7 +332,8 @@ export class SecurityHandlerService {
       canMoveToFolder: element.availableActions?.includes('moveToFolder'),
       canMoveToVersionedFolder: element.availableActions?.includes('moveToVersionedFolder'),
       canReadAfterFinalised: element.availableActions?.includes('finalisedReadActions'),
-      canEditAfterFinalise: element.availableActions?.includes('finalisedEditActions')
+      canEditAfterFinalise: element.availableActions?.includes('finalisedEditActions'),
+      canMergeInto: element.availableActions?.includes('mergeInto')
     };
 
     if ((element as Finalisable).finalised !== undefined) {

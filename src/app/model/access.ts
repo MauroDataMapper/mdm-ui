@@ -44,4 +44,5 @@ export interface Access {
   canMoveToVersionedFolder: boolean;
   canReadAfterFinalised: boolean;
   canEditAfterFinalise: boolean;
+  canMergeInto: boolean;
 }

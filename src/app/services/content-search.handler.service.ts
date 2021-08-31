@@ -22,7 +22,6 @@ import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
-import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
     providedIn: 'root'
@@ -97,28 +96,26 @@ export class ContentSearchHandlerService {
                     pageSize: limit,
                    pageIndex: offset * limit
                 });
-        } else if (contextElement.domainType === 'Folder') {
-          return this.resources.tree.search(ContainerDomainType.Folders, searchText,
-              {
-                  searchTerm: searchText,
-                  limit,
-                  offset,
-                  domainTypes,
-                  labelOnly,
-                  dataModelTypes,
-                  classifiers,
-                  classifierFilter,
+        }
+        else if (contextElement.domainType === 'Folder') {
+          return this.resources.folder.search(
+            contextElement.id,
+            {
+              searchTerm: searchText,
+              limit,
+              offset,
+              domainTypes,
+              labelOnly,
+              dataModelTypes,
 
-                  lastUpdatedAfter,
-                  lastUpdatedBefore,
+              lastUpdatedAfter,
+              lastUpdatedBefore,
 
-                  createdAfter,
-                  createdBefore,
-
-                  pageSize: limit,
-                  pageIndex: offset * limit
-
-              });
+              createdAfter,
+              createdBefore,
+              pageSize: limit,
+              pageIndex: offset * limit
+          });
         } else if (contextElement.domainType === 'DataModel') {
           return this.resources.dataModel.search(contextElement.id, {
                 searchTerm: searchText,

@@ -153,19 +153,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.unsubcribe$.complete();
   }
 
-  private loadContent(properties: ApiProperty[]) {
-    this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
-    this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
-    this.detailHeading = this.getContentProperty(properties, 'content.home.detail.heading');
-    this.detailColumn1 = this.getContentProperty(properties, 'content.home.detail.column_one');
-    this.detailColumn2 = this.getContentProperty(properties, 'content.home.detail.column_two');
-    this.detailColumn3 = this.getContentProperty(properties, 'content.home.detail.column_three');
-  }
-
-  private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find(p => p.key === key)?.value ?? defaultHtmlContent.find(p => p.key === key).value;
-  }
-
   login = () => {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
       if (user) {
@@ -195,4 +182,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   };
+
+  private loadContent(properties: ApiProperty[]) {
+    this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
+    this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
+    this.detailHeading = this.getContentProperty(properties, 'content.home.detail.heading');
+    this.detailColumn1 = this.getContentProperty(properties, 'content.home.detail.column_one');
+    this.detailColumn2 = this.getContentProperty(properties, 'content.home.detail.column_two');
+    this.detailColumn3 = this.getContentProperty(properties, 'content.home.detail.column_three');
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value ?? defaultHtmlContent.find(p => p.key === key).value;
+  }
 }

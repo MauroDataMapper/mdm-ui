@@ -17,4 +17,4 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-export const OpenIdConnectModuleName = 'mdm.pluginAuthenticationOpenidConnect';
+export const openIdConnectModuleName = 'mdm.pluginAuthenticationOpenidConnect';

@@ -49,7 +49,7 @@ import { MarkupDisplayModalComponent } from './markup-display-modal/markup-displ
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 
-const DefaultAceConfig: AceConfigInterface = {
+const defaultAceConfig: AceConfigInterface = {
 };
 
 @NgModule({
@@ -95,7 +95,7 @@ const DefaultAceConfig: AceConfigInterface = {
     ModalService,
     {
       provide: ACE_CONFIG,
-      useValue: DefaultAceConfig
+      useValue: defaultAceConfig
     }
   ],
   exports: [

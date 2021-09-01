@@ -87,76 +87,6 @@ export class ApiPropertyComponent implements OnInit {
     }
   }
 
-  private createFormGroup() {
-    this.formGroup = new FormGroup({
-      key: new FormControl(this.property.metadata.key, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
-      category: new FormControl(this.property.metadata.category, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
-      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
-      value: new FormControl(this.property.original?.value, [Validators.required])  // eslint-disable-line @typescript-eslint/unbound-method
-    });
-  }
-
-  private getBlankMetadata() {
-    return {
-      key: '',
-      category: '',
-      publiclyVisible: false,
-      editType: ApiPropertyEditType.Value,
-      isSystem: false
-    };
-  }
-
-  private loadExistingProperty() {
-    this.resources.apiProperties
-      .get(this.id)
-      .pipe(
-        map((response: ApiPropertyResponse): ApiPropertyEditableState => {
-          const original = response.body;
-          const metadata = propertyMetadata.find(p => p.key === original.key) ?? {
-            key: original.key,
-            category: original.category,
-            isSystem: false,
-            publiclyVisible: original.publiclyVisible,
-            editType: ApiPropertyEditType.Value
-          };
-
-          return {
-            metadata,
-            original
-          };
-        }),
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the property.', errors);
-          return [];
-        })
-      )
-      .subscribe((data: ApiPropertyEditableState) => {
-        this.property = data;
-        this.createFormGroup();
-      });
-  }
-
-  private loadAvailableSystemProperties() {
-    this.resources.apiProperties
-      .list()
-      .pipe(
-        map((response: ApiPropertyIndexResponse) => {
-          return response.body.items;
-        }),
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the properties.', errors);
-          return [];
-        })
-      )
-      .subscribe((data: ApiProperty[]) => {
-        this.systemProperties = propertyMetadata.filter(m => data.every(p => p.key !== m.key));
-        this.property = {
-          metadata: this.getBlankMetadata()
-        };
-        this.createFormGroup();
-      });
-  }
-
   systemPropertyChanged(change: MatSelectChange) {
     if (change.value) {
       this.property.metadata = propertyMetadata.find(m => m.key === change.value);
@@ -241,6 +171,76 @@ export class ApiPropertyComponent implements OnInit {
           this.navigateToParent();
         });
     }
+  }
+
+  private createFormGroup() {
+    this.formGroup = new FormGroup({
+      key: new FormControl(this.property.metadata.key, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
+      category: new FormControl(this.property.metadata.category, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
+      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
+      value: new FormControl(this.property.original?.value, [Validators.required])  // eslint-disable-line @typescript-eslint/unbound-method
+    });
+  }
+
+  private getBlankMetadata() {
+    return {
+      key: '',
+      category: '',
+      publiclyVisible: false,
+      editType: ApiPropertyEditType.Value,
+      isSystem: false
+    };
+  }
+
+  private loadExistingProperty() {
+    this.resources.apiProperties
+      .get(this.id)
+      .pipe(
+        map((response: ApiPropertyResponse): ApiPropertyEditableState => {
+          const original = response.body;
+          const metadata = propertyMetadata.find(p => p.key === original.key) ?? {
+            key: original.key,
+            category: original.category,
+            isSystem: false,
+            publiclyVisible: original.publiclyVisible,
+            editType: ApiPropertyEditType.Value
+          };
+
+          return {
+            metadata,
+            original
+          };
+        }),
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the property.', errors);
+          return [];
+        })
+      )
+      .subscribe((data: ApiPropertyEditableState) => {
+        this.property = data;
+        this.createFormGroup();
+      });
+  }
+
+  private loadAvailableSystemProperties() {
+    this.resources.apiProperties
+      .list()
+      .pipe(
+        map((response: ApiPropertyIndexResponse) => {
+          return response.body.items;
+        }),
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((data: ApiProperty[]) => {
+        this.systemProperties = propertyMetadata.filter(m => data.every(p => p.key !== m.key));
+        this.property = {
+          metadata: this.getBlankMetadata()
+        };
+        this.createFormGroup();
+      });
   }
 
   private navigateToParent() {

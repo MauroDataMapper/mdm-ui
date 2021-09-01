@@ -24,10 +24,11 @@ import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators
 import { BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceDataTypeIndexResponse, ReferenceDataType } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor } from '@mdm/model/referenceModelModel';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ReferenceDataModelDetail, ReferenceDataType, ReferenceDataTypeIndexResponse } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-reference-data-element',
@@ -46,7 +47,7 @@ export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterVi
   displayedColumns = ['name', 'description', 'type', 'other'];
   referenceDataTypes: ReferenceDataType[] = [];
 
-  access: any;
+  access: Access;
 
   /**
    * Signal to attach to subscriptions to trigger when they should be unsubscribed.

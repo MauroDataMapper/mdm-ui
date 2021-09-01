@@ -16,16 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemDomainType, Classifier, MdmIndexResponse, MdmResponse } from '@maurodatamapper/mdm-resources';
-
-export interface ReferenceDataType {
-  id: string;
-  domainType: CatalogueItemDomainType;
-  label: string;
-  description?: string;
-  model?: string;
-  [key: string]: any;
-}
+import { CatalogueItemDomainType, MdmIndexResponse, MdmResponse, ReferenceDataType } from '@maurodatamapper/mdm-resources';
 
 export interface ReferenceDataTypeEditor {
   label: string;
@@ -73,9 +64,6 @@ export interface ReferenceDataValueIndexBody {
    */
   rows: ReferenceDataValueRow[];
 }
-
-export type ReferenceDataTypeIndexResponse = MdmIndexResponse<ReferenceDataType>;
-export type ReferenceDataTypeDetailxResponse = MdmResponse<ReferenceDataType>;
 
 export type ReferenceDataElementIndexResponse = MdmIndexResponse<ReferenceDataElement>;
 export type ReferenceDataElementDetailResponse = MdmResponse<ReferenceDataElement>;

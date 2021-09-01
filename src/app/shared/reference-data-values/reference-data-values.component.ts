@@ -23,6 +23,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ReferenceDataElement, ReferenceDataValueColumn, ReferenceDataValueIndexResponse, ReferenceDataValueRow, ReferenceDataElementIndexResponse } from '@mdm/model/referenceModelModel';
+import { ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
 
 interface ReferenceDataTableRow {
   [key: string]: ReferenceDataValueColumn;
@@ -34,7 +35,7 @@ interface ReferenceDataTableRow {
   styleUrls: ['./reference-data-values.component.scss']
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
-  @Input() parent: any;
+  @Input() parent: ReferenceDataModelDetail;
   @Output() totalCount = new EventEmitter<string>();
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -75,7 +76,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
           ]);
         }),
         map(([elements, values]) => {
-          this.setDisplayColumns(elements.body.items);          
+          this.setDisplayColumns(elements.body.items);
 
           this.totalItemCount = values.body.count;
           this.totalCount.emit(String(values.body.count));
@@ -87,9 +88,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
           return [];
         })
       ).subscribe((rows: ReferenceDataValueRow[]) => {
-        this.setValuesToDataSource(rows);        
+        this.setValuesToDataSource(rows);
       });
-      
+
     this.changeRef.detectChanges();
   }
 
@@ -122,9 +123,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       options['search'] = this.searchTerm;
     }
 
-    if (this.hideFilters) {      
+    if (this.hideFilters) {
       return this.resources.referenceDataValue.list(this.parent.id, options);
-    } 
+    }
 
     return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
   }
@@ -140,9 +141,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
   private setValuesToDataSource(rows: ReferenceDataValueRow[]) {
     this.records = rows.map(row => {
       // Flatten each endpoint item to make the table rows tabular and not an object hierarchy
-      return row.columns.reduce<ReferenceDataTableRow>((acc, column) => {        
+      return row.columns.reduce<ReferenceDataTableRow>((acc, column) => {
         return {
-          ...acc, 
+          ...acc,
           [column.referenceDataElement.label]: column
         };
       }, {});

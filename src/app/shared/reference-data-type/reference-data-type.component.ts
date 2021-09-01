@@ -22,12 +22,13 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
-import { ReferenceDataType, ReferenceDataTypeEditor, ReferenceDataTypeIndexResponse } from '@mdm/model/referenceModelModel';
+import { ReferenceDataTypeEditor } from '@mdm/model/referenceModelModel';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ReferenceDataModelDetail, ReferenceDataType, ReferenceDataTypeIndexResponse } from '@maurodatamapper/mdm-resources';
+import { Access } from '@mdm/model/access';
 
 @Component({
   selector: 'mdm-reference-data-type',
@@ -46,7 +47,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
   isLoadingResults = true;
   displayedColumns = ['name', 'description', 'type', 'other'];
 
-  access: any;
+  access: Access;
 
   constructor(
     private resources: MdmResourcesService,

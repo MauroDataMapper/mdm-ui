@@ -21,13 +21,13 @@ import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.servic
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { BroadcastEvent, BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
-import { ReferenceDataType, ReferenceDataTypeEditor, ReferenceDataTypeIndexResponse, ReferenceModelResult } from '@mdm/model/referenceModelModel';
+import { BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { ReferenceDataType, ReferenceDataTypeEditor, ReferenceDataTypeIndexResponse } from '@mdm/model/referenceModelModel';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItemDomainType, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data-type',
@@ -35,7 +35,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./reference-data-type.component.scss']
 })
 export class ReferenceDataTypeComponent implements AfterViewInit {
-  @Input() parent: ReferenceModelResult;
+  @Input() parent: ReferenceDataModelDetail;
   @Output() totalCount = new EventEmitter<string>();
 
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
@@ -92,7 +92,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
         })
       ).subscribe((data: ReferenceDataType[]) => {
         this.records = data.map(item => new EditableRecord(
-          item, 
+          item,
           {
             label: item.label,
             description: item.description,
@@ -113,7 +113,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
     const newRecord = new EditableRecord<ReferenceDataType, ReferenceDataTypeEditor>(
       {
         id: '',
-        domainType: DOMAIN_TYPE.ReferencePrimitiveType,
+        domainType: CatalogueItemDomainType.ReferencePrimitiveType,
         label: '',
         description: ''
       },
@@ -157,8 +157,8 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
       .subscribe(() => {
         this.messageHandler.showSuccess('Reference Data Type removed successfully.');
         this.loadReferenceDataTypes();
-        this.broadcast.dispatch(BroadcastEvent.ReferenceDataTypesChanged);
-      });    
+        this.broadcast.referenceDataTypesChanged();
+      });
   }
 
   onEdit(record: EditableRecord<ReferenceDataType, ReferenceDataTypeEditor>, index: number) {
@@ -176,7 +176,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
         description: record.source.description,
         errors: []
       };
-    }    
+    }
 
     this.editingService.setFromCollection(this.records);
   };
@@ -201,7 +201,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
       description: record.edit.description
     };
 
-    if (record.isNew) {      
+    if (record.isNew) {
       this.resources.referenceDataType
         .save(this.parent.id, resource)
         .pipe(
@@ -213,7 +213,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
         .subscribe(() => {
           this.messageHandler.showSuccess('Reference Data Type created successfully.');
           this.loadReferenceDataTypes();
-          this.broadcast.dispatch(BroadcastEvent.ReferenceDataTypesChanged);
+          this.broadcast.referenceDataTypesChanged();
         });
     }
     else {
@@ -228,8 +228,8 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
         .subscribe(() => {
           this.messageHandler.showSuccess('Reference Data Type updated successfully.');
           this.loadReferenceDataTypes();
-          this.broadcast.dispatch(BroadcastEvent.ReferenceDataTypesChanged);
+          this.broadcast.referenceDataTypesChanged();
         });
-    }   
+    }
   }
 }

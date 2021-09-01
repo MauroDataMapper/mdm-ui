@@ -18,34 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { CatalogueItemDomainType, Classifier, MdmIndexResponse, MdmResponse } from '@maurodatamapper/mdm-resources';
 
-export class EditableReferenceModel {
-  deletePending: boolean;
-  label: string;
-  description: string;
-  classifiers: Classifier[] = [];
-  aliases: any[] = [];
-  visible: boolean;
-  waiting: boolean;
-  author: any;
-  organisation: any;
-  validationError: boolean;
-
-  constructor() { }
-
-  show() { }
-  cancel() { }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save(parent: any) { }
-}
-
-export class Categories {
-  index: number;
-  id: string;
-  key: string;
-  value: string;
-  category: string;
-}
-
 export interface ReferenceDataType {
   id: string;
   domainType: CatalogueItemDomainType;

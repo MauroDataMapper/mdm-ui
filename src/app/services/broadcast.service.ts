@@ -167,4 +167,18 @@ export class BroadcastService {
   onFavouritesChanged(): Observable<FavouritesUpdatedBroadcastData> {
     return this.on<FavouritesUpdatedBroadcastData>('favoritesChanged');
   }
+
+  /**
+   * Notify that a reference data type has been added, updated or removed by a user.
+   */
+  referenceDataTypesChanged() {
+    this.dispatch('referenceDataTypesChanged');
+  }
+
+  /**
+   * Get an observable to watch for the `referenceDataTypesChanged` {@link BroadcastEvent}.
+   */
+  onReferenceDataTypesChanged(): Observable<void> {
+    return this.on('referenceDataTypesChanged');
+  }
 }

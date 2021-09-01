@@ -21,13 +21,13 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { EMPTY, merge, Observable, Subject } from 'rxjs';
 import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { BroadcastEvent, BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceModelResult, ReferenceDataTypeIndexResponse, ReferenceDataType } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceDataTypeIndexResponse, ReferenceDataType } from '@mdm/model/referenceModelModel';
 import { EditableRecord } from '@mdm/model/editable-forms';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItemDomainType, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data-element',
@@ -35,7 +35,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./reference-data-element.component.scss']
 })
 export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() parent: ReferenceModelResult;
+  @Input() parent: ReferenceDataModelDetail;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @Output() totalCount = new EventEmitter<string>();
 
@@ -62,11 +62,11 @@ export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterVi
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
     private broadcast: BroadcastService
-  ) { }  
+  ) { }
 
   ngOnInit(): void {
     this.broadcast
-      .on(BroadcastEvent.ReferenceDataTypesChanged)
+      .onReferenceDataTypesChanged()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadReferenceDataTypes());
   }
@@ -80,7 +80,7 @@ export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterVi
     this.access = this.securityHandler.elementAccess(this.parent);
 
     this.loadReferenceDataTypes();
-    this.loadReferenceDataElements();    
+    this.loadReferenceDataElements();
   }
 
   listDataElements(pageSize?: number, pageIndex?: number): Observable<ReferenceDataElementIndexResponse> {
@@ -151,7 +151,7 @@ export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterVi
     const newRecord = new EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>(
       {
         id: '',
-        domainType: DOMAIN_TYPE.ReferenceDataElement,
+        domainType: CatalogueItemDomainType.ReferenceDataElement,
         label: '',
         description: ''
       },

@@ -38,7 +38,8 @@ export type BroadcastEvent =
   | 'elementDeleted'
   | 'profileImageUpdated'
   | 'apiPropertyUpdated'
-  | 'favoritesChanged';
+  | 'favoritesChanged'
+  | 'referenceDataTypesChanged';
 
 /**
  * Represents a message to broadcast with an optional data payload.

@@ -24,10 +24,10 @@ import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators
 import { BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElementEditor } from '@mdm/model/referenceModelModel';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, ReferenceDataModelDetail, ReferenceDataType, ReferenceDataTypeIndexResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataModelDetail, ReferenceDataType, ReferenceDataTypeIndexResponse } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 
 @Component({

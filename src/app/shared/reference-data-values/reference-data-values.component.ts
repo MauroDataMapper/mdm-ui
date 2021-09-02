@@ -22,8 +22,8 @@ import { forkJoin, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataElement, ReferenceDataValueColumn, ReferenceDataValueIndexResponse, ReferenceDataValueRow, ReferenceDataElementIndexResponse } from '@mdm/model/referenceModelModel';
-import { ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
+import { ReferenceDataValueColumn, ReferenceDataValueIndexResponse, ReferenceDataValueRow } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
 
 interface ReferenceDataTableRow {
   [key: string]: ReferenceDataValueColumn;

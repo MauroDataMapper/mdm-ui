@@ -53,8 +53,8 @@ export const environment = {
   checkSessionExpiryTimeout: 300000,
   features: {
     useSubscribedCatalogues: true,
-    useVersionedFolders: false,
-    useMergeUiV2: false,
+    useVersionedFolders: true,
+    useMergeUiV2: true,
     useOpenIdConnect: false,
     useDigitalObjectIdentifiers: false
   }

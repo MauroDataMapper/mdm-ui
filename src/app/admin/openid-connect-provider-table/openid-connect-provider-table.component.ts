@@ -22,7 +22,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { ModulesResponse, OpenIdConnectProvider, OpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
-import { OpenIdConnectModuleName } from '@mdm/model/openid-connect.model';
+import { openIdConnectModuleName } from '@mdm/model/openid-connect.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -78,7 +78,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
         finalize(() => this.loading = false)
       )
       .subscribe((response: ModulesResponse) => {
-        this.moduleLoaded = response.body.findIndex(module => module.name === OpenIdConnectModuleName) !== -1;
+        this.moduleLoaded = response.body.findIndex(module => module.name === openIdConnectModuleName) !== -1;
         if (this.moduleLoaded) {
           this.initialise();
         }

@@ -74,10 +74,71 @@ pipeline {
           }
         }
       }
-      post{
-        always{
-          recordIssues tools: [esLint(pattern: '**/eslint_report.xml')]
+      post {
+        always {
+          recordIssues qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]], tools: [esLint(pattern: '**/eslint_report.xml')]
         }
+      }
+    }
+
+    stage('Distribution Build') {
+      steps {
+        nvm('') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'npm run dist'
+          }
+        }
+      }
+    }
+
+    // Deploy develop branch even if tests fail if the code builds, as it'll be an unstable snapshot but we should still deploy
+    stage('Deploy develop to Artifactory') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        rtUpload(
+          serverId: 'cs-artifactory',
+          spec: '''{
+          "files": [
+            {
+              "pattern": "dist/mdm-ui-*.tgz",
+              "target": "artifacts-snapshots/mauroDataMapper/mdm-ui/"
+            }
+         ]
+    }''',
+          )
+        rtPublishBuildInfo(
+          serverId: 'cs-artifactory',
+          )
+      }
+    }
+
+    stage('Deploy main to Artifactory') {
+      when {
+        allOf {
+          branch 'main'
+          expression {
+            currentBuild.currentResult == 'SUCCESS'
+          }
+        }
+
+      }
+      steps {
+        rtUpload(
+          serverId: 'cs-artifactory',
+          spec: '''{
+          "files": [
+            {
+              "pattern": "dist/mdm-ui-*.tgz",
+              "target": "artifacts/mauroDataMapper/mdm-ui/"
+            }
+         ]
+    }''',
+          )
+        rtPublishBuildInfo(
+          serverId: 'cs-artifactory',
+          )
       }
     }
 
@@ -95,6 +156,28 @@ pipeline {
         }
       }
     }
+
+    stage('Continuous Deployment') {
+      when {
+        allOf {
+          branch 'develop'
+          expression {
+            currentBuild.currentResult == 'SUCCESS'
+          }
+        }
+      }
+      steps {
+        script {
+          try {
+            println("Triggering the [continuous-deployment] job")
+            build quietPeriod: 300, wait: false, job: 'continuous-deployment'
+          } catch (hudson.AbortException ignored) {
+            println("Cannot trigger the [continuous-deployment] job as it doesn't exist")
+          }
+        }
+      }
+    }
+
   }
   post {
     always {
@@ -108,7 +191,6 @@ pipeline {
         reportTitles         : 'Test'
       ])
       outputTestResults()
-      slackNotification()
       zulipNotification(topic: 'mdm-ui')
     }
   }

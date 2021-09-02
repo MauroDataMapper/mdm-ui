@@ -1,6 +1,6 @@
 {
   "name": "mdm-ui",
-  "version": "6.5.0",
+  "version": "6.6.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,8 +12,8 @@
     "test-watch": "jest --watch",
     "test-clearCache": "jest --clearCache",
     "lint": "ng lint",
-    "eslint": "tsc --noEmit && eslint . --ext ts --quiet --fix",
-    "eslint-nofix": "tsc --noEmit && eslint . --ext ts --quiet",
+    "eslint": "tsc --noEmit && eslint . --ext ts --fix",
+    "eslint-nofix": "tsc --noEmit && eslint . --ext ts",
     "eslint-report": "eslint . --ext ts --format checkstyle -o eslint_report.xml",
     "e2e": "ng e2e",
     "postinstall": "ngcc",
@@ -38,7 +38,7 @@
     "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@fortawesome/fontawesome-free": "5.15.1",
-    "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#4.9.0",
+    "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#4.10.0",
     "@uirouter/angular": "7.0.0",
     "@uirouter/core": "6.0.6",
     "@uirouter/rx": "0.6.5",

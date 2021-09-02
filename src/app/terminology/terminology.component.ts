@@ -168,7 +168,9 @@ export class TerminologyComponent
     this.messageService.toggleSearch();
   }
 
-  fetch(text, loadAll, offset, limit) {
+  // This fetch function needs to be a property-based function because it is passed as a property to the
+  // mdm-select component for searching for terms
+  fetch = (text, loadAll, offset, limit) => {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {
@@ -182,7 +184,7 @@ export class TerminologyComponent
       limit,
       offset
     });
-  }
+  };
 
   onTermSelect(term) {
     this.stateHandler.Go(

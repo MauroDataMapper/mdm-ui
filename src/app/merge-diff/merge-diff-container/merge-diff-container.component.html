@@ -47,6 +47,7 @@ SPDX-License-Identifier: Apache-2.0
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
+          [disabled]="!committingList || committingList.length === 0"
           (click)="onCommitChanges()"
         >
           <i

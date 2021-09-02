@@ -22,11 +22,10 @@ import { forkJoin, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataValueColumn, ReferenceDataValueIndexResponse, ReferenceDataValueRow } from '@mdm/model/referenceModelModel';
-import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataModelDetail } from '@maurodatamapper/mdm-resources';
+import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataModelDetail, ReferenceDataValue, ReferenceDataValueRow, ReferenceDataValueSearchQueryParameters, ReferenceDataValueTableResponse } from '@maurodatamapper/mdm-resources';
 
 interface ReferenceDataTableRow {
-  [key: string]: ReferenceDataValueColumn;
+  [key: string]: ReferenceDataValue;
 }
 
 @Component({
@@ -112,22 +111,22 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
     this.filterEvent.emit(filter);
   }
 
-  contentFetch(pageSize?: number, pageIndex?: number, filters?: any): Observable<ReferenceDataValueIndexResponse> {
-    const options = {
+  contentFetch(pageSize?: number, pageIndex?: number, filters?: any): Observable<ReferenceDataValueTableResponse> {
+    let query: ReferenceDataValueSearchQueryParameters = {
       max: pageSize,
       offset: pageIndex,
       asRows: true
     };
 
     if (filters) {
-      options['search'] = this.searchTerm;
+      query.search = this.searchTerm;
     }
 
     if (this.hideFilters) {
-      return this.resources.referenceDataValue.list(this.parent.id, options);
+      return this.resources.referenceDataValue.list(this.parent.id, query);
     }
 
-    return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
+    return this.resources.referenceDataValue.search(this.parent.id, query);
   }
 
   elementsFetch(): Observable<ReferenceDataElementIndexResponse> {

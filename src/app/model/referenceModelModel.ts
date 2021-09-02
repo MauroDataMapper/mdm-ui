@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmResponse, ReferenceDataElement, ReferenceDataType } from '@maurodatamapper/mdm-resources';
+import { ReferenceDataType } from '@maurodatamapper/mdm-resources';
 
 export interface ReferenceDataTypeEditor {
   label: string;
@@ -31,28 +31,3 @@ export interface ReferenceDataElementEditor {
   errors: any;
 }
 
-export interface ReferenceDataValueColumn {
-  id: string;
-  rowNumber: number;
-  value: string;
-  referenceDataElement: ReferenceDataElement;
-}
-
-export interface ReferenceDataValueRow {
-  columns: ReferenceDataValueColumn[];
-  [key: string]: any;
-}
-
-export interface ReferenceDataValueIndexBody {
-  /**
-   * Gets the number of items in the returned list.
-   */
-  count: number;
-
-  /**
-   * Gets the list of items returned from the API.
-   */
-  rows: ReferenceDataValueRow[];
-}
-
-export type ReferenceDataValueIndexResponse = MdmResponse<ReferenceDataValueIndexBody>;

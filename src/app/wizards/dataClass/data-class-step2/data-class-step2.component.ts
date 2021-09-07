@@ -36,7 +36,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { CreateType } from '@mdm/wizards/wizards.model';
 @Component({
   selector: 'mdm-data-class-step2',
   templateUrl: './data-class-step2.component.html',
@@ -49,7 +49,10 @@ export class DataClassStep2Component
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   scope: any;
   multiplicityError: any;
   selectedDataClassesStr = '';
@@ -78,8 +81,7 @@ export class DataClassStep2Component
   constructor(
     private validator: ValidatorService,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
+    private messageHandler: MessageHandlerService
   ) {
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {

@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">
       <mat-radio-button value="new">Create a New Data Class</mat-radio-button>
       <mat-radio-button value="copy">Copy Data Class(s) from...</mat-radio-button>
-      <mat-radio-button value="import">Import Data Class(s) from...</mat-radio-button>
+      <mat-radio-button value="import">Use Data Class(s) from...</mat-radio-button>
       <mat-radio-button value="extend" *ngIf="model.parent.domainType !== 'DataModel'">Extend with Data Class(s) from...</mat-radio-button>
     </mat-radio-group>
 

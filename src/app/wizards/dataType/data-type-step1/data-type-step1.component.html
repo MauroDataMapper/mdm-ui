@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 	<mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">
 		<mat-radio-button value="new">Create a New Data Type</mat-radio-button>
 		<mat-radio-button value="copy">Copy Data Type(s) from...</mat-radio-button>
-    <mat-radio-button value="import">Import Data Type(s) from...</mat-radio-button>
+    <mat-radio-button value="import">Use Data Type(s) from...</mat-radio-button>
 	</mat-radio-group>
 
 	<mdm-model-selector-tree [onSelect]="onSelect"

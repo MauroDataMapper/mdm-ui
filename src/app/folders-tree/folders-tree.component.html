@@ -56,10 +56,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #treeMenu="matMenu">
   <ng-template matMenuContent let-node="node">
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
-      <i class="fas fa-plus"></i> Create
-    </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="importMenu" [matMenuTriggerData]="{node: node}">
-      <i class="fas fa-plus"></i> Import/Extend
+      <i class="fas fa-plus"></i> Add
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
       <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
@@ -110,24 +107,6 @@ SPDX-License-Identifier: Apache-2.0
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
       <i class="fas fa-atom dataModelTypeIcon"></i> Data Element
-    </button>
-  </ng-template>
-</mat-menu>
-
-<!-- Sub-menu for "Import/Extend" -->
-<mat-menu #importMenu="matMenu" class="tree-context-menu">
-  <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataClass')" (click)="handleExtendDataClass(node)">
-      <i class="fas fa-cube dataModelTypeIcon"></i> Extend Data Class
-    </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleImportDataClass(node)">
-      <i class="fas fa-cube dataModelTypeIcon"></i> Import Data Class
-    </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleImportDataType(node)">
-      <i class="fas fa-code dataModelTypeIcon"></i> Import Data Type
-    </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleImportDataElement(node)">
-      <i class="fas fa-code dataModelTypeIcon"></i> Import Data Element
     </button>
   </ng-template>
 </mat-menu>

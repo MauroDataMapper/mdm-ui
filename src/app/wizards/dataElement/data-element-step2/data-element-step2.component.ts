@@ -38,6 +38,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -50,7 +51,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   multiplicityError: any;
   selectedDataClassesStr = '';
   defaultCheckedMap: any;

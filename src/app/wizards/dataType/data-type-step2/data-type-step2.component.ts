@@ -38,6 +38,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-type-step2',
@@ -57,7 +58,10 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   totalSelectedItemsCount: number;
   filter: object;
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   scope: any;
   defaultCheckedMap: any;
   loaded = false;

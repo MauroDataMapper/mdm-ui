@@ -317,7 +317,7 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   bulkDelete() {
-    const dataElementIdLst = this.dataClassRecords.filter(record => record.checked === true);
+    const dataElementIdLst = this.dataClassRecords.filter(record => record.checked);
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {

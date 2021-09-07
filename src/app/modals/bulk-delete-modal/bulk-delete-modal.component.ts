@@ -21,9 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { BroadcastService } from '@mdm/services/broadcast.service';
-
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 @Component({
   selector: 'mdm-bulk-delete',
   templateUrl: './bulk-delete-modal.component.html',
@@ -44,8 +42,6 @@ export class BulkDeleteModalComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService,
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
   ) { }
@@ -63,7 +59,6 @@ export class BulkDeleteModalComponent implements AfterViewInit {
 
   closeAndRefresh = () => {
     this.stateHandler.reload();
-    // this.broadcast.reloadCatalogueTree();
     this.dialogRef.close({ status: 'ok' });
   };
 
@@ -81,7 +76,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
         };
 
         switch (item.domainType) {
-          case 'DataClass':
+          case CatalogueItemDomainType.DataClass:
             if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
               return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id, item.model, item.id).toPromise();
             } else if (item.imported && this.parentDataClass?.id !== null) {
@@ -91,15 +86,15 @@ export class BulkDeleteModalComponent implements AfterViewInit {
             } else {
               return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
             }
-          case 'DataElement':
+          case CatalogueItemDomainType.DataElement:
             if (item.imported) {
               return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id, this.parentDataClass.id, item.model, item.dataClass, item.id).toPromise();
             } else {
               return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
             }
-          case 'PrimitiveType':
-          case 'ReferenceType':
-          case 'EnumerationType':
+          case CatalogueItemDomainType.PrimitiveType:
+          case CatalogueItemDomainType.ReferenceType:
+          case CatalogueItemDomainType.EnumerationType:
             if (item.imported) {
               return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();
             } else {

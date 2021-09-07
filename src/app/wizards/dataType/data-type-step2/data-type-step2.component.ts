@@ -139,10 +139,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       this.dataSourceDataTypes.sort = this.sort.toArray()[0];
 
       // Selected Data Types table
-      // this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
-      // this.sort.toArray()[1].sortChange.subscribe(() => (this.paginator.toArray()[1].pageIndex = 0));
-      // this.dataSourceSelectedDataTypes.paginator = this.paginator.toArray()[1];
-
       if (this.sort !== null && this.sort !== undefined && this.sort.length > 1 && this.paginator !== null && this.paginator !== undefined && this.paginator.length > 1) {
         merge(this.sort.toArray()[0].sortChange, this.paginator.toArray()[0].page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;

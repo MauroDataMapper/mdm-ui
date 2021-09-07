@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
@@ -52,7 +51,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 })
 export class DataModelComponent
   extends BaseComponent
-  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+  implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   subscription: Subscription;
   showSearch = false;
@@ -159,10 +158,6 @@ export class DataModelComponent
           );
         }
       );
-  }
-
-  ngAfterViewInit(): void {
-    // this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   ngAfterViewChecked(): void {

@@ -32,7 +32,6 @@ import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

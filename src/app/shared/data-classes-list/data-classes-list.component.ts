@@ -38,7 +38,7 @@ import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-mo
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DataClass } from '@maurodatamapper/mdm-resources';
+import { DataClass, DataClassDetail, DataClassIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 
 @Component({
@@ -51,19 +51,18 @@ export class DataClassesListComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  @ViewChild(MatTable, { static: false }) table: MatTable<DataClassDetail>;
 
-  @Input() parentDataModel: any;
-  @Input() grandParentDataClass: any;
-  @Input() parentDataClass: any;
-  @Input() loadingData: any;
-  @Input() isEditable: any;
+  @Input() parentDataModel: DataModelDetail;
+  @Input() grandParentDataClass: DataClassDetail;
+  @Input() parentDataClass: DataClassDetail;
+  @Input() isEditable: boolean;
   checkAllCheckbox = false;
 
   processing: boolean;
   failCount: number;
   total: number;
-  dataClassRecords: any[] = [];
+  dataClassRecords: DataClassDetail[] = [];
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
@@ -112,9 +111,9 @@ export class DataClassesListComponent implements AfterViewInit {
             this.filter
           );
         }),
-        map((data: any) => {
+        map((data: DataClassIndexResponse) => {
           if (this.parentDataClass.extendsDataClasses) {
-            this.totalDataClassCount = parseInt(data.body.count, 10) + (this.parentDataClass.extendsDataClasses.length as number);
+            this.totalDataClassCount = data.body.count + (this.parentDataClass.extendsDataClasses.length as number);
           } else {
             this.totalDataClassCount = data.body.count;
           }
@@ -139,7 +138,7 @@ export class DataClassesListComponent implements AfterViewInit {
       });
   }
 
-  openEdit(dataClass: DataClass) {
+  openEdit(dataClass: DataClassDetail) {
     if (!dataClass || (dataClass && !dataClass.id)) {
       return '';
     }

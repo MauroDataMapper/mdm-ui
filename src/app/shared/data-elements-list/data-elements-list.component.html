@@ -65,8 +65,8 @@ SPDX-License-Identifier: Apache-2.0
         <div>
           <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClassParent}"></mdm-element-link>
         </div>
-        <div>
-          <small class="item-type ml-1"[class.item-type-imported]="record.imported === true">{{record.imported ? 'Imported':''}} {{record.domainType}}</small>
+        <div *ngIf="record.imported">
+            <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
         </div>
       </td>
     </ng-container>

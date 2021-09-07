@@ -62,12 +62,15 @@ SPDX-License-Identifier: Apache-2.0
          </div>
        </th>
        <td mat-cell *matCellDef="let record" style="word-wrap: break-word;">
-         <div>
-           <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClassParent}"></mdm-element-link>
-         </div>
-         <div>
-           <small class="item-type ml-1" [class.item-type-imported]="record.imported === true" [class.item-type-extended]="record.extended === true">{{record.imported ? 'Imported':''}}{{record.extended ? 'Extended':''}} {{record.domainType}}</small>
-         </div>
+        <div>
+          <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClassParent}"></mdm-element-link>
+        </div>
+        <div *ngIf="record.imported">
+          <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+        </div>
+        <div *ngIf="record.extended">
+          <span class="badge badge-primary item-type-extended" title="Extended: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">Extended Data Class &nbsp;<i class="fas fa-info-circle"></i></span>
+        </div>
        </td>
      </ng-container>
      <ng-container matColumnDef="description">

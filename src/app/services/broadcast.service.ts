@@ -20,7 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, CatalogueTreeNodeSelectedBroadcastData, FavouritesUpdatedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
+import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, CatalogueItemTransitionData, CatalogueTreeNodeSelectedBroadcastData, FavouritesUpdatedBroadcastData, UserLoggedInBroadcastData } from './broadcast.model';
 
 /**
  * Service to broadcast events and data payloads to any other part of the application that subscribes to those events.
@@ -166,5 +166,21 @@ export class BroadcastService {
    */
   onFavouritesChanged(): Observable<FavouritesUpdatedBroadcastData> {
     return this.on<FavouritesUpdatedBroadcastData>('favoritesChanged');
+  }
+
+  /**
+   * Notify that a catalogue item has been transitioned into view.
+   *
+   * @param data The data associated with the change.
+   */
+  transitionedToCatalogueItem(data: CatalogueItemTransitionData) {
+    this.dispatch('transitionedToCatalogueItem', data);
+  }
+
+  /**
+   * Get an observable to watch for the `transitionedToCatalogueItem` {@link BroadcastEvent}.
+   */
+  onTransitionedToCatalogueItem(): Observable<CatalogueItemTransitionData> {
+    return this.on<CatalogueItemTransitionData>('transitionedToCatalogueItem');
   }
 }

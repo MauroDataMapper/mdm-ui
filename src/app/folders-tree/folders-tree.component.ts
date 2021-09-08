@@ -169,6 +169,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       .onFavouritesChanged()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadFavourites());
+
+    this.broadcast
+      .onTransitionedToCatalogueItem()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        // TODO
+      });
   }
 
 

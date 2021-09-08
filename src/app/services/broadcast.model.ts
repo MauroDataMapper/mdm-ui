@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, MultiFacetAwareDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { FlatNode } from '@mdm/folders-tree/flat-node';
 
 /**
@@ -38,7 +38,8 @@ export type BroadcastEvent =
   | 'elementDeleted'
   | 'profileImageUpdated'
   | 'apiPropertyUpdated'
-  | 'favoritesChanged';
+  | 'favoritesChanged'
+  | 'transitionedToCatalogueItem';
 
 /**
  * Represents a message to broadcast with an optional data payload.
@@ -92,4 +93,20 @@ export interface ApiPropertyUpdatedBroadcastData {
 export interface FavouritesUpdatedBroadcastData {
   name: 'add' | 'remove';
   element: CatalogueItem;
+}
+
+/**
+ * Data to broadcast for the `transitionedToCatalogueItem` {@link BroadcastEvent}. Contains the basic information
+ * of the catalogue item that was transitioned to for viewing.
+ */
+export interface CatalogueItemTransitionData {
+  /**
+   * Get domain type of the catalogue item.
+   */
+  multiFacetDomainType: MultiFacetAwareDomainType;
+
+  /**
+   * The identifier of the catalogue item.
+   */
+  id: Uuid;
 }

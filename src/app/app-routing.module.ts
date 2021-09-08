@@ -55,7 +55,7 @@ import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import { HookMatchCriteria, HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
@@ -65,7 +65,8 @@ import { VersionedFolderComponent } from './versioned-folder/versioned-folder/ve
 import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
-import { SecurityHandlerService, SharedService } from './services';
+import { BroadcastService, SecurityHandlerService, SharedService } from './services';
+import { MultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
 
 /**
  * Collection of all page state routes.
@@ -131,7 +132,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: FolderComponent,
       params: { tabView: { value: null, squash: true, dynamic: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.Folders
       }
     },
     {
@@ -193,7 +196,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataModelComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataModels
       }
     },
     {
@@ -207,7 +212,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ReferenceDataComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.ReferenceDataModels
       }
     },
     {
@@ -273,7 +280,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.Terminologies
       }
     },
     {
@@ -282,7 +291,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataClassComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataClasses
       }
     },
     {
@@ -292,7 +303,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: { tabView: { dynamic: true, value: null, squash: true } },
       component: DataElementComponent,
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataElements
       }
     },
     {
@@ -326,7 +339,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: {
         tabView: { dynamic: true, value: null, squash: true },
         data: {
-          allowAnonymous: true
+          allowAnonymous: true,
+          isCatalogueItem: true,
+          multiFacetAwareDomainType: MultiFacetAwareDomainType.DataTypes
         }
       }
     },
@@ -350,7 +365,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.Terms
       }
     },
     {
@@ -392,7 +409,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.CodeSets
       }
     },
     {
@@ -416,16 +435,26 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: VersionedFolderComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        isCatalogueItem: true,
+        multiFacetAwareDomainType: MultiFacetAwareDomainType.VersionedFolders
       }
     }
   ]
 };
 
 /**
- * Router transition hook to check editing state of app before switching views
+ * Setup the transition hooks for the router to interact when state transitions happen.
+ *
+ * This wrapper function is used so that the inner functions have the injected dependent services in scope.
+ *
+ * @param transitions The TransitionService to attach the hooks to.
+ * @param injector The Angular injector to get access to dependencies.
  */
-const editingViewTransitionHooks = (transitions: TransitionService, editing: EditingService) => {
+const setupTransitionHooks = (transitions: TransitionService, injector: Injector) => {
+
+  const editing = injector.get(EditingService);
+  const broadcast = injector.get(BroadcastService);
 
   /**
    * Check each state transition where the "from" view state is marked as editable.
@@ -444,17 +473,6 @@ const editingViewTransitionHooks = (transitions: TransitionService, editing: Edi
    */
   const onEnteringViewAction = () => editing.stop();
 
-  transitions.onBefore(canLeaveStateCriteria, canLeaveStateAction);
-  transitions.onEnter({}, onEnteringViewAction);
-};
-
-/**
- * Router transition hooks for checking role access before switching views.
- *
- * @see {@link StateRoleAccessService}
- */
-const roleTransitionHooks = (transitions: TransitionService) => {
-
   /**
    * Before starting a transition, check if the user/role has access to this route.
    */
@@ -471,19 +489,33 @@ const roleTransitionHooks = (transitions: TransitionService) => {
     return securityHandler.isLoggedIn();
   };
 
+  const hasTransitionedToCatalogueItem: HookMatchCriteria = {
+    to: state => state.data?.isCatalogueItem && state.data?.multiFacetAwareDomainType
+  }
+
+  const transitionedToCatalogueItem = (transition: Transition): HookResult => {
+    broadcast.transitionedToCatalogueItem({
+      multiFacetDomainType: transition.$to().data.multiFacetAwareDomainType,
+      id: transition.params().id
+    });
+  }
+
+  // Transition hooks for editing
+  transitions.onBefore(canLeaveStateCriteria, canLeaveStateAction);
+  transitions.onEnter({}, onEnteringViewAction);
+
+  // Transition hooks for access checks
   transitions.onStart({}, canAccessRoute);
-};
+
+  // Transition hooks for when catalogue items come into view
+  transitions.onSuccess(hasTransitionedToCatalogueItem, transitionedToCatalogueItem)
+}
 
 /**
  * Configuration of the `UIRouter`.
  */
 const routerConfigFn = (router: UIRouter, injector: Injector) => {
-  const transitions = router.transitionService;
-
-  const editing = injector.get<EditingService>(EditingService);
-
-  editingViewTransitionHooks(transitions, editing);
-  roleTransitionHooks(transitions);
+  setupTransitionHooks(router.transitionService, injector);
 };
 
 @NgModule({

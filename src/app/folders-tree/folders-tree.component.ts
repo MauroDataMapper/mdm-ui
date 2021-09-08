@@ -21,15 +21,16 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { FlatNode, getCatalogueItemDomainTypeIcon } from './flat-node';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService, SharedService } from '@mdm/services';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { catchError, takeUntil } from 'rxjs/operators';
-import { CatalogueItemDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { CatalogueItemDomainType, ContainerDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem, MdmTreeItemResource, MdmTreeItemResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemTransitionData } from '@mdm/services/broadcast.model';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -173,9 +174,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.broadcast
       .onTransitionedToCatalogueItem()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        // TODO
-      });
+      .subscribe(data => this.syncCurrentCatalogueItem(data));
   }
 
 
@@ -208,6 +207,45 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     fs.forEach(f => {
       this.favourites[f.id] = f;
     });
+  }
+
+  syncCurrentCatalogueItem(data: CatalogueItemTransitionData) {
+    if (!this.selectedNode) {
+      // Cancel operation - current node is not selected yet, so cannot compare
+      // This might happen if the UIRouter transitions are happening faster that this component binding is
+      // updating
+      return;
+    }
+
+    if (this.selectedNode.id === data.id) {
+      // Catalogue item that is in view now is already selected in the tree
+      return;
+    }
+
+    const options: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    }
+
+    this.resources.tree
+      .ancestors(ContainerDomainType.Folders, data.multiFacetDomainType, data.id, {}, options)
+      .pipe(
+        catchError(() => EMPTY),
+        map((response: MdmTreeItemResponse) => this.flattenAncestorTree(response.body))
+      )
+      .subscribe((ancestors: MdmTreeItem[]) => {
+        console.log(ancestors);
+      });
+  }
+
+  private flattenAncestorTree(node: MdmTreeItem): MdmTreeItem[] {
+    if (!node.children || node.children.length === 0) {
+      return [node];
+    }
+
+    // Ancestor tree will only contain one child per node at most
+    const child = node.children[0];
+    const current = this.flattenAncestorTree(child);
+    return [node].concat(current);
   }
 
   /** Get whether the node has children or not. Tree branch control. */

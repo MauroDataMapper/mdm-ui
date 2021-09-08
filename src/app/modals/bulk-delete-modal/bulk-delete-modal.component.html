@@ -41,9 +41,12 @@ SPDX-License-Identifier: Apache-2.0
                 <td>
                   <span>{{record.label}}</span>
                 </td>
-                <td>
-                  <small class="item-type" [class.item-type-imported]="record.imported === true" [class.item-type-extended]="record.extended === true">{{record.imported ? 'Imported':''}}{{record.extended ? 'Extended':''}} {{record.domainType}}</small>
-                </td>
+                <div *ngIf="record.imported">
+                  <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+                </div>
+                <div *ngIf="record.extended">
+                  <span class="badge badge-primary item-type-extended" title="Extended: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">Extended Data Class &nbsp;<i class="fas fa-info-circle"></i></span>
+                </div>
                 <td>
                     <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
                         <div class="text-center">

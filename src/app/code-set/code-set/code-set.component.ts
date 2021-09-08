@@ -31,13 +31,13 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   CodeSetDetail,
   CodeSetDetailResponse,
   ModelUpdatePayload,
+  MultiFacetAwareDomainType,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -89,10 +89,10 @@ export class CodeSetComponent
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private broadcast: BroadcastService
   ) {
     super();
   }
@@ -108,6 +108,11 @@ export class CodeSetComponent
     }
 
     this.parentId = this.uiRouterGlobals.params.id;
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.CodeSets
+    });
 
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);

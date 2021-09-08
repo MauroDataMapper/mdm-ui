@@ -217,6 +217,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadModelsTree(true));
 
+    this.broadcast
+      .onTransitionedToCatalogueItem()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => console.log(data));
+
     this.currentClassification = null;
     this.allClassifications = [];
   }

@@ -33,9 +33,10 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   ModelUpdatePayload,
+  MultiFacetAwareDomainType,
   ReferenceDataModelDetail,
   ReferenceDataModelDetailResponse,
   SecurableDomainType
@@ -89,7 +90,8 @@ export class ReferenceDataComponent
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService,
     private messageHandler: MessageHandlerService,
-    private title: Title
+    private title: Title,
+    private broadcast: BroadcastService
   ) {
   }
 
@@ -102,6 +104,11 @@ export class ReferenceDataComponent
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Reference Data Model');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.ReferenceDataModels
+    });
 
     this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);

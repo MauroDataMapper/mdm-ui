@@ -27,13 +27,15 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import {
+  BroadcastService,
   MessageHandlerService,
   SecurityHandlerService
   } from '@mdm/services';
 import {
   DataClass,
   DataClassDetail,
-  DataClassDetailResponse
+  DataClassDetailResponse,
+  MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -82,7 +84,8 @@ export class DataClassComponent
     private securityHandler: SecurityHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService
   ) {
     super();
   }
@@ -111,6 +114,11 @@ export class DataClassComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
     this.title.setTitle('Data Class');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.DataClasses
+    });
 
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {

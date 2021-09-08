@@ -30,6 +30,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { Subscription } from 'rxjs';
 import {
+  BroadcastService,
   MessageHandlerService,
   MessageService,
   SecurityHandlerService
@@ -38,6 +39,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,
+  MultiFacetAwareDomainType,
   TerminologyDetail,
   TerminologyDetailResponse
 } from '@maurodatamapper/mdm-resources';
@@ -85,7 +87,8 @@ export class TerminologyComponent
     private resources: MdmResourcesService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private broadcast: BroadcastService
   ) {
   }
 
@@ -104,6 +107,12 @@ export class TerminologyComponent
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.Terminologies
+    });
+
     this.resources.terminology
       .get(id)
       .subscribe((result: TerminologyDetailResponse) => {

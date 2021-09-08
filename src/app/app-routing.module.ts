@@ -55,7 +55,7 @@ import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { HookMatchCriteria, HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import { HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
@@ -65,8 +65,7 @@ import { VersionedFolderComponent } from './versioned-folder/versioned-folder/ve
 import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/merge-diff-container.component';
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
-import { BroadcastService, SecurityHandlerService, SharedService } from './services';
-import { MultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
+import { SecurityHandlerService, SharedService } from './services';
 
 /**
  * Collection of all page state routes.
@@ -132,9 +131,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: FolderComponent,
       params: { tabView: { value: null, squash: true, dynamic: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.Folders
+        allowAnonymous: true
       }
     },
     {
@@ -196,9 +193,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataModelComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataModels
+        allowAnonymous: true
       }
     },
     {
@@ -212,9 +207,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ReferenceDataComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.ReferenceDataModels
+        allowAnonymous: true
       }
     },
     {
@@ -280,9 +273,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.Terminologies
+        allowAnonymous: true
       }
     },
     {
@@ -291,9 +282,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataClassComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataClasses
+        allowAnonymous: true
       }
     },
     {
@@ -303,9 +292,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: { tabView: { dynamic: true, value: null, squash: true } },
       component: DataElementComponent,
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.DataElements
+        allowAnonymous: true
       }
     },
     {
@@ -339,9 +326,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: {
         tabView: { dynamic: true, value: null, squash: true },
         data: {
-          allowAnonymous: true,
-          isCatalogueItem: true,
-          multiFacetAwareDomainType: MultiFacetAwareDomainType.DataTypes
+          allowAnonymous: true
         }
       }
     },
@@ -365,9 +350,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.Terms
+        allowAnonymous: true
       }
     },
     {
@@ -409,9 +392,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.CodeSets
+        allowAnonymous: true
       }
     },
     {
@@ -435,9 +416,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: VersionedFolderComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true,
-        isCatalogueItem: true,
-        multiFacetAwareDomainType: MultiFacetAwareDomainType.VersionedFolders
+        allowAnonymous: true
       }
     }
   ]
@@ -454,7 +433,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 const setupTransitionHooks = (transitions: TransitionService, injector: Injector) => {
 
   const editing = injector.get(EditingService);
-  const broadcast = injector.get(BroadcastService);
 
   /**
    * Check each state transition where the "from" view state is marked as editable.
@@ -489,26 +467,12 @@ const setupTransitionHooks = (transitions: TransitionService, injector: Injector
     return securityHandler.isLoggedIn();
   };
 
-  const hasTransitionedToCatalogueItem: HookMatchCriteria = {
-    to: state => state.data?.isCatalogueItem && state.data?.multiFacetAwareDomainType
-  }
-
-  const transitionedToCatalogueItem = (transition: Transition): HookResult => {
-    broadcast.transitionedToCatalogueItem({
-      multiFacetDomainType: transition.$to().data.multiFacetAwareDomainType,
-      id: transition.params().id
-    });
-  }
-
   // Transition hooks for editing
   transitions.onBefore(canLeaveStateCriteria, canLeaveStateAction);
   transitions.onEnter({}, onEnteringViewAction);
 
   // Transition hooks for access checks
   transitions.onStart({}, canAccessRoute);
-
-  // Transition hooks for when catalogue items come into view
-  transitions.onSuccess(hasTransitionedToCatalogueItem, transitionedToCatalogueItem)
 }
 
 /**

@@ -170,11 +170,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       .onFavouritesChanged()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadFavourites());
-
-    this.broadcast
-      .onTransitionedToCatalogueItem()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => this.syncCurrentCatalogueItem(data));
   }
 
 
@@ -210,31 +205,33 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   syncCurrentCatalogueItem(data: CatalogueItemTransitionData) {
-    if (!this.selectedNode) {
-      // Cancel operation - current node is not selected yet, so cannot compare
-      // This might happen if the UIRouter transitions are happening faster that this component binding is
-      // updating
-      return;
-    }
+    console.log(data);
 
-    if (this.selectedNode.id === data.id) {
-      // Catalogue item that is in view now is already selected in the tree
-      return;
-    }
+    // if (!this.selectedNode) {
+    //   // Cancel operation - current node is not selected yet, so cannot compare
+    //   // This might happen if the UIRouter transitions are happening faster that this component binding is
+    //   // updating
+    //   return;
+    // }
 
-    const options: MdmHttpHandlerOptions = {
-      handleGetErrors: false
-    }
+    // if (this.selectedNode.id === data.id) {
+    //   // Catalogue item that is in view now is already selected in the tree
+    //   return;
+    // }
 
-    this.resources.tree
-      .ancestors(ContainerDomainType.Folders, data.multiFacetDomainType, data.id, {}, options)
-      .pipe(
-        catchError(() => EMPTY),
-        map((response: MdmTreeItemResponse) => this.flattenAncestorTree(response.body))
-      )
-      .subscribe((ancestors: MdmTreeItem[]) => {
-        console.log(ancestors);
-      });
+    // const options: MdmHttpHandlerOptions = {
+    //   handleGetErrors: false
+    // }
+
+    // this.resources.tree
+    //   .ancestors(ContainerDomainType.Folders, data.multiFacetDomainType, data.id, {}, options)
+    //   .pipe(
+    //     catchError(() => EMPTY),
+    //     map((response: MdmTreeItemResponse) => this.flattenAncestorTree(response.body))
+    //   )
+    //   .subscribe((ancestors: MdmTreeItem[]) => {
+    //     console.log(ancestors);
+    //   });
   }
 
   private flattenAncestorTree(node: MdmTreeItem): MdmTreeItem[] {

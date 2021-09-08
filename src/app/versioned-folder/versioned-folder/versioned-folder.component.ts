@@ -17,15 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { MultiFacetAwareDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -68,9 +67,9 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) {
+    private editingService: EditingService,
+    private broadcast: BroadcastService) {
     super();
   }
 
@@ -93,6 +92,11 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Versioned Folder');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.VersionedFolders
+    });
 
     this.loadDetails(this.parentId);
 

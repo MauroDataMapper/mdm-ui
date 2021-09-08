@@ -32,11 +32,12 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   DataModelDetail,
   DataModelDetailResponse,
   ModelUpdatePayload,
+  MultiFacetAwareDomainType,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
@@ -100,7 +101,8 @@ export class DataModelComponent
     private securityHandler: SecurityHandlerService,
     private title: Title,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private broadcast: BroadcastService
   ) {
     super();
   }
@@ -123,6 +125,11 @@ export class DataModelComponent
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.DataModels
+    });
 
     this.dataModelDetails(this.parentId);
 

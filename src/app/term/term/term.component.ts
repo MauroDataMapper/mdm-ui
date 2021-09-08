@@ -31,14 +31,15 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   Term,
   CatalogueItemDomainType,
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
-  TerminologyDetailResponse
+  TerminologyDetailResponse,
+  MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -85,7 +86,8 @@ export class TermComponent
     private changeRef: ChangeDetectorRef,
     private title: Title,
     private editingService: EditingService,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private broadcast: BroadcastService
   ) {
   }
 
@@ -100,6 +102,11 @@ export class TermComponent
 
     this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.Terms
+    });
 
     this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
     this.tabSelected(this.activeTab);

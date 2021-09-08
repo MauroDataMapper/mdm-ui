@@ -29,11 +29,11 @@ import {
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   FolderDetail,
   FolderDetailResponse,
+  MultiFacetAwareDomainType,
   PermissionsResponse,
   SecurableDomainType
 } from '@maurodatamapper/mdm-resources';
@@ -83,7 +83,6 @@ export class FolderComponent
     private securityHandler: SecurityHandlerService,
     private broadcast: BroadcastService,
     private title: Title,
-    private dialog: MatDialog,
     private  editingService: EditingService,
     private messageHandler: MessageHandlerService
   ) {
@@ -103,6 +102,12 @@ export class FolderComponent
       this.editMode = true;
     }
     this.title.setTitle('Folder');
+
+    this.broadcast.transitionedToCatalogueItem({
+      id: this.uiRouterGlobals.params.id,
+      multiFacetDomainType: MultiFacetAwareDomainType.Folders
+    });
+
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
     this.folderDetails(this.uiRouterGlobals.params.id);

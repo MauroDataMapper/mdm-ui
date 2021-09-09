@@ -18,12 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, MdmTreeItem, MdmTreeItemListResponse, Modelable, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ClassifierDetailResponse, ContainerDomainType, FolderDetailResponse, MdmTreeItem, MdmTreeItemListResponse, MdmTreeItemResponse, Modelable, MultiFacetAwareDomainType, SubscribedCatalogue, SubscribedCatalogueIndexResponse, Uuid, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FlatNode } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NewFolderModalConfiguration, NewFolderModalResponse } from '@mdm/modals/new-folder-modal/new-folder-modal.model';
-import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
 import { EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
@@ -313,6 +313,21 @@ export class ModelTreeService implements OnDestroy {
       );
   }
 
+  getAncestors(domainType: MultiFacetAwareDomainType, id: Uuid): Observable<MdmTreeItem[]> {
+    // TODO: get ancestors for (versioned) folders
+
+    const options: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    };
+
+    return this.resources.tree
+      .ancestors(ContainerDomainType.Folders, domainType, id, {}, options)
+      .pipe(
+        catchError(() => EMPTY),
+        map((response: MdmTreeItemResponse) => this.flattenAncestorTree(response.body))
+      );
+  }
+
   private deleteCatalogueItem(item: Modelable, permanent: boolean): Observable<void> {
     const baseTypes = this.elementTypes.getBaseTypes();
     const type = baseTypes[item.domainType];
@@ -329,5 +344,16 @@ export class ModelTreeService implements OnDestroy {
           return EMPTY;
         })
       );
+  }
+
+  private flattenAncestorTree(node: MdmTreeItem): MdmTreeItem[] {
+    if (!node.children || node.children.length === 0) {
+      return [node];
+    }
+
+    // Ancestor tree will only contain one child per node at most
+    const child = node.children[0];
+    const current = this.flattenAncestorTree(child);
+    return [node].concat(current);
   }
 }

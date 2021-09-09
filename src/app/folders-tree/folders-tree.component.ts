@@ -53,7 +53,7 @@ export class NodeConfirmClickEvent {
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
-  @Input() node: any;
+  @Input() node: MdmTreeItem;
   @Input() searchCriteria: string;
   @Input() defaultCheckedMap: any = {};
 
@@ -205,44 +205,15 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   syncCurrentCatalogueItem(data: CatalogueItemTransitionData) {
-    console.log(data);
-
-    // if (!this.selectedNode) {
-    //   // Cancel operation - current node is not selected yet, so cannot compare
-    //   // This might happen if the UIRouter transitions are happening faster that this component binding is
-    //   // updating
-    //   return;
-    // }
-
-    // if (this.selectedNode.id === data.id) {
-    //   // Catalogue item that is in view now is already selected in the tree
-    //   return;
-    // }
-
-    // const options: MdmHttpHandlerOptions = {
-    //   handleGetErrors: false
-    // }
-
-    // this.resources.tree
-    //   .ancestors(ContainerDomainType.Folders, data.multiFacetDomainType, data.id, {}, options)
-    //   .pipe(
-    //     catchError(() => EMPTY),
-    //     map((response: MdmTreeItemResponse) => this.flattenAncestorTree(response.body))
-    //   )
-    //   .subscribe((ancestors: MdmTreeItem[]) => {
-    //     console.log(ancestors);
-    //   });
-  }
-
-  private flattenAncestorTree(node: MdmTreeItem): MdmTreeItem[] {
-    if (!node.children || node.children.length === 0) {
-      return [node];
+    //console.log(data);
+    if (this.selectedNode && this.selectedNode.id === data.id) {
+      // Catalogue item that is in view now is already selected in the tree
+      return;
     }
 
-    // Ancestor tree will only contain one child per node at most
-    const child = node.children[0];
-    const current = this.flattenAncestorTree(child);
-    return [node].concat(current);
+    this.modelTree
+      .getAncestors(data.multiFacetDomainType, data.id)
+      .subscribe(ancestors => this.expandToTreeItem(ancestors));
   }
 
   /** Get whether the node has children or not. Tree branch control. */
@@ -319,6 +290,36 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   focusNode(fnode: FlatNode) {
     this.selectedNode = fnode; // Control highlighting selected tree node
     this.nodeDbClickEvent.emit(fnode.node);
+  }
+
+  expandToTreeItem(expandPath: MdmTreeItem[]) {
+    console.log(expandPath);
+    expandPath.forEach(async treeItem => {
+      const match = this.treeControl.dataNodes.find(dataNode => dataNode.id === treeItem.id);
+      if (!match) {
+        return
+      }
+
+      if (this.hasChild(-1, match) && !match.children) {
+        match.children = await this.expand(treeItem);
+
+        // Manually construct the FlatNodes and insert into the tree's dataNodes array
+        const newNodes = match.children?.map((c: any) => {
+          return new FlatNode(
+            c,
+            this.treeControl.getLevel(match) + 1,
+            this.securityHandler.elementAccess(c));
+        });
+
+        this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(match) + 1, 0, ...(newNodes || []));
+      }
+
+      if (!this.treeControl.isExpanded(match)) {
+        this.treeControl.expand(match);
+      }
+
+      this.selectedNode = match;
+    });
   }
 
   async expand(node: MdmTreeItem) {

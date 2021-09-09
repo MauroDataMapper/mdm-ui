@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
@@ -37,7 +37,7 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
+import { FoldersTreeComponent, NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
   CatalogueItemDomainType,
@@ -59,7 +59,9 @@ import {
   templateUrl: './models.component.html',
   styleUrls: ['./models.component.scss']
 })
-export class ModelsComponent implements OnInit, OnDestroy {
+export class ModelsComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('foldersTree') foldersTree: FoldersTreeComponent;
+
   formData: any = {};
   activeTab = 0;
   allModels: MdmTreeItem = null;
@@ -217,13 +219,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadModelsTree(true));
 
+    this.currentClassification = null;
+    this.allClassifications = [];
+  }
+
+  ngAfterViewInit(): void {
     this.broadcast
       .onTransitionedToCatalogueItem()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => console.log(data));
-
-    this.currentClassification = null;
-    this.allClassifications = [];
+      .subscribe(data => this.foldersTree?.syncCurrentCatalogueItem(data));
   }
 
   ngOnDestroy() {

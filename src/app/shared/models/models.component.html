@@ -129,17 +129,19 @@ SPDX-License-Identifier: Apache-2.0
 
 
                     <div *ngIf="filteredModels && !reloading">
-                        <mdm-folders-tree [inSearchMode]="inSearchMode"
-                                        [rememberExpandedStates]="true"
-                                        [node]="filteredModels"
-                                        [searchCriteria]="searchText"
-                                        (loadModelsToCompareEvent)="loadModelsToCompare($event)"
-                                        [enableDragAndDrop]="true"
-                                        [enableContextMenu]="true"
-                                        (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
-                                        (nodeAdded)="onNodeAdded()">
-                            </mdm-folders-tree>
+                        <mdm-folders-tree
+                          #foldersTree
+                          [inSearchMode]="inSearchMode"
+                          [rememberExpandedStates]="true"
+                          [node]="filteredModels"
+                          [searchCriteria]="searchText"
+                          (loadModelsToCompareEvent)="loadModelsToCompare($event)"
+                          [enableDragAndDrop]="true"
+                          [enableContextMenu]="true"
+                          (nodeDbClickEvent)="onNodeDbClick($event)"
+                          (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
+                          (nodeAdded)="onNodeAdded()">
+                        </mdm-folders-tree>
                     </div>
                     <div class="loading-spinner" *ngIf="reloading">
                         <div>

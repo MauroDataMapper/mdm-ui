@@ -48,7 +48,7 @@ export class DataTypeStep1Component implements OnInit {
       return;
     }
 
-    if (this.model.createType === 'copy' && !this.model.copyFromDataModel.length) {
+    if (['copy', 'import'].includes(this.model.createType) && !this.model.copyFromDataModel.length) {
       this.step.invalid = true;
       return;
     }

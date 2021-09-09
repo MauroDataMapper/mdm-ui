@@ -17,6 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
+  <div style="clear: both" *ngIf="!dataClass">
+    <mat-progress-bar
+      value="50"
+      bufferValue="75"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
   <mdm-data-class-details *ngIf="dataClass" [dataClass]="dataClass"></mdm-data-class-details>
 </div>
 <div *ngIf="showSearch">
@@ -64,6 +72,7 @@ SPDX-License-Identifier: Apache-2.0
     #tab
     [selectedIndex]="activeTab"
     (selectedIndexChange)="tabSelected($event)"
+    *ngIf="dataClass"
   >
     <mat-tab label="Description">
       <ng-template matTabContent>

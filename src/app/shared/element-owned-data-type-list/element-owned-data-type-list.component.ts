@@ -48,7 +48,7 @@ import { GridService } from '@mdm/services/grid.service';
 })
 export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
-  @Input() type: any;
+  @Input() type: 'static' | 'dynamic';
   @Input() isEditable: any;
 
   @Input() childOwnedDataTypes: any;
@@ -219,18 +219,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = [];
-    this.records.forEach(record => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          label: record.label,
-          dataModel: record.model,
-          domainType: 'DataType',
-          type: record.domainType
-        });
-      }
-    });
+    const dataElementIdLst = this.records.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },

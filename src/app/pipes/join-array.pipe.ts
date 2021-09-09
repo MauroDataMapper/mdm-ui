@@ -16,23 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import {Pipe, PipeTransform} from '@angular/core';
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
-import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+@Pipe({name: 'joinArray'})
+export class JoinArrayPipe implements PipeTransform {
+  transform(values: any[], delimiter = '', propertyName?: string) {
+    if (!values || values.length === 0) {
+      return '';
+    }
 
-@NgModule({
-  declarations: [
-    HighlighterPipe,
-    JoinArrayPipe
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    HighlighterPipe,
-    JoinArrayPipe
-  ]
-})
-export class PipesModule { }
+    if (propertyName) {
+      return values.map(v => v[propertyName]).join(delimiter);
+    }
+
+    return values.join(delimiter);
+  }
+
+}

@@ -539,6 +539,46 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     });
   }
 
+  handleExtendDataClass(fnode: FlatNode) {
+    if (fnode.domainType !== CatalogueItemDomainType.DataModel && fnode.domainType !== CatalogueItemDomainType.DataClass) {
+      throw new Error('Context item is not data model or data class.');
+    }
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
+  handleImportDataClass(fnode: FlatNode) {
+    if (fnode.domainType !== CatalogueItemDomainType.DataModel && fnode.domainType !== CatalogueItemDomainType.DataClass) {
+      throw new Error('Context item is not data model or data class.');
+    }
+    this.stateHandler.Go('NewDataClass', {
+      grandParentDataClassId: fnode.domainType === CatalogueItemDomainType.DataClass ? fnode.node.parentId : null,
+      parentDataModelId: fnode.domainType === CatalogueItemDomainType.DataModel ? fnode.id : fnode.node.modelId,
+      parentDataClassId: fnode.domainType === CatalogueItemDomainType.DataModel ? null : fnode.id
+    });
+  }
+
+  handleImportDataType(fnode: FlatNode) {
+    if (fnode.domainType !== CatalogueItemDomainType.DataModel) {
+      throw new Error('Context item is not data model.');
+    }
+    this.stateHandler.Go('NewDataType', { parentDataModelId: fnode.id });
+  }
+
+  handleImportDataElement(fnode: FlatNode) {
+    if (fnode.domainType !== CatalogueItemDomainType.DataClass) {
+      throw new Error('Context item is not data class.');
+    }
+    this.stateHandler.Go('NewDataElement', {
+      grandParentDataClassId: fnode.node.parentId,
+      parentDataModelId: fnode.node.modelId,
+      parentDataClassId: fnode.id
+    });
+  }
+
   openWindow(fnode: FlatNode) {
     const parameters: any = { id: fnode.id };
 

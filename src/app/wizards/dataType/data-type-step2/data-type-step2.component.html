@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 								(validationStatusEvent)="validationStatusEmitter($event)"></mdm-data-type-inline>
 	</form>
 </div>
-<div *ngIf="model.createType == 'copy'" class="mb-2">
+<div *ngIf="['copy', 'import'].includes(model.createType)" class="mb-2">
 	<h4 class="marginless">Please Select Data Type(s):</h4>
 	<div class="heading-container">
 		Data Types
@@ -101,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0
 	</div>
 </div>
 
-<div *ngIf="model.createType == 'copy'" class="mb-2">
+<div *ngIf="['copy', 'import'].includes(model.createType)" class="mb-2">
 	<div class="heading-container">
 		Summary of Selected Data Types
 		<span class="mdm--badge mdm--element-count">{{totalSelectedItemsCount}}</span>

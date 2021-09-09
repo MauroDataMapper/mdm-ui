@@ -38,6 +38,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -50,7 +51,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   multiplicityError: any;
   selectedDataClassesStr = '';
   defaultCheckedMap: any;
@@ -244,7 +248,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   validate = (newValue?) => {
     let invalid = false;
     this.step.invalid = false;
-    if (newValue && this.model.createType === 'new') {
+    if (newValue && ['copy', 'import'].includes(this.model.createType)) {
       // check Min/Max
       this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);
 
@@ -259,7 +263,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       }
       invalid = this.myForm.invalid;
     }
-    if (this.model.createType === 'copy') {
+    if (['copy', 'import'].includes(this.model.createType)) {
       if (this.model.selectedDataElements.length === 0) {
         this.step.invalid = true;
         return;
@@ -334,7 +338,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.model, dc.dataClass, dc.id, null).toPromise();
+        switch (this.model.createType) {
+          case 'copy': return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.model, dc.dataClass, dc.id, null).toPromise();
+          case 'import': return this.resources.dataClass.importDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.model, dc.dataClass, dc.id, null).toPromise();
+        }
       }).catch(error => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);

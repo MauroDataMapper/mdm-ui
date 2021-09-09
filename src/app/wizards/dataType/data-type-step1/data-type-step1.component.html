@@ -19,17 +19,16 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="model" class="mb-2">
 	<span>How do you want to add a new Data Type(s) to </span>
 	<mdm-element-link [parentDataModel]="{id:model.parent}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
-	<mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('new')">
-		<mat-radio-button [checked]="model.createType === 'new'" value="new">Create a New Data Type</mat-radio-button>
-	</mat-radio-group>
-	<mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('copy')">
-		<mat-radio-button [checked]="model.createType === 'copy'" value="copy">Copy Data Type(s) from...</mat-radio-button>
+	<mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">
+		<mat-radio-button value="new">Create a New Data Type</mat-radio-button>
+		<mat-radio-button value="copy">Copy Data Type(s) from...</mat-radio-button>
+    <mat-radio-button value="import">Use Data Type(s) from...</mat-radio-button>
 	</mat-radio-group>
 
 	<mdm-model-selector-tree [onSelect]="onSelect"
                             ngDefaultControl
                             [placeholder]="'Select Data Model...'"
-                            [processing]="model.createType != 'copy'"
+                            [processing]="!['copy', 'import'].includes(model.createType)"
                             [doNotShowDataClasses]="true"
                             [ngModel]="model.copyFromDataModel"
                             [treeSearchDomainType]="'DataModel'"

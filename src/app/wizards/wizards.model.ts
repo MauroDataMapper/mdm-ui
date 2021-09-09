@@ -27,3 +27,5 @@ export interface WizardStep<T> {
   compRef?: ComponentRef<any>;
   active?: boolean;
 }
+
+export type CreateType = 'new' | 'copy' | 'import' | 'extend';

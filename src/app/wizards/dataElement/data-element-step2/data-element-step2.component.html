@@ -114,8 +114,8 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event"></mdm-element-classifications>
         </form>
     </div>
-    <div *ngIf="model.createType == 'copy'" class="mb-3">
-        <h4 class="mt-4">Select the Data Element(s) that you'd like to copy:</h4>
+    <div *ngIf="['copy', 'import'].includes(model.createType)" class="mb-3">
+        <h4 class="mt-4">Select the Data Element(s) that you'd like to {{model.createType}}:</h4>
         <div class="heading-container">
             <h4 class="mb-1 mt-2">
               Data Elements
@@ -191,7 +191,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 
-    <div *ngIf="model.createType == 'copy'" class="mt-1">
+    <div *ngIf="['copy', 'import'].includes(model.createType)" class="mt-1">
         <div class="heading-container">
           <h4 class="marginless">
             <span>Summary of Selected Data Elements</span>

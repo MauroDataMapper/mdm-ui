@@ -18,6 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <div class="full-width mb-1 mdm--shadow-block">
+  <div style="clear: both" *ngIf="!terminology">
+    <mat-progress-bar
+      value="50"
+      bufferValue="75"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
   <div class="panel">
     <mdm-terminology-details
       *ngIf="terminology"
@@ -69,6 +77,7 @@ SPDX-License-Identifier: Apache-2.0
     #tab
     [selectedIndex]="activeTab"
     (selectedIndexChange)="tabSelected($event)"
+    *ngIf="terminology"
   >
     <mat-tab label="Description">
       <ng-template matTabContent>

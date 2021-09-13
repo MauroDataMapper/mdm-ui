@@ -75,9 +75,11 @@ export class TerminologyComponent
   showDelete = false;
   showEditDescription = false;
   access: Access;
-  tabs = new TabCollection(['description', 'terms', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection(['description', 'terms', 'relationship-types', 'rules', 'annotations', 'history']);
   isLoadingTerms = true;
   termsItemCount = 0;
+  isLoadingRelationshipTypes = true;
+  relationshipTypesItemCount = 0;
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -218,5 +220,10 @@ export class TerminologyComponent
   termsCountEmitter($event) {
     this.isLoadingTerms = false;
     this.termsItemCount = $event;
+  }
+
+  relationshipTypesCountEmitter($event) {
+    this.isLoadingRelationshipTypes = false;
+    this.relationshipTypesItemCount = $event;
   }
 }

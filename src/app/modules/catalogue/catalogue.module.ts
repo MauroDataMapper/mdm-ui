@@ -189,6 +189,7 @@ import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-pro
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { TermRelationshipListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
 
 @NgModule({
   declarations: [
@@ -279,6 +280,7 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     SearchComponent,
     TerminologyComponent,
     TermListComponent,
+    TermRelationshipListComponent,
     CreateTermDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
@@ -306,6 +308,7 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     TermComponent,
     TermDetailsComponent,
     TermRelationshipsComponent,
+    TermRelationshipListComponent,
     ByteArrayToBase64Pipe,
     SettingsComponent,
     LinkSuggestionComponent,

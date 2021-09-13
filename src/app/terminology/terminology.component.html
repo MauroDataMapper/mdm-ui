@@ -95,6 +95,34 @@ SPDX-License-Identifier: Apache-2.0
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
+        Terms
+        <span *ngIf="isLoadingTerms" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ termsItemCount }})
+      </ng-template>
+
+      <div class="full-width">
+        <mdm-term-list
+          pageSize="10"
+          [terminology]="terminology"
+          [canEdit]="showEdit"
+          [canDelete]="showDelete"
+          (totalCount)="termsCountEmitter($event)"
+          (selectedTerm)="onTermSelect($event)"></mdm-term-list>
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
         Rules
         <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
           <ngx-skeleton-loader

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  AfterViewInit,
+  AfterViewChecked,
   OnDestroy,
   Component,
   OnInit,
@@ -52,7 +52,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./terminology.component.sass']
 })
 export class TerminologyComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   terminology: TerminologyDetail;
@@ -75,7 +75,9 @@ export class TerminologyComponent
   showDelete = false;
   showEditDescription = false;
   access: Access;
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection(['description', 'terms', 'rules', 'annotations', 'history']);
+  isLoadingTerms = true;
+  termsItemCount = 0;
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -125,8 +127,10 @@ export class TerminologyComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewChecked(): void {
+    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+      this.editingService.setTabGroupClickEvent(this.tabGroup);
+    }
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
@@ -209,5 +213,10 @@ export class TerminologyComponent
   historyCountEmitter($event) {
     this.isLoadingHistory = false;
     this.historyItemCount = $event;
+  }
+
+  termsCountEmitter($event) {
+    this.isLoadingTerms = false;
+    this.termsItemCount = $event;
   }
 }

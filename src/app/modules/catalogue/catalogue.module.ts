@@ -105,6 +105,8 @@ import { HomeComponent } from '@mdm/home/home.component';
 import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
+import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
+import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
@@ -276,6 +278,8 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
+    TermListComponent,
+    CreateTermDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
@@ -458,6 +462,8 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
+    TermListComponent,
+    CreateTermDialogComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,

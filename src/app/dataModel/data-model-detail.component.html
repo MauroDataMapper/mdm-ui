@@ -219,6 +219,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <h4
           class="inline-block marginless"
+          data-cy="catalogue-item-label"
           [ngClass]="{ deletedDataModelTitle: dataModel?.deleted }"
         >
           <span
@@ -274,9 +275,10 @@ SPDX-License-Identifier: Apache-2.0
         <mdm-element-status [result]="dataModel"></mdm-element-status>
       </div>
 
-      <div class="detail-icons">
+      <div class="detail-icons" data-cy="model-properties">
         <div
           class="text-muted"
+          data-cy="item-type"
           *ngIf="
             dataModel?.type === 'Data Asset' ||
             dataModel?.type === 'Data Standard'
@@ -297,7 +299,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </small>
         </div>
-        <div class="text-muted" *ngIf="dataModel?.readableByEveryone">
+        <div class="text-muted" data-cy="availability" *ngIf="dataModel?.readableByEveryone">
           <small>
             <i
               class="fas fa-globe-europe globe"
@@ -307,7 +309,7 @@ SPDX-License-Identifier: Apache-2.0
             <span><strong>Availability: </strong>Publicly Readable</span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="dataModel?.readableByAuthenticatedUsers">
+        <div class="text-muted" data-cy="availability" *ngIf="dataModel?.readableByAuthenticatedUsers">
           <small>
             <i
               class="fas fa-users globe"
@@ -317,7 +319,7 @@ SPDX-License-Identifier: Apache-2.0
             <span><strong>Availability: </strong>Authenticated users only</span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="dataModel?.authority">
+        <div class="text-muted" data-cy="authority" *ngIf="dataModel?.authority">
           <small>
             <i class="far fa-building" matTooltip="Authority"></i>
             <span
@@ -326,7 +328,7 @@ SPDX-License-Identifier: Apache-2.0
             >
           </small>
         </div>
-        <div class="text-muted" *ngIf="dataModel?.documentationVersion">
+        <div class="text-muted" data-cy="documentation-version" *ngIf="dataModel?.documentationVersion">
           <small>
             <i matTooltip="Documentation Version" class="fas fa-copy"></i>
             <span
@@ -337,6 +339,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div
           class="text-muted"
+          data-cy="model-version"
           *ngIf="dataModel?.modelVersion && dataModel?.finalised"
         >
           <small>
@@ -348,7 +351,7 @@ SPDX-License-Identifier: Apache-2.0
             </span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="dataModel">
+        <div class="text-muted" data-cy="branch" *ngIf="dataModel">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>

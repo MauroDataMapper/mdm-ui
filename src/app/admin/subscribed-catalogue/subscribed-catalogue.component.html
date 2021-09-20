@@ -41,9 +41,9 @@ SPDX-License-Identifier: Apache-2.0
             {{errors.url}}
         </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline" [hintLabel]="isCreating ? 'Must be provided when creating a new subscribed catalogue' : 'Enter API key again to modify (optional)'">
+    <mat-form-field appearance="outline" hintLabel="An API key is required to view non-public models in the subscribed catalogue">
         <mat-label>API Key</mat-label>
-        <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" [required]="isCreating" />
+        <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" />
         <mat-error *ngIf="errors && errors.apiKey">
             {{errors.apiKey}}
         </mat-error>

@@ -115,7 +115,6 @@
     "license-check-and-add": "3.0.4",
     "prettier": "2.1.2",
     "prettier-eslint": "11.0.0",
-    "protractor": "7.0.0",
     "save-svg-as-png": "1.4.17",
     "sonarqube-scanner": "^2.8.0",
     "ts-node": "9.0.0",

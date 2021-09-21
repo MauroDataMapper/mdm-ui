@@ -132,11 +132,6 @@ export class SubscribedCatalogueComponent implements OnInit {
       isValid = false;
     }
 
-    if (this.isCreating && (this.catalogue.apiKey?.trim()?.length ?? 0) === 0) {
-      this.errors.apiKey = 'API key cannot be empty when creating a subscribed catalogue';
-      isValid = false;
-    }
-
     return isValid;
   }
 

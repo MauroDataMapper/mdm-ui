@@ -35,10 +35,8 @@ SPDX-License-Identifier: Apache-2.0
     <body>
         <p>Redirecting back to Mauro Data Mapper...</p>
         <script lang="javascript">
-          const baseUrl = `${window.location.protocol}//${window.location.host}`;
-          const currentUrl = `#/open-id-connect/authorize${window.location.search}`;
-          const redirectUrl = new URL(currentUrl, baseUrl);
-          window.open(redirectUrl.toString(), '_self');
+          const redirectUrl = window.location.href.replace('/redirects/open-id-connect-redirect.html', '/#/open-id-connect/authorize');
+          window.open(redirectUrl, '_self');
         </script>
     </body>
 </html>

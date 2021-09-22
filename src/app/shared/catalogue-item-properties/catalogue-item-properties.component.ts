@@ -56,6 +56,9 @@ export class CatalogueItemPropertiesComponent implements OnChanges {
       case CatalogueItemDomainType.CodeSet:
         this.itemType = 'Code Set';
         break;
+      case CatalogueItemDomainType.ReferenceDataModel:
+        this.itemType = 'Reference Data Model';
+        break;
       default:
         this.itemType = this.item.domainType;
         break;

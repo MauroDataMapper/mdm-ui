@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
         <button
           type="button"
           mat-icon-button
+          data-cy="user-actions-menu"
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
@@ -30,10 +31,15 @@ SPDX-License-Identifier: Apache-2.0
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
-        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <mat-menu
+          #userActions="matMenu"
+          class="mdm--mat-menu--actions"
+          data-cy="top-level-user-actions"
+        >
           <button
             mat-menu-item
             type="button"
+            data-cy="finalise"
             *ngIf="access.showFinalise"
             class="has-text-green"
             (click)="finalise()"
@@ -47,6 +53,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="edit-label"
             *ngIf="showEdit || access.canEditDescription"
             (click)="enableEdit()"
           >
@@ -55,6 +62,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="compare"
             [matMenuTriggerFor]="compareMenu"
             *ngIf="isAdminUser"
           >
@@ -64,6 +72,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="create-new-version"
             *ngIf="access.showNewVersion"
             (click)="newVersion()"
           >
@@ -77,6 +86,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="restore"
             class="has-text-green"
             *ngIf="refDataModel.deleted && isAdminUser"
             (click)="restore()"
@@ -86,6 +96,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="delete-options-menu"
             [matMenuTriggerFor]="userActionsDelete"
             *ngIf="access.showDelete"
             class="warning"
@@ -96,9 +107,10 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <mat-menu #userActionsDelete="matMenu">
+        <mat-menu #userActionsDelete="matMenu" data-cy="delete-actions">
           <button
             mat-menu-item
+            data-cy="soft-delete"
             (click)="askForSoftDelete()"
             *ngIf="access.showSoftDelete && !refDataModel.deleted"
           >
@@ -106,6 +118,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="permanent-delete"
             (click)="askForPermanentDelete()"
             *ngIf="access.showPermanentDelete"
           >
@@ -114,7 +127,11 @@ SPDX-License-Identifier: Apache-2.0
         </mat-menu>
 
         <mat-menu #compareMenu="matMenu">
-          <button mat-menu-item (click)="compare()" *ngIf="!refDataModel.deleted">
+          <button
+            mat-menu-item
+            (click)="compare()"
+            *ngIf="!refDataModel.deleted"
+          >
             Compare to another Data Model
           </button>
           <div
@@ -142,6 +159,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="user-group-access"
             color="primary"
             type="button"
             class="paddingless"
@@ -159,6 +177,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="export-menu"
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
@@ -201,6 +220,7 @@ SPDX-License-Identifier: Apache-2.0
           </div>
           <h4
             class="inline-block marginless"
+            data-cy="catalogue-item-label"
             [ngClass]="{ deletedDataModelTitle: refDataModel.deleted }"
           >
             <span class="dataModelTypeIcon">
@@ -220,25 +240,25 @@ SPDX-License-Identifier: Apache-2.0
             >
             </mdm-inline-text-edit>
             <sup
-            *ngIf="refDataModel?.readableByEveryone"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-globe-europe globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Publicly Available"
-            ></i
-          ></sup>
-          <sup
-            *ngIf="refDataModel?.readableByAuthenticatedUsers"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-users globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Authenticated users only"
-            ></i
-          ></sup>
+              *ngIf="refDataModel?.readableByEveryone"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-globe-europe globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Publicly Available"
+              ></i
+            ></sup>
+            <sup
+              *ngIf="refDataModel?.readableByAuthenticatedUsers"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-users globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Authenticated users only"
+              ></i
+            ></sup>
           </h4>
           <span class="inline-block" *ngIf="refDataModel.deleted">
             <small class="warning"> | Deleted</small>
@@ -253,73 +273,8 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <div class="detail-icons">
-        <div
-          class="text-muted"
-          *ngIf="refDataModel.domainType == 'ReferenceDataModel'"
-        >
-          <small>
-            <i class="fas fa-cube" matTooltip="Item type"></i>
-            <span
-              ><strong>Item type: </strong
-              ><span class="item-type">Reference Data Model</span></span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="refDataModel?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="refDataModel?.readableByAuthenticatedUsers">
-          <small>
-            <i
-              class="fas fa-users globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="refDataModel.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong>{{ refDataModel.authority['label'] }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="refDataModel">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ refDataModel.documentationVersion }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="refDataModel.modelVersion">
-          <small>
-            <i matTooltip="Model Version" class="fas fa-file-alt"></i>
-            <span><strong>Version: </strong>{{ refDataModel.modelVersion }}</span>
-          </small>
-        </div>
-
-        <div class="text-muted" *ngIf="refDataModel">
-          <small>
-            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-            <span><strong>Branch: </strong></span>
-            <span>
-              <mdm-branch-selector [catalogueItem]="refDataModel"></mdm-branch-selector>
-            </span>
-          </small>
-        </div>
-      </div>
+      <mdm-catalogue-item-properties [item]="refDataModel">
+      </mdm-catalogue-item-properties>
     </div>
   </form>
 </div>

@@ -356,7 +356,7 @@ export class SecurityHandlerService {
     // The static page is therefore a landing point so that it can immediately redirect to the correct authentication component
     // route and do the real work.
     const authorizationUrl = '/redirects/open-id-connect-redirect.html';
-    const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    return new URL(authorizationUrl, baseUrl);
+    const baseUrl = window.location.href.slice(0, window.location.href.indexOf('/#/'));
+    return new URL(baseUrl + authorizationUrl);
   }
 }

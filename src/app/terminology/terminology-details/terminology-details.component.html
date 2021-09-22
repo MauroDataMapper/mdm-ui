@@ -28,6 +28,7 @@ SPDX-License-Identifier: Apache-2.0
         <button
           type="button"
           mat-icon-button
+          data-cy="user-actions-menu"
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
@@ -35,13 +36,29 @@ SPDX-License-Identifier: Apache-2.0
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
-        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-          <button mat-menu-item type="button" *ngIf="access.showFinalise" class="has-text-green" (click)="finalise()">
-                      <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
-                   </button>
+        <mat-menu
+          #userActions="matMenu"
+          class="mdm--mat-menu--actions"
+          data-cy="top-level-user-actions"
+        >
           <button
             mat-menu-item
             type="button"
+            data-cy="finalise"
+            *ngIf="access.showFinalise"
+            class="has-text-green"
+            (click)="finalise()"
+          >
+            <i
+              class="fas fa-check-circle has-text-green"
+              aria-hidden="true"
+            ></i>
+            Finalise
+          </button>
+          <button
+            mat-menu-item
+            type="button"
+            data-cy="edit-label"
             *ngIf="access.showEdit || access.canEditDescription"
             (click)="showForm()"
           >
@@ -50,9 +67,15 @@ SPDX-License-Identifier: Apache-2.0
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
                    </button> -->
-          <button mat-menu-item type="button" *ngIf="access.showNewVersion" (click)="newVersion()">
-                      <i class="fas fa-copy"></i> Create a New Version
-                   </button>
+          <button
+            mat-menu-item
+            type="button"
+            data-cy="create-new-version"
+            *ngIf="access.showNewVersion"
+            (click)="newVersion()"
+          >
+            <i class="fas fa-copy"></i> Create a New Version
+          </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
                       <i class="fas fa-code-branch"></i> Merge
                    </button>
@@ -61,6 +84,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="delete-options-menu"
             [matMenuTriggerFor]="userActionsDelete"
             *ngIf="access.showDelete"
             class="warning"
@@ -71,9 +95,10 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <mat-menu #userActionsDelete="matMenu">
+        <mat-menu #userActionsDelete="matMenu" data-cy="delete-actions">
           <button
             mat-menu-item
+            data-cy="soft-delete"
             (click)="askForSoftDelete()"
             *ngIf="access.showSoftDelete && !mcTerminology.deleted"
           >
@@ -81,6 +106,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="permanent-delete"
             (click)="askForPermanentDelete()"
             *ngIf="access.showPermanentDelete"
           >
@@ -111,6 +137,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="user-group-access"
             color="primary"
             type="button"
             class="paddingless"
@@ -128,6 +155,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="export-menu"
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
@@ -160,6 +188,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="search"
             color="primary"
             type="button"
             class="paddingless"
@@ -182,6 +211,7 @@ SPDX-License-Identifier: Apache-2.0
 
           <h4
             class="inline-block marginless"
+            data-cy="catalogue-item-label"
             [ngClass]="{ deletedDataModelTitle: mcTerminology?.deleted }"
           >
             <span class="dataModelTypeIcon">
@@ -201,25 +231,25 @@ SPDX-License-Identifier: Apache-2.0
             >
             </mdm-inline-text-edit>
             <sup
-            *ngIf="mcTerminology?.readableByEveryone"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-globe-europe globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Publicly Available"
-            ></i
-          ></sup>
-          <sup
-            *ngIf="mcTerminology?.readableByAuthenticatedUsers"
-            class="text-muted"
-            style="margin-left: 4px"
-            ><i
-              class="fas fa-users globe fa-xs"
-              aria-hidden="true"
-              matTooltip="Authenticated users only"
-            ></i
-          ></sup>
+              *ngIf="mcTerminology?.readableByEveryone"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-globe-europe globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Publicly Available"
+              ></i
+            ></sup>
+            <sup
+              *ngIf="mcTerminology?.readableByAuthenticatedUsers"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-users globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Authenticated users only"
+              ></i
+            ></sup>
           </h4>
           <mdm-element-status [result]="mcTerminology"></mdm-element-status>
           <span class="inline-block">
@@ -230,66 +260,8 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <div class="detail-icons">
-        <div class="text-muted">
-          <small>
-            <i class="fas fa-cube" matTooltip="Item type"></i>
-            <span
-              ><strong>Item type: </strong
-              ><span class="item-type">{{
-                mcTerminology.domainType
-              }}</span></span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology?.readableByAuthenticatedUsers">
-          <small>
-            <i
-              class="fas fa-users globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology?.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong
-              >{{ mcTerminology.authority['label'] }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ mcTerminology.documentationVersion }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology">
-          <small>
-            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-            <span><strong>Branch: </strong></span>
-            <span>
-              <mdm-branch-selector [catalogueItem]="mcTerminology"></mdm-branch-selector>
-            </span>
-          </small>
-        </div>
-      </div>
+      <mdm-catalogue-item-properties [item]="mcTerminology">
+      </mdm-catalogue-item-properties>
     </div>
   </form>
 </div>

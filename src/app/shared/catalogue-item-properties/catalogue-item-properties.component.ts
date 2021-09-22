@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Branchable, CatalogueItem, CatalogueItemDomainType, DataModelDetail, Finalisable, ModelableDetail, SecurableModel, Versionable } from '@maurodatamapper/mdm-resources';
+import { Branchable, CatalogueItem, CatalogueItemDomainType, DataModelDetail, Finalisable, Historical, ModelableDetail, SecurableModel, Versionable } from '@maurodatamapper/mdm-resources';
 
 export type CatalogueItemPropertiesType =
   CatalogueItem
@@ -25,7 +25,8 @@ export type CatalogueItemPropertiesType =
   & Partial<SecurableModel>
   & Partial<Finalisable>
   & Partial<Versionable>
-  & Partial<Branchable>;
+  & Partial<Branchable>
+  & Partial<Historical>;
 
 @Component({
   selector: 'mdm-catalogue-item-properties',

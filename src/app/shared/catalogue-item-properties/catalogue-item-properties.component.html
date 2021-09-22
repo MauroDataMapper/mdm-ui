@@ -73,6 +73,15 @@ SPDX-License-Identifier: Apache-2.0
       >
     </small>
   </div>
+  <div class="text-muted" data-cy="last-update" *ngIf="item?.lastUpdated">
+    <small>
+      <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+      <span
+        ><strong>Last update: </strong>
+        {{ item.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
+      >
+    </small>
+  </div>
   <div
     class="text-muted"
     data-cy="model-version"

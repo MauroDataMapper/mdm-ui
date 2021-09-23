@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,14 +15,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<i
-  *ngIf="isLoggedIn"
-  data-cy="favourite-toggle"
-  class="fas fa-star favouritesIcon"
-  [ngClass]="{
-    addedToFavourite: isFavorite
-  }"
-  (click)="toggle()"
-  matTooltip="Favourite"
-></i>
+*/
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { CatalogueItemPropertiesComponent } from './catalogue-item-properties.component';
+
+describe('CatalogueItemPropertiesComponent', () => {
+  let harness: ComponentHarness<CatalogueItemPropertiesComponent>;
+
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(CatalogueItemPropertiesComponent);
+  });
+
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

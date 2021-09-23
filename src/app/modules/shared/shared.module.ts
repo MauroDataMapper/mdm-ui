@@ -50,6 +50,7 @@ import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons
 import { ModelIconComponent } from '@mdm/shared/model-icon/model-icon.component';
 import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
+import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-b
     DataTypeListButtonsComponent,
     ModelIconComponent,
     PathNameComponent,
-    FavoriteButtonComponent
+    FavoriteButtonComponent,
+    CatalogueItemPropertiesComponent
   ],
   imports: [
     CommonModule,
@@ -122,7 +124,8 @@ import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-b
     DataTypeListButtonsComponent,
     PathNameComponent,
     ModelIconComponent,
-    FavoriteButtonComponent
+    FavoriteButtonComponent,
+    CatalogueItemPropertiesComponent
   ]
 })
 export class SharedModule {}

@@ -70,7 +70,9 @@ export class TermComponent
   annotationsView = 'default';
   showEditDescription = false;
   rulesItemCount = 0;
+  codeSetItemCount = 0;
   isLoadingRules = true;
+  isLoadingCodeSets = true;
   showEdit = false;
   showDelete = false;
   access: Access;
@@ -123,6 +125,7 @@ export class TermComponent
 
   termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
+
 
     forkJoin([
       this.resources.terminology.get(terminologyId) as Observable<
@@ -206,6 +209,19 @@ export class TermComponent
           error
         );
       }
+    );
+  }
+
+  codeSetCountEmitter($event) {
+    this.isLoadingCodeSets = false;
+    this.codeSetItemCount = $event;
+  }
+
+  onCodeSetSelect(codeset) {
+    this.stateHandler.Go(
+      'codeset',
+      { id: codeset.id },
+      null
     );
   }
 }

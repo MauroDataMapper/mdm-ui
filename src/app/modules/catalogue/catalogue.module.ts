@@ -190,6 +190,7 @@ import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { TermRelationshipListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
+import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
 
 @NgModule({
   declarations: [
@@ -281,6 +282,7 @@ import { TermRelationshipListComponent } from '@mdm/terminology/term-relationshi
     TerminologyComponent,
     TermListComponent,
     TermRelationshipListComponent,
+    TermCodeSetListComponent,
     CreateTermDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
@@ -308,7 +310,6 @@ import { TermRelationshipListComponent } from '@mdm/terminology/term-relationshi
     TermComponent,
     TermDetailsComponent,
     TermRelationshipsComponent,
-    TermRelationshipListComponent,
     ByteArrayToBase64Pipe,
     SettingsComponent,
     LinkSuggestionComponent,
@@ -466,6 +467,7 @@ import { TermRelationshipListComponent } from '@mdm/terminology/term-relationshi
     TerminologyComponent,
     TerminologyDetailsComponent,
     TermListComponent,
+    TermCodeSetListComponent,
     CreateTermDialogComponent,
     TwoSidePanelComponent,
     UiViewComponent,

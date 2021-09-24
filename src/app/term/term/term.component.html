@@ -41,6 +41,32 @@ SPDX-License-Identifier: Apache-2.0
       </mdm-profile-data-view>
     </ng-template>
   </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Code Sets
+      <span *ngIf="isLoadingCodeSets" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ codeSetItemCount }})
+    </ng-template>
+
+    <div class="full-width">
+      <mdm-term-codeset-list
+        [pageSize]="10"
+        [term]="term"
+        (totalCount)="codeSetCountEmitter($event)"
+        (selectedCodeSet)="onCodeSetSelect($event)"></mdm-term-codeset-list>
+    </div>
+  </mat-tab>
   <mat-tab label="Links">
     <ng-template matTabContent>
       <div class="full-width">

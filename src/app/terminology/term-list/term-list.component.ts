@@ -21,7 +21,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Outpu
 import { MatSort } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Term, TerminologyDetail } from '@maurodatamapper/mdm-resources';
-import { MdmTableDataSource } from '../table-data-source';
+import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';

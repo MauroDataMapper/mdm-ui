@@ -18,55 +18,56 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TerminologyDetail, TermRelationshipType } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { merge } from 'rxjs';
+import { CodeSet, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
+import { merge } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'mdm-term-relationship-type-list',
-  templateUrl: './term-relationship-type-list.component.html',
-  styleUrls: ['./term-relationship-type-list.component.scss']
+  selector: 'mdm-term-codeset-list',
+  templateUrl: './term-codeset-list.component.html',
+  styleUrls: ['./term-codeset-list.component.scss']
 })
-export class TermRelationshipListComponent implements OnInit, OnChanges, AfterViewInit {
-  @Input() terminology: TerminologyDetail;
+export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChanges {
+
+  @Input() term: TermDetail;
   @Input() pageSize = 10;
   @Input() canEdit = false;
   @Input() canDelete = false;
   @Output() totalCount = new EventEmitter<number>();
+  @Output() selectedCodeSet = new EventEmitter<CodeSet>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['label', 'actions'];
-  relationshipTypes: MdmTableDataSource<TermRelationshipType> = new MdmTableDataSource();
+  displayedColumns: string[] = ['label', 'author'];
+  codesets: MdmTableDataSource<CodeSet> = new MdmTableDataSource();
   isLoadingResults = false;
   reloadEvent = new EventEmitter<string>();
   totalItemCount = 0;
 
-  constructor(private resources: MdmResourcesService, private dialog: MatDialog) {}
+  constructor(private resources: MdmResourcesService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.terminology) {
-      if (this.relationshipTypes && this.terminology) {
-        // Update action functions when terminology changed
-        this.relationshipTypes.fetchFunction = options => this.resources.termRelationshipTypes.list(this.terminology.id, options);
-        this.relationshipTypes.deleteFunction = (item: TermRelationshipType) => this.resources.termRelationshipTypes.remove(this.terminology.id, item.id);
+    if (!this.term) {
+      return;
+    }
 
-        // Ignore first change as it will be handle by ngAfterViewInit() after MatSort and MatPaginator initialised
-        if (!changes.terminology.isFirstChange) {
-          this.relationshipTypes.fetchData();
-        }
-      }
+    if (changes.term) {
+      // Update action functions when term changed
+      this.codesets.fetchFunction = options => {
+        return this.resources.terms.codesetsForTerm(this.term.model, this.term.id, options);
+      };
+
+      this.codesets.fetchData();
     }
   }
 
   ngOnInit() {
     // Keep track of item count
-    this.relationshipTypes.count.subscribe(c => {
+    this.codesets.count.subscribe(c => {
       this.totalItemCount = c;
       this.totalCount.emit(this.totalItemCount);
     });
@@ -82,40 +83,24 @@ export class TermRelationshipListComponent implements OnInit, OnChanges, AfterVi
     // Update table data source on sorting, paging, or reload events
     merge(this.sort?.sortChange, this.paginator?.page, this.reloadEvent).subscribe(() => {
       this.refreshFetchOptions();
-      this.relationshipTypes.fetchData();
+      this.codesets.fetchData();
     });
 
     // Initial paging and sorting configuration
     this.refreshFetchOptions();
 
     // First data fetch
-    this.relationshipTypes.fetchData();
+    this.codesets.fetchData();
   }
 
   refreshFetchOptions() {
-    this.relationshipTypes.pageable = {
+    this.codesets.pageable = {
       max: this.paginator?.pageSize || this.pageSize,
       offset: (this.paginator?.pageIndex * this.paginator?.pageSize) || 0
     };
-    this.relationshipTypes.sortable = {
+    this.codesets.sortable = {
       sort: this.sort?.active,
       order: this.sort?.direction
     };
-  }
-
-  openCreateRelationshipTypeDialog(): void {
-    throw new Error('Not implemented');
-  }
-
-  editRelationshipType(term: TermRelationshipType) {
-    if (this.canEdit) {
-      throw new Error('Not implemented');
-    }
-  }
-
-  deleteRelationshipType(term: TermRelationshipType) {
-    if (this.canDelete) {
-      this.relationshipTypes.deleteItem(term);
-    }
   }
 }

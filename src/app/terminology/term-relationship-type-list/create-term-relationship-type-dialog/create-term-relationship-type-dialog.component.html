@@ -1,0 +1,17 @@
+<form [formGroup]="form" (ngSubmit)="submit(form)">
+  <h4 mat-dialog-title>Create New Term Relationship Type</h4>
+  <div mat-dialog-content>
+    <div class="lead" style="padding-bottom: 10px;">
+      Terminology: {{data.terminology.label}}
+    </div>
+    <mat-form-field style="width: 100%">
+      <mat-label>Label</mat-label>
+      <input matInput formControlName="label" required>
+      <mat-error></mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions style="display: flex; justify-content: end; gap: 5px;">
+    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn-outline-primary" [disabled]="!form.valid" cdkFocusInitial>Submit</button>
+  </div>
+</form>

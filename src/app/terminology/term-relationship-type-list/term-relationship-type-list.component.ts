@@ -25,6 +25,13 @@ import { TerminologyDetail, TermRelationshipType } from '@maurodatamapper/mdm-re
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
+import { CreateTermRelationshipTypeDialogComponent } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
+
+class CreateTermRelationshipTypeForm {
+  label: string;
+
+  constructor(readonly terminology: TerminologyDetail) {}
+}
 
 @Component({
   selector: 'mdm-term-relationship-type-list',
@@ -104,10 +111,18 @@ export class TermRelationshipListComponent implements OnInit, OnChanges, AfterVi
   }
 
   openCreateRelationshipTypeDialog(): void {
-    throw new Error('Not implemented');
+    const dialogRef = this.dialog.open(CreateTermRelationshipTypeDialogComponent, {
+      data: new CreateTermRelationshipTypeForm(this.terminology)
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        this.relationshipTypes.fetchData();
+      }
+    });
   }
 
-  editRelationshipType(term: TermRelationshipType) {
+  editRelationshipType(termRelationshipType: TermRelationshipType) {
     if (this.canEdit) {
       throw new Error('Not implemented');
     }

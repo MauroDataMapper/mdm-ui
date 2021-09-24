@@ -191,6 +191,7 @@ import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { TermRelationshipListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
 import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
+import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term-relationship-type-list/create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 
 @NgModule({
   declarations: [
@@ -284,6 +285,7 @@ import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-li
     TermRelationshipListComponent,
     TermCodeSetListComponent,
     CreateTermDialogComponent,
+    CreateTermRelationshipTypeDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
@@ -469,6 +471,7 @@ import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-li
     TermListComponent,
     TermCodeSetListComponent,
     CreateTermDialogComponent,
+    CreateTermRelationshipTypeDialogComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,

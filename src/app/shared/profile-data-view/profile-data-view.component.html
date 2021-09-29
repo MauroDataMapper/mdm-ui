@@ -44,6 +44,7 @@ SPDX-License-Identifier: Apache-2.0
           <mat-select
             [(ngModel)]="currentView"
             name="descriptionView"
+            data-cy="profile-selector"
             (ngModelChange)="changeProfile()"
           >
             <mat-option value="default">Default profile</mat-option>
@@ -90,6 +91,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <button
           mat-flat-button
+          data-cy="edit-default"
           *ngIf="currentView === 'default' && canEdit"
           color="primary"
           type="button"

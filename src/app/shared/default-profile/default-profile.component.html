@@ -19,9 +19,9 @@ SPDX-License-Identifier: Apache-2.0
 
 <table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
-    <tr *ngIf="isInControlList('aliases')" >
+    <tr *ngIf="isInControlList('aliases')" data-cy="aliases" >
       <td class="detailsRowHeader">Aliases</td>
-      <td>
+      <td data-cy="value">
         <mdm-element-alias
           *ngIf="catalogueItem"
           [aliases]="catalogueItem.aliases"
@@ -31,9 +31,9 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-element-alias>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('description')">
+    <tr *ngIf="isInControlList('description')" data-cy="description">
       <td class="detailsRowHeader">Description</td>
-      <td class="elementDetailDescription">
+      <td data-cy="value" class="elementDetailDescription">
         <div *ngIf="catalogueItem">
           <mdm-content-editor
             [(content)]="catalogueItem.description"
@@ -42,18 +42,18 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('multiplicity')">
+    <tr *ngIf="isInControlList('multiplicity')" data-cy="multipicity">
       <th class="detailsRowHeader">Multiplicity</th>
-      <td class="dataClassDetailsModelPath">
+      <td data-cy="value" class="dataClassDetailsModelPath">
         <mdm-multiplicity
           [min]="catalogueItem.minMultiplicity"
           [max]="catalogueItem.maxMultiplicity"
         ></mdm-multiplicity>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('author')" >
+    <tr *ngIf="isInControlList('author')" data-cy="author">
       <td class="detailsRowHeader">Author</td>
-      <td *ngIf="catalogueItem">
+      <td data-cy="value" *ngIf="catalogueItem">
         <mdm-inline-text-edit
           [readOnly]="true"
           [(ngModel)]="catalogueItem.author"
@@ -64,9 +64,9 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('organisation')" >
+    <tr *ngIf="isInControlList('organisation')" data-cy="organisation">
       <td class="detailsRowHeader">Organisation</td>
-      <td *ngIf="catalogueItem">
+      <td data-cy="value" *ngIf="catalogueItem">
         <mdm-inline-text-edit
           [readOnly]="true"
           [(ngModel)]="catalogueItem.organisation"
@@ -77,9 +77,9 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('terminology')">
+    <tr *ngIf="isInControlList('terminology')" data-cy="terminology">
       <td class="detailsRowHeader">Terminology</td>
-      <td *ngIf="catalogueItem.terminology">
+      <td data-cy="value" *ngIf="catalogueItem.terminology">
         <span *ngIf="catalogueItem.terminology">
           <small
             ><span
@@ -103,9 +103,9 @@ SPDX-License-Identifier: Apache-2.0
         ></mdm-element-link>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('url')" >
+    <tr *ngIf="isInControlList('url')" data-cy="url">
       <td class="detailsRowHeader">URL</td>
-      <td *ngIf="catalogueItem">
+      <td data-cy="value" *ngIf="catalogueItem">
         <mdm-inline-text-edit
           [readOnly]="true"
           [(ngModel)]="catalogueItem.url"
@@ -117,9 +117,9 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </tr>
 
-    <tr *ngIf="isInControlList('dataType')">
+    <tr *ngIf="isInControlList('dataType')" data-cy="data-type">
       <th class="detailsRowHeader">Data Type</th>
-      <td>
+      <td data-cy="value">
         <mdm-element-data-type
         [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
         [mcParentDataModel]="catalogueItem"
@@ -128,11 +128,11 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </tr>
 
-    <tr *ngIf="isInControlList('classifications')">
+    <tr *ngIf="isInControlList('classifications')" data-cy="classifications">
       <td class="detailsRowHeader">Classifications</td>
-      <td>
+      <td data-cy="value">
         <mdm-element-classifications
-          [classifications]="catalogueItem.classifiers"      
+          [classifications]="catalogueItem.classifiers"
           [readOnly]="true"
         ></mdm-element-classifications>
       </td>

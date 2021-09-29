@@ -29,9 +29,10 @@ SPDX-License-Identifier: Apache-2.0
     [name]="name"
     class="outlined-input form-control"
     [ngClass]="styleCss" />
-    <button
+  <button
     *ngIf="showButtons"
     [disabled]="isRequired && ngValue.length === 0"
+    data-cy="save"
     mat-icon-button
     color="accent"
     type="button"
@@ -43,10 +44,11 @@ SPDX-License-Identifier: Apache-2.0
   </button>
   <button
     *ngIf="showButtons"
+    data-cy="cancel"
     mat-icon-button
     color="warn"
     type="button"
-     matTooltip="Cancel edit"
+    matTooltip="Cancel edit"
     aria-label="Cancel edit"
     (click)="cancel()"
   >

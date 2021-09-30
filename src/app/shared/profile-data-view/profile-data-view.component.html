@@ -44,6 +44,7 @@ SPDX-License-Identifier: Apache-2.0
           <mat-select
             [(ngModel)]="currentView"
             name="descriptionView"
+            data-cy="profile-selector"
             (ngModelChange)="changeProfile()"
           >
             <mat-option value="default">Default profile</mat-option>
@@ -90,6 +91,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <button
           mat-flat-button
+          data-cy="edit-default"
           *ngIf="currentView === 'default' && canEdit"
           color="primary"
           type="button"
@@ -110,10 +112,10 @@ SPDX-License-Identifier: Apache-2.0
         </button>
 
         <mat-menu #editMenu="matMenu">
-          <button mat-menu-item (click)="editDefaultProfileDescription()">
+          <button mat-menu-item data-cy="edit-description" (click)="editDefaultProfileDescription()">
             <i class="fas fa-pencil-alt"></i> Edit Description
           </button>
-          <button mat-menu-item (click)="editDefaultProfileFull()">
+          <button mat-menu-item data-cy="edit-all" (click)="editDefaultProfileFull()">
             <i class="fas fa-pencil-alt"></i> Edit
           </button>
         </mat-menu>

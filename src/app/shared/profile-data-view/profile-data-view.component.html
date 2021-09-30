@@ -112,10 +112,10 @@ SPDX-License-Identifier: Apache-2.0
         </button>
 
         <mat-menu #editMenu="matMenu">
-          <button mat-menu-item (click)="editDefaultProfileDescription()">
+          <button mat-menu-item data-cy="edit-description" (click)="editDefaultProfileDescription()">
             <i class="fas fa-pencil-alt"></i> Edit Description
           </button>
-          <button mat-menu-item (click)="editDefaultProfileFull()">
+          <button mat-menu-item data-cy="edit-all" (click)="editDefaultProfileFull()">
             <i class="fas fa-pencil-alt"></i> Edit
           </button>
         </mat-menu>

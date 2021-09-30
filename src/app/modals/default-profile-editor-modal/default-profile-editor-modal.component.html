@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
         <td [attr.colspan]="2" class="detailsRowHeader">
           {{ item.displayName }}
         </td>
-        <td>
+        <td [attr.data-cy]="item.propertyName">
           <mdm-element-alias
           *ngIf="item.controlType === profileControlType.aliases"
           [aliases]="item.value"
@@ -168,7 +168,7 @@ SPDX-License-Identifier: Apache-2.0
               <span class="help-block errorMessage" *ngIf="dataTypeErrors"
                 ><small>{{ dataTypeErrors }}</small></span
               >
-          
+
             </div>
             <mdm-element-classifications
             *ngIf="item.controlType === profileControlType.classifications"
@@ -188,6 +188,7 @@ SPDX-License-Identifier: Apache-2.0
   <div>
     <button
       mat-button
+      data-cy="cancel"
       color="warn"
       style="margin-right: 8px"
       (click)="onCancel()"
@@ -196,6 +197,7 @@ SPDX-License-Identifier: Apache-2.0
     </button>
     <button
       mat-flat-button
+      data-cy="continue"
       color="primary"
       type="submit"
       class="custom"

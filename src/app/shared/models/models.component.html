@@ -129,7 +129,8 @@ SPDX-License-Identifier: Apache-2.0
 
 
                     <div *ngIf="filteredModels && !reloading">
-                        <mdm-folders-tree [inSearchMode]="inSearchMode"
+                        <mdm-folders-tree [treeName]="'Models'"
+                                        [inSearchMode]="inSearchMode"
                                         [rememberExpandedStates]="true"
                                         [node]="filteredModels"
                                         [searchCriteria]="searchText"

@@ -22,6 +22,7 @@ SPDX-License-Identifier: Apache-2.0
       <button
         type="button"
         mat-icon-button
+        data-cy="user-actions-menu"
         [matMenuTriggerFor]="userActions"
         style="position: relative; float: right; margin-right: 4px; bottom: 6px"
       >
@@ -30,10 +31,15 @@ SPDX-License-Identifier: Apache-2.0
       </button>
 
       <!--First level Menu-->
-      <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+      <mat-menu
+        #userActions="matMenu"
+        class="mdm--mat-menu--actions"
+        data-cy="top-level-user-actions"
+      >
         <button
           mat-menu-item
           type="button"
+          data-cy="edit-label"
           *ngIf="access.showEdit || access.canEditDescription"
           (click)="showForm()"
         >
@@ -45,6 +51,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="access.showPermanentDelete"
           color="warn"
           type="button"
+          data-cy="permanent-delete"
           (click)="askForPermanentDelete()"
           class="warning"
         >
@@ -56,88 +63,61 @@ SPDX-License-Identifier: Apache-2.0
     <div *ngIf="classification">
       <div [ngClass]="{ 'has-error': errorMessage != '' }">
         <h4
-        class="inline-block marginless"
-        [ngClass]="{ deletedDataModelTitle: classification?.deleted }"
-      >
-        <span class="dataModelTypeIcon">
-          <i matTooltip="Classifier" class="fas fa-tag"></i>
-        </span>
-        <mdm-inline-text-edit
-          [readOnly]="false"
-          [inEditMode]="editMode"
-          [showButtons]="true"
-          (saveClicked)="save()"
-          (cancelClicked)="cancel()"
-          [isRequired]="true"
-          [(ngModel)]="classification.label"
-          [styleCss]="'dataModelDetailsLabel'"
-          name="moduleName"
-          size="20"
+          class="inline-block marginless"
+          data-cy="catalogue-item-label"
+          [ngClass]="{ deletedDataModelTitle: classification?.deleted }"
         >
-        </mdm-inline-text-edit>
-        <sup
-        *ngIf="classification?.readableByEveryone"
-        class="text-muted"
-        style="margin-left: 4px"
-        ><i
-          class="fas fa-globe-europe globe fa-xs"
-          aria-hidden="true"
-          matTooltip="Publicly Available"
-        ></i
-      ></sup>
-      <sup
-        *ngIf="classification?.readableByAuthenticatedUsers"
-        class="text-muted"
-        style="margin-left: 4px"
-        ><i
-          class="fas fa-users globe fa-xs"
-          aria-hidden="true"
-          matTooltip="Authenticated users only"
-        ></i
-      ></sup>
-      </h4>
+          <span class="dataModelTypeIcon">
+            <i matTooltip="Classifier" class="fas fa-tag"></i>
+          </span>
+          <mdm-inline-text-edit
+            [readOnly]="false"
+            [inEditMode]="editMode"
+            [showButtons]="true"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+            [isRequired]="true"
+            [(ngModel)]="classification.label"
+            [styleCss]="'dataModelDetailsLabel'"
+            name="moduleName"
+            size="20"
+          >
+          </mdm-inline-text-edit>
+          <sup
+            *ngIf="classification?.readableByEveryone"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-globe-europe globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Publicly Available"
+            ></i
+          ></sup>
+          <sup
+            *ngIf="classification?.readableByAuthenticatedUsers"
+            class="text-muted"
+            style="margin-left: 4px"
+            ><i
+              class="fas fa-users globe fa-xs"
+              aria-hidden="true"
+              matTooltip="Authenticated users only"
+            ></i
+          ></sup>
+        </h4>
         <span class="inline-block">
           <small *ngIf="classification?.deleted" class="warning">
             | Deleted</small
           >
         </span>
       </div>
-                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+      <div
+        [ngClass]="{ 'form-group': true, 'has-error': true }"
+        *ngIf="errorMessage != ''"
+      >
         <span class="help-block">{{ errorMessage }}</span>
       </div>
     </div>
-    <div class="detail-icons">
-      <div class="text-muted">
-        <small>
-          <i class="fas fa-cube" matTooltip="Item type"></i>
-                        <span><strong>Item type: </strong><span class="item-type">Classifier</span></span>
-        </small>
-      </div>
-      <div class="text-muted" *ngIf="classification?.readableByEveryone">
-        <small>
-                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-          <span><strong>Availability: </strong>Publicly Readable</span>
-        </small>
-      </div>
-        <div class="text-muted" *ngIf="classification?.readableByAuthenticatedUsers">
-          <small>
-            <i
-              class="fas fa-users globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="classification">
-        <small>
-          <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-            <span
-              ><strong>Last update: </strong>
-              {{ classification.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
-            >
-        </small>
-      </div>
-    </div>
+    <mdm-catalogue-item-properties [item]="classification">
+    </mdm-catalogue-item-properties>
   </div>
 </div>

@@ -176,7 +176,7 @@ export class ClassificationDetailsComponent implements OnInit {
       .subscribe(
         () => {
           this.messageHandler.showSuccess('Classifier deleted successfully.');
-          this.broadcast.reloadCatalogueTree();
+          this.broadcast.reloadClassificationTree();
           this.stateHandler.Go(
             'allDataModel',
             { reload: true, location: true },

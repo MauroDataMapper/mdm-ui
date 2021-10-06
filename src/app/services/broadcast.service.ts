@@ -121,6 +121,20 @@ export class BroadcastService {
   }
 
   /**
+   * Notify that the classification tree should be reloaded.
+   */
+  reloadClassificationTree() {
+    this.dispatch('reloadClassificationTree');
+  }
+
+  /**
+   * Get an observable to watch for the `reloadClassificationTree` {@link BroadcastEvent}.
+   */
+  onReloadClassificationTree(): Observable<void> {
+    return this.on('reloadClassificationTree');
+  }
+
+  /**
    * Notify that a tree node has been selected in the catalogue tree.
    *
    * @param data The data associated with the selection.

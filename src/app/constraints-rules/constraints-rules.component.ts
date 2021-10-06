@@ -188,6 +188,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
               temp.push(result.body);
               this.records = temp;
               this.totalItemCount = this.records.length;
+              this.totalCount.emit(String(this.totalItemCount));
             },
             (error) => {
               this.messageHandler.showError(error);

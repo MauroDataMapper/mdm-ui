@@ -83,8 +83,9 @@ export class ClassificationDetailsComponent implements OnInit {
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.openSecurityAccess(this.classification, 'classifier');
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }

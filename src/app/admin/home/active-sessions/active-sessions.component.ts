@@ -29,6 +29,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MdmSessionResource } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-active-sessions',
@@ -49,9 +50,9 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   hideFilters = true;
   dataSource = new MatTableDataSource<any>();
 
-  constructor(private messageHandler: MessageHandlerService, private resourcesService: MdmResourcesService) {
-    this.displayedColumns = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
-    this.displayedColumnsUnauthorised = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
+  constructor(private messageHandler: MessageHandlerService,  private resourcesService: MdmResourcesService) {
+    this.displayedColumns = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess','lastAccessedUrl'];
+    this.displayedColumnsUnauthorised = ['id', 'start', 'lastAccess','lastAccessedUrl'];
   }
 
   ngOnInit() {
@@ -72,18 +73,21 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       order: 'asc'
     };
 
-    this.resourcesService.admin.activeSessions(options).subscribe(resp => {
-      for (const [key] of Object.entries(resp.body.items)) {
-        resp.body.items[key].creationDateTime = new Date(resp.body.items[key].creationDateTime);
-        resp.body.items[key].lastAccessedDateTime = new Date(resp.body.items[key].lastAccessedDateTime);
-        if (resp.body.countAuthorised > 0) {
-          this.records.push(resp.body.items[key]);
-        }
+    
 
-        if (resp.body.countUnauthorised > 0) {
-          this.unauthorised.push(resp.body.items[key]);
-        }
+     this.resourcesService.session.activeSessions({},options).subscribe(resp => {
+      for (const [key] of Object.entries(resp.body.authorisedItems)) {
+        resp.body.authorisedItems[key].creationDateTime = new Date(resp.body.authorisedItems[key].creationDateTime);
+        resp.body.authorisedItems[key].lastAccessedDateTime = new Date(resp.body.authorisedItems[key].lastAccessedDateTime);    
+        this.records.push(resp.body.authorisedItems[key]);        
       }
+
+      for (const [key] of Object.entries(resp.body.unauthorisedItems)) {
+        resp.body.unauthorisedItems[key].creationDateTime = new Date(resp.body.unauthorisedItems[key].creationDateTime);
+        resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(resp.body.unauthorisedItems[key].lastAccessedDateTime); 
+        this.unauthorised.push(resp.body.unauthorisedItems[key]);    
+      }
+
       this.totalItemCount = resp.body.countAuthorised;
       this.unauthorisedCount = resp.body.countUnauthorised;
       this.dataSource.data = this.records;

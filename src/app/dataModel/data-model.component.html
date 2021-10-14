@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div
+*ngIf="dataModel"
   class="full-width"
   data-cy="catalogue-item-container"
   [attr.data-catalogue-item-id]="dataModel.id"
@@ -30,8 +31,7 @@ SPDX-License-Identifier: Apache-2.0
       mode="indeterminate"
     ></mat-progress-bar>
   </div>
-  <mdm-data-model-detail
-    *ngIf="dataModel"
+  <mdm-data-model-detail    
     [dataModel]="dataModel"
   ></mdm-data-model-detail>
 </div>

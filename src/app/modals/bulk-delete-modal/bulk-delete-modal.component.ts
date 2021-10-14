@@ -98,7 +98,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
             if (item.imported) {
               return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();
             } else {
-              return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
+              return this.resources.dataType.remove(item.model, item.id).toPromise();
             }
         }
       }).catch(() => {

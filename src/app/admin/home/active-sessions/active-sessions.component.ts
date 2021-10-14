@@ -29,7 +29,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MdmSessionResource } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-active-sessions',
@@ -73,19 +72,19 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       order: 'asc'
     };
 
-    
+
 
      this.resourcesService.session.activeSessions({},options).subscribe(resp => {
       for (const [key] of Object.entries(resp.body.authorisedItems)) {
         resp.body.authorisedItems[key].creationDateTime = new Date(resp.body.authorisedItems[key].creationDateTime);
-        resp.body.authorisedItems[key].lastAccessedDateTime = new Date(resp.body.authorisedItems[key].lastAccessedDateTime);    
-        this.records.push(resp.body.authorisedItems[key]);        
+        resp.body.authorisedItems[key].lastAccessedDateTime = new Date(resp.body.authorisedItems[key].lastAccessedDateTime);
+        this.records.push(resp.body.authorisedItems[key]);
       }
 
       for (const [key] of Object.entries(resp.body.unauthorisedItems)) {
         resp.body.unauthorisedItems[key].creationDateTime = new Date(resp.body.unauthorisedItems[key].creationDateTime);
-        resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(resp.body.unauthorisedItems[key].lastAccessedDateTime); 
-        this.unauthorised.push(resp.body.unauthorisedItems[key]);    
+        resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(resp.body.unauthorisedItems[key].lastAccessedDateTime);
+        this.unauthorised.push(resp.body.unauthorisedItems[key]);
       }
 
       this.totalItemCount = resp.body.countAuthorised;

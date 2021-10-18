@@ -263,7 +263,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         const data = result.body.items;
         this.allClassifiers = data;
         data.forEach((classifier) => {
-          classifier.domainType = CatalogueItemDomainType.Classification;
+          classifier.domainType = CatalogueItemDomainType.Classifier;
         });
         this.classifiers = {
           children: data,

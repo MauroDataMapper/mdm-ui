@@ -105,7 +105,7 @@ export  class DefaultProfileControls {
       case CatalogueItemDomainType.EnumerationType:
       case CatalogueItemDomainType.ReferenceType:
         return dataType;
-    case CatalogueItemDomainType.Classification:
+    case CatalogueItemDomainType.Classifier:
         return classification;
       default:
         return dataModel;

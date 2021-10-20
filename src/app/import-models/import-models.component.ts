@@ -78,7 +78,7 @@ export class ImportModelsComponent implements OnInit {
     private uiRouterGlobals: UIRouterGlobals,
     private modelTree: ModelTreeService,
     private shared: SharedService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.importType = this.uiRouterGlobals.params.importType
@@ -150,7 +150,7 @@ export class ImportModelsComponent implements OnInit {
       selectedItem.name
     );
 
-    this.resources.importer.get(selectedItem.namespace,selectedItem.name,selectedItem.version).subscribe((res) => {
+    this.resources.importer.get(selectedItem.namespace, selectedItem.name, selectedItem.version).subscribe((res) => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
@@ -254,11 +254,13 @@ export class ImportModelsComponent implements OnInit {
         this.messageHandler.showSuccess('Models imported successfully!');
         this.broadcast.reloadCatalogueTree();
         if (result && result.body.count === 1) {
-          this.stateHandler.Go(
-            ModelDomainRequestType[this.importType],
-            { id: result.body.items[0].id },
-            { reload: true, location: true }
-          );
+          setTimeout(() => {
+            this.stateHandler.Go(
+              ModelDomainRequestType[this.importType],
+              { id: result.body.items[0].id },
+              { reload: true, location: true }
+            );
+          }, 500);
         }
       },
       (error) => {

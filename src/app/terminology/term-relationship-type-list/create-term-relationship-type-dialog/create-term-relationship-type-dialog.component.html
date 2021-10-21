@@ -1,17 +1,33 @@
-<form [formGroup]="form" (ngSubmit)="submit(form)">
-  <h4 mat-dialog-title>Create New Term Relationship Type</h4>
-  <div mat-dialog-content>
-    <div class="lead" style="padding-bottom: 10px;">
-      Terminology: {{data.terminology.label}}
+<div class="create-term-relationship-type-dialog">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h4 mat-dialog-title style="border-bottom: 1px solid #dddddd; padding-bottom: 10px;">
+      <span *ngIf="!data.id">Create New</span>
+      <span *ngIf="data.id">Update</span>
+      <span> Term Relationship Type</span>
+    </h4>
+    <div mat-dialog-content>
+      <div class="lead" style="padding-bottom: 10px;">
+        Terminology: {{data.terminology.label}}
+      </div>
+      <mat-form-field style="width: 100%">
+        <mat-label>Label</mat-label>
+        <input matInput formControlName="label" required>
+        <mat-error></mat-error>
+      </mat-form-field>
+      <mat-form-field style="width: 100%">
+        <mat-label>Display Label</mat-label>
+        <input matInput formControlName="displayLabel">
+      </mat-form-field>
+      <div>
+        <mat-checkbox formControlName="parentalRelationship">Parent Relationship</mat-checkbox>
+      </div>
+      <div>
+        <mat-checkbox formControlName="childRelationship">Child Relationship</mat-checkbox>
+      </div>
     </div>
-    <mat-form-field style="width: 100%">
-      <mat-label>Label</mat-label>
-      <input matInput formControlName="label" required>
-      <mat-error></mat-error>
-    </mat-form-field>
-  </div>
-  <div mat-dialog-actions style="display: flex; justify-content: end; gap: 5px;">
-    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn btn-outline-primary" [disabled]="!form.valid" cdkFocusInitial>Submit</button>
-  </div>
-</form>
+    <div mat-dialog-actions style="display: flex; justify-content: end; gap: 5px;">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!form.valid" cdkFocusInitial>Submit</button>
+    </div>
+  </form>
+</div>

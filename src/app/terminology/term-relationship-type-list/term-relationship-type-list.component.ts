@@ -21,16 +21,28 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Outpu
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TerminologyDetail, TermRelationshipType } from '@maurodatamapper/mdm-resources';
+import { TerminologyDetail, TermRelationshipType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { CreateTermRelationshipTypeDialogComponent } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 
 class CreateTermRelationshipTypeForm {
+  id?: Uuid;
   label: string;
+  displayLabel: string;
+  parentalRelationship = false;
+  childRelationship = false;
 
-  constructor(readonly terminology: TerminologyDetail) {}
+  constructor(readonly terminology: TerminologyDetail, relationshipType?: TermRelationshipType) {
+    if (relationshipType) {
+      this.id = relationshipType.id || null;
+      this.label = relationshipType.label;
+      this.displayLabel = relationshipType.displayLabel;
+      this.parentalRelationship = relationshipType.parentalRelationship || false;
+      this.childRelationship = relationshipType.childRelationship || false;
+    }
+  }
 }
 
 @Component({
@@ -38,7 +50,7 @@ class CreateTermRelationshipTypeForm {
   templateUrl: './term-relationship-type-list.component.html',
   styleUrls: ['./term-relationship-type-list.component.scss']
 })
-export class TermRelationshipListComponent implements OnInit, OnChanges, AfterViewInit {
+export class TermRelationshipTypeListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() terminology: TerminologyDetail;
   @Input() pageSize = 10;
   @Input() canEdit = false;
@@ -48,7 +60,7 @@ export class TermRelationshipListComponent implements OnInit, OnChanges, AfterVi
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['label', 'actions'];
+  displayedColumns: string[] = ['label', 'displayLabel', 'actions'];
   relationshipTypes: MdmTableDataSource<TermRelationshipType> = new MdmTableDataSource();
   isLoadingResults = false;
   reloadEvent = new EventEmitter<string>();
@@ -124,7 +136,17 @@ export class TermRelationshipListComponent implements OnInit, OnChanges, AfterVi
 
   editRelationshipType(termRelationshipType: TermRelationshipType) {
     if (this.canEdit) {
-      throw new Error('Not implemented');
+      this.resources.termRelationshipTypes.get(this.terminology.id, termRelationshipType.id).subscribe(trt => {
+        const dialogRef = this.dialog.open(CreateTermRelationshipTypeDialogComponent, {
+          data: new CreateTermRelationshipTypeForm(this.terminology, trt.body)
+        });
+
+        dialogRef.afterClosed().subscribe(data => {
+          if (data) {
+            this.relationshipTypes.fetchData();
+          }
+        });
+      });
     }
   }
 

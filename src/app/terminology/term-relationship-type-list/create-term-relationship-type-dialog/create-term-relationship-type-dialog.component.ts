@@ -27,26 +27,56 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      label: [this.data.label, Validators.required]
+      label: [this.data.label, Validators.required],
+      displayLabel: [this.data.displayLabel],
+      parentalRelationship: [this.data.parentalRelationship],
+      childRelationship: [this.data.childRelationship]
     });
   }
 
-  submit(form: FormGroup) {
+  submit() {
+    if (this.form.invalid) {
+      this.messageHandler.showError('Form invalid');
+    }
+
     this.submitting = true;
-    this.resources.termRelationshipTypes.save(this.data.terminology.id, {
-      label: form.value.label
-    }).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
-      if (response.ok) {
-        this.dialogRef.close(response.body);
-      } else {
-        this.messageHandler.showWarning(response.body);
-      }
-      this.submitting = false;
-    },
-    error => {
-      this.messageHandler.showError(error);
-      this.submitting = false;
-    });
+    if (this.data.id) {
+      this.resources.termRelationshipTypes.update(this.data.terminology.id, this.data.id, {
+        label: this.form.value.label,
+        displayLabel: this.form.value.displayLabel,
+        parentalRelationship: this.form.value.parentalRelationship || false,
+        childRelationship: this.form.value.childRelationship || false
+      }).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
+        if (response.ok) {
+          this.dialogRef.close(response.body);
+        } else {
+          this.messageHandler.showWarning(response.body);
+        }
+        this.submitting = false;
+      },
+      error => {
+        this.messageHandler.showError(error);
+        this.submitting = false;
+      });
+    } else {
+      this.resources.termRelationshipTypes.save(this.data.terminology.id, {
+        label: this.form.value.label,
+        displayLabel: this.form.value.displayLabel,
+        parentalRelationship: this.form.value.parentalRelationship || false,
+        childRelationship: this.form.value.childRelationship || false
+      }).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
+        if (response.ok) {
+          this.dialogRef.close(response.body);
+        } else {
+          this.messageHandler.showWarning(response.body);
+        }
+        this.submitting = false;
+      },
+      error => {
+        this.messageHandler.showError(error);
+        this.submitting = false;
+      });
+    }
   }
 
   onCancel(): void {

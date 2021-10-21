@@ -100,3 +100,5 @@ We recommend installing this globally with `npm i -g symlinked` then you can cal
 ## Build the application
 
 To 'export' the code for production, run `ng build --prod` this will compile & minify the code, making it ready for production
+
+change

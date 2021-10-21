@@ -20,6 +20,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { MdmIndexResponse, MdmResponse, PageParameters } from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
+import { tap } from 'rxjs/operators';
 
 export interface Sortable {
   sort?: string;
@@ -31,11 +32,11 @@ export class MdmTableDataSource<T> extends DataSource<T> {
   private _dataStream = new BehaviorSubject<T[]>([]);
   private _fetchFunction = new BehaviorSubject<(options?: any) => Observable<MdmIndexResponse<T>>>(() => EMPTY);
   private _updateFunction = new BehaviorSubject<(options?: any) => Observable<MdmResponse<T>>>(() => EMPTY);
-  private _deleteFunction = new BehaviorSubject<(options?: any) => Observable<void>>(() => EMPTY);
+  private _deleteFunction = new BehaviorSubject<(options?: any) => Observable<any>>(() => EMPTY);
   private _pageable = new BehaviorSubject<PageParameters>({max: 10, offset: 0});
   private _sortable = new BehaviorSubject<Sortable>({});
 
-  constructor(fetchFunction?: (options?: any) => Observable<MdmIndexResponse<T>>, updateFunction?: (options?: any) => Observable<MdmResponse<T>>, deleteFunction?: (options?: any) => Observable<void>) {
+  constructor(fetchFunction?: (options?: any) => Observable<MdmIndexResponse<T>>, updateFunction?: (options?: any) => Observable<MdmResponse<T>>, deleteFunction?: (options?: any) => Observable<any>) {
     super();
 
     if (fetchFunction) {
@@ -84,7 +85,7 @@ export class MdmTableDataSource<T> extends DataSource<T> {
     return this._deleteFunction.value;
   }
 
-  set deleteFunction(deleteFunc: (item: T) => Observable<void>) {
+  set deleteFunction(deleteFunc: (item: T) => Observable<any>) {
     this._deleteFunction.next(deleteFunc);
   }
 
@@ -117,7 +118,7 @@ export class MdmTableDataSource<T> extends DataSource<T> {
   }
 
   fetchData() {
-    if (!this._fetchFunction.value) {
+    if (!this.fetchFunction) {
       throw new Error('Fetch function not provided');
     }
 
@@ -131,24 +132,22 @@ export class MdmTableDataSource<T> extends DataSource<T> {
   }
 
   updateItem(item: T) {
-    if (!this._updateFunction.value) {
+    if (!this.updateFunction) {
       throw new Error('Update function not provided');
     }
 
-    this.updateFunction(item).subscribe(
-      () => this.fetchData(),
-      error => console.error(error)
+    return this.updateFunction(item).pipe(
+      tap(() => this.fetchData())
     );
   }
 
   deleteItem(item: T) {
-    if (!this._deleteFunction.value) {
+    if (!this.deleteFunction) {
       throw new Error('Delete function not provided');
     }
 
-    this.deleteFunction(item).subscribe(
-      () => this.fetchData(),
-      error => console.error(error)
+    return this.deleteFunction(item).pipe(
+      tap(() => this.fetchData())
     );
   }
 }

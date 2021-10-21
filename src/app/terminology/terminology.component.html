@@ -20,8 +20,8 @@ SPDX-License-Identifier: Apache-2.0
 <div
   class="full-width mb-1 mdm--shadow-block"
   data-cy="catalogue-item-container"
-  [attr.data-catalogue-item-id]="terminology.id"
-  [attr.data-catalogue-item-domain]="terminology.domainType"
+  [attr.data-catalogue-item-id]="terminology?.id"
+  [attr.data-catalogue-item-domain]="terminology?.domainType"
 >
   <div style="clear: both" *ngIf="!terminology">
     <mat-progress-bar
@@ -118,7 +118,9 @@ SPDX-License-Identifier: Apache-2.0
           [canEdit]="showEdit"
           [canDelete]="showDelete"
           (totalCount)="termsCountEmitter($event)"
-          (selectedTerm)="onTermSelect($event)"></mdm-term-list>
+          (selectedTerm)="onTermSelect($event)"
+          (addedTerm)="onTermAdd()"
+          (deletedTerm)="onTermDelete()"></mdm-term-list>
       </div>
     </mat-tab>
     <mat-tab>

@@ -225,7 +225,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return getCatalogueItemDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
   }
 
-  /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
+  /** Additional CSS classes to add to the tree node. */
   getCssClass(node: FlatNode) {
     return `fa-sm ${node.deleted ? 'deleted-folder' : ''}`;
   }

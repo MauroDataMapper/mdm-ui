@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div class="mt-1">
-                <button mat-flat-button color="primary" (click)="openCreateTermDialog()">
+                <button type="button" mat-flat-button color="primary" (click)="openCreateTermDialog()">
                     <i class="fas fa-plus" aria-hidden="true"></i> Add Terms
                 </button>
             </div>
@@ -51,10 +51,6 @@ SPDX-License-Identifier: Apache-2.0
       <th mat-header-cell *matHeaderCellDef [style.display]="canEdit || canDelete ? '':'none'"></th>
       <td mat-cell *matCellDef="let item" [style.display]="canEdit || canDelete ? '':'none'">
         <div style="display: flex;">
-          <!-- TODO: Reenable after edit features is in place -->
-          <!-- <button *ngIf="canEdit" mat-icon-button color="primary" type="button" (click)="editTerm(item)" aria-label="Edit" matTooltip="Edit">
-            <i class="fas fa-pencil-alt"></i>
-          </button> -->
           <button *ngIf="canDelete" mat-icon-button color="warn" type="button" (click)="deleteTerm(item)" class="warning" aria-label="Delete" matTooltip="Delete">
             <i class="far fa-trash-alt"></i>
           </button>

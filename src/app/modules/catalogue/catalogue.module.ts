@@ -189,9 +189,11 @@ import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-pro
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
-import { TermRelationshipListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
+import { TermRelationshipTypeListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
 import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
 import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term-relationship-type-list/create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
+import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
+import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 
 @NgModule({
   declarations: [
@@ -282,10 +284,11 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
     SearchComponent,
     TerminologyComponent,
     TermListComponent,
-    TermRelationshipListComponent,
+    TermRelationshipTypeListComponent,
     TermCodeSetListComponent,
     CreateTermDialogComponent,
     CreateTermRelationshipTypeDialogComponent,
+    CreateTermRelationshipDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
@@ -356,7 +359,8 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
     VersionedFolderDetailComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
-    ProfileDataViewComponent
+    ProfileDataViewComponent,
+    TermRelationshipListComponent
   ],
   imports: [
     AdminModule,
@@ -472,6 +476,7 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
     TermCodeSetListComponent,
     CreateTermDialogComponent,
     CreateTermRelationshipTypeDialogComponent,
+    CreateTermRelationshipDialogComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,

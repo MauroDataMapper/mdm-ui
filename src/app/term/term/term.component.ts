@@ -71,8 +71,10 @@ export class TermComponent
   showEditDescription = false;
   rulesItemCount = 0;
   codeSetItemCount = 0;
+  relationshipItemCount = 0;
   isLoadingRules = true;
   isLoadingCodeSets = true;
+  isLoadingRelationships = true;
   showEdit = false;
   showDelete = false;
   access: Access;
@@ -118,9 +120,9 @@ export class TermComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  rulesCountEmitter($event) {
+  rulesCountEmitter(count: number) {
     this.isLoadingRules = false;
-    this.rulesItemCount = $event;
+    this.rulesItemCount = count;
   }
 
   termDetails(id: string) {
@@ -212,15 +214,28 @@ export class TermComponent
     );
   }
 
-  codeSetCountEmitter($event) {
+  codeSetCountEmitter(count: number) {
     this.isLoadingCodeSets = false;
-    this.codeSetItemCount = $event;
+    this.codeSetItemCount = count;
   }
 
   onCodeSetSelect(codeset) {
     this.stateHandler.Go(
       'codeset',
       { id: codeset.id },
+      null
+    );
+  }
+
+  relationshipCountEmitter(count: number) {
+    this.isLoadingRelationships = false;
+    this.relationshipItemCount = count;
+  }
+
+  onTermSelect(term) {
+    this.stateHandler.Go(
+      'term',
+      { terminologyId: term.model, id: term.id },
       null
     );
   }

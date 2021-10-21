@@ -30,6 +30,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { Subscription } from 'rxjs';
 import {
+  BroadcastService,
   MessageHandlerService,
   MessageService,
   SecurityHandlerService
@@ -88,6 +89,7 @@ export class TerminologyComponent
     private title: Title,
     private resources: MdmResourcesService,
     private messageService: MessageService,
+    private broadcastService: BroadcastService,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService
   ) {
@@ -198,6 +200,14 @@ export class TerminologyComponent
       { terminologyId: term.model, id: term.id },
       null
     );
+  }
+
+  onTermAdd() {
+    this.broadcastService.reloadCatalogueTree();
+  }
+
+  onTermDelete() {
+    this.broadcastService.reloadCatalogueTree();
   }
 
   ngOnDestroy() {

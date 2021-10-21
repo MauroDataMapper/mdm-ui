@@ -51,6 +51,8 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() canDelete = false;
   @Output() totalCount = new EventEmitter<number>();
   @Output() selectedTerm = new EventEmitter<Term>();
+  @Output() addedTerm = new EventEmitter<Term>();
+  @Output() deletedTerm = new EventEmitter();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -125,19 +127,14 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
         this.terms.fetchData();
+        this.addedTerm.emit(data);
       }
     });
   }
 
-  editTerm(term: Term) {
-    if (this.canEdit) {
-      throw new Error('Not implemented');
-    }
-  }
-
   deleteTerm(term: Term) {
     if (this.canDelete) {
-      this.terms.deleteItem(term);
+      this.terms.deleteItem(term).subscribe(() => this.deletedTerm.emit());
     }
   }
 }

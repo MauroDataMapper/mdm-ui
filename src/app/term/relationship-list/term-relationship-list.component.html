@@ -1,0 +1,48 @@
+<div class="term-relationship-list">
+  <div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="55" fxFlex.md="55" fxFlex.sm="55" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+            <h4 class="marginless">
+                Related Terms <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+            </h4>
+        </div>
+        <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+            <div class="mt-1">
+                <button mat-flat-button color="primary" (click)="openAddRelationshipDialog()">
+                    <i class="fas fa-plus" aria-hidden="true"></i> Add Related Terms
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+  <h4 *ngIf="!relationshipTypes || relationshipTypes?.length === 0" style="color: #aaaaaa; margin: 20px;">No relationship records found</h4>
+  <ng-container *ngFor="let t of relationshipTypes">
+    <section style="margin-top: 10px">
+      <div style="font-size: 1.1rem; font-weight: normal; margin-bottom: 14px;">{{t.displayLabel}}</div>
+      <div *ngIf="filterByRelationshipType(t).length === 0" style="color: #aaaaaa;">No record found for this relationship</div>
+      <table class="table" *ngIf="filterByRelationshipType(t).length !== 0">
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th style="width: 80px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filterByRelationshipType(t)">
+            <td>
+              <button type="button" class="btn btn-link" (click)="selectedTerm.emit(item.targetTerm)">{{item.targetTerm.label}}</button>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <button *ngIf="canDelete" mat-icon-button color="warn" type="button" (click)="deleteRelationship(item)" class="warning" aria-label="Delete" matTooltip="Delete term from relationship">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <hr>
+  </ng-container>
+</div>

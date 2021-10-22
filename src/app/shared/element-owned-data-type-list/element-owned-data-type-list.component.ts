@@ -163,8 +163,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     });
 
     if (this.domainType) {
-      if (this.domainType.id !== "DataType") {
-        filter["domainType"] = this.domainType.id
+      if (this.domainType.id !== 'DataType') {
+        filter['domainType'] = this.domainType.id;
       }
     }
 

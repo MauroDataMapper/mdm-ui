@@ -159,13 +159,19 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       const value = x.nativeElement.value;
       if (value !== '') {
         filter[name] = value;
-       }
-      });
+      }
+    });
+
+    if (this.domainType) {
+      if (this.domainType.id !== 'DataType') {
+        filter['domainType'] = this.domainType.id;
+      }
+    }
 
     this.filter = filter;
     this.filterEvent.emit(filter);
 
-};
+  };
 
   applyMatSelectFilter() {
     this.applyFilter();

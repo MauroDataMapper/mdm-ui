@@ -132,7 +132,7 @@ export class ClassificationComponent
       .get(id)
       .subscribe((response: ClassifierDetailResponse) => {
         this.result = response.body;
-        this.result.domainType = CatalogueItemDomainType.Classification;
+        this.result.domainType = CatalogueItemDomainType.Classifier;
         this.catalogueItem = this.result;
 
         this.parentId = this.result.id;

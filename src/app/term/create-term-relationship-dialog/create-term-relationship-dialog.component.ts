@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType, ContainerDomainType, ModelDomainType, TermDetail, TerminologyDetail, TermRelationship, TermRelationshipType } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
@@ -12,19 +12,20 @@ import { HttpResponse } from '@angular/common/http';
   templateUrl: 'create-term-relationship-dialog.component.html',
   styleUrls: ['create-term-relationship-dialog.component.scss']
 })
-export class CreateTermRelationshipDialogComponent implements OnInit {
+export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   formWithExistingTerm: FormGroup;
   formWithNewTerm: FormGroup;
   terminology: TerminologyDetail;
-  _relationshipTypes = new BehaviorSubject<TermRelationshipType[]>([]);
-  _sourceTerm = new BehaviorSubject<TermDetail>(null);
-  _relationshipType = new BehaviorSubject<TermRelationshipType>(null);
-  _targetTerm = new BehaviorSubject<TermDetail>(null);
-  _useExistingTerms = new BehaviorSubject<boolean>(true);
-
   submitting = false;
+
+  private subscriptions = new Subscription();
+  private _relationshipTypes = new BehaviorSubject<TermRelationshipType[]>([]);
+  private _sourceTerm = new BehaviorSubject<TermDetail>(null);
+  private _relationshipType = new BehaviorSubject<TermRelationshipType>(null);
+  private _targetTerm = new BehaviorSubject<TermDetail>(null);
+  private _useExistingTerms = new BehaviorSubject<boolean>(true);
 
   constructor(
     private resources: MdmResourcesService,
@@ -71,38 +72,43 @@ export class CreateTermRelationshipDialogComponent implements OnInit {
       })
     });
 
-    this._relationshipType.subscribe(rt => {
-      if (rt?.id) {
-        this.formWithExistingTerm.patchValue({relationshipType: rt.id});
-        this.formWithNewTerm.patchValue({relationshipType: rt.id});
-      }
-    });
-
-    this._targetTerm.subscribe(term => {
-      if (this.useExistingTerms && term?.id) {
-        this.form.patchValue({targetTerm: term.id});
-        if (this.form.controls.targetTerm.untouched) {
-          this.form.controls.targetTerm.markAsTouched();
+    this.subscriptions.add(
+      this._relationshipType.subscribe(rt => {
+        if (rt?.id) {
+          this.formWithExistingTerm.patchValue({relationshipType: rt.id});
+          this.formWithNewTerm.patchValue({relationshipType: rt.id});
         }
-      }
-    });
+      })
+    );
 
-    this._useExistingTerms.subscribe(b => {
-      if (b) {
-        this.form = this.formWithExistingTerm;
-      } else {
-        this.form = this.formWithNewTerm;
-      }
-    });
+    this.subscriptions.add(
+      this._targetTerm.subscribe(term => {
+        if (this.useExistingTerms && term?.id) {
+          this.form.patchValue({targetTerm: term.id});
+          if (this.form.controls.targetTerm.untouched) {
+            this.form.controls.targetTerm.markAsTouched();
+          }
+        }
+      })
+    );
 
-    this.formWithNewTerm.valueChanges.subscribe(() => {
-      if (this.form.value.targetTerm?.code && this.form.value.targetTerm?.definition) {
-        // if (this.targetTerm?.code !== this.form.value.targetTerm?.code) {
-          this.targetTerm = this.form.value.targetTerm;
-        // }
+    this.subscriptions.add(
+      this._useExistingTerms.subscribe(b => {
+        if (b) {
+          this.form = this.formWithExistingTerm;
+        } else {
+          this.form = this.formWithNewTerm;
+        }
+      })
+    );
 
-      }
-    });
+    this.subscriptions.add(
+      this.formWithNewTerm.valueChanges.subscribe(() => {
+        if (this.form.value.targetTerm?.code && this.form.value.targetTerm?.definition) {
+            this.targetTerm = this.form.value.targetTerm;
+        }
+      })
+    );
   }
 
   selectedTerm(term: TermDetail | TerminologyDetail) {
@@ -175,6 +181,10 @@ export class CreateTermRelationshipDialogComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   get relationshipTypes(): TermRelationshipType[] {

@@ -201,7 +201,7 @@ export class LinkSuggestionComponent implements OnInit {
       this.model.suggestions.splice(index, 1);
       this.datasource.data = this.model.suggestions;
       this.table.renderRows();
-      this.model.totalIgnoredLinks++;      
+      this.model.totalIgnoredLinks++;
       this.model.totalSuggestionLinks--;
     }
   };

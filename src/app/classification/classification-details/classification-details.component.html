@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-icon-button
         data-cy="user-actions-menu"
         [matMenuTriggerFor]="userActions"
-        style="position: relative; float: right; margin-right: 4px; bottom: 6px"
+        style="position: relative; float: right; margin-right: 4px;"
       >
         <i class="fas fa-ellipsis-v"></i>
         <span style="display: none">Menu</span>
@@ -59,6 +59,23 @@ SPDX-License-Identifier: Apache-2.0
         </button>
       </mat-menu>
       <!-- End of first level menu -->
+      <div
+        *ngIf="access.showPermission"
+        style="position: relative; float: right; margin-right: 8px"
+        [hidden]="editMode"
+      >
+        <button
+          mat-icon-button
+          color="primary"
+          type="button"
+          class="paddingless"
+          (click)="toggleSecuritySection()"
+          matTooltip="User & Group Access"
+          aria-label="User & Group Access"
+        >
+          <i class="fas fa-user-lock"></i>
+        </button>
+      </div>
     </div>
     <div *ngIf="classification">
       <div [ngClass]="{ 'has-error': errorMessage != '' }">

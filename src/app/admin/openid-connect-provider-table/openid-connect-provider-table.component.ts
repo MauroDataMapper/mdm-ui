@@ -59,7 +59,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
       return;
     }
 
-    this.title.setTitle('OpenID Connect poviders');
+    this.title.setTitle('OpenID Connect providers');
   }
 
   ngAfterViewInit(): void {

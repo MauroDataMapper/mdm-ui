@@ -50,7 +50,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   showDisable = false;
   showEdit = false;
 
-  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['firstName','lastName', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(

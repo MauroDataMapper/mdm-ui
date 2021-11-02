@@ -50,7 +50,7 @@ export class LinkSuggestionComponent implements OnInit {
   paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  @ViewChild(MatTable) table: MatTable<any>;
   datasource = new MatTableDataSource();
   doNotSuggest: any;
 
@@ -193,15 +193,16 @@ export class LinkSuggestionComponent implements OnInit {
   };
 
   ignoreSuggestion = (record) => {
-    this.model.totalIgnoredLinks++;
+
     const index = this.model.suggestions.indexOf(record);
 
     if (index >= 0) {
       this.model.suggestions[index].ignore = true;
-      setTimeout(() => {
-        this.model.suggestions.splice(index, 1);
-        this.table.renderRows();
-      }, 300);
+      this.model.suggestions.splice(index, 1);
+      this.datasource.data = this.model.suggestions;
+      this.table.renderRows();
+      this.model.totalIgnoredLinks++;
+      this.model.totalSuggestionLinks--;
     }
   };
 

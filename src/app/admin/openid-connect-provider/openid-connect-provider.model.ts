@@ -195,12 +195,12 @@ export class OpenIdConnectProviderForm {
     };
   }
 
-  private handleDropdownValue(value: string) 
+  private handleDropdownValue(value: string)
   {
      if(value !== undefined)
      {
        return value.toUpperCase();
-     } 
+     }
      return value;
     }
 }

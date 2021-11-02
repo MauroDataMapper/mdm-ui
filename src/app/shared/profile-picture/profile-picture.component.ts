@@ -17,8 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
-import { Uuid } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Component({
   selector: 'mdm-profile-picture',
@@ -27,18 +25,21 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 })
 export class ProfilePictureComponent implements OnInit {
   @Input() user: any;
-  @Input() userId : Uuid;
   image: any;
   dynamicTooltipText: string;
-  constructor(private resoucesService: MdmResourcesService) {}
+  constructor() {}
 
   ngOnInit() {
+    const displayName = `${this.user?.firstName ?? ''} ${this.user?.lastName ?? ''}`;
+    const organisation = this.user?.organisation ?? '';
+    const emailAddress = this.user?.emailAddress ?? '';
 
-    if(this.userId){
-    this.resoucesService.userImage.getUserImageFile(this.userId).subscribe(result =>
-      {
-        this.image = result.body;
-      });
-    }
+    this.dynamicTooltipText = [displayName.trim(), organisation.trim(), emailAddress.trim()].join(', ');
   }
+
+  getImage = () => {
+    if (this.user.profilePicture.fileType !== 'base64') {
+      this.image = this.user.profilePicture.fileContents;
+    }
+  };
 }

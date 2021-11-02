@@ -19,9 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 <div>
     <img *ngIf="user.profilePicture"
          class="profilePicture"
+         matTooltip="{{dynamicTooltipText}}"
          src="data:{{user.profilePicture.fileType}};base64,{{user.profilePicture.fileContents | byteArrayToBase64}}"
          alt="Profile picture"/>
     <span *ngIf="!user.profilePicture"
           style="cursor: pointer; font-size: 18px;"
+          matTooltip="{{dynamicTooltipText}}"
           class="fas fa-user profilePicture"></span>
 </div>

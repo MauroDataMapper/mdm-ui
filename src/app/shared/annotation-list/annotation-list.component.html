@@ -39,7 +39,6 @@ SPDX-License-Identifier: Apache-2.0
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                 <div *ngIf="!record.inEdit">
                     <div class="annotation-item-header">
-                        <mdm-profile-picture [userId]="record.createdByUser.id" class="inline-block mr-1" style="display: inline-block;"></mdm-profile-picture>
                         <span class="annotation-username">{{record.createdByUser.name}} @ </span>
                         <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                     </div>
@@ -56,8 +55,7 @@ SPDX-License-Identifier: Apache-2.0
                     <div style="padding-top: 5px;">
                         <div *ngFor="let childAnnotation of record.childAnnotations" [hidden]="!(record.show)">
                             <div class="annotation-item">
-                                <div class="annotation-child-item-header">
-                                    <mdm-profile-picture [userId]="childAnnotation.createdByUser.id" class="inline-block mr-1" style="display: inline-block;"></mdm-profile-picture>
+                                <div class="annotation-child-item-header">                                   
                                     <span class="annotation-username">{{childAnnotation.createdByUser.name }} @ </span>
                                     <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                 </div>

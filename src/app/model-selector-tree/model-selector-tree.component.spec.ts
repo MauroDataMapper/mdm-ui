@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ModelSelectorTreeComponent } from './model-selector-tree.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
@@ -29,11 +28,23 @@ import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SecurityHandlerService } from '@mdm/services';
 import { empty } from 'rxjs';
+import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
+
+interface SecurityHandlerServiceStub {
+  isLoggedIn: jest.Mock;
+}
 
 describe('ModelSelectorTreeComponent', () => {
   let component: ModelSelectorTreeComponent;
   let fixture: ComponentFixture<ModelSelectorTreeComponent>;
+
+  let treeSpy: any;
+
+  const securityHandler: SecurityHandlerServiceStub = {
+    isLoggedIn: jest.fn(() => false)
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,6 +68,10 @@ describe('ModelSelectorTreeComponent', () => {
             }
           }
         },
+        {
+          provide: SecurityHandlerService,
+          useValue: securityHandler
+        },
         ElementTypesService
       ],
       declarations: [
@@ -72,9 +87,21 @@ describe('ModelSelectorTreeComponent', () => {
     fixture = TestBed.createComponent(ModelSelectorTreeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    treeSpy = spyOn(component['resources'].tree, 'list').and.callThrough();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('load tree with filter applied', () => {
+    const defaultQueryStringParams: any = {
+      includeDocumentSuperseded: true,
+      includeModelSuperseded: true,
+      includeDeleted: true
+    };
+    component.reload();
+    expect(treeSpy).toHaveBeenCalledWith(ContainerDomainType.Folders, defaultQueryStringParams);
   });
 });

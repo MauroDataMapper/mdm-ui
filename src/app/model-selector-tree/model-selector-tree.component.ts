@@ -243,7 +243,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   loadTree(model) {
     const id = (model && model.id) ? model.id : null;
     this.loading = true;
-    let options = {};
+    let options: any = {};
     if (!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()) {
       if (this.userSettingsHandler.get('includeSupersededDocModels') || false) {
         options = {
@@ -262,7 +262,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list(ContainerDomainType.Folders, options);
+    let method = this.resources.tree.list(ContainerDomainType.Folders, options.queryStringParams);
 
 
     if (id) {

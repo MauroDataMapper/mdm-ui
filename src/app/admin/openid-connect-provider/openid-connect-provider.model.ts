@@ -74,8 +74,8 @@ export class OpenIdConnectProviderForm {
         scope: new FormControl(provider?.authorizationEndpointParameters?.scope ?? 'openid email profile'),
         responseType: new FormControl(provider?.authorizationEndpointParameters?.responseType ?? 'code'),
         responseMode: new FormControl(provider?.authorizationEndpointParameters?.responseMode),
-        display: new FormControl(provider?.authorizationEndpointParameters?.display),
-        prompt: new FormControl(provider?.authorizationEndpointParameters?.prompt),
+        display: new FormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.display)),
+        prompt: new FormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.prompt)),
         maxAge: new FormControl(provider?.authorizationEndpointParameters?.maxAge),
         uiLocales: new FormControl(provider?.authorizationEndpointParameters?.uiLocales),
         idTokenHint: new FormControl(provider?.authorizationEndpointParameters?.idTokenHint),
@@ -185,8 +185,8 @@ export class OpenIdConnectProviderForm {
       scope: this.group.get('authorizationEndpointParams.scope').value ,
       responseType: this.group.get('authorizationEndpointParams.responseType').value,
       responseMode: this.group.get('authorizationEndpointParams.responseMode').value,
-      display: this.group.get('authorizationEndpointParams.display').value,
-      prompt: this.group.get('authorizationEndpointParams.prompt').value,
+      display: this.group.get('authorizationEndpointParams.display').value === undefined ? null : this.group.get('authorizationEndpointParams.display').value,
+      prompt: this.group.get('authorizationEndpointParams.prompt').value === undefined ? null : this.group.get('authorizationEndpointParams.prompt').value,
       maxAge: this.group.get('authorizationEndpointParams.maxAge').value,
       uiLocales: this.group.get('authorizationEndpointParams.uiLocales').value,
       idTokenHint: this.group.get('authorizationEndpointParams.idTokenHint').value,
@@ -194,4 +194,13 @@ export class OpenIdConnectProviderForm {
       acrValues: this.group.get('authorizationEndpointParams.acrValues').value
     };
   }
+
+  private handleDropdownValue(value: string) 
+  {
+     if(value !== undefined)
+     {
+       return value.toUpperCase();
+     } 
+     return value;
+    }
 }

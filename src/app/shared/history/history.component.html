@@ -27,9 +27,9 @@ SPDX-License-Identifier: Apache-2.0
               User
           </th>
           <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-              <div style="float: left;margin: 3px;">
-                  <mdm-profile-picture [user]="element.createdBy" class="inline-block mr-1" style="display: inline-block;"></mdm-profile-picture>
-                  <span [innerHTML]="element.createdBy"></span>
+              <div style="float: left;margin: 3px;" *ngIf="element.createdBy">
+                  <mdm-profile-picture [userId]="element.createdByUser.id" class="inline-block mr-1" style="display: inline-block;"></mdm-profile-picture>
+                  <span [innerHTML]="element.createdByUser.name"></span>
               </div>
           </td>
       </ng-container>

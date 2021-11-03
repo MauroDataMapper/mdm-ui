@@ -14,6 +14,7 @@ pipeline {
     stage('Tool Versions') {
       steps {
         nvm('') {
+          sh 'npm i -g npm@7.24.1'
           sh 'node --version'
           sh 'npm --version'
         }

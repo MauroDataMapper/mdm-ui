@@ -11,7 +11,7 @@ Web front-end for the Mauro Data Mapper
 
 ## Requirements
 
-Please use [NVM](https://github.com/nvm-sh/nvm) to manage the required node/npm dependencies.
+Please use [NVM](https://github.com/nvm-sh/nvm) to manage the required node dependencies, and then run `npm i -g npm@7.24.1` to update to v7 of npm
 
 ## Installation
 

@@ -73,7 +73,7 @@
     "ngx-skeleton-loader": "2.4.4",
     "ngx-text-diff": "^0.6.0",
     "ngx-toastr": "13.1.0",
-    "prismjs": "1.23.0",
+    "prismjs": "1.25.0",
     "rxjs": "6.6.3",
     "svg-pan-zoom": "3.6.1",
     "web-animations-js": "2.3.2",

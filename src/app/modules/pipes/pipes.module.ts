@@ -20,14 +20,19 @@ SPDX-License-Identifier: Apache-2.0
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
 
 @NgModule({
-  declarations: [  HighlighterPipe],
+  declarations: [
+    HighlighterPipe,
+    JoinArrayPipe
+  ],
   imports: [
     CommonModule
   ],
   exports: [
-    HighlighterPipe
+    HighlighterPipe,
+    JoinArrayPipe
   ]
 })
 export class PipesModule { }

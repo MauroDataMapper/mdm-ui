@@ -23,6 +23,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { environment } from '@env/environment';
 import { Title } from '@angular/platform-browser';
+import { StateHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-change-password',
@@ -45,6 +46,7 @@ export class ChangePasswordComponent implements OnInit {
     private resourcesService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
     private title: Title
     ) {
     this.currentUser = this.securityHandler.getCurrentUser();
@@ -70,11 +72,7 @@ export class ChangePasswordComponent implements OnInit {
 
     this.resourcesService.catalogueUser.changePassword(this.currentUser.id, body).subscribe(() => {
         this.messageHandler.showSuccess('Password updated successfully.');
-        this.newPassword = '';
-        this.oldPassword = '';
-        this.confirm = '';
-        this.message = '';
-        this.changePasswordForm.reset();
+        this.stateHandler.Go('appContainer.userArea.profile');
       }, error => {
         this.message = `Error : ${error.error.errors[0].message}`;
     });

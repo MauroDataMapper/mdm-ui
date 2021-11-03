@@ -48,7 +48,7 @@ import { GridService } from '@mdm/services/grid.service';
 })
 export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
-  @Input() type: any;
+  @Input() type: 'static' | 'dynamic';
   @Input() isEditable: any;
 
   @Input() childOwnedDataTypes: any;
@@ -95,9 +95,9 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.dataSource.paginator = this.paginator;
     }
     if (this.isEditable && !this.parent.finalised) {
-      this.displayedColumns = ['name', 'description', 'type', 'checkbox'];
+      this.displayedColumns = ['name', 'description', 'domainType', 'checkbox'];
     } else {
-      this.displayedColumns = ['name', 'description', 'type'];
+      this.displayedColumns = ['name', 'description', 'domainType'];
     }
   }
 
@@ -159,13 +159,19 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       const value = x.nativeElement.value;
       if (value !== '') {
         filter[name] = value;
-       }
-      });
+      }
+    });
+
+    if (this.domainType) {
+      if (this.domainType.id !== 'DataType') {
+        filter['domainType'] = this.domainType.id;
+      }
+    }
 
     this.filter = filter;
     this.filterEvent.emit(filter);
 
-};
+  };
 
   applyMatSelectFilter() {
     this.applyFilter();
@@ -219,18 +225,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = [];
-    this.records.forEach(record => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          label: record.label,
-          dataModel: record.model,
-          domainType: 'DataType',
-          type: record.domainType
-        });
-      }
-    });
+    const dataElementIdLst = this.records.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },

@@ -16,26 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import {Pipe, PipeTransform} from '@angular/core';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+@Pipe({name: 'joinArray'})
+export class JoinArrayPipe implements PipeTransform {
+  transform(values: any[], delimiter = '', propertyName?: string) {
+    if (!values || values.length === 0) {
+      return '';
+    }
 
-  beforeEach(() => {
-    page = new AppPage();
-  });
+    if (propertyName) {
+      return values.map(v => v[propertyName]).join(delimiter);
+    }
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to mdm-ui!');
-  });
+    return values.join(delimiter);
+  }
 
-  afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    expect(logs).not.toContain(jasmine.objectContaining({
-      level: logging.Level.SEVERE,
-    } as logging.Entry));
-  });
-});
+}

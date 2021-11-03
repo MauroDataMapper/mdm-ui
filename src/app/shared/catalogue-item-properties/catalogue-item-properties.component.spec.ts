@@ -16,14 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { browser, by, element } from 'protractor';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { CatalogueItemPropertiesComponent } from './catalogue-item-properties.component';
 
-export class AppPage {
-  navigateTo() {
-    return browser.get(browser.baseUrl) as Promise<any>;
-  }
+describe('CatalogueItemPropertiesComponent', () => {
+  let harness: ComponentHarness<CatalogueItemPropertiesComponent>;
 
-  getTitleText() {
-    return element(by.css('mdm-root h1')).getText() as Promise<string>;
-  }
-}
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(CatalogueItemPropertiesComponent);
+  });
+
+  it('should create', () => {
+    expect(harness?.isComponentCreated).toBeTruthy();
+  });
+});

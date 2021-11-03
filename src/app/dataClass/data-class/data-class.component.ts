@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -47,7 +47,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 })
 export class DataClassComponent
   extends BaseComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassDetail;
   showSecuritySection: boolean;
@@ -125,8 +125,10 @@ export class DataClassComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewChecked(): void {
+    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+      this.editingService.setTabGroupClickEvent(this.tabGroup);
+    }
   }
 
   dataClassDetails(model, id, parentDataClass?) {

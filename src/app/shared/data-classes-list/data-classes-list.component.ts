@@ -38,7 +38,7 @@ import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-mo
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DataClass } from '@maurodatamapper/mdm-resources';
+import { DataClass, DataClassDetail, DataClassIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 
 @Component({
@@ -51,19 +51,18 @@ export class DataClassesListComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  @ViewChild(MatTable, { static: false }) table: MatTable<DataClassDetail>;
 
-  @Input() parentDataModel: any;
-  @Input() grandParentDataClass: any;
-  @Input() parentDataClass: any;
-  @Input() loadingData: any;
-  @Input() isEditable: any;
+  @Input() parentDataModel: DataModelDetail;
+  @Input() grandParentDataClass: DataClassDetail;
+  @Input() parentDataClass: DataClassDetail;
+  @Input() isEditable: boolean;
   checkAllCheckbox = false;
 
   processing: boolean;
   failCount: number;
   total: number;
-  dataClassRecords: any[] = [];
+  dataClassRecords: DataClassDetail[] = [];
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
@@ -82,6 +81,7 @@ export class DataClassesListComponent implements AfterViewInit {
     private gridService: GridService,
     private messageHandler: MessageHandlerService
   ) {}
+
   ngAfterViewInit() {
     if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['name', 'description', 'label', 'checkbox'];
@@ -111,8 +111,12 @@ export class DataClassesListComponent implements AfterViewInit {
             this.filter
           );
         }),
-        map((data: any) => {
-          this.totalDataClassCount = data.body.count;
+        map((data: DataClassIndexResponse) => {
+          if (this.parentDataClass.extendsDataClasses) {
+            this.totalDataClassCount = data.body.count + (this.parentDataClass.extendsDataClasses.length as number);
+          } else {
+            this.totalDataClassCount = data.body.count;
+          }
           this.isLoadingResults = false;
           return data.body.items;
         }),
@@ -122,11 +126,19 @@ export class DataClassesListComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => {
-        this.dataClassRecords = data;
+        if (this.parentDataClass.extendsDataClasses) {
+          const extendedDC = this.parentDataClass.extendsDataClasses.map(dc => {
+            dc['extended'] = true;
+            return dc;
+          });
+          this.dataClassRecords = [...data, ...extendedDC];
+        } else {
+          this.dataClassRecords = data;
+        }
       });
   }
 
-  openEdit(dataClass: DataClass) {
+  openEdit(dataClass: DataClassDetail) {
     if (!dataClass || (dataClass && !dataClass.id)) {
       return '';
     }
@@ -304,16 +316,7 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   bulkDelete() {
-    const dataElementIdLst = [];
-    this.dataClassRecords.forEach((record) => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          domainType: record.domainType
-        });
-      }
-    });
-
+    const dataElementIdLst = this.dataClassRecords.filter(record => record.checked);
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {

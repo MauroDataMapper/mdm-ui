@@ -22,6 +22,7 @@ SPDX-License-Identifier: Apache-2.0
       <div class="full-width" style="clear: both" *ngIf="dataModel">
         <button
           type="button"
+          data-cy="user-actions-menu"
           mat-icon-button
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
@@ -30,9 +31,14 @@ SPDX-License-Identifier: Apache-2.0
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
-        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <mat-menu
+          #userActions="matMenu"
+          class="mdm--mat-menu--actions"
+          data-cy="top-level-user-actions"
+        >
           <button
             mat-menu-item
+            data-cy="finalise"
             type="button"
             *ngIf="access.showFinalise"
             class="has-text-green"
@@ -46,6 +52,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="edit-label"
             type="button"
             *ngIf="access.showEdit"
             (click)="showForm()"
@@ -54,6 +61,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="compare"
             type="button"
             [matMenuTriggerFor]="compareMenu"
             *ngIf="isAdminUser"
@@ -63,6 +71,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="create-new-version"
             type="button"
             *ngIf="access.showNewVersion"
             (click)="newVersion()"
@@ -71,18 +80,25 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="merge"
             type="button"
             *ngIf="access.canMergeInto"
             (click)="merge()"
           >
             <i class="fas fa-window-restore"></i> Merge...
           </button>
-          <button mat-menu-item type="button" (click)="showMergeGraph()">
+          <button
+            mat-menu-item
+            data-cy="merge-graph"
+            type="button"
+            (click)="showMergeGraph()"
+          >
             <i class="fas fa-code-branch"></i> Merge graph
           </button>
           <mat-divider></mat-divider>
           <button
             mat-menu-item
+            data-cy="restore"
             type="button"
             class="has-text-green"
             *ngIf="dataModel.deleted && isAdminUser"
@@ -92,6 +108,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="delete-options-menu"
             type="button"
             [matMenuTriggerFor]="userActionsDelete"
             *ngIf="access.showDelete"
@@ -103,9 +120,10 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <mat-menu #userActionsDelete="matMenu">
+        <mat-menu #userActionsDelete="matMenu" data-cy="delete-actions">
           <button
             mat-menu-item
+            data-cy="soft-delete"
             (click)="askForSoftDelete()"
             *ngIf="access.showSoftDelete && !dataModel.deleted"
           >
@@ -113,6 +131,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="permanent-delete"
             (click)="askForPermanentDelete()"
             *ngIf="access.showPermanentDelete"
           >
@@ -150,6 +169,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="user-group-access"
             color="primary"
             type="button"
             class="paddingless"
@@ -167,6 +187,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="export-menu"
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
@@ -199,6 +220,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="search"
             color="primary"
             type="button"
             class="paddingless"
@@ -219,6 +241,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <h4
           class="inline-block marginless"
+          data-cy="catalogue-item-label"
           [ngClass]="{ deletedDataModelTitle: dataModel?.deleted }"
         >
           <span
@@ -274,92 +297,8 @@ SPDX-License-Identifier: Apache-2.0
         <mdm-element-status [result]="dataModel"></mdm-element-status>
       </div>
 
-      <div class="detail-icons">
-        <div
-          class="text-muted"
-          *ngIf="
-            dataModel?.type === 'Data Asset' ||
-            dataModel?.type === 'Data Standard'
-          "
-        >
-          <small class="block">
-            <div>
-              <i class="fas fa-cube" matTooltip="Item type"></i>
-              <strong>Item type: </strong>
-              <span class="item-type" *ngIf="dataModel?.type === 'Data Asset'"
-                >Data Asset</span
-              >
-              <span
-                class="item-type"
-                *ngIf="dataModel?.type === 'Data Standard'"
-                >Data Standard</span
-              >
-            </div>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel?.readableByAuthenticatedUsers">
-          <small>
-            <i
-              class="fas fa-users globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel?.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong
-              >{{ dataModel.authority['label'] }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel?.documentationVersion">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ dataModel.documentationVersion }}</span
-            >
-          </small>
-        </div>
-        <div
-          class="text-muted"
-          *ngIf="dataModel?.modelVersion && dataModel?.finalised"
-        >
-          <small>
-            <i matTooltip="Model Version" class="fas fa-file-alt"></i>
-            <span><strong>Version: </strong>{{ dataModel.modelVersion }}</span>
-            <span *ngIf="dataModel.modelVersionTag" class="tag-name">
-              <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
-              <span>{{ dataModel.modelVersionTag }}</span>
-            </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="dataModel">
-          <small>
-            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-            <span><strong>Branch: </strong></span>
-            <span>
-              <mdm-branch-selector
-                [catalogueItem]="dataModel"
-              ></mdm-branch-selector>
-            </span>
-          </small>
-        </div>
-      </div>
+      <mdm-catalogue-item-properties [item]="dataModel">
+      </mdm-catalogue-item-properties>
     </div>
   </form>
 </div>

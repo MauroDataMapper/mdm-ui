@@ -14,8 +14,7 @@ pipeline {
     stage('Tool Versions') {
       steps {
         nvm('') {
-          // Currently npm v6 is packaged with node and we need v7+
-          sh 'npm install -g npm@^7.10.0'
+          sh 'npm i -g npm@7.24.1'
           sh 'node --version'
           sh 'npm --version'
         }
@@ -30,12 +29,39 @@ pipeline {
       }
     }
 
-    stage('Install') {
+    stage('Install Global') {
       steps {
         nvm('') {
           sh 'npm install -g npm-check'
           sh 'npm install -g @angular/cli'
+          sh 'npm install -g symlinked'
+        }
+      }
+    }
+
+    stage('Install Dependencies') {
+      when {
+        not {
+          branch 'main'
+        }
+      }
+      steps {
+        nvm('') {
+          sh 'npm install'
+          sh 'npm link @maurodatamapper/mdm-resources'
+          sh 'symlinked names'
+        }
+      }
+    }
+
+    stage('Clean Install Dependencies') {
+      when {
+        branch 'main'
+      }
+      steps {
+        nvm('') {
           sh 'npm ci'
+          sh 'symlinked names'
         }
       }
     }
@@ -82,6 +108,12 @@ pipeline {
     }
 
     stage('Distribution Build') {
+      when{
+        anyOf{
+          branch 'develop'
+          branch 'main'
+        }
+      }
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {

@@ -38,6 +38,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-type-step2',
@@ -57,7 +58,10 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   totalSelectedItemsCount: number;
   filter: object;
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   scope: any;
   defaultCheckedMap: any;
   loaded = false;
@@ -139,10 +143,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       this.dataSourceDataTypes.sort = this.sort.toArray()[0];
 
       // Selected Data Types table
-      this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
-      this.sort.toArray()[1].sortChange.subscribe(() => (this.paginator.toArray()[1].pageIndex = 0));
-      this.dataSourceSelectedDataTypes.paginator = this.paginator.toArray()[1];
-
       if (this.sort !== null && this.sort !== undefined && this.sort.length > 1 && this.paginator !== null && this.paginator !== undefined && this.paginator.length > 1) {
         merge(this.sort.toArray()[0].sortChange, this.paginator.toArray()[0].page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
@@ -267,7 +267,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       }
       invalid = true;
     }
-    if (this.model.createType === 'copy') {
+    if (['copy', 'import'].includes(this.model.createType)) {
       if (this.model.selectedDataTypes !== null && this.model.selectedDataTypes !== undefined && this.model.selectedDataTypes.length === 0) {
         this.step.invalid = true;
         this.changeRef.detectChanges();
@@ -317,7 +317,10 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
+        switch(this.model.createType) {
+          case 'copy': return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
+          case 'import': return this.resourceService.dataModel.importDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
+        }
       }).catch(error => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);

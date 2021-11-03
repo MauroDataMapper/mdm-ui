@@ -32,11 +32,10 @@ import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { CreateType } from '@mdm/wizards/wizards.model';
 @Component({
   selector: 'mdm-data-class-step2',
   templateUrl: './data-class-step2.component.html',
@@ -49,7 +48,10 @@ export class DataClassStep2Component
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
-  model: any;
+  model: {
+    [key: string]: any;
+    createType: CreateType;
+  };
   scope: any;
   multiplicityError: any;
   selectedDataClassesStr = '';
@@ -64,6 +66,7 @@ export class DataClassStep2Component
   failCount = 0;
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
+  copyMessage = '';
 
   formChangesSubscription: Subscription;
 
@@ -77,8 +80,7 @@ export class DataClassStep2Component
   constructor(
     private validator: ValidatorService,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
+    private messageHandler: MessageHandlerService
   ) {
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
@@ -190,7 +192,14 @@ export class DataClassStep2Component
 
       invalid = this.myForm.invalid;
     }
-    if (this.model.createType === 'copy') {
+    if (['copy', 'import', 'extend'].includes(this.model.createType)) {
+      switch (this.model.createType) {
+        case 'copy': this.copyMessage = 'copy'; break;
+        case 'import': this.copyMessage = 'import'; break;
+        case 'extend': this.copyMessage = 'extend with'; break;
+        default: this.copyMessage = '';
+      }
+
       if (this.model.selectedDataClasses.length === 0) {
         this.step.invalid = true;
         return;
@@ -220,19 +229,18 @@ export class DataClassStep2Component
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass
-              .copyChildDataClass(
-                this.model.parent.model,
-                this.model.parent.id,
-                dc.modelId,
-                dc.id,
-                null
-              )
-              .toPromise();
+            switch (this.model.createType) {
+              case 'copy': return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'import': return this.resources.dataClass.importDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'extend': return this.resources.dataClass.addExtendDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+            }
+          } if (this.model.parent.domainType === 'DataModel') {
+            switch (this.model.createType) {
+              case 'copy': return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'import': return this.resources.dataModel.importDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+            }
           } else {
-            return this.resources.dataClass
-              .copyDataClass(this.model.parent.id, dc.modelId, dc.id, null)
-              .toPromise();
+            return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
           }
         })
         .catch((error) => {

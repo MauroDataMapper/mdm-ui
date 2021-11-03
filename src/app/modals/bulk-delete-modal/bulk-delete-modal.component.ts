@@ -1,3 +1,4 @@
+import { StateHandlerService } from './../../services/handlers/state-handler.service';
 /*
 Copyright 2020-2021 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
@@ -20,9 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { BroadcastService } from '@mdm/services/broadcast.service';
-
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 @Component({
   selector: 'mdm-bulk-delete',
   templateUrl: './bulk-delete-modal.component.html',
@@ -43,8 +42,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService,
+    private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
   ) { }
 
@@ -55,37 +53,12 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   }
 
   getData = () => {
-    this.data.dataElementIdLst.forEach((item: any) => {
-      if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
-          if (result !== undefined) {
-            this.records.push(result.body);
-          }
-        }, err => {
-          this.messageHandler.showError('There was a problem getting the Data Elements.', err);
-        });
-      } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
-          if (result !== undefined) {
-            this.records.push(result.body);
-          }
-        }, err => {
-          this.messageHandler.showError('There was a problem getting the Data Classes.', err);
-        });
-      } else if (item.domainType === 'DataType') {
-        this.records.push({
-          domainType: item.domainType,
-          label: item.label,
-          id: item.id,
-          dataModel: item.dataModel
-        });
-      }
-    });
+    this.records = this.data.dataElementIdLst;
     this.changeRef.detectChanges();
   };
 
   closeAndRefresh = () => {
-    this.broadcast.reloadCatalogueTree();
+    this.stateHandler.reload();
     this.dialogRef.close({ status: 'ok' });
   };
 
@@ -101,14 +74,32 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           result: 'Success',
           hasError: false
         };
-        if (item.domainType === 'DataClass') {
-          return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
-        }
-        if (item.domainType === 'DataElement') {
-          return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
-        }
-        if (item.domainType === 'DataType') {
-          return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
+
+        switch (item.domainType) {
+          case CatalogueItemDomainType.DataClass:
+            if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
+              return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id, item.model, item.id).toPromise();
+            } else if (item.imported && this.parentDataClass?.id !== null) {
+              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
+            } else if (item.extended && this.parentDataClass) {
+              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
+            } else {
+              return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
+            }
+          case CatalogueItemDomainType.DataElement:
+            if (item.imported) {
+              return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id, this.parentDataClass.id, item.model, item.dataClass, item.id).toPromise();
+            } else {
+              return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
+            }
+          case CatalogueItemDomainType.PrimitiveType:
+          case CatalogueItemDomainType.ReferenceType:
+          case CatalogueItemDomainType.EnumerationType:
+            if (item.imported) {
+              return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();
+            } else {
+              return this.resources.dataType.remove(item.model, item.id).toPromise();
+            }
         }
       }).catch(() => {
         this.failCount++;

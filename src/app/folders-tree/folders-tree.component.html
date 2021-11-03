@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
-<mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
+<mat-tree #foldersTree [attr.name]="treeName" [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
         <button mat-icon-button disabled aria-label="Disabled button">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #treeMenu="matMenu">
   <ng-template matMenuContent let-node="node">
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
-      <i class="fas fa-plus"></i> Create
+      <i class="fas fa-plus"></i> Add
     </button>
     <button mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
       <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>

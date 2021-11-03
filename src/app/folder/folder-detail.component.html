@@ -17,15 +17,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    name="form"
-    disable-submit-on-enter
-  >
+  <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="folder">
         <button
           type="button"
           mat-icon-button
+          data-cy="user-actions-menu"
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
@@ -33,10 +31,15 @@ SPDX-License-Identifier: Apache-2.0
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
-        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <mat-menu
+          #userActions="matMenu"
+          class="mdm--mat-menu--actions"
+          data-cy="top-level-user-actions"
+        >
           <button
             mat-menu-item
             type="button"
+            data-cy="edit-label"
             *ngIf="access.showEdit"
             (click)="showForm()"
           >
@@ -46,6 +49,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
+            data-cy="delete-options-menu"
             [matMenuTriggerFor]="userActionsDelete"
             *ngIf="access.showSoftDelete || access.showPermanentDelete"
             class="warning"
@@ -56,9 +60,10 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <mat-menu #userActionsDelete="matMenu">
+        <mat-menu #userActionsDelete="matMenu" data-cy="delete-actions">
           <button
             mat-menu-item
+            data-cy="soft-delete"
             (click)="askForSoftDelete()"
             *ngIf="access.showSoftDelete && !folder.deleted"
           >
@@ -66,6 +71,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="permanent-delete"
             (click)="askForPermanentDelete()"
             *ngIf="access.showPermanentDelete"
           >
@@ -80,6 +86,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-icon-button
+            data-cy="user-group-access"
             color="primary"
             type="button"
             class="paddingless"
@@ -94,11 +101,11 @@ SPDX-License-Identifier: Apache-2.0
 
       <div *ngIf="folder">
         <div class="detail-icons--cta">
-          <mdm-favorite-button [catalogueItem]="folder">
-          </mdm-favorite-button>
+          <mdm-favorite-button [catalogueItem]="folder"> </mdm-favorite-button>
         </div>
         <h4
           class="inline-block marginless"
+          data-cy="catalogue-item-label"
           [ngClass]="{ deletedDataModelTitle: folder?.deleted }"
         >
           <span class="dataModelTypeIcon">
@@ -142,46 +149,8 @@ SPDX-License-Identifier: Apache-2.0
         </span>
       </div>
 
-      <div class="detail-icons">
-        <div class="text-muted">
-          <small>
-            <i class="fas fa-cube" matTooltip="Item type"></i>
-            <span
-              ><strong>Item type: </strong
-              ><span class="item-type">Folder</span></span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="folder?.readableByEveryone">
-          <small>
-            <i
-              class="fas fa-globe-europe globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="folder?.readableByAuthenticatedUsers">
-          <small>
-            <i
-              class="fas fa-users globe"
-              aria-hidden="true"
-              matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="folder">
-          <small>
-            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-            <span
-              ><strong>Last update: </strong>
-              {{ folder.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
-            >
-          </small>
-        </div>
-      </div>
+      <mdm-catalogue-item-properties [item]="folder">
+      </mdm-catalogue-item-properties>
     </div>
   </form>
 </div>

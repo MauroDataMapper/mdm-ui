@@ -11,7 +11,7 @@ Web front-end for the Mauro Data Mapper
 
 ## Requirements
 
-Please use [NVM](https://github.com/nvm-sh/nvm) to manage the required node/npm dependencies.
+Please use [NVM](https://github.com/nvm-sh/nvm) to manage the required node dependencies, and then run `npm i -g npm@7.24.1` to update to v7 of npm
 
 ## Installation
 
@@ -54,37 +54,48 @@ Therefore if you change any dependency versions you must make sure the `package-
 
 ## MDM-Resources
 
-We have a dependency on another repository ([mdm-resources](https://github.com/MauroDataMapper/mdm-resources)) 
-which is not currently published to NPM .
+We have a dependency on another repository ([mdm-resources](https://github.com/MauroDataMapper/mdm-resources)) which we develop.
 
-* The `develop` branch of this repo tracks the develop branch of mdm-resources
-* The `main` branch of this repo tracks a specific tagged release of mdm-resources
+The package.json file is configured to use the latest release of this module into the NPM registry,
+however if you are developing mdm-resources alongside mdm-ui or you know there are changes which have not yet been released you will need to 
+do the following
 
-If any updates are made to the mdm-resources repo then to allow Jenkins to build successfully you will need to update the
-`package-lock.json` which points to a specific commit hash for mdm-resources.
-This can be done by running
+1. Clone the mdm-resources repository
+2. Link the mdm-resources repository into your global npm
+3. Link mdm-resources into mdm-ui
+
+Once you have linked the mdm-resources repo into the global npm it will remain there until you unlink it,
+you will have to re-build (`npm run build`) mdm-resources with each change for those changes to be picked up by mdm-ui,
+however you dont have to re-link after the rebuild.
+
+### Linking to mdm-resources
+
+If you run `npm install` inside mdm-ui you will have to re-run the final link step below to re-link mdm-resources into mdm-ui.
 
 ```shell
-$ npm update @maurodatamapper/mdm-resources
+# Clone mdm-resources
+$ git clone git@github.com:MauroDataMapper/mdm-resources.git
+
+# Link mdm-resources to global npm
+$ cd mdm-resources
+$ npm install
+$ npm run build
+$ npm link
+
+# Link mdm-resources into mdm-ui
+$ cd mdm-ui
+$ npm link @maurodatamapper/mdm-resources
 ```
 
-### `develop` branch
+### Unlinking from mdm-resources
 
-We have the `develop` branch set with a dependency of:
+This is surprisingly simple just run `npm install` or `npm ci`
 
-```json
- "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#develop",
-```
+### Useful Tool for Links
 
-### `main` branch
-
-We have the `main` branch set with a dependency of:
-
-```json
- "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#<RELEASE_TAG>",
-```
-
-Where the `RELEASE_TAG` is the stable tagged release of mdm-resources we need for the release of mdm-ui.
+There is a useful npm package ([symlinked](https://www.npmjs.com/package/symlinked)) which can list what modules are linked into your repository.
+This is helpful if you want to check if mdm-resources is currently linked to mdm-ui.
+We recommend installing this globally with `npm i -g symlinked` then you can call it inside mdm-ui using `symlinked names`.
 
 ## Build the application
 

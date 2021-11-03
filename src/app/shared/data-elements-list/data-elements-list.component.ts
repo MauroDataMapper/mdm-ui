@@ -295,15 +295,7 @@ export class DataElementsListComponent implements AfterViewInit {
   }
 
   bulkDelete() {
-    const dataElementIdLst = [];
-    this.dataElementRecords.forEach((record) => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          domainType: record.domainType
-        });
-      }
-    });
+    const dataElementIdLst = this.dataElementRecords.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: {

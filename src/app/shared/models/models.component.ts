@@ -217,6 +217,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadModelsTree(true));
 
+    this.broadcast
+      .onReloadClassificationTree()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.loadClassifiers());
+
     this.currentClassification = null;
     this.allClassifications = [];
   }
@@ -258,7 +263,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         const data = result.body.items;
         this.allClassifiers = data;
         data.forEach((classifier) => {
-          classifier.domainType = CatalogueItemDomainType.Classification;
+          classifier.domainType = CatalogueItemDomainType.Classifier;
         });
         this.classifiers = {
           children: data,

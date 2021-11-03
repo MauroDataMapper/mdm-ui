@@ -175,8 +175,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       if (text.length !== 0) {
         if (!this.multiple) {
           if (this.selectedElements && this.selectedElements.length > 0) {
-            const label = this.selectedElements[0] ? this.selectedElements[0].label : '';
-            if (this.selectedElements && text.trim().toLowerCase() === label.trim().toLowerCase() && label.trim().toLowerCase() !== '') {
+            const label = this.selectedElements[0]?.label ? this.selectedElements[0].label : '';
+            if (this.selectedElements && text?.trim().toLowerCase() === label?.trim().toLowerCase() && label?.trim().toLowerCase() !== '') {
               return;
             }
           }
@@ -243,7 +243,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   loadTree(model) {
     const id = (model && model.id) ? model.id : null;
     this.loading = true;
-    let options = {};
+    let options: any = {};
     if (!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()) {
       if (this.userSettingsHandler.get('includeSupersededDocModels') || false) {
         options = {
@@ -262,7 +262,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list(ContainerDomainType.Folders, options);
+    let method = this.resources.tree.list(ContainerDomainType.Folders, options.queryStringParams);
 
 
     if (id) {

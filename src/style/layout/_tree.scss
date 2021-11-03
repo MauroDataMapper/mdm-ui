@@ -305,6 +305,7 @@ ul.favourites li:focus {
   padding: 1px 6px;
   display: inline-block;
   vertical-align: middle;
+  white-space: nowrap;
 }
 .detail-icons--cta {
   float: right;

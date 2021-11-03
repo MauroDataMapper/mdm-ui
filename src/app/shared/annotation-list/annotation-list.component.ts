@@ -116,11 +116,8 @@ export class AnnotationListComponent implements AfterViewInit {
       id: '',
       label: '',
       description: '',
-      createdBy: {
-        firstName: '',
-        lastName: '',
-        organisation: '',
-        emailAddress: ''
+      createdByUser: {
+        name: ''
       },
       edit: {
         id: '',

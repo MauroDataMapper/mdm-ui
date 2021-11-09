@@ -16,8 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+@use '~@angular/material' as mat;
 @import "~ngx-toastr/toastr.css";
-@import "~@angular/material/theming";
 
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
 @import '~bootstrap';
 
 // Include the common styles for Angular Material. Only required to include this once!
-@include mat-core();
+@include mat.core();
 
 /*
 Themes

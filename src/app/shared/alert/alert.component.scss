@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@import "~@angular/material/theming";
+@use '~@angular/material' as mat;
 @import "../../../style/abstracts/variables";
 
 @mixin mdm-alert-theme($theme) {
@@ -25,9 +25,9 @@ SPDX-License-Identifier: Apache-2.0
   $warn: map-get($theme, warn);
 
   $infoColor: $defaultInfoColor;
-  $successColor: mat-color($accent);
+  $successColor: mat.get-color-from-palette($accent);
   $warningColor: $defaultWarningColor;
-  $errorColor: mat-color($warn);
+  $errorColor: mat.get-color-from-palette($warn);
 
   .mdm-alert {
     &--success {

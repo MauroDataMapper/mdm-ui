@@ -23,7 +23,7 @@
   "private": true,
   "dependencies": {
     "@angular-eslint/template-parser": "0.5.0-beta.3",
-    "@angular-material-extensions/password-strength": "9.0.0",
+    "@angular-material-extensions/password-strength": "^9.0.0",
     "@angular/animations": "11.2.14",
     "@angular/cdk": "10.2.5",
     "@angular/common": "11.2.14",

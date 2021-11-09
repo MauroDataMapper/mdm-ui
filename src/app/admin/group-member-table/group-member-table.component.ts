@@ -62,7 +62,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter = this.gridService.applyFilter(this.filters);
+  applyFilter : any;
 
   constructor(
     private roles: ROLES,
@@ -75,6 +75,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
+    this.applyFilter = this.gridService.applyFilter(this.filters);
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.gridService.reloadEvent.subscribe(
       () => (this.paginator.pageIndex = 0)

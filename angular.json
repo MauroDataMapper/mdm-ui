@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "allowedCommonJsDependencies": ["lodash"],
             "customWebpackConfig": {
               "path": "webpack.config.js"
             },

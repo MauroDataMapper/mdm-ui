@@ -112,9 +112,9 @@ export class TerminologyComponent
         this.access = this.securityHandler.elementAccess(data);
         this.showEdit = this.access.showEdit;
         this.showDelete =
-          this.access.showPermanentDelete || this.access.showSoftDelete;
-
+          this.access.showPermanentDelete || this.access.showSoftDelete;        
           this.terminology = data;
+            this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
       });
 
@@ -125,8 +125,7 @@ export class TerminologyComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewInit(): void {   
   }
 
   save(saveItems: Array<DefaultProfileItem>) {

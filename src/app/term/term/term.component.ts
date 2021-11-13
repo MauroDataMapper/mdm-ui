@@ -21,7 +21,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewChecked
 } from '@angular/core';
 import { Subscription, forkJoin, Observable } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -50,7 +50,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./term.component.scss']
 })
 export class TermComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewChecked {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
@@ -116,8 +116,10 @@ export class TermComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewChecked(): void {
+    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+      this.editingService.setTabGroupClickEvent(this.tabGroup);
+    }
   }
 
   rulesCountEmitter(count: number) {

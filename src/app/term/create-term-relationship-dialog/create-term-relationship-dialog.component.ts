@@ -32,17 +32,29 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy {
 
+  // Form instance holder
   form: FormGroup;
+
+  // Form instance for creating relationship with existing term
   formWithExistingTerm: FormGroup;
+
+  // Form instance for creating relationship with new term
   formWithNewTerm: FormGroup;
+
+  // Terminology the terms and relationship belong to
   terminology: TerminologyDetail;
+
   submitting = false;
 
   private subscriptions = new Subscription();
-  private _relationshipTypes = new BehaviorSubject<TermRelationshipType[]>([]);
   private _sourceTerm = new BehaviorSubject<TermDetail>(null);
   private _relationshipType = new BehaviorSubject<TermRelationshipType>(null);
   private _targetTerm = new BehaviorSubject<TermDetail>(null);
+
+  // The types of relationships available
+  private _relationshipTypes = new BehaviorSubject<TermRelationshipType[]>([]);
+
+  // Keep track of whether need to create new term, or use existing ones, for the relationship.
   private _useExistingTerms = new BehaviorSubject<boolean>(true);
 
   constructor(
@@ -111,8 +123,8 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
     );
 
     this.subscriptions.add(
-      this._useExistingTerms.subscribe(b => {
-        if (b) {
+      this._useExistingTerms.subscribe(useExistingTerms => {
+        if (useExistingTerms) {
           this.form = this.formWithExistingTerm;
         } else {
           this.form = this.formWithNewTerm;

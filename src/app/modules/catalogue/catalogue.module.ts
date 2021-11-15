@@ -359,7 +359,6 @@ import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-rel
     VersionedFolderDetailComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
-    ProfileDataViewComponent,
     TermRelationshipListComponent
   ],
   imports: [

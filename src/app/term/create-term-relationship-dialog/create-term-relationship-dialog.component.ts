@@ -24,6 +24,7 @@ import { CatalogueItemDomainType, ContainerDomainType, ModelDomainType, TermDeta
 import { MessageHandlerService } from '@mdm/services';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-create-term-relationship-dialog',
@@ -156,6 +157,7 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
     this.submitting = true;
 
     if (!this.useExistingTerms) {
+      // Create the new term first
       this.resources.terms.save(this.terminology.id, {
         domainType: CatalogueItemDomainType.Term,
         code: this.form.value.targetTerm.code,
@@ -164,27 +166,24 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
       }).subscribe((response: HttpResponse<TermDetail>) => {
         if (response.ok) {
           this.targetTerm = response.body;
+
+          // New term created. Now add the new relationship.
           this.resources.terms.addTermRelationships(this.terminology.id, this.sourceTerm.id, {
             sourceTerm: this.sourceTerm.id,
             relationshipType: this.relationshipType.id,
             targetTerm: this.targetTerm.id
-          }).subscribe(
-            (trResponse: HttpResponse<TermRelationship>) => {
+          }).pipe(
+            finalize(() => this.submitting = false)
+          ).subscribe((trResponse: HttpResponse<TermRelationship>) => {
               if (trResponse.ok) {
                 this.dialogRef.close(trResponse.body);
               } else {
                 this.messageHandler.showWarning(trResponse.body);
               }
-              this.submitting = false;
-            },
-            error => {
-              this.messageHandler.showError(error);
-              this.submitting = false;
             }
           );
         } else {
-          this.messageHandler.showError('Unable to create new Term');
-          this.submitting = false;
+          this.messageHandler.showWarning(response.body);
         }
       });
     } else {
@@ -192,18 +191,15 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
         sourceTerm: this.sourceTerm.id,
         relationshipType: this.relationshipType.id,
         targetTerm: this.targetTerm.id
-      }).subscribe(
+      }).pipe(
+        finalize(() => this.submitting = false)
+      ).subscribe(
         (response: HttpResponse<TermRelationship>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
           } else {
             this.messageHandler.showWarning(response.body);
           }
-          this.submitting = false;
-        },
-        error => {
-          this.messageHandler.showError(error);
-          this.submitting = false;
         }
       );
     }

@@ -61,7 +61,6 @@ SPDX-License-Identifier: Apache-2.0
           </div>
           <div *ngIf="!useExistingTerms" class="card">
             <div class="card-body" formGroupName="targetTerm">
-              <!-- <form [formGroup]="newTermForm" (ngSubmit)="createTerm()"> -->
                 <div mat-dialog-content>
                   <div class="lead" style="padding-bottom: 10px;">
                     Terminology: {{data.terminology.label}}
@@ -80,11 +79,6 @@ SPDX-License-Identifier: Apache-2.0
                     <textarea matInput formControlName="description"></textarea>
                   </mat-form-field>
                 </div>
-                <!-- <div mat-dialog-actions style="display: flex; justify-content: end; gap: 5px;">
-                  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
-                  <button type="submit" class="btn btn-outline-primary" [disabled]="!form.valid" cdkFocusInitial>Submit</button>
-                </div> -->
-              <!-- </form> -->
             </div>
           </div>
         </div>

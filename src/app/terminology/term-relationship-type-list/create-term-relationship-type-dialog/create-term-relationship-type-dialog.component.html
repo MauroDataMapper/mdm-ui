@@ -18,34 +18,38 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="create-term-relationship-type-dialog">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <h4 mat-dialog-title style="border-bottom: 1px solid #dddddd; padding-bottom: 10px;">
-      <span *ngIf="!data.id">Create New</span>
-      <span *ngIf="data.id">Update</span>
-      <span> Term Relationship Type</span>
-    </h4>
-    <div mat-dialog-content>
+    <div class="modal-header pxy-2">
+      <h4 class="modal-title marginless">
+        <span *ngIf="!data.id">Create New</span>
+        <span *ngIf="data.id">Update</span>
+        <span> Term Relationship Type</span>
+      </h4>
+    </div>
+    <div class="modal-body pxy-2">
       <div class="lead" style="padding-bottom: 10px;">
         Terminology: {{data.terminology.label}}
       </div>
-      <mat-form-field style="width: 100%">
-        <mat-label>Label</mat-label>
-        <input matInput formControlName="label" required>
-        <mat-error></mat-error>
-      </mat-form-field>
-      <mat-form-field style="width: 100%">
-        <mat-label>Display Label</mat-label>
-        <input matInput formControlName="displayLabel">
-      </mat-form-field>
-      <div>
-        <mat-checkbox formControlName="parentalRelationship">Parent Relationship</mat-checkbox>
-      </div>
-      <div>
-        <mat-checkbox formControlName="childRelationship">Child Relationship</mat-checkbox>
+      <div class="mdm--form-input">
+        <mat-form-field style="width: 100%">
+          <mat-label>Label</mat-label>
+          <input matInput formControlName="label" required>
+          <mat-error></mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 100%">
+          <mat-label>Display Label</mat-label>
+          <input matInput formControlName="displayLabel">
+        </mat-form-field>
+        <div>
+          <mat-checkbox formControlName="parentalRelationship">Parent Relationship</mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox formControlName="childRelationship">Child Relationship</mat-checkbox>
+        </div>
       </div>
     </div>
-    <div mat-dialog-actions style="display: flex; justify-content: end; gap: 5px;">
-      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
-      <button type="submit" class="btn btn-outline-primary" [disabled]="!form.valid" cdkFocusInitial>Submit</button>
+    <div class="modal-footer pxy-2">
+      <button mat-button color="warn" class="mr-1" type="button" (click)="onCancel()">Cancel</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
     </div>
   </form>
 </div>

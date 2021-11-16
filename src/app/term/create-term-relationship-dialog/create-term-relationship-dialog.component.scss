@@ -16,30 +16,3 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-.create-term-relationship-dialog {
-  min-width: 700px;
-  .term-relationship-source {
-    .source-term-label {
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-  }
-
-  .term-relationship-type {
-    .relationship-type-label {
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-  }
-
-  .term-relationship-target {
-    .card-body {
-      overflow: scroll;
-      max-height: 500px;
-    }
-    .target-term-label {
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-  }
-}

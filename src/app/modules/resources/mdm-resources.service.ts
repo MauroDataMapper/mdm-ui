@@ -57,7 +57,8 @@ import {
   MdmVersionedFolderResource,
   MdmPluginOpenIdConnectResource,
   MdmMergeResource,
-  MdmPluginDoiResource
+  MdmPluginDoiResource,
+  MdmTermRelationshipTypeResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -76,6 +77,7 @@ export class MdmResourcesService {
   terminology = new MdmTerminologyResource(this.resourcesConfig, this.restHandler);
   terms = new MdmTermResource(this.resourcesConfig, this.restHandler);
   term = new MdmTermResource(this.resourcesConfig, this.restHandler);
+  termRelationshipTypes = new MdmTermRelationshipTypeResource(this.resourcesConfig, this.restHandler);
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
   versionedFolder = new MdmVersionedFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);

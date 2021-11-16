@@ -21,7 +21,7 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewChecked
 } from '@angular/core';
 import { Subscription, forkJoin, Observable } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -50,7 +50,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./term.component.scss']
 })
 export class TermComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewChecked {
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
@@ -70,7 +70,11 @@ export class TermComponent
   annotationsView = 'default';
   showEditDescription = false;
   rulesItemCount = 0;
+  codeSetItemCount = 0;
+  relationshipItemCount = 0;
   isLoadingRules = true;
+  isLoadingCodeSets = true;
+  isLoadingRelationships = true;
   showEdit = false;
   showDelete = false;
   access: Access;
@@ -112,17 +116,20 @@ export class TermComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewChecked(): void {
+    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+      this.editingService.setTabGroupClickEvent(this.tabGroup);
+    }
   }
 
-  rulesCountEmitter($event) {
+  rulesCountEmitter(count: number) {
     this.isLoadingRules = false;
-    this.rulesItemCount = $event;
+    this.rulesItemCount = count;
   }
 
   termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
+
 
     forkJoin([
       this.resources.terminology.get(terminologyId) as Observable<
@@ -206,6 +213,32 @@ export class TermComponent
           error
         );
       }
+    );
+  }
+
+  codeSetCountEmitter(count: number) {
+    this.isLoadingCodeSets = false;
+    this.codeSetItemCount = count;
+  }
+
+  onCodeSetSelect(codeset) {
+    this.stateHandler.Go(
+      'codeset',
+      { id: codeset.id },
+      null
+    );
+  }
+
+  relationshipCountEmitter(count: number) {
+    this.isLoadingRelationships = false;
+    this.relationshipItemCount = count;
+  }
+
+  onTermSelect(term) {
+    this.stateHandler.Go(
+      'term',
+      { terminologyId: term.model, id: term.id },
+      null
     );
   }
 }

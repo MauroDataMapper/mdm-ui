@@ -42,6 +42,6 @@ SPDX-License-Identifier: Apache-2.0
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
-    <mat-paginator [length]="totalItemCount" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="pageSize" pageIndex="0" showFirstLastButtons></mat-paginator>
+    <mat-paginator [length]="totalItemCount" [pageSize]="pageSize" pageIndex="0" showFirstLastButtons></mat-paginator>
   </div>
 </div>

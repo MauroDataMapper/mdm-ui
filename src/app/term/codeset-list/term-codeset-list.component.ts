@@ -23,7 +23,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { CodeSet, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-term-codeset-list',
@@ -40,7 +40,7 @@ export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChange
   @Output() selectedCodeSet = new EventEmitter<CodeSet>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   displayedColumns: string[] = ['label', 'author'];
   codesets: MdmTableDataSource<CodeSet> = new MdmTableDataSource();
@@ -96,7 +96,7 @@ export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChange
   refreshFetchOptions() {
     this.codesets.pageable = {
       max: this.paginator?.pageSize || this.pageSize,
-      offset: (this.paginator?.pageIndex * this.paginator?.pageSize) || 0
+      offset: (this.paginator?.pageOffset) || 0
     };
     this.codesets.sortable = {
       sort: this.sort?.active,

@@ -105,6 +105,8 @@ import { HomeComponent } from '@mdm/home/home.component';
 import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
+import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
+import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
@@ -187,6 +189,11 @@ import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-pro
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { TermRelationshipTypeListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
+import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
+import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term-relationship-type-list/create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
+import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
+import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 
 @NgModule({
   declarations: [
@@ -276,6 +283,12 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
+    TermListComponent,
+    TermRelationshipTypeListComponent,
+    TermCodeSetListComponent,
+    CreateTermDialogComponent,
+    CreateTermRelationshipTypeDialogComponent,
+    CreateTermRelationshipDialogComponent,
     TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
@@ -346,7 +359,8 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     VersionedFolderDetailComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
-    ProfileDataViewComponent
+    ProfileDataViewComponent,
+    TermRelationshipListComponent
   ],
   imports: [
     AdminModule,
@@ -458,6 +472,11 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
+    TermListComponent,
+    TermCodeSetListComponent,
+    CreateTermDialogComponent,
+    CreateTermRelationshipTypeDialogComponent,
+    CreateTermRelationshipDialogComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,

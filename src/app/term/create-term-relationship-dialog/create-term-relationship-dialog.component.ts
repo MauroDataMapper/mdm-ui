@@ -22,9 +22,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType, ContainerDomainType, ModelDomainType, TermDetail, TerminologyDetail, TermRelationship, TermRelationshipType } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-create-term-relationship-dialog',
@@ -163,7 +163,14 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
         code: this.form.value.targetTerm.code,
         definition: this.form.value.targetTerm.definition,
         description: this.form.value.targetTerm.description
-      }).subscribe((response: HttpResponse<TermDetail>) => {
+      }).pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to create new term');
+          console.error(error);
+          return EMPTY;
+        }),
+        finalize(() => this.submitting = false)
+      ).subscribe((response: HttpResponse<TermDetail>) => {
         if (response.ok) {
           this.targetTerm = response.body;
 
@@ -173,6 +180,11 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
             relationshipType: this.relationshipType.id,
             targetTerm: this.targetTerm.id
           }).pipe(
+            catchError(error => {
+              this.messageHandler.showError('Unable to create new relationship');
+              console.error(error);
+              return EMPTY;
+            }),
             finalize(() => this.submitting = false)
           ).subscribe((trResponse: HttpResponse<TermRelationship>) => {
               if (trResponse.ok) {
@@ -192,6 +204,11 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
         relationshipType: this.relationshipType.id,
         targetTerm: this.targetTerm.id
       }).pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to create new relationship');
+          console.error(error);
+          return EMPTY;
+        }),
         finalize(() => this.submitting = false)
       ).subscribe(
         (response: HttpResponse<TermRelationship>) => {

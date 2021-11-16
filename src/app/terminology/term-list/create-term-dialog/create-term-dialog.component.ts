@@ -23,6 +23,8 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
+import { catchError, finalize } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'mdm-create-term-dialog',
@@ -59,16 +61,19 @@ export class CreateTermDialogComponent implements OnInit {
       code: form.value.code,
       definition: form.value.definition,
       description: form.value.description
-    }).subscribe((response: HttpResponse<TermDetail>) => {
+    }).pipe(
+      catchError(error => {
+        this.messageHandler.showError('Unable to create new term');
+        console.error(error);
+        return EMPTY;
+      }),
+      finalize(() => this.submitting = false)
+    ).subscribe((response: HttpResponse<TermDetail>) => {
       if (response.ok) {
         this.dialogRef.close(response.body);
       } else {
         this.messageHandler.showWarning(response.body);
       }
-      this.submitting = false;
-    },
-    error => {
-      this.messageHandler.showError(error);
       this.submitting = false;
     });
   }

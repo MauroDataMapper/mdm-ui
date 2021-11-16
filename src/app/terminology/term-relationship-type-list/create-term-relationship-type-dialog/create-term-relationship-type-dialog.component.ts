@@ -23,6 +23,8 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { TermRelationshipTypeDetail } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
+import { catchError, finalize } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'mdm-create-term-relationship-type-dialog',
@@ -64,17 +66,19 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
         displayLabel: this.form.value.displayLabel,
         parentalRelationship: this.form.value.parentalRelationship || false,
         childRelationship: this.form.value.childRelationship || false
-      }).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
+      }).pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to create update relationship type');
+          console.error(error);
+          return EMPTY;
+        }),
+        finalize(() => this.submitting = false)
+      ).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
         if (response.ok) {
           this.dialogRef.close(response.body);
         } else {
           this.messageHandler.showWarning(response.body);
         }
-        this.submitting = false;
-      },
-      error => {
-        this.messageHandler.showError(error);
-        this.submitting = false;
       });
     } else {
       this.resources.termRelationshipTypes.save(this.data.terminology.id, {
@@ -82,17 +86,19 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
         displayLabel: this.form.value.displayLabel,
         parentalRelationship: this.form.value.parentalRelationship || false,
         childRelationship: this.form.value.childRelationship || false
-      }).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
+      }).pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to create new relationship type');
+          console.error(error);
+          return EMPTY;
+        }),
+        finalize(() => this.submitting = false)
+      ).subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
         if (response.ok) {
           this.dialogRef.close(response.body);
         } else {
           this.messageHandler.showWarning(response.body);
         }
-        this.submitting = false;
-      },
-      error => {
-        this.messageHandler.showError(error);
-        this.submitting = false;
       });
     }
   }

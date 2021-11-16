@@ -19,13 +19,13 @@ SPDX-License-Identifier: Apache-2.0
 
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TerminologyDetail, TermRelationshipType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { CreateTermRelationshipTypeDialogComponent } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 class CreateTermRelationshipTypeForm {
   id?: Uuid;
@@ -58,7 +58,7 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
   @Output() totalCount = new EventEmitter<number>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   displayedColumns: string[] = ['label', 'displayLabel', 'actions'];
   relationshipTypes: MdmTableDataSource<TermRelationshipType> = new MdmTableDataSource();

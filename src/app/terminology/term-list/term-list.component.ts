@@ -23,9 +23,9 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { Term, TerminologyDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTermDialogComponent } from './create-term-dialog/create-term-dialog.component';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 class CreateTermForm {
   terminology: TerminologyDetail;
@@ -55,7 +55,7 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() deletedTerm = new EventEmitter();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   displayedColumns: string[] = ['code', 'definition', 'actions'];
   terms: MdmTableDataSource<Term> = new MdmTableDataSource();

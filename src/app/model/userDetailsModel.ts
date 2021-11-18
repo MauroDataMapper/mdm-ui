@@ -24,5 +24,5 @@ export class UserDetailsResult {
   jobTitle: string;
   userRole: string;
   groups: any[];
-  emailAddress: any;
+  emailAddress: string;
 }

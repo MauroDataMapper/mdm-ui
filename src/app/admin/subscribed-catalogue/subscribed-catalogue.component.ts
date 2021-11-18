@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue, SubscribedCatalogueResponse } from '@maurodatamapper/mdm-resources';
+import { SubscribedCatalogue, SubscribedCatalogueResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -57,7 +57,7 @@ export class SubscribedCatalogueComponent implements OnInit {
     }
 
     this.editingService.start();
-    const catalogueId = this.routerGobals.params.id;
+    const catalogueId : Uuid = this.routerGobals.params.id;
 
     if (catalogueId) {
       this.isCreating = false;

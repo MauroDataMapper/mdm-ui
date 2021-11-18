@@ -144,7 +144,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       .subscribe(() => this.rejectUser(row));
   };
 
-  approveUser = (row) => {
+  approveUser = (row : any) => {
     this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
       this.messageHandler.showSuccess('User approved successfully');
       this.broadcast.dispatch('pendingUserUpdated');

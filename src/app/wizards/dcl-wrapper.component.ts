@@ -24,7 +24,7 @@ import {
   Input,
   ComponentFactoryResolver,
   ChangeDetectorRef,
-  EventEmitter, OnChanges, AfterViewInit, OnDestroy
+  EventEmitter, OnChanges, AfterViewInit, OnDestroy, Type
 } from '@angular/core';
 
 // Helper component to add dynamic components
@@ -35,8 +35,13 @@ import {
 export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() stepChanged = new EventEmitter<any>();
   @ViewChild('target', { read: ViewContainerRef, static: false }) target;
-  @Input() type;
+  @Input() type : Type<unknown>;
   stepVal: any;
+
+  private isViewInitialized = false;
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver, private cdRef: ChangeDetectorRef) { }
+
   @Input()
   get step(): any {
     return this.stepVal;
@@ -45,9 +50,6 @@ export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy 
     this.stepVal = val;
     this.stepChanged.emit();
   }
-  private isViewInitialized = false;
-
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, private cdRef: ChangeDetectorRef) { }
 
   updateComponent() {
     if (!this.isViewInitialized) {

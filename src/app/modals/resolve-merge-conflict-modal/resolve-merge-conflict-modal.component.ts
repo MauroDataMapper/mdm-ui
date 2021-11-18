@@ -36,6 +36,11 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   private mergeViewrl : ElementRef;
   private mergeViewlr : ElementRef;
 
+  constructor(
+    private dialogRef: MatDialogRef<ResolveMergeConflictModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) { }
+
   @ViewChild('mergeDiffrl', {static:false}) set mergeDiffConRl(content: ElementRef) {
     this.mergeViewrl = content;
   }
@@ -44,10 +49,6 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     this.mergeViewlr = content;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<ResolveMergeConflictModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
 
   ngAfterViewInit(): void {
     if (this.data.diffs) {

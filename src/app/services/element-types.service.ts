@@ -293,7 +293,7 @@ export class ElementTypesService {
 
   };
 
-  private userTypes: any = {
+  private userTypes: {} = {
     UserGroup: { id: 'UserGroup', link: 'userGroup', title: 'UserGroup', resourceName: 'userGroup' },
     User: { id: 'User', link: 'user', title: 'User', resourceName: 'user' },
   };

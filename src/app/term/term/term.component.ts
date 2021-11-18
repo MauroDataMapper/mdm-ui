@@ -38,7 +38,8 @@ import {
   TermDetail,
   TermDetailResponse,
   TerminologyDetail,
-  TerminologyDetailResponse
+  TerminologyDetailResponse,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -105,7 +106,7 @@ export class TermComponent
     this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as Uuid).index;
     this.tabSelected(this.activeTab);
 
     this.termDetails(this.parentId);
@@ -200,7 +201,7 @@ export class TermComponent
     });
 
     this.resources.term
-    .update(this.term.terminology.id, this.term.id, resource)
+    .update(this.terminology.id, this.term.id, resource)
     .subscribe(
       (result:TermDetailResponse) => {
         this.termDetails(result.body.id);

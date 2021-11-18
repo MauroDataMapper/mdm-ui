@@ -29,7 +29,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataModel, DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 
 @Component({
@@ -39,7 +39,7 @@ import { Access } from '@mdm/model/access';
 })
 export class DataTypeDetailComponent implements OnInit {
   @Input() dataType: DataTypeDetail;
-  @Input() mcParentDataModel: any;
+  @Input() mcParentDataModel: DataModel;
 
   originalDataType : DataTypeDetail;
   elementType: any;

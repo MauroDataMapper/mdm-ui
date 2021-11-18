@@ -41,7 +41,7 @@ export class GridService {
     }
   };
 
-  constructOptions(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  constructOptions(pageSize? : number, pageIndex? : number, sortBy? : string, sortType? : string, filters? : {}) {
     const options = {};
 
     if (pageSize) {

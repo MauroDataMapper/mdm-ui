@@ -22,6 +22,7 @@ import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.servic
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Component({
    selector: 'mdm-reference-data-element',
@@ -29,7 +30,7 @@ import { GridService } from '@mdm/services';
    styleUrls: ['./reference-data-element.component.scss']
 })
 export class ReferenceDataElementComponent implements AfterViewInit {
-   @Input() parent: any;
+   @Input() parent: CatalogueItem;
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
    @Output() totalCount = new EventEmitter<string>();
 

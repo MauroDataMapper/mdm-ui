@@ -26,6 +26,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { ValidatorService } from '@mdm/services/validator.service';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Uuid } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-user',
@@ -33,7 +34,7 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  id: any;
+  id: Uuid;
   result = [];
   allGroups = [];
   selectedGroups = [];
@@ -177,7 +178,7 @@ export class UserComponent implements OnInit {
       // it's in edit mode
       if (this.user.id) {
         // it's in edit mode (update)
-        this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
+        this.resourcesService.catalogueUser.update(this.user.id as Uuid, resource).subscribe(() => {
         this.messageHandler.showSuccess('User updated successfully.');
         this.navigateToParent();
         }, error => {

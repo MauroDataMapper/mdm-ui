@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {Component,  OnInit} from '@angular/core';
+import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-element-step1',
@@ -24,13 +26,30 @@ import {Component,  OnInit} from '@angular/core';
   styleUrls: ['./data-element-step1.component.sass']
 })
 export class DataElementStep1Component implements OnInit {
-  step = {
-      invalid: true,
-      scope: {
-          model: ''
-      }
+  step: {
+    invalid : boolean;
+    isProcessComplete : boolean;
+    scope : {
+       model: {
+        [key: string]: any;
+        createType: CreateType;
+        selectedDataTypes: Array<any>;
+        parent:DataModel;
+        copyFromDataModel: Array<DataModel>;
+        copyFromDataClass: Array<DataClass>;
+      };
+    };
   };
-  modelVal: any;
+  modelVal: {
+    [key: string]: any;
+    createType: CreateType;
+    selectedDataTypes: Array<any>;
+    parent:DataModel;
+    copyFromDataModel: Array<DataModel>;
+    copyFromDataClass: Array<DataClass>;
+  };;
+
+  constructor() { }
 
   get model() {
     return this.modelVal;
@@ -41,7 +60,6 @@ export class DataElementStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor() { }
 
   validate = () => {
     if (!this.model?.createType) {

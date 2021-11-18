@@ -46,6 +46,14 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   val: any;
   constructor() { }
 
+  get ngValue() {
+    return this.val;
+  }
+
+  set ngValue(val) {
+    this.val = val;
+    this.propChange(val);
+  }
 
   writeValue(obj: any): void {
     this.ngValue = obj;
@@ -65,14 +73,7 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  set ngValue(val) {
-    this.val = val;
-    this.propChange(val);
-  }
 
-  get ngValue() {
-    return this.val;
-  }
 
   save()
   {

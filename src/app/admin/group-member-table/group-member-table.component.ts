@@ -62,7 +62,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter : any
+  applyFilter : any;
 
   constructor(
     private roles: ROLES,

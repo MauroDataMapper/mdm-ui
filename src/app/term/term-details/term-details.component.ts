@@ -26,7 +26,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   TermDetail,
   TermDetailResponse,
-  TerminologyDetailResponse
+  TerminologyDetailResponse,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
@@ -71,7 +72,7 @@ export class TermDetailsComponent implements OnInit {
   }
 
   termDetails(): any {
-    const termId = this.uiRouterGlobals.params.id;
+    const termId : Uuid = this.uiRouterGlobals.params.id;
     this.terminologyId = this.uiRouterGlobals.params.terminologyId;
     this.resourcesService.term
       .get(this.terminologyId, termId)

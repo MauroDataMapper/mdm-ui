@@ -105,7 +105,7 @@ export class DataClassComponent
       this.parentDataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();

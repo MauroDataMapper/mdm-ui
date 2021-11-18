@@ -40,6 +40,8 @@ export class AlertComponent implements OnInit {
     ['error', { icon: 'fa-times-circle', cssModifier: 'mdm-alert--error' }]
   ]);
 
+  constructor() { }
+
   get iconName() {
     if (!this.showIcon) {
       return '';
@@ -51,8 +53,6 @@ export class AlertComponent implements OnInit {
   get cssModifier() {
     return this.styleMetadata.get(this.alertStyle)?.cssModifier ?? '';
   }
-
-  constructor() { }
 
   ngOnInit(): void {
   }

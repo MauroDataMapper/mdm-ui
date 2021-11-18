@@ -26,7 +26,6 @@ import { ToastrModule } from 'ngx-toastr';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 describe('StateHandlerService', () => {
   let spyRouter: UIRouter;
-  let currentText = '';   // What the spyRouter.stateService.current.toString() returns.
 
   beforeEach(() => {
     /**
@@ -95,7 +94,6 @@ describe('StateHandlerService', () => {
   it('should get folder url', () => {
     const handlerService = TestBed.inject(StateHandlerService);
 
-    currentText = '';
     const result = handlerService.getURL('folder', null);
     expect(spyRouter.stateService.href).toHaveBeenCalled();
     expect(result).toEqual(handlerService.handler.states.folder);
@@ -129,7 +127,6 @@ describe('StateHandlerService', () => {
    */
   it('should get unknown', () => {
     const handlerService = TestBed.inject(StateHandlerService);
-    currentText = '';
     const name = 'Fjord defect';
     const result = handlerService.getURL(name, null);
     expect(result).toEqual(name);

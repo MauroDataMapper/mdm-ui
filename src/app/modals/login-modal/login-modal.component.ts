@@ -43,14 +43,6 @@ export class LoginModalComponent implements OnInit {
 
   openIdConnectProviders?: PublicOpenIdConnectProvider[];
 
-  get userName() {
-    return this.signInForm.get('userName');
-  }
-
-  get password() {
-    return this.signInForm.get('password');
-  }
-
   constructor(
     private broadcast: BroadcastService,
     public dialogRef: MatDialogRef<LoginModalComponent>,
@@ -60,6 +52,15 @@ export class LoginModalComponent implements OnInit {
     private resources: MdmResourcesService,
     private shared: SharedService,
     private messageHandler: MessageHandlerService) { }
+
+  get userName() {
+    return this.signInForm.get('userName');
+  }
+
+  get password() {
+    return this.signInForm.get('password');
+  }
+
 
   ngOnInit() {
     this.signInForm = new FormGroup({

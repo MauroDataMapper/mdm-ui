@@ -40,7 +40,6 @@ import { CatalogueItemDomainType, ContainerDomainType, FolderIndexResponse, MdmT
   styleUrls: ['./model-selector-tree.component.sass']
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
-
   @Input() root: any;
   @Output() rootChange = new EventEmitter<any>();
   @Input() defaultElements: any;
@@ -70,18 +69,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() checkChange = new EventEmitter<any>();
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
-
-  showTree: any;
-  placeholderStr: string;
-  loading: boolean;
-  rootNode: any;
-  filteredRootNode: any;
-  markChildren: any;
-  selectedElements: MdmTreeItem[] = [];
-  searchCriteria: any;
-  hasValidationError: boolean;
-  inSearchMode: any;
-  wasInside = false;
   searchInputTreeControl: ElementRef;
   selectedElementsVal: MdmTreeItem[];
   @Input()
@@ -98,6 +85,18 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     }
     this.ngModelChange.emit(this.selectedElementsVal);
   }
+
+  showTree: any;
+  placeholderStr: string;
+  loading: boolean;
+  rootNode: any;
+  filteredRootNode: any;
+  markChildren: any;
+  selectedElements: MdmTreeItem[] = [];
+  searchCriteria: any;
+  hasValidationError: boolean;
+  inSearchMode: any;
+  wasInside = false;
 
   @HostListener('click')
   clickInside() {
@@ -167,8 +166,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
-      return event.target.value;
-    }),
+        return event.target.value;
+      }),
       filter((res: any) => res.length >= 0),
       debounceTime(500),
       distinctUntilChanged()
@@ -216,7 +215,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.tree.list(ContainerDomainType.Folders, { foldersOnly: true }).subscribe((data: MdmTreeItemListResponse) => {
+      this.resources.tree.list(ContainerDomainType.Folders, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
         // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
         // outside the component and passed into this component as an @Input(), making this a "dumb" component.
         // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for

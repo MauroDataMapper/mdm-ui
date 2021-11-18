@@ -26,19 +26,12 @@ import { CreateType } from '@mdm/wizards/wizards.model';
   styleUrls: ['./data-element-step1.component.sass']
 })
 export class DataElementStep1Component implements OnInit {
-  step: {
-    invalid : boolean;
-    isProcessComplete : boolean;
+  step = {
+    invalid : true,
+    isProcessComplete : false,
     scope : {
-       model: {
-        [key: string]: any;
-        createType: CreateType;
-        selectedDataTypes: Array<any>;
-        parent:DataModel;
-        copyFromDataModel: Array<DataModel>;
-        copyFromDataClass: Array<DataClass>;
-      };
-    };
+       model: null
+      }
   };
   modelVal: {
     [key: string]: any;

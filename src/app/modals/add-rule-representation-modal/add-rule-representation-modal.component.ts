@@ -190,6 +190,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
         reader.readAsText(fileInput.target.files[0]);
       }
       else{
+        this.myFilename = 'Import File';
         this.messageHandler.showError('Unable in import file please copy and paste');
       }
     }

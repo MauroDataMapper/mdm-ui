@@ -18,6 +18,10 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "allowedCommonJsDependencies": ["lodash"],
+            "sourceMap": {
+              "vendor": true
+            },
+            "preserveSymlinks": true,
             "customWebpackConfig": {
               "path": "webpack.config.js"
             },
@@ -83,6 +87,7 @@
               "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
+              "sourceMap": true,
               "namedChunks": true
             }
           }

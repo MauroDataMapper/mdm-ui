@@ -201,7 +201,7 @@ export class DataModelComponent
           });
 
         if (this.sharedService.isLoggedIn(true)) {
-          this.DataModelPermissions(id);
+          this.DataModelPermissions(this.catalogueItem.id);
         }
       });
   }

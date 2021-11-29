@@ -119,8 +119,8 @@ export class TerminologyComponent
         this.showEdit = this.access.showEdit;
         this.showDelete =
           this.access.showPermanentDelete || this.access.showSoftDelete;
-
           this.terminology = data;
+            this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
       });
 

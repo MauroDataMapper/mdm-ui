@@ -198,7 +198,7 @@ export class ElementsTableComponent implements AfterViewInit {
         });
       }
     });
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkEditModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
         panelClass: 'bulk-edit-modal'
@@ -231,7 +231,7 @@ export class ElementsTableComponent implements AfterViewInit {
         });
       }
     });
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
         panelClass: 'bulk-delete-modal'

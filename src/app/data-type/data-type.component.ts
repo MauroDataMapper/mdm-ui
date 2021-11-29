@@ -30,7 +30,7 @@ import {
   SecurityHandlerService,
 } from '@mdm/services';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataModel, DataType, DataTypeDetail, DataTypeDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -43,10 +43,10 @@ export class DataTypeComponent extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
-  dataType: any;
-  dataModelId: any;
-  dataModel: any;
-  id: any;
+  dataType: DataTypeDetail;
+  dataModelId: Uuid;
+  dataModel: DataModel;
+  id: Uuid;
   activeTab: number;
   showExtraTabs: boolean;
   showEditForm = false;
@@ -102,11 +102,10 @@ export class DataTypeComponent extends BaseComponent
     this.title.setTitle('Data Type');
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView
+      this.uiRouterGlobals.params.tabView as string
     ).index;
     this.tabSelected(this.activeTab);
 
-    this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
     this.resources.dataType.get(this.dataModelId, this.id).subscribe(

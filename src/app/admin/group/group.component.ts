@@ -23,6 +23,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Uuid } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-group',
@@ -37,7 +38,7 @@ export class GroupComponent implements OnInit {
     groupMembers: [],
     id: ''
   };
-  groupId: any;
+  groupId: Uuid;
 
   constructor(
     private messageHandler: MessageHandlerService,

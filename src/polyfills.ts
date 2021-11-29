@@ -36,4 +36,4 @@ import 'core-js/es/set';
 import 'core-js/es/reflect';
 import 'classlist.js';  // Run `npm install --save classlist.js`.
 import 'web-animations-js';  // Run `npm install --save web-animations-js`.
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js';  // Included with Angular CLI.

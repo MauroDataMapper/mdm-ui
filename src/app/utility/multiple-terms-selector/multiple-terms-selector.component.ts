@@ -73,7 +73,7 @@ export class MultipleTermsSelectorComponent {
   currentRecord: number;
   totalItemCount = 0;
   isProcessing = false;
-  selectedItems: any;
+  selectedItems: any[];
   private searchControlInput: ElementRef;
   @Input()
   get selectedTerms() {

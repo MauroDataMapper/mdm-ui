@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
-import { TermDetail } from '@maurodatamapper/mdm-resources';
+import { QueryParameters, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Subscription } from 'rxjs';
 
@@ -42,7 +42,7 @@ export class TermRelationshipsComponent implements OnInit {
 
   ngOnInit() {
     if (this.term) {
-      const parameters: any = { };
+      const parameters: QueryParameters = { };
       if (this.type) {
         parameters.type = this.type;
       }

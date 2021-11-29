@@ -17,6 +17,11 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "allowedCommonJsDependencies": ["lodash"],
+            "sourceMap": {
+              "vendor": true
+            },
+            "preserveSymlinks": true,
             "customWebpackConfig": {
               "path": "webpack.config.js"
             },
@@ -64,7 +69,7 @@
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": true,              
               "budgets": [
                 {
                   "type": "initial",
@@ -76,6 +81,14 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
@@ -87,8 +100,13 @@
           "configurations": {
             "production": {
               "browserTarget": "mdm-ui:build:production"
+            },
+            "development": {
+              "browserTarget": "mdm-ui:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
+          
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

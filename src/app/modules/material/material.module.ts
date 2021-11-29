@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ModuleWithProviders, NgModule} from '@angular/core';
+import { NgModule} from '@angular/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -132,7 +132,7 @@ export class MaterialModule {
     constructor(public matIconRegistry: MatIconRegistry) {
     }
 
-    static forRoot(): ModuleWithProviders {
+    static forRoot() {
         return {
             ngModule: MaterialModule,
             providers: [MatIconRegistry]

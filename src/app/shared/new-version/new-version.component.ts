@@ -186,7 +186,7 @@ export class NewVersionComponent implements OnInit {
         copyDataFlows: false
       };
 
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
         .newForkModel(this.catalogueItem.id, resource);
 
       this.handleCreateResponse(
@@ -195,7 +195,7 @@ export class NewVersionComponent implements OnInit {
         'There was a problem creating the new forked version.');
     }
     else if (this.actionValue === 'Version') {
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
         .newBranchModelVersion(this.catalogueItem.id, {});
 
       this.handleCreateResponse(
@@ -208,7 +208,7 @@ export class NewVersionComponent implements OnInit {
         branchName: this.branchName.value
       };
 
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
          .newBranchModelVersion(this.catalogueItem.id, resource);
 
       this.handleCreateResponse(

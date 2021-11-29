@@ -25,7 +25,7 @@ import { Step } from '@mdm/model/stepModel';
 import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, DataModelDetailResponse, DataType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, DataModelDetailResponse, DataType, Uuid } from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
 
 @Component({
@@ -34,10 +34,10 @@ import { ElementTypesService } from '@mdm/services';
   styleUrls: ['./data-type-main.component.sass'],
 })
 export class DataTypeMainComponent implements OnInit {
-  parentDataModelId: any;
+  parentDataModelId: Uuid;
   steps: Step[] = [];
-  processing: any;
-  isProcessComplete: any;
+  processing: boolean;
+  isProcessComplete: boolean;
   model = {
     createType: 'new',
     copyFromDataModel: [],

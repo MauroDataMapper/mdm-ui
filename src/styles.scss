@@ -16,8 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+@use '~@angular/material' as mat;
 @import "~ngx-toastr/toastr.css";
-@import "~@angular/material/theming";
 
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
 @import '~bootstrap';
 
 // Include the common styles for Angular Material. Only required to include this once!
-@include mat-core();
+@include mat.core();
 
 /*
 Themes
@@ -41,10 +41,12 @@ Import more theme SASS files here to make them available to the app
 @import "style/abstracts/mixins";
 @import "style/abstracts/helpers";
 
-@import "@fortawesome/fontawesome-free/scss/fontawesome";
-@import "@fortawesome/fontawesome-free/scss/solid";
-@import "@fortawesome/fontawesome-free/scss/regular";
-@import "@fortawesome/fontawesome-free/scss/brands";
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '@fortawesome/fontawesome-free/scss/fontawesome';
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/brands';
+@import '@fortawesome/fontawesome-free/scss/v4-shims';
 
 @import "style/main";
 @import "style/default";

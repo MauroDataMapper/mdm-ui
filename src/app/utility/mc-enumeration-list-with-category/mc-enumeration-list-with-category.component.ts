@@ -27,6 +27,7 @@ import { MatTable } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { DataClassDetail, DataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -34,13 +35,13 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./mc-enumeration-list-with-category.component.sass']
 })
 export class McEnumerationListWithCategoryComponent implements OnInit {
-  @Input() parent;
+  @Input() parent : DataModelDetail | DataClassDetail;
   @Input() clientSide = false;
-  @Input() enumerationValues;
+  @Input() enumerationValues ;
   @Input() onUpdate;
   @Input() type: any;
   @Input() isEditable = false;
-  @Input() domainType: any;
+  @Input() domainType: string;
 
   @Output() afterSave = new EventEmitter<any>();
 

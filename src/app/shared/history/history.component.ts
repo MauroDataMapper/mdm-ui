@@ -54,7 +54,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter = this.gridService.applyFilter(this.filters);
+  applyFilter :any;
 
   constructor(public resourcesService: MdmResourcesService, private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
 
@@ -72,6 +72,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     this.parentTypeVal = this.parentType;
     this.parentIdVal = this.parentId ? this.parentId : this.parent?.id;
     this.parentVal = this.parent;
+    this.applyFilter = this.gridService.applyFilter(this.filters);
 
   }
 

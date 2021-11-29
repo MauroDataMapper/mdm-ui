@@ -51,7 +51,7 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getApiProperties();
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView as string);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }

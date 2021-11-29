@@ -27,6 +27,8 @@ export class MultiplicityComponent {
   @Input() min: number | string;
   @Input() max: number | string;
 
+  constructor() {}
+
   get isValid(): boolean {
     if (this.min === null || this.min === undefined || this.max === null || this.max === undefined) {
       return false;
@@ -42,6 +44,4 @@ export class MultiplicityComponent {
 
     return true;
   }
-
-  constructor() {}
 }

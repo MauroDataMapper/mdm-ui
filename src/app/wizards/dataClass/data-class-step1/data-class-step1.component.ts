@@ -27,6 +27,9 @@ export class DataClassStep1Component implements OnInit {
   step: any;
 
   modelVal: any;
+
+  constructor(private changeRef: ChangeDetectorRef) {}
+
   get model() {
     return this.modelVal;
   }
@@ -35,7 +38,7 @@ export class DataClassStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor(private changeRef: ChangeDetectorRef) {}
+
 
   ngOnInit() {
     this.model = this.step.scope.model;

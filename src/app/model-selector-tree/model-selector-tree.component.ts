@@ -166,8 +166,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
-      return event.target.value;
-    }),
+        return event.target.value;
+      }),
       filter((res: any) => res.length >= 0),
       debounceTime(500),
       distinctUntilChanged()

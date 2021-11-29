@@ -16,13 +16,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+@use '~@angular/material' as mat;
 
-@import '~@angular/material/theming';
 
 @mixin mdm-models-tree-theme($theme) {
   $primary: map-get($theme, primary);
 
   span.tree-top-actions button, .import-folder-actions button {
-    color: mat-color($primary);
+    color: mat.get-color-from-palette($primary);
   }
 }

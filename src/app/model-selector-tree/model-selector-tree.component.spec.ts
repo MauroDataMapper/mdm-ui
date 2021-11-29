@@ -88,7 +88,7 @@ describe('ModelSelectorTreeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    treeSpy = spyOn(component['resources'].tree, 'list').and.callThrough();
+    treeSpy =  jest.spyOn(component['resources'].tree, 'list');
   });
 
   it('should create', () => {

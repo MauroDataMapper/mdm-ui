@@ -32,7 +32,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataElement, DataElementDetail } from '@maurodatamapper/mdm-resources';
+import { DataClass, DataElement, DataElementDetail, DataModel } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 
@@ -43,8 +43,8 @@ import { Access } from '@mdm/model/access';
 })
 export class DataElementDetailsComponent
   implements OnInit, OnDestroy {
-  @Input() parentDataModel;
-  @Input() parentDataClass;
+  @Input() parentDataModel : DataModel;
+  @Input() parentDataClass : DataClass;
   @Input() editMode = false;
   result: DataElementDetail;
   subscription: Subscription;

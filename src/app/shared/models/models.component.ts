@@ -44,6 +44,7 @@ import {
   Classifier,
   ClassifierIndexResponse,
   ContainerDomainType,
+  DataModel,
   isContainerDomainType,
   MdmTreeItem,
   MdmTreeItemListResponse,
@@ -364,7 +365,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadModelsTree();
   }
 
-  loadModelsToCompare(dataModel: any) {
+  loadModelsToCompare(dataModel: DataModel) {
     this.resources.catalogueItem
       .listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })
       .subscribe((result) => {

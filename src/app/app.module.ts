@@ -38,9 +38,10 @@ import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
+import { BulkEditElementSelectComponent } from './bulk-edit/bulk-edit-element-select/bulk-edit-element-select.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, BulkEditElementSelectComponent],
   imports: [
     BrowserModule,
     CatalogueModule,

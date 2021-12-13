@@ -20,6 +20,9 @@ SPDX-License-Identifier: Apache-2.0
   <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="dataModel">
+
+        <mdm-bulk-edit-profile-select *ngIf="dataModel" [domainType]="dataModel.domainType" [catalogueItemId]="dataModel.id"></mdm-bulk-edit-profile-select>
+
         <button
           type="button"
           data-cy="user-actions-menu"

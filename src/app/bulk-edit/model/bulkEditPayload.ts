@@ -1,3 +1,3 @@
-export class BulkEditPayload
-{
+export class BulkEditPayload {
+    elements: any[];
 }

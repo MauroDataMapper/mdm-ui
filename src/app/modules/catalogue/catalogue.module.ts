@@ -195,6 +195,7 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
 import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
+import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 
 @NgModule({
   declarations: [
@@ -367,6 +368,7 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
   imports: [
     AdminModule,
     AngularSplitModule.forRoot(),
+    BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,
     ChartsModule,

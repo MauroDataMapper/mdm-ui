@@ -142,10 +142,11 @@ SPDX-License-Identifier: Apache-2.0
           <i class="fas fa-code-branch"></i>
           {{node.branchName}}
         </small>
-        <small *ngIf="node.modelVersion" class="ml-1 text-muted">
+        <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
           <span> | </span>
-          <i class="fas fa-file-alt"></i>
-          {{node.modelVersion}}
+          <i  class="fas fa-file-alt"></i>
+           <span *ngIf="node.modelVersion">{{node.modelVersion}}</span>
+           <span *ngIf="node.version">{{node.version}}</span>
         </small>
         <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
           <span> | </span>

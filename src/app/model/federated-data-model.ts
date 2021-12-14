@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { Version } from '@angular/compiler';
 import { AvailableDataModel, CatalogueItemDomainType, SubscribedDataModel } from '@maurodatamapper/mdm-resources';
 
 export class FederatedDataModel {
@@ -27,6 +28,7 @@ export class FederatedDataModel {
   subscriptionId?: string;
   folderId?: string;
   folderLabel?: string;
+  version? : Version;
 
   constructor(
     catalogueId: string,

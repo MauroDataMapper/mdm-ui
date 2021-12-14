@@ -5,6 +5,7 @@ import { BulkEditProfileSelectComponent } from './bulk-edit-profile-select/bulk-
 import { BulkEditEditorComponent } from './bulk-edit-editor/bulk-edit-editor.component';
 import { BulkEditSaveModalComponent } from './modals/bulk-edit-save-modal/bulk-edit-save-modal.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component';
 
 
 
@@ -13,7 +14,8 @@ import { AgGridModule } from 'ag-grid-angular';
     BulkEditElementSelectComponent,
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
-    BulkEditSaveModalComponent
+    BulkEditSaveModalComponent,
+    BulkEditBaseComponent
   ],
   imports: [
     CommonModule,

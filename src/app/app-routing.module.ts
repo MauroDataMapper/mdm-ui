@@ -66,6 +66,7 @@ import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/m
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
 import { SecurityHandlerService, SharedService } from './services';
+import { BulkEditBaseComponent } from './bulk-edit/bulk-edit-base/bulk-edit-base.component';
 
 /**
  * Collection of all page state routes.
@@ -186,6 +187,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
       url: '/:domainType/newVersion/:id',
       component: NewVersionComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit',
+      url: '/:domainType/bulkEdit/:id',
+      component: BulkEditBaseComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',

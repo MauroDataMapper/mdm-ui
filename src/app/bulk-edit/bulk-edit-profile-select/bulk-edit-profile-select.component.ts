@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
@@ -20,15 +20,40 @@ export class BulkEditProfileSelectComponent implements OnInit {
 
   profiles: Array<Profile>;
 
-  constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService) { }
+  constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService, private stateHandler: StateHandlerService) { }
 
   ngOnInit(): void {
-    this.resouces.profile.getMany(this.domainType, this.catalogueItemId, {itemsProfiles:[{ multiFacetAwareItemDomainType:'DataModel', multiFacetAwareItemId: '59923a64-c5ae-4b94-a825-2ca5c7e803f3'}]}).pipe(
-      catchError((error) => { this.messageHandler.showError(error); return EMPTY; })
-    ).subscribe((result) => {
-      this.profiles = result.body;
-    }
-    );
+
+    this.resouces.dataModel.dataElements(this.catalogueItemId).pipe(
+      catchError((error) => { this.messageHandler.showError(error); return EMPTY;})
+    ).switchMap((profiles) => {
+
+      const itemsProfiles = new Array<any>();
+
+      profiles.array.forEach(dataElement => {
+        itemsProfiles.push({ multiFacetAwareItemDomainType: dataElement.domainType, multiFacetAwareItemId: dataElement.id });
+      });
+
+      this.resouces.profile.getMany(this.domainType, this.catalogueItemId, {itemsProfiles}).
+      pipe(
+        catchError(profileError => {
+           this.messageHandler.showError(profileError);
+           return EMPTY;
+        })
+      ).subscribe(result => {
+        this.profiles = result.body;
+      });
+    });
   }
 
+  proceedToEdit()
+  {
+
+  }
+
+
+  cancel()
+  {
+    this.stateHandler.GoPrevious();
+  }
 }

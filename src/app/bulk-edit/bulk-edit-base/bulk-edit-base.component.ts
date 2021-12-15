@@ -15,10 +15,16 @@ export class BulkEditBaseComponent implements OnInit {
   @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
 
   profileSelectStep = true;
+  editorStep = false;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  openEditor(){
+    this.profileSelectStep = !this.profileSelectStep;
+    this.editorStep = !this.editorStep;
   }
 
 }

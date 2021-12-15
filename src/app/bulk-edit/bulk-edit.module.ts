@@ -6,6 +6,8 @@ import { BulkEditEditorComponent } from './bulk-edit-editor/bulk-edit-editor.com
 import { BulkEditSaveModalComponent } from './modals/bulk-edit-save-modal/bulk-edit-save-modal.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component';
+import { MaterialModule } from '@mdm/modules/material/material.module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -19,13 +21,16 @@ import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component
   ],
   imports: [
     CommonModule,
+    MaterialModule,
+    FormsModule,
     AgGridModule.withComponents([])
   ],
   exports: [
     BulkEditElementSelectComponent,
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
-    BulkEditSaveModalComponent
+    BulkEditSaveModalComponent,
+    BulkEditBaseComponent
   ]
 })
 export class BulkEditModule { }

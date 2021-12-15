@@ -21,9 +21,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="dataModel">
 
-        <mdm-bulk-edit-profile-select *ngIf="dataModel" [domainType]="dataModel.domainType" [catalogueItemId]="dataModel.id"></mdm-bulk-edit-profile-select>
-
-        <button
+       <button
           type="button"
           data-cy="user-actions-menu"
           mat-icon-button
@@ -62,6 +60,15 @@ SPDX-License-Identifier: Apache-2.0
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
           </button>
+          <button
+          mat-menu-item
+          data-cy="edit-label"
+          type="button"
+          *ngIf="access.showEdit"
+          (click)="openBulkEdit()"
+        >
+          <i class="fas fa-clone"></i> Bulk Edit
+        </button>
           <button
             mat-menu-item
             data-cy="compare"

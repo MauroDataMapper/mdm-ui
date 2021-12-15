@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StateHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -7,9 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BulkEditEditorComponent implements OnInit {
 
-  constructor() { }
+  @Output() backEvent = new EventEmitter();
+
+  tabs : Array<{tabTile:string}>;
+
+  constructor(private stateHandler: StateHandlerService) { }
+
 
   ngOnInit(): void {
   }
 
+  cancel() {
+    this.stateHandler.GoPrevious();
+  }
+
+  back() {
+    this.backEvent.emit();
+  }
 }
+
+

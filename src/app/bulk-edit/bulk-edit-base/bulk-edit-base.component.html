@@ -1,1 +1,2 @@
-<mdm-bulk-edit-profile-select *ngIf="profileSelectStep" (domainType)="domainType" (catalogueItemId)="catalogueItemId"></mdm-bulk-edit-profile-select>   
+<mdm-bulk-edit-profile-select *ngIf="profileSelectStep"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
+<mdm-bulk-edit-editor (backEvent)="openEditor()" *ngIf="editorStep"></mdm-bulk-edit-editor>

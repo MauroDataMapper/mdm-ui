@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, ProfileSummary, ProfileSummaryIndexResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { EMPTY } from 'rxjs';
+import { UIRouterGlobals } from '@uirouter/core';
+import { EMPTY, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
 
@@ -13,47 +14,54 @@ import { BulkEditPayload } from '../model/bulkEditPayload';
 })
 export class BulkEditProfileSelectComponent implements OnInit {
 
-  @Input() domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
-  @Input() catalogueItemId: Uuid;
+  @Output() nextSelected = new EventEmitter<any>();
   @Input() bulkEditPayload: BulkEditPayload;
-  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
 
-  profiles: Array<Profile>;
 
-  constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService, private stateHandler: StateHandlerService) { }
+  catalogueItemId: Uuid;
+  domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
+  profiles: Array<ProfileSummary>;
+  selectedProfiles = new Array<ProfileSummary>();
+
+  constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService, private stateHandler: StateHandlerService, private uiRouterGlobals: UIRouterGlobals) { }
 
   ngOnInit(): void {
 
+    this.catalogueItemId = this.uiRouterGlobals.params.id;
+    this.domainType = this.uiRouterGlobals.params.domainType;
+
     this.resouces.dataModel.dataElements(this.catalogueItemId).pipe(
-      catchError((error) => { this.messageHandler.showError(error); return EMPTY;})
-    ).switchMap((profiles) => {
+      catchError((error) => { this.messageHandler.showError(error); return EMPTY; })
+    ).subscribe((profiles) => {
 
-      const itemsProfiles = new Array<any>();
+      const de: DataElementDetail = profiles.body.items[0];
 
-      profiles.array.forEach(dataElement => {
-        itemsProfiles.push({ multiFacetAwareItemDomainType: dataElement.domainType, multiFacetAwareItemId: dataElement.id });
-      });
-
-      this.resouces.profile.getMany(this.domainType, this.catalogueItemId, {itemsProfiles}).
-      pipe(
-        catchError(profileError => {
-           this.messageHandler.showError(profileError);
-           return EMPTY;
+      forkJoin(
+        {
+          used: this.resouces.profile.usedProfiles(de.domainType, de.id),
+          unused: this.resouces.profile.unusedProfiles(de.domainType, de.id)
+        }
+      ).pipe(
+        catchError(error => {
+          this.messageHandler.showError(error);
+          return EMPTY;
         })
-      ).subscribe(result => {
-        this.profiles = result.body;
-      });
+      ).subscribe((res) => {
+        const usedRes = res.used as ProfileSummaryIndexResponse;
+        const unusedRes = res.unused as ProfileSummaryIndexResponse;
+        this.profiles = usedRes.body;
+        this.profiles.push(...unusedRes.body);
+      }
+      );
     });
   }
 
-  proceedToEdit()
-  {
-
+  proceedToEdit() {
+    this.nextSelected.emit(this.selectedProfiles);
   }
 
 
-  cancel()
-  {
+  cancel() {
     this.stateHandler.GoPrevious();
   }
 }

@@ -15,13 +15,13 @@ import { BulkEditPayload } from '../model/bulkEditPayload';
 export class BulkEditProfileSelectComponent implements OnInit {
 
   @Output() nextSelected = new EventEmitter<any>();
-  @Input() bulkEditPayload: BulkEditPayload;
 
+  @Input() bulkEditPayload: BulkEditPayload;
+  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
 
   catalogueItemId: Uuid;
   domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
   profiles: Array<ProfileSummary>;
-  selectedProfiles = new Array<ProfileSummary>();
 
   constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService, private stateHandler: StateHandlerService, private uiRouterGlobals: UIRouterGlobals) { }
 
@@ -35,6 +35,7 @@ export class BulkEditProfileSelectComponent implements OnInit {
     ).subscribe((profiles) => {
 
       const de: DataElementDetail = profiles.body.items[0];
+      this.bulkEditPayload.selectedElements = profiles.body.items;
 
       forkJoin(
         {
@@ -57,7 +58,7 @@ export class BulkEditProfileSelectComponent implements OnInit {
   }
 
   proceedToEdit() {
-    this.nextSelected.emit(this.selectedProfiles);
+    this.nextSelected.emit();
   }
 
 

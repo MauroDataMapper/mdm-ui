@@ -1,3 +1,6 @@
+import { DataElementDetail, ProfileSummary } from '@maurodatamapper/mdm-resources';
+
 export class BulkEditPayload {
-    elements: any[];
+    selectedElements: Array<DataElementDetail>;
+    selectedProfiles: Array<ProfileSummary>;
 }

@@ -3,8 +3,11 @@
 </div>
 <div class="modal-body pxy-2">
     <mat-tab-group>
-        <mat-tab *ngFor="let tabtitle of tabs; let index = index" class="tab-title">
-            <ng-template mat-tab-label>{{tabtitle}}</ng-template>
+        <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
+            <ng-template mat-tab-label>{{tab.tabTitle}}</ng-template>
+            <ag-grid-angular #agGrid  style="width: 100%; height: 700px" id="tab.tabTitle" class="ag-theme-alpine" (cellValueChanged)="onCellValueChanged($event)"  (gridReady)="onGridReady($event)"
+                [columnDefs]="tab.columnDefs" [rowData]="tab.rowData">
+            </ag-grid-angular>
         </mat-tab>
     </mat-tab-group>
 </div>
@@ -16,7 +19,7 @@
         Back
     </button>
 
-    <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="cancel()">
-        Next
+    <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="save()">
+        Save
     </button>
 </div>

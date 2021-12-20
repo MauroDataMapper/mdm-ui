@@ -1,2 +1,2 @@
-<mdm-bulk-edit-profile-select *ngIf="profileSelectStep"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
-<mdm-bulk-edit-editor (backEvent)="openEditor()" *ngIf="editorStep"></mdm-bulk-edit-editor>
+<mdm-bulk-edit-profile-select *ngIf="profileSelectStep" [(bulkEditPayload)]="bulkEditPayload"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
+<mdm-bulk-edit-editor (backEvent)="openEditor()" [(bulkEditPayload)]="bulkEditPayload" *ngIf="editorStep"></mdm-bulk-edit-editor>

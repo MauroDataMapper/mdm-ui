@@ -11,8 +11,9 @@ export class BulkEditBaseComponent implements OnInit {
 
   @Input() domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
   @Input() catalogueItemId: Uuid;
-  @Input() bulkEditPayload: BulkEditPayload;
   @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
+
+  bulkEditPayload :  BulkEditPayload;
 
   profileSelectStep = true;
   editorStep = false;
@@ -20,6 +21,7 @@ export class BulkEditBaseComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.bulkEditPayload = {selectedElements : [], selectedProfiles: []};
   }
 
   openEditor(){

@@ -19,4 +19,15 @@ SPDX-License-Identifier: Apache-2.0
 <div class="full-width">
     <mdm-federated-data-model-detail *ngIf="dataModel" [dataModel]="dataModel" (reloading)="onReloading()">
     </mdm-federated-data-model-detail>
+    <mat-tab-group *ngIf="dataModel" #tab animationDuration="0ms" [selectedIndex]="activeTab"
+        (selectedIndexChange)="tabSelected($event)">
+        <mat-tab label="Newer Versions">
+            <ng-template matTabContent>
+              <mdm-newer-versions
+                [catalogueItem]="dataModel"
+              >
+              </mdm-newer-versions>
+            </ng-template>
+          </mat-tab>
+    </mat-tab-group>
 </div>

@@ -17,53 +17,32 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('./node_modules/mini-css-extract-plugin');
 
 module.exports = {
-  rules:[{
-    test: /\.js$/,
-    exclude: /(node_modules)/,
-    use: {
-        loader: 'babel-loader',
-        options: {
-            presets: ['@babel/preset-env']
-        }
-    }
-},{
-    test: /\.(sa|sc|c)ss$/,
-    use: [{
-            loader: MiniCssExtractPlugin.loader
-        }, {
-            loader: "css-loader",
-        },
-        {
-            loader: "postcss-loader",
-            options: {
-                sourceMap: true
-            },
-        },
-        {
-            loader: "sass-loader",
-            options: {
-                sourceMap: true
-            },
-            options: {
-                implementation: require("sass")
+    module: {
+        rules: [{
+            test: /\.js$/,
+            exclude: /(node_modules)/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
             }
-        }
+        },         {
+            test: /\.(ttf|eot|svg|gif|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            use: [{
+                loader: 'file-loader',
+            }]
+        },
+        ]
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            $ENV: {
+                themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
+            }
+        })
     ]
-  },
-  {
-      test: /\.(ttf|eot|svg|gif|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      use: [{
-          loader: 'file-loader',
-      }]
-  },
-  ],
-  plugins: [
-    new webpack.DefinePlugin({
-      $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
-      }
-    })
-  ]
 };

@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "esModuleInterop": true,
-    "target": "ES5",
+    "target": "ES6",
     "types": [
       "jest"
     ],

@@ -47,7 +47,7 @@ pipeline {
       }
       steps {
         nvm('') {
-          sh 'npm install'
+          sh 'npm ci'
           sh 'npm link @maurodatamapper/mdm-resources'
           sh 'symlinked names'
         }

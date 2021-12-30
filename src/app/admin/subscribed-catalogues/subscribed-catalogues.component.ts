@@ -113,7 +113,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
       sortBy,
       sortType);
 
-    return this.resources.subscribedCatalogues.list(options);
+    return this.resources.admin.listSubscribedCatalogues(options);
   }
 
   addSubscription = () => {
@@ -139,7 +139,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
         }
       })
       .pipe(
-        switchMap(() => this.resources.subscribedCatalogues.remove(record.id))
+        switchMap(() => this.resources.admin.removeSubscribedCatalogue(record.id))
       )
       .subscribe(
         () => {
@@ -152,8 +152,8 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   testSubscription(record: SubscribedCatalogue) {
     this.messageHandler.showInfo(`Testing connection to "${record.label}"...`);
 
-    this.resources.subscribedCatalogues
-      .testConnection(record.id)
+    this.resources.admin
+      .testSubscribedCatalogueConnection(record.id)
       .subscribe(
         () => this.messageHandler.showSuccess(`Subscribed catalogue "${record.label}" is functioning as expected.`),
         error => this.messageHandler.showError(`There was a problem connecting to the subscribed catalogue "${record.label}", please check the configuration.`, error)

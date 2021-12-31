@@ -5,20 +5,22 @@
     <mat-tab-group>
         <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
             <ng-template mat-tab-label>{{tab.tabTitle}}</ng-template>
-            <ag-grid-angular #agGrid  style="width: 100%; height: 700px" id="tab.tabTitle" class="ag-theme-alpine" (cellValueChanged)="onCellValueChanged($event)"  (gridReady)="onGridReady($event)"
-                [columnDefs]="tab.columnDefs" [rowData]="tab.rowData">
+            <ag-grid-angular #agGrid  style="width:100%; height: 50vh;" id="tab.tabTitle" class="ag-theme-alpine" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"  (gridReady)="onGridReady($event)"
+                [columnDefs]="tab.columnDefs" [rowData]="tab.rowData" [frameworkComponents]="frameworkComponents">
             </ag-grid-angular>
         </mat-tab>
     </mat-tab-group>
 </div>
 <div class="modal-footer pxy-2">
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
-        Cancel
+        Close
     </button>
     <button mat-button color="warn" type="button" class="mr-1" (click)="back()">
         Back
     </button>
-
+    <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="validate()">
+        Validate
+    </button>
     <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="save()">
         Save
     </button>

@@ -8,6 +8,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FormsModule } from '@angular/forms';
+import { CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
 
 
 
@@ -17,13 +18,14 @@ import { FormsModule } from '@angular/forms';
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
     BulkEditSaveModalComponent,
-    BulkEditBaseComponent
+    BulkEditBaseComponent,
+    CheckboxRendererComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([CheckboxRendererComponent])
   ],
   exports: [
     BulkEditElementSelectComponent,

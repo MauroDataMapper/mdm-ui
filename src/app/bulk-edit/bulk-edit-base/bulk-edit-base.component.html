@@ -1,2 +1,23 @@
 <mdm-bulk-edit-profile-select *ngIf="profileSelectStep" [(bulkEditPayload)]="bulkEditPayload"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
-<mdm-bulk-edit-editor (backEvent)="openEditor()" [(bulkEditPayload)]="bulkEditPayload" *ngIf="editorStep"></mdm-bulk-edit-editor>
+<div  *ngIf="editorStep">
+    <mat-tab-group>
+        <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
+            <ng-template mat-tab-label>{{tab.tabTitle}}</ng-template>
+            <mdm-bulk-edit-editor *ngIf="tab"[tab]="tab" ></mdm-bulk-edit-editor>
+        </mat-tab>
+    </mat-tab-group>
+    <div class="modal-footer pxy-2">
+        <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+            Close
+        </button>
+        <button mat-button color="warn" type="button" class="mr-1" (click)="openEditor()">
+            Back
+        </button>
+        <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="validate()">
+            Validate
+        </button>
+        <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="save()">
+            Save
+        </button>
+    </div>
+</div>

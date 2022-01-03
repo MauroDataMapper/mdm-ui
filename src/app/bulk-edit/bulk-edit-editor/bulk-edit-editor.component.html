@@ -1,27 +1,15 @@
-<div class="modal-header pxy-2">
-    <h4 class='modal-title marginless'>Edit</h4>
-</div>
 <div class="modal-body pxy-2">
-    <mat-tab-group>
-        <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
-            <ng-template mat-tab-label>{{tab.tabTitle}}</ng-template>
-            <ag-grid-angular #agGrid  style="width:100%; height: 50vh;" id="tab.tabTitle" class="ag-theme-alpine" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"  (gridReady)="onGridReady($event)"
-                [columnDefs]="tab.columnDefs" [rowData]="tab.rowData" [frameworkComponents]="frameworkComponents">
-            </ag-grid-angular>
-        </mat-tab>
-    </mat-tab-group>
-</div>
-<div class="modal-footer pxy-2">
-    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
-        Close
-    </button>
-    <button mat-button color="warn" type="button" class="mr-1" (click)="back()">
-        Back
-    </button>
-    <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="validate()">
-        Validate
-    </button>
-    <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="save()">
-        Save
-    </button>
+
+
+    <ag-grid-angular *ngIf="loaded" #agGrid style="width:100%; height: 50vh;" id="tab.tabTitle" class="ag-theme-alpine"
+        [stopEditingWhenCellsLoseFocus]="true"  [defaultColDef]="defaultColDef" [singleClickEdit]="true" (cellValueChanged)="onCellValueChanged($event)"
+        (gridReady)="onGridReady($event)" [columnDefs]="columnDefs" [rowData]="rowData"
+        [frameworkComponents]="frameworkComponents">
+    </ag-grid-angular>
+
+
+    <span *ngIf="totalValidationErrors > 0" class="mr-2">
+        <i class="fas fa-exclamation-triangle warning" style="color: #f19e3f"></i>
+        There are {{totalValidationErrors}} field(s) with issues
+    </span>
 </div>

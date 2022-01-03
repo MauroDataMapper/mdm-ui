@@ -20,14 +20,16 @@ export class CheckboxRendererComponent implements ICellRendererAngularComp {
   }
 
   checkedHandler(event) {
-      let checked = event.target.checked;
-      let colId = this.params.column.colId;
+      const checked = event.target.checked;
+      const colId = this.params.column.colId;
       this.params.node.setDataValue(colId, checked);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   refresh(params: ICellRendererParams): boolean {
     return true;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   afterGuiAttached?(params?: IAfterGuiAttachedParams): void {
     throw new Error('Method not implemented.');
   }

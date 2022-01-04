@@ -80,7 +80,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
     });
     this.referenceLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
-        id: `${subClassLink.source}-${subClassLink.label}`,
+        id: `${subClassLink.source}-${subClassLink.name}`,
         source: { id: subClassLink.source },
         target: { id: subClassLink.target },
         attrs: {

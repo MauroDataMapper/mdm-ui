@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MultiFacetAwareDomainType, CatalogueItemDomainType, Uuid, Profile } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -15,22 +15,22 @@ import { BulkEditPayload } from '../model/bulkEditPayload';
 })
 export class BulkEditBaseComponent implements OnInit {
 
-  @Input() domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
-  @Input() catalogueItemId: Uuid;
   @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
 
   bulkEditPayload: BulkEditPayload;
+  catalogueItemId: Uuid;
+  domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
 
   profileSelectStep = true;
   editorStep = false;
-  tabs : Array<{ tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid }>}>;
-  editedProfiles: { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } };
-
+  tabs : Array<{ tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid}>; editedProfiles : { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }}>;
 
   constructor(private dialog: MatDialog, private stateHandler: StateHandlerService, private resouce: MdmResourcesService, private broadcast: BroadcastService,  private uiRouterGlobals: UIRouterGlobals, private messageHandler: MessageHandlerService) { }
 
   ngOnInit(): void {
     this.bulkEditPayload = { selectedElements: [], selectedProfiles: [] };
+    this.catalogueItemId = this.uiRouterGlobals.params.id;
+    this.domainType = this.uiRouterGlobals.params.domainType;
   }
 
   openEditor() {
@@ -55,7 +55,7 @@ export class BulkEditBaseComponent implements OnInit {
 
 
   buildTabs() {
-    this.tabs= new Array<{ tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid }>}>();
+    this.tabs= new Array<{ tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid}>; editedProfiles : { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }}>();
 
     const multiFacetAwareItems = new Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid }>();
 
@@ -63,13 +63,23 @@ export class BulkEditBaseComponent implements OnInit {
       multiFacetAwareItems.push({ multiFacetAwareItemId: element.id, multiFacetAwareItemDomainType: element.domainType });
     });
     this.bulkEditPayload.selectedProfiles.forEach(profile => {
-      this.tabs.push({ tabTitle: profile.displayName, profile,  multiFacetAwareItems});
+      const editedProfiles : any = null;
+      this.tabs.push({ tabTitle: profile.displayName, profile,  multiFacetAwareItems, editedProfiles});
     });
   }
 
   save()
 {
-  this.resouce.profile.saveMany(this.domainType, this.catalogueItemId, { profilesProvided: this.editedProfiles.body.profilesProvided }).pipe(
+
+  const profiles : Array<any> = [];
+
+  this.tabs.forEach((tab) =>
+    {
+        profiles.push(...tab.editedProfiles.body.profilesProvided);
+    }
+  );
+
+  this.resouce.profile.saveMany(this.domainType, this.catalogueItemId, { profilesProvided: profiles }).pipe(
     catchError(error => {
       this.messageHandler.showError(error);
       return EMPTY;

@@ -3,7 +3,7 @@
     <mat-tab-group>
         <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
             <ng-template mat-tab-label>{{tab.tabTitle}}</ng-template>
-            <mdm-bulk-edit-editor *ngIf="tab"[tab]="tab" ></mdm-bulk-edit-editor>
+            <mdm-bulk-edit-editor *ngIf="tab"  [(tab)]="tabs[index]" ></mdm-bulk-edit-editor>
         </mat-tab>
     </mat-tab-group>
     <div class="modal-footer pxy-2">

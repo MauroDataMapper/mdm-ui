@@ -17,9 +17,8 @@ export class BulkEditEditorComponent implements OnInit {
 
   @Output() backEvent = new EventEmitter();
 
-  @Input('tab') tab: { tabTitle: string; profile: any; multiFacetAwareItems: Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid }> };
-
-  editedProfiles: { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } };
+  @Input('tab') tab: { tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid}>; editedProfiles : { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }};
+  @Output() tabChanged = new EventEmitter();
 
 
   frameworkComponents = {
@@ -71,12 +70,12 @@ export class BulkEditEditorComponent implements OnInit {
       })
     ).subscribe((proResult: { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }) => {
 
-      const tempColumnDefs = new Array<{ headerName: string; field: string; editable?: boolean; cellRenderer?: string }>();
+      const tempColumnDefs = new Array<{ headerName: string; field: string; editable?: boolean; cellRenderer?: string; pinned?: string }>();
       const tempRowData = new Array<any>();
 
-      this.editedProfiles = proResult;
+      this.tab.editedProfiles = proResult;
 
-      tempColumnDefs.push({ headerName: 'Element', field: 'Element' });
+      tempColumnDefs.push({ headerName: 'Element', field: 'Element' , pinned: 'left'});
 
       proResult.body.profilesProvided[0].profile.sections.forEach(section => {
         section.fields.forEach(field => {
@@ -131,7 +130,7 @@ export class BulkEditEditorComponent implements OnInit {
 
   onCellValueChanged(event: any) {
     const element = event.data.Element;
-    const item = this.editedProfiles.body.profilesProvided.find(x => x.profile.label === element);
+    const item = this.tab.editedProfiles.body.profilesProvided.find(x => x.profile.label === element);
 
     if (item) {
       Object.keys(event.data as {}).forEach(data => {
@@ -149,7 +148,7 @@ export class BulkEditEditorComponent implements OnInit {
   validate() {
     this.totalValidationErrors = 0;
 
-    this.resouce.profile.validateMany(this.domainType, this.catalogueItemId, { profilesProvided: this.editedProfiles.body.profilesProvided }).pipe(
+    this.resouce.profile.validateMany(this.domainType, this.catalogueItemId, { profilesProvided: this.tab.editedProfiles.body.profilesProvided }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.validationErrors = error.error as ProfileValidationErrorList;
         this.gridApi.redrawRows();

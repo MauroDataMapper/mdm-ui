@@ -68,8 +68,10 @@ export class NewerVersionsComponent implements AfterViewInit {
   }
 
   fetchNewerVersions(pageSize? : number, pageIndex? : number, sortBy? : string, sortType? :string) {
+    // Future proofing to enable paging if number of versions increases
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const options : QueryParameters = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType);
-    return this.resouces.subscribedCatalogues.newerVersions(this.catalogueId, this.catalogueItem.modelId,options).pipe(catchError(error => {
+    return this.resouces.subscribedCatalogues.newerVersions(this.catalogueId, this.catalogueItem.modelId).pipe(catchError(error => {
       this.messagingServer.showError(error);
       return EMPTY;
     }));

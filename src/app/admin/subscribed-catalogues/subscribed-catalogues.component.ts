@@ -22,7 +22,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable } from 'rxjs';
@@ -152,8 +152,12 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   testSubscription(record: SubscribedCatalogue) {
     this.messageHandler.showInfo(`Testing connection to "${record.label}"...`);
 
+    const requestOptions: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    };
+
     this.resources.admin
-      .testSubscribedCatalogueConnection(record.id)
+      .testSubscribedCatalogueConnection(record.id, {}, requestOptions)
       .subscribe(
         () => this.messageHandler.showSuccess(`Subscribed catalogue "${record.label}" is functioning as expected.`),
         error => this.messageHandler.showError(`There was a problem connecting to the subscribed catalogue "${record.label}", please check the configuration.`, error)

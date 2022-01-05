@@ -82,7 +82,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row"
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'mdm--active-row ' : row.checked }"></tr>
     </table>
 </div>

@@ -71,9 +71,9 @@ export class ErrorComponent implements OnInit {
     const jsonMd = '```json\n' + json + '\n```';
 
     return ''.concat(
-      `# ${this.errorHeader}\n\n`,
+      `## ${this.errorHeader}\n\n`,
       `${this.errorMessage}\n\n`,
-      '# Details\n\n',
+      '## Details\n\n',
       jsonMd,
       '\n');
   }

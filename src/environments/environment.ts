@@ -35,6 +35,9 @@ export const environment = {
     url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
     project: 'MC'
   },
+  issueReporting: {
+    defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose'
+  },
   documentation: {
     url: 'https://maurodatamapper.github.io/',
     pages: {
@@ -60,7 +63,8 @@ export const environment = {
     useVersionedFolders: true,
     useMergeUiV2: true,
     useOpenIdConnect: true,
-    useDigitalObjectIdentifiers: true
+    useDigitalObjectIdentifiers: true,
+    useIssueReporting: true
   }
 };
 

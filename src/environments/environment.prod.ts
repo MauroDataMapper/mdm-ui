@@ -56,6 +56,7 @@ export const environment = {
     useVersionedFolders: true,
     useMergeUiV2: true,
     useOpenIdConnect: false,
-    useDigitalObjectIdentifiers: false
+    useDigitalObjectIdentifiers: false,
+    useIssueReporting: false
   }
 };

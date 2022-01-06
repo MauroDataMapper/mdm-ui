@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { FeaturesService } from '@mdm/services/features.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { catchError } from 'rxjs/operators';
 
@@ -32,28 +33,20 @@ const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxf
 export class FooterComponent implements OnInit {
   copyright: string = defaultFooterCopyright;
   showDocumentationLink = true;
-  showYouTrackLink = true;
-  documentation = this.sharedService.documentation;
-  youTrack = this.sharedService.youTrack;
+  showReportIssueLink = true;
+  documentation = this.shared.documentation;
+  youTrack = this.shared.youTrack;
+  features: FeaturesService;
 
   constructor(
-    private sharedService: SharedService,
+    private shared: SharedService,
     private resources: MdmResourcesService) {}
 
   ngOnInit() {
-    if (
-      this.sharedService.simpleViewSupport &&
-      !this.sharedService.isLoggedIn()
-    ) {
-      this.showDocumentationLink = false;
-    }
+    this.features = this.shared.features;
 
-    if (
-      this.sharedService.simpleViewSupport &&
-      !this.sharedService.isLoggedIn()
-    ) {
-      this.showYouTrackLink = false;
-    }
+    this.showDocumentationLink = !(this.shared.simpleViewSupport && !this.shared.isLoggedIn());
+    this.showReportIssueLink = !(this.shared.simpleViewSupport && !this.shared.isLoggedIn());
 
     this.resources.apiProperties
       .listPublic()

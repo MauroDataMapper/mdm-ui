@@ -32,7 +32,6 @@ export class SharedService {
   backendURL = environment.apiEndpoint;
   appVersion = environment.version;
   appTitle = environment.appTitle;
-  youTrack = environment.youTrack;
   issueReporting = environment.issueReporting;
   documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;

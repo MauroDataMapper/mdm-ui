@@ -21,7 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
-import { SecurityHandlerService, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, StateHandlerService } from '@mdm/services';
 import {
   AuthenticatedResponse
 } from '@maurodatamapper/mdm-resources';
@@ -34,11 +34,12 @@ import {
 export class NotFoundComponent extends ErrorComponent implements OnInit {
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService,
     protected security: SecurityHandlerService,
     protected stateHandler: StateHandlerService) {
-    super(messages, clipboard, shared);
+    super(messages, messageHandler, clipboard, shared);
 
     this.security.isAuthenticated().subscribe((result: AuthenticatedResponse) => {
       if (!result.body.authenticatedSession) {

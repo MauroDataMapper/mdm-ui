@@ -21,6 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
+import { MessageHandlerService } from '@mdm/services';
 @Component({
   selector: 'mdm-not-authorized-error',
   templateUrl: '../error.component.html',
@@ -30,9 +31,10 @@ export class NotAuthorizedComponent extends ErrorComponent implements OnInit {
 
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService) {
-    super(messages, clipboard, shared);
+    super(messages, messageHandler, clipboard, shared);
     this.errorHeader = 'Not Authorized';
     this.errorMessage = 'We\'re sorry, but the server does not allow you to view this page.';
     this.errorResolution = 'You may need to check that the item you have requested actually exists, and that you have permission to view it';

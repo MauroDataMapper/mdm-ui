@@ -25,37 +25,35 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div *ngIf="features.useIssueReporting" class="mb-2">
   <p>{{ errorReportMessage }}</p>
-  <a
-    mat-stroked-button
-    color="primary"
-    href="{{ issueReporting.systemErrorUrl }}"
-    target="_blank"
-    rel="noopener"
-  >
-    <i class="fas fa-share"></i>
-    Report Issue
-  </a>
-  <p></p>
+  <p>
+    <a
+      mat-stroked-button
+      color="primary"
+      href="{{ issueReporting.systemErrorUrl }}"
+      target="_blank"
+      rel="noopener"
+    >
+      <i class="fas fa-share"></i>
+      Report issue
+    </a>
+  </p>
+  <p>
+    It is useful when reporting issues to include as much contextual
+    information as possible. Click on the button below to copy captured
+    information to the clipboard, allowing you to paste it into your issue
+    report:
+  </p>
+  <p>
+    <button mat-stroked-button color="primary" type="button" (click)="copyDetails()">
+      <i class="fas fa-clipboard"></i> Copy information
+    </button>
+  </p>
 </div>
 <div>
   <mat-slide-toggle (change)="changeShowDetails()"
     >Show details</mat-slide-toggle
   >
   <div [hidden]="!showDetails" class="mt-1">
-    <h3>Details</h3>
-
-    <p>
-      <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="copyToClipboard()"
-      >
-        <i class="fas fa-clipboard"></i>
-        Copy to Clipboard
-      </button>
-    </p>
-
     <table class="table dataModelDetailTable mdm--table-fixed">
       <tbody>
         <tr *ngFor="let item of dataSource">

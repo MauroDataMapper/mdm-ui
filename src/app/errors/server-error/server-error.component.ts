@@ -21,6 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
+import { MessageHandlerService } from '@mdm/services';
 @Component({
   selector: 'mdm-server-error',
   templateUrl: '../error.component.html',
@@ -30,9 +31,10 @@ export class ServerErrorComponent extends ErrorComponent implements OnInit {
 
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService) {
-    super(messages, clipboard, shared);
+    super(messages, messageHandler, clipboard, shared);
     this.errorHeader = 'Server Error';
     this.errorMessage = 'We\'re sorry, but the server responded with an error message.';
     this.errorResolution = 'This may be a temporary issue, so you might like to try again later';

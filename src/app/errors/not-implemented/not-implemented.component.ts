@@ -21,6 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
+import { MessageHandlerService } from '@mdm/services';
 @Component({
   selector: 'mdm-not-implemented-error',
   templateUrl: '../error.component.html',
@@ -30,9 +31,10 @@ export class NotImplementedComponent extends ErrorComponent implements OnInit {
 
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService) {
-    super(messages, clipboard, shared);
+    super(messages, messageHandler, clipboard, shared);
     this.errorHeader = 'Not Implemented';
     this.errorMessage = 'We\'re sorry, but the server responded to say that the feature you have requested has not yet been implemented';
     this.errorResolution = 'If you are running a development or test instance of the server, this may be something we\'re currently working on.';

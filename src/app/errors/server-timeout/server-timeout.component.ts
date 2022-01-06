@@ -21,6 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
+import { MessageHandlerService } from '@mdm/services';
 @Component({
   selector: 'mdm-server-timeout-error',
   templateUrl: '../error.component.html',
@@ -30,9 +31,10 @@ export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
 
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService) {
-    super(messages, clipboard, shared);
+    super(messages, messageHandler, clipboard, shared);
     this.errorHeader = 'Server Timeout Error';
     this.errorMessage = 'We\'re sorry, but the server responded with an error message.';
     this.errorResolution = 'The request may have succeeded. Please allow some time and then select the catalogue item you were on from the model tree to refresh the view.';

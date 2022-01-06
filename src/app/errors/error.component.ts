@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '../services/shared.service';
+import { MessageHandlerService } from '@mdm/services';
 
 const columns: string[] = ['field', 'value'];
 
@@ -44,6 +45,7 @@ export class ErrorComponent implements OnInit {
 
   constructor(
     protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
     protected clipboard: ClipboardService,
     protected shared: SharedService,
   ) {
@@ -54,13 +56,25 @@ export class ErrorComponent implements OnInit {
 
   ngOnInit() { }
 
-  copyToClipboard() {
-    this.clipboard.copyFromContent(
-      JSON.stringify(this.lastError, null, 2)
-    );
+  copyDetails() {
+    if (this.clipboard.copyFromContent(this.getLastErrorAsMarkdown())) {
+      this.messageHandler.showSuccess('Copied information to clipboard');
+    }
   }
 
   changeShowDetails() {
     this.showDetails = !this.showDetails;
+  }
+
+  private getLastErrorAsMarkdown() {
+    const json = JSON.stringify(this.lastError, null, 2);
+    const jsonMd = '```json\n' + json + '\n```';
+
+    return ''.concat(
+      `# ${this.errorHeader}\n\n`,
+      `${this.errorMessage}\n\n`,
+      '# Details\n\n',
+      jsonMd,
+      '\n');
   }
 }

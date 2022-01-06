@@ -22,8 +22,6 @@ import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '../services/shared.service';
 import { MessageHandlerService } from '@mdm/services';
 
-const columns: string[] = ['field', 'value'];
-
 @Component({
   selector: 'mdm-error',
   templateUrl: './error.component.html',

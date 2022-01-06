@@ -3,7 +3,6 @@ import { MultiFacetAwareDomainType, CatalogueItemDomainType, Uuid } from '@mauro
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { ColDef } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
@@ -35,23 +34,23 @@ export class BulkEditElementSelectComponent implements OnInit {
   load() {
     this.resources.dataModel.dataElements(this.catalogueItemId).pipe(
       catchError(error => {
-        this.messageHandler.showError(console.error);
+        this.messageHandler.showError(error);
         return EMPTY;
       })
     ).subscribe(elements => {
       this.elements = elements.body.items;
-    })
+    });
   }
 
   proceedToProfile() {
     this.nextSelected.emit();
   }
 
-  
-  objectComparisonFunction = function( option, value ) : boolean {
+
+  objectComparisonFunction( option, value) : boolean {
     return option.id === value.id;
-  }
-  
+  };
+
 
   cancel() {
     this.stateHandler.GoPrevious();

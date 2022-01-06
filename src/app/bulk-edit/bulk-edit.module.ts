@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
 import { DateCellEditorComponent } from './date-cell-editor/date-cell-editor.component';
 import { CalendarModule } from 'primeng/calendar';
-import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({

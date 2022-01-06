@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, ProfileSummary, ProfileSummaryIndexResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { pipe, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
@@ -31,7 +31,7 @@ export class BulkEditProfileSelectComponent implements OnInit {
     this.catalogueItemId = this.uiRouterGlobals.params.id;
     this.domainType = this.uiRouterGlobals.params.domainType;
 
-    //Profiles are the same for all elements so taking the element and getting the used/unsed to get full list of selectable profiles
+    // Profiles are the same for all elements so taking the element and getting the used/unsed to get full list of selectable profiles
     const de: DataElementDetail = this.bulkEditPayload.selectedElements[0];
 
     forkJoin(
@@ -49,7 +49,7 @@ export class BulkEditProfileSelectComponent implements OnInit {
       const unusedRes = res.unused as ProfileSummaryIndexResponse;
       this.profiles = usedRes.body;
       this.profiles.push(...unusedRes.body);
-    }) 
+    });
   }
 
   proceedToEdit() {
@@ -60,10 +60,10 @@ export class BulkEditProfileSelectComponent implements OnInit {
     this.backSelected.emit();
   }
 
-  objectComparisonFunction = function( option, value ) : boolean {
+  objectComparisonFunction( option, value ) : boolean {
     return option.name === value.name && option.namespace === value.namespace;
-  }
-  
+  };
+
 
   cancel() {
     this.stateHandler.GoPrevious();

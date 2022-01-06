@@ -51,7 +51,7 @@ export class BulkEditBaseComponent implements OnInit {
     this.elementSelectStep = false;
   }
 
-  
+
   openElement()
   {
     this.profileSelectStep = false;

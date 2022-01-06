@@ -21,7 +21,8 @@ export class BulkEditBaseComponent implements OnInit {
   catalogueItemId: Uuid;
   domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
 
-  profileSelectStep = true;
+  profileSelectStep = false;
+  elementSelectStep = true;
   editorStep = false;
   tabs : Array<{ tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid}>; editedProfiles : { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }}>;
 
@@ -34,13 +35,28 @@ export class BulkEditBaseComponent implements OnInit {
   }
 
   openEditor() {
-    this.profileSelectStep = !this.profileSelectStep;
-    this.editorStep = !this.editorStep;
+    this.profileSelectStep = false;
+    this.editorStep = true;
     if (this.editorStep) {
 
       // build tabs
       this.buildTabs();
     }
+  }
+
+  openProfile()
+  {
+    this.profileSelectStep = true;
+    this.editorStep = false;
+    this.elementSelectStep = false;
+  }
+
+  
+  openElement()
+  {
+    this.profileSelectStep = false;
+    this.editorStep = false;
+    this.elementSelectStep = true;
   }
 
 

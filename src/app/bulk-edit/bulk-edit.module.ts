@@ -9,7 +9,9 @@ import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FormsModule } from '@angular/forms';
 import { CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
-
+import { DateCellEditorComponent } from './date-cell-editor/date-cell-editor.component';
+import { CalendarModule } from 'primeng/calendar';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -19,13 +21,15 @@ import { CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer
     BulkEditEditorComponent,
     BulkEditSaveModalComponent,
     BulkEditBaseComponent,
-    CheckboxRendererComponent
+    CheckboxRendererComponent,
+    DateCellEditorComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
+    CalendarModule,
     FormsModule,
-    AgGridModule.withComponents([CheckboxRendererComponent])
+    AgGridModule.withComponents([CheckboxRendererComponent, DateCellEditorComponent])
   ],
   exports: [
     BulkEditElementSelectComponent,

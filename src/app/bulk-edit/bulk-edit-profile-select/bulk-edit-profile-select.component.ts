@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, ProfileSummary, ProfileSummaryIndexResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { UIRouterGlobals } from '@uirouter/core';
+import { pipe, UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
@@ -15,6 +15,7 @@ import { BulkEditPayload } from '../model/bulkEditPayload';
 export class BulkEditProfileSelectComponent implements OnInit {
 
   @Output() nextSelected = new EventEmitter<any>();
+  @Output() backSelected = new EventEmitter<any>();
 
   @Input() bulkEditPayload: BulkEditPayload;
   @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
@@ -30,37 +31,39 @@ export class BulkEditProfileSelectComponent implements OnInit {
     this.catalogueItemId = this.uiRouterGlobals.params.id;
     this.domainType = this.uiRouterGlobals.params.domainType;
 
-    this.resouces.dataModel.dataElements(this.catalogueItemId).pipe(
-      catchError((error) => { this.messageHandler.showError(error); return EMPTY; })
-    ).subscribe((profiles) => {
+    //Profiles are the same for all elements so taking the element and getting the used/unsed to get full list of selectable profiles
+    const de: DataElementDetail = this.bulkEditPayload.selectedElements[0];
 
-      const de: DataElementDetail = profiles.body.items[0];
-      this.bulkEditPayload.selectedElements = profiles.body.items;
-
-      forkJoin(
-        {
-          used: this.resouces.profile.usedProfiles(de.domainType, de.id),
-          unused: this.resouces.profile.unusedProfiles(de.domainType, de.id)
-        }
-      ).pipe(
-        catchError(error => {
-          this.messageHandler.showError(error);
-          return EMPTY;
-        })
-      ).subscribe((res) => {
-        const usedRes = res.used as ProfileSummaryIndexResponse;
-        const unusedRes = res.unused as ProfileSummaryIndexResponse;
-        this.profiles = usedRes.body;
-        this.profiles.push(...unusedRes.body);
+    forkJoin(
+      {
+        used: this.resouces.profile.usedProfiles(de.domainType, de.id),
+        unused: this.resouces.profile.unusedProfiles(de.domainType, de.id)
       }
-      );
-    });
+    ).pipe(
+      catchError(error => {
+        this.messageHandler.showError(error);
+        return EMPTY;
+      })
+    ).subscribe((res) => {
+      const usedRes = res.used as ProfileSummaryIndexResponse;
+      const unusedRes = res.unused as ProfileSummaryIndexResponse;
+      this.profiles = usedRes.body;
+      this.profiles.push(...unusedRes.body);
+    }) 
   }
 
   proceedToEdit() {
     this.nextSelected.emit();
   }
 
+  openElements() {
+    this.backSelected.emit();
+  }
+
+  objectComparisonFunction = function( option, value ) : boolean {
+    return option.name === value.name && option.namespace === value.namespace;
+  }
+  
 
   cancel() {
     this.stateHandler.GoPrevious();

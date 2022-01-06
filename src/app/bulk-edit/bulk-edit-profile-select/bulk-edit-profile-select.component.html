@@ -6,15 +6,17 @@
 </div>
 <mat-form-field appearance="fill" style="width: 500px;">
   <mat-label>Profile</mat-label>
-  <mat-select multiple  [(ngModel)]="bulkEditPayload.selectedProfiles" >
-    <mat-option *ngFor="let profile of profiles" [value]="profile">{{profile.displayName}}</mat-option>
+  <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.selectedProfiles" >
+    <mat-option *ngFor="let profile of profiles" [value]="profile"  >{{profile.displayName}}</mat-option>
   </mat-select>
 </mat-form-field>
 <div class="modal-footer pxy-2">
   <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
     Cancel
   </button>
-
+  <button mat-button color="warn" type="button" class="mr-1" (click)="openElements()">
+    Back
+</button>
   <button [disabled]="bulkEditPayload.selectedProfiles.length <= 0" mat-stroked-button type="button" color="primary" type="button"
     class="mr-1" (click)="proceedToEdit()">
     Next

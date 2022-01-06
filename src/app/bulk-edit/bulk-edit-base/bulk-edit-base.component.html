@@ -1,4 +1,5 @@
-<mdm-bulk-edit-profile-select *ngIf="profileSelectStep" [(bulkEditPayload)]="bulkEditPayload"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
+<mdm-bulk-edit-element-select *ngIf="elementSelectStep" [(bulkEditPayload)]="bulkEditPayload" (nextSelected)="openProfile()"></mdm-bulk-edit-element-select>
+<mdm-bulk-edit-profile-select *ngIf="profileSelectStep" [(bulkEditPayload)]="bulkEditPayload" (backSelected)="openElement()"  (nextSelected)="openEditor()"></mdm-bulk-edit-profile-select>   
 <div  *ngIf="editorStep">
     <mat-tab-group>
         <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
@@ -10,7 +11,7 @@
         <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
             Close
         </button>
-        <button mat-button color="warn" type="button" class="mr-1" (click)="openEditor()">
+        <button mat-button color="warn" type="button" class="mr-1" (click)="openProfile()">
             Back
         </button>
         <button mat-stroked-button type="button" color="primary" type="button" class="mr-1" (click)="validate()">

@@ -1,7 +1,22 @@
-<ag-grid-angular
-    style="width: 500px; height: 500px;"
-    class="ag-theme-alpine"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
->
-</ag-grid-angular>
+<div class="modal-header pxy-2">
+    <h4 class='modal-title marginless'>Element Select</h4>
+  </div>
+  <div class="modal-body pxy-2">
+    <p>Please select the elements you wish to edit.</p>
+  </div>
+  <mat-form-field appearance="fill" style="width: 500px;">
+    <mat-label>Element</mat-label>
+    <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.selectedElements" >
+      <mat-option *ngFor="let element of elements" [value]="element" >{{element.label}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="modal-footer pxy-2">
+    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+      Cancel
+    </button>
+  
+    <button [disabled]="bulkEditPayload.selectedElements.length <= 0" mat-stroked-button type="button" color="primary" type="button"
+      class="mr-1" (click)="proceedToProfile()">
+      Next
+    </button>
+  </div>

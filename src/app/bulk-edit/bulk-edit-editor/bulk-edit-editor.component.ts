@@ -7,6 +7,7 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CheckboxRendererComponent } from '../checkbox-renderer/checkbox-renderer.component';
+import { DateCellEditorComponent } from '../date-cell-editor/date-cell-editor.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -22,7 +23,8 @@ export class BulkEditEditorComponent implements OnInit {
 
 
   frameworkComponents = {
-    checkboxRenderer: CheckboxRendererComponent
+    checkboxRenderer: CheckboxRendererComponent,
+    dateCellEditor: DateCellEditorComponent
   };
 
   validationErrors: any;
@@ -79,12 +81,17 @@ export class BulkEditEditorComponent implements OnInit {
 
       proResult.body.profilesProvided[0].profile.sections.forEach(section => {
         section.fields.forEach(field => {
-          const col: { headerName: string; field: string; editable?: boolean; cellRenderer?: string; cellStyle?: {}; cellClassRules: any } = { headerName: field.fieldName, field: field.metadataPropertyName, editable: true, cellClassRules: this.cellRules };
+          const col: { headerName: string; field: string; editable?: boolean; cellEditor?: string; cellRenderer?: string; cellStyle?: {}; cellClassRules: any } = { headerName: field.fieldName, field: field.metadataPropertyName, editable: true, cellClassRules: this.cellRules };
           if (field.dataType === 'boolean') {
             col.cellRenderer = 'checkboxRenderer';
             col.editable = false;
             col.cellStyle = { textAlign: 'center' };
           }
+        // TODO - update to work with date control - Partially completed issue with click to edit load
+        //   if(field.dataType === 'date' || field.dataType === 'datetime')
+        // {
+        //   col.cellEditor = 'dateCellEditor';
+        // }
           tempColumnDefs.push(col);
         });
       });

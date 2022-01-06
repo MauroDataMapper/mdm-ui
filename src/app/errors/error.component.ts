@@ -19,8 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
-
-import { YoutrackService } from '../services/youtrack.service';
 import { SharedService } from '../services/shared.service';
 
 const columns: string[] = ['field', 'value'];
@@ -31,72 +29,38 @@ const columns: string[] = ['field', 'value'];
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent implements OnInit {
-  showYouTrackLink = true;
+  features = this.shared.features;
+  issueReporting = this.shared.issueReporting;
   showDetails = false;
   lastError: any;
 
   dataSource: object[] = [];
-  displayedColumns: string[] = columns;
-  codeHighlighted = false;
-  issueReported = false;
-  issueReporting = false;
   isLoggedIn = false;
   summary: string;
-  errorInSubmit = false;
-  username: string;
   errorHeader: string;
   errorMessage: string;
   errorResolution: string;
   errorReportMessage: string;
 
   constructor(
-    protected messageService: MessageService,
-    protected clipboardService: ClipboardService,
-    protected sharedService: SharedService,
-    protected youtrackService: YoutrackService
+    protected messages: MessageService,
+    protected clipboard: ClipboardService,
+    protected shared: SharedService,
   ) {
-    this.lastError = messageService.lastError;
-    this.isLoggedIn = sharedService.isLoggedIn();
+    this.lastError = messages.lastError;
+    this.isLoggedIn = shared.isLoggedIn();
     this.summary = `Error ${this.lastError.error?.status} : ${this.lastError.error?.message}`;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   copyToClipboard() {
-    this.clipboardService.copyFromContent(
+    this.clipboard.copyFromContent(
       JSON.stringify(this.lastError, null, 2)
     );
   }
 
   changeShowDetails() {
     this.showDetails = !this.showDetails;
-  }
-
-  reportIssueToYouTrack() {
-    // make sure youTrack is configured
-    if (!this.showYouTrackLink) {
-      return;
-    }
-    this.issueReporting = true;
-
-    const summary : string = this.lastError.error.message;
-    const description = JSON.stringify(this.lastError, null, 2);
-
-    this.youtrackService.reportIssue(summary, description).subscribe(() => {
-        this.successfulReport();
-      }, () => {
-        this.errorReport();
-      }
-    );
-  }
-
-  successfulReport() {
-    this.issueReporting = false;
-    this.issueReported = true;
-  }
-
-  errorReport() {
-    this.issueReporting = false;
-    this.errorInSubmit = true;
   }
 }

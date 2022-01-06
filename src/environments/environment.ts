@@ -36,7 +36,8 @@ export const environment = {
     project: 'MC'
   },
   issueReporting: {
-    defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose'
+    defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose',
+    systemErrorUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new?assignees=&labels=bug&template=bug_report.md&title='
   },
   documentation: {
     url: 'https://maurodatamapper.github.io/',

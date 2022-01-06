@@ -17,57 +17,59 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="jumbotron errorMessage" style="text-align: left">
-    <h2> <i class="fas fa-bug"></i>{{errorHeader}}</h2>
-    <p>{{errorMessage}}</p>
+  <h2><i class="fas fa-bug"></i> {{ errorHeader }}</h2>
+  <p>{{ errorMessage }}</p>
 </div>
 <div>
-    <p>{{errorResolution}}</p>
+  <p>{{ errorResolution }}</p>
 </div>
-<div *ngIf="isLoggedIn && showYouTrackLink">
-    <p>{{errorReportMessage}}</p>
-    <button mat-button color="primary" type="button" (click)="reportIssueToYouTrack()" *ngIf="!issueReporting && !issueReported && !errorInSubmit">
-        <i class="fas fa-share"></i>
-        Report Issue
-    </button>
-
-
-    <div class="alert alert-info" *ngIf="issueReporting">
-        <span><mat-progress-spinner diameter="20"
-                                    color="primary"
-                                    mode="indeterminate"
-                                    style="display: inline-block">
-        </mat-progress-spinner>
-        Reporting issue...</span>
-    </div>
-    <div class="alert alert-success" *ngIf="issueReported">
-        <i class="fas fa-check"></i> <strong>Success!</strong> Issue successfully reported to YouTrack - thank you!
-    </div>
-    <div class="alert alert-danger" *ngIf="errorInSubmit">
-        <i class="fas fa-times"></i><strong>Error!</strong> Failed to report issue to YouTrack. <br/>
-        This may be a configuration error or an problem with the issue-tracking software.  Please contact your catalogue administrator.
-    </div>
+<div *ngIf="features.useIssueReporting" class="mb-2">
+  <p>{{ errorReportMessage }}</p>
+  <a
+    mat-stroked-button
+    color="primary"
+    href="{{ issueReporting.systemErrorUrl }}"
+    target="_blank"
+    rel="noopener"
+  >
+    <i class="fas fa-share"></i>
+    Report Issue
+  </a>
+  <p></p>
 </div>
 <div>
-    <mat-slide-toggle (change)="changeShowDetails()">Show details</mat-slide-toggle>
-    <div [hidden]="!showDetails">
-        <h3>Details
-            <button mat-stroked-button color="primary" type="button" (click)="copyToClipboard()">
-                <i class="fas fa-clipboard"></i>
-                Copy to Clipboard
-            </button>
-        </h3>
+  <mat-slide-toggle (change)="changeShowDetails()"
+    >Show details</mat-slide-toggle
+  >
+  <div [hidden]="!showDetails" class="mt-1">
+    <h3>Details</h3>
 
+    <p>
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="copyToClipboard()"
+      >
+        <i class="fas fa-clipboard"></i>
+        Copy to Clipboard
+      </button>
+    </p>
 
-        <table class="table dataModelDetailTable mdm--table-fixed">
-            <tbody>
-            <tr *ngFor="let item of dataSource">
-                <td class="detailsRowHeader">{{item.field}}</td>
-                <td>
-                    <span *ngIf="!item.code">{{item.value}}</span>
-                    <ngx-json-viewer *ngIf="item.code" [json]="item.value" [expanded]="true"></ngx-json-viewer>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <table class="table dataModelDetailTable mdm--table-fixed">
+      <tbody>
+        <tr *ngFor="let item of dataSource">
+          <td class="detailsRowHeader">{{ item.field }}</td>
+          <td>
+            <span *ngIf="!item.code">{{ item.value }}</span>
+            <ngx-json-viewer
+              *ngIf="item.code"
+              [json]="item.value"
+              [expanded]="true"
+            ></ngx-json-viewer>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

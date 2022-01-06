@@ -47,7 +47,6 @@ export const environment = {
       DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
     }
   },
-  simpleViewSupport: false,
   name: 'production',
   appIsEditable: false,
   checkSessionExpiryTimeout: 300000,

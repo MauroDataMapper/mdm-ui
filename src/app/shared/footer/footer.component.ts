@@ -32,21 +32,16 @@ const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxf
 })
 export class FooterComponent implements OnInit {
   copyright: string = defaultFooterCopyright;
-  showDocumentationLink = true;
-  showReportIssueLink = true;
   documentation = this.shared.documentation;
-  youTrack = this.shared.youTrack;
+  issueReporting = this.shared.issueReporting;
   features: FeaturesService;
 
   constructor(
     private shared: SharedService,
-    private resources: MdmResourcesService) {}
+    private resources: MdmResourcesService) { }
 
   ngOnInit() {
     this.features = this.shared.features;
-
-    this.showDocumentationLink = !(this.shared.simpleViewSupport && !this.shared.isLoggedIn());
-    this.showReportIssueLink = !(this.shared.simpleViewSupport && !this.shared.isLoggedIn());
 
     this.resources.apiProperties
       .listPublic()

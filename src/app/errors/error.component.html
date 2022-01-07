@@ -41,15 +41,13 @@ SPDX-License-Identifier: Apache-2.0
     It is useful when reporting issues to include as much contextual
     information as possible. Click on the button below to copy captured
     information to the clipboard, allowing you to paste it into your issue
-    report:
-  </p>
-  <p>
-    <button mat-stroked-button color="primary" type="button" (click)="copyDetails()">
-      <i class="fas fa-clipboard"></i> Copy information
-    </button>
+    report.
   </p>
 </div>
 <div>
+  <button mat-stroked-button color="primary" type="button" class="mr-1" (click)="copyDetails()">
+    <i class="fas fa-clipboard"></i> Copy details
+  </button>
   <mat-slide-toggle (change)="changeShowDetails()"
     >Show details</mat-slide-toggle
   >

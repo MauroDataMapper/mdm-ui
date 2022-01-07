@@ -96,11 +96,13 @@ export class DateFromToComponent implements OnInit {
   public clear1(): any {
     this.dtFrom = null;
     this.date2Options.minDate = null;
+    this.datePicker1Changed(null, this.oldVal);
   }
 
   public clear2(): any {
     this.dtTo = null;
     this.date1Options.maxDate = null;
+    this.datePicker2Changed(null, this.oldVal);
   }
 
   public open1() {

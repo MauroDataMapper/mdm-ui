@@ -102,8 +102,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
       'federateddatamodel',
       {
         parentId: this.catalogueId,
-        id: this.modelId,
-        dataModel: this.dataModel
+        id: this.modelId
       },
       {
         reload: true

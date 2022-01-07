@@ -46,7 +46,10 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   pagination: McSelectPagination;
 
   constructor(
-    public dialogRef: MatDialogRef<DefaultProfileEditorModalComponent,DefaultProfileModalResponse>,
+    public dialogRef: MatDialogRef<
+      DefaultProfileEditorModalComponent,
+      DefaultProfileModalResponse
+    >,
     @Inject(MAT_DIALOG_DATA) public data: DefaultProfileModalConfiguration,
     protected resourcesSvc: MdmResourcesService,
     protected validator: ValidatorService,
@@ -58,35 +61,37 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   ngOnInit(): void {}
 
   save() {
-
     let hasError = false;
 
     this.data.items.forEach((item: DefaultProfileItem) => {
       if (item.controlType === ProfileControlTypes.multiplicity) {
         const valResult = this.validator.validateMultiplicities(
-          item.minMultiplicity === undefined ? '' : item.minMultiplicity.toString(),
-          item.maxMultiplicity === undefined ? '' : item.maxMultiplicity.toString()
+          item.minMultiplicity === undefined
+            ? ''
+            : item.minMultiplicity.toString(),
+          item.maxMultiplicity === undefined
+            ? ''
+            : item.maxMultiplicity.toString()
         );
         if (valResult) {
           this.multiplicityError = valResult;
           hasError = true;
         }
-      }
-      else if (item.controlType === ProfileControlTypes.dataType)
-      {
-       hasError = !this.validateDataType(item);
+      } else if (item.controlType === ProfileControlTypes.dataType) {
+        hasError = !this.validateDataType(item);
       }
     });
 
     if (!hasError) {
-      this.dialogRef.close({status: ModalDialogStatus.Ok, items: this.data.items});
+      this.dialogRef.close({
+        status: ModalDialogStatus.Ok,
+        items: this.data.items
+      });
     }
   }
 
   onCancel() {
-    this.editing
-    .confirmCancelAsync()
-    .subscribe(confirm => {
+    this.editing.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close({ status: ModalDialogStatus.Cancel });
       }
@@ -98,16 +103,12 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   }
 
   validateDataType(item: any) {
-
     let isValid = true;
 
     if (!this.showNewInlineDataType) {
       return true;
     }
-    if (
-      !item.value.label ||
-      item.value.label.trim().length === 0
-    ) {
+    if (!item.value.label || item.value.label.trim().length === 0) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
@@ -155,20 +156,39 @@ export class DefaultProfileEditorModalComponent implements OnInit {
       limit: options['limit'],
       offset: options['offset']
     };
-    return this.resources.dataType.list(this.data.parentCatalogueItem.id, options);
+    return this.resources.dataType.list(
+      this.data.parentCatalogueItem.id,
+      options
+    );
   };
 
   onDataTypeSelect(dataType, item) {
     item.value = dataType;
   }
 
-  toggleShowNewInlineDataType() {
+  toggleShowNewInlineDataType(item) {
     this.showNewInlineDataType = !this.showNewInlineDataType;
     this.dataTypeErrors = '';
+    if (this.showNewInlineDataType) {
+       const newDT = {
+        label: item.value.label,
+        description: '',
+        metadata: [],
+        domainType: CatalogueItemDomainType.PrimitiveType,
+        enumerationValues: [],
+        classifiers: [],
+        organisation: '',
+        referencedTerminology: {id : ''},
+        referencedDataType: { id: '' },
+        referencedDataClass: { id: '' },
+        referencedModel: { id: '', domainType: '' }
+      };
+
+      item.value = newDT;
+    }
   }
 
-  classificationChanged(classifications, item)
-  {
-   item.value  = classifications;
+  classificationChanged(classifications, item) {
+    item.value = classifications;
   }
 }

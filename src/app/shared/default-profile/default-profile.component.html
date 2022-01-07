@@ -121,6 +121,7 @@ SPDX-License-Identifier: Apache-2.0
       <th class="detailsRowHeader">Data Type</th>
       <td data-cy="value">
         <mdm-element-data-type
+        *ngIf="catalogueItem"
         [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
         [mcParentDataModel]="catalogueItem"
       >

@@ -116,7 +116,6 @@ export class FlatNode {
   get modelVersion() {
     return this.node?.modelVersion;
   }
-
 }
 
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;

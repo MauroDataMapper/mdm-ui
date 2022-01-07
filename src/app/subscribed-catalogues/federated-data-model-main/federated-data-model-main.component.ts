@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
+import { TabCollection } from '@mdm/model/ui.model';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -34,6 +35,10 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
   catalogueId: string;
   modelId: string;
   dataModel: FederatedDataModel;
+  activeTab: any;
+  tabs = new TabCollection([
+    'newVersion'
+  ]);
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -72,6 +77,11 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.getFederatedDataModel(true);
   }
 
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
+    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
+  }
+
   private getFederatedDataModel(reloadView?: boolean) {
     this.subscribedCatalogues
       .getFederatedDataModels(this.catalogueId)
@@ -84,6 +94,8 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
         },
         errors => this.messageHandler.showError('There was a problem getting the Federated Data Model', errors));
   }
+
+
 
   private reloadView() {
     this.stateHandler.Go(

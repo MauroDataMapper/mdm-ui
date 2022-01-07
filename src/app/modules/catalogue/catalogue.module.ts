@@ -194,6 +194,7 @@ import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-li
 import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term-relationship-type-list/create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
+import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
 
 @NgModule({
   declarations: [
@@ -360,7 +361,8 @@ import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-rel
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
-    TermRelationshipListComponent
+    TermRelationshipListComponent,
+    NewerVersionsComponent
   ],
   imports: [
     AdminModule,
@@ -539,7 +541,8 @@ import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-rel
     ProfileDetailsComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
-    ProfileDataViewComponent
+    ProfileDataViewComponent,
+    NewerVersionsComponent
   ]
 })
 export class CatalogueModule { }

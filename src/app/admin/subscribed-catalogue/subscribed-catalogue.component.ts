@@ -63,8 +63,8 @@ export class SubscribedCatalogueComponent implements OnInit {
       this.isCreating = false;
       this.title.setTitle('Subscribed Catalogue - Edit Subscription');
 
-      this.resources.subscribedCatalogues
-        .get(catalogueId)
+      this.resources.admin
+        .getSubscribedCatalogue(catalogueId)
         .subscribe(
           (data: SubscribedCatalogueResponse) => this.catalogue = data.body,
           error => {
@@ -89,8 +89,8 @@ export class SubscribedCatalogueComponent implements OnInit {
     }
 
     if (this.catalogue.id) {
-      this.resources.subscribedCatalogues
-        .update(this.catalogue.id, this.catalogue)
+      this.resources.admin
+        .updateSubscribedCatalogue(this.catalogue.id, this.catalogue)
         .subscribe(
           () => {
             this.messageHandler.showSuccess('Subscribed catalogue updated successfully.');
@@ -99,8 +99,8 @@ export class SubscribedCatalogueComponent implements OnInit {
           error => this.messageHandler.showError('There was a problem updating the subscribed catalogue.', error));
     }
     else {
-      this.resources.subscribedCatalogues
-        .save(this.catalogue)
+      this.resources.admin
+        .saveSubscribedCatalogues(this.catalogue)
         .subscribe(
           () => {
             this.messageHandler.showSuccess('Subscribed catalogue saved successfully.');

@@ -27,6 +27,7 @@ export class FederatedDataModel {
   subscriptionId?: string;
   folderId?: string;
   folderLabel?: string;
+  version? : string;
 
   constructor(
     catalogueId: string,
@@ -36,6 +37,7 @@ export class FederatedDataModel {
       this.modelId = available?.modelId;
       this.label = available?.label;
       this.description = available?.description;
+      this.version = available?.version;
       this.modelType = available?.modelType;
       this.subscriptionId = subscription?.id;
       this.folderId = subscription?.folderId;

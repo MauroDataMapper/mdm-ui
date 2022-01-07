@@ -183,6 +183,7 @@ export class ModelTreeService implements OnDestroy {
           domainType: CatalogueItemDomainType.FederatedDataModel,
           hasChildren: false,
           label: item.label,
+          modelVersion: item.version,
           parentId: item.catalogueId,
           availableActions: []
         })))

@@ -28,9 +28,11 @@ import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileMod
 import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, from, zip, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap, mergeMap, tap } from 'rxjs/operators';
 import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
+import { GridService } from '@mdm/services/grid.service';
+import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-profile-data-view',
@@ -45,7 +47,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();
 
-  currentView: ProfileDataViewType | string = 'default';
+  currentView: ProfileDataViewType | string;
   lastView?: ProfileDataViewType | string;
   usedProfiles: ProfileSummaryListItem[] = [];
   unusedProfiles: ProfileSummaryListItem[] = [];
@@ -56,6 +58,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   isEditablePostFinalise = false;
   isReadableByEveryone = false;
   doiState: DoiState = 'not submitted';
+  defaultProfileDomainName: string;
+  otherProperty: any;
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -89,14 +93,29 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private editing: EditingService,
+    private gridService: GridService,
     private shared: SharedService) { }
 
   ngOnInit(): void {
+      this.resources.apiProperties
+        .listPublic()
+        .pipe(
+          catchError(errors => {
+            this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+            return [];
+          })
+        )
+        .subscribe((response: ApiPropertyIndexResponse) => {
+          this.loadDefaultCustomProfile(response.body.items);
+        });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
+      if (!this.catalogueItem.domainType) {
+        this.catalogueItem.domainType = changes.catalogueItem.previousValue.domainType;
+      }
       this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
       this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
 
@@ -251,7 +270,33 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   private loadUsedProfiles(domainType: CatalogueItemDomainType, id: Uuid) {
     this.loadProfileItems('used', domainType, id)
-      .subscribe(items => this.usedProfiles = items);
+      .subscribe(items => {
+        if (items && items.length > 0) {
+          this.usedProfiles = items;
+
+          // Set a default value
+          this.otherProperty = this.loadDefaultProfilePropertyValue(domainType, id)
+              .subscribe(defaultValues => {
+               if (defaultValues && (defaultValues.length > 0)) {
+                  this.otherProperty = defaultValues[0].value;
+               }
+
+            if (!this.lastView && this.otherProperty) {
+              // Get the item in usedProfiles that matches the otherProperties value
+              this.currentView = this.usedProfiles.find(e => e.display === this.otherProperty)?.value ?? 'default';
+            } else {
+              this.currentView = 'default';
+            }
+            this.changeProfile();
+             });
+        } else {
+          if (!this.lastView) {
+            this.currentView = 'default';
+          }
+        }
+        this.changeProfile();
+
+      });
   }
 
   private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: any) {
@@ -351,19 +396,21 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
     const [namespace, name] = this.getNamespaceAndName(this.currentView);
 
-    this.resources.profile
-      .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name)
-      .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the selected profile.', error);
-          return EMPTY;
-        })
-      )
-      .subscribe((response: ProfileResponse) => {
-        this.currentProfile = response.body;
-        this.currentProfile.namespace = namespace;
-        this.currentProfile.name = name;
-      });
+    if (namespace && name) {
+      this.resources.profile
+        .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem getting the selected profile.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe((response: ProfileResponse) => {
+          this.currentProfile = response.body;
+          this.currentProfile.namespace = namespace;
+          this.currentProfile.name = name;
+        });
+    }
   }
 
   private addNewProfile() {
@@ -549,4 +596,100 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }
       });
   }
+
+  private loadDefaultCustomProfile(properties: ApiProperty[]) {
+    this.defaultProfileDomainName = this.getContentProperty(properties, 'ui.default.profile.namespace');
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
+  }
+
+  private getCatalogueItemHierarchy() {
+    let catalogueHierarchy = [];
+    catalogueHierarchy.push({id: this.catalogueItem.id,
+      domainType: this.catalogueItem.domainType});
+    if (this.catalogueItem.hasOwnProperty('breadcrumbs')) {
+      catalogueHierarchy = catalogueHierarchy.concat(this.catalogueItem.breadcrumbs.map(breadcrumb => {
+          return {id: breadcrumb.id, domainType: breadcrumb.domainType};
+      }));
+    }
+
+    return catalogueHierarchy;
+  }
+
+  private loadDefaultProfilePropertyValue(
+       domainType: CatalogueItemDomainType,
+       id: any) {
+
+      const catalogueHierarchy = this.getCatalogueItemHierarchy();
+
+      // Get metadata for each catalogueItem in the hierarchy
+      const options = this.gridService.constructOptions(20, 0, null, null, null);
+      // const request: Observable<any> =
+      this.resources.profile.otherMetadata(
+        domainType,
+        id,
+        options);
+
+      const properties = from(catalogueHierarchy).pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the list of other properties.', error);
+          return EMPTY;
+        }),
+        mergeMap(param => this.getPropertiesFromCatalogueItem(param))
+      );
+
+
+      const observable = zip(
+        properties
+      );
+
+      let responses = [];
+      const subject = new Subject<any>();
+      observable.subscribe({
+        next: property => {
+          for (const property_item of property) {
+            if (property_item !== undefined ) {
+              responses = responses.concat(
+                property_item.filter(o => (
+                 this.usedProfiles.findIndex(e => e.display === o.value) !== -1
+                 ))
+              );
+            }
+          }
+        },
+        complete: () => {
+          subject.next(responses);
+        },
+      });
+
+      return subject.asObservable();
+    }
+
+    private getPropertiesFromCatalogueItem(param) {
+      const options = this.gridService.constructOptions(20, 0, null, null, null);
+      const request: Observable<any> =
+        this.resources.profile.otherMetadata(
+            param.domainType,
+            param.id,
+            options);
+
+      return request.pipe(
+        catchError(error => {
+           this.messageHandler.showError('There was a problem getting the list of other properties.', error);
+           return EMPTY;
+        }),
+        map((data: any) => {
+           const tempItems = data.body.items;
+           const items = tempItems.filter( o => (
+             o.namespace === this.defaultProfileDomainName)
+             );
+           return items;
+        })
+      );
+    }
+
 }
+
+

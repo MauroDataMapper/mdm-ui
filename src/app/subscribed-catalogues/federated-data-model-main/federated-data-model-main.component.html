@@ -21,11 +21,12 @@ SPDX-License-Identifier: Apache-2.0
     </mdm-federated-data-model-detail>
     <mat-tab-group *ngIf="dataModel && catalogueId" #tab animationDuration="0ms" [selectedIndex]="activeTab"
         (selectedIndexChange)="tabSelected($event)">
-        <mat-tab label="Newer Versions">
+        <mat-tab *ngIf="showNewerVersionsTab" label="Newer Versions">
             <ng-template matTabContent>
               <mdm-newer-versions
                 [catalogueItem]="dataModel"
                 [catalogueId]="catalogueId"
+                (hasErrored)="onNewerVersionsHasErrored()"
               >
               </mdm-newer-versions>
             </ng-template>

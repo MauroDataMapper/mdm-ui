@@ -24,37 +24,6 @@ import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { LinkCreatorService } from '../markdown/markdown-parser/link-creator.service';
 
-const standardButtons = [
-  'source',
-  '|',
-  'bold',
-  'italic',
-  'underline',
-  '|',
-  'ul',
-  'ol',
-  'eraser',
-  '|',
-  'outdent',
-  'indent',
-  '|',
-  'font',
-  'fontsize',
-  'brush',
-  'paragraph',
-  '|',
-  'table',
-  '|',
-  'align',
-  '\n',
-  'undo',
-  'redo',
-  '|',
-  'hr',
-  'copyformat',
-  'fullsize',
-];
-
 const basicButtons = [
   'bold',
   'italic',
@@ -107,23 +76,51 @@ export class HtmlEditorComponent implements OnInit {
     private linkCreator: LinkCreatorService) { }
 
   ngOnInit(): void {
-    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
-
-    const extraButtons = [
+    const standardButtons = [
+      'source',
+      '|',
+      'bold',
+      'italic',
+      'underline',
+      '|',
+      'ul',
+      'ol',
+      'eraser',
+      '|',
+      'outdent',
+      'indent',
+      '|',
+      'font',
+      'fontsize',
+      'brush',
+      'paragraph',
+      '|',
+      'table',
       {
-        name: 'addelement',
-        text: 'Add Element',
-        icon: '',
+        name: 'linktoelement',
+        text: 'Link to Element',
+        tooltip: 'Add link to element',
+        icon: 'link',
         exec: (editor: any) => this.onAddElementLink(this, editor)
-      }
+      },
+      '|',
+      'align',
+      '\n',
+      'undo',
+      'redo',
+      '|',
+      'hr',
+      'copyformat',
+      'fullsize',
     ];
+
+    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
 
     this.editorConfig = {
       buttons,
       buttonsMD: buttons,
       buttonsSM: buttons,
-      buttonsXS: buttons,
-      extraButtons
+      buttonsXS: buttons
     };
   }
 

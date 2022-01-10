@@ -17,7 +17,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, MdmResponse, Modelable, Uuid } from '@maurodatamapper/mdm-resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { StateHandlerService } from './handlers/state-handler.service';
 
 @Injectable({ providedIn: 'root' })
@@ -298,7 +301,9 @@ export class ElementTypesService {
     User: { id: 'User', link: 'user', title: 'User', resourceName: 'user' },
   };
 
-  constructor(private stateHandler: StateHandlerService) { }
+  constructor(
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService) { }
 
   getSemanticLinkTypes() {
     return this.semanticLinkTypes;
@@ -429,10 +434,133 @@ export class ElementTypesService {
       });
   }
 
+  /**
+   * Get the named link indentifier for a catalogue item. This can be used to dynamically
+   * resolve a link to another catalogue element through strings rather than unique IDs.
+   * @param element Catalogue element containing the information requried to produce a named link.
+   * @returns An observable to subscribe to which will return the named link to the element.
+   */
+  getNamedLinkIdentifier(element): Observable<string> {
+    const baseTypes = this.getTypes();
+
+    const dataTypeNames = this.getTypesForBaseTypeArray('DataType').map((dt) => {
+      return dt.id;
+    });
+
+    let parentId = null;
+    if (element.domainType === 'DataClass') {
+      parentId = element.modelId;
+    }
+    if (!parentId && element.breadcrumbs) {
+      parentId = element.breadcrumbs[0].id;
+    }
+
+    let parentDataClassId = null;
+    if (element.parentDataClass) {
+      parentDataClassId = element.parentDataClass;
+    }
+    else if (element.dataClass) {
+      parentDataClassId = element.dataClass;
+    }
+    else if (element.breadcrumbs) {
+      parentDataClassId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+    }
+
+    if (element.domainType === 'DataClass') {
+      return this.getDataModelName(parentId)
+        .pipe(
+          map(dataModelName => `dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`)
+        );
+    }
+
+    if (element.domainType === 'DataModel') {
+      return of(`${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`);
+    }
+
+    if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
+      let isHierarchical = false;
+
+      if (!parentId) {
+        parentId = element.element.model;
+        isHierarchical = true;
+      }
+
+      return this.getDataModelName(parentId)
+        .pipe(
+          map(dataModelName => {
+            if (isHierarchical) {
+              return `dm:${dataModelName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+            }
+            else {
+              return `dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+            }
+          })
+        );
+    }
+
+    if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
+      let isHierarchical = false;
+
+      if (!parentId) {
+        parentId = element.element.model;
+        parentDataClassId = element.element.dataClass;
+        isHierarchical = true;
+      }
+
+      const dataModelName$ = this.getDataModelName(parentId);
+      const dataClassName$ = this.getDataClassName(parentId, parentDataClassId);
+
+      return forkJoin([dataModelName$, dataClassName$])
+        .pipe(
+          map(([dataModelName, dataClassName]) => {
+            if (isHierarchical) {
+              return `dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+            }
+            else {
+              return `dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+            }
+          })
+        );
+    }
+
+    if (element.domainType === 'Term') {
+      return this.getTerminologyName(parentId)
+        .pipe(
+          map(terminologyName => `te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`));
+    }
+
+    if (element.domainType === 'CodeSet') {
+      return of(`${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`);
+    }
+
+    return of(null);
+  }
+
   isModelDataType(domainType: CatalogueItemDomainType) {
     return domainType === CatalogueItemDomainType.CodeSetType
       || domainType === CatalogueItemDomainType.TerminologyType
       || domainType === CatalogueItemDomainType.ReferenceDataModelType;
+  }
+
+  private getDataModelName(id: Uuid): Observable<string> {
+    return this.resources.dataModel
+      .get(id)
+      .pipe(
+        map((res: MdmResponse<Modelable>) => res.body.label));
+  }
+
+  private getTerminologyName(id: Uuid): Observable<string> {
+    return this.resources.terminology
+      .get(id)
+      .pipe(
+        map((res: MdmResponse<Modelable>) => res.body.label));
+  }
+
+  private getDataClassName(dataModelId: Uuid, id: Uuid): Observable<string> {
+    return this.resources.dataClass
+      .get(dataModelId, id)
+      .pipe(
+        map((res: MdmResponse<Modelable>) => res.body.label));
   }
 }
 

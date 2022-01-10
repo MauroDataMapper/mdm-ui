@@ -22,6 +22,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
 import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { LinkCreatorService } from '../markdown/markdown-parser/link-creator.service';
 
 const standardButtons = [
   'source',
@@ -102,7 +103,8 @@ export class HtmlEditorComponent implements OnInit {
   constructor(
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
-    private elementTypesService: ElementTypesService) { }
+    private elementTypesService: ElementTypesService,
+    private linkCreator: LinkCreatorService) { }
 
   ngOnInit(): void {
     const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
@@ -144,11 +146,14 @@ export class HtmlEditorComponent implements OnInit {
         return;
       }
 
-      const href = component.elementTypesService.getLinkUrl(element);
-      const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
+      component.elementTypesService.getNamedLinkIdentifier(element)
+        .subscribe(namedLink => {
+          const href = component.linkCreator.createLink(namedLink, null, null);
+          const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
 
-      editor.selection.setCursorIn(focusNode);
-      editor.selection.insertHTML(html);
+          editor.selection.setCursorIn(focusNode);
+          editor.selection.insertHTML(html);
+        });
     });
 
     component.elementDialogService.open([], []);

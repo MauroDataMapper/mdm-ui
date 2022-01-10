@@ -33,13 +33,13 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 })
 export class NewerVersionsComponent implements AfterViewInit {
 
-  @ViewChild(MdmPaginatorComponent, {static:false}) paginator : MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: false }) paginator: MdmPaginatorComponent;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input('catalogueItem') catalogueItem: FederatedDataModel;
   @Input() catalogueId: Uuid;
 
-  displayedColumns = ['label','version','navigate'];
+  displayedColumns = ['label', 'version', 'navigate'];
 
   isLoadingResults: boolean;
   totalNewVersionCount: number;
@@ -67,19 +67,25 @@ export class NewerVersionsComponent implements AfterViewInit {
       });
   }
 
-  fetchNewerVersions(pageSize? : number, pageIndex? : number, sortBy? : string, sortType? :string) {
+  fetchNewerVersions(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: string) {
     // Future proofing to enable paging if number of versions increases
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const options : QueryParameters = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType);
-    return this.resouces.subscribedCatalogues.newerVersions(this.catalogueId, this.catalogueItem.modelId).pipe(catchError(error => {
-      this.messagingServer.showError(error);
-      return EMPTY;
-    }));
+    const options: QueryParameters = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType);
+    return this.resouces.subscribedCatalogues
+      .newerVersions(
+        this.catalogueId,
+        this.catalogueItem.modelId,
+        {},
+        { handleGetErrors: false })
+      .pipe(
+        catchError(error => {
+          this.messagingServer.showError(error);
+          return EMPTY;
+        }));
   }
 
-  navigateToNewerVersion(record: FederatedDataModel)
-  {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel', {parentId:this.catalogueId, id:record.modelId});
+  navigateToNewerVersion(record: FederatedDataModel) {
+    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel', { parentId: this.catalogueId, id: record.modelId });
   }
 
 }

@@ -21,9 +21,9 @@ import { MatSort } from '@angular/material/sort';
 import { QueryParameters, Uuid } from '@maurodatamapper/mdm-resources';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { EMPTY, merge } from 'rxjs';
+import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -45,25 +45,31 @@ export class NewerVersionsComponent implements AfterViewInit {
   totalNewVersionCount: number;
   newVersionsRecords: any;
 
-  constructor(private resouces: MdmResourcesService, private messagingServer: MessageHandlerService, private gridService: GridService, private stateHandler: StateHandlerService) { }
+  constructor(
+    private resouces: MdmResourcesService,
+    private gridService: GridService,
+    private stateHandler: StateHandlerService) { }
 
   ngAfterViewInit(): void {
-    merge(this.sort.sortChange, this.paginator.page).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
-      return this.fetchNewerVersions(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction);
-    }),
-      map((data: any) => {
-        this.totalNewVersionCount = data.body.newerPublishedModels.length;
-        this.isLoadingResults = false;
-        return data.body.newerPublishedModels;
-
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        return [];
-      })).subscribe(data => {
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.fetchNewerVersions(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction);
+        }),
+        map((data: any) => {
+          this.totalNewVersionCount = data.body.newerPublishedModels.length;
+          this.isLoadingResults = false;
+          return data.body.newerPublishedModels;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe(data => {
         this.newVersionsRecords = data;
-
       });
   }
 
@@ -76,12 +82,7 @@ export class NewerVersionsComponent implements AfterViewInit {
         this.catalogueId,
         this.catalogueItem.modelId,
         {},
-        { handleGetErrors: false })
-      .pipe(
-        catchError(error => {
-          this.messagingServer.showError(error);
-          return EMPTY;
-        }));
+        { handleGetErrors: false });
   }
 
   navigateToNewerVersion(record: FederatedDataModel) {

@@ -39,6 +39,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
   tabs = new TabCollection([
     'newVersion'
   ]);
+  showNewerVersionsTab = true;
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -82,6 +83,10 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
   }
 
+  onNewerVersionsHasErrored() {
+    this.showNewerVersionsTab = false;
+  }
+
   private getFederatedDataModel(reloadView?: boolean) {
     this.subscribedCatalogues
       .getFederatedDataModels(this.catalogueId)
@@ -94,8 +99,6 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
         },
         errors => this.messageHandler.showError('There was a problem getting the Federated Data Model', errors));
   }
-
-
 
   private reloadView() {
     this.stateHandler.Go(

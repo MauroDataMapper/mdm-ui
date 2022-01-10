@@ -16,111 +16,109 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<ng-container *ngIf="isLoadingResults || totalNewVersionCount > 0">
-  <div class="heading-container">
-    <h4 class="marginless">
-      <span>Newer Versions</span>
-      <span *ngIf="isLoadingResults" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        >
-        </ngx-skeleton-loader>
-      </span>
-      <span
-        class="mdm--badge mdm--element-count"
-        *ngIf="!isLoadingResults && totalNewVersionCount"
-        >{{ totalNewVersionCount }}</span
+<div class="heading-container">
+  <h4 class="marginless">
+    <span>Newer Versions</span>
+    <span *ngIf="isLoadingResults" class="mdm--skeleton-badge">
+      <ngx-skeleton-loader
+        count="1"
+        appearance="circle"
+        [theme]="{
+          'border-radius': '5px',
+          height: '31px',
+          width: '28px',
+          'background-color': '#b7bbc5'
+        }"
       >
-    </h4>
-  </div>
-  <div class="table-responsive">
-    <table
-      mat-table
-      #tableDataElements
-      matSort
-      [dataSource]="newVersionsRecords"
-      class="mdm--mat-table table-striped"
+      </ngx-skeleton-loader>
+    </span>
+    <span
+      class="mdm--badge mdm--element-count"
+      *ngIf="!isLoadingResults && totalNewVersionCount"
+      >{{ totalNewVersionCount }}</span
     >
-      <ng-container matColumnDef="label">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header="label"
-          style="max-width: 35%; width: 35%"
-          columnName="label"
+  </h4>
+</div>
+<div class="table-responsive">
+  <table
+    mat-table
+    #tableDataElements
+    matSort
+    [dataSource]="newVersionsRecords"
+    class="mdm--mat-table table-striped"
+  >
+    <ng-container matColumnDef="label">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="label"
+        style="max-width: 35%; width: 35%"
+        columnName="label"
+      >
+        Label
+      </th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+        <div>
+          {{ record.label }}
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="version">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="version"
+        style="max-width: 45%; width: 45%"
+        columnName="version"
+      >
+        Version
+      </th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+        {{ record.version }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="navigate">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="version"
+        style="max-width: 5%; width: 5%"
+        columnName="navigate"
+      ></th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+        <button
+          type="button"
+          mat-icon-button
+          (click)="navigateToNewerVersion(record)"
+          style="position: relative; float: right; margin-right: 4px"
         >
-          Label
-        </th>
-        <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
-          <div>
-            {{ record.label }}
-          </div>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="version">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header="version"
-          style="max-width: 45%; width: 45%"
-          columnName="version"
-        >
-          Version
-        </th>
-        <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
-          {{ record.version }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="navigate">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header="version"
-          style="max-width: 5%; width: 5%"
-          columnName="navigate"
-        ></th>
-        <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
-          <button
-            type="button"
-            mat-icon-button
-            (click)="navigateToNewerVersion(record)"
-            style="position: relative; float: right; margin-right: 4px"
-          >
-            <i class="fas fa-external-link-alt"></i>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [ngClass]="{ 'mdm--active-row ': row.checked }"
-      ></tr>
-    </table>
-  </div>
+          <i class="fas fa-external-link-alt"></i>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngClass]="{ 'mdm--active-row ': row.checked }"
+    ></tr>
+  </table>
+</div>
 
-  <div
-    class="bordered is-hidden pxy-2"
-    [ngClass]="{ block: !totalNewVersionCount && !isLoadingResults }"
-  >
-    <p class="marginless">There are no Newer Versions in this repository.</p>
-  </div>
-  <div
-    class="mdm--mat-pagination"
-    [ngClass]="{
-      'is-hidden': !totalNewVersionCount || totalNewVersionCount < 6
-    }"
-  >
-    <mdm-paginator
-      [length]="totalNewVersionCount"
-      showFirstLastButtons
-    ></mdm-paginator>
-  </div>
-</ng-container>
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalNewVersionCount && !isLoadingResults }"
+>
+  <p class="marginless">There are no Newer Versions in this repository.</p>
+</div>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{
+    'is-hidden': !totalNewVersionCount || totalNewVersionCount < 6
+  }"
+>
+  <mdm-paginator
+    [length]="totalNewVersionCount"
+    showFirstLastButtons
+  ></mdm-paginator>
+</div>

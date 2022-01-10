@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { QueryParameters, Uuid } from '@maurodatamapper/mdm-resources';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
@@ -39,9 +39,12 @@ export class NewerVersionsComponent implements AfterViewInit {
   @Input('catalogueItem') catalogueItem: FederatedDataModel;
   @Input() catalogueId: Uuid;
 
+  @Output() hasErrored = new EventEmitter<void>();
+
   displayedColumns = ['label', 'version', 'navigate'];
 
   isLoadingResults: boolean;
+  hasFailed = false;
   totalNewVersionCount: number;
   newVersionsRecords: any;
 
@@ -65,11 +68,16 @@ export class NewerVersionsComponent implements AfterViewInit {
         }),
         catchError(() => {
           this.isLoadingResults = false;
+          this.hasFailed = true;
           return [];
         })
       )
       .subscribe(data => {
         this.newVersionsRecords = data;
+
+        if (this.hasFailed) {
+          this.hasErrored.emit();
+        }
       });
   }
 

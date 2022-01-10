@@ -437,6 +437,7 @@ export class ElementTypesService {
   /**
    * Get the named link indentifier for a catalogue item. This can be used to dynamically
    * resolve a link to another catalogue element through strings rather than unique IDs.
+   *
    * @param element Catalogue element containing the information requried to produce a named link.
    * @returns An observable to subscribe to which will return the named link to the element.
    */

@@ -69,15 +69,14 @@ export class NewerVersionsComponent implements AfterViewInit {
         catchError(() => {
           this.isLoadingResults = false;
           this.hasFailed = true;
+          this.hasErrored.emit();
           return [];
         })
       )
       .subscribe(data => {
         this.newVersionsRecords = data;
 
-        if (this.hasFailed) {
-          this.hasErrored.emit();
-        }
+
       });
   }
 

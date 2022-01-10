@@ -22,20 +22,23 @@ import { LinkCreatorService } from './link-creator.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('LinkCreatorService', () => {
   let service: LinkCreatorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [ElementTypesService]
+    service = setupTestModuleForService(LinkCreatorService);
 
-    });
-    service = TestBed.inject(LinkCreatorService);
+    // TestBed.configureTestingModule({
+    //   imports: [
+    //     UIRouterModule.forRoot({ useHash: true }),
+    //     ToastrModule.forRoot()
+    //   ],
+    //   providers: [ElementTypesService]
+
+    // });
+    // service = TestBed.inject(LinkCreatorService);
   });
 
   it('should be created', () => {

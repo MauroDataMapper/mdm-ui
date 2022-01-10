@@ -16,22 +16,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
 
 import { ElementTypesService } from './element-types.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('ElementTypesService', () => {
- beforeEach(() => TestBed.configureTestingModule({
-   imports: [HttpClientTestingModule,
-    UIRouterModule.forRoot({ useHash: true }),
-    ToastrModule.forRoot()],
-    providers: [ElementTypesService]}));
+  let service: ElementTypesService;
 
- it('should be created', () => {
-   const service: ElementTypesService = TestBed.inject(ElementTypesService);
-   expect(service).toBeTruthy();
- });
+  beforeEach(() => {
+    service = setupTestModuleForService(ElementTypesService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

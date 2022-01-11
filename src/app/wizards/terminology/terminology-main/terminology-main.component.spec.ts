@@ -119,9 +119,9 @@ describe('TerminologyMainComponent', () => {
     }));
 
     harness.component.ngOnInit();
-    harness.component.setupForm.get('label').setValue('Terminology');
-    harness.component.setupForm.get('author').setValue('Tester');
-    harness.component.setupForm.get('organisation').setValue('Mauro');
+    harness.component.label.setValue('Terminology');
+    harness.component.author.setValue('Tester');
+    harness.component.organisation.setValue('Mauro');
 
     harness.component.save();
 

@@ -484,6 +484,15 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       });
   }
 
+  handleAddTerminology(fnode: FlatNode) {
+    this.stateHandler.Go(
+      'NewTerminology',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
+      });
+  }
+
   handleAddCodeSet(fnode: FlatNode) {
     this.stateHandler.Go(
       'NewCodeSet',

@@ -12,9 +12,6 @@ import { BulkEditContext } from '../types/bulk-edit-types';
   styleUrls: ['./bulk-edit-profile-select.component.scss']
 })
 export class BulkEditProfileSelectComponent implements OnInit {
-  @Input() catalogueItemId: Uuid;
-  @Input() domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
-
   @Output() nextSelected = new EventEmitter<void>();
   @Output() backSelected = new EventEmitter<void>();
 
@@ -30,12 +27,9 @@ export class BulkEditProfileSelectComponent implements OnInit {
     private stateHandler: StateHandlerService) { }
 
   ngOnInit(): void {
-    // Profiles are the same for all elements so taking the element and getting the used/unsed to get full list of selectable profiles
-    const de: DataElementDetail = this.context.elements[0];
-
     forkJoin([
-      this.resouces.profile.usedProfiles(de.domainType, de.id),
-      this.resouces.profile.unusedProfiles(de.domainType, de.id)
+      this.resouces.profile.usedProfiles(this.context.domainType, this.context.catalogueItemId),
+      this.resouces.profile.unusedProfiles(this.context.domainType, this.context.catalogueItemId)
     ])
     .pipe(
       catchError(error => {

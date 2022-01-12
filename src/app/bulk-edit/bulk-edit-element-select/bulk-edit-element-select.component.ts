@@ -12,9 +12,6 @@ import { BulkEditContext } from '../types/bulk-edit-types';
   styleUrls: ['./bulk-edit-element-select.component.scss']
 })
 export class BulkEditElementSelectComponent implements OnInit {
-  @Input() catalogueItemId: Uuid;
-  @Input() domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
-
   @Output() nextSelected = new EventEmitter<void>();
 
   /** Two way binding */
@@ -30,7 +27,7 @@ export class BulkEditElementSelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.resources.dataModel
-      .dataElements(this.catalogueItemId)
+      .dataElements(this.context.catalogueItemId)
       .pipe(
         catchError(error => {
           this.messageHandler.showError(error);

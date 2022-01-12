@@ -1,14 +1,10 @@
 <mdm-bulk-edit-element-select
   *ngIf="elementSelectStep"
-  [catalogueItemId]="catalogueItemId"
-  [domainType]="domainType"
   [(context)]="context"
   (nextSelected)="openProfile()"
 ></mdm-bulk-edit-element-select>
 <mdm-bulk-edit-profile-select
   *ngIf="profileSelectStep"
-  [catalogueItemId]="catalogueItemId"
-  [domainType]="domainType"
   [(context)]="context"
   (backSelected)="openElement()"
   (nextSelected)="openEditor()"
@@ -16,9 +12,11 @@
 <div *ngIf="editorStep">
   <mat-tab-group>
     <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
-      <ng-template mat-tab-label>{{ tab.tabTitle }}</ng-template>
+      <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
       <mdm-bulk-edit-editor
         *ngIf="tab"
+        [catalogueItemId]="context.catalogueItemId"
+        [domainType]="context.domainType"
         [(tab)]="tabs[index]"
       ></mdm-bulk-edit-editor>
     </mat-tab>

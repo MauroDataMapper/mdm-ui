@@ -15,8 +15,6 @@ import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-type
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
-  catalogueItemId: Uuid;
-  domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
 
   profileSelectStep = false;
   elementSelectStep = true;
@@ -33,11 +31,11 @@ export class BulkEditContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.context = {
+      catalogueItemId: this.uiRouterGlobals.params.id,
+      domainType: this.uiRouterGlobals.params.domainType,
       elements: [],
       profiles: []
     };
-    this.catalogueItemId = this.uiRouterGlobals.params.id;
-    this.domainType = this.uiRouterGlobals.params.domainType;
   }
 
   openEditor() {
@@ -78,7 +76,7 @@ export class BulkEditContainerComponent implements OnInit {
       });
 
       return {
-        tabTitle: profile.displayName,
+        displayName: profile.displayName,
         profile,
         multiFacetAwareItems,
         editedProfiles: null
@@ -95,8 +93,8 @@ export class BulkEditContainerComponent implements OnInit {
 
     this.resouce.profile
       .saveMany(
-        this.domainType,
-        this.catalogueItemId,
+        this.context.domainType,
+        this.context.catalogueItemId,
         { profilesProvided: profiles })
       .pipe(
         catchError(error => {

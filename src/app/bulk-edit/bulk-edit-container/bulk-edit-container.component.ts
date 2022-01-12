@@ -5,7 +5,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService, MessageHandlerService, BroadcastService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-types';
 
 @Component({
@@ -69,18 +69,20 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   buildTabs() {
-    this.tabs = [];
+    this.tabs = this.context.profiles.map<BulkEditProfileContext>(profile => {
+      const multiFacetAwareItems = this.context.elements.map<MultiFacetAwareItem>(element => {
+        return {
+          multiFacetAwareItemDomainType: element.domainType,
+          multiFacetAwareItemId: element.id
+        }
+      });
 
-    const multiFacetAwareItems = this.context.elements.map<MultiFacetAwareItem>(element => {
       return {
-        multiFacetAwareItemDomainType: element.domainType,
-        multiFacetAwareItemId: element.id
-      }
-    });
-
-    this.context.profiles.forEach(profile => {
-      const editedProfiles: any = null;
-      this.tabs.push({ tabTitle: profile.displayName, profile, multiFacetAwareItems, editedProfiles });
+        tabTitle: profile.displayName,
+        profile,
+        multiFacetAwareItems,
+        editedProfiles: null
+      };
     });
   }
 
@@ -91,25 +93,31 @@ export class BulkEditContainerComponent implements OnInit {
       profiles.push(...tab.editedProfiles.profilesProvided);
     });
 
-    this.resouce.profile.saveMany(this.domainType, this.catalogueItemId, { profilesProvided: profiles }).pipe(
-      catchError(error => {
-        this.messageHandler.showError(error);
-        return EMPTY;
-      })
-    ).subscribe(() => {
-      this.dialog.openConfirmationAsync({
-        data: {
-          title: 'Close bulk editor?',
-          okBtnTitle: 'Yes',
-          cancelBtnTitle: 'No',
-          btnType: 'primary',
-          message: '<b>Save Successful</b>, do you want to close the bulk editor?',
-        }
-      }).subscribe(
-        () => {
-          this.cancel();
-        }
-      );
-    });
+    this.resouce.profile
+      .saveMany(
+        this.domainType,
+        this.catalogueItemId,
+        { profilesProvided: profiles })
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(error);
+          return EMPTY;
+        }),
+        switchMap(() => {
+          return this.dialog.openConfirmationAsync({
+            data: {
+              title: 'Close bulk editor?',
+              okBtnTitle: 'Yes',
+              cancelBtnTitle: 'No',
+              btnType: 'primary',
+              message: '<b>Save Successful</b>, do you want to close the bulk editor?',
+            }
+          });
+        })
+      )
+      .subscribe(() => {
+        // Chosen to close the editor and go back
+        this.cancel();
+      });
   }
 }

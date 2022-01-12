@@ -5,7 +5,7 @@ import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BulkEditPayload } from '../model/bulkEditPayload';
+import { BulkEditContext } from '../types/bulk-edit-types';
 
 @Component({
   selector: 'mdm-bulk-edit-element-select',
@@ -16,8 +16,8 @@ export class BulkEditElementSelectComponent implements OnInit {
 
   @Output() nextSelected = new EventEmitter<any>();
 
-  @Input() bulkEditPayload: BulkEditPayload;
-  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
+  @Input() bulkEditPayload: BulkEditContext;
+  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditContext>();
 
   catalogueItemId: Uuid;
   domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;

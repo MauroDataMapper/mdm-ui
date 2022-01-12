@@ -6,7 +6,7 @@
   </div>
   <mat-form-field appearance="fill" style="width: 500px;">
     <mat-label>Element</mat-label>
-    <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.selectedElements" >
+    <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.elements" >
       <mat-option *ngFor="let element of elements" [value]="element" >{{element.label}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -14,8 +14,8 @@
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
       Cancel
     </button>
-  
-    <button [disabled]="bulkEditPayload.selectedElements.length <= 0" mat-stroked-button type="button" color="primary" type="button"
+
+    <button [disabled]="bulkEditPayload.elements.length <= 0" mat-stroked-button type="button" color="primary" type="button"
       class="mr-1" (click)="proceedToProfile()">
       Next
     </button>

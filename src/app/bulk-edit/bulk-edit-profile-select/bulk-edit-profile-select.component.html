@@ -6,7 +6,7 @@
 </div>
 <mat-form-field appearance="fill" style="width: 500px;">
   <mat-label>Profile</mat-label>
-  <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.selectedProfiles" >
+  <mat-select multiple [compareWith]="objectComparisonFunction"  [(ngModel)]="bulkEditPayload.profiles" >
     <mat-option *ngFor="let profile of profiles" [value]="profile"  >{{profile.displayName}}</mat-option>
   </mat-select>
 </mat-form-field>
@@ -17,7 +17,7 @@
   <button mat-button color="warn" type="button" class="mr-1" (click)="openElements()">
     Back
 </button>
-  <button [disabled]="bulkEditPayload.selectedProfiles.length <= 0" mat-stroked-button type="button" color="primary" type="button"
+  <button [disabled]="bulkEditPayload.profiles.length <= 0" mat-stroked-button type="button" color="primary" type="button"
     class="mr-1" (click)="proceedToEdit()">
     Next
   </button>

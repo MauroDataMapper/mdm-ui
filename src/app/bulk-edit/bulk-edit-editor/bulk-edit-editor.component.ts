@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, ProfileValidationErrorList, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, ProfileContextIndexResponse, ProfileValidationErrorList, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { BulkEditProfileContext } from '../types/bulk-edit-types';
 import { CheckboxRendererComponent } from './renderers/checkbox-renderer/checkbox-renderer.component';
 import { DateCellEditorComponent } from './renderers/date-cell-editor/date-cell-editor.component';
 
@@ -18,7 +19,7 @@ export class BulkEditEditorComponent implements OnInit {
 
   @Output() backEvent = new EventEmitter();
 
-  @Input('tab') tab: { tabTitle: string; profile:any; multiFacetAwareItems : Array<{ multiFacetAwareItemDomainType: string; multiFacetAwareItemId: Uuid}>; editedProfiles : { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }};
+  @Input('tab') tab: BulkEditProfileContext;
   @Output() tabChanged = new EventEmitter();
 
 
@@ -65,17 +66,24 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   load() {
-    this.resouce.profile.getMany(this.domainType, this.catalogueItemId, { multiFacetAwareItems: this.tab.multiFacetAwareItems, profileProviderServices: [{ name: this.tab.profile.name, namespace: this.tab.profile.namespace }] }).pipe(
+    this.resouce.profile.getMany(
+      this.domainType,
+      this.catalogueItemId,
+      {
+        multiFacetAwareItems: this.tab.multiFacetAwareItems,
+        profileProviderServices: [{ name: this.tab.profile.name, namespace: this.tab.profile.namespace }]
+      })
+    .pipe(
       catchError(error => {
         this.messageHandler.showError(error);
         return EMPTY;
       })
-    ).subscribe((proResult: { body: { count: number; profilesProvided: [{ profile: Profile; profileProviderService: { namespace: string; name: string } }] } }) => {
+    ).subscribe((proResult: ProfileContextIndexResponse) => {
 
       const tempColumnDefs = new Array<{ headerName: string; field: string; editable?: boolean; cellRenderer?: string; pinned?: string }>();
       const tempRowData = new Array<any>();
 
-      this.tab.editedProfiles = proResult;
+      this.tab.editedProfiles = proResult.body;
 
       tempColumnDefs.push({ headerName: 'Element', field: 'Element' , pinned: 'left'});
 
@@ -137,7 +145,7 @@ export class BulkEditEditorComponent implements OnInit {
 
   onCellValueChanged(event: any) {
     const element = event.data.Element;
-    const item = this.tab.editedProfiles.body.profilesProvided.find(x => x.profile.label === element);
+    const item = this.tab.editedProfiles.profilesProvided.find(x => x.profile.label === element);
 
     if (item) {
       Object.keys(event.data as {}).forEach(data => {
@@ -155,7 +163,7 @@ export class BulkEditEditorComponent implements OnInit {
   validate() {
     this.totalValidationErrors = 0;
 
-    this.resouce.profile.validateMany(this.domainType, this.catalogueItemId, { profilesProvided: this.tab.editedProfiles.body.profilesProvided }).pipe(
+    this.resouce.profile.validateMany(this.domainType, this.catalogueItemId, { profilesProvided: this.tab.editedProfiles.profilesProvided }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.validationErrors = error.error as ProfileValidationErrorList;
         this.gridApi.redrawRows();

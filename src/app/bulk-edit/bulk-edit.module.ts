@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { BulkEditElementSelectComponent } from './bulk-edit-element-select/bulk-edit-element-select.component';
 import { BulkEditProfileSelectComponent } from './bulk-edit-profile-select/bulk-edit-profile-select.component';
 import { BulkEditEditorComponent } from './bulk-edit-editor/bulk-edit-editor.component';
-import { BulkEditSaveModalComponent } from './modals/bulk-edit-save-modal/bulk-edit-save-modal.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { BulkEditBaseComponent } from './bulk-edit-base/bulk-edit-base.component';
+import { BulkEditContainerComponent } from './bulk-edit-container/bulk-edit-container.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FormsModule } from '@angular/forms';
-import { CheckboxRendererComponent } from './checkbox-renderer/checkbox-renderer.component';
-import { DateCellEditorComponent } from './date-cell-editor/date-cell-editor.component';
+import { CheckboxRendererComponent } from './bulk-edit-editor/renderers/checkbox-renderer/checkbox-renderer.component';
+import { DateCellEditorComponent } from './bulk-edit-editor/renderers/date-cell-editor/date-cell-editor.component';
 import { CalendarModule } from 'primeng/calendar';
 
 
@@ -18,8 +17,7 @@ import { CalendarModule } from 'primeng/calendar';
     BulkEditElementSelectComponent,
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
-    BulkEditSaveModalComponent,
-    BulkEditBaseComponent,
+    BulkEditContainerComponent,
     CheckboxRendererComponent,
     DateCellEditorComponent
   ],
@@ -34,8 +32,7 @@ import { CalendarModule } from 'primeng/calendar';
     BulkEditElementSelectComponent,
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
-    BulkEditSaveModalComponent,
-    BulkEditBaseComponent
+    BulkEditContainerComponent
   ]
 })
 export class BulkEditModule { }

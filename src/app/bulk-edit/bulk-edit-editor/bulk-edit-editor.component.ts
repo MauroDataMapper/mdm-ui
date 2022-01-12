@@ -6,8 +6,8 @@ import { BroadcastService, MessageHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CheckboxRendererComponent } from '../checkbox-renderer/checkbox-renderer.component';
-import { DateCellEditorComponent } from '../date-cell-editor/date-cell-editor.component';
+import { CheckboxRendererComponent } from './renderers/checkbox-renderer/checkbox-renderer.component';
+import { DateCellEditorComponent } from './renderers/date-cell-editor/date-cell-editor.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',

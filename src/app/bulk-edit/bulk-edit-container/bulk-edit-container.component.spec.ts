@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BulkEditSaveModalComponent } from './bulk-edit-save-modal.component';
+import { BulkEditContainerComponent } from './bulk-edit-container.component';
 
-describe('BulkEditSaveModalComponent', () => {
-  let component: BulkEditSaveModalComponent;
-  let fixture: ComponentFixture<BulkEditSaveModalComponent>;
+describe('BulkEditBaseComponent', () => {
+  let component: BulkEditContainerComponent;
+  let fixture: ComponentFixture<BulkEditContainerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BulkEditSaveModalComponent ]
+      declarations: [ BulkEditContainerComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BulkEditSaveModalComponent);
+    fixture = TestBed.createComponent(BulkEditContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,11 +9,11 @@ import { catchError } from 'rxjs/operators';
 import { BulkEditPayload } from '../model/bulkEditPayload';
 
 @Component({
-  selector: 'mdm-bulk-edit-base',
-  templateUrl: './bulk-edit-base.component.html',
-  styleUrls: ['./bulk-edit-base.component.scss']
+  selector: 'mdm-bulk-edit-container',
+  templateUrl: './bulk-edit-container.component.html',
+  styleUrls: ['./bulk-edit-container.component.scss']
 })
-export class BulkEditBaseComponent implements OnInit {
+export class BulkEditContainerComponent implements OnInit {
 
   @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditPayload>();
 

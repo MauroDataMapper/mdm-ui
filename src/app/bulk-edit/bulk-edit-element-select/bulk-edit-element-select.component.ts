@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MultiFacetAwareDomainType, CatalogueItemDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import { MultiFacetAwareDomainType, CatalogueItemDomainType, Uuid, DataElementIndexResponse, DataElement } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditContext } from '../types/bulk-edit-types';
@@ -13,48 +12,45 @@ import { BulkEditContext } from '../types/bulk-edit-types';
   styleUrls: ['./bulk-edit-element-select.component.scss']
 })
 export class BulkEditElementSelectComponent implements OnInit {
+  @Input() catalogueItemId: Uuid;
+  @Input() domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
 
-  @Output() nextSelected = new EventEmitter<any>();
+  @Output() nextSelected = new EventEmitter<void>();
 
-  @Input() bulkEditPayload: BulkEditContext;
-  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditContext>();
+  /** Two way binding */
+  @Input() context: BulkEditContext;
+  @Output() contextChanged = new EventEmitter<BulkEditContext>();
 
-  catalogueItemId: Uuid;
-  domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
-  elements: any;
+  elements: DataElement[];
 
-  constructor(private stateHandler: StateHandlerService, private resources: MdmResourcesService, private uiRouterGlobals: UIRouterGlobals, private messageHandler: MessageHandlerService) { }
+  constructor(
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit(): void {
-    this.catalogueItemId = this.uiRouterGlobals.params.id;
-    this.domainType = this.uiRouterGlobals.params.domainType;
-    this.load();
-  }
-
-  load() {
-    this.resources.dataModel.dataElements(this.catalogueItemId).pipe(
-      catchError(error => {
-        this.messageHandler.showError(error);
-        return EMPTY;
-      })
-    ).subscribe(elements => {
-      this.elements = elements.body.items;
-    });
+    this.resources.dataModel
+      .dataElements(this.catalogueItemId)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: DataElementIndexResponse) => {
+        this.elements = response.body.items;
+      });
   }
 
   proceedToProfile() {
     this.nextSelected.emit();
   }
 
-
-  objectComparisonFunction( option, value) : boolean {
+  objectComparisonFunction(option, value): boolean {
     return option.id === value.id;
   };
-
 
   cancel() {
     this.stateHandler.GoPrevious();
   }
-
-
 }

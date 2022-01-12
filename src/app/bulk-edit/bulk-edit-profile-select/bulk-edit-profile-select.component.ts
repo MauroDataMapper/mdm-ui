@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, ProfileSummary, ProfileSummaryIndexResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditContext } from '../types/bulk-edit-types';
@@ -13,42 +12,42 @@ import { BulkEditContext } from '../types/bulk-edit-types';
   styleUrls: ['./bulk-edit-profile-select.component.scss']
 })
 export class BulkEditProfileSelectComponent implements OnInit {
+  @Input() catalogueItemId: Uuid;
+  @Input() domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
 
-  @Output() nextSelected = new EventEmitter<any>();
-  @Output() backSelected = new EventEmitter<any>();
+  @Output() nextSelected = new EventEmitter<void>();
+  @Output() backSelected = new EventEmitter<void>();
 
-  @Input() bulkEditPayload: BulkEditContext;
-  @Output() bulkEditPayloadChanged = new EventEmitter<BulkEditContext>();
+  /** Two-way binding */
+  @Input() context: BulkEditContext;
+  @Output() contextChanged = new EventEmitter<BulkEditContext>();
 
-  catalogueItemId: Uuid;
-  domainType: MultiFacetAwareDomainType | CatalogueItemDomainType;
-  profiles: Array<ProfileSummary>;
+  profiles: ProfileSummary[];
 
-  constructor(private resouces: MdmResourcesService, private messageHandler: MessageHandlerService, private stateHandler: StateHandlerService, private uiRouterGlobals: UIRouterGlobals) { }
+  constructor(
+    private resouces: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService) { }
 
   ngOnInit(): void {
-
-    this.catalogueItemId = this.uiRouterGlobals.params.id;
-    this.domainType = this.uiRouterGlobals.params.domainType;
-
     // Profiles are the same for all elements so taking the element and getting the used/unsed to get full list of selectable profiles
-    const de: DataElementDetail = this.bulkEditPayload.elements[0];
+    const de: DataElementDetail = this.context.elements[0];
 
-    forkJoin(
-      {
-        used: this.resouces.profile.usedProfiles(de.domainType, de.id),
-        unused: this.resouces.profile.unusedProfiles(de.domainType, de.id)
-      }
-    ).pipe(
+    forkJoin([
+      this.resouces.profile.usedProfiles(de.domainType, de.id),
+      this.resouces.profile.unusedProfiles(de.domainType, de.id)
+    ])
+    .pipe(
       catchError(error => {
         this.messageHandler.showError(error);
         return EMPTY;
       })
-    ).subscribe((res) => {
-      const usedRes = res.used as ProfileSummaryIndexResponse;
-      const unusedRes = res.unused as ProfileSummaryIndexResponse;
-      this.profiles = usedRes.body;
-      this.profiles.push(...unusedRes.body);
+    )
+    .subscribe(([used, unused]: [ProfileSummaryIndexResponse, ProfileSummaryIndexResponse]) => {
+      this.profiles = [
+        ...used.body,
+        ...unused.body
+      ];
     });
   }
 
@@ -60,10 +59,9 @@ export class BulkEditProfileSelectComponent implements OnInit {
     this.backSelected.emit();
   }
 
-  objectComparisonFunction( option, value ) : boolean {
+  objectComparisonFunction(option, value) : boolean {
     return option.name === value.name && option.namespace === value.namespace;
   };
-
 
   cancel() {
     this.stateHandler.GoPrevious();

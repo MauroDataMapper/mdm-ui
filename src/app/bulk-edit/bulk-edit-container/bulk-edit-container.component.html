@@ -1,11 +1,15 @@
 <mdm-bulk-edit-element-select
   *ngIf="elementSelectStep"
-  [(bulkEditPayload)]="context"
+  [catalogueItemId]="catalogueItemId"
+  [domainType]="domainType"
+  [(context)]="context"
   (nextSelected)="openProfile()"
 ></mdm-bulk-edit-element-select>
 <mdm-bulk-edit-profile-select
   *ngIf="profileSelectStep"
-  [(bulkEditPayload)]="context"
+  [catalogueItemId]="catalogueItemId"
+  [domainType]="domainType"
+  [(context)]="context"
   (backSelected)="openElement()"
   (nextSelected)="openEditor()"
 ></mdm-bulk-edit-profile-select>

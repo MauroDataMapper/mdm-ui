@@ -1,5 +1,5 @@
-<input
-  type="checkbox"
-  (click)="checkedHandler($event)"
+<mat-checkbox
+  color="primary"
   [checked]="params.value"
-/>
+  (change)="valueChanged($event)"
+></mat-checkbox>

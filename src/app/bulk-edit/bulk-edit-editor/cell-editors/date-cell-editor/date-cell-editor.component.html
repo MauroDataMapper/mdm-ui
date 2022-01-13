@@ -1,11 +1,11 @@
 <p-calendar
-#container
-[(ngModel)]="value"
-[appendTo]="'body'"
-[style]="{ height: '100%', width: '100%' }"
-[inputStyle]="{ height: '100%', width: '100%' }"
-[monthNavigator]="true"
-yearRange="2015:2025"
-dateFormat="d/m/yy"
-(onSelect)="onSelect($event)"
+  #container
+  [(ngModel)]="value"
+  [appendTo]="'body'"
+  [style]="{ height: '100%', width: '100%' }"
+  [inputStyle]="{ height: '100%', width: '100%' }"
+  [monthNavigator]="true"
+  yearRange="2015:2025"
+  dateFormat="d/m/yy"
+  (onSelect)="onSelect($event)"
 ></p-calendar>

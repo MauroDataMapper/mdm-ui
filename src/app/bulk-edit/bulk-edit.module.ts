@@ -7,7 +7,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { BulkEditContainerComponent } from './bulk-edit-container/bulk-edit-container.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FormsModule } from '@angular/forms';
-import { CheckboxRendererComponent } from './bulk-edit-editor/cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
+import { CheckboxCellRendererComponent } from './bulk-edit-editor/cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DateCellEditorComponent } from './bulk-edit-editor/cell-editors/date-cell-editor/date-cell-editor.component';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -18,7 +18,7 @@ import { CalendarModule } from 'primeng/calendar';
     BulkEditProfileSelectComponent,
     BulkEditEditorComponent,
     BulkEditContainerComponent,
-    CheckboxRendererComponent,
+    CheckboxCellRendererComponent,
     DateCellEditorComponent
   ],
   imports: [
@@ -27,7 +27,7 @@ import { CalendarModule } from 'primeng/calendar';
     CalendarModule,
     FormsModule,
     AgGridModule.withComponents([
-      CheckboxRendererComponent,
+      CheckboxCellRendererComponent,
       DateCellEditorComponent
     ])
   ],

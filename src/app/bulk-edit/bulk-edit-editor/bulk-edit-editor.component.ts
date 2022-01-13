@@ -7,7 +7,7 @@ import { CellClassParams, CellClassRules, CellValueChangedEvent, ColDef, ColGrou
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../types/bulk-edit-types';
-import { CheckboxRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
+import { CheckboxCellRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DateCellEditorComponent } from './cell-editors/date-cell-editor/date-cell-editor.component';
 
 @Component({
@@ -29,7 +29,7 @@ export class BulkEditEditorComponent implements OnInit {
    * Register custom components to the grid by name.
    */
   frameworkComponents = {
-    checkboxRenderer: CheckboxRendererComponent,
+    checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent
   };
 
@@ -193,7 +193,7 @@ export class BulkEditEditorComponent implements OnInit {
     };
 
     if (field.dataType === 'boolean') {
-      column.cellRenderer = 'checkboxRenderer';
+      column.cellRenderer = 'checkboxCellRenderer';
       column.editable = false;
       column.cellStyle = { textAlign: 'center' };
     }

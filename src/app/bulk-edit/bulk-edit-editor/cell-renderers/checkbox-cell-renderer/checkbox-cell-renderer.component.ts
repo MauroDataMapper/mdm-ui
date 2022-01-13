@@ -9,7 +9,6 @@ import { ICellRendererParams } from 'ag-grid-community';
   styleUrls: ['./checkbox-cell-renderer.component.scss']
 })
 export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
-
   params: ICellRendererParams;
 
   agInit(params: ICellRendererParams): void {
@@ -19,14 +18,14 @@ export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
     }
   }
 
+  refresh(): boolean {
+    // Let agGrid handle refresh
+    return false;
+  }
+
   valueChanged(event: MatCheckboxChange) {
     const checked = event.checked;
     const colId = this.params.column.getColId();
     this.params.node.setDataValue(colId, checked);
-  }
-
-  refresh(): boolean {
-    // Let agGrid handle refresh
-    return false;
   }
 }

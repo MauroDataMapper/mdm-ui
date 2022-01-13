@@ -197,11 +197,10 @@ export class BulkEditEditorComponent implements OnInit {
       column.editable = false;
       column.cellStyle = { textAlign: 'center' };
     }
-    // TODO - update to work with date control - Partially completed issue with click to edit load
-    //   if(field.dataType === 'date' || field.dataType === 'datetime')
-    // {
-    //   col.cellEditor = 'dateCellEditor';
-    // }
+
+    if(field.dataType === 'date') {
+      column.cellEditor = 'dateCellEditor';
+    }
 
     return column;
   }

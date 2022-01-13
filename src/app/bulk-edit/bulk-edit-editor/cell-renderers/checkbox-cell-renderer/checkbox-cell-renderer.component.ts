@@ -3,9 +3,9 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams, IAfterGuiAttachedParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'mdm-checkbox-renderer',
-  templateUrl: './checkbox-renderer.component.html',
-  styleUrls: ['./checkbox-renderer.component.scss']
+  selector: 'mdm-checkbox-cell-renderer',
+  templateUrl: './checkbox-cell-renderer.component.html',
+  styleUrls: ['./checkbox-cell-renderer.component.scss']
 })
 export class CheckboxRendererComponent implements ICellRendererAngularComp {
 

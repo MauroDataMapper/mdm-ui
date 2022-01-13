@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, ProfileContext, ProfileContextCollection, ProfileContextIndexResponse, ProfileField, ProfileValidationErrorList, Uuid } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, MultiFacetAwareDomainType, Profile, ProfileContextCollection, ProfileContextIndexResponse, ProfileField, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService } from '@mdm/services';
 import { CellClassParams, CellClassRules, CellValueChangedEvent, ColDef, ColGroupDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../types/bulk-edit-types';
-import { CheckboxRendererComponent } from './renderers/checkbox-renderer/checkbox-renderer.component';
-import { DateCellEditorComponent } from './renderers/date-cell-editor/date-cell-editor.component';
+import { CheckboxRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
+import { DateCellEditorComponent } from './cell-editors/date-cell-editor/date-cell-editor.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -25,6 +25,9 @@ export class BulkEditEditorComponent implements OnInit {
   @Input() tab: BulkEditProfileContext;
   @Output() tabChanged = new EventEmitter();
 
+  /**
+   * Register custom components to the grid by name.
+   */
   frameworkComponents = {
     checkboxRenderer: CheckboxRendererComponent,
     dateCellEditor: DateCellEditorComponent

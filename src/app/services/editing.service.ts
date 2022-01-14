@@ -37,7 +37,8 @@ const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
   'appContainer.adminArea.user',
   'appContainer.adminArea.group',
-  'appContainer.adminArea.subscribedCatalogue'
+  'appContainer.adminArea.subscribedCatalogue',
+  'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit'
 ];
 
 export interface EditableObject {

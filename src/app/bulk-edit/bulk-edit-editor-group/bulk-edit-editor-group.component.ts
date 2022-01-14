@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MultiFacetAwareItem } from '@maurodatamapper/mdm-resources';
-import { BroadcastService } from '@mdm/services';
+import { MultiFacetAwareItem, ProfileContext } from '@maurodatamapper/mdm-resources';
 import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-types';
 
 @Component({
@@ -12,7 +11,7 @@ export class BulkEditEditorGroupComponent implements OnInit {
   @Output() onCancel = new EventEmitter<void>();
   @Output() onPrevious = new EventEmitter<void>();
   @Output() onValidate = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<any[]>();
+  @Output() onSave = new EventEmitter<ProfileContext[]>();
 
   /** Two way binding */
   @Input() context: BulkEditContext;
@@ -51,8 +50,7 @@ export class BulkEditEditorGroupComponent implements OnInit {
   }
 
   save() {
-    const profiles: Array<any> = [];
-
+    const profiles: ProfileContext[] = [];
     this.tabs.forEach((tab) => {
       profiles.push(...tab.editedProfiles.profilesProvided);
     });

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DataModelDetail, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataModelDetail, DataModelDetailResponse, ProfileContext } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService, MessageHandlerService, BroadcastService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../types/bulk-edit-types';
 
 @Component({
@@ -22,13 +22,13 @@ export class BulkEditContainerComponent implements OnInit {
   public Steps = BulkEditStep;
 
   constructor(
-    private dialog: MatDialog,
     private stateHandler: StateHandlerService,
     private resouce: MdmResourcesService,
     private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
     private messageHandler: MessageHandlerService,
-    private title: Title) { }
+    private title: Title,
+    private editing: EditingService) { }
 
   ngOnInit(): void {
     this.context = {
@@ -49,10 +49,12 @@ export class BulkEditContainerComponent implements OnInit {
       .subscribe((response: DataModelDetailResponse) => {
         this.parent = response.body;
         this.title.setTitle(`Bulk Edit - ${this.parent.label}`);
+        this.editing.start();
       });
   }
 
   cancel() {
+    // The state handler is also tied to the EditingService, so will automatically confirm to leave first
     this.stateHandler.GoPrevious();
   }
 
@@ -68,7 +70,7 @@ export class BulkEditContainerComponent implements OnInit {
     this.broadcast.dispatch('validateBulkEdit');
   }
 
-  save(profiles: any[]) {
+  save(profiles: ProfileContext[]) {
     this.resouce.profile
       .saveMany(
         this.context.domainType,
@@ -78,22 +80,10 @@ export class BulkEditContainerComponent implements OnInit {
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profiles.', error);
           return EMPTY;
-        }),
-        switchMap(() => {
-          return this.dialog.openConfirmationAsync({
-            data: {
-              title: 'Close bulk editor?',
-              okBtnTitle: 'Yes',
-              cancelBtnTitle: 'No',
-              btnType: 'primary',
-              message: '<b>Save Successful</b>, do you want to close the bulk editor?',
-            }
-          });
         })
       )
       .subscribe(() => {
-        // Chosen to close the editor and go back
-        this.cancel();
+        this.messageHandler.showSuccess('Profile information was saved successfully.');
       });
   }
 }

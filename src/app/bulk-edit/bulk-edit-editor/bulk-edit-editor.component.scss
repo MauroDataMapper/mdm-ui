@@ -1,3 +1,13 @@
+@import "style/abstracts/variables";
+
+.mdm-bulk-edit-editor {
+  &__validation {
+    &--warning {
+      color: $defaultWarningColor;
+    }
+  }
+}
+
 :host::ng-deep {
   .mdm-bulk-edit-editor {
     &__invalid {

@@ -1,25 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { BulkEditContainerComponent } from './bulk-edit-container.component';
 
 describe('BulkEditBaseComponent', () => {
-  let component: BulkEditContainerComponent;
-  let fixture: ComponentFixture<BulkEditContainerComponent>;
+  let harness: ComponentHarness<BulkEditContainerComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ BulkEditContainerComponent ]
-    })
-    .compileComponents();
-  });
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(BulkEditContainerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    harness = await setupTestModuleForComponent(BulkEditContainerComponent);
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

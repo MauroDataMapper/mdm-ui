@@ -199,8 +199,15 @@ export class BulkEditEditorComponent implements OnInit {
       column.cellStyle = { textAlign: 'center' };
     }
 
-    if(field.dataType === 'date') {
+    if (field.dataType === 'date') {
       column.cellEditor = 'dateCellEditor';
+    }
+
+    if (field.dataType === 'enumeration') {
+      column.cellEditor = 'agSelectCellEditor';
+      column.cellEditorParams = {
+        values: [''].concat(field.allowedValues)
+      }
     }
 
     return column;

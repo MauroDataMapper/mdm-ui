@@ -41,7 +41,7 @@ export class BulkEditContainerComponent implements OnInit {
 
   constructor(
     private stateHandler: StateHandlerService,
-    private resouce: MdmResourcesService,
+    private resource: MdmResourcesService,
     private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
     private messageHandler: MessageHandlerService,
@@ -56,7 +56,7 @@ export class BulkEditContainerComponent implements OnInit {
       profiles: []
     };
 
-    this.resouce.dataModel
+    this.resource.dataModel
       .get(this.context.catalogueItemId)
       .pipe(
         catchError(error => {
@@ -89,7 +89,7 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   save(profiles: ProfileContext[]) {
-    this.resouce.profile
+    this.resource.profile
       .saveMany(
         this.context.domainType,
         this.context.catalogueItemId,

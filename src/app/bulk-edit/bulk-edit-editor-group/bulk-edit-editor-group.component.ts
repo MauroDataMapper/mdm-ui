@@ -43,7 +43,7 @@ export class BulkEditEditorGroupComponent implements OnInit {
         return {
           multiFacetAwareItemDomainType: element.domainType,
           multiFacetAwareItemId: element.id
-        }
+        };
       });
 
       return {

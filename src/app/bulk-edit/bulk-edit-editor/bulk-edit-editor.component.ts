@@ -126,7 +126,7 @@ export class BulkEditEditorComponent implements OnInit {
         if (field.metadataPropertyName === event.colDef.field) {
           field.currentValue = event.newValue;
         }
-      })
+      });
     });
   }
 
@@ -144,7 +144,7 @@ export class BulkEditEditorComponent implements OnInit {
         catchError((error: HttpErrorResponse) => {
           this.validated = error.error as ProfileContextCollection;
           this.totalValidationErrors = this.validated.profilesProvided.reduce((current, next) => {
-            return current + (next.errors?.total ?? 0)
+            return current + (next.errors?.total ?? 0);
           }, 0);
           this.gridApi?.redrawRows();
           return EMPTY;
@@ -225,7 +225,7 @@ export class BulkEditEditorComponent implements OnInit {
       column.cellEditor = 'agSelectCellEditor';
       column.cellEditorParams = {
         values: [''].concat(field.allowedValues)
-      }
+      };
     }
 
     return column;

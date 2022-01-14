@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, MultiFacetAwareItem, Profile, ProfileContextCollection, ProfileSummary, Uuid } from "@maurodatamapper/mdm-resources";
+import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, MultiFacetAwareItem, Profile, ProfileContextCollection, ProfileSummary, Uuid } from '@maurodatamapper/mdm-resources';
 
 export enum BulkEditStep {
   Selection,

@@ -1,0 +1,60 @@
+<div class="modal-body pxy-2">
+  <p>Please select the elements and profiles you wish to edit.</p>
+</div>
+<form class="mdm--form mdm--form-configuration" [formGroup]="setupForm">
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Element(s)</mat-label>
+      <mat-select
+        multiple
+        required
+        formControlName="elements"
+        [compareWith]="elementCompare"
+        [(ngModel)]="context.elements"
+      >
+        <mat-option *ngFor="let element of availableElements" [value]="element">
+          {{ element.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="setupForm && elements.errors?.required">
+        At least one element is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Profile(s)</mat-label>
+      <mat-select
+        multiple
+        required
+        formControlName="profiles"
+        [compareWith]="profileCompare"
+        [(ngModel)]="context.profiles"
+      >
+        <mat-option *ngFor="let profile of availableProfiles" [value]="profile">
+          {{ profile.displayName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="setupForm && profiles.errors?.required">
+        At least one profile is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>
+<div class="modal-footer pxy-2">
+  <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+    Cancel
+  </button>
+
+  <button
+    [disabled]="!setupForm.valid"
+    mat-stroked-button
+    type="button"
+    color="primary"
+    type="button"
+    class="mr-1"
+    (click)="next()"
+  >
+    Next
+  </button>
+</div>

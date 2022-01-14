@@ -39,7 +39,8 @@ export class BulkEditEditorComponent implements OnInit {
   columns: ColGroupDef[] = [];
   rows: BulkEditDataRow[] = [];
   cellRules: CellClassRules = {
-    'rag-red': (params) => this.showValidationError(params),
+    'mdm-bulk-edit-editor__invalid': (params) => this.showValidationError(params),
+    'mdm-bulk-edit-editor__readonly': (params) => !params.colDef.editable
   };
 
   defaultColDef: ColDef = {
@@ -76,7 +77,7 @@ export class BulkEditEditorComponent implements OnInit {
         })
       .pipe(
         catchError(error => {
-          this.messageHandler.showError(error);
+          this.messageHandler.showError('There was a problem loading the profiles.', error);
           return EMPTY;
         })
       )

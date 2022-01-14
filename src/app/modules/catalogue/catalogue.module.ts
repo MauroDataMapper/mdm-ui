@@ -112,7 +112,6 @@ import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.compon
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
 import { FavouritesComponent } from '@mdm/shared/favourites/favourites.component';
-import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { ShowIfRoleIsWritableDirective } from '@mdm/directives/show-if-role-is-writable.directive';
 import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { ClassificationComponent } from '@mdm/classification/classification.component';
@@ -296,7 +295,6 @@ import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
     UiViewComponent,
     ModelsComponent,
     FavouritesComponent,
-    ElementIconComponent,
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,
@@ -485,7 +483,6 @@ import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
     UiViewComponent,
     ModelsComponent,
     FavouritesComponent,
-    ElementIconComponent,
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,

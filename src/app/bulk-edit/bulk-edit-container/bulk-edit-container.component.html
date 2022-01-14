@@ -1,64 +1,23 @@
-<mdm-bulk-edit-element-select
-  *ngIf="elementSelectStep"
-  [(context)]="context"
-  (nextSelected)="openProfile()"
-></mdm-bulk-edit-element-select>
-<mdm-bulk-edit-profile-select
-  *ngIf="profileSelectStep"
-  [(context)]="context"
-  (backSelected)="openElement()"
-  (nextSelected)="openEditor()"
-></mdm-bulk-edit-profile-select>
-<div *ngIf="editorStep">
-  <mat-tab-group>
-    <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
-      <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
-      <mdm-bulk-edit-editor
-        *ngIf="tab"
-        [catalogueItemId]="context.catalogueItemId"
-        [domainType]="context.domainType"
-        [(tab)]="tabs[index]"
-      ></mdm-bulk-edit-editor>
-    </mat-tab>
-  </mat-tab-group>
-  <div class="modal-footer pxy-2">
-    <button
-      mat-button
-      color="warn"
-      type="button"
-      class="mr-1"
-      (click)="cancel()"
-    >
-      Close
-    </button>
-    <button
-      mat-button
-      color="warn"
-      type="button"
-      class="mr-1"
-      (click)="openProfile()"
-    >
-      Back
-    </button>
-    <button
-      mat-stroked-button
-      type="button"
-      color="primary"
-      type="button"
-      class="mr-1"
-      (click)="validate()"
-    >
-      Validate
-    </button>
-    <button
-      mat-stroked-button
-      type="button"
-      color="primary"
-      type="button"
-      class="mr-1"
-      (click)="save()"
-    >
-      Save
-    </button>
-  </div>
+<div class="heading-container">
+  <h4 class="marginless">Bulk Edit</h4>
 </div>
+<div class="mdm-bulk-edit-container__parent">
+  <span class="dataModelTypeIcon">
+    <mdm-element-icon [element]="parent"></mdm-element-icon>
+  </span>
+  <span class="dataModelDetailsLabel">{{ parent.label }}</span>
+</div>
+<mdm-bulk-edit-select
+  *ngIf="currentStep === Steps.Selection"
+  [(context)]="context"
+  (onNext)="next()"
+  (onCancel)="cancel()"
+></mdm-bulk-edit-select>
+<mdm-bulk-edit-editor-group
+  *ngIf="currentStep === Steps.Editor"
+  [(context)]="context"
+  (onCancel)="cancel()"
+  (onPrevious)="previous()"
+  (onValidate)="validate()"
+  (onSave)="save($event)"
+></mdm-bulk-edit-editor-group>

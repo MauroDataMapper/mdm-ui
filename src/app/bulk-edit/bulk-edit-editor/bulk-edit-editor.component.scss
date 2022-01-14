@@ -1,5 +1,11 @@
-:host::ng-deep .rag-red {
-    /* background-color: red; */
-    border: 1px solid red !important;
-  }
+:host::ng-deep {
+  .mdm-bulk-edit-editor {
+    &__invalid {
+      border: 1px solid red !important;
+    }
 
+    &__readonly {
+      background-color: #eaeaeb;
+    }
+  }
+}

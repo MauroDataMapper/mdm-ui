@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MultiFacetAwareDomainType, CatalogueItemDomainType, Uuid, MultiFacetAwareItem } from '@maurodatamapper/mdm-resources';
+import { Title } from '@angular/platform-browser';
+import { DataModelDetail, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService, MessageHandlerService, BroadcastService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-types';
+import { BulkEditContext, BulkEditStep } from '../types/bulk-edit-types';
 
 @Component({
   selector: 'mdm-bulk-edit-container',
@@ -15,11 +16,10 @@ import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-type
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
+  parent: DataModelDetail;
+  currentStep: BulkEditStep = BulkEditStep.Selection;
 
-  profileSelectStep = false;
-  elementSelectStep = true;
-  editorStep = false;
-  tabs: BulkEditProfileContext[];
+  public Steps = BulkEditStep;
 
   constructor(
     private dialog: MatDialog,
@@ -27,7 +27,8 @@ export class BulkEditContainerComponent implements OnInit {
     private resouce: MdmResourcesService,
     private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService,
+    private title: Title) { }
 
   ngOnInit(): void {
     this.context = {
@@ -36,61 +37,38 @@ export class BulkEditContainerComponent implements OnInit {
       elements: [],
       profiles: []
     };
-  }
 
-  openEditor() {
-    this.profileSelectStep = false;
-    this.editorStep = true;
-    if (this.editorStep) {
-      this.buildTabs();
-    }
-  }
-
-  openProfile() {
-    this.profileSelectStep = true;
-    this.editorStep = false;
-    this.elementSelectStep = false;
-  }
-
-  openElement() {
-    this.profileSelectStep = false;
-    this.editorStep = false;
-    this.elementSelectStep = true;
+    this.resouce.dataModel
+      .get(this.context.catalogueItemId)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the parent catalogue item.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: DataModelDetailResponse) => {
+        this.parent = response.body;
+        this.title.setTitle(`Bulk Edit - ${this.parent.label}`);
+      });
   }
 
   cancel() {
     this.stateHandler.GoPrevious();
   }
 
+  next() {
+    this.currentStep = this.currentStep + 1;
+  }
+
+  previous() {
+    this.currentStep = this.currentStep - 1;
+  }
+
   validate() {
     this.broadcast.dispatch('validateBulkEdit');
   }
 
-  buildTabs() {
-    this.tabs = this.context.profiles.map<BulkEditProfileContext>(profile => {
-      const multiFacetAwareItems = this.context.elements.map<MultiFacetAwareItem>(element => {
-        return {
-          multiFacetAwareItemDomainType: element.domainType,
-          multiFacetAwareItemId: element.id
-        }
-      });
-
-      return {
-        displayName: profile.displayName,
-        profile,
-        multiFacetAwareItems,
-        editedProfiles: null
-      };
-    });
-  }
-
-  save() {
-    const profiles: Array<any> = [];
-
-    this.tabs.forEach((tab) => {
-      profiles.push(...tab.editedProfiles.profilesProvided);
-    });
-
+  save(profiles: any[]) {
     this.resouce.profile
       .saveMany(
         this.context.domainType,
@@ -98,7 +76,7 @@ export class BulkEditContainerComponent implements OnInit {
         { profilesProvided: profiles })
       .pipe(
         catchError(error => {
-          this.messageHandler.showError(error);
+          this.messageHandler.showError('There was a problem saving the profiles.', error);
           return EMPTY;
         }),
         switchMap(() => {

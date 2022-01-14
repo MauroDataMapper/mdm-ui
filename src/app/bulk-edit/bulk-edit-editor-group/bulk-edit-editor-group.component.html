@@ -1,0 +1,51 @@
+<mat-tab-group>
+  <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
+    <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
+    <mdm-bulk-edit-editor
+      *ngIf="tab"
+      [catalogueItemId]="context.catalogueItemId"
+      [domainType]="context.domainType"
+      [(tab)]="tabs[index]"
+    ></mdm-bulk-edit-editor>
+  </mat-tab>
+</mat-tab-group>
+<div class="modal-footer pxy-2">
+  <button
+    mat-button
+    color="warn"
+    type="button"
+    class="mr-1"
+    (click)="cancel()"
+  >
+    Close
+  </button>
+  <button
+    mat-button
+    color="warn"
+    type="button"
+    class="mr-1"
+    (click)="previous()"
+  >
+    Back
+  </button>
+  <button
+    mat-stroked-button
+    type="button"
+    color="primary"
+    type="button"
+    class="mr-1"
+    (click)="validate()"
+  >
+    Validate
+  </button>
+  <button
+    mat-stroked-button
+    type="button"
+    color="primary"
+    type="button"
+    class="mr-1"
+    (click)="save()"
+  >
+    Save
+  </button>
+</div>

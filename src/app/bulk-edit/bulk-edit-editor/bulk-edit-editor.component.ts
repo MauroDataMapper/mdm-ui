@@ -58,7 +58,7 @@ export class BulkEditEditorComponent implements OnInit {
   rows: BulkEditDataRow[] = [];
   cellRules: CellClassRules = {
     'mdm-bulk-edit-editor__invalid': (params) => this.showValidationError(params),
-    'mdm-bulk-edit-editor__readonly': (params) => !params.colDef.editable
+    'mdm-bulk-edit-editor__readonly': (params) => !params.colDef.editable && params.colDef.cellRenderer !== 'checkboxCellRenderer'
   };
 
   defaultColDef: ColDef = {

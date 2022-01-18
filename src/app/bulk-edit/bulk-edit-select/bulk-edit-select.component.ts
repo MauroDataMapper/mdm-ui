@@ -18,11 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataElement, DataElementIndexResponse, ProfileSummary, ProfileSummaryIndexResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, DataElement, DataElementIndexResponse, ProfileSummary, ProfileSummaryIndexResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
-import { EMPTY, forkJoin } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, forkJoin, Observable } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { BulkEditContext } from '../types/bulk-edit-types';
 
 @Component({
@@ -60,8 +60,24 @@ export class BulkEditSelectComponent implements OnInit {
       profiles: new FormControl('', Validators.required)   // eslint-disable-line @typescript-eslint/unbound-method
     });
 
-    this.loadAvailableElements();
-    this.loadAvailableProfiles();
+    this.loadAvailableElements()
+      .pipe(
+        switchMap(elements => {
+          this.availableElements = elements.body.items;
+
+          const dataElement = this.availableElements[0];
+          return this.loadAvailableProfiles(dataElement);
+        }),
+        map(([used, unused]) => {
+          this.availableProfiles = [
+            ...used.body,
+            ...unused.body
+          ];
+        })
+      )
+      .subscribe(() => {
+        // Subscribe to perform the request
+      })
   }
 
   elementCompare(option, value): boolean {
@@ -80,36 +96,29 @@ export class BulkEditSelectComponent implements OnInit {
     this.onNext.emit();
   }
 
-  private loadAvailableElements() {
-    this.resources.dataModel
+  private loadAvailableElements(): Observable<DataElementIndexResponse> {
+    return this.resources.dataModel
       .dataElements(this.context.catalogueItemId)
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem finding the Data Elements.', error);
           return EMPTY;
         })
-      )
-      .subscribe((response: DataElementIndexResponse) => {
-        this.availableElements = response.body.items;
-      });
+      );
   }
 
-  private loadAvailableProfiles() {
-    forkJoin([
-      this.resources.profile.usedProfiles(this.context.domainType, this.context.catalogueItemId),
-      this.resources.profile.unusedProfiles(this.context.domainType, this.context.catalogueItemId)
+  private loadAvailableProfiles(catalogueItem: CatalogueItem): Observable<[ProfileSummaryIndexResponse, ProfileSummaryIndexResponse]> {
+    // Load correct profiles based on Data Elements
+    // TODO: change for future domain type support
+    return forkJoin<ProfileSummaryIndexResponse, ProfileSummaryIndexResponse>([
+      this.resources.profile.usedProfiles(catalogueItem.domainType, catalogueItem.id),
+      this.resources.profile.unusedProfiles(catalogueItem.domainType, catalogueItem.id)
     ])
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem finding available profiles.', error);
           return EMPTY;
         })
-      )
-      .subscribe(([used, unused]: [ProfileSummaryIndexResponse, ProfileSummaryIndexResponse]) => {
-        this.availableProfiles = [
-          ...used.body,
-          ...unused.body
-        ];
-      });
+      );
   }
 }

@@ -235,9 +235,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-/test-report.xml
-/test-report
-junit.xml
+**/test-report
 yarn.lock
 eslint_report.*
 .scannerwork

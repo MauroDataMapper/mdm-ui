@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-const packageFile = require('../../package.json');
+const packageFile = require('../../../../package.json');
 
 export const environment = {
   production: true,

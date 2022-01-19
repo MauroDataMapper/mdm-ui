@@ -41,9 +41,17 @@ module.exports = {
   },
   reporters: [
     'default',
-    'jest-junit',
-    ['jest-html-reporter', { pageTitle: 'Test Report' }],
-    ['jest-sonar', { outputDirectory: 'test-report' }]
+    ['jest-junit', {
+      outputDirectory: "test-report/mdm-ui"
+    }],
+    ['jest-html-reporter', {
+      pageTitle: "Mauro Data Mapper User Interface: Test Results",
+      outputPath: "test-report/mdm-ui/jest-report.html",
+      includeFailureMsg: true
+    }],
+    ['jest-sonar', {
+      outputDirectory: "test-report/mdm-ui"
+    }]
   ],
   watchPathIgnorePatterns: ['test-report/', 'junit.xml'],
   transformIgnorePatterns: [

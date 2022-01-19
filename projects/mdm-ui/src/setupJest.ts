@@ -22,6 +22,6 @@ SPDX-License-Identifier: Apache-2.0
  * the @angular-builders/jest facade, this internally calls 'jest-preset-angular/setup-jest' for you. Calling it
  * twice will produce an error.
  */
-//import 'jest-preset-angular/setup-jest';
+// import 'jest-preset-angular/setup-jest';
 
 // import './jestGlobalMocks'; // browser mocks globally available for every test

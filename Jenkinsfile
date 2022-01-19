@@ -22,10 +22,8 @@ pipeline {
     }
     stage('Jenkins Clean') {
       steps {
-        sh 'rm -f junit.xml'
         sh 'rm -rf test-report'
         sh 'rm -rf coverage'
-        sh 'rm -f eslint_report.json'
       }
     }
 
@@ -88,7 +86,7 @@ pipeline {
       }
       post {
         always {
-          junit allowEmptyResults: true, testResults: 'junit.xml'
+          junit allowEmptyResults: true, testResults: 'test-report/mdm-ui/junit.xml'
         }
       }
     }
@@ -96,7 +94,7 @@ pipeline {
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'npm run eslint-report'
+            sh 'npm run eslint-xml'
           }
         }
       }
@@ -217,8 +215,8 @@ pipeline {
         allowMissing         : true,
         alwaysLinkToLastBuild: true,
         keepAll              : false,
-        reportDir            : 'test-report',
-        reportFiles          : 'index.html',
+        reportDir            : 'test-report/mdm-ui',
+        reportFiles          : 'jest-report.html',
         reportName           : 'Test Report',
         reportTitles         : 'Test'
       ])

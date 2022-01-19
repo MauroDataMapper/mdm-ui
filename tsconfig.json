@@ -1,13 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
-    "paths": {
-      "@mdm/*": ["./app/*"],
-      "@env/*": ["./environments/*"]
-    },
+    "baseUrl": "./",
     "emitDecoratorMetadata" : true,
-    "outDir": "./dist/",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,

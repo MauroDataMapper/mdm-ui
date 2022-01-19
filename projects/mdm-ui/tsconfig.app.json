@@ -1,8 +1,12 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "types": ["node"]
+    "outDir": "../../out-tsc/app",
+    "types": ["node"],
+    "paths": {
+      "@mdm/*": ["projects/mdm-ui/src/app/*"],
+      "@env/*": ["projects/mdm-ui/src/environments/*"]
+    }
   },
   "files": [
     "src/main.ts",

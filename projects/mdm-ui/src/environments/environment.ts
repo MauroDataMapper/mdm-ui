@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-const packageFile = require('../../package.json');
+const packageFile = require('../../../../package.json');
 
 export const environment = {
   production: false,

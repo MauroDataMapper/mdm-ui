@@ -10,8 +10,8 @@
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/mdm-ui",
+      "sourceRoot": "projects/mdm-ui/src",
       "prefix": "mdm",
       "architect": {
         "build": {
@@ -23,25 +23,25 @@
             },
             "preserveSymlinks": true,
             "customWebpackConfig": {
-              "path": "webpack.config.js"
+              "path": "projects/mdm-ui/webpack.config.js"
             },
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/mdm-ui",
+            "index": "projects/mdm-ui/src/index.html",
+            "main": "projects/mdm-ui/src/main.ts",
+            "polyfills": "projects/mdm-ui/src/polyfills.ts",
+            "tsConfig": "projects/mdm-ui/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/assets/favicon.ico",
-              "src/assets",
+              "projects/mdm-ui/src/assets/favicon.ico",
+              "projects/mdm-ui/src/assets",
               {
                 "glob": "open-id-connect-redirect.html",
-                "input": "src/static-pages",
+                "input": "projects/mdm-ui/src/static-pages",
                 "output": "/redirects"
               }
             ],
             "styles": [
-              "src/styles.scss",
+              "projects/mdm-ui/src/styles.scss",
               "node_modules/jodit/build/jodit.min.css"
             ],
             "scripts": [
@@ -49,8 +49,8 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/style",
-                "src/app"
+                "projects/mdm-ui/src/style",
+                "projects/mdm-ui/src/app"
               ]
             }
           },
@@ -58,8 +58,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/mdm-ui/src/environments/environment.ts",
+                  "with": "projects/mdm-ui/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -120,25 +120,12 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "projects/mdm-ui/tsconfig.app.json",
+              "projects/mdm-ui/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "mdm-ui:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "mdm-ui:serve:production"
-            }
           }
         }
       }

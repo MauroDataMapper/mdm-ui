@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('./node_modules/mini-css-extract-plugin');
 
 module.exports = {
     module: {

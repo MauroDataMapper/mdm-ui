@@ -14,6 +14,7 @@
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --fix",
     "eslint-nofix": "tsc --noEmit && eslint . --ext ts",
+    "eslint-html": "tsc --noEmit && eslint . --ext ts --fix --format html -o eslint_report.html",
     "eslint-report": "eslint . --ext ts --format checkstyle -o eslint_report.xml",
     "e2e": "ng e2e",
     "postinstall": "ngcc",

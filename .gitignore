@@ -239,6 +239,6 @@ $RECYCLE.BIN/
 /test-report
 junit.xml
 yarn.lock
-eslint_report.json
+eslint_report.*
 .scannerwork
 releases

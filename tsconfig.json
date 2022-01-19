@@ -16,6 +16,10 @@
     "types": [
       "jest"
     ],
+    "paths": {
+      "@mdm/*": ["projects/mdm-ui/src/app/*"],
+      "@env/*": ["projects/mdm-ui/src/environments/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],

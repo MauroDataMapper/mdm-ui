@@ -80,8 +80,8 @@ pipeline {
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'npm run test-with-coverage'
-            sh 'npm run test-clearCache'
+            sh 'npm run test mdm-ui -- --coverage'
+            sh 'npm run test mdm-ui -- --clear-cache'
             sh "rm -rf /tmp/jest_${JOB_BASE_NAME}"
           }
         }

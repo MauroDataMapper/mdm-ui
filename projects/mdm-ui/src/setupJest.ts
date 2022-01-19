@@ -16,5 +16,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import 'jest-preset-angular/setup-jest';
+
+/**
+ * Note: Do *not* import this again. The npm command `npm run test` will actually call `ng test` and go through
+ * the @angular-builders/jest facade, this internally calls 'jest-preset-angular/setup-jest' for you. Calling it
+ * twice will produce an error.
+ */
+//import 'jest-preset-angular/setup-jest';
+
 // import './jestGlobalMocks'; // browser mocks globally available for every test

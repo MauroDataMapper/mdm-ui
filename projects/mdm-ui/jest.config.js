@@ -19,9 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 module.exports = {
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: [
-    '<rootDir>/src/setupJest.ts'
-  ],
+  setupFilesAfterEnv: ['<rootDir>/projects/mdm-ui/src/setupJest.ts'],
   coveragePathIgnorePatterns: [
     '<rootDir>/jestSetup.ts',
     '<rootDir>/node_modules/',
@@ -33,26 +31,23 @@ module.exports = {
   },
   globals: {
     'ts - jest': {
-      tsconfig: 'tsconfig.spec.json',
+      tsconfig: '<rootDir>/projects/mdm-ui/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.html'
     }
   },
   moduleNameMapper: {
-    '^@mdm/(.*)$': '<rootDir>/src/app/$1',
-    '^@env/(.*)$': '<rootDir>/src/environments/$1'
+    '^@mdm/(.*)$': '<rootDir>/projects/mdm-ui/src/app/$1',
+    '^@env/(.*)$': '<rootDir>/projects/mdm-ui/src/environments/$1'
   },
   reporters: [
     'default',
     'jest-junit',
     ['jest-html-reporter', { pageTitle: 'Test Report' }],
-     ['jest-sonar',{outputDirectory: 'test-report'}]
+    ['jest-sonar', { outputDirectory: 'test-report' }]
   ],
-  watchPathIgnorePatterns: [
-    'test-report/',
-    'junit.xml'
-  ],
+  watchPathIgnorePatterns: ['test-report/', 'junit.xml'],
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)' // Ignore files inside node_modules folder
   ],
-  cacheDirectory: '/tmp/jest_'+ (process.env.JOB_BASE_NAME || 'cache')
+  cacheDirectory: '/tmp/jest_' + (process.env.JOB_BASE_NAME || 'cache')
 };

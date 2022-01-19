@@ -39,12 +39,23 @@ $ npm install
 
 ### Run the application
 
-* To start the application in development mode run `ng serve`
-* After the terminal finishes compiling, open up your browser and navigate to http://localhost:4200
+To start the application in development mode run `ng serve`. After the terminal finishes compiling, open up your browser and navigate to http://localhost:4200.
 
 ### Testing the application
 
-* To test the application run `npm test`
+To test the application run `npm test`.
+
+This Angular workspace uses [Jest](https://jestjs.io/) as testing framework, so any command line parameters that Jest can use can also be provided. For example:
+
+```bash
+# Explicitly state which Angular project to test
+npm run test mdm-ui
+
+# Execute test runner in watch mode. Note the "--" separator for npm to separate command line arguments
+npm run test mdm-ui -- --watch
+```
+
+### Deployments
 
 All pushes to the repository will invoke a Jenkins CI build.
 When Jenkins runs the builds it uses `npm ci` which uses the `package-lock.json` to determine dependencies,

@@ -298,7 +298,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       delete options['label'];
     }
 
-    return this.resources.dataType.list(this.model.parent.id, options);
+    return this.resources.dataType.list(this.model.parentDataModel.id, options);
   };
 
   onTargetSelect = (selectedValue) => {

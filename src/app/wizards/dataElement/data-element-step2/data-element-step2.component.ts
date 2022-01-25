@@ -126,7 +126,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     const dataClass : DataClass = this.model.copyFromDataClass[0];
-    return this.resources.dataElement.list(dataClass.model, dataClass.id, options);
+    return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
   }
 
   onLoad() {

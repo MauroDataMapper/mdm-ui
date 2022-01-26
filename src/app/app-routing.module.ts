@@ -66,6 +66,7 @@ import { MergeDiffContainerComponent } from './merge-diff/merge-diff-container/m
 import { OpenIdConnectAuthorizeComponent } from './security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
 import { SecurityHandlerService, SharedService } from './services';
+import { TerminologyMainComponent } from './wizards/terminology/terminology-main/terminology-main.component';
 
 /**
  * Collection of all page state routes.
@@ -266,6 +267,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       data: {
         allowAnonymous: true
       }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewTerminology',
+      url: '/terminology/new?parentFolderId&parentDomainType',
+      component: TerminologyMainComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',

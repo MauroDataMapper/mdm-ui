@@ -195,6 +195,7 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
 import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
+import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 
 @NgModule({
   declarations: [
@@ -362,7 +363,8 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
     TermRelationshipListComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ],
   imports: [
     AdminModule,
@@ -542,7 +544,8 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ]
 })
 export class CatalogueModule { }

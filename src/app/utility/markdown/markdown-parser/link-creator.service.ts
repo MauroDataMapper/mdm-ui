@@ -140,7 +140,7 @@ export class LinkCreatorService {
       return this.elementTypes.getLinkUrl(mcElement);
     }
 
-    if (elementType === 'http') {
+    if (elementType === 'http' || elementType ==='mailto') {
       return href;
     }
   }

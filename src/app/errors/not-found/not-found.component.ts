@@ -19,12 +19,12 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '@mdm/services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
-import { YoutrackService } from '@mdm/services/youtrack.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
-import { SecurityHandlerService, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, StateHandlerService } from '@mdm/services';
 import {
-  AuthenticatedResponse} from '@maurodatamapper/mdm-resources';
+  AuthenticatedResponse
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-not-found-error',
@@ -32,18 +32,18 @@ import {
   styleUrls: []
 })
 export class NotFoundComponent extends ErrorComponent implements OnInit {
-  constructor(protected messageService: MessageService,
-              protected clipboardService: ClipboardService,
-              protected sharedService: SharedService,
-              protected youtrackService: YoutrackService,
-              protected security: SecurityHandlerService,
-              protected stateHandler: StateHandlerService) {
-    super(messageService, clipboardService, sharedService, youtrackService);
+  constructor(
+    protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
+    protected clipboard: ClipboardService,
+    protected shared: SharedService,
+    protected security: SecurityHandlerService,
+    protected stateHandler: StateHandlerService) {
+    super(messages, messageHandler, clipboard, shared);
 
-    this.security.isAuthenticated().subscribe((result: AuthenticatedResponse)  => {
-      if(!result.body.authenticatedSession)
-      {
-        this.sharedService.handleRequiredToLogin();
+    this.security.isAuthenticated().subscribe((result: AuthenticatedResponse) => {
+      if (!result.body.authenticatedSession) {
+        this.shared.handleRequiredToLogin();
       }
     });
 

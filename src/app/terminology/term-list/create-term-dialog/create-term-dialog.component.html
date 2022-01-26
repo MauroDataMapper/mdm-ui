@@ -21,27 +21,42 @@ SPDX-License-Identifier: Apache-2.0
     <h4 class="modal-title marginless">Create New Term</h4>
   </div>
   <div class="modal-body pxy-2">
-    <div class="lead" style="padding-bottom: 10px;">
-      Terminology: {{data.terminology.label}}
+    <div class="lead" style="padding-bottom: 10px">
+      Terminology: {{ data.terminology.label }}
     </div>
     <div class="mdm--form-input">
-      <mat-form-field style="width: 100%">
+      <mat-form-field appearance="outline" class="full-width paddingless">
         <mat-label>Code</mat-label>
-        <input matInput formControlName="code" required>
+        <input matInput formControlName="code" required />
         <mat-error></mat-error>
       </mat-form-field>
-      <mat-form-field style="width: 100%">
+      <mat-form-field appearance="outline" class="full-width paddingless">
         <mat-label>Definition</mat-label>
         <textarea matInput formControlName="definition" required></textarea>
       </mat-form-field>
-      <mat-form-field style="width: 100%">
+      <mat-form-field appearance="outline" class="full-width paddingless">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
     </div>
     <div class="modal-footer pxy-2">
-      <button mat-button color="warn" class="mr-1" type="button" (click)="onCancel()">Cancel</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!form.valid"
+      >
+        Submit
+      </button>
     </div>
   </div>
 </form>

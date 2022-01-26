@@ -30,4 +30,8 @@ describe('LinkCreatorService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('render urls as HTML', () => {
+    expect(service.createLink('http://localhost', '', 'link')).toEqual('http://localhost');
+  });
 });

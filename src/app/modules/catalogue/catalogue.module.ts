@@ -195,6 +195,7 @@ import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
+import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 
 @NgModule({
   declarations: [
@@ -361,7 +362,8 @@ import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
     TermRelationshipListComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ],
   imports: [
     AdminModule,
@@ -541,7 +543,8 @@ import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ]
 })
 export class CatalogueModule { }

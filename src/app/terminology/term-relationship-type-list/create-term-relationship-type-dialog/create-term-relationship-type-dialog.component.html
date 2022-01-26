@@ -26,30 +26,49 @@ SPDX-License-Identifier: Apache-2.0
       </h4>
     </div>
     <div class="modal-body pxy-2">
-      <div class="lead" style="padding-bottom: 10px;">
-        Terminology: {{data.terminology.label}}
+      <div class="lead" style="padding-bottom: 10px">
+        Terminology: {{ data.terminology.label }}
       </div>
       <div class="mdm--form-input">
-        <mat-form-field style="width: 100%">
+        <mat-form-field appearance="outline" class="full-width paddingless">
           <mat-label>Label</mat-label>
-          <input matInput formControlName="label" required>
+          <input matInput formControlName="label" required />
           <mat-error></mat-error>
         </mat-form-field>
-        <mat-form-field style="width: 100%">
+        <mat-form-field appearance="outline" class="full-width paddingless">
           <mat-label>Display Label</mat-label>
-          <input matInput formControlName="displayLabel">
+          <input matInput formControlName="displayLabel" />
         </mat-form-field>
         <div>
-          <mat-checkbox formControlName="parentalRelationship">Parent Relationship</mat-checkbox>
+          <mat-checkbox formControlName="parentalRelationship"
+            >Parent Relationship</mat-checkbox
+          >
         </div>
         <div>
-          <mat-checkbox formControlName="childRelationship">Child Relationship</mat-checkbox>
+          <mat-checkbox formControlName="childRelationship"
+            >Child Relationship</mat-checkbox
+          >
         </div>
       </div>
     </div>
     <div class="modal-footer pxy-2">
-      <button mat-button color="warn" class="mr-1" type="button" (click)="onCancel()">Cancel</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!form.valid"
+      >
+        Submit
+      </button>
     </div>
   </form>
 </div>

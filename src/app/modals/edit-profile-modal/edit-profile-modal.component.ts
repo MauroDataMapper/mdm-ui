@@ -161,7 +161,7 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     dg.afterClosed().subscribe((dgData) => {
-      this.markdownParser.createMarkdownLink(dgData).then((mkData) => {
+      this.markdownParser.createMarkdownLink(dgData).subscribe((mkData) => {
         field.currentValue = mkData;
       });
     });

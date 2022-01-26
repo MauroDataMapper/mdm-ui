@@ -17,23 +17,22 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, CodeSetCreatePayload, CodeSetDetailResponse, Container, Uuid } from '@maurodatamapper/mdm-resources';
-import { FolderService } from '@mdm/folders-tree/folder.service';
-import { catchError } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { CatalogueItemDomainType, Container, ModelCreatePayload, TerminologyDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import { FolderService } from '@mdm/folders-tree/folder.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { UIRouterGlobals } from '@uirouter/core';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'mdm-code-set-main',
-  templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss'],
+  selector: 'mdm-terminology-main',
+  templateUrl: './terminology-main.component.html',
+  styleUrls: ['./terminology-main.component.scss']
 })
-export class CodeSetMainComponent implements OnInit {
+export class TerminologyMainComponent implements OnInit {
   parentFolderId: Uuid;
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
@@ -64,14 +63,6 @@ export class CodeSetMainComponent implements OnInit {
     this.classifiers.setValue(value);
   }
 
-  get terms() {
-    return this.setupForm.get('terms');
-  }
-
-  set termsValue(value: any[]) {
-    this.terms.setValue(value);
-  }
-
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
@@ -80,16 +71,15 @@ export class CodeSetMainComponent implements OnInit {
     private folders: FolderService,
     private title: Title) { }
 
-  ngOnInit() {
-    this.title.setTitle('New Code Set');
+  ngOnInit(): void {
+    this.title.setTitle('New Terminology');
 
     this.setupForm = new FormGroup({
       label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
       author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
       organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
       description: new FormControl(''),
-      classifiers: new FormControl([]),
-      terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
+      classifiers: new FormControl([])
     });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
@@ -113,27 +103,26 @@ export class CodeSetMainComponent implements OnInit {
       return;
     }
 
-    const resource: CodeSetCreatePayload = {
+    const payload: ModelCreatePayload = {
       label: this.label.value,
       author: this.author.value,
       organisation: this.organisation.value,
       description: this.description.value,
       classifiers: this.classifiers.value,
-      folder: this.parentFolderId,
-      terms: this.terms.value
+      folder: this.parentFolderId
     };
 
-    this.resources.codeSet
-      .addToFolder(this.parentFolderId, resource)
+    this.resources.terminology
+      .addToFolder(this.parentFolderId, payload)
       .pipe(
         catchError(error => {
-          this.messageHandler.showError('There was a problem creating the Code Set.', error);
+          this.messageHandler.showError('There was a problem creating the Terminology.', error);
           return EMPTY;
         })
       )
-      .subscribe((response: CodeSetDetailResponse) => {
-        this.messageHandler.showSuccess('Code Set created successfully.');
-        this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+      .subscribe((response: TerminologyDetailResponse) => {
+        this.messageHandler.showSuccess('Terminology created successfully.');
+        this.stateHandler.Go('terminology', { id: response.body.id }, { reload: true });
       });
   }
 }

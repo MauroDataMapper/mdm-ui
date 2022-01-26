@@ -64,7 +64,7 @@ export class ElementClassificationsComponent implements OnInit {
   }
   getAllClassifications() {
     this.resourceService.classifier
-      .list()
+      .list({ all: true })
       .subscribe((result: ClassifierIndexResponse) => {
         this.allClassifications = result.body.items;
         const selectedList: any[] = [];

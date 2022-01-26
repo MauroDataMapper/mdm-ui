@@ -61,6 +61,12 @@ em {
   font-style: oblique;
 }
 
+a.mat-stroked-button {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 a.show-more, a.show-less {
   color: #3279B5;
   text-decoration:none;

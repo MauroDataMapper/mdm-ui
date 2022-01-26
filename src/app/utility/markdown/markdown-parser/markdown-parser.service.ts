@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import marked from 'marked/lib/marked';
+import * as marked from 'marked';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
@@ -48,15 +48,15 @@ export class MarkdownParserService {
       renderer = this.customTextRendererService;
     }
 
-    marked.use({ tokenizer: this.tokenizer as any });
-    marked.setOptions({
+    marked.marked.use({ tokenizer: this.tokenizer as any });
+    marked.marked.setOptions({
       renderer,
       gfm: true,
       breaks: true,
     });
 
     if (source) {
-       source = marked(source);
+       source = marked.marked(source);
        source = source?.replace('\\r\\n','');
       return source;
     }

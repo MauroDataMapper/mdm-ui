@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Pipe, PipeTransform } from '@angular/core';
-import marked from 'marked/lib/marked';
+import * as marked from 'marked';
 
 /**
  * A utility to do simple markdown parsing.
@@ -29,7 +29,7 @@ export class MarkedPipe implements PipeTransform {
 
   transform(value: string, options = {}) {
     if (value) {
-      const md = marked.setOptions(options);
+      const md = marked.marked.setOptions(options);
       return md.parse(value);
     }
     return value;

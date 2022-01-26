@@ -51,6 +51,7 @@ import { ModelIconComponent } from '@mdm/shared/model-icon/model-icon.component'
 import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
+import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-pr
     ModelIconComponent,
     PathNameComponent,
     FavoriteButtonComponent,
-    CatalogueItemPropertiesComponent
+    CatalogueItemPropertiesComponent,
+    ElementIconComponent
   ],
   imports: [
     CommonModule,
@@ -125,7 +127,8 @@ import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-pr
     PathNameComponent,
     ModelIconComponent,
     FavoriteButtonComponent,
-    CatalogueItemPropertiesComponent
+    CatalogueItemPropertiesComponent,
+    ElementIconComponent
   ]
 })
 export class SharedModule {}

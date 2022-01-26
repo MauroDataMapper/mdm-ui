@@ -274,6 +274,11 @@ export class DataModelDetailComponent implements OnInit {
     this.dataModel = Object.assign({}, this.originalDataModel);
   }
 
+  openBulkEdit()
+  {
+    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', {id: this.dataModel.id, domainType: this.dataModel.domainType});
+  }
+
   finalise() {
     this.resourcesService.dataModel
       .latestModelVersion(this.dataModel.id)

@@ -224,8 +224,7 @@ export class BulkEditEditorComponent implements OnInit {
     if (field.dataType === 'enumeration') {
       column.cellEditor = 'agSelectCellEditor';
       column.cellEditorParams = {
-        values: [''].concat(field.allowedValues)
-      };
+        values: [''].concat(field.allowedValues.sort())};
     }
 
     return column;

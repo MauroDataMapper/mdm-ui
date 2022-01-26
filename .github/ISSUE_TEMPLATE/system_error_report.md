@@ -1,8 +1,8 @@
 ---
-name: Report a bug
-about: Create a bug report to help us improve an area that needs fixing
+name: Report a system error
+about: Provide details on a system error that prevented you from carrying out something
 title: ''
-labels: bug
+labels: system error
 assignees: ''
 
 ---
@@ -11,7 +11,7 @@ Please fill in the sections below, adding/removing information where applicable:
 
 # Description
 
-A clear and concise description of what the bug is.
+A clear and concise description of what happened and what you were trying to do.
 
 # Steps to reproduce
 
@@ -25,9 +25,9 @@ e.g.
 
 A clear and concise description of what you expected to happen.
 
-# Screenshots
+# Error details
 
-If applicable, add screenshots to help explain your problem.
+If available, include any error details automatically provided by Mauro. If using the Mauro Data Mapper UI, this is available via the "Copy details" button on an error page, then paste the details here.
 
 # Environment
 

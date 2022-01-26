@@ -31,9 +31,9 @@ export const environment = {
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
-  youTrack: {
-    url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
-    project: 'MC'
+  issueReporting: {
+    defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose',
+    systemErrorUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new?assignees=&labels=system%20error&template=system_error_report.md&title='
   },
   documentation: {
     url: 'https://maurodatamapper.github.io/',
@@ -51,7 +51,6 @@ export const environment = {
       DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
     }
   },
-  simpleViewSupport: false,
   name: 'development',
   appIsEditable: true,
   checkSessionExpiryTimeout: 300000,
@@ -60,7 +59,8 @@ export const environment = {
     useVersionedFolders: true,
     useMergeUiV2: true,
     useOpenIdConnect: true,
-    useDigitalObjectIdentifiers: true
+    useDigitalObjectIdentifiers: true,
+    useIssueReporting: true
   }
 };
 

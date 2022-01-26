@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0
                   [disabled]="field.uneditable"
                 >
                   <mat-option
-                    *ngFor="let value of field.allowedValues"
+                    *ngFor="let value of sortBy(field.allowedValues)"
                     [value]="value"
                   >
                     {{ value }}

@@ -139,5 +139,9 @@ export class LinkCreatorService {
       };
       return this.elementTypes.getLinkUrl(mcElement);
     }
+
+    if (elementType === 'http') {
+      return href;
+    }
   }
 }

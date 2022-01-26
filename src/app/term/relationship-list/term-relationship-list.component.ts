@@ -97,7 +97,19 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   }
 
   filterByRelationshipType(relationshipType: TermRelationshipType) {
-    return this.relationships.filter(r => r.relationshipType.id === relationshipType.id);
+    return this.relationships
+      .filter(r => r.relationshipType.id === relationshipType.id)
+      .sort((first, second) => {
+        if (first.targetTerm.code < second.targetTerm.code) {
+          return -1;
+        }
+
+        if (first.targetTerm.code > second.targetTerm.code) {
+          return 1;
+        }
+
+        return 0;
+      });
   }
 
   deleteRelationship(termRelationship: TermRelationship) {

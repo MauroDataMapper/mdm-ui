@@ -96,6 +96,9 @@ SPDX-License-Identifier: Apache-2.0
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
       <i class="fas fa-file-alt dataModelTypeIcon"></i> Data Model
     </button>
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddTerminology(node)">
+      <i class="fas fa-book dataModelTypeIcon"></i> Terminology
+    </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
       <i class="fas fa-list dataModelTypeIcon"></i> Code Set
     </button>

@@ -150,6 +150,10 @@ export class EditProfileModalComponent implements OnInit {
     return this.validationErrors.errors.find(e => e.fieldName === fieldName);
   }
 
+  sortBy(items: []) {
+    return items.sort((a, b) => a > b ? 1 : a === b ? 0 : -1);
+  }
+
   showAddElementToMarkdown(field: ProfileField) {
     const dg = this.dialog.open(ElementSelectorComponent, {
       data: { validTypesToSelect: ['DataModel'], notAllowedToSelectIds: [] },
@@ -157,7 +161,7 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     dg.afterClosed().subscribe((dgData) => {
-      this.markdownParser.createMarkdownLink(dgData).then((mkData) => {
+      this.markdownParser.createMarkdownLink(dgData).subscribe((mkData) => {
         field.currentValue = mkData;
       });
     });

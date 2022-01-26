@@ -18,12 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import marked from 'marked/lib/marked';
+import * as marked from 'marked';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
 import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
 import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -48,23 +50,21 @@ export class MarkdownParserService {
       renderer = this.customTextRendererService;
     }
 
-    marked.use({ tokenizer: this.tokenizer as any });
-    marked.setOptions({
+    marked.marked.use({ tokenizer: this.tokenizer as any });
+    marked.marked.setOptions({
       renderer,
       gfm: true,
       breaks: true,
     });
 
     if (source) {
-       source = marked(source);
+       source = marked.marked(source);
        source = source?.replace('\\r\\n','');
       return source;
     }
   }
 
-  public async createMarkdownLink(element) {
-    const baseTypes = this.elementTypes.getTypes();
-
+  public createMarkdownLink(element): Observable<string> {
     const dataTypeNames = this.elementTypes.getTypesForBaseTypeArray('DataType').map((dt) => {
       return dt.id;
     });
@@ -77,83 +77,27 @@ export class MarkdownParserService {
       parentId = element.breadcrumbs[0].id;
     }
 
-    let parentDataClassId = null;
-    if (element.parentDataClass) {
-      parentDataClassId = element.parentDataClass;
-    } else if (element.dataClass) {
-      parentDataClassId = element.dataClass;
-    } else if (element.breadcrumbs) {
-      parentDataClassId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
-    }
+    return this.elementTypes.getNamedLinkIdentifier(element)
+      .pipe(
+        map(namedLink => {
+          if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
+            if (!parentId) {
+              return `[${element.element.label}](${namedLink})`;
+            } else {
+              return `[${element.label}](${namedLink})`;
+            }
+          }
 
-    let str = '';
-    if (element.domainType === 'DataClass') {
-      const dataModelName = await this.getDataModelName(parentId);
-      str = `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    }
+          if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
+            if (!parentId) {
+              return `[${element.element.label}](${namedLink})`;
+            }
+            else {
+              return `[${element.label}](${namedLink})`;
+            }
+          }
 
-    if (element.domainType === 'DataModel') {
-      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    }
-
-    if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
-      let dataModelName = '';
-      if (!parentId) {
-        parentId = element.element.model;
-        dataModelName = await this.getDataModelName(parentId);
-        str += `[${element.element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
-      } else {
-        dataModelName = await this.getDataModelName(parentId);
-        str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-      }
-    }
-
-    if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
-      let dataModelName = '';
-      let dataClassName = '';
-      if (!parentId) {
-        parentId = element.element.model;
-        parentDataClassId = element.element.dataClass;
-        dataModelName = await this.getDataModelName(parentId);
-        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
-        str += `[${element.element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
-      } else {
-        dataModelName = await this.getDataModelName(parentId);
-        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
-        str += `[${element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-      }
-    }
-
-    if (element.domainType === 'Term') {
-      const terminologyName = await this.getTerminologyName(parentId);
-      str += `[${element.label}](te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    }
-
-    if (element.domainType === 'CodeSet') {
-      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    }
-
-    // Not supported at the moment. Keeping for further use.
-    // if (element.domainType === 'Folder') {
-    //  str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    // }
-
-    str += ')';
-    return str;
-  }
-
-  private async getDataModelName(id: any) {
-    const response = await this.resourcesService.dataModel.get(id).toPromise();
-    return response.body.label;
-  }
-
-  private async getTerminologyName(id: any) {
-    const response = await this.resourcesService.terminology.get(id).toPromise();
-    return response.body.label;
-  }
-
-  private async getDataClassName(dataModelId: any, id: any) {
-    const response = await this.resourcesService.dataClass.get(dataModelId, id).toPromise();
-    return response.body.label;
+          return `[${element.label}](${namedLink})`;
+        }));
   }
 }

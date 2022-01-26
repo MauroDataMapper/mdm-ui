@@ -16,29 +16,22 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
 
 import { LinkCreatorService } from './link-creator.service';
-import { ElementTypesService } from '@mdm/services/element-types.service';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('LinkCreatorService', () => {
   let service: LinkCreatorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [ElementTypesService]
-
-    });
-    service = TestBed.inject(LinkCreatorService);
+    service = setupTestModuleForService(LinkCreatorService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('render urls as HTML', () => {
+    expect(service.createLink('http://localhost', '', 'link')).toEqual('http://localhost');
   });
 });

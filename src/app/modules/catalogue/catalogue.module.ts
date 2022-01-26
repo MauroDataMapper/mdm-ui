@@ -112,7 +112,6 @@ import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.compon
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
 import { FavouritesComponent } from '@mdm/shared/favourites/favourites.component';
-import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { ShowIfRoleIsWritableDirective } from '@mdm/directives/show-if-role-is-writable.directive';
 import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { ClassificationComponent } from '@mdm/classification/classification.component';
@@ -195,6 +194,8 @@ import { CreateTermRelationshipTypeDialogComponent } from '@mdm/terminology/term
 import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-relationship-list.component';
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
+import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
+import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 
 @NgModule({
   declarations: [
@@ -295,7 +296,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     UiViewComponent,
     ModelsComponent,
     FavouritesComponent,
-    ElementIconComponent,
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,
@@ -362,11 +362,13 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
     TermRelationshipListComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ],
   imports: [
     AdminModule,
     AngularSplitModule.forRoot(),
+    BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,
     ChartsModule,
@@ -483,7 +485,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     UiViewComponent,
     ModelsComponent,
     FavouritesComponent,
-    ElementIconComponent,
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,
@@ -542,7 +543,8 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
-    NewerVersionsComponent
+    NewerVersionsComponent,
+    TerminologyMainComponent
   ]
 })
 export class CatalogueModule { }

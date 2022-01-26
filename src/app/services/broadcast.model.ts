@@ -39,7 +39,8 @@ export type BroadcastEvent =
   | 'profileImageUpdated'
   | 'apiPropertyUpdated'
   | 'favoritesChanged'
-  | 'reloadClassificationTree';
+  | 'reloadClassificationTree'
+  | 'validateBulkEdit';
 
 /**
  * Represents a message to broadcast with an optional data payload.

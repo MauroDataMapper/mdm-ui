@@ -1,19 +1,23 @@
 ---
-name: Feature request
-about: Create a report to help us improve
+name: Request a feature
+about: Provide a request to a new feature or enhancement you would like to see included in Mauro
 title: ''
-labels: bug
+labels: enhancement
 assignees: ''
+
 ---
 
-**Describe the feature request**
-A clear and concise description of what is being requested.
+Please fill in the sections below, adding/removing information where applicable:
 
-**Use cases**
-Please describe the scenarios that your requested feature is intended to support
+# Description
 
-**Screenshots**
-If applicable, add screenshots to help explain how this new feature fits with the existing system.
+A clear and concise description of what your feature suggestion is.
 
-**Additional context**
-Please add any other context or justification here.  You may like to discuss with us further through [Zulip](http://maurodatamapper.zulipchat.com/)
+# Additional context
+
+Add any other context about the request here, such as:
+
+- Screenshots, diagrams or mockups of your intentions
+- In-depth details of how you imagine the feature would function
+- Raise issues that would need to be clarified
+- Etc...

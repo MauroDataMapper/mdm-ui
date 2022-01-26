@@ -39,20 +39,14 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Author</mat-label>
-            <input matInput type="text" formControlName="author" name="author" required>
-            <mat-error *ngIf="setupForm && author.errors?.required">
-              Author is required
-            </mat-error>
+            <input matInput type="text" formControlName="author" name="author">
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Organisation</mat-label>
-            <input matInput type="text" formControlName="organisation" name="organisation" required>
-            <mat-error *ngIf="setupForm && organisation.errors?.required">
-              Organisation is required
-            </mat-error>
+            <input matInput type="text" formControlName="organisation" name="organisation">
         </mat-form-field>
     </div>
 

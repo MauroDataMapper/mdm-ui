@@ -77,7 +77,7 @@ export class BulkEditSelectComponent implements OnInit {
       )
       .subscribe(() => {
         // Subscribe to perform the request
-      })
+      });
   }
 
   elementCompare(option, value): boolean {

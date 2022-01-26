@@ -66,23 +66,23 @@ describe('BulkEditBaseComponent', () => {
     profile: {
       saveMany: jest.fn()
     }
-  }
+  };
 
   const uiRouterGlobalsStub: UIRouterGlobalsStub = {
     params: new StateParams()
-  }
+  };
 
   const titleStub: TitleStub = {
     setTitle: jest.fn()
-  }
+  };
 
   const editingStub: EditingStub = {
     start: jest.fn()
-  }
+  };
 
   const messageHandlerStub: MessageHandlerStub = {
     showSuccess: jest.fn()
-  }
+  };
 
   const id = '123';
   const dataModel: DataModelDetail = {

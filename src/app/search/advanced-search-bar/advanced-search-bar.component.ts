@@ -119,7 +119,7 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.advancedSearch = false;
 
     this.resources.classifier
-      .list()
+      .list({ all: true })
       .subscribe((result: ClassifierIndexResponse) => {
         this.classifications = result.body.items;
       });

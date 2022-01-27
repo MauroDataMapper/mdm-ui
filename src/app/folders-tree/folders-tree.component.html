@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -95,6 +95,9 @@ SPDX-License-Identifier: Apache-2.0
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
       <i class="fas fa-file-alt dataModelTypeIcon"></i> Data Model
+    </button>
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddTerminology(node)">
+      <i class="fas fa-book dataModelTypeIcon"></i> Terminology
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
       <i class="fas fa-list dataModelTypeIcon"></i> Code Set

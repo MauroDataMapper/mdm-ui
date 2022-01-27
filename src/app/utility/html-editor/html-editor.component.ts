@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,37 +22,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
 import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
-
-const standardButtons = [
-  'source',
-  '|',
-  'bold',
-  'italic',
-  'underline',
-  '|',
-  'ul',
-  'ol',
-  'eraser',
-  '|',
-  'outdent',
-  'indent',
-  '|',
-  'font',
-  'fontsize',
-  'brush',
-  'paragraph',
-  '|',
-  'table',
-  '|',
-  'align',
-  '\n',
-  'undo',
-  'redo',
-  '|',
-  'hr',
-  'copyformat',
-  'fullsize',
-];
+import { LinkCreatorService } from '../markdown/markdown-parser/link-creator.service';
 
 const basicButtons = [
   'bold',
@@ -102,26 +72,55 @@ export class HtmlEditorComponent implements OnInit {
   constructor(
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
-    private elementTypesService: ElementTypesService) { }
+    private elementTypesService: ElementTypesService,
+    private linkCreator: LinkCreatorService) { }
 
   ngOnInit(): void {
-    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
-
-    const extraButtons = [
+    const standardButtons = [
+      'source',
+      '|',
+      'bold',
+      'italic',
+      'underline',
+      '|',
+      'ul',
+      'ol',
+      'eraser',
+      '|',
+      'outdent',
+      'indent',
+      '|',
+      'font',
+      'fontsize',
+      'brush',
+      'paragraph',
+      '|',
+      'table',
       {
-        name: 'addelement',
-        text: 'Add Element',
-        icon: '',
+        name: 'linktoelement',
+        text: 'Link to Element',
+        tooltip: 'Add link to element',
+        icon: 'link',
         exec: (editor: any) => this.onAddElementLink(this, editor)
-      }
+      },
+      '|',
+      'align',
+      '\n',
+      'undo',
+      'redo',
+      '|',
+      'hr',
+      'copyformat',
+      'fullsize',
     ];
+
+    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
 
     this.editorConfig = {
       buttons,
       buttonsMD: buttons,
       buttonsSM: buttons,
-      buttonsXS: buttons,
-      extraButtons
+      buttonsXS: buttons
     };
   }
 
@@ -144,11 +143,14 @@ export class HtmlEditorComponent implements OnInit {
         return;
       }
 
-      const href = component.elementTypesService.getLinkUrl(element);
-      const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
+      component.elementTypesService.getNamedLinkIdentifier(element)
+        .subscribe(namedLink => {
+          const href = component.linkCreator.createLink(namedLink, null, null);
+          const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
 
-      editor.selection.setCursorIn(focusNode);
-      editor.selection.insertHTML(html);
+          editor.selection.setCursorIn(focusNode);
+          editor.selection.insertHTML(html);
+        });
     });
 
     component.elementDialogService.open([], []);

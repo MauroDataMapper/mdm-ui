@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,8 @@ const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
   'appContainer.adminArea.user',
   'appContainer.adminArea.group',
-  'appContainer.adminArea.subscribedCatalogue'
+  'appContainer.adminArea.subscribedCatalogue',
+  'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit'
 ];
 
 export interface EditableObject {

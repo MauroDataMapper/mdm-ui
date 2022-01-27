@@ -32,7 +32,7 @@
 
   "licenseFormats": {
     "sass": {
-      "prepend": "// ",
+      "prepend": "//",
       "eachLine": {
         "prepend": "  "
       }

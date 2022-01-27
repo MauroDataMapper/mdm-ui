@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
         class="prevent-click mat-elevation-z0"
         (click)="clickButton=false"
       >
-        <mat-expansion-panel-header>         
+        <mat-expansion-panel-header>
             <div
               fxFlex
               fxLayout="row"
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
                   <span class="mdm--badge mdm--element-count">{{
                     totalItemCount
                   }}</span>
-  
+
                 <i
                   class="fas fa-filter authorize-click"
                   (click)="$event.stopPropagation(); filterClick()"
@@ -77,15 +77,15 @@ SPDX-License-Identifier: Apache-2.0
                   mat-flat-button
                   color="primary"
                   style="margin-left: 5px; z-index: 100;"
-                  type="button"             
+                  type="button"
                   (click)="exportAllRules()"
                   class="authorize-click"
                 >
                   <i class="fas fa-download"></i> Export
-                </button>  
-              </div> 
-              </div> 
-            </div>    
+                </button>
+              </div>
+              </div>
+            </div>
         </mat-expansion-panel-header>
         <mat-form-field appearance="outline" class="mb-2 full-width">
           <mat-label>Select Language</mat-label>
@@ -161,7 +161,7 @@ SPDX-License-Identifier: Apache-2.0
                 (click)="expandRow(record)"
               ></i>
             </div>
-            <div> 
+            <div>
               <mdm-all-links-in-paged-list
                 [parent]="record"
               ></mdm-all-links-in-paged-list>
@@ -328,7 +328,7 @@ SPDX-License-Identifier: Apache-2.0
                       <button
                         mat-menu-item
                         color="accent"
-                        type="button"                
+                        type="button"
                         (click)="exportRuleRepresentation(record)"
                       >
                         <i class="fas fa-download"></i> Export
@@ -371,7 +371,7 @@ SPDX-License-Identifier: Apache-2.0
           [ngClass]="{ 'mdm--active-row ': row.checked }"
         ></tr>
         <tr
-          mat-row         
+          mat-row
           *matRowDef="let element; columns: ['expandedDetail']"
           class="detail-row"
         ></tr>

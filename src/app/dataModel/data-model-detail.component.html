@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,8 @@ SPDX-License-Identifier: Apache-2.0
   <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="dataModel">
-        <button
+
+       <button
           type="button"
           data-cy="user-actions-menu"
           mat-icon-button
@@ -59,6 +60,15 @@ SPDX-License-Identifier: Apache-2.0
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
           </button>
+          <button
+          mat-menu-item
+          data-cy="edit-label"
+          type="button"
+          *ngIf="access.showEdit"
+          (click)="openBulkEdit()"
+        >
+          <i class="fas fa-clone"></i> Bulk Edit
+        </button>
           <button
             mat-menu-item
             data-cy="compare"

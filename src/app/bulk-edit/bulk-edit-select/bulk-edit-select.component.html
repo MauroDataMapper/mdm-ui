@@ -1,0 +1,78 @@
+<!--
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="modal-body pxy-2">
+  <p>Please select the elements and profiles you wish to edit.</p>
+</div>
+<form class="mdm--form mdm--form-configuration" [formGroup]="setupForm">
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Element(s)</mat-label>
+      <mat-select
+        multiple
+        required
+        formControlName="elements"
+        [compareWith]="elementCompare"
+        [(ngModel)]="context.elements"
+      >
+        <mat-option *ngFor="let element of availableElements" [value]="element">
+          {{ element.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="setupForm && elements.errors?.required">
+        At least one element is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Profile(s)</mat-label>
+      <mat-select
+        multiple
+        required
+        formControlName="profiles"
+        [compareWith]="profileCompare"
+        [(ngModel)]="context.profiles"
+      >
+        <mat-option *ngFor="let profile of availableProfiles" [value]="profile">
+          {{ profile.displayName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="setupForm && profiles.errors?.required">
+        At least one profile is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>
+<div class="modal-footer pxy-2">
+  <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+    Cancel
+  </button>
+
+  <button
+    [disabled]="!setupForm.valid"
+    mat-stroked-button
+    type="button"
+    color="primary"
+    type="button"
+    class="mr-1"
+    (click)="next()"
+  >
+    Next
+  </button>
+</div>

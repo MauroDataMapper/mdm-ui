@@ -28,7 +28,7 @@ import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileMod
 import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY, Observable, of, from, zip, Subject } from 'rxjs';
+import { EMPTY, Observable, from, zip, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap, mergeMap, tap } from 'rxjs/operators';
 import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
 import { GridService } from '@mdm/services/grid.service';
@@ -114,7 +114,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
       if (!this.catalogueItem.domainType) {
-        this.catalogueItem.domainType = changes.catalogueItem.previousValue.domainType
+        this.catalogueItem.domainType = changes.catalogueItem.previousValue.domainType;
       }
       this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
       this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
@@ -610,9 +610,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     catalogueHierarchy.push({id: this.catalogueItem.id,
       domainType: this.catalogueItem.domainType});
     if (this.catalogueItem.hasOwnProperty('breadcrumbs')) {
-      catalogueHierarchy = catalogueHierarchy.concat(this.catalogueItem.breadcrumbs.map(function(breadcrumb) {
-          return {id: breadcrumb.id, domainType: breadcrumb.domainType}
-      }))
+      catalogueHierarchy = catalogueHierarchy.concat(this.catalogueItem.breadcrumbs.map((breadcrumb) => {
+          return {id: breadcrumb.id, domainType: breadcrumb.domainType};
+      }));
     }
 
     return catalogueHierarchy;
@@ -626,8 +626,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
       // Get metadata for each catalogueItem in the hierarchy
       const options = this.gridService.constructOptions(20, 0, null, null, null);
-      const request: Observable<any> =
-        this.resources.profile.otherMetadata(
+      this.resources.profile.otherMetadata(
           domainType,
           id,
           options);
@@ -646,14 +645,14 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       );
 
       let responses = [];
-      let subject = new Subject<any>();
+      const subject = new Subject<any>();
       observable.subscribe({
         next: property => {
           for (const property_item of property) {
             if (property_item !== undefined ) {
               responses = responses.concat(
                 property_item.filter(o => (
-                 this.usedProfiles.findIndex(e => e.display === o.value) != -1
+                 this.usedProfiles.findIndex(e => e.display === o.value) !== -1
                  ))
               );
             }
@@ -682,7 +681,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         }),
         map((data: any) => {
            const tempItems = data.body.items;
-           let items = tempItems.filter( o => (
+           const items = tempItems.filter( o => (
              o.namespace === this.defaultProfileDomainName)
              );
            return items;

@@ -34,4 +34,8 @@ describe('LinkCreatorService', () => {
   it('render urls as HTML', () => {
     expect(service.createLink('http://localhost', '', 'link')).toEqual('http://localhost');
   });
+
+  it('render emails as HTML', () => {
+    expect(service.createLink('mailto:user@test.com', '', 'email')).toEqual('mailto:user@test.com');
+  });
 });

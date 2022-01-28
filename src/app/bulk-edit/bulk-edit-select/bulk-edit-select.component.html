@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
         [(ngModel)]="context.profiles"
       >
         <mat-option *ngFor="let profile of availableProfiles" [value]="profile">
-          {{ profile.displayName }}
+          {{ profile.displayName }} ({{profile.version}})
         </mat-option>
       </mat-select>
       <mat-error *ngIf="setupForm && profiles.errors?.required">

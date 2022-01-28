@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +26,8 @@ SPDX-License-Identifier: Apache-2.0
             <div>
                 <div class="footer--box" flex fxLayout="column" fxLayoutAlign="space-between">
                     <div class="footer--links">
-                        <a *ngIf="documentation && documentation.url && showDocumentationLink" href="{{documentation.url}}" target="_blank" rel="noopener">Documentation</a>
-                        <a *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" href="{{youTrack.url}}/newIssue" target="_blank" rel="noopener">Report Issue</a>
+                        <a *ngIf="documentation && documentation.url" href="{{documentation.url}}" target="_blank" rel="noopener">Documentation</a>
+                        <a *ngIf="features.useIssueReporting && issueReporting.defaultUrl && issueReporting.defaultUrl.length > 0" href="{{issueReporting.defaultUrl}}" target="_blank" rel="noopener">Report Issue</a>
                     </div>
                 </div>
                 <div class="footer--box mt-2">

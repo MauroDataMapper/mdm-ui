@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,41 +17,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EnumerationValuesDetailsComponent } from './enumeration-values-details.component';
-import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
-import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('EnumerationValuesDetailsComponent', () => {
-   let component: EnumerationValuesDetailsComponent;
-   let fixture: ComponentFixture<EnumerationValuesDetailsComponent>;
+  let harness: ComponentHarness<EnumerationValuesDetailsComponent>;
 
-   beforeEach(async(() => {
-      TestBed.configureTestingModule({
-         imports: [
-            UIRouterModule.forRoot({ useHash: true }),
-            ToastrModule.forRoot()
-         ],
-         declarations: [
-            EnumerationValuesDetailsComponent,
-            ModelPathComponent,
-            ElementLinkComponent
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(EnumerationValuesDetailsComponent);
+  });
 
-         ]
-      })
-         .compileComponents();
-   }));
-
-   beforeEach(() => {
-      fixture = TestBed.createComponent(EnumerationValuesDetailsComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-   });
-
-   it('should create', () => {
-      expect(component).toBeTruthy();
-   });
+  it('should create', () => {
+    expect(harness.isComponentCreated).toBeTruthy();
+  });
 });

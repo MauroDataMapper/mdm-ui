@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -144,7 +144,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       .subscribe(() => this.rejectUser(row));
   };
 
-  approveUser = (row) => {
+  approveUser = (row : any) => {
     this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
       this.messageHandler.showSuccess('User approved successfully');
       this.broadcast.dispatch('pendingUserUpdated');

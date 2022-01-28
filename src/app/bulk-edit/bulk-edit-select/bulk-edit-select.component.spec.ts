@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,26 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { BulkEditSelectComponent } from './bulk-edit-select.component';
 
-import { CustomTextRendererService } from './custom-text-renderer.service';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+describe('BulkEditSelectComponent', () => {
+  let harness: ComponentHarness<BulkEditSelectComponent>;
 
-describe('CustomTextRendererService', () => {
-  let service: CustomTextRendererService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ]
-    });
-    service = TestBed.inject(CustomTextRendererService);
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(BulkEditSelectComponent);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should create', () => {
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,31 +24,6 @@ import {Observable, Subject} from 'rxjs';
 })
 export class MessageService implements OnDestroy {
 
-  get lastError(): any {
-    return this.lastErrorVar;
-  }
-
-  set lastError(value: any) {
-    this.lastErrorVar = value;
-  }
-
-  get errorMessage(): {} {
-    return this.errorMessageVar;
-  }
-
-  set errorMessage(value: {}) {
-    this.errorMessageVar = value;
-  }
-
-  isUserGroupAccess = false;
-  isSearch = false;
-  isShareReadWithEveryone = false;
-  isEditMode = false;
-
-  private lastErrorVar = {};
-  private errorMessageVar = {};
-
-  /* eslint-disable @typescript-eslint/member-ordering */
   @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 
   @Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
@@ -57,33 +32,49 @@ export class MessageService implements OnDestroy {
 
   @Output() editMode: EventEmitter<boolean> = new EventEmitter();
 
-  private subjUserDetails = new Subject<any>();
+  isUserGroupAccess = false;
+  isSearch = false;
+  isShareReadWithEveryone = false;
+  isEditMode = false;
+  loggedInChange = new Subject<any>();
+  dataModelDataChange = new Subject<any>();
+  elementSelectorSendMessage = new Subject<any>();
 
-  private dataChange = new Subject<any>();
-
-  private loggedInChange = new Subject<any>();
-
-  private dataModelDataChange = new Subject<any>();
-
+  dataChange = new Subject<any>();
   dataChanged$ = this.dataChange.asObservable();
-
   loggedInChanged$ = this.loggedInChange.asObservable();
-
   dataModelDataChange$ = this.dataModelDataChange.asObservable();
-
-  private elementSelectorSendMessage = new Subject<any>();
-
   elementSelector = this.elementSelectorSendMessage.asObservable();
-
-  private FolderSubject = new Subject<any>();
-
   folderPermissions;
 
+  private lastErrorVar = {};
+  private errorMessageVar = {};
+  private subjUserDetails = new Subject<any>();
   private UserGroupAccessSubject = new Subject<any>();
   /** Generic message functions */
 
     // A map to store subjects/channels
   private subjects: Map<string, Subject<any>> = new Map();
+  private FolderSubject = new Subject<any>();
+
+
+
+  get lastError(): any {
+    return this.lastErrorVar;
+  }
+
+  set lastError(value: any) {
+    this.lastErrorVar = value;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  get errorMessage(): {} {
+    return this.errorMessageVar;
+  }
+
+  set errorMessage(value: {}) {
+    this.errorMessageVar = value;
+  }
 
   sendUserDetails(data) {
     this.subjUserDetails.next(data);

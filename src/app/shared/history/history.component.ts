@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +54,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter = this.gridService.applyFilter(this.filters);
+  applyFilter :any;
 
   constructor(public resourcesService: MdmResourcesService, private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
 
@@ -72,6 +72,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     this.parentTypeVal = this.parentType;
     this.parentIdVal = this.parentId ? this.parentId : this.parent?.id;
     this.parentVal = this.parent;
+    this.applyFilter = this.gridService.applyFilter(this.filters);
 
   }
 

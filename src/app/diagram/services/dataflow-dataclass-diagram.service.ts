@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { BasicDiagramService } from './basic-diagram.service';
 import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
+import { Uuid } from '@maurodatamapper/mdm-resources';
 
 
 export class DataflowDataclassDiagramService extends BasicDiagramService {
@@ -33,7 +34,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
 
-    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id, params.flowId, {all:true});
+    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id as Uuid, params.flowId as Uuid, {all:true});
   }
 
   render(data: any): void {

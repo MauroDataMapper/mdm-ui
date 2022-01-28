@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +48,7 @@ export class StateHandlerService {
         subscribedcatalogue: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
         federateddatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
 
+        newterminology: 'appContainer.mainApp.twoSidePanel.catalogue.NewTerminology',
         newcodeset: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
         newdatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
         newdataclass: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',

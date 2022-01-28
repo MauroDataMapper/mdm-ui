@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,9 @@ export class DataClassStep1Component implements OnInit {
   step: any;
 
   modelVal: any;
+
+  constructor(private changeRef: ChangeDetectorRef) {}
+
   get model() {
     return this.modelVal;
   }
@@ -35,7 +38,7 @@ export class DataClassStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor(private changeRef: ChangeDetectorRef) {}
+
 
   ngOnInit() {
     this.model = this.step.scope.model;

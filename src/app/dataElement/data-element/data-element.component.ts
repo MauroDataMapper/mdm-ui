@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +29,21 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   GridService,
   MessageHandlerService,
-  SecurityHandlerService} from '@mdm/services';
+  SecurityHandlerService
+} from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { DataElement, DataElementDetail, DataElementDetailResponse, DataTypeReference } from '@maurodatamapper/mdm-resources';
-import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
+import {
+  DataElement,
+  DataElementDetail,
+  DataElementDetailResponse,
+  DataTypeReference
+} from '@maurodatamapper/mdm-resources';
+import {
+  DefaultProfileItem,
+  ProfileControlTypes
+} from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-
 
 @Component({
   selector: 'mdm-data-element',
@@ -45,7 +53,6 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class DataElementComponent
   extends BaseComponent
   implements OnInit, AfterViewInit {
-
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataElementOutput: DataElementDetail;
   showSecuritySection: boolean;
@@ -76,8 +83,14 @@ export class DataElementComponent
   isValid = false;
   rulesItemCount = 0;
   isLoadingRules = true;
-  access:any;
-  tabs = new TabCollection(['description', 'links', 'summaryMetadata', 'rules', 'annotations']);
+  access: any;
+  tabs = new TabCollection([
+    'description',
+    'links',
+    'summaryMetadata',
+    'rules',
+    'annotations'
+  ]);
   newlyAddedDataType = {
     label: '',
     description: '',
@@ -135,7 +148,7 @@ export class DataElementComponent
   }
 
   ngOnInit() {
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
@@ -189,10 +202,7 @@ export class DataElementComponent
     }
   }
 
-
-
   save(saveItems: Array<DefaultProfileItem>) {
-
     const resource: DataElement = {
       id: this.dataElementOutput.id,
       label: this.dataElementOutput.label,
@@ -213,12 +223,10 @@ export class DataElementComponent
         resource.maxMultiplicity = item.maxMultiplicity;
       } else if (item.controlType === ProfileControlTypes.dataType) {
         resource.dataType = item.value as DataTypeReference;
-      }
-      else {
+      } else {
         resource[item.propertyName] = item.value;
       }
     });
-
 
     this.resourcesService.dataElement
       .update(
@@ -229,11 +237,14 @@ export class DataElementComponent
       )
       .subscribe(
         (result: DataElementDetailResponse) => {
-          this.dataElementOutput = result.body;
+          this.dataElementOutput = null;
+
+          setTimeout(() => {
+            this.dataElementOutput = result.body;
+          }, 250);
+
           this.catalogueItem = result.body;
-          this.messageHandler.showSuccess(
-            'Data Element updated successfully.'
-          );
+          this.messageHandler.showSuccess('Data Element updated successfully.');
         },
         (error) => {
           this.messageHandler.showError(
@@ -262,7 +273,7 @@ export class DataElementComponent
         if (this.dataElementOutput) {
           // tslint:disable-next-line: deprecation
           this.activeTab = this.getTabDetailByName(
-            this.uiRouterGlobals.params.tabView
+            this.uiRouterGlobals.params.tabView as string
           ).index;
           this.tabSelected(this.activeTab);
         }
@@ -295,12 +306,11 @@ export class DataElementComponent
   }
 
   watchDataElementObject() {
-    this.access = this.securityHandler.elementAccess(
-      this.dataElementOutput
-    );
+    this.access = this.securityHandler.elementAccess(this.dataElementOutput);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,6 +39,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { DataModel, DataType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-step2',
@@ -57,10 +58,25 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   totalItemCount = 0;
   totalSelectedItemsCount: number;
   filter: object;
-  step: any;
+  step: {
+    invalid : boolean;
+    isProcessComplete : boolean;
+    scope : {
+       model: {
+        [key: string]: any;
+        createType: CreateType;
+        selectedDataTypes: Array<any>;
+        parent:DataModel;
+        copyFromDataModel: Array<DataModel>;
+      };
+    };
+  };
   model: {
     [key: string]: any;
     createType: CreateType;
+    selectedDataTypes: Array<any>;
+    parent:DataModel;
+    copyFromDataModel: Array<DataModel>;
   };
   scope: any;
   defaultCheckedMap: any;
@@ -114,7 +130,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
-  validationStatusEmitter($event) {
+  validationStatusEmitter($event : string) {
     this.step.invalid = JSON.parse($event);
   }
 
@@ -313,7 +329,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.processing = true;
     this.isProcessComplete = false;
     let promise = Promise.resolve();
-    this.model.selectedDataTypes.forEach((dc: any) => {
+    this.model.selectedDataTypes.forEach((dc: DataType) => {
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };

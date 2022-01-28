@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,57 +17,55 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="jumbotron errorMessage" style="text-align: left">
-    <h2> <i class="fas fa-bug"></i>{{errorHeader}}</h2>
-    <p>{{errorMessage}}</p>
+  <h2><i class="fas fa-bug"></i> {{ errorHeader }}</h2>
+  <p>{{ errorMessage }}</p>
 </div>
 <div>
-    <p>{{errorResolution}}</p>
+  <p>{{ errorResolution }}</p>
 </div>
-<div *ngIf="isLoggedIn && showYouTrackLink">
-    <p>{{errorReportMessage}}</p>
-    <button mat-button color="primary" type="button" (click)="reportIssueToYouTrack()" *ngIf="!issueReporting && !issueReported && !errorInSubmit">
-        <i class="fas fa-share"></i>
-        Report Issue
-    </button>
-
-
-    <div class="alert alert-info" *ngIf="issueReporting">
-        <span><mat-progress-spinner diameter="20"
-                                    color="primary"
-                                    mode="indeterminate"
-                                    style="display: inline-block">
-        </mat-progress-spinner>
-        Reporting issue...</span>
-    </div>
-    <div class="alert alert-success" *ngIf="issueReported">
-        <i class="fas fa-check"></i> <strong>Success!</strong> Issue successfully reported to YouTrack - thank you!
-    </div>
-    <div class="alert alert-danger" *ngIf="errorInSubmit">
-        <i class="fas fa-times"></i><strong>Error!</strong> Failed to report issue to YouTrack. <br/>
-        This may be a configuration error or an problem with the issue-tracking software.  Please contact your catalogue administrator.
-    </div>
+<div *ngIf="features.useIssueReporting" class="mb-2">
+  <p>{{ errorReportMessage }}</p>
+  <p>
+    <a
+      mat-stroked-button
+      color="primary"
+      href="{{ issueReporting.systemErrorUrl }}"
+      target="_blank"
+      rel="noopener"
+    >
+      <i class="fas fa-share"></i>
+      Report issue
+    </a>
+  </p>
+  <p>
+    It is useful when reporting issues to include as much contextual
+    information as possible. Click on the button below to copy captured
+    information to the clipboard, allowing you to paste it into your issue
+    report.
+  </p>
 </div>
 <div>
-    <mat-slide-toggle (change)="changeShowDetails()">Show details</mat-slide-toggle>
-    <div [hidden]="!showDetails">
-        <h3>Details
-            <button mat-stroked-button color="primary" type="button" (click)="copyToClipboard()">
-                <i class="fas fa-clipboard"></i>
-                Copy to Clipboard
-            </button>
-        </h3>
-
-
-        <table class="table dataModelDetailTable mdm--table-fixed">
-            <tbody>
-            <tr *ngFor="let item of dataSource">
-                <td class="detailsRowHeader">{{item.field}}</td>
-                <td>
-                    <span *ngIf="!item.code">{{item.value}}</span>
-                    <ngx-json-viewer *ngIf="item.code" [json]="item.value" [expanded]="true"></ngx-json-viewer>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+  <button mat-stroked-button color="primary" type="button" class="mr-1" (click)="copyDetails()">
+    <i class="fas fa-clipboard"></i> Copy details
+  </button>
+  <mat-slide-toggle (change)="changeShowDetails()"
+    >Show details</mat-slide-toggle
+  >
+  <div [hidden]="!showDetails" class="mt-1">
+    <table class="table dataModelDetailTable mdm--table-fixed">
+      <tbody>
+        <tr *ngFor="let item of dataSource">
+          <td class="detailsRowHeader">{{ item.field }}</td>
+          <td>
+            <span *ngIf="!item.code">{{ item.value }}</span>
+            <ngx-json-viewer
+              *ngIf="item.code"
+              [json]="item.value"
+              [expanded]="true"
+            ></ngx-json-viewer>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

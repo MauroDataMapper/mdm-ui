@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'fileSize'
 })
 export class FileSizePipe implements PipeTransform {
-  transform(bytes, precision?): any {
+  transform(bytes : any, precision? : number): string {
     if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) { return '-'; }
     if (typeof precision === 'undefined') { precision = 1; }
     const units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];

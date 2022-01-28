@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,44 +23,44 @@ SPDX-License-Identifier: Apache-2.0
     </h4>
 </div>
 <form name="subscribedCatForm" class="mdm--form mb-2">
-    <mat-form-field appearance="outline">
-        <mat-label>Label</mat-label>
-        <input matInput name="name" [(ngModel)]="catalogue.label" required />
-        <mat-error *ngIf="errors && errors.label">
-            {{errors.label}}
-        </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Description</mat-label>
-        <input matInput name="description" [(ngModel)]="catalogue.description" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" hintLabel="Provide the domain URL to the Mauro system to connect to">
-        <mat-label>URL</mat-label>
-        <input matInput name="url" [(ngModel)]="catalogue.url" required />
-        <mat-error *ngIf="errors && errors.url">
-            {{errors.url}}
-        </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" hintLabel="An API key is required to view non-public models in the subscribed catalogue">
-        <mat-label>API Key</mat-label>
-        <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" />
-        <mat-error *ngIf="errors && errors.apiKey">
-            {{errors.apiKey}}
-        </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" style="max-width: 200px;">
-        <mat-label>Refresh period (days)</mat-label>
-        <input type="number" matInput name="refreshPeriod" [(ngModel)]="catalogue.refreshPeriod" />
-    </mat-form-field>
-    <div>
-        <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
-            Cancel
-        </button>
-        <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="catalogue.id">
-            Update subscription
-        </button>
-        <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!catalogue.id">
-            Add subscription
-        </button>
-    </div>
+  <mat-form-field appearance="outline">
+    <mat-label>Label</mat-label>
+    <input matInput name="name" [(ngModel)]="catalogue.label" required />
+    <mat-error *ngIf="errors && errors.label">
+      {{errors.label}}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <input matInput name="description" [(ngModel)]="catalogue.description" />
+  </mat-form-field>
+  <mat-form-field appearance="outline" hintLabel="Provide the domain URL to the Mauro system to connect to">
+    <mat-label>URL</mat-label>
+    <input matInput name="url" [(ngModel)]="catalogue.url" required />
+    <mat-error *ngIf="errors && errors.url">
+      {{errors.url}}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" hintLabel="An API key is required to view non-public models in the subscribed catalogue">
+    <mat-label>API Key</mat-label>
+    <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" />
+    <mat-error *ngIf="errors && errors.apiKey">
+      {{errors.apiKey}}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="max-width: 200px;">
+    <mat-label>Refresh period (days)</mat-label>
+    <input type="number" matInput name="refreshPeriod" [(ngModel)]="catalogue.refreshPeriod" />
+  </mat-form-field>
+  <div>
+    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="catalogue.id">
+      Update subscription
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!catalogue.id">
+      Add subscription
+    </button>
+  </div>
 </form>

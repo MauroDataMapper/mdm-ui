@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@import "~@angular/material/theming";
+@use '~@angular/material' as mat;
 @import "../components/custom";
 
 /*
@@ -132,31 +132,31 @@ $nhs-digital-palette-warn: (
   )
 );
 
-$nhs-digital-theme-primary: mat-palette($nhs-digital-palette-primary);
-$nhs-digital-theme-accent: mat-palette($nhs-digital-palette-accent);
-$nhs-digital-theme-warn: mat-palette($nhs-digital-palette-warn);
+$nhs-digital-theme-primary: mat.define-palette($nhs-digital-palette-primary);
+$nhs-digital-theme-accent: mat.define-palette($nhs-digital-palette-accent);
+$nhs-digital-theme-warn: mat.define-palette($nhs-digital-palette-warn);
 
-$nhs-digital-theme: mat-light-theme(
+$nhs-digital-theme: mat.define-light-theme(
   $nhs-digital-theme-primary,
   $nhs-digital-theme-accent,
   $nhs-digital-theme-warn
 );
 
-$nhs-digital-typography: mat-typography-config(
+$nhs-digital-typography: mat.define-typography-config(
   $font-family: "Frutiger, Arial, sans-serif",
-  $body-1: mat-typography-level(17px, 26px, 500),
-  $body-2: mat-typography-level(18px, 26px, 500),
-  $headline: mat-typography-level(36px, 42px, 600),
-  $title: mat-typography-level(32px, 38px, 600),
-  $subheading-2: mat-typography-level(26px, 32px, 600),
-  $subheading-1: mat-typography-level(22px, 28px, 600),
-  $button: mat-typography-level(20px, 26px, 600),
-  $input: mat-typography-level(18px, 1.125, 500)
+  $body-1: mat.define-typography-level(17px, 26px, 500),
+  $body-2: mat.define-typography-level(18px, 26px, 500),
+  $headline: mat.define-typography-level(36px, 42px, 600),
+  $title: mat.define-typography-level(32px, 38px, 600),
+  $subheading-2: mat.define-typography-level(26px, 32px, 600),
+  $subheading-1: mat.define-typography-level(22px, 28px, 600),
+  $button: mat.define-typography-level(20px, 26px, 600),
+  $input: mat.define-typography-level(18px, 1.125, 500)
 );
 
 .nhs-digital-theme {
-  @include angular-material-theme($nhs-digital-theme);
-  @include angular-material-typography($nhs-digital-typography);
+  @include mat.all-component-themes($nhs-digital-theme);
+  @include mat.all-component-typographies($nhs-digital-typography);
   @include mdm-custom-components-theme($nhs-digital-theme);
 
   /* Style overrides for the NHS Digital theme */

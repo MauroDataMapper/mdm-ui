@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getApiProperties();
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView as string);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,6 +67,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
+import { Finalisable, Modelable } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-constraints-rules',
@@ -87,7 +88,7 @@ import FileSaver from 'file-saver';
   ]
 })
 export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
-  @Input() parent: any;
+  @Input() parent: Modelable & Finalisable;
   @Input() domainType: string;
   @Output() totalCount = new EventEmitter<string>();
 
@@ -144,7 +145,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
         .subscribe((result) => {
           const tempList: Array<RuleRepresentation> = [];
 
-          result.body.items.forEach((element) => {
+          result.body.items.forEach((element : RuleRepresentation) => {
             element['rule'] = record;
             if (
               this.selectedLanguage.value === 'all' ||
@@ -325,7 +326,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     });
   };
 
-  addRepresentation(rule: any): void {
+  addRepresentation(rule: RuleModel): void {
     const dialog = this.dialog.open(AddRuleRepresentationModalComponent, {
       data: {
         language: '',
@@ -408,7 +409,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       const myFilename = `${ruleRep.rule.name}.${
         this.fileExtensions[ruleRep.language]
       }`;
-      const content = new Blob([ruleRep.representation]);
+      const content = new Blob([ruleRep.representation as BlobPart]);
       FileSaver.saveAs(content, myFilename);
     } catch (error) {
       this.messageHandler.showError('Error Exporting', error);
@@ -421,7 +422,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     const zipFilename = `${rule.name}.zip`;
 
     try {
-      rule.ruleRepresentations.forEach((ruleRep) => {
+      rule.ruleRepresentations.forEach((ruleRep : RuleRepresentation) => {
         if (
           this.selectedLanguage.value === ruleRep.language ||
           this.selectedLanguage.value === 'all'

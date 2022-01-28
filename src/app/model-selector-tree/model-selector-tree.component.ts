@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -166,8 +166,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
-      return event.target.value;
-    }),
+        return event.target.value;
+      }),
       filter((res: any) => res.length >= 0),
       debounceTime(500),
       distinctUntilChanged()

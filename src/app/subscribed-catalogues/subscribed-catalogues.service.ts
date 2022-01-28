@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,27 +31,27 @@ export class SubscribedCataloguesService {
   constructor(private resources: MdmResourcesService) { }
 
   /**
-   * Combines the endpoint responses from `listAvailableModels()` and `listSubscribedModels()` to produce a collection of
+   * Combines the endpoint responses from `listPublishedModels()` and `listSubscribedModels()` to produce a collection of
    * `FederatedDataModel` objects to provide external data models and their subscription status.
    *
    * @param catalogueId The UUID of the subscribed catalogue to search under.
    */
   getFederatedDataModels(catalogueId: string): Observable<FederatedDataModel[]> {
     return combineLatest([
-      this.listAvailableModels(catalogueId),
+      this.listPublishedModels(catalogueId),
       this.listSubscribedModels(catalogueId)
     ])
     .pipe(
-      map(([availableModels, subscribedModels]) => {
-        return availableModels.map(available => {
-          const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''));
-          return new FederatedDataModel(catalogueId, available, subscribed);
+      map(([publishedModels, subscribedModels]) => {
+        return publishedModels.map(publishedModel => {
+          const subscribed = subscribedModels.find(item => item.subscribedModelId === (publishedModel.modelId ?? ''));
+          return new FederatedDataModel(catalogueId, publishedModel, subscribed);
         });
       })
     );
   }
 
-  listAvailableModels(catalogueId: string): Observable<AvailableDataModel[]> {
+  listPublishedModels(catalogueId: string): Observable<AvailableDataModel[]> {
     // Handle any HTTP errors manually. This covers the scenario where this is unable to
     // get available models from the subscribed catalogue e.g. the subscribed catalogue instance is not
     // available/offline
@@ -60,7 +60,7 @@ export class SubscribedCataloguesService {
     };
 
     return this.resources.subscribedCatalogues
-      .listAvailableModels(catalogueId, {}, restOptions)
+      .listPublishedModels(catalogueId, {}, restOptions)
       .pipe(
         map((response: AvailableDataModelIndexResponse) => response.body.items ?? [])
       );

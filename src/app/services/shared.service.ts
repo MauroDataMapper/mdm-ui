@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,9 +32,8 @@ export class SharedService {
   backendURL = environment.apiEndpoint;
   appVersion = environment.version;
   appTitle = environment.appTitle;
-  youTrack = environment.youTrack;
+  issueReporting = environment.issueReporting;
   documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
-  simpleViewSupport = environment.simpleViewSupport;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
   isAdmin;

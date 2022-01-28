@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
-
-import { YoutrackService } from '../services/youtrack.service';
 import { SharedService } from '../services/shared.service';
-
-const columns: string[] = ['field', 'value'];
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-error',
@@ -31,72 +28,51 @@ const columns: string[] = ['field', 'value'];
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent implements OnInit {
-  showYouTrackLink = true;
+  features = this.shared.features;
+  issueReporting = this.shared.issueReporting;
   showDetails = false;
   lastError: any;
 
   dataSource: object[] = [];
-  displayedColumns: string[] = columns;
-  codeHighlighted = false;
-  issueReported = false;
-  issueReporting = false;
   isLoggedIn = false;
   summary: string;
-  errorInSubmit = false;
-  username: string;
   errorHeader: string;
   errorMessage: string;
   errorResolution: string;
   errorReportMessage: string;
 
   constructor(
-    protected messageService: MessageService,
-    protected clipboardService: ClipboardService,
-    protected sharedService: SharedService,
-    protected youtrackService: YoutrackService
+    protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
+    protected clipboard: ClipboardService,
+    protected shared: SharedService,
   ) {
-    this.lastError = messageService.lastError;
-    this.isLoggedIn = sharedService.isLoggedIn();
+    this.lastError = messages.lastError;
+    this.isLoggedIn = shared.isLoggedIn();
     this.summary = `Error ${this.lastError.error?.status} : ${this.lastError.error?.message}`;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  copyToClipboard() {
-    this.clipboardService.copyFromContent(
-      JSON.stringify(this.lastError, null, 2)
-    );
+  copyDetails() {
+    if (this.clipboard.copyFromContent(this.getLastErrorAsMarkdown())) {
+      this.messageHandler.showSuccess('Copied information to clipboard');
+    }
   }
 
   changeShowDetails() {
     this.showDetails = !this.showDetails;
   }
 
-  reportIssueToYouTrack() {
-    // make sure youTrack is configured
-    if (!this.showYouTrackLink) {
-      return;
-    }
-    this.issueReporting = true;
+  private getLastErrorAsMarkdown() {
+    const json = JSON.stringify(this.lastError, null, 2);
+    const jsonMd = '```json\n' + json + '\n```';
 
-    const summary = this.lastError.error.message;
-    const description = JSON.stringify(this.lastError, null, 2);
-
-    this.youtrackService.reportIssue(summary, description).subscribe(() => {
-        this.successfulReport();
-      }, () => {
-        this.errorReport();
-      }
-    );
-  }
-
-  successfulReport() {
-    this.issueReporting = false;
-    this.issueReported = true;
-  }
-
-  errorReport() {
-    this.issueReporting = false;
-    this.errorInSubmit = true;
+    return ''.concat(
+      `## ${this.errorHeader}\n\n`,
+      `${this.errorMessage}\n\n`,
+      '## Details\n\n',
+      jsonMd,
+      '\n');
   }
 }

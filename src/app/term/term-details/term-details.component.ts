@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   TermDetail,
   TermDetailResponse,
-  TerminologyDetailResponse
+  TerminologyDetailResponse,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
@@ -71,7 +72,7 @@ export class TermDetailsComponent implements OnInit {
   }
 
   termDetails(): any {
-    const termId = this.uiRouterGlobals.params.id;
+    const termId : Uuid = this.uiRouterGlobals.params.id;
     this.terminologyId = this.uiRouterGlobals.params.terminologyId;
     this.resourcesService.term
       .get(this.terminologyId, termId)

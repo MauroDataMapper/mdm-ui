@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,6 +39,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -54,6 +55,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   model: {
     [key: string]: any;
     createType: CreateType;
+    selectedDataTypes: Array<any>;
+    parent:DataModel;
+    copyFromDataModel: Array<DataModel>;
+    copyFromDataClass: Array<DataClass>;
   };
   multiplicityError: any;
   selectedDataClassesStr = '';
@@ -120,7 +125,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-    const dataClass = this.model.copyFromDataClass[0];
+    const dataClass : DataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
   }
 

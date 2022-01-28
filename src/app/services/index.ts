@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@ export * from './helpDialogue.service';
 export * from './broadcast.service';
 export * from './validator.service';
 export * from './grid.service';
-export * from './youtrack.service';
 export * from './highlight.service';
 export * from './element-selector-dialogue.service';
 export * from './element-types.service';

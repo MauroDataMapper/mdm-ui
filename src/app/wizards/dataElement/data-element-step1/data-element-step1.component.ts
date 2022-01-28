@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {Component,  OnInit} from '@angular/core';
+import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
+import { CreateType } from '@mdm/wizards/wizards.model';
 
 @Component({
   selector: 'mdm-data-element-step1',
@@ -25,12 +27,22 @@ import {Component,  OnInit} from '@angular/core';
 })
 export class DataElementStep1Component implements OnInit {
   step = {
-      invalid: true,
-      scope: {
-          model: ''
+    invalid : true,
+    isProcessComplete : false,
+    scope : {
+       model: null
       }
   };
-  modelVal: any;
+  modelVal: {
+    [key: string]: any;
+    createType: CreateType;
+    selectedDataTypes: Array<any>;
+    parent:DataModel;
+    copyFromDataModel: Array<DataModel>;
+    copyFromDataClass: Array<DataClass>;
+  };;
+
+  constructor() { }
 
   get model() {
     return this.modelVal;
@@ -41,7 +53,6 @@ export class DataElementStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor() { }
 
   validate = () => {
     if (!this.model?.createType) {

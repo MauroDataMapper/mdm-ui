@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
 <mat-tree #foldersTree [attr.name]="treeName" [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
-        <button mat-icon-button disabled aria-label="Disabled button">
+        <button type="button" mat-icon-button disabled aria-label="Disabled button">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
         </button>
 
@@ -29,14 +29,14 @@ SPDX-License-Identifier: Apache-2.0
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
-            <button mat-icon-button disabled aria-label="Disabled button">
+            <button type="button" mat-icon-button disabled aria-label="Disabled button">
                 <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
             </button>
         </ng-container>
 
         <!-- Default to show expansion icon -->
         <ng-container *ngIf="hasChild(-1,node)">
-            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)">
+            <button type="button" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)">
                 <mat-icon class="mat-icon-rtl-mirror" fontSet="fas" fontIcon="{{treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus'}}"></mat-icon>
             </button>
         </ng-container>
@@ -55,21 +55,21 @@ SPDX-License-Identifier: Apache-2.0
 
 <mat-menu #treeMenu="matMenu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
       <i class="fas fa-plus"></i> Add
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
       <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
       <i *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></i>
       {{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites
     </button>
-    <button mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
+    <button type="button" mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
       <i class="fas fa-binoculars"></i> View
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
       <i class="fas fa-eye"></i> Compare
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canDeleteElements(node)" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canDeleteElements(node)" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
       <i class="far fa-trash-alt warning"></i> Delete
     </button>
   </ng-template>
@@ -78,10 +78,10 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "View" -->
 <mat-menu #viewMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="canSetTreeFocus(node)" (click)="focusNode(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canSetTreeFocus(node)" (click)="focusNode(node)">
       <i class="fas fa-eye"></i> Focus on this element
     </button>
-    <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">
       <i class="fas fa-external-link-alt"></i> Open in new window
     </button>
   </ng-template>
@@ -90,22 +90,25 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Create" -->
 <mat-menu #createMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolder(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolder(node)">
       <i class="fas fa-folder dataModelTypeIcon"></i> Folder
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
       <i class="fas fa-file-alt dataModelTypeIcon"></i> Data Model
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddTerminology(node)">
+      <i class="fas fa-book dataModelTypeIcon"></i> Terminology
+    </button>
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
       <i class="fas fa-list dataModelTypeIcon"></i> Code Set
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
       <i class="fas fa-puzzle-piece dataModelTypeIcon"></i> Data Class
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
       <i class="fas fa-code dataModelTypeIcon"></i> Data Type
     </button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
       <i class="fas fa-atom dataModelTypeIcon"></i> Data Element
     </button>
   </ng-template>
@@ -114,16 +117,16 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Delete" -->
 <mat-menu #deleteMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted" (click)="handleSoftDelete(node)">Mark as deleted</button>
-    <button mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete" (click)="handlePermanentDelete(node)">Delete <span class="warning">permanently</span></button>
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted" (click)="handleSoftDelete(node)">Mark as deleted</button>
+    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete" (click)="handlePermanentDelete(node)">Delete <span class="warning">permanently</span></button>
   </ng-template>
 </mat-menu>
 
 <!-- Sub-menu for "Compare..." -->
 <mat-menu #compareMenu="matMenu" class="tree-context-menu">
     <ng-template matMenuContent let-node="node">
-        <button mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node)">Another Data Model</button>
-        <button *ngFor="let targetVersion of targetVersions" mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node, targetVersion)">
+        <button type="button" mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node)">Another Data Model</button>
+        <button type="button" *ngFor="let targetVersion of targetVersions" mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node, targetVersion)">
             {{targetVersion.label}} <span style="padding-left: 5px;font-style:italic;font-size: 11px;">{{targetVersion.documentationVersion}}</span>
         </button>
     </ng-template>
@@ -142,10 +145,11 @@ SPDX-License-Identifier: Apache-2.0
           <i class="fas fa-code-branch"></i>
           {{node.branchName}}
         </small>
-        <small *ngIf="node.modelVersion" class="ml-1 text-muted">
+        <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
           <span> | </span>
-          <i class="fas fa-file-alt"></i>
-          {{node.modelVersion}}
+          <i  class="fas fa-file-alt"></i>
+           <span *ngIf="node.modelVersion">{{node.modelVersion}}</span>
+           <span *ngIf="node.version">{{node.version}}</span>
         </small>
         <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
           <span> | </span>

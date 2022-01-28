@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +62,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter = this.gridService.applyFilter(this.filters);
+  applyFilter : any;
 
   constructor(
     private roles: ROLES,
@@ -75,6 +75,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
+    this.applyFilter = this.gridService.applyFilter(this.filters);
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.gridService.reloadEvent.subscribe(
       () => (this.paginator.pageIndex = 0)

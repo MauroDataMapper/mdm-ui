@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,6 +36,11 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   private mergeViewrl : ElementRef;
   private mergeViewlr : ElementRef;
 
+  constructor(
+    private dialogRef: MatDialogRef<ResolveMergeConflictModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) { }
+
   @ViewChild('mergeDiffrl', {static:false}) set mergeDiffConRl(content: ElementRef) {
     this.mergeViewrl = content;
   }
@@ -44,10 +49,6 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     this.mergeViewlr = content;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<ResolveMergeConflictModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
 
   ngAfterViewInit(): void {
     if (this.data.diffs) {

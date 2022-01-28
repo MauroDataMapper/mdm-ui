@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView as string);
     this.appVersion = this.shared.appVersion;
     this.title.setTitle('Dashboard');
   }

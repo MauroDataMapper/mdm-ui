@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -186,7 +186,7 @@ export class NewVersionComponent implements OnInit {
         copyDataFlows: false
       };
 
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
         .newForkModel(this.catalogueItem.id, resource);
 
       this.handleCreateResponse(
@@ -195,7 +195,7 @@ export class NewVersionComponent implements OnInit {
         'There was a problem creating the new forked version.');
     }
     else if (this.actionValue === 'Version') {
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
         .newBranchModelVersion(this.catalogueItem.id, {});
 
       this.handleCreateResponse(
@@ -208,7 +208,7 @@ export class NewVersionComponent implements OnInit {
         branchName: this.branchName.value
       };
 
-      const request = this.resources[this.domainElementType.resourceName]
+      const request : Observable<MdmResponse<CatalogueItem>> = this.resources[this.domainElementType.resourceName]
          .newBranchModelVersion(this.catalogueItem.id, resource);
 
       this.handleCreateResponse(

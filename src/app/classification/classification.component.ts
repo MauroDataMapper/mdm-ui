@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { TabCollection } from '@mdm/model/ui.model';
-import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -97,7 +97,7 @@ export class ClassificationComponent
 
 
     this.title.setTitle('Classifier');
-    this.classifierDetails(this.uiRouterGlobals.params.id);
+    this.classifierDetails(this.uiRouterGlobals.params.id as string);
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -115,10 +115,10 @@ export class ClassificationComponent
         this.showSearch = message;
       }
     );
-    this.afterSave = (result: { body: { id: any } }) =>
+    this.afterSave = (result: { body: { id: Uuid } }) =>
       this.classifierDetails(result.body.id);
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
     this.tabSelected(this.activeTab);
   }
 
@@ -127,7 +127,7 @@ export class ClassificationComponent
   }
 
 
-  classifierDetails(id: any) {
+  classifierDetails(id: Uuid) {
     this.resourcesService.classifier
       .get(id)
       .subscribe((response: ClassifierDetailResponse) => {
@@ -150,7 +150,7 @@ export class ClassificationComponent
       });
   }
 
-  classifierPermissions(id: any) {
+  classifierPermissions(id: Uuid) {
     this.resourcesService.security
       .permissions(SecurableDomainType.Classifiers, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {

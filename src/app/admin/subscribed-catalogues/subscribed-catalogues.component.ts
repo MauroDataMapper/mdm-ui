@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable } from 'rxjs';
@@ -113,7 +113,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
       sortBy,
       sortType);
 
-    return this.resources.subscribedCatalogues.list(options);
+    return this.resources.admin.listSubscribedCatalogues(options);
   }
 
   addSubscription = () => {
@@ -139,7 +139,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
         }
       })
       .pipe(
-        switchMap(() => this.resources.subscribedCatalogues.remove(record.id))
+        switchMap(() => this.resources.admin.removeSubscribedCatalogue(record.id))
       )
       .subscribe(
         () => {
@@ -152,8 +152,12 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   testSubscription(record: SubscribedCatalogue) {
     this.messageHandler.showInfo(`Testing connection to "${record.label}"...`);
 
-    this.resources.subscribedCatalogues
-      .listAvailableModels(record.id)
+    const requestOptions: MdmHttpHandlerOptions = {
+      handleGetErrors: false
+    };
+
+    this.resources.admin
+      .testSubscribedCatalogueConnection(record.id, {}, requestOptions)
       .subscribe(
         () => this.messageHandler.showSuccess(`Subscribed catalogue "${record.label}" is functioning as expected.`),
         error => this.messageHandler.showError(`There was a problem connecting to the subscribed catalogue "${record.label}", please check the configuration.`, error)

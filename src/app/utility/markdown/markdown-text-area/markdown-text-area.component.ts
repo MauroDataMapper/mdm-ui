@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -106,18 +106,20 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.messageService.elementSelector.subscribe(data => {
       this.selectedElement = data;
       if (this.selectedElement != null) {
-        this.markdownParser.createMarkdownLink(this.selectedElement).then(result => {
-          if (this.editableTextArea) {
-            const startPos = this.editableTextArea.nativeElement.selectionStart;
-            this.editableTextArea.nativeElement.focus();
+        this.markdownParser
+          .createMarkdownLink(this.selectedElement)
+          .subscribe(result => {
+            if (this.editableTextArea) {
+              const startPos = this.editableTextArea.nativeElement.selectionStart;
+              this.editableTextArea.nativeElement.focus();
 
-            this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart)} ${result} ${this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length)}`;
+              this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart)} ${result} ${this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length)}`;
 
-            this.editableTextArea.nativeElement.selectionStart = startPos;
-            this.editableTextArea.nativeElement.focus();
-            this.description = this.editableTextArea.nativeElement.value;
-          }
-        });
+              this.editableTextArea.nativeElement.selectionStart = startPos;
+              this.editableTextArea.nativeElement.focus();
+              this.description = this.editableTextArea.nativeElement.value;
+            }
+          });
       }
     });
   }

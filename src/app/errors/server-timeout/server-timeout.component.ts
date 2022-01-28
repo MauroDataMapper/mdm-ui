@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,32 +16,33 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {MessageService} from '@mdm/services/message.service';
-import {ClipboardService} from 'ngx-clipboard';
-import {YoutrackService} from '@mdm/services/youtrack.service';
-import {SharedService} from '@mdm/services/shared.service';
-import {ErrorComponent} from '../error.component';
+import { Component, OnInit } from '@angular/core';
+import { MessageService } from '@mdm/services/message.service';
+import { ClipboardService } from 'ngx-clipboard';
+import { SharedService } from '@mdm/services/shared.service';
+import { ErrorComponent } from '../error.component';
+import { MessageHandlerService } from '@mdm/services';
 @Component({
-    selector: 'mdm-server-timeout-error',
-    templateUrl: '../error.component.html',
-    styleUrls: []
+  selector: 'mdm-server-timeout-error',
+  templateUrl: '../error.component.html',
+  styleUrls: []
 })
 export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
 
-    constructor(protected messageService: MessageService,
-                protected clipboardService: ClipboardService,
-                protected sharedService: SharedService,
-                protected youtrackService: YoutrackService) {
-        super(messageService, clipboardService, sharedService, youtrackService);
-        this.errorHeader = 'Server Timeout Error';
-        this.errorMessage = 'We\'re sorry, but the server responded with an error message.';
-        this.errorResolution = 'The request may have succeeded. Please allow some time and then select the catalogue item you were on from the model tree to refresh the view.';
-        this.errorReportMessage = 'Alternatively, if the error persists, please report the issue to us by using the link below:';
+  constructor(
+    protected messages: MessageService,
+    protected messageHandler: MessageHandlerService,
+    protected clipboard: ClipboardService,
+    protected shared: SharedService) {
+    super(messages, messageHandler, clipboard, shared);
+    this.errorHeader = 'Server Timeout Error';
+    this.errorMessage = 'We\'re sorry, but the server responded with an error message.';
+    this.errorResolution = 'The request may have succeeded. Please allow some time and then select the catalogue item you were on from the model tree to refresh the view.';
+    this.errorReportMessage = 'Alternatively, if the error persists, please report the issue to us by using the link below:';
 
-        this.dataSource.push({field: 'Reason', value: 'Server Timeout', code: false});
-        this.dataSource.push({field: 'Status', value: 'Server Gateway Timeout', code: false});
-        this.dataSource.push({field: 'Error Code', value: '504', code: false});
-    }
+    this.dataSource.push({ field: 'Reason', value: 'Server Timeout', code: false });
+    this.dataSource.push({ field: 'Status', value: 'Server Gateway Timeout', code: false });
+    this.dataSource.push({ field: 'Error Code', value: '504', code: false });
+  }
 }
 

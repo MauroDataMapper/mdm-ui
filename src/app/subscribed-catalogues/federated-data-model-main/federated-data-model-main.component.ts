@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
+import { TabCollection } from '@mdm/model/ui.model';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -34,6 +35,11 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
   catalogueId: string;
   modelId: string;
   dataModel: FederatedDataModel;
+  activeTab: any;
+  tabs = new TabCollection([
+    'newVersion'
+  ]);
+  showNewerVersionsTab = true;
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -72,6 +78,15 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.getFederatedDataModel(true);
   }
 
+  tabSelected(index: number) {
+    const tab = this.tabs.getByIndex(index);
+    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
+  }
+
+  onNewerVersionsHasErrored() {
+    this.showNewerVersionsTab = false;
+  }
+
   private getFederatedDataModel(reloadView?: boolean) {
     this.subscribedCatalogues
       .getFederatedDataModels(this.catalogueId)
@@ -90,8 +105,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
       'federateddatamodel',
       {
         parentId: this.catalogueId,
-        id: this.modelId,
-        dataModel: this.dataModel
+        id: this.modelId
       },
       {
         reload: true

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,8 @@ export class MultiplicityComponent {
   @Input() min: number | string;
   @Input() max: number | string;
 
+  constructor() {}
+
   get isValid(): boolean {
     if (this.min === null || this.min === undefined || this.max === null || this.max === undefined) {
       return false;
@@ -42,6 +44,4 @@ export class MultiplicityComponent {
 
     return true;
   }
-
-  constructor() {}
 }

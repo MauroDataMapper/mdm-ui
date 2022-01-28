@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { StateService } from '@uirouter/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { UIRouterGlobals } from '@uirouter/core';
 
 @Component({
    selector: 'mdm-enumeration-values',
@@ -55,7 +55,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
    constructor(
       private stateHandler: StateHandlerService,
-      private stateService: StateService,
+      private uiRouterGlobals: UIRouterGlobals,
       private resource: MdmResourcesService,
       private title: Title
    ) { }
@@ -64,12 +64,9 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
    }
 
    async ngAfterViewInit() {
-      // tslint:disable-next-line: deprecation
-      this.parentDataModel = this.stateService.params.dataModelId;
-      // tslint:disable-next-line: deprecation
-      this.parentDataType = this.stateService.params.dataTypeId;
-      // tslint:disable-next-line: deprecation
-      this.id = this.stateService.params.id;
+       this.parentDataModel = this.uiRouterGlobals.params.dataModelId;
+      this.parentDataType = this.uiRouterGlobals.params.dataTypeId;
+        this.id = this.uiRouterGlobals.params.id;
 
       await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe((result: DataTypeDetailResponse) => {
          this.breadCrumbs = result.body.breadcrumbs;
@@ -97,7 +94,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
       });
       this.tabGroup.realignInkBar();
       // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+      this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView).index;
       this.tabSelected(this.activeTab);
    }
 

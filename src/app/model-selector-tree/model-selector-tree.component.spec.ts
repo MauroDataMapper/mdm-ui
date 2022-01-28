@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +88,7 @@ describe('ModelSelectorTreeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    treeSpy = spyOn(component['resources'].tree, 'list').and.callThrough();
+    treeSpy =  jest.spyOn(component['resources'].tree, 'list');
   });
 
   it('should create', () => {

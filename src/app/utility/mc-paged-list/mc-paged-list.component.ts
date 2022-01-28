@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,16 +24,31 @@ import { Component, OnInit, Input, ViewChild, ElementRef, ContentChild, Template
   styleUrls: ['./mc-paged-list.component.sass']
 })
 export class McPagedListComponent implements OnInit {
+  fetchMethod: any; // when it's 'type=dynamic'
+
+  editBtnTooltip: any;
+  editBtnText: any;
+
+  doNotDisplayTitle: any;
+  currentPage = 0;
+  disablePrev = false;
+  disableNext = false;
+  total = 0;
+  displayItems: any[];
+  displayValues: any[];
+
+  constructor() {}
+
   @ViewChild('displayItemsDiv', { static: false }) displayItemsDiv: ElementRef;
 
   @ContentChild('pageListTemplate', { static: true })
   pageListTemplateTmpl: TemplateRef<any>;
 
   @Input() type: any; // static,dynamic
-  @Input() name: any;
-  @Input() mcTitle: any;
+  @Input() name: string;
+  @Input() mcTitle: string;
   @Output() itemsChange = new EventEmitter();
-  @Input() pageSize: any;
+  @Input() pageSize: number;
   itemValues: any;
   @Input()
   get items() {
@@ -49,20 +64,9 @@ export class McPagedListComponent implements OnInit {
     this.itemsChange.emit(this.itemValues);
     this.ngOnInit();
   }
-  fetchMethod: any; // when it's 'type=dynamic'
 
-  editBtnTooltip: any;
-  editBtnText: any;
 
-  doNotDisplayTitle: any;
-  currentPage = 0;
-  disablePrev = false;
-  disableNext = false;
-  total = 0;
-  displayItems: any[];
-  displayValues: any[];
 
-  constructor() {}
 
   ngOnInit() {
     if (this.type === 'static') {
@@ -87,7 +91,7 @@ export class McPagedListComponent implements OnInit {
       const tempValues = [];
       const start = this.pageSize * this.currentPage;
 
-      for (let i = start; i < start + parseInt(this.pageSize, 10) && i < this.total; i++) {
+      for (let i = start; i < start + this.pageSize, 10 && i < this.total; i++) {
         tempValues.push(this.displayItems[i]);
       }
       this.displayValues = tempValues;

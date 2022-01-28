@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ export class FeaturesService implements OnDestroy {
   useMergeUiV2: boolean;
   useOpenIdConnect: boolean;
   useDigitalObjectIdentifiers: boolean;
+  useIssueReporting: boolean;
 
   private unsubscribe$ = new Subject();
 
@@ -95,6 +96,11 @@ export class FeaturesService implements OnDestroy {
       properties,
       'feature.use_digital_object_identifiers',
       environment.features.useDigitalObjectIdentifiers);
+
+    this.useIssueReporting = this.getBooleanValue(
+      properties,
+      'feature.use_issue_reporting',
+      environment.features.useIssueReporting);
   }
 
   private getBooleanValue(properties: ApiProperty[], key: string, defaultValue: boolean): boolean {

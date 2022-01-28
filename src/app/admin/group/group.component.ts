@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { Uuid } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-group',
@@ -37,7 +38,7 @@ export class GroupComponent implements OnInit {
     groupMembers: [],
     id: ''
   };
-  groupId: any;
+  groupId: Uuid;
 
   constructor(
     private messageHandler: MessageHandlerService,

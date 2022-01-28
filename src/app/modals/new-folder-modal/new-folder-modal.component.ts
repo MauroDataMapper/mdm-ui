@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +48,12 @@ export class NewFolderModalComponent implements OnInit {
     isVersioned: new FormControl(false)
   });
 
+  constructor(
+    private dialogRef: MatDialogRef<NewFolderModalComponent, NewFolderModalResponse>,
+    @Inject(MAT_DIALOG_DATA) public data: NewFolderModalConfiguration,
+    private editing: EditingService,
+    private shared: SharedService) { }
+
   get label() {
     return this.folderForm.get('label');
   }
@@ -55,12 +61,6 @@ export class NewFolderModalComponent implements OnInit {
   get isVersioned() {
     return this.folderForm.get('isVersioned');
   }
-
-  constructor(
-    private dialogRef: MatDialogRef<NewFolderModalComponent, NewFolderModalResponse>,
-    @Inject(MAT_DIALOG_DATA) public data: NewFolderModalConfiguration,
-    private editing: EditingService,
-    private shared: SharedService) { }
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';

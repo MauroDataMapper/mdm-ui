@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  AfterViewInit,
+  AfterViewChecked,
   OnDestroy,
   Component,
   OnInit,
@@ -30,6 +30,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { Subscription } from 'rxjs';
 import {
+  BroadcastService,
   MessageHandlerService,
   MessageService,
   SecurityHandlerService
@@ -52,7 +53,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   styleUrls: ['./terminology.component.sass']
 })
 export class TerminologyComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   terminology: TerminologyDetail;
@@ -75,7 +76,11 @@ export class TerminologyComponent
   showDelete = false;
   showEditDescription = false;
   access: Access;
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection(['description', 'terms', 'relationship-types', 'rules', 'annotations', 'history']);
+  isLoadingTerms = true;
+  termsItemCount = 0;
+  isLoadingRelationshipTypes = true;
+  relationshipTypesItemCount = 0;
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -84,6 +89,7 @@ export class TerminologyComponent
     private title: Title,
     private resources: MdmResourcesService,
     private messageService: MessageService,
+    private broadcastService: BroadcastService,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService
   ) {
@@ -113,8 +119,8 @@ export class TerminologyComponent
         this.showEdit = this.access.showEdit;
         this.showDelete =
           this.access.showPermanentDelete || this.access.showSoftDelete;
-
           this.terminology = data;
+            this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
       });
 
@@ -125,8 +131,10 @@ export class TerminologyComponent
     );
   }
 
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  ngAfterViewChecked(): void {
+    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+      this.editingService.setTabGroupClickEvent(this.tabGroup);
+    }
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
@@ -194,6 +202,14 @@ export class TerminologyComponent
     );
   }
 
+  onTermAdd() {
+    this.broadcastService.reloadCatalogueTree();
+  }
+
+  onTermDelete() {
+    this.broadcastService.reloadCatalogueTree();
+  }
+
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks
@@ -209,5 +225,15 @@ export class TerminologyComponent
   historyCountEmitter($event) {
     this.isLoadingHistory = false;
     this.historyItemCount = $event;
+  }
+
+  termsCountEmitter($event) {
+    this.isLoadingTerms = false;
+    this.termsItemCount = $event;
+  }
+
+  relationshipTypesCountEmitter($event) {
+    this.isLoadingRelationshipTypes = false;
+    this.relationshipTypesItemCount = $event;
   }
 }

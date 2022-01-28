@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,8 @@ export class AlertComponent implements OnInit {
     ['error', { icon: 'fa-times-circle', cssModifier: 'mdm-alert--error' }]
   ]);
 
+  constructor() { }
+
   get iconName() {
     if (!this.showIcon) {
       return '';
@@ -51,8 +53,6 @@ export class AlertComponent implements OnInit {
   get cssModifier() {
     return this.styleMetadata.get(this.alertStyle)?.cssModifier ?? '';
   }
-
-  constructor() { }
 
   ngOnInit(): void {
   }

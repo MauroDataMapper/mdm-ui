@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,6 +59,12 @@ label {
 }
 em {
   font-style: oblique;
+}
+
+a.mat-stroked-button {
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 a.show-more, a.show-less {
@@ -292,4 +298,9 @@ ngx-skeleton-loader .loader {
   width: 24px;
   height: 24px;
   margin: 4px 8px;
+}
+
+.create-term-relationship-type-dialog .mat-checkbox > label {
+  font-size: 1rem;
+  font-weight: normal;
 }

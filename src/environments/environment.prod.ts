@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,9 @@ export const environment = {
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
-  youTrack: {
-    url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
-    project: 'MC'
+  issueReporting: {
+    defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose',
+    systemErrorUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new?assignees=&labels=system%20error&template=system_error_report.md&title='
   },
   documentation: {
     url: 'https://maurodatamapper.github.io/',
@@ -47,7 +47,6 @@ export const environment = {
       DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
     }
   },
-  simpleViewSupport: false,
   name: 'production',
   appIsEditable: false,
   checkSessionExpiryTimeout: 300000,
@@ -56,6 +55,7 @@ export const environment = {
     useVersionedFolders: true,
     useMergeUiV2: true,
     useOpenIdConnect: false,
-    useDigitalObjectIdentifiers: false
+    useDigitalObjectIdentifiers: false,
+    useIssueReporting: false
   }
 };

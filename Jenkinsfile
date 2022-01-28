@@ -14,7 +14,7 @@ pipeline {
     stage('Tool Versions') {
       steps {
         nvm('') {
-          sh 'npm i -g npm@7.24.1'
+          sh 'npm i -g npm@8.3.0'
           sh 'node --version'
           sh 'npm --version'
         }
@@ -47,7 +47,7 @@ pipeline {
       }
       steps {
         nvm('') {
-          sh 'npm install'
+          sh 'npm ci'
           sh 'npm link @maurodatamapper/mdm-resources'
           sh 'symlinked names'
         }
@@ -102,7 +102,7 @@ pipeline {
       }
       post {
         always {
-          recordIssues qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]], tools: [esLint(pattern: '**/eslint_report.xml')]
+         recordIssues qualityGates: [[threshold: 1, type: 'TOTAL_ERROR', unstable: true], [threshold: 1, type: 'TOTAL_HIGH', unstable: true]], tools: [esLint(pattern: '**/eslint_report.xml')]
         }
       }
     }

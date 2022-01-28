@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,32 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('./node_modules/mini-css-extract-plugin');
 
 module.exports = {
-  plugins: [
-    new webpack.DefinePlugin({
-      $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
-      }
-    })
-  ]
+    module: {
+        rules: [{
+            test: /\.js$/,
+            exclude: /(node_modules)/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
+            }
+        },         {
+            test: /\.(ttf|eot|svg|gif|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            use: [{
+                loader: 'file-loader',
+            }]
+        },
+        ]
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            $ENV: {
+                themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
+            }
+        })
+    ]
 };

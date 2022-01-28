@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,7 +80,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
     });
     this.referenceLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
-        id: `${subClassLink.source}-${subClassLink.label}`,
+        id: `${subClassLink.source}-${subClassLink.name}`,
         source: { id: subClassLink.source },
         target: { id: subClassLink.target },
         attrs: {

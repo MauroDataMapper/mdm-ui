@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +16,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="full-width">
-  <mdm-term-details></mdm-term-details>
+<div style="clear: both" *ngIf="!term">
+  <mat-progress-bar
+    value="50"
+    bufferValue="75"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </div>
-
-<div *ngIf="hasResult">
-  <mdm-term-relationships
-    [term]="result"
-    type="source"
-  ></mdm-term-relationships>
+<div class="full-width">
+  <mdm-term-details *ngIf="term"></mdm-term-details>
 </div>
 
 <mat-tab-group
   #tab
+  *ngIf="term"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
 >
@@ -40,6 +42,47 @@ SPDX-License-Identifier: Apache-2.0
       >
       </mdm-profile-data-view>
     </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Related Terms&nbsp;<span *ngIf="!isLoadingRelationships">({{ relationshipItemCount }})</span>
+    </ng-template>
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-term-relationship-list
+          [term]="result"
+          [canEdit]="showEdit"
+          [canDelete]="showDelete"
+          (selectedTerm)="onTermSelect($event)"
+          (totalCount)="relationshipCountEmitter($event)"></mdm-term-relationship-list>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Code Sets
+      <span *ngIf="isLoadingCodeSets" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ codeSetItemCount }})
+    </ng-template>
+
+    <div class="full-width">
+      <mdm-term-codeset-list
+        [pageSize]="10"
+        [term]="term"
+        (totalCount)="codeSetCountEmitter($event)"
+        (selectedCodeSet)="onCodeSetSelect($event)"></mdm-term-codeset-list>
+    </div>
   </mat-tab>
   <mat-tab label="Links">
     <ng-template matTabContent>

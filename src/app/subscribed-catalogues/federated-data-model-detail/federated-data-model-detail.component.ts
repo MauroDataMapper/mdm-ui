@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { FolderDetailResponse, SubscribedDataModelResponse } from '@maurodatamapper/mdm-resources';
+import { FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
@@ -85,13 +85,6 @@ export class FederatedDataModelDetailComponent implements OnInit {
           this.messageHandler.showError('There was a problem subscribing to the data model.', error);
           return [];
         }),
-        switchMap((response: SubscribedDataModelResponse) => {
-          return this.resources.subscribedCatalogues.federate(response.body.id);
-        }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem synchronising a data model.', error);
-          return [];
-        }),
         finalize(() => {
           this.processing = false;
           this.reloading.emit();
@@ -129,28 +122,13 @@ export class FederatedDataModelDetailComponent implements OnInit {
         error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
   }
 
-  federate() {
-    this.processing = true;
-    this.resources.subscribedCatalogues
-      .federate(this.dataModel.subscriptionId)
-      .pipe(
-        finalize(() => {
-          this.processing = false;
-          this.reloading.emit();
-        })
-      )
-      .subscribe(
-        () => this.messageHandler.showSuccess(`Synchronised the data model '${this.dataModel.label}' successfully.`),
-        errors => this.messageHandler.showError('There was a problem synchronising a data model.', errors));
-  }
-
    setFolderLabelToForm() {
     if (!this.dataModel.folderId) {
       return;
     }
 
     this.resources.folder
-      .get(this.dataModel.folderId)
+      .get(this.dataModel.folderId, {}, {handleGetErrors : false})
       .subscribe((response: FolderDetailResponse) => this.dataModel.folderLabel = response.body.label);
 
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,9 +32,17 @@ import { takeUntil } from 'rxjs/operators';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class DataModelStep1Component implements OnInit, OnDestroy {
+
   allDataModelTypes: any;
   step: WizardStep<DataModelMainComponent>;
   setupForm: FormGroup;
+
+  private unsubscribe$ = new Subject();
+
+  constructor(
+    private helpDialogueHandler: HelpDialogueHandlerService,
+    private resources: MdmResourcesService
+  ) {}
 
   get label() {
     return this.setupForm.get('label');
@@ -63,13 +71,6 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
   set classifiersValue(value: any[]) {
     this.classifiers.setValue(value);
   }
-
-  private unsubscribe$ = new Subject();
-
-  constructor(
-    private helpDialogueHandler: HelpDialogueHandlerService,
-    private resources: MdmResourcesService
-  ) {}
 
   ngOnInit() {
     this.setupForm = new FormGroup({

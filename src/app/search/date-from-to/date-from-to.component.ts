@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -96,11 +96,13 @@ export class DateFromToComponent implements OnInit {
   public clear1(): any {
     this.dtFrom = null;
     this.date2Options.minDate = null;
+    this.datePicker1Changed(null, this.oldVal);
   }
 
   public clear2(): any {
     this.dtTo = null;
     this.date1Options.maxDate = null;
+    this.datePicker2Changed(null, this.oldVal);
   }
 
   public open1() {

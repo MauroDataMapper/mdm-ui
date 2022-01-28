@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-content-editor>
                     </td>
                 </tr>
-                <tr *ngIf="dataModel.folderId">
+                <tr>
                     <th class="detailsRowHeader">Folder</th>
                     <td class="elementDetailDescription">
                         <mdm-inline-text-edit [readOnly]="true" [inEditMode]="false"
@@ -78,13 +78,7 @@ SPDX-License-Identifier: Apache-2.0
                                 <i class="fas fa-minus"></i><span class="ml-1">Unsubscribe</span>
                             </button>
                         </div>
-                        <div *ngIf="dataModel.isSubscribed" class="mr-1" style="float: right;">
-                            <button mat-stroked-button color="primary" type="button"
-                                matTooltip="Synchronise" aria-label="Synchronise" [disabled]="processing" (click)="federate()">
-                                <i class="fas fa-sync"></i>
-                            </button>
-                        </div>
-                        <div style="clear: both;" *ngIf="processing">
+                          <div style="clear: both;" *ngIf="processing">
                             <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </td>

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,11 +85,11 @@ export class CodeSetMainComponent implements OnInit {
 
     this.setupForm = new FormGroup({
       label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
-      author: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      organisation: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+      organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
       description: new FormControl(''),
       classifiers: new FormControl([]),
-      terms: new FormControl([], Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+      terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
     });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;

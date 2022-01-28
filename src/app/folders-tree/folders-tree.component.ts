@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 University of Oxford
+Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -225,7 +225,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return getCatalogueItemDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
   }
 
-  /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
+  /** Additional CSS classes to add to the tree node. */
   getCssClass(node: FlatNode) {
     return `fa-sm ${node.deleted ? 'deleted-folder' : ''}`;
   }
@@ -478,6 +478,15 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   handleAddDataModel(fnode: FlatNode) {
     this.stateHandler.Go(
       'NewDataModel',
+      {
+        parentFolderId: fnode.id,
+        parentDomainType: fnode.domainType
+      });
+  }
+
+  handleAddTerminology(fnode: FlatNode) {
+    this.stateHandler.Go(
+      'NewTerminology',
       {
         parentFolderId: fnode.id,
         parentDomainType: fnode.domainType

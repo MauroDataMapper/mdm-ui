@@ -16,24 +16,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@import "style/abstracts/variables";
 
-.mdm-bulk-edit-editor {
-  &__validation {
-    &--warning {
-      color: $defaultWarningColor;
-    }
-  }
-}
+/**
+ * Note: Do *not* import this again. The npm command `npm run test` will actually call `ng test` and go through
+ * the @angular-builders/jest facade, this internally calls 'jest-preset-angular/setup-jest' for you. Calling it
+ * twice will produce an error.
+ */
+// import 'jest-preset-angular/setup-jest';
 
-:host::ng-deep {
-  .mdm-bulk-edit-editor {
-    &__invalid {
-      border: 1px solid red !important;
-    }
-
-    &__readonly {
-      background-color: #eaeaeb;
-    }
-  }
-}
+// import './jestGlobalMocks'; // browser mocks globally available for every test

@@ -16,14 +16,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-const packageFile = require('../../package.json');
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
+
+const packageFile = require('../../../../package.json');
 
 export const environment = {
-  production: true,
+  production: false,
   version: packageFile?.version ?? '',
-  apiEndpoint: 'api',
+  apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
-  themeName: $ENV.themeName ?? 'default',
+  themeName: 'default',
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
@@ -47,15 +51,24 @@ export const environment = {
       DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
     }
   },
-  name: 'production',
-  appIsEditable: false,
+  name: 'development',
+  appIsEditable: true,
   checkSessionExpiryTimeout: 300000,
   features: {
     useSubscribedCatalogues: true,
     useVersionedFolders: true,
     useMergeUiV2: true,
-    useOpenIdConnect: false,
-    useDigitalObjectIdentifiers: false,
-    useIssueReporting: false
+    useOpenIdConnect: true,
+    useDigitalObjectIdentifiers: true,
+    useIssueReporting: true
   }
 };
+
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

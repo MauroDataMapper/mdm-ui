@@ -1,13 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
-    "paths": {
-      "@mdm/*": ["./app/*"],
-      "@env/*": ["./environments/*"]
-    },
+    "baseUrl": "./",
     "emitDecoratorMetadata" : true,
-    "outDir": "./dist/",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -20,6 +16,10 @@
     "types": [
       "jest"
     ],
+    "paths": {
+      "@mdm/*": ["projects/mdm-ui/src/app/*"],
+      "@env/*": ["projects/mdm-ui/src/environments/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],

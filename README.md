@@ -39,12 +39,34 @@ $ npm install
 
 ### Run the application
 
-* To start the application in development mode run `ng serve`
-* After the terminal finishes compiling, open up your browser and navigate to http://localhost:4200
+To start the application in development mode run `npm start`. After the terminal finishes compiling, open up your browser and navigate to http://localhost:4200.
+
+Alternatively:
+
+```bash
+# Explicitly state which Angular project to test
+npm start mdm-ui
+```
 
 ### Testing the application
 
-* To test the application run `npm test`
+To test the application run `npm test`.
+
+This Angular workspace uses [Jest](https://jestjs.io/) as testing framework, so any command line parameters that Jest can use can also be provided. For example:
+
+```bash
+# Explicitly state which Angular project to test
+npm run test mdm-ui
+
+# Execute test runner in watch mode. Note the "--" separator for npm to separate command line arguments
+npm run test mdm-ui -- --watch
+```
+
+## Build the application
+
+To 'export' the code for production, run `ng build --configuration production`. This will compile & minify the code, making it ready for production.
+
+### Deployments
 
 All pushes to the repository will invoke a Jenkins CI build.
 When Jenkins runs the builds it uses `npm ci` which uses the `package-lock.json` to determine dependencies,
@@ -96,7 +118,3 @@ This is surprisingly simple just run `npm install` or `npm ci`
 There is a useful npm package ([symlinked](https://www.npmjs.com/package/symlinked)) which can list what modules are linked into your repository.
 This is helpful if you want to check if mdm-resources is currently linked to mdm-ui.
 We recommend installing this globally with `npm i -g symlinked` then you can call it inside mdm-ui using `symlinked names`.
-
-## Build the application
-
-To 'export' the code for production, run `ng build --prod` this will compile & minify the code, making it ready for production

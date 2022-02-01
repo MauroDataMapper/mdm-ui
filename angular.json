@@ -41,12 +41,9 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/jodit/build/jodit.min.css"
+              "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/jodit/build/jodit.min.js"
-            ],
+            "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/style",

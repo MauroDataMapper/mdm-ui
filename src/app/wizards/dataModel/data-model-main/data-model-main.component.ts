@@ -51,6 +51,7 @@ export class DataModelMainComponent implements OnInit {
     private folders: FolderService,
     private title: Title) { }
 
+  disabledSave = false;
   ngOnInit() {
     this.title.setTitle('New Data Model');
 
@@ -90,6 +91,7 @@ export class DataModelMainComponent implements OnInit {
   };
 
   save() {
+    this.disabledSave =  true;
     const details = this.steps[0].compRef.instance as DataModelStep1Component;
     const types = this.steps[1].compRef.instance as DataModelStep2Component;
 
@@ -114,12 +116,16 @@ export class DataModelMainComponent implements OnInit {
       .addToFolder(this.parentFolderId, resource, queryStringParams)
       .pipe(
         catchError(error => {
+          this.disabledSave =  false;
           this.messageHandler.showError('There was a problem saving the Data Model.', error);
           return EMPTY;
         }))
       .subscribe((response: DataModelDetailResponse) => {
         this.messageHandler.showSuccess('Data Model saved successfully.');
+        this.disabledSave =  false;
         this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
+      }, error => {
+        this.disabledSave =  false;
       });
   }
 }

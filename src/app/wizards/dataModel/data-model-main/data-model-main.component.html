@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
                 </button>
             </div>
             <div fxFlex fxLayout="row-reverse" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
-                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid" (click)="save()">Submit Data Model</button>
+                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || disabledSave" (click)="save()">Submit Data Model</button>
                 <button mat-stroked-button type="button" color="primary" class="custom" *ngIf="(i+1) !== steps.length" [disabled]="step.invalid" matStepperNext>
                     Next step
                     <i class="fas fa-chevron-right"></i>

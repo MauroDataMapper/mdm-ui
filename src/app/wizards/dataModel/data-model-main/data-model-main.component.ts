@@ -24,7 +24,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { CatalogueItemDomainType, Container, DataModelCreatePayload, DataModelDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
@@ -42,7 +42,7 @@ export class DataModelMainComponent implements OnInit {
   parentFolderId: Uuid;
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
-
+  isSaving = false;
   constructor(
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
@@ -50,8 +50,6 @@ export class DataModelMainComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private folders: FolderService,
     private title: Title) { }
-
-  disabledSave = false;
   ngOnInit() {
     this.title.setTitle('New Data Model');
 
@@ -91,7 +89,7 @@ export class DataModelMainComponent implements OnInit {
   };
 
   save() {
-    this.disabledSave =  true;
+    this.isSaving =  true;
     const details = this.steps[0].compRef.instance as DataModelStep1Component;
     const types = this.steps[1].compRef.instance as DataModelStep2Component;
 
@@ -116,16 +114,15 @@ export class DataModelMainComponent implements OnInit {
       .addToFolder(this.parentFolderId, resource, queryStringParams)
       .pipe(
         catchError(error => {
-          this.disabledSave =  false;
           this.messageHandler.showError('There was a problem saving the Data Model.', error);
           return EMPTY;
+        }),
+        finalize(() => {
+          this.isSaving =  false;
         }))
       .subscribe((response: DataModelDetailResponse) => {
         this.messageHandler.showSuccess('Data Model saved successfully.');
-        this.disabledSave =  false;
         this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
-      }, error => {
-        this.disabledSave =  false;
       });
   }
 }

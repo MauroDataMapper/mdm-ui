@@ -98,7 +98,13 @@ export class DataTypeComponent extends BaseComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
-
+    this.resources.dataModel.get(this.dataModelId).subscribe(
+      (result) =>
+      {
+        this.dataModel = result.body;
+      }
+    );
+    
     this.title.setTitle('Data Type');
 
     this.activeTab = this.tabs.getByName(

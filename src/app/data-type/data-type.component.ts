@@ -104,7 +104,7 @@ export class DataTypeComponent extends BaseComponent
         this.dataModel = result.body;
       }
     );
-    
+
     this.title.setTitle('Data Type');
 
     this.activeTab = this.tabs.getByName(

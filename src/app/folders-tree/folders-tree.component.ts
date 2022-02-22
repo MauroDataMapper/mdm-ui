@@ -283,19 +283,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     try {
       switch (node.domainType) {
         case CatalogueItemDomainType.Folder:
-          if (this.justShowFolders) {
-            const folderResponse = await this.resources.tree.get('folders', 'folders', node.id).toPromise();
-            return folderResponse.body;
-          } else {
-            return node.children;
-          }
-        case CatalogueItemDomainType.VersionedFolder:
-          if (this.justShowFolders) {
-            const versionedFolderResponse = await this.resources.tree.get('folders', 'versionedFolders', node.id).toPromise();
-            return versionedFolderResponse.body;
-          } else {
-            return node.children;
-          }
+        case CatalogueItemDomainType.VersionedFolder: { // VersionedFolders are treated the same as Folders
+          const folderResponse = await this.resources.tree.getFolder(node.id).toPromise();
+          return folderResponse.body;
+        }
         case CatalogueItemDomainType.DataModel: {
           const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
           return dataModelResponse.body;

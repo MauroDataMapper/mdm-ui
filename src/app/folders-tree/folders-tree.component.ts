@@ -584,7 +584,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     if (fnode.domainType === CatalogueItemDomainType.DataClass) {
       parameters.dataModelId = fnode.modelId;
-        parameters.dataClassId = fnode.node.parentId || "";
+        parameters.dataClassId = fnode.node.parentId || '';
     }
 
     this.stateHandler.NewWindow(fnode.domainType.toLocaleLowerCase(), parameters);

@@ -43,9 +43,13 @@ module.exports = {
   },
   reporters: [
     'default',
-    'jest-junit',
-    ['jest-html-reporter', { pageTitle: 'Test Report' }],
-     ['jest-sonar',{outputDirectory: 'test-report'}]
+    ['jest-junit',{outputDirectory: 'test-report'}],
+    ['jest-html-reporter', {
+      pageTitle: 'Mauro UI: Test Report',
+      outputPath: 'test-report/index.html',
+      includeFailureMsg: true
+    }],
+    ['jest-sonar', {outputDirectory: 'test-report'}]
   ],
   watchPathIgnorePatterns: [
     'test-report/',
@@ -54,5 +58,6 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)' // Ignore files inside node_modules folder
   ],
-  cacheDirectory: '/tmp/jest_'+ (process.env.JOB_BASE_NAME || 'cache')
+  cacheDirectory: '/tmp/jest_'+ (process.env.JOB_BASE_NAME || 'cache'),
+  coverageReporters: ['clover', 'json', 'lcov', 'text', 'cobertura']
 };

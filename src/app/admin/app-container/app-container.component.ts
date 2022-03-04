@@ -29,6 +29,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./app-container.component.sass']
 })
 export class AdminAppContainerComponent implements OnInit, OnDestroy {
+  isAdministrator = false;
   pendingUsersCount = 0;
   features = this.sharedService.features;
 
@@ -40,23 +41,27 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
     private broadcast: BroadcastService) {}
 
   ngOnInit() {
-    if (this.isAdmin()) {
-      this.getPendingUsers();
-      this.broadcast
-        .on('pendingUserUpdated')
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => this.getPendingUsers());
-    }
+    this.securityHandler
+      .isAdministrator()
+      .subscribe(isAdministrator => {
+        this.isAdministrator = isAdministrator;
+
+        if (!isAdministrator) {
+          return;
+        }
+
+        this.getPendingUsers();
+        this.broadcast
+          .on('pendingUserUpdated')
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(() => this.getPendingUsers());
+      })
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
-  isAdmin = () => {
-    return this.securityHandler.isAdmin();
-  };
 
   getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {

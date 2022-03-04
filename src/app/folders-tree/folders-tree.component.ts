@@ -594,10 +594,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return this.favouriteHandler.isAdded(fnode);
   }
 
-  get isUserAdmin() {
-    return this.securityHandler.isAdmin();
-  }
-
   isNodeFinalised(node: FlatNode) {
     return node.finalised;
   }

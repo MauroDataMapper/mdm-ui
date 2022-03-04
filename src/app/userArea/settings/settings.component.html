@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0
         </mat-checkbox>
     </div>
 
-    <div class="mb-2" *ngIf="isAdmin()">
+    <div class="mb-2" *ngIf="isAdministrator">
       <mat-checkbox name="includeDeleted" [(ngModel)]="includeDeleted" labelPosition="after">
           Show Deleted Models
       </mat-checkbox>

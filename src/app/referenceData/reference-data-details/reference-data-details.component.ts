@@ -53,8 +53,8 @@ export class ReferenceDataDetailsComponent implements OnInit {
   @Input() refDataModel: ReferenceDataModelDetail;
   originalRefDataModel: ReferenceDataModelDetail;
   showEdit = false;
-  isAdminUser: boolean;
   isLoggedIn: boolean;
+  isAdministrator = false;
   deleteInProgress: boolean;
   exporting: boolean;
   errorMessage = '';
@@ -80,8 +80,8 @@ export class ReferenceDataDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     this.loadExporterList();
     this.ReferenceModelDetails();
     this.originalRefDataModel = Object.assign({}, this.refDataModel);
@@ -111,7 +111,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   restore() {
-    if (!this.isAdminUser || !this.refDataModel.deleted) {
+    if (!this.isAdministrator || !this.refDataModel.deleted) {
       return;
     }
 

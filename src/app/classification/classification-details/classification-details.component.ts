@@ -91,7 +91,7 @@ export class ClassificationDetailsComponent implements OnInit {
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.access.showSoftDelete) {
       return;
     }
 

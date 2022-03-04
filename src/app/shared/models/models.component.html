@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
                                                 Show Superseded Models
                                             </mat-checkbox>
                                         </div> -->
-                                        <div *ngIf="isAdmin" mat-menu-item>
+                                        <div *ngIf="isAdministrator" mat-menu-item>
                                             <mat-checkbox name="includeDeleted" (ngModelChange)="toggleFilters('includeDeleted')" [(ngModel)]="includeDeleted">
                                                 Show Deleted Models
                                             </mat-checkbox>

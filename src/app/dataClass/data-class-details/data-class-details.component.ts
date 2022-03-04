@@ -221,9 +221,4 @@ export class DataClassDetailsComponent implements OnInit {
     this.editMode = false;
     this.editingService.stop();
   }
-
-
-  isAdmin() {
-    return this.securityHandler.isAdmin();
-  }
 }

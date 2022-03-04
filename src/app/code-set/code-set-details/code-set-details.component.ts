@@ -52,7 +52,7 @@ export class CodeSetDetailsComponent implements OnInit {
   editMode = false;
   originalCodeSetDetail: CodeSetDetail;
   showSecuritySection: boolean;
-  isAdminUser: boolean;
+  isAdministrator = false;
   deleteInProgress: boolean;
   processing = false;
   access: Access;
@@ -69,9 +69,7 @@ export class CodeSetDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private title: Title,
     private editingService: EditingService
-  ) {
-    this.isAdminUser = this.sharedService.isAdmin;
-  }
+  ) { }
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
@@ -79,6 +77,7 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     this.codeSetDetails();
     this.originalCodeSetDetail = Object.assign({}, this.codeSetDetail);
   }
@@ -175,7 +174,7 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   restore() {
-    if (!this.isAdminUser || !this.codeSetDetail.deleted) {
+    if (!this.isAdministrator || !this.codeSetDetail.deleted) {
       return;
     }
 

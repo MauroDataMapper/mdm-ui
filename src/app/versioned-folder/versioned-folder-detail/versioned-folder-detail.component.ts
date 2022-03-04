@@ -27,7 +27,7 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService, ValidatorService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, StateHandlerService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
@@ -45,7 +45,6 @@ export class VersionedFolderDetailComponent implements OnInit {
 
   isEditing = false;
   original: VersionedFolderDetail;
-  isAdminUser = false;
   processing = false;
   access: Access;
 
@@ -55,7 +54,6 @@ export class VersionedFolderDetailComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
-    private shared: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
@@ -63,7 +61,6 @@ export class VersionedFolderDetailComponent implements OnInit {
     private validator: ValidatorService) { }
 
   ngOnInit(): void {
-    this.isAdminUser = this.shared.isAdmin;
     this.access = this.securityHandler.elementAccess(this.detail);
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
     this.original = Object.assign({}, this.detail);

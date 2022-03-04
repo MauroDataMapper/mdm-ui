@@ -38,6 +38,7 @@ export class ModelManagementComponent implements OnInit {
   deleteInProgress = false;
   deleteSuccessMessage: string;
   folders: any;
+  isAdministrator = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -54,6 +55,8 @@ export class ModelManagementComponent implements OnInit {
     this.filterElement = '';
     this.loadFolders();
     this.title.setTitle('Model management');
+
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
   }
 
   onFilterChange = () => {
@@ -137,7 +140,7 @@ export class ModelManagementComponent implements OnInit {
   };
 
   askForPermanentDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.isAdministrator) {
       this.messageHandler.showError('Only Admins are allowed to delete records!');
       return;
     }
@@ -209,7 +212,7 @@ export class ModelManagementComponent implements OnInit {
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.isAdministrator) {
       this.messageHandler.showError('Only Admins are allowed to delete records!');
       return;
     }

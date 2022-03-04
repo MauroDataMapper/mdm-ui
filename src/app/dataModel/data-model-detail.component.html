@@ -74,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
             data-cy="compare"
             type="button"
             [matMenuTriggerFor]="compareMenu"
-            *ngIf="isAdminUser"
+            *ngIf="isAdministrator"
           >
             <i class="fas fa-balance-scale-right" aria-hidden="true"></i>
             Compare
@@ -111,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
             data-cy="restore"
             type="button"
             class="has-text-green"
-            *ngIf="dataModel.deleted && isAdminUser"
+            *ngIf="dataModel.deleted && isAdministrator"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore

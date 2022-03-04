@@ -62,7 +62,7 @@ export class SettingsComponent implements OnInit {
     if (this.isAdministrator) {
       this.includeDeleted = this.userSettingsHandler.get('includeDeleted') || this.includeDeleted;
     }
-  }
+  };
 
   saveSettings = () => {
     this.userSettingsHandler.update('countPerTable', this.countPerTable);

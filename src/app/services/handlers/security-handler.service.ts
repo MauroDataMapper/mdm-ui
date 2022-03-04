@@ -368,7 +368,7 @@ export class SecurityHandlerService {
   }
 
   private addAdministratorStateToLocalStorage(state: boolean) {
-    localStorage.setItem('isAdmin', String(state))
+    localStorage.setItem('isAdmin', String(state));
   }
 
   private getAdministratorStateFromLocalStorage(): boolean | undefined {

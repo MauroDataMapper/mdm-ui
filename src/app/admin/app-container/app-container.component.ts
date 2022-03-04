@@ -55,7 +55,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
           .on('pendingUserUpdated')
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(() => this.getPendingUsers());
-      })
+      });
   }
 
   ngOnDestroy(): void {

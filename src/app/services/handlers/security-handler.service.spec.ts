@@ -80,9 +80,9 @@ describe('SecurityHandlerService', () => {
   });
 
   it.each([
-    ['123', 'user@test.com', false],
-    ['456', 'admin@test.com', true]
-  ])('should sign in user %s %s when admin = %o', (id, userName, isAdmin) => {
+    ['123', 'user@test.com'],
+    ['456', 'admin@test.com']
+  ])('should sign in user %s %s', (id, userName) => {
     const credentials: LoginPayload = { username: userName, password: 'test' };
     const expectedUser: UserDetails = {
       id,
@@ -90,7 +90,6 @@ describe('SecurityHandlerService', () => {
       email: userName,
       firstName: 'first',
       lastName: 'last',
-      isAdmin,
       needsToResetPassword: false,
       role: '',
       token: undefined
@@ -105,17 +104,9 @@ describe('SecurityHandlerService', () => {
           lastName: expectedUser.lastName
         }
       }
-    }));
+  }));
 
-    resourcesStub.session.isApplicationAdministration.mockImplementationOnce(() => cold('--a|', {
-      a: {
-        body: {
-          applicationAdministrationSession: expectedUser.isAdmin
-        }
-      }
-    }));
-
-    const expected$ = cold('----a|', { a: expectedUser });
+    const expected$ = cold('--a|', { a: expectedUser });
     const actual$ = service.signIn(credentials);
 
     expect(actual$).toBeObservable(expected$);

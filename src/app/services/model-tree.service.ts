@@ -311,7 +311,7 @@ export class ModelTreeService implements OnDestroy {
                 btnType: 'warn',
                 message: '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
               }
-            })
+            });
         }),
         switchMap(() => this.deleteCatalogueItem(item, true))
       );

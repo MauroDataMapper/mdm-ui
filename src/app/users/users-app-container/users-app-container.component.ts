@@ -46,7 +46,7 @@ export class UsersAppContainerComponent implements OnInit {
             return EMPTY;
           }
 
-          return this.sharedService.pendingUsersCount()
+          return this.sharedService.pendingUsersCount();
         })
       )
       .subscribe((data: any) => this.pendingUsersCount = data.body.count);

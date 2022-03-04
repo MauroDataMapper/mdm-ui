@@ -36,7 +36,7 @@ export class SharedService {
   documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
-  //isAdmin;
+  // isAdmin;
   applicationOffline = new Subject<any>();
   current;
 

@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
             type="button"
             data-cy="restore"
             class="has-text-green"
-            *ngIf="codeSetDetail.deleted && isAdminUser"
+            *ngIf="codeSetDetail.deleted && isAdministrator"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore

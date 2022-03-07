@@ -17,30 +17,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'mdm-app-container',
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.sass']
 })
-export class AppContainerComponent {
-  constructor(
-    private securityHandler: SecurityHandlerService,
-    private sharedService: SharedService
-  ) {}
-
-
-  isLoggedOn = () => {
-    return this.securityHandler.isLoggedIn();
-  };
-
-  isAdminUser = () => {
-    return this.sharedService.isAdminUser();
-  };
-
-  logout = () => {
-    return this.sharedService.logout();
-  };
-}
+export class AppContainerComponent { }

@@ -55,7 +55,6 @@ export class TerminologyDetailsComponent implements OnInit {
   processing = false;
   exportError = null;
   exportList = [];
-  isAdminUser = this.sharedService.isAdminUser();
   isLoggedIn = this.sharedService.isLoggedIn();
   exportedFileIsReady = false;
   deleteInProgress = false;

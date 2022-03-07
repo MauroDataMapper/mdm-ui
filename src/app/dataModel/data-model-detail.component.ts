@@ -46,7 +46,6 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
-import { MergeDiffAdapterService } from '@mdm/merge-diff/merge-diff-adapter/merge-diff-adapter.service';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 
 @Component({
@@ -59,7 +58,7 @@ export class DataModelDetailComponent implements OnInit {
   @Input() dataModel: DataModelDetail;
   originalDataModel: DataModelDetail;
   editMode = false;
-  isAdminUser: boolean;
+  isAdministrator = false;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
   exporting: boolean;
@@ -81,13 +80,11 @@ export class DataModelDetailComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService,
-    private mergeDiffService: MergeDiffAdapterService
-  ) { }
+    private validatorService: ValidatorService  ) { }
 
   ngOnInit() {
-    this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     this.loadExporterList();
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
@@ -204,7 +201,7 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   restore() {
-    if (!this.isAdminUser || !this.dataModel.deleted) {
+    if (!this.isAdministrator || !this.dataModel.deleted) {
       return;
     }
 

@@ -36,7 +36,7 @@ export class SharedService {
   documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
-  isAdmin;
+  // isAdmin;
   applicationOffline = new Subject<any>();
   current;
 
@@ -49,9 +49,7 @@ export class SharedService {
     private securityHandler: SecurityHandlerService,
     private toaster: ToastrService,
     private resources: MdmResourcesService
-  ) {
-    this.isAdmin = this.securityHandler.isAdmin();
-  }
+  ) { }
 
   logout() {
     this.securityHandler.logout();
@@ -68,10 +66,6 @@ export class SharedService {
       this.handleExpiredSession();
     }
     return this.securityHandler.isLoggedIn();
-  };
-
-  isAdminUser = () => {
-    return this.securityHandler.isAdmin();
   };
 
   handleExpiredSession(firstTime?) {

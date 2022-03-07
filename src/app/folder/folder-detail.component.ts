@@ -47,7 +47,6 @@ export class FolderDetailComponent implements OnInit {
   originalFolder: FolderDetail;
 
   editMode = false;
-  isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
   showEditMode = false;
@@ -68,7 +67,6 @@ export class FolderDetailComponent implements OnInit {
     private title: Title,
     private editingService: EditingService,
     private dialog: MatDialog) {
-    this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
   }
 

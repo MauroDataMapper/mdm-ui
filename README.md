@@ -28,8 +28,8 @@ $ git clone git@github.com:MauroDataMapper/mdm-ui.git
 # This will use the `.nvmrc` file to install the node versions we need and update to the latest version of npm
 $ nvm install --latest-npm
 
-# Install Angular CLI
-$ npm i @angular/cli
+# Install Angular CLI globally
+$ npm install -g @angular/cli
 
 # Install the code dependencies
 $ npm install

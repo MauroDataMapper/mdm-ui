@@ -166,8 +166,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
-        return event.target.value;
-      }),
+      return event.target.value;
+    }),
       filter((res: any) => res.length >= 0),
       debounceTime(500),
       distinctUntilChanged()
@@ -214,29 +214,36 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       }, () => {
         this.loading = false;
       });
-    } else {
-      this.resources.tree.list(ContainerDomainType.Folders, {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
-        // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
-        // outside the component and passed into this component as an @Input(), making this a "dumb" component.
-        // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for
-        // the future.
-        const children = this.folderFilterFn ? this.filterFolderTreeItems(data.body) : data.body;
-        this.loading = false;
-        this.rootNode = {
-          children,
-          isRoot: true
-        };
-        this.filteredRootNode = this.rootNode;
+    }
+    else {
+      this.resources.tree.list(
+        ContainerDomainType.Folders,
+        {
+          foldersOnly: true,
+          modelCreatableOnly: true
+        })
+        .subscribe((data: MdmTreeItemListResponse) => {
+          // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
+          // outside the component and passed into this component as an @Input(), making this a "dumb" component.
+          // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for
+          // the future.
+          const children = this.folderFilterFn ? this.filterFolderTreeItems(data.body) : data.body;
+          this.loading = false;
+          this.rootNode = {
+            children,
+            isRoot: true
+          };
+          this.filteredRootNode = this.rootNode;
 
-        if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
-          // If a node has already been initially selected, update the input field to
-          // display it
-          this.searchCriteria = this.selectedElements[0].label;
-        }
+          if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
+            // If a node has already been initially selected, update the input field to
+            // display it
+            this.searchCriteria = this.selectedElements[0].label;
+          }
 
-      }, () => {
-        this.loading = false;
-      });
+        }, () => {
+          this.loading = false;
+        });
     }
   }
 

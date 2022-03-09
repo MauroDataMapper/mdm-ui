@@ -1,0 +1,56 @@
+<div class="mdm-change-branch-name-modal">
+  <h4 mat-dialog-title>Change Branch Name</h4>
+  <hr />
+  <mat-dialog-content>
+    <div>
+      <mdm-element-icon [element]="model"></mdm-element-icon>
+      <span class="dataModelDetailsLabel">{{ model.label }}</span>
+    </div>
+    <div class="detail-icons">
+      <div class="text-muted">
+        <small>
+          <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+          <span><strong>Branch: </strong></span>
+          {{ model.branchName }}
+        </small>
+      </div>
+    </div>
+    <p class="mt-2">Enter the new name for your branch below:</p>
+    <form role="form" [formGroup]="formGroup">
+      <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Branch name</mat-label>
+          <input matInput type="text" formControlName="branchName" required />
+          <mat-error *ngIf="branchName?.errors?.required">
+            Branch name is required
+          </mat-error>
+          <mat-error *ngIf="branchName?.errors?.invalidBranchName">
+            This branch name cannot be used
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="modal-footer pxy-2">
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="formGroup.invalid"
+        (click)="change()"
+      >
+        Change
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

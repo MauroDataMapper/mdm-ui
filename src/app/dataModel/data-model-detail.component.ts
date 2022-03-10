@@ -47,9 +47,7 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
-import { ChangeBranchNameModalComponent, ChangeBranchNameModalData, ChangeBranchNameModalResult, defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
-import { dia } from 'jointjs';
-import { timeStamp } from 'console';
+import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -303,7 +301,7 @@ export class DataModelDetailComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Data Model updated successfully.');
+        this.messageHandler.showSuccess('Data Model branch name updated successfully.');
         this.stateHandler.Go(
           'datamodel',
           { id: this.dataModel.id },

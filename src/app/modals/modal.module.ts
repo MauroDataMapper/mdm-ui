@@ -48,6 +48,7 @@ import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+import { ChangeBranchNameModalComponent } from './change-branch-name-modal/change-branch-name-modal.component';
 
 const defaultAceConfig: AceConfigInterface = {
 };
@@ -89,7 +90,8 @@ const defaultAceConfig: AceConfigInterface = {
     AddRuleModalComponent,
     ApiKeysModalComponent,
     MarkupDisplayModalComponent,
-    DefaultProfileEditorModalComponent
+    DefaultProfileEditorModalComponent,
+    ChangeBranchNameModalComponent
   ],
   providers: [
     ModalService,
@@ -102,7 +104,8 @@ const defaultAceConfig: AceConfigInterface = {
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    ChangeBranchNameModalComponent
   ]
 })
 export class ModalModule {

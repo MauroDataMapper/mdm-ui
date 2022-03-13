@@ -22,7 +22,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
@@ -32,15 +31,17 @@ import {
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
   CodeSetDetail,
   CodeSetDetailResponse,
-  CodeSetUpdatePayload
+  CodeSetUpdatePayload,
+  ModelUpdatePayload
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
+import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -63,13 +64,16 @@ export class CodeSetDetailsComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
     private editingService: EditingService
   ) { }
+
+  get canChangeBranchName() {
+    return this.access.showEdit && this.codeSetDetail.branchName !== defaultBranchName;
+  }
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
@@ -304,5 +308,35 @@ export class CodeSetDetailsComponent implements OnInit {
         domainType: this.codeSetDetail.domainType
       }
     );
+  }
+
+  editBranchName() {
+    this.dialog.openChangeBranchName(this.codeSetDetail)
+      .pipe(
+        switchMap(dialogResult => {
+          const payload: ModelUpdatePayload = {
+            id: this.codeSetDetail.id,
+            domainType: this.codeSetDetail.domainType,
+            branchName: dialogResult.branchName
+          };
+
+          return this.resourcesService.codeSet.update(payload.id, payload);
+        }),
+        catchError(error => {
+          this.messageHandler.showError(
+            'There was a problem updating the branch name.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Code Set branch name updated successfully.');
+        this.stateHandler.Go(
+          'codeset',
+          { id: this.codeSetDetail.id },
+          { reload: true }
+        );
+      });
   }
 }

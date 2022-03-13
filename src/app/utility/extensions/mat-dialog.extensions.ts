@@ -17,8 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { CatalogueItem, SecurableModel } from '@maurodatamapper/mdm-resources';
+import { Branchable, CatalogueItem, Modelable, SecurableModel } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { ChangeBranchNameModalComponent, ChangeBranchNameModalData, ChangeBranchNameModalResult } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { SecurityAccessResource, SecurityModalConfiguration } from '@mdm/modals/security-modal/security-modal.model';
@@ -101,6 +102,18 @@ declare module '@angular/material/dialog/dialog' {
      * @returns The dialog reference to observe.
      */
     openSecurityAccess(element: CatalogueItem & SecurableModel, resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
+
+    /**
+     * Extension method to open a modal dialog containing the `ChangeBranchNameModalComponent`.
+     *
+     * @param model The model containing the details and the branch name to change.
+     * @returns An observable for when a new branch name is chosen.
+     *
+     * @see `ChangeBranchNameModalComponent`
+     * @see `ChangeBranchNameModalData`
+     * @see `ChangeBranchNameModalResult`
+     */
+    openChangeBranchName(model: Modelable & Branchable): Observable<ChangeBranchNameModalResult>;
   }
 }
 
@@ -145,7 +158,7 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
     );
 };
 
-MatDialog.prototype.openSecurityAccess = function(
+MatDialog.prototype.openSecurityAccess = function (
   this: MatDialog,
   element: CatalogueItem & SecurableModel,
   resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus> {
@@ -159,4 +172,20 @@ MatDialog.prototype.openSecurityAccess = function(
       panelClass: 'security-modal'
     }
   );
+};
+
+MatDialog.prototype.openChangeBranchName = function (
+  this: MatDialog,
+  model: Modelable & Branchable): Observable<ChangeBranchNameModalResult> {
+  return this.open<ChangeBranchNameModalComponent, ChangeBranchNameModalData, ChangeBranchNameModalResult>(
+    ChangeBranchNameModalComponent,
+    {
+      data: {
+        model
+      }
+    })
+    .afterClosed()
+    .pipe(
+      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
+    );
 };

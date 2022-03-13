@@ -29,11 +29,13 @@ SPDX-License-Identifier: Apache-2.0
                 <input matInput [(ngModel)]="model.label" name="label" required>
             </mat-form-field>
         </div>
+
         <div class="mdm--form-input">
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Description</mat-label>
-                <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
-            </mat-form-field>
+          <label class="manual-material-label">Description</label>
+          <mdm-content-editor
+            [(content)]="model.description"
+            [inEditMode]="true">
+          </mdm-content-editor>
         </div>
 
         <div class="mdm--form-input mb-3">

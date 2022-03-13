@@ -117,9 +117,11 @@ export class MultipleTermsSelectorComponent {
   }
 
   loadTerminologies() {
-    this.resources.terminology.list().subscribe((data: TerminologyIndexResponse) => {
-      this.selectorSection.terminologies = data.body.items;
-    });
+    this.resources.terminology
+      .list({ all: true, sort: 'label' })
+      .subscribe((data: TerminologyIndexResponse) => {
+        this.selectorSection.terminologies = data.body.items;
+      });
   }
 
   onTerminologySelect(terminology: Terminology) {

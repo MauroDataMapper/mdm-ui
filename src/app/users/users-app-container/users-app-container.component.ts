@@ -19,6 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-users-app-container',
@@ -28,17 +30,26 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
   pendingUsersCount = 0;
-  isAdmin = this.securityHandler.isAdmin();
+  isAdministrator = false;
   features = this.sharedService.features;
 
   constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService) {}
 
   ngOnInit() {
-    if (this.isAdmin) {
-      this.sharedService.pendingUsersCount().subscribe(data => {
-        this.pendingUsersCount = data.body.count;
-      });
-    }
+    this.securityHandler
+      .isAdministrator()
+      .pipe(
+        switchMap(isAdministrator => {
+          this.isAdministrator = isAdministrator;
+
+          if (!isAdministrator) {
+            return EMPTY;
+          }
+
+          return this.sharedService.pendingUsersCount();
+        })
+      )
+      .subscribe((data: any) => this.pendingUsersCount = data.body.count);
   }
 
   logout = () => {

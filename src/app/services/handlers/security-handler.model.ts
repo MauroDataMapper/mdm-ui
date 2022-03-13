@@ -77,6 +77,5 @@ export interface UserDetails {
   userName: string;
   email: string;
   role?: string;
-  isAdmin?: boolean;
   needsToResetPassword?: boolean;
 }

@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 /* eslint-disable id-blacklist */
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProfileSummaryIndexResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Component({
@@ -39,10 +40,10 @@ export class AddProfileModalComponent implements OnInit {
   ngOnInit(): void {
     this.resourcesSvc.profile
       .unusedProfiles(this.data.domainType, this.data.domainId)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
+      .subscribe((profiles: ProfileSummaryIndexResponse) => {
         profiles.body.forEach((profile) => {
           const prof: any = [];
-          prof['display'] = profile.displayName;
+          prof['display'] = `${profile.displayName} (${profile.version})`;
           prof['value'] = `${profile.namespace}/${profile.name}`;
           this.allUnusedProfiles.push(prof);
           this.showProfileSelector = true;
@@ -52,6 +53,7 @@ export class AddProfileModalComponent implements OnInit {
 
   save() {
     // Save Changes
+    console.log(this.data.selectedProfile);
     this.dialogRef.close(this.data.selectedProfile);
   }
 

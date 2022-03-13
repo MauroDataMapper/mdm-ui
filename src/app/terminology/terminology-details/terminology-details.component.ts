@@ -41,6 +41,9 @@ import {
   TerminologyDetailResponse} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Access } from '@mdm/model/access';
+import { catchError, switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -55,7 +58,6 @@ export class TerminologyDetailsComponent implements OnInit {
   processing = false;
   exportError = null;
   exportList = [];
-  isAdminUser = this.sharedService.isAdminUser();
   isLoggedIn = this.sharedService.isLoggedIn();
   exportedFileIsReady = false;
   deleteInProgress = false;
@@ -78,6 +80,10 @@ export class TerminologyDetailsComponent implements OnInit {
     private editingService: EditingService,
     private messageService: MessageService
   ) {}
+
+  get canChangeBranchName() {
+    return this.access.showEdit && this.mcTerminology.branchName !== defaultBranchName;
+  }
 
   ngOnInit() {
     this.terminologyDetails();
@@ -333,5 +339,35 @@ export class TerminologyDetailsComponent implements OnInit {
   showForm() {
     this.editingService.start();
     this.editMode = true;
+  }
+
+  editBranchName() {
+    this.dialog.openChangeBranchName(this.mcTerminology)
+      .pipe(
+        switchMap(dialogResult => {
+          const payload: ModelUpdatePayload = {
+            id: this.mcTerminology.id,
+            domainType: this.mcTerminology.domainType,
+            branchName: dialogResult.branchName
+          };
+
+          return this.resources.terminology.update(payload.id, payload);
+        }),
+        catchError(error => {
+          this.messageHandler.showError(
+            'There was a problem updating the branch name.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Terminology branch name updated successfully.');
+        this.stateHandler.Go(
+          'terminology',
+          { id: this.mcTerminology.id },
+          { reload: true }
+        );
+      });
   }
 }

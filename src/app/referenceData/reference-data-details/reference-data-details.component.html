@@ -61,10 +61,19 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="edit-branch-name"
+            type="button"
+            *ngIf="canChangeBranchName"
+            (click)="editBranchName()"
+          >
+            <i class="fas fa-code-branch"></i> Edit Branch Name
+          </button>
+          <button
+            mat-menu-item
             type="button"
             data-cy="compare"
             [matMenuTriggerFor]="compareMenu"
-            *ngIf="isAdminUser"
+            *ngIf="isAdministrator"
           >
             <i class="fas fa-balance-scale-right" aria-hidden="true"></i>
             Compare
@@ -88,7 +97,7 @@ SPDX-License-Identifier: Apache-2.0
             type="button"
             data-cy="restore"
             class="has-text-green"
-            *ngIf="refDataModel.deleted && isAdminUser"
+            *ngIf="refDataModel.deleted && isAdministrator"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore

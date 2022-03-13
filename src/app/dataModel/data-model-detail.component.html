@@ -61,6 +61,15 @@ SPDX-License-Identifier: Apache-2.0
             <i class="fas fa-pencil-alt"></i> Edit Title
           </button>
           <button
+            mat-menu-item
+            data-cy="edit-branch-name"
+            type="button"
+            *ngIf="canChangeBranchName"
+            (click)="editBranchName()"
+          >
+            <i class="fas fa-code-branch"></i> Edit Branch Name
+          </button>
+          <button
           mat-menu-item
           data-cy="edit-label"
           type="button"

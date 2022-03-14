@@ -25,6 +25,7 @@ pipeline {
         sh 'rm -f junit.xml'
         sh 'rm -rf test-report'
         sh 'rm -rf coverage'
+        sh 'rm -rf dist'
         sh 'rm -f eslint_report.json'
       }
     }
@@ -128,6 +129,7 @@ pipeline {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'npm run dist'
+            sh 'MDM_UI_THEME_NAME=nhs-digital npm run dist'
           }
         }
       }

@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "dist": "ng build --configuration production --output-path=dist/mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\") && npm run dist-archive",
-    "dist-archive": "tar zcvf dist/mdm-ui-7.1.0$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \".$MDM_UI_THEME_NAME\").tgz -C dist mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\")",
+    "dist-archive": "tar zcvf dist/mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \".$MDM_UI_THEME_NAME\").tgz -C dist mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\")",
     "test": "jest",
     "test-with-coverage": "jest --coverage",
     "test-watch": "jest --watch",

@@ -126,7 +126,8 @@ export class EditProfileModalComponent implements OnInit {
         this.data.profile.name,
         this.data.catalogueItem.domainType,
         this.data.catalogueItem.id,
-        this.profileData
+        this.profileData,
+        this.data.profile.version
       )
       .pipe(
         catchError((error: HttpErrorResponse) => {

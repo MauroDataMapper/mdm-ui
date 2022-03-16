@@ -186,7 +186,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
               this.catalogueItem.id,
               selected.namespace,
               selected.name,
-              result.profile);
+              result.profile,
+              selected.version);
         }),
         catchError(error => {
           this.messageHandler.showError('There was a problem saving the profile.', error);
@@ -229,7 +230,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             this.catalogueItem.domainType,
             this.catalogueItem.id,
             this.currentProfile.namespace,
-            this.currentProfile.name
+            this.currentProfile.name,
+            this.currentProfile.version
           );
         }),
         catchError(error => {
@@ -359,10 +361,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       map((response: ProfileSummaryIndexResponse) => {
         return response.body.map(summary => {
           return {
-            display: summary.displayName,
-            value: `${summary.namespace}/${summary.name}`,
+            display: `${summary.displayName} (${summary.version})`,
+            value: `${summary.namespace}/${summary.name}/${summary.version}`,
             namespace: summary.namespace,
-            name: summary.name
+            name: summary.name,
+            version: summary.version
           };
         });
       })
@@ -394,11 +397,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private selectCustomProfile() {
     this.lastView = this.currentView;
 
-    const [namespace, name] = this.getNamespaceAndName(this.currentView);
+    const [namespace, name, version] = this.getNamespaceNameAndVersion(this.currentView);
 
-    if (namespace && name) {
+    if (namespace && name && version) {
       this.resources.profile
-        .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name)
+        .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name, version)
         .pipe(
           catchError(error => {
             this.messageHandler.showError('There was a problem getting the selected profile.', error);
@@ -409,6 +412,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           this.currentProfile = response.body;
           this.currentProfile.namespace = namespace;
           this.currentProfile.name = name;
+          this.currentProfile.version = version;
         });
     }
   }
@@ -428,9 +432,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .afterClosed()
       .subscribe((newProfile) => {
         if (newProfile) {
-          const [namespace, name] = this.getNamespaceAndName(newProfile);
+          const [namespace, name, version] = this.getNamespaceNameAndVersion(newProfile);
           this.resources.profile
-            .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name, '')
+            .profile(this.catalogueItem.domainType, this.catalogueItem.id, namespace, name, version)
             .pipe(
               catchError(error => {
                 this.messageHandler.showError('There was a problem getting the selected profile.', error);
@@ -452,9 +456,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       });
   }
 
-  private getNamespaceAndName(viewName: string): [string, string] {
+  private getNamespaceNameAndVersion(viewName: string): [string, string, string] {
     const split = viewName.split('/');
-    return [split[0], split[1]];
+    return [split[0], split[1], split[2]];
   }
 
   private getDoiStatus() {

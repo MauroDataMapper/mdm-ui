@@ -54,6 +54,17 @@ export const getDefaultProfileData = (
   const items: DefaultProfileItem[] = [];
   const controls = DefaultProfileControls.renderControls(catalogueItem.domainType);
 
+  if (showControl(controls, 'code')) {
+    items.push(
+      createDefaultProfileItem(
+        catalogueItem.code,
+        'Code',
+        ProfileControlTypes.text,
+        'code'
+      )
+    );
+  }
+
   items.push(
     createDefaultProfileItem(
       catalogueItem.description,

@@ -64,6 +64,16 @@ export const getDefaultProfileData = (
       )
     );
   }
+  if (showControl(controls, 'definition')) {
+    items.push(
+      createDefaultProfileItem(
+        catalogueItem.definition,
+        'Definition',
+        ProfileControlTypes.text,
+        'definition'
+      )
+    );
+  }
 
   items.push(
     createDefaultProfileItem(

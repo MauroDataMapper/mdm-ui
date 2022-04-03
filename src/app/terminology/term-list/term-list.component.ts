@@ -20,23 +20,12 @@ SPDX-License-Identifier: Apache-2.0
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Term, TerminologyDetail } from '@maurodatamapper/mdm-resources';
+import { Term, TermDetail, TerminologyDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateTermDialogComponent } from './create-term-dialog/create-term-dialog.component';
+import { CreateTermDialogComponent, CreateTermForm } from './create-term-dialog/create-term-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-
-class CreateTermForm {
-  terminology: TerminologyDetail;
-  code: string;
-  definition: string;
-  description: string;
-
-  constructor(terminology: TerminologyDetail) {
-    this.terminology = terminology;
-  }
-}
 
 @Component({
   selector: 'mdm-term-list',
@@ -120,9 +109,12 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   openCreateTermDialog(): void {
-    const dialogRef = this.dialog.open(CreateTermDialogComponent, {
-      data: new CreateTermForm(this.terminology)
-    });
+    const dialogRef = this.dialog.open<CreateTermDialogComponent, CreateTermForm, TermDetail>(
+      CreateTermDialogComponent,
+      {
+        data: new CreateTermForm(this.terminology),
+        minWidth: 800
+      });
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {

@@ -241,7 +241,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('Profile removed successfully');
-        this.currentView = 'default';
+        this.currentView = this.usedProfiles.find(e => e.display === this.otherProperty &&
+            !(e.namespace === this.currentProfile.namespace && e.name === this.currentProfile.name && e.version === this.currentProfile.version)
+          )?.value
+          ?? 'default';
         this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.changeProfile();
@@ -282,17 +285,17 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
                if (defaultValues && (defaultValues.length > 0)) {
                   this.otherProperty = defaultValues[0].value;
                }
-
-            if (!this.lastView && this.otherProperty) {
+            if (!this.currentView && this.otherProperty) {
               // Get the item in usedProfiles that matches the otherProperties value
               this.currentView = this.usedProfiles.find(e => e.display === this.otherProperty)?.value ?? 'default';
-            } else {
+            } else if (!this.currentView) {
               this.currentView = 'default';
             }
             this.changeProfile();
              });
         } else {
-          if (!this.lastView) {
+          this.usedProfiles = items;
+          if (!this.currentView) {
             this.currentView = 'default';
           }
         }

@@ -96,11 +96,12 @@ export class HtmlEditorComponent implements OnInit {
       'paragraph',
       '|',
       'table',
+      'link',
       {
         name: 'linktoelement',
-        text: 'Link to Element',
-        tooltip: 'Add link to element',
-        icon: 'link',
+        text: 'Link to Catalogue Item',
+        tooltip: 'Add link to catalogue item',
+        icon: 'attachment',
         exec: (editor: any) => this.onAddElementLink(this, editor)
       },
       '|',

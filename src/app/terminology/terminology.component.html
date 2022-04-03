@@ -119,7 +119,7 @@ SPDX-License-Identifier: Apache-2.0
           [canDelete]="showDelete"
           (totalCount)="termsCountEmitter($event)"
           (selectedTerm)="onTermSelect($event)"
-          (addedTerm)="onTermAdd()"
+          (addedTerm)="onTermAdd($event)"
           (deletedTerm)="onTermDelete()"></mdm-term-list>
       </div>
     </mat-tab>

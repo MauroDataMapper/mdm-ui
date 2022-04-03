@@ -20,11 +20,22 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { CatalogueItemDomainType, TermDetail } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, TermDetail, TerminologyDetail } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+
+export class CreateTermForm {
+  terminology: TerminologyDetail;
+  code: string;
+  definition: string;
+  description: string;
+
+  constructor(terminology: TerminologyDetail) {
+    this.terminology = terminology;
+  }
+}
 
 @Component({
   selector: 'mdm-create-term-dialog',
@@ -41,41 +52,60 @@ export class CreateTermDialogComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<CreateTermDialogComponent>,
+    private dialogRef: MatDialogRef<CreateTermDialogComponent, TermDetail | undefined>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  get code() {
+    return this.form.get('code');
+  }
+
+  get definition() {
+    return this.form.get('definition');
+  }
+
+  get description() {
+    return this.form.get('description');
+  }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
       // eslint-disable-next-line @typescript-eslint/unbound-method
       code: [this.data.code, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      definition: [this.data.definition, Validators.required],
+      definition: [this.data.definition],
       description: [this.data.description]
     });
   }
 
-  submit(form: FormGroup) {
+  submit() {
+    if (this.form.invalid) {
+      return;
+    }
+
     this.submitting = true;
-    this.resources.terms.save(this.data.terminology.id, {
-      domainType: CatalogueItemDomainType.Term,
-      code: form.value.code,
-      definition: form.value.definition,
-      description: form.value.description
-    }).pipe(
-      catchError(error => {
-        this.messageHandler.showError('Unable to create new term');
-        console.error(error);
-        return EMPTY;
-      }),
-      finalize(() => this.submitting = false)
-    ).subscribe((response: HttpResponse<TermDetail>) => {
-      if (response.ok) {
-        this.dialogRef.close(response.body);
-      } else {
-        this.messageHandler.showWarning(response.body);
-      }
-      this.submitting = false;
-    });
+    this.resources.terms
+      .save(
+        this.data.terminology.id,
+        {
+          domainType: CatalogueItemDomainType.Term,
+          code: this.code.value,
+          definition: this.definition.value ?? this.code.value,
+          description: this.description.value
+        })
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('Unable to create new term', error);
+          return EMPTY;
+        }),
+        finalize(() => this.submitting = false)
+      )
+      .subscribe((response: HttpResponse<TermDetail>) => {
+        if (response.ok) {
+          this.dialogRef.close(response.body);
+        } else {
+          this.messageHandler.showWarning(response.body);
+        }
+        this.submitting = false;
+      });
   }
 
   onCancel(): void {

@@ -76,9 +76,19 @@ export  class DefaultProfileControls {
       'aliases',
       'dataType'
     ];
+
     const folder = ['description'];
     const dataType = ['description', 'aliases', 'classifications', 'dataType'];
-    const term = ['description', 'aliases',  'classifications', 'url','terminology'];
+
+    const term = [
+      'code',
+      'description',
+      'aliases',
+      'classifications',
+      'url',
+      'terminology'
+    ];
+
     const classification = ['description'];
 
 

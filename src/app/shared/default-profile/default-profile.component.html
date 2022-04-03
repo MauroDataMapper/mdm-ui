@@ -32,6 +32,19 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
+    <tr *ngIf="isInControlList('definition')" data-cy="definition">
+      <td class="detailsRowHeader">Definition</td>
+      <td data-cy="value" *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.definition"
+          [name]="'moduleNameDefinition'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
     <tr *ngIf="isInControlList('aliases')" data-cy="aliases" >
       <td class="detailsRowHeader">Aliases</td>
       <td data-cy="value">

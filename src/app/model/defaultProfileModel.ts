@@ -82,6 +82,7 @@ export  class DefaultProfileControls {
 
     const term = [
       'code',
+      'definition',
       'description',
       'aliases',
       'classifications',

@@ -44,7 +44,7 @@ export class AddProfileModalComponent implements OnInit {
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = `${profile.displayName} (${profile.version})`;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
+          prof['value'] = `${profile.namespace}/${profile.name}/${profile.version}`;
           this.allUnusedProfiles.push(prof);
           this.showProfileSelector = true;
         });

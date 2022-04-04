@@ -25,6 +25,7 @@ pipeline {
         sh 'rm -f junit.xml'
         sh 'rm -rf test-report'
         sh 'rm -rf coverage'
+        sh 'rm -rf dist'
         sh 'rm -f eslint_report.json'
       }
     }
@@ -88,7 +89,17 @@ pipeline {
       }
       post {
         always {
-          junit allowEmptyResults: true, testResults: 'junit.xml'
+          junit allowEmptyResults: true, testResults: 'test-report/junit.xml'
+          publishCoverage adapters: [istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
+          publishHTML([
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : false,
+            reportDir            : 'test-report',
+            reportFiles          : 'index.html',
+            reportName           : 'Test Report',
+            reportTitles         : 'Test'
+          ])
         }
       }
     }
@@ -118,6 +129,7 @@ pipeline {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'npm run dist'
+            sh 'MDM_UI_THEME_NAME=nhs-digital npm run dist'
           }
         }
       }
@@ -213,15 +225,6 @@ pipeline {
   }
   post {
     always {
-      publishHTML([
-        allowMissing         : true,
-        alwaysLinkToLastBuild: true,
-        keepAll              : false,
-        reportDir            : 'test-report',
-        reportFiles          : 'index.html',
-        reportName           : 'Test Report',
-        reportTitles         : 'Test'
-      ])
       outputTestResults()
       zulipNotification(topic: 'mdm-ui')
     }

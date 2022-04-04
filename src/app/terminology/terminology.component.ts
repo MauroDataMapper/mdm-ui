@@ -39,6 +39,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,
+  Term,
   TerminologyDetail,
   TerminologyDetailResponse
 } from '@maurodatamapper/mdm-resources';
@@ -194,7 +195,7 @@ export class TerminologyComponent
     });
   };
 
-  onTermSelect(term) {
+  onTermSelect(term: Term) {
     this.stateHandler.Go(
       'term',
       { terminologyId: term.model, id: term.id },
@@ -202,8 +203,8 @@ export class TerminologyComponent
     );
   }
 
-  onTermAdd() {
-    this.broadcastService.reloadCatalogueTree();
+  onTermAdd(term: Term) {
+    this.onTermSelect(term);
   }
 
   onTermDelete() {

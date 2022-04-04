@@ -594,10 +594,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     return this.favouriteHandler.isAdded(fnode);
   }
 
-  get isUserAdmin() {
-    return this.securityHandler.isAdmin();
-  }
-
   isNodeFinalised(node: FlatNode) {
     return node.finalised;
   }
@@ -750,8 +746,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     try {
       switch (currentNode.domainType) {
-        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
-        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
+        case CatalogueItemDomainType.Folder:
+        case CatalogueItemDomainType.VersionedFolder:
+          await this.resources.folder.moveFolderToFolder(currentNode.id, parentFolder?.id).toPromise();
+          break;
         case CatalogueItemDomainType.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
         case CatalogueItemDomainType.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
         case CatalogueItemDomainType.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
@@ -832,8 +830,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     try {
       // Top level tree node has no parent
       switch (currentNode.domainType) {
-        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
-        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
+        case CatalogueItemDomainType.Folder:
+        case CatalogueItemDomainType.VersionedFolder:
+          await this.resources.folder.moveFolderToFolder(currentNode.id).toPromise();
+          break;
         default:
           this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
           return;

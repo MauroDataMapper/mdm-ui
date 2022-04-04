@@ -30,15 +30,20 @@ export class CustomHtmlRendererService extends marked.Renderer {
     super();
   }
 
-  link = (href: string, title: any, text: string) => {
-    if (href) {
-      const createdLink = this.linkCreatorService.createLink(href, title, text);
-
-      return `<a href='${createdLink}'>${text}</a>`;
+  link(href: string, title: string, text: string) {
+    if (!href) {
+      return `<a href='#'>${text}</a>`;
     }
-    // return the actual format if it does not star with MC
-    return `<a href='${href}' target="_blank">${text}</a>`;
-  };
+
+    if (this.isUrl(href)) {
+      // Create external link
+      return `<a href='${href}' target="_blank">${text}</a>`;
+    }
+
+    // Create internal link
+    const createdLink = this.linkCreatorService.createLink(href, title, text);
+    return `<a href='${createdLink}'>${text}</a>`;
+  }
 
   // just reduce header tags for one level
   heading = (text, level) => {
@@ -50,4 +55,15 @@ export class CustomHtmlRendererService extends marked.Renderer {
   table = (header, body) => {
     return `<table class='table table-bordered'> ${header} ${body}</table>`;
   };
+
+  private isUrl(href: string): boolean {
+    let url: URL;
+    try {
+      url = new URL(href);
+    } catch (_) {
+      return false;
+    }
+
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  }
 }

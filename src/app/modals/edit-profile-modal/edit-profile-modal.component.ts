@@ -33,6 +33,7 @@ import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/mar
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
+import {EditingService} from '@mdm/services/editing.service';
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
@@ -44,6 +45,7 @@ export class EditProfileModalComponent implements OnInit {
   okBtnText: string;
   validationErrors: ProfileValidationErrorList = {
     total: 0,
+    fieldTotal: 0,
     errors: []
   };
 
@@ -63,7 +65,8 @@ export class EditProfileModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
     private markdownParser: MarkdownParserService,
     protected resources: MdmResourcesService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    protected editing: EditingService) {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (data.isNew && field.defaultValue) {
@@ -116,7 +119,11 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   onCancel() {
-    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+    this.editing.confirmCancelAsync().subscribe((confirm) => {
+      if (confirm) {
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+      }
+    });
   }
 
   validate() {
@@ -143,12 +150,12 @@ export class EditProfileModalComponent implements OnInit {
       });
   }
 
-  getValidationError(fieldName: string): ProfileValidationError | undefined {
-    if (this.validationErrors.total === 0) {
+  getValidationError(metadataPropertyName: string): ProfileValidationError | undefined {
+    if (this.validationErrors.fieldTotal === 0) {
       return undefined;
     }
 
-    return this.validationErrors.errors.find(e => e.fieldName === fieldName);
+    return this.validationErrors.errors.find(e => e.metadataPropertyName === metadataPropertyName);
   }
 
   sortBy(items: []) {

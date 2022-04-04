@@ -16,23 +16,42 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItem, CatalogueItemDomainType, catalogueItemToMultiFacetAware, DoiState, DoiStatusResponse, DoiSubmissionState, Finalisable, isDataType, MdmResponse, Modelable, ModelableDetail, MultiFacetAwareDomainType, Profile, ProfileResponse, ProfileSummaryIndexResponse, SecurableModel, Uuid } from '@maurodatamapper/mdm-resources';
-import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
-import { DefaultProfileEditorModalComponent } from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { EditProfileModalConfiguration, EditProfileModalResult } from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
-import { DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse } from '@mdm/model/defaultProfileModel';
-import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, SecurityHandlerService, SharedService } from '@mdm/services';
-import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY, Observable, from, zip, Subject } from 'rxjs';
-import { catchError, filter, map, switchMap, mergeMap, tap } from 'rxjs/operators';
-import { doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem } from './profile-data-view.model';
-import { GridService } from '@mdm/services/grid.service';
-import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  ApiProperty,
+  ApiPropertyIndexResponse,
+  CatalogueItem,
+  CatalogueItemDomainType,
+  catalogueItemToMultiFacetAware,
+  DoiState,
+  DoiStatusResponse,
+  DoiSubmissionState,
+  Finalisable,
+  isDataType,
+  MdmResponse,
+  Modelable,
+  ModelableDetail,
+  MultiFacetAwareDomainType,
+  Profile,
+  ProfileResponse,
+  ProfileSummaryIndexResponse,
+  SecurableModel,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
+import {ModalDialogStatus} from '@mdm/constants/modal-dialog-status';
+import {AddProfileModalComponent} from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import {DefaultProfileEditorModalComponent} from '@mdm/modals/default-profile-editor-modal/default-profile-editor-modal.component';
+import {EditProfileModalComponent} from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import {EditProfileModalConfiguration, EditProfileModalResult} from '@mdm/modals/edit-profile-modal/edit-profile-modal.model';
+import {DefaultProfileItem, DefaultProfileModalConfiguration, DefaultProfileModalResponse} from '@mdm/model/defaultProfileModel';
+import {MdmHttpHandlerOptions, MdmResourcesService} from '@mdm/modules/resources';
+import {MessageHandlerService, SecurityHandlerService, SharedService} from '@mdm/services';
+import {EditingService} from '@mdm/services/editing.service';
+import {EMPTY, from, Observable, Subject, zip} from 'rxjs';
+import {catchError, filter, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {doiProfileNamespace, getDefaultProfileData, ProfileDataViewType, ProfileSummaryListItem} from './profile-data-view.model';
+import {GridService} from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-profile-data-view',
@@ -58,8 +77,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   isEditablePostFinalise = false;
   isReadableByEveryone = false;
   doiState: DoiState = 'not submitted';
-  defaultProfileDomainName: string;
-  otherProperty: any;
+  defaultProfileMetadataNamespace: string;
+  defaultProfileView: string;
+  otherDefaultProfileView: string;
+
+  private readonly defaultProfileNamespacePropertyKey = 'ui.default.profile.namespace';
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -157,6 +179,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .concat(this.unusedProfiles)
       .find(item => item.value === this.currentView);
 
+    const oldProfile: Profile = JSON.parse(JSON.stringify(this.currentProfile));
+
     this.editing
       .openDialog<EditProfileModalComponent, EditProfileModalConfiguration, EditProfileModalResult>(
         EditProfileModalComponent,
@@ -174,8 +198,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .pipe(
         tap(result => {
           if (!result.profile && isNew) {
-            this.currentView = 'default';
+            this.currentView = this.lastView;
             this.changeProfile();
+          }
+          if (result.status !== ModalDialogStatus.Ok && !isNew) {
+            this.currentProfile = oldProfile;
           }
         }),
         filter(result => result.status === ModalDialogStatus.Ok),
@@ -240,11 +267,15 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         })
       )
       .subscribe(() => {
+        let notCurrentOtherDefaultProfileView: string;
+        if (this.otherDefaultProfileView !== undefined && this.currentView !== this.otherDefaultProfileView) {
+          notCurrentOtherDefaultProfileView = this.otherDefaultProfileView;
+        }
         this.messageHandler.showSuccess('Profile removed successfully');
-        this.currentView = this.usedProfiles.find(e => e.display === this.otherProperty &&
+        this.currentView = this.usedProfiles.find(e => e.value === this.defaultProfileView &&
             !(e.namespace === this.currentProfile.namespace && e.name === this.currentProfile.name && e.version === this.currentProfile.version)
           )?.value
-          ?? 'default';
+          ?? notCurrentOtherDefaultProfileView ?? 'default';
         this.loadUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.loadUnusedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
         this.changeProfile();
@@ -280,14 +311,19 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           this.usedProfiles = items;
 
           // Set a default value
-          this.otherProperty = this.loadDefaultProfilePropertyValue(domainType, id)
+          this.loadDefaultProfilePropertyValue(domainType, id)
               .subscribe(defaultValues => {
                if (defaultValues && (defaultValues.length > 0)) {
-                  this.otherProperty = defaultValues[0].value;
+                  this.defaultProfileView = defaultValues[0].value;
+                  if (defaultValues.length > 1) {
+                    this.otherDefaultProfileView = defaultValues[1].value;
+                  } else {
+                    this.otherDefaultProfileView = undefined;
+                  }
                }
-            if (!this.currentView && this.otherProperty) {
+            if (!this.currentView && this.defaultProfileView) {
               // Get the item in usedProfiles that matches the otherProperties value
-              this.currentView = this.usedProfiles.find(e => e.display === this.otherProperty)?.value ?? 'default';
+              this.currentView = this.usedProfiles.find(e => e.value === this.defaultProfileView)?.value ?? 'default';
             } else if (!this.currentView) {
               this.currentView = 'default';
             }
@@ -605,7 +641,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {
-    this.defaultProfileDomainName = this.getContentProperty(properties, 'ui.default.profile.namespace');
+    this.defaultProfileMetadataNamespace = this.getContentProperty(properties, this.defaultProfileNamespacePropertyKey);
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
@@ -655,15 +691,14 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       let responses = [];
       const subject = new Subject<any>();
       observable.subscribe({
-        next: property => {
-          for (const property_item of property) {
-            if (property_item !== undefined ) {
-              responses = responses.concat(
-                property_item.filter(o => (
-                 this.usedProfiles.findIndex(e => e.display === o.value) !== -1
-                 ))
-              );
-            }
+        next: defaultProfileProperties => {
+          const namespace = defaultProfileProperties[0].find(property => property.key === 'namespace');
+          const name = defaultProfileProperties[0].find(property => property.key === 'name');
+          const version = defaultProfileProperties[0].find(property => property.key === 'version');
+          if (namespace !== undefined && name !== undefined && version !== undefined) {
+            responses = this.usedProfiles.filter(usedProfile =>
+              usedProfile.namespace === namespace.value && usedProfile.name === name.value && usedProfile.version === version.value
+            ).concat(responses);
           }
         },
         complete: () => {
@@ -690,7 +725,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         map((data: any) => {
            const tempItems = data.body.items;
            const items = tempItems.filter( o => (
-             o.namespace === this.defaultProfileDomainName)
+             o.namespace === this.defaultProfileMetadataNamespace)
              );
            return items;
         })

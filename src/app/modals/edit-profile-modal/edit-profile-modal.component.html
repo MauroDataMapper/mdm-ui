@@ -186,8 +186,8 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
-            <mat-error *ngIf="getValidationError(field.fieldName)">
-              {{ getValidationError(field.fieldName).message }}
+            <mat-error *ngIf="getValidationError(field.metadataPropertyName)">
+              {{ getValidationError(field.metadataPropertyName).message }}
             </mat-error>
           </td>
         </tr>

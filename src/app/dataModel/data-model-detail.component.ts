@@ -34,7 +34,7 @@ import {
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import {
   DataModelDetail,
@@ -46,8 +46,8 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
-import { MergeDiffAdapterService } from '@mdm/merge-diff/merge-diff-adapter/merge-diff-adapter.service';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
+import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -59,7 +59,7 @@ export class DataModelDetailComponent implements OnInit {
   @Input() dataModel: DataModelDetail;
   originalDataModel: DataModelDetail;
   editMode = false;
-  isAdminUser: boolean;
+  isAdministrator = false;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
   exporting: boolean;
@@ -81,13 +81,15 @@ export class DataModelDetailComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService,
-    private mergeDiffService: MergeDiffAdapterService
-  ) { }
+    private validatorService: ValidatorService) { }
+
+  get canChangeBranchName() {
+    return this.access.showEdit && this.dataModel.branchName !== defaultBranchName;
+  }
 
   ngOnInit() {
-    this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     this.loadExporterList();
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
@@ -204,7 +206,7 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   restore() {
-    if (!this.isAdminUser || !this.dataModel.deleted) {
+    if (!this.isAdministrator || !this.dataModel.deleted) {
       return;
     }
 
@@ -274,9 +276,38 @@ export class DataModelDetailComponent implements OnInit {
     this.dataModel = Object.assign({}, this.originalDataModel);
   }
 
-  openBulkEdit()
-  {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', {id: this.dataModel.id, domainType: this.dataModel.domainType});
+  openBulkEdit() {
+    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', { id: this.dataModel.id, domainType: this.dataModel.domainType });
+  }
+
+  editBranchName() {
+    this.dialog.openChangeBranchName(this.dataModel)
+      .pipe(
+        switchMap(dialogResult => {
+          const payload: ModelUpdatePayload = {
+            id: this.dataModel.id,
+            domainType: this.dataModel.domainType,
+            branchName: dialogResult.branchName
+          };
+
+          return this.resourcesService.dataModel.update(payload.id, payload);
+        }),
+        catchError(error => {
+          this.messageHandler.showError(
+            'There was a problem updating the branch name.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Data Model branch name updated successfully.');
+        this.stateHandler.Go(
+          'datamodel',
+          { id: this.dataModel.id },
+          { reload: true }
+        );
+      });
   }
 
   finalise() {

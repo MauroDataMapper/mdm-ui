@@ -117,7 +117,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
   resetPassword(row) {
     from(this.resources.catalogueUser.adminPasswordReset(row.id, null)).subscribe(() => {
-      this.messageHandler.showSuccess('Reset password email sent successfully!');
+      this.messageHandler.showSuccess('Reset password request received successfully, please use the email tab to view status');
     }, error => {
       this.messageHandler.showError('There was a problem sending reset password email.', error);
     });

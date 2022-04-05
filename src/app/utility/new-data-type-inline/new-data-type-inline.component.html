@@ -39,9 +39,10 @@ SPDX-License-Identifier: Apache-2.0
 			<tr>
 				<td class="detailsRowHeader">Description</td>
 				<td>
-					<mat-form-field appearance="outline" class="full-width">
-						<textarea matInput name="description"  [(ngModel)]="model.description"></textarea>
-					</mat-form-field>
+          <mdm-content-editor
+            [(content)]="model.description"
+            [inEditMode]="true">
+          </mdm-content-editor>
 				</td>
 			</tr>
 			<tr *ngIf="showClassification">

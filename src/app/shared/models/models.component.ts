@@ -65,7 +65,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   activeTab = 0;
   allModels: MdmTreeItem = null;
   filteredModels = null;
-  isAdmin = this.securityHandler.isAdmin();
+  isAdministrator = false;
   inSearchMode = false;
   folder = '';
   searchboxFocused = false;
@@ -202,6 +202,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.userSettingsHandler.get('showSupersededModels') || false;
       this.includeDeleted =
         this.userSettingsHandler.get('includeDeleted') || false;
+
+      this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     }
 
     if (

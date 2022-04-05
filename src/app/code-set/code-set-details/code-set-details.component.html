@@ -61,6 +61,15 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="edit-branch-name"
+            type="button"
+            *ngIf="canChangeBranchName"
+            (click)="editBranchName()"
+          >
+            <i class="fas fa-code-branch"></i> Edit Branch Name
+          </button>
+          <button
+            mat-menu-item
             type="button"
             data-cy="create-new-version"
             *ngIf="access.showNewVersion"
@@ -78,7 +87,7 @@ SPDX-License-Identifier: Apache-2.0
             type="button"
             data-cy="restore"
             class="has-text-green"
-            *ngIf="codeSetDetail.deleted && isAdminUser"
+            *ngIf="codeSetDetail.deleted && isAdministrator"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore

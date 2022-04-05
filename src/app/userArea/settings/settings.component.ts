@@ -34,6 +34,8 @@ export class SettingsComponent implements OnInit {
   includeModelSuperseded = this.userSettingsHandler.defaultSettings.includeModelSuperseded;
   includeDocumentSuperseded = this.userSettingsHandler.defaultSettings.includeDocumentSuperseded;
   includeDeleted = this.userSettingsHandler.defaultSettings.includeDeleted;
+  isAdministrator = false;
+
   constructor(
     private messageHandler: MessageHandlerService,
     private helpDialogueService: HelpDialogueHandlerService,
@@ -43,20 +45,23 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadSettings();
     this.title.setTitle('Preferences');
+
+    this.securityHandler.isAdministrator()
+      .subscribe(state => {
+        this.isAdministrator = state;
+        this.loadSettings();
+      });
   }
+
   loadSettings = () => {
     this.countPerTable = this.userSettingsHandler.get('countPerTable') || this.countPerTable;
     this.expandMoreDescription = this.userSettingsHandler.get('expandMoreDescription') || this.expandMoreDescription;
     this.includeModelSuperseded = this.userSettingsHandler.get('includeModelSuperseded') || this.includeModelSuperseded;
     this.includeDocumentSuperseded = this.userSettingsHandler.get('includeDocumentSuperseded') || this.includeDocumentSuperseded;
-    if (this.isAdmin()) {
+    if (this.isAdministrator) {
       this.includeDeleted = this.userSettingsHandler.get('includeDeleted') || this.includeDeleted;
     }
-  };
-  isAdmin = () => {
-    return this.securityHandler.isAdmin();
   };
 
   saveSettings = () => {
@@ -64,7 +69,7 @@ export class SettingsComponent implements OnInit {
     this.userSettingsHandler.update('expandMoreDescription', this.expandMoreDescription);
     this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);
     this.userSettingsHandler.update('includeDocumentSuperseded', this.includeDocumentSuperseded);
-    if (this.isAdmin()) {
+    if (this.isAdministrator) {
       this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
     }
 

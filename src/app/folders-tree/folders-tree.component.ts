@@ -283,19 +283,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     try {
       switch (node.domainType) {
         case CatalogueItemDomainType.Folder:
-          if (this.justShowFolders) {
-            const folderResponse = await this.resources.tree.get('folders', 'folders', node.id).toPromise();
-            return folderResponse.body;
-          } else {
-            return node.children;
-          }
-        case CatalogueItemDomainType.VersionedFolder:
-          if (this.justShowFolders) {
-            const versionedFolderResponse = await this.resources.tree.get('folders', 'versionedFolders', node.id).toPromise();
-            return versionedFolderResponse.body;
-          } else {
-            return node.children;
-          }
+        case CatalogueItemDomainType.VersionedFolder: { // VersionedFolders are treated the same as Folders
+          const folderResponse = await this.resources.tree.getFolder(node.id).toPromise();
+          return folderResponse.body;
+        }
         case CatalogueItemDomainType.DataModel: {
           const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
           return dataModelResponse.body;
@@ -593,17 +584,14 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     if (fnode.domainType === CatalogueItemDomainType.DataClass) {
       parameters.dataModelId = fnode.modelId;
+        parameters.dataClassId = fnode.node.parentId || '';
     }
 
-    this.stateHandler.NewWindow(fnode.domainType.toLocaleLowerCase(), { id: fnode.id });
+    this.stateHandler.NewWindow(fnode.domainType.toLocaleLowerCase(), parameters);
   }
 
   isFavourited(fnode: FlatNode) {
     return this.favouriteHandler.isAdded(fnode);
-  }
-
-  get isUserAdmin() {
-    return this.securityHandler.isAdmin();
   }
 
   isNodeFinalised(node: FlatNode) {
@@ -758,8 +746,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     try {
       switch (currentNode.domainType) {
-        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
-        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
+        case CatalogueItemDomainType.Folder:
+        case CatalogueItemDomainType.VersionedFolder:
+          await this.resources.folder.moveFolderToFolder(currentNode.id, parentFolder?.id).toPromise();
+          break;
         case CatalogueItemDomainType.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
         case CatalogueItemDomainType.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
         case CatalogueItemDomainType.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
@@ -840,8 +830,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     try {
       // Top level tree node has no parent
       switch (currentNode.domainType) {
-        case CatalogueItemDomainType.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
-        case CatalogueItemDomainType.VersionedFolder: await this.resources.versionedFolder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise(); break;
+        case CatalogueItemDomainType.Folder:
+        case CatalogueItemDomainType.VersionedFolder:
+          await this.resources.folder.moveFolderToFolder(currentNode.id).toPromise();
+          break;
         default:
           this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
           return;

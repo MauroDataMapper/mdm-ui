@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Container, DataTypeReference, Modelable, ModelableDetail } from '@maurodatamapper/mdm-resources';
+import {Container, DataTypeReference, Modelable, ModelableDetail, Version} from '@maurodatamapper/mdm-resources';
 import { DefaultProfileControls, DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 
 export type ProfileDataViewType = 'default' | 'other' | 'addnew';
@@ -29,6 +29,7 @@ export interface ProfileSummaryListItem {
   value: string;
   namespace: string;
   name: string;
+  version: Version;
 }
 
 export const showControl = (controls: string[], controlName: string): boolean => {
@@ -53,6 +54,27 @@ export const getDefaultProfileData = (
   descriptionOnly: boolean): DefaultProfileItem[] => {
   const items: DefaultProfileItem[] = [];
   const controls = DefaultProfileControls.renderControls(catalogueItem.domainType);
+
+  if (showControl(controls, 'code')) {
+    items.push(
+      createDefaultProfileItem(
+        catalogueItem.code,
+        'Code',
+        ProfileControlTypes.text,
+        'code'
+      )
+    );
+  }
+  if (showControl(controls, 'definition')) {
+    items.push(
+      createDefaultProfileItem(
+        catalogueItem.definition,
+        'Definition',
+        ProfileControlTypes.text,
+        'definition'
+      )
+    );
+  }
 
   items.push(
     createDefaultProfileItem(

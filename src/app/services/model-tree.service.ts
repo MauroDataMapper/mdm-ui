@@ -288,28 +288,31 @@ export class ModelTreeService implements OnDestroy {
   }
 
   deleteCatalogueItemPermanent(item: Modelable): Observable<void> {
-    if (!this.securityHandler.isAdmin()) {
-      this.messageHandler.showWarning('Only administrators may permanently delete catalogue items.');
-      return of();
-    }
-
-    return this.dialog
-      .openDoubleConfirmationAsync({
-        data: {
-          title: 'Permanent deletion',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: `Are you sure you want to <span class=\'warning\'>permanently</span> delete '${item.label}'?`
-        }
-      }, {
-        data: {
-          title: 'Confirm permanent deletion',
-          okBtnTitle: 'Confirm deletion',
-          btnType: 'warn',
-          message: '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
-        }
-      })
+    return this.securityHandler.isAdministrator()
       .pipe(
+        switchMap(isAdministrator => {
+          if (!isAdministrator) {
+            this.messageHandler.showWarning('Only administrators may permanently delete catalogue items.');
+            return of();
+          }
+
+          return this.dialog
+            .openDoubleConfirmationAsync({
+              data: {
+                title: 'Permanent deletion',
+                okBtnTitle: 'Yes, delete',
+                btnType: 'warn',
+                message: `Are you sure you want to <span class=\'warning\'>permanently</span> delete '${item.label}'?`
+              }
+            }, {
+              data: {
+                title: 'Confirm permanent deletion',
+                okBtnTitle: 'Confirm deletion',
+                btnType: 'warn',
+                message: '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
+              }
+            });
+        }),
         switchMap(() => this.deleteCatalogueItem(item, true))
       );
   }

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <mdm-markdown-text-area
-  *ngIf="contentFormat === ContentFormatType.Markdown"
+  *ngIf="contentFormat === 'markdown'"
   [element]="element"
   [property]="property"
   [inEditMode]="inEditMode"
@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 </mdm-markdown-text-area>
 
 <mdm-html-editor
-  *ngIf="contentFormat === ContentFormatType.Html"
+  *ngIf="contentFormat === 'html'"
   [element]="element"
   [property]="property"
   [inEditMode]="inEditMode"
@@ -42,9 +42,9 @@ SPDX-License-Identifier: Apache-2.0
 >
 </mdm-html-editor>
 
-<div *ngIf="isInEditMode()">
+<div *ngIf="isInEditMode() && allowFormatChoice">
   <mat-button-toggle-group name="format" aria-label="Format" [(ngModel)]="contentFormat">
-    <mat-button-toggle [value]="ContentFormatType.Markdown">Markdown</mat-button-toggle>
-    <mat-button-toggle [value]="ContentFormatType.Html">HTML</mat-button-toggle>
+    <mat-button-toggle value="markdown">Markdown</mat-button-toggle>
+    <mat-button-toggle value="html">HTML</mat-button-toggle>
   </mat-button-toggle-group>
 </div>

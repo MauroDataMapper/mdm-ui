@@ -30,6 +30,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 })
 export class SettingsComponent implements OnInit {
   countPerTable = this.userSettingsHandler.defaultSettings.countPerTable;
+  editorFormat = this.userSettingsHandler.defaultSettings.editorFormat;
   expandMoreDescription = this.userSettingsHandler.defaultSettings.expandMoreDescription;
   includeModelSuperseded = this.userSettingsHandler.defaultSettings.includeModelSuperseded;
   includeDocumentSuperseded = this.userSettingsHandler.defaultSettings.includeDocumentSuperseded;
@@ -56,6 +57,7 @@ export class SettingsComponent implements OnInit {
 
   loadSettings = () => {
     this.countPerTable = this.userSettingsHandler.get('countPerTable') || this.countPerTable;
+    this.editorFormat = this.userSettingsHandler.get('editorFormat') || this.editorFormat;
     this.expandMoreDescription = this.userSettingsHandler.get('expandMoreDescription') || this.expandMoreDescription;
     this.includeModelSuperseded = this.userSettingsHandler.get('includeModelSuperseded') || this.includeModelSuperseded;
     this.includeDocumentSuperseded = this.userSettingsHandler.get('includeDocumentSuperseded') || this.includeDocumentSuperseded;
@@ -66,6 +68,7 @@ export class SettingsComponent implements OnInit {
 
   saveSettings = () => {
     this.userSettingsHandler.update('countPerTable', this.countPerTable);
+    this.userSettingsHandler.update('editorFormat', this.editorFormat);
     this.userSettingsHandler.update('expandMoreDescription', this.expandMoreDescription);
     this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);
     this.userSettingsHandler.update('includeDocumentSuperseded', this.includeDocumentSuperseded);

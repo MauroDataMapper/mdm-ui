@@ -17,22 +17,23 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Term, TermDetail, TerminologyDetail } from '@maurodatamapper/mdm-resources';
-import { MdmTableDataSource } from '@mdm/utility/table-data-source';
-import { merge } from 'rxjs';
+import { Term, TermDetail, TermIndexResponse, TerminologyDetail } from '@maurodatamapper/mdm-resources';
+import { merge, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTermDialogComponent, CreateTermForm } from './create-term-dialog/create-term-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { GridService, MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-term-list',
   templateUrl: './term-list.component.html',
   styleUrls: ['./term-list.component.scss']
 })
-export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
+export class TermListComponent implements AfterViewInit {
 
   @Input() terminology: TerminologyDetail;
   @Input() pageSize = 10;
@@ -47,65 +48,88 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   displayedColumns: string[] = ['code', 'definition', 'actions'];
-  terms: MdmTableDataSource<Term> = new MdmTableDataSource();
+  terms: Term[] = [];
   isLoadingResults = false;
-  reloadEvent = new EventEmitter<string>();
   totalItemCount = 0;
 
-  constructor(private resources: MdmResourcesService, private dialog: MatDialog) {}
+  hideFilters = true;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
+  codeFilter?: string;
+  definitionFilter?: string;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.terminology) {
-      if (this.terms && this.terminology) {
-        // Update action functions when terminology changed
-        this.terms.fetchFunction = options => this.resources.terms.list(this.terminology.id, options);
-        this.terms.deleteFunction = (item: Term) => this.resources.terms.remove(this.terminology.id, item.id);
-
-        // Ignore first change as it will be handle by ngAfterViewInit() after MatSort and MatPaginator initialised
-        if (!changes.terminology.isFirstChange) {
-          this.terms.fetchData();
-        }
-      }
-    }
-  }
-
-  ngOnInit() {
-    // Keep track of item count
-    this.terms.count.subscribe(c => {
-      this.totalItemCount = c;
-      this.totalCount.emit(this.totalItemCount);
-    });
-  }
+  constructor(
+    private resources: MdmResourcesService,
+    private dialog: MatDialog,
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService) { }
 
   ngAfterViewInit() {
-    // Reset pageIndex on reload
-    this.reloadEvent.subscribe(() => this.paginator.pageIndex = 0);
-
-    // Reset pageIndex on re-order
+    this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
     this.sort?.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    // Update table data source on sorting, paging, or reload events
-    merge(this.sort?.sortChange, this.paginator?.page, this.reloadEvent).subscribe(() => {
-      this.refreshFetchOptions();
-      this.terms.fetchData();
+    merge(
+      this.sort.sortChange,
+      this.paginator.page,
+      this.filterEvent
+    ).pipe(
+      startWith({}),
+      switchMap(() => {
+        this.isLoadingResults = true;
+        return this.fetchTerms(
+          this.paginator.pageSize,
+          this.paginator.pageOffset,
+          this.sort.active,
+          this.sort.direction,
+          this.filter);
+      }),
+      map((data) => {
+        this.totalItemCount = data.body.count;
+        this.totalCount.emit(data.body.count);
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+    ).subscribe((data) => {
+      this.terms = data;
     });
-
-    // Initial paging and sorting configuration
-    this.refreshFetchOptions();
-
-    // First data fetch
-    this.terms.fetchData();
   }
 
-  refreshFetchOptions() {
-    this.terms.pageable = {
-      max: this.paginator?.pageSize || this.pageSize,
-      offset: (this.paginator?.pageIndex * this.paginator?.pageSize) || 0
+  filterClick () {
+    this.hideFilters = !this.hideFilters;
+  }
+
+  applyFilter() {
+    this.filter = {
+      ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter })
     };
-    this.terms.sortable = {
-      sort: this.sort?.active,
-      order: this.sort?.direction
-    };
+
+    this.filterEvent.emit();
+  }
+
+  reload() {
+    this.hideFilters = true;
+    this.filter = { };
+    this.filterEvent.emit();
+  }
+
+  fetchTerms(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: {}): Observable<TermIndexResponse> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters);
+    return this.resources.terms.list(this.terminology.id, options);
   }
 
   openCreateTermDialog(): void {
@@ -118,7 +142,7 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        this.terms.fetchData();
+        this.reload();
         this.addedTerm.emit(data);
       }
     });
@@ -126,7 +150,11 @@ export class TermListComponent implements OnInit, AfterViewInit, OnChanges {
 
   deleteTerm(term: Term) {
     if (this.canDelete) {
-      this.terms.deleteItem(term).subscribe(() => this.deletedTerm.emit());
+      this.resources.terms.remove(this.terminology.id, term.id)
+        .subscribe(() => {
+          this.messageHandler.showSuccess(`Term "${term.definition}" was successfully removed.`);
+          this.reload();
+        });
     }
   }
 }

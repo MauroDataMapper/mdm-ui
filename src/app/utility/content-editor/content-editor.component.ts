@@ -79,7 +79,7 @@ export class ContentEditorComponent implements OnInit {
   }
 
   isEmptyContent() {
-    return !this.content
+    return !this.content;
   }
 
 

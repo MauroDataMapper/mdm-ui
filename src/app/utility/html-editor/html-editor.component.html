@@ -18,24 +18,24 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <div *ngIf="!element">
-   <jodit-editor *ngIf="inEditMode" 
-                  [(ngModel)]="description" 
+   <jodit-editor *ngIf="inEditMode"
+                  [(ngModel)]="description"
                   name="{{property}}"
                   [config]="editorConfig"
                   (onChange)="onHtmlEditorChanged($event)">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="description | safe:'html'" *ngIf="!inEditMode"></span>
+      <span [innerHTML]="description ?? '' | safe:'html'" *ngIf="!inEditMode"></span>
   </div>
 </div>
 
 <div *ngIf="element">
-   <jodit-editor *ngIf="inEditMode" 
-                  [(ngModel)]="element[property]" 
+   <jodit-editor *ngIf="inEditMode"
+                  [(ngModel)]="element[property]"
                   name="{{property}}"
                   [config]="editorConfig">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!inEditMode"></span>
+      <span [innerHTML]="element[property] ?? '' | safe:'html'" *ngIf="!inEditMode"></span>
    </div>
 </div>

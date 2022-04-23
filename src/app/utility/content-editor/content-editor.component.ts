@@ -17,12 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ContentEditorFormat } from '@mdm/constants/ui.types';
+import { UserSettingsHandlerService } from '@mdm/services';
 import { HtmlButtonMode } from '../html-editor/html-editor.component';
-
-export enum ContentEditorFormat {
-  Markdown,
-  Html
-}
 
 export interface ContentEditorMarkdownOptions {
   showHelpText: boolean;
@@ -39,7 +36,7 @@ export interface ContentEditorHtmlOptions {
 })
 export class ContentEditorComponent implements OnInit {
 
-  @Input() contentFormat: ContentEditorFormat = ContentEditorFormat.Html;
+  @Input() contentFormat: ContentEditorFormat = 'markdown';
 
   /* Inputs/outputs for manual properties */
   @Input() inEditMode: boolean;
@@ -54,24 +51,22 @@ export class ContentEditorComponent implements OnInit {
   @Input() htmlOptions: ContentEditorHtmlOptions;
 
   ButtonModeTypes = HtmlButtonMode;
-  ContentFormatType = ContentEditorFormat;
 
-  constructor() { }
+  constructor(private userSettings: UserSettingsHandlerService) { }
 
   ngOnInit(): void {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
     this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
 
-    this.contentFormat = this.isHtmlContent() ? ContentEditorFormat.Html : ContentEditorFormat.Markdown;
-  }
+    const formatPreference = this.userSettings.get<ContentEditorFormat>('editorFormat')
+      ?? this.userSettings.defaultSettings.editorFormat;
 
-  getContentFormatName() {
-    switch (this.contentFormat)
-    {
-      case ContentEditorFormat.Markdown: return 'Markdown';
-      case ContentEditorFormat.Html: return 'HTML';
-      default: return '';
+    if(this.isEmptyContent()) {
+      this.contentFormat = formatPreference;
+    } else {
+      this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
+
   }
 
   isInEditMode() : boolean {
@@ -82,6 +77,11 @@ export class ContentEditorComponent implements OnInit {
     this.content = value;
     this.contentChange.emit(value);
   }
+
+  isEmptyContent() {
+    return !this.content;
+  }
+
 
   isHtmlContent() {
 

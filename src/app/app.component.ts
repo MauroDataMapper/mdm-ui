@@ -20,8 +20,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, of, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { BroadcastService, StateHandlerService, UserSettingsHandlerService } from './services';
 import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
@@ -78,15 +78,22 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.broadcast
       .onUserLoggedIn()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(args => {
-        this.userSettingsHandler.init().then(() => {
-          // To remove any ngToast messages specifically sessionExpiry,...
-          this.toastr.toasts.forEach(x => this.toastr.clear(x.toastId));
-          if (args && args.nextRoute) {
-            this.stateHandler.Go(args.nextRoute, {}, { reload: true, inherit: false, notify: true });
-          }
-        });
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        switchMap(args => {
+          const settings$ = this.userSettingsHandler.loadForCurrentUser();
+          return forkJoin([
+            of(args),
+            settings$
+          ]);
+        })
+      )
+      .subscribe(([args, _]) => {
+        // To remove any ngToast messages specifically sessionExpiry,...
+        this.toastr.toasts.forEach(x => this.toastr.clear(x.toastId));
+        if (args && args.nextRoute) {
+          this.stateHandler.Go(args.nextRoute, {}, { reload: true, inherit: false, notify: true });
+        }
       });
 
     this.setupIdleTimer();

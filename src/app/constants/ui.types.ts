@@ -19,8 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 /**
  * Defines the possible formats for using a content editor.
  *
- * * `auto` - Automatically attempt to determine the format of content based on the text entered.
  * * `markdown` - Assume that content is in Markdown format.
  * * `html` - Assume that content is in HTML format.
  */
-export type ContentEditorFormat = 'auto' | 'markdown' | 'html';
+export type ContentEditorFormat = 'markdown' | 'html';

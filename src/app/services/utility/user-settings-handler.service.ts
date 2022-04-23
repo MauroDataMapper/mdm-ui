@@ -51,7 +51,7 @@ export class UserSettingsHandlerService {
     includeDocumentSuperseded: false,
     includeDeleted: false,
     dataFlowDiagramsSetting: {},
-    editorFormat: 'auto'
+    editorFormat: 'markdown'
   };
 
   constructor(

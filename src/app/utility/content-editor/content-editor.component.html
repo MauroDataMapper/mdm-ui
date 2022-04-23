@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
 >
 </mdm-html-editor>
 
-<div *ngIf="isInEditMode() && allowFormatChoice">
+<div *ngIf="isInEditMode()">
   <mat-button-toggle-group name="format" aria-label="Format" [(ngModel)]="contentFormat">
     <mat-button-toggle value="markdown">Markdown</mat-button-toggle>
     <mat-button-toggle value="html">HTML</mat-button-toggle>

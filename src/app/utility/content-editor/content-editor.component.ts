@@ -36,7 +36,7 @@ export interface ContentEditorHtmlOptions {
 })
 export class ContentEditorComponent implements OnInit {
 
-  @Input() contentFormat: ContentEditorFormat = 'auto';
+  @Input() contentFormat: ContentEditorFormat = 'markdown';
 
   /* Inputs/outputs for manual properties */
   @Input() inEditMode: boolean;
@@ -51,7 +51,6 @@ export class ContentEditorComponent implements OnInit {
   @Input() htmlOptions: ContentEditorHtmlOptions;
 
   ButtonModeTypes = HtmlButtonMode;
-  allowFormatChoice = true;
 
   constructor(private userSettings: UserSettingsHandlerService) { }
 
@@ -62,12 +61,12 @@ export class ContentEditorComponent implements OnInit {
     const formatPreference = this.userSettings.get<ContentEditorFormat>('editorFormat')
       ?? this.userSettings.defaultSettings.editorFormat;
 
-    this.contentFormat = formatPreference;
-    if (this.contentFormat === 'auto') {
+    if(this.isEmptyContent()) {
+      this.contentFormat = formatPreference;
+    } else {
       this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
 
-    this.allowFormatChoice = formatPreference === 'auto';
   }
 
   isInEditMode() : boolean {
@@ -78,6 +77,11 @@ export class ContentEditorComponent implements OnInit {
     this.content = value;
     this.contentChange.emit(value);
   }
+
+  isEmptyContent() {
+    return !this.content
+  }
+
 
   isHtmlContent() {
 

@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
               <div *ngIf="model.source.domainType === 'DataModel'">
                 <span class="mdm--badge">1</span>
                 <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank"><i
+                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank" rel="noopener"><i
                   class="fas fa-external-link-alt"></i></a></span></span>
                 <mdm-model-selector-tree
                   [processing]="model.loadingSource"
@@ -58,7 +58,7 @@ SPDX-License-Identifier: Apache-2.0
             <div class="form-group">
               <span class="mdm--badge">2</span>
               <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                                  *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
+                                                  *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank" rel="noopener"><i
               class="fas fa-external-link-alt"></i></a></span>
               <mdm-model-selector-tree
                 [processing]="model.processing"

@@ -96,18 +96,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab>
       <ng-template mat-tab-label>
         Terms
-        <span *ngIf="isLoadingTerms" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
+        <mdm-skeleton-badge *ngIf="isLoadingTerms"></mdm-skeleton-badge>
         ({{ termsItemCount }})
       </ng-template>
 
@@ -126,18 +115,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab>
       <ng-template mat-tab-label>
         Relationship Types
-        <span *ngIf="isLoadingRelationshipTypes" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
+        <mdm-skeleton-badge *ngIf="isLoadingRelationshipTypes"></mdm-skeleton-badge>
         ({{ relationshipTypesItemCount }})
       </ng-template>
 
@@ -153,18 +131,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab>
       <ng-template mat-tab-label>
         Rules
-        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
+        <mdm-skeleton-badge *ngIf="isLoadingRules"></mdm-skeleton-badge>
         ({{ rulesItemCount }})
       </ng-template>
       <div class="full-width">
@@ -251,18 +218,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab>
       <ng-template mat-tab-label>
         History
-        <span *ngIf="isLoadingHistory" class="mdm--skeleton-badge">
-          <ngx-skeleton-loader
-            count="1"
-            appearance="circle"
-            [theme]="{
-              'border-radius': '5px',
-              height: '31px',
-              width: '28px',
-              'background-color': '#b7bbc5'
-            }"
-          ></ngx-skeleton-loader>
-        </span>
+        <mdm-skeleton-badge *ngIf="isLoadingHistory"></mdm-skeleton-badge>
         ({{ historyItemCount }})
       </ng-template>
 

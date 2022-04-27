@@ -46,18 +46,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab>
     <ng-template mat-tab-label>
       Elements
-      <span *ngIf="isLoadingElements" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
+      <mdm-skeleton-badge *ngIf="isLoadingElements"></mdm-skeleton-badge>
       ({{ elementsItemCount }})
     </ng-template>
     <div class="full-width">
@@ -71,18 +60,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab>
     <ng-template mat-tab-label>
       Types
-      <span *ngIf="isLoadingTypes" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
+      <mdm-skeleton-badge *ngIf="isLoadingTypes"></mdm-skeleton-badge>
       ({{ typesItemCount }})
     </ng-template>
     <div class="full-width">
@@ -96,18 +74,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab>
     <ng-template mat-tab-label>
       Data
-      <span *ngIf="isLoadingData" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
+      <mdm-skeleton-badge *ngIf="isLoadingData"></mdm-skeleton-badge>
       ({{ dataItemCount }})
     </ng-template>
     <div class="full-width">
@@ -122,18 +89,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab>
     <ng-template mat-tab-label>
       Rules
-      <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
+      <mdm-skeleton-badge *ngIf="isLoadingRules"></mdm-skeleton-badge>
       ({{ rulesItemCount }})
     </ng-template>
     <div class="full-width">

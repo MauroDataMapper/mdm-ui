@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,15 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<div class="mdm-root" [class]="themeCssSelector">
-    <div class="mat-typography mdm-app-component">
-        <mdm-navbar></mdm-navbar>
+*/
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-        <main ui-view></main>
+import { SkeletonBadgeComponent } from './skeleton-badge.component';
 
-        <mdm-footer class="mdm-footer"></mdm-footer>
+describe('SkeletonBadgeComponent', () => {
+  let component: SkeletonBadgeComponent;
+  let fixture: ComponentFixture<SkeletonBadgeComponent>;
 
-        <mdm-loading-indicator></mdm-loading-indicator>
-    </div>
-</div>
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ SkeletonBadgeComponent ]
+    })
+    .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SkeletonBadgeComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,15 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<div class="mdm-root" [class]="themeCssSelector">
-    <div class="mat-typography mdm-app-component">
-        <mdm-navbar></mdm-navbar>
+*/
+import { Component } from '@angular/core';
 
-        <main ui-view></main>
-
-        <mdm-footer class="mdm-footer"></mdm-footer>
-
-        <mdm-loading-indicator></mdm-loading-indicator>
-    </div>
-</div>
+@Component({
+  selector: 'mdm-skeleton-badge',
+  templateUrl: './skeleton-badge.component.html',
+  styleUrls: ['./skeleton-badge.component.scss']
+})
+export class SkeletonBadgeComponent { }

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
     <h4 class="marginless">Classified Elements</h4>
-    <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
+    <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
     <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
     <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
 </div>

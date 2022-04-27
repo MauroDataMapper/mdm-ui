@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex  fxLayout="row" fxFlex="70" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-start center">
         <h4 class="marginless">
                 Properties
-                <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
+                <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
                 <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
             </h4>

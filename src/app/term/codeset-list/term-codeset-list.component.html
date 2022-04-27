@@ -27,14 +27,14 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <table mat-table matSort matSortDisableClear [dataSource]="codesets" class="mdm--mat-table table-striped">
     <ng-container matColumnDef="label">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 80%;">Label</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 80%;" scope="col">Label</th>
       <td mat-cell *matCellDef="let item">
         <button type="button" class="btn btn-link" (click)="selectedCodeSet.emit(item)">{{item.label}}</button>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="author">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">Author</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" scope="col">Author</th>
       <td mat-cell *matCellDef="let item"> {{item.author}} </td>
     </ng-container>
 

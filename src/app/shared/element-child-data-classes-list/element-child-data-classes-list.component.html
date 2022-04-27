@@ -37,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
     <table mat-table #table [dataSource]="records" cdkDropList (cdkDropListDropped)="dropTable($event)" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="checkbox">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;">
+            <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;" scope="col">
                 <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
                     <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
                 </mat-checkbox>
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 35%; width: 35%;" columnName="name">
+            <th mat-header-cell *matHeaderCellDef style="max-width: 35%; width: 35%;" columnName="name" scope="col">
                 Name
             </th>
           <td mat-cell *matCellDef="let record" style="overflow-wrap: break-word; word-break: break-word;">
@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
           </td>
         </ng-container>
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 50%; width: 50%;" columnName="description">
+            <th mat-header-cell *matHeaderCellDef style="max-width: 50%; width: 50%;" columnName="description" scope="col">
                 Description
             </th>
             <td mat-cell *matCellDef="let record">
@@ -75,7 +75,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="multiplicity">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 5%; width: 5%;" columnName="multiplicity">
+            <th mat-header-cell *matHeaderCellDef style="max-width: 5%; width: 5%;" columnName="multiplicity" scope="col">
                Multiplicity
             </th>
             <td mat-cell *matCellDef="let record" style="text-align: center;">
@@ -102,10 +102,10 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
     <table class="mdm--mat-table mdm--skeleton-table">
         <tr>
-            <th style="width: 5%;" *ngIf="isEditable && !parentDataModel.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
-            <th style="width: 29%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-            <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-            <th style="width: 11%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+            <th style="width: 5%;" scope="col" *ngIf="isEditable && !parentDataModel.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
+            <th style="width: 29%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+            <th style="width: 43%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+            <th style="width: 11%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
             <td style="width: 2%;" *ngIf="isEditable && !parentDataModel.finalised"></td>
         </tr>
     <tr>

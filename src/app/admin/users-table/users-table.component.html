@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
       <ng-container matColumnDef="firstName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="firstName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="firstName" scope="col">
           <span [hidden]="!hideFilters">First name</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="lastName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="lastName" scope="col">
           <span [hidden]="!hideFilters">Last name</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="emailAddress">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="emailAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="emailAddress" scope="col">
           <span [hidden]="!hideFilters">Email</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" floatLabel="never">
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="organisation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer; width: 12%" columnName="organisation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer; width: 12%" columnName="organisation" scope="col">
           <span [hidden]="!hideFilters">Organisation</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="groups">
-        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; width: 24%;" columnName="groups">
+        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; width: 24%;" columnName="groups" scope="col">
           <span [hidden]="!hideFilters">Groups</span>
         </th>
         <td mat-cell *matCellDef="let record" style="text-align: left; word-break: break-word;">
@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="width: 5%; text-align: center;" columnName="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="width: 5%; text-align: center;" columnName="status" scope="col">
           <span [hidden]="!hideFilters">Status</span>
         </th>
         <td mat-cell *matCellDef="let record" style="text-align: center;">

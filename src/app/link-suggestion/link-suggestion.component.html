@@ -131,7 +131,7 @@ SPDX-License-Identifier: Apache-2.0
                   <table mat-table matSort [dataSource]="datasource" class="table table-bordered">
                     <ng-container matColumnDef="source">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header="source" [disabled]="!hideFilters"
-                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="source">
+                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="source" scope="col">
                         Source Data Element
                       </th>
                       <td mat-cell *matCellDef="let suggest"
@@ -150,7 +150,7 @@ SPDX-License-Identifier: Apache-2.0
                     </ng-container>
                     <ng-container matColumnDef="target">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header="target" [disabled]="!hideFilters"
-                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="target">
+                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="target" scope="col">
                         Target Data Element
                       </th>
                       <td mat-cell *matCellDef="let suggest"
@@ -219,7 +219,7 @@ SPDX-License-Identifier: Apache-2.0
                     </ng-container>
                     <ng-container matColumnDef="buttons">
                       <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 8%;width: 8%;"
-                          columnName="buttons" sortable="true">
+                          columnName="buttons" sortable="true" scope="col">
                       </th>
                       <td mat-cell *matCellDef="let suggest; let i = index" style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
                         <div *ngIf="!suggest.success && !suggest.processing">

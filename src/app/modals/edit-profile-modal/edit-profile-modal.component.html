@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <table *ngIf="this.profileData" class="table table-bordered">
+    <table *ngIf="this.profileData" class="table table-bordered" role="presentation">
       <tbody *ngFor="let section of this.profileData?.sections">
         <tr>
           <td [attr.colspan]="2" class="detailsRowHeader">

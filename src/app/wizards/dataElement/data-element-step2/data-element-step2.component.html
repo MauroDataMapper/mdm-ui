@@ -127,7 +127,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="table-responsive" [ngClass]="{'is-hidden':!totalItemCount}">
             <table mat-table [dataSource]="dataSourceDataElements" matSort class="mdm--mat-table table-striped">
                 <ng-container matColumnDef="checkbox">
-                    <th mat-header-cell *matHeaderCellDef columnName="checkbox" style="cursor: pointer; max-width: 7%; width: 7%; text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef columnName="checkbox" style="cursor: pointer; max-width: 7%; width: 7%; text-align: center;" scope="col">
                         <mat-checkbox [checked]="isAllChecked" (change)="onCheckAll()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
                             <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
                         </mat-checkbox>
@@ -139,7 +139,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="label">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" columnName="label" style="cursor: pointer; max-width: 28%; width: 28%;">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" columnName="label" style="cursor: pointer; max-width: 28%; width: 28%;" scope="col">
                         <span [hidden]="!hideFilters">Name</span>
                         <div [hidden]="hideFilters">
                             <mat-form-field class="filter" floatLabel="never">
@@ -153,7 +153,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description" scope="col">
                         <span [hidden]="!hideFilters">Description</span>
                         <div [hidden]="hideFilters">
                             <mat-form-field class="filter" floatLabel="never">
@@ -167,7 +167,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="domainType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 30%; width: 30%;" columnName="domainType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 30%; width: 30%;" columnName="domainType" scope="col">
                         <span [hidden]="!hideFilters">Type</span>
                         <div [hidden]="hideFilters">
                             <mat-label>Type</mat-label>
@@ -202,7 +202,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="table-responsive" [ngClass]="{'is-hidden':!totalSelectedItemsCount}">
             <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--mat-table table-striped">
                 <ng-container matColumnDef="label">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label" scope="col">
                         <span [hidden]="!hideFiltersSelectedDataTypes">Name</span>
                         <div [hidden]="hideFiltersSelectedDataTypes">
                             <mat-form-field class="filter" floatLabel="never">
@@ -218,7 +218,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description" scope="col">
                         <span [hidden]="!hideFiltersSelectedDataTypes">Description</span>
                         <div [hidden]="hideFiltersSelectedDataTypes">
                             <mat-form-field class="filter" floatLabel="never">
@@ -232,7 +232,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="domainType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="domainType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="domainType" scope="col">
                         <span [hidden]="!hideFiltersSelectedDataTypes">Type</span>
                         <div [hidden]="hideFiltersSelectedDataTypes">
                             <mat-form-field class="filter" floatLabel="never">
@@ -246,7 +246,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" scope="col">
                         Status
                     </th>
                     <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">

@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
         <ng-container matColumnDef="label">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 30%;width: 30%;" columnName="label">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 30%;width: 30%;" columnName="label" scope="col">
                 <span [hidden]="!hideFilters">Name</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -45,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 55%;width: 55%;" columnName="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 55%;width: 55%;" columnName="description" scope="col">
                 <span [hidden]="!hideFilters">Description</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -65,7 +65,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="type" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%; text-align: center;" columnName="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="type" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%; text-align: center;" columnName="type" scope="col">
                 <span [hidden]="!hideFilters">Type</span>
                 <!-- <div [hidden]="hideFilters">
                     <mat-label>Type</mat-label>
@@ -94,9 +94,9 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 30%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 55%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 15%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+        <th style="width: 30%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 55%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 15%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
     </tr>
     <tr>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
   <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--mat-table mat-elevation-z3 table-striped">
       <ng-container matColumnDef="createdBy">
-          <th style="cursor:pointer;max-width: 30%;width: 30%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <th style="cursor:pointer;max-width: 30%;width: 30%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
               User
           </th>
           <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="dateCreated">
-          <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
               Date
           </th>
           <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="description">
-          <th style="cursor:pointer;max-width: 50%;width: 50%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <th style="cursor:pointer;max-width: 50%;width: 50%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
               Description
           </th>
           <td style="max-width: 50%;width: 50%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
@@ -61,9 +61,9 @@ SPDX-License-Identifier: Apache-2.0
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--table-fixed skeleton-table">
       <tr>
-          <th style="width: 20%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-          <th style="width: 20%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-          <th style="width: 60%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '20%'}"></ngx-skeleton-loader></th>
+          <th style="width: 20%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+          <th style="width: 20%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+          <th style="width: 60%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '20%'}"></ngx-skeleton-loader></th>
       </tr>
       <tr>
           <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

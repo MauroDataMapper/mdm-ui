@@ -31,9 +31,9 @@ SPDX-License-Identifier: Apache-2.0
     <table class="table enumerationKeyValueTable" *ngIf="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
       <thead>
         <tr>
-          <th *ngIf="hasCategory">Group</th>
-          <th>Key</th>
-          <th>Value</th>
+          <th *ngIf="hasCategory" scope="col">Group</th>
+          <th scope="col">Key</th>
+          <th scope="col">Value</th>
         </tr>
       </thead>
       <tbody>

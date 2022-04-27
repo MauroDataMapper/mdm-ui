@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table table-striped marginless">
             <ng-container matColumnDef="label">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="label">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="label" scope="col">
                     <span>Label</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="description" scope="col">
                     <span>Description</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="connection">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="connection">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="connection" scope="col">
                     <span>Connection</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="refreshPeriod">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%; cursor: pointer; max-width: 40%;" columnName="refreshPeriod">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%; cursor: pointer; max-width: 40%;" columnName="refreshPeriod" scope="col">
                     <span>Refresh period (days)</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">

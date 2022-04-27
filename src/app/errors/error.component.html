@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0
     >Show details</mat-slide-toggle
   >
   <div [hidden]="!showDetails" class="mt-1">
-    <table class="table dataModelDetailTable mdm--table-fixed">
+    <table class="table dataModelDetailTable mdm--table-fixed" role="presentation">
       <tbody>
         <tr *ngFor="let item of dataSource">
           <td class="detailsRowHeader">{{ item.field }}</td>

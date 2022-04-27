@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
   <table mat-table #table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
       <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 35%;width: 35%;" columnName="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 35%;width: 35%;" columnName="name" scope="col">
               <span [hidden]="!hideFilters">Name</span>
               <div [hidden]="hideFilters">
                   <mat-form-field class="filter" floatLabel="never">
@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0
           </td>
       </ng-container>
       <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description" scope="col">
               <span [hidden]="!hideFilters">Description</span>
               <div [hidden]="hideFilters">
                   <mat-form-field class="filter" floatLabel="never">
@@ -99,7 +99,7 @@ SPDX-License-Identifier: Apache-2.0
           </td>
       </ng-container>
       <ng-container matColumnDef="multiplicity">
-          <th mat-header-cell *matHeaderCellDef style="max-width: 7%;width: 7%;" columnName="multiplicity">
+          <th mat-header-cell *matHeaderCellDef style="max-width: 7%;width: 7%;" columnName="multiplicity" scope="col">
               <span [hidden]="!hideFilters">Multiplicity</span>
               <div [hidden]="hideFilters">
                   <mat-form-field class="filter" floatLabel="never">
@@ -128,7 +128,7 @@ SPDX-License-Identifier: Apache-2.0
           </td>
       </ng-container> -->
       <ng-container matColumnDef="checkbox">
-        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;" scope="col">
             <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
                 <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
             </mat-checkbox>
@@ -149,10 +149,10 @@ SPDX-License-Identifier: Apache-2.0
 <div class="item" *ngIf="isLoadingResults">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 3%;" *ngIf="isEditable && !parentDataModel.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
-        <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 11.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+        <th style="width: 3%;" scope="col" *ngIf="isEditable && !parentDataModel.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
+        <th style="width: 33.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 43%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 11.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
         <td style="width: 10%;" *ngIf="isEditable && !parentDataModel.finalised"></td>
     </tr>
     <tr>

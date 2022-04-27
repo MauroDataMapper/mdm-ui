@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
   <form>
     <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
       <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Group name</th>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
           <div *ngIf="!record.inEdit">
             {{ record.userGroup.name }}
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="access">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Access Level</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Access Level</th>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
           <div *ngIf="!record.inEdit">
             {{ record.groupRole.displayName }}
@@ -137,9 +137,9 @@ SPDX-License-Identifier: Apache-2.0
   <div class="item" *ngIf="loading">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 11.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+        <th style="width: 33.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 43%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 11.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
     </tr>
     <tr>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

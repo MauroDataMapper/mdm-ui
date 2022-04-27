@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="table-responsive">
         <table mat-table matSort [dataSource]="records" class="mdm--mat-table table table-striped marginless">
             <ng-container matColumnDef="sentToEmailAddress">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="sentToEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%" columnName="sentToEmailAddress">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="sentToEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%" columnName="sentToEmailAddress" scope="col">
                     <span [hidden]="!hideFilters">To</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" floatLabel="never">
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="dateTimeSent">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="dateTimeSent" [disabled]="!hideFilters" style="cursor: pointer; width: 10%;" columnName="dateTimeSent">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="dateTimeSent" [disabled]="!hideFilters" style="cursor: pointer; width: 10%;" columnName="dateTimeSent" scope="col">
                     <span>Date/Time</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="subject">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="subject" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="subject">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="subject" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="subject" scope="col">
                     <span [hidden]="!hideFilters">Subject</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" floatLabel="never">
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="body">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="body" [disabled]="!hideFilters" style="cursor: pointer; width:40%" columnName="body">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="body" [disabled]="!hideFilters" style="cursor: pointer; width:40%" columnName="body" scope="col">
                     <span>Body</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="successfullySent">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="successfullySent" [disabled]="!hideFilters" style="cursor: pointer; width: 10%;" columnName="successfullySent">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="successfullySent" [disabled]="!hideFilters" style="cursor: pointer; width: 10%;" columnName="successfullySent" scope="col">
                     <span [hidden]="!hideFilters">Status</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left;">

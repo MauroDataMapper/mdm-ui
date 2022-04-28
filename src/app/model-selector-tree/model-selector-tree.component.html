@@ -38,10 +38,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <span class="import-folder-actions">
         <button mat-stroked-button type="button" [disabled]="processing" *ngIf="!multiple" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
-          <i class="fas fa-times warning" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
+          <span class="fas fa-times warning" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></span>
         </button>
         <button mat-stroked-button type="button" [disabled]="processing" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
-          <i class="fas fa-list" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
+          <span class="fas fa-list" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></span>
         </button>
       </span>
 

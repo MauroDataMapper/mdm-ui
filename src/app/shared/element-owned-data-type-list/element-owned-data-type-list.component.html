@@ -23,23 +23,23 @@ SPDX-License-Identifier: Apache-2.0
                 Data Types
                 <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
                 <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="isEditable && !parent.finalised" class="mt-1">
                 <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="dataTypeBulkActions" *ngIf="bulkActionsVisible > 0">
                   Bulk actions
-                  <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
+                  <span class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></span>
               </button>
               <mat-menu #dataTypeBulkActions="matMenu" class="mdm--mat-menu--actions">
                   <button mat-menu-item class="warning" (click)="bulkDelete()">
-                      <i class="far fa-trash-alt"></i> Delete selected rows
+                      <span class="far fa-trash-alt"></span> Delete selected rows
                   </button>
               </mat-menu>
 
               <button mat-flat-button color="primary" type="button" class="ml-1" (click)="addDataType()">
-                  <i class="fas fa-plus" aria-hidden="true"></i>
+                  <span class="fas fa-plus" aria-hidden="true"></span>
                   Add Data Type
               </button>
             </div>
@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
                 <div>
                     <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link>
                     <div *ngIf="record.imported">
-                      <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+                      <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<span class="fas fa-info-circle"></span></span>
                     </div>
                 </div>
             </td>

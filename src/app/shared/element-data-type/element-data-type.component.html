@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
     <a class="dataTypeEnumeration" href="{{link}}" [hidden]="hideName">{{elementDataType.label}}</a>
     <span class="dataTypeLabel dataTypeEnumeration" [hidden]="hideName">(Enumeration)</span>
     <span *ngIf="!hideEnumList" class="enumCaretShow" style="margin-right: 2px;cursor: pointer; width:40px;" (click)="showEnums()" matTooltip="Show Enumerations">
-      <i class="fas fa-caret-down fa-xs"></i>
+      <span class="fas fa-caret-down fa-xs"></span>
       &nbsp;&nbsp;&nbsp;
     </span>
 
@@ -59,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
         <tr *ngIf="showMoreIcon" style="list-style: none;">
           <td [attr.colspan]="hasCategory ? 3 : 2">
-            <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <i class="fas fa-caret-down fa-xs"></i></a>
+            <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fas fa-caret-down fa-xs"></span></a>
           </td>
         </tr>
       </tbody>

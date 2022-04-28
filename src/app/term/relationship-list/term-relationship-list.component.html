@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div class="mt-1">
                 <button mat-flat-button color="primary" (click)="openAddRelationshipDialog()">
-                    <i class="fas fa-plus" aria-hidden="true"></i> Add Related Terms
+                    <span class="fas fa-plus" aria-hidden="true"></span> Add Related Terms
                 </button>
             </div>
         </div>
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
             <td>
               <div style="display: flex;">
                 <button *ngIf="canDelete" mat-icon-button color="warn" type="button" (click)="deleteRelationship(item)" class="warning" aria-label="Delete" matTooltip="Delete term from relationship">
-                  <i class="far fa-trash-alt"></i>
+                  <span class="far fa-trash-alt"></span>
                 </button>
             </div>
             </td>

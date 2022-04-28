@@ -19,14 +19,14 @@ SPDX-License-Identifier: Apache-2.0
 <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
 	<mat-tab>
 		<ng-template mat-tab-label>
-			<i class="fas fa-users"></i>&nbsp;
+			<span class="fas fa-users"></span>&nbsp;
 			<span>Active Sessions</span>
 		</ng-template>
 		<mdm-active-sessions></mdm-active-sessions>
 	</mat-tab>
 	<mat-tab>
 		<ng-template mat-tab-label>
-			<i class="fas fa-plug"></i>&nbsp;
+			<span class="fas fa-plug"></span>&nbsp;
 			<span>Plugins & Modules</span>
 		</ng-template>
 		<div class="full-width">
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
 	</mat-tab>
 	<mat-tab>
 		<ng-template mat-tab-label>
-			<i class="fas fa-sitemap"></i>&nbsp;
+			<span class="fas fa-sitemap"></span>&nbsp;
 			<span>Profiles</span>
 		</ng-template>
 		<div class="full-width">

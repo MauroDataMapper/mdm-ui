@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
             Data
             <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
             <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-            <i class="fas fa-filter" (click)="toggleSearch()" matTooltip="Toggle search"></i>
+            <span class="fas fa-filter" (click)="toggleSearch()" matTooltip="Toggle search"></span>
          </h4>
       </div>
       <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center"> </div>

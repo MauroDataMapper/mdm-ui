@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
           <button mat-flat-button color="primary" type="button" (click)="add()">
-              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span class="fas fa-plus" aria-hidden="true"></span>
               Add Member
           </button>
       </div>
@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
                                 matTooltip="Cancel edit"
                                 aria-label="Cancel edit"
                                 (click)="cancelEdit(record, i)">
-                            <i class="fas fa-times"></i>
+                            <span class="fas fa-times"></span>
                         </button>
                         <button mat-stroked-button
                                 color="accent"
@@ -100,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0
                                 matTooltip="Confirm member"
                                 aria-label="Confirm member"
                                 (click)="confirmAddMember(record, i)">
-                                <i class="fas fa-check"></i>
+                                <span class="fas fa-check"></span>
                         </button>
                     </div>
                     <div *ngIf="!record.isNew">
@@ -111,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
                               matTooltip="Remove from Group"
                               aria-label="Remove from Group"
                               (click)="askForDelete(record)">
-                          <i class="far fa-trash-alt"></i>
+                          <span class="far fa-trash-alt"></span>
                       </button>
                     </div>
                 </div>

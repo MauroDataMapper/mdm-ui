@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #treeMenu="matMenu">
   <ng-template matMenuContent let-node="node">
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
-      <i class="fas fa-plus"></i> Add
+      <span class="fas fa-plus"></span> Add
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
       <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
@@ -64,13 +64,13 @@ SPDX-License-Identifier: Apache-2.0
       {{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
-      <i class="fas fa-binoculars"></i> View
+      <span class="fas fa-binoculars"></span> View
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
-      <i class="fas fa-eye"></i> Compare
+      <span class="fas fa-eye"></span> Compare
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canDeleteElements(node)" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
-      <i class="far fa-trash-alt warning"></i> Delete
+      <span class="far fa-trash-alt warning"></span> Delete
     </button>
   </ng-template>
 </mat-menu>
@@ -79,10 +79,10 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #viewMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canSetTreeFocus(node)" (click)="focusNode(node)">
-      <i class="fas fa-eye"></i> Focus on this element
+      <span class="fas fa-eye"></span> Focus on this element
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">
-      <i class="fas fa-external-link-alt"></i> Open in new window
+      <span class="fas fa-external-link-alt"></span> Open in new window
     </button>
   </ng-template>
 </mat-menu>
@@ -91,25 +91,25 @@ SPDX-License-Identifier: Apache-2.0
 <mat-menu #createMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolder(node)">
-      <i class="fas fa-folder dataModelTypeIcon"></i> Folder
+      <span class="fas fa-folder dataModelTypeIcon"></span> Folder
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
-      <i class="fas fa-file-alt dataModelTypeIcon"></i> Data Model
+      <span class="fas fa-file-alt dataModelTypeIcon"></span> Data Model
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddTerminology(node)">
-      <i class="fas fa-book dataModelTypeIcon"></i> Terminology
+      <span class="fas fa-book dataModelTypeIcon"></span> Terminology
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
-      <i class="fas fa-list dataModelTypeIcon"></i> Code Set
+      <span class="fas fa-list dataModelTypeIcon"></span> Code Set
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
-      <i class="fas fa-puzzle-piece dataModelTypeIcon"></i> Data Class
+      <span class="fas fa-puzzle-piece dataModelTypeIcon"></span> Data Class
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
-      <i class="fas fa-code dataModelTypeIcon"></i> Data Type
+      <span class="fas fa-code dataModelTypeIcon"></span> Data Type
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
-      <i class="fas fa-atom dataModelTypeIcon"></i> Data Element
+      <span class="fas fa-atom dataModelTypeIcon"></span> Data Element
     </button>
   </ng-template>
 </mat-menu>
@@ -142,7 +142,7 @@ SPDX-License-Identifier: Apache-2.0
         <!-- </div> -->
         <small *ngIf="node.branchName" class="ml-1 text-muted">
           <span> | </span>
-          <i class="fas fa-code-branch"></i>
+          <span class="fas fa-code-branch"></span>
           {{node.branchName}}
         </small>
         <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
@@ -153,11 +153,11 @@ SPDX-License-Identifier: Apache-2.0
         </small>
         <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
           <span> | </span>
-          <i class="fas fa-star favouritesIcon addedToFavourite"></i>
+          <span class="fas fa-star favouritesIcon addedToFavourite"></span>
         </small>
         <small *ngIf="node.domainType === 'FederatedDataModel' && node.dataModel && node.dataModel.isSubscribed" class="ml-1 text-muted">
           <span> | </span>
-          <i class="fas fa-check-circle subscribedIcon" matTooltip="Subscribed"></i>
+          <span class="fas fa-check-circle subscribedIcon" matTooltip="Subscribed"></span>
         </small>
     </div>
 </ng-template>

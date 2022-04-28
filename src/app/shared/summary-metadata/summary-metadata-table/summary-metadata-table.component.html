@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
     <h4 class="marginless">
         Data
         <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
-        <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+        <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
     </h4>
 </div>
 <div class="table-responsive">
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
                 <p>{{ record.description }}</p>
                 <button mat-stroked-button color="primary" type="button" *ngIf="record.summaryMetadataReports.length > 0" (click)="this.popup(record)">
                     More details
-                    <i class="fas fa-chevron-right"></i>
+                    <span class="fas fa-chevron-right"></span>
                 </button>
             </td>
         </ng-container>

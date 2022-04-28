@@ -54,7 +54,10 @@ SPDX-License-Identifier: Apache-2.0
     padding: 8px 16px;
     display: block;
   }
-  i {
+  i,
+  span.fas,
+  span.fab,
+  span.far {
     color: inherit;
     margin-right: 6px;
     width: 22px;

@@ -22,19 +22,19 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">
                 Links
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddLink" class="mt-1">
-                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <span class="fas fa-external-link-alt fa-xs"></span></button>
                 <button mat-flat-button color="primary" (click)="add()">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="fas fa-plus" aria-hidden="true"></span>
                     Add Link
                 </button>
             </div>
             <div *ngIf="access && !access.canAddLink && showLinkSuggestion" class="mt-1">
-                <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <span class="fas fa-external-link-alt fa-xs"></span></button>
             </div>
         </div>
     </div>

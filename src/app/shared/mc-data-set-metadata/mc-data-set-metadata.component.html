@@ -23,13 +23,13 @@ SPDX-License-Identifier: Apache-2.0
                 Properties
                 <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
                 <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddMetadata" class="mt-1">
                 <button mat-flat-button color="primary" type="button" (click)="add()">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="fas fa-plus" aria-hidden="true"></span>
                     Add Property
                 </button>
             </div>

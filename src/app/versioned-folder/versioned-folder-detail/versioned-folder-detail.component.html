@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
-          <i class="fas fa-ellipsis-v"></i>
+          <span class="fas fa-ellipsis-v"></span>
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showEdit && !isEditing"
             (click)="showForm()"
           >
-            <i class="fas fa-pencil-alt"></i> Edit Title
+            <span class="fas fa-pencil-alt"></span> Edit Title
           </button>
           <button
             mat-menu-item
@@ -59,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="canChangeBranchName"
             (click)="editBranchName()"
           >
-            <i class="fas fa-code-branch"></i> Edit Branch Name
+            <span class="fas fa-code-branch"></span> Edit Branch Name
           </button>
           <button
             mat-menu-item
@@ -67,13 +67,13 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showNewVersion"
             (click)="newVersion()"
           >
-            <i class="fas fa-copy"></i> Create a New Version
+            <span class="fas fa-copy"></span> Create a New Version
           </button>
           <button mat-menu-item type="button" *ngIf="access.canMergeInto" (click)="merge()">
-            <i class="fas fa-window-restore"></i> Merge...
+            <span class="fas fa-window-restore"></span> Merge...
           </button>
           <button mat-menu-item type="button" (click)="showMergeGraph()">
-            <i class="fas fa-code-branch"></i> Merge graph
+            <span class="fas fa-code-branch"></span> Merge graph
           </button>
           <mat-divider></mat-divider>
           <button
@@ -83,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showSoftDelete || access.showPermanentDelete"
             class="warning"
           >
-            <i class="far fa-trash-alt warning"></i> Delete
+            <span class="far fa-trash-alt warning"></span> Delete
           </button>
         </mat-menu>
         <!-- End of first level menu -->
@@ -121,7 +121,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="User & Group Access"
             aria-label="User & Group Access"
           >
-            <i class="fas fa-user-lock"></i>
+            <span class="fas fa-user-lock"></span>
           </button>
         </div>
 
@@ -144,7 +144,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="Search"
             aria-label="Search"
           >
-            <i class="fas fa-search"></i>
+            <span class="fas fa-search"></span>
           </button>
         </div>
       </div>
@@ -207,7 +207,7 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
         <div class="text-muted">
           <small>
-            <i class="fas fa-cube" matTooltip="Item type"></i>
+            <span class="fas fa-cube" matTooltip="Item type"></span>
             <span>
               <strong>Item type: </strong>
               <span class="item-type">Versioned Folder</span>
@@ -258,7 +258,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div class="text-muted" *ngIf="detail">
           <small>
-            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+            <span class="fas fa-code-branch" matTooltip="Branch name"></span>
             <span><strong>Branch: </strong></span>
             <span>
               <mdm-branch-selector [catalogueItem]="detail"></mdm-branch-selector>
@@ -267,7 +267,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div class="text-muted" *ngIf="detail">
           <small>
-            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+            <span class="far fa-calendar-alt" matTooltip="Last update"></span>
             <span>
               <strong>Last update: </strong>
               {{ detail.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}

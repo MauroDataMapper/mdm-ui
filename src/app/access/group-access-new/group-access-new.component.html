@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
       <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
         <div *ngIf="canAddGroups" class="mt-1">
           <button mat-flat-button color="primary" type="button" (click)="add()">
-            <i class="fas fa-plus"></i>
+            <span class="fas fa-plus"></span>
             Add Group
           </button>
         </div>
@@ -110,16 +110,16 @@ SPDX-License-Identifier: Apache-2.0
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
           <div *ngIf="!record.isNew">
             <button mat-icon-button color="warn" (click)="deleteRecord(record)" type="button" aria-label="Cancel edit">
-              <i class="far fa-trash-alt"></i>
+              <span class="far fa-trash-alt"></span>
             </button>
           </div>
           <div *ngIf="record.isNew">
             <div>
               <button mat-icon-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
-                <i class="fas fa-times"></i>
+                <span class="fas fa-times"></span>
               </button>
               <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record)" type="button" aria-label="Save record">
-                <i class="fas fa-check"></i>
+                <span class="fas fa-check"></span>
               </button>
             </div>
           </div>

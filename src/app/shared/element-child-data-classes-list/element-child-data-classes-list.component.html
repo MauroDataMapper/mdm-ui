@@ -22,11 +22,11 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="isEditable && !parentDataModel.finalised" class="mt-1">
                 <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="contentBulkActions" *ngIf="bulkActionsVisible > 0">
                     Bulk actions
-                    <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
+                    <span class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></span>
                 </button>
                 <mat-menu #contentBulkActions="matMenu" class="mdm--mat-menu--actions">
                     <button mat-menu-item class="warning" (click)="bulkDelete()">
-                        <i class="far fa-trash-alt"></i> Delete selected rows
+                        <span class="far fa-trash-alt"></span> Delete selected rows
                     </button>
                 </mat-menu>
             </div>
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
             <div>
                 <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
                 <div *ngIf="record.imported">
-                    <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+                    <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<span class="fas fa-info-circle"></span></span>
                 </div>
             </div>
           </td>
@@ -86,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
             <td mat-header-cell *matHeaderCellDef columnName="actions" style="width: 5%; max-width: 5%; text-align: center;"></td>
             <td mat-cell *matCellDef="let record" style="width: 5%; max-width: 5%; text-align: center;">
                 <button mat-icon-button color="warn" type="button" (click)="toggleDelete(record)" class="warning" aria-label="Delete" matTooltip="Delete">
-                  <i class="far fa-trash-alt"></i>
+                  <span class="far fa-trash-alt"></span>
                 </button>
             </td>
         </ng-container>

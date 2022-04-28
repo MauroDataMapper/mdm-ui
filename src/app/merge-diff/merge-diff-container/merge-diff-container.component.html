@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="loading-spinner" *ngIf="!loaded">
   <div>
-    <i class="fas fa-sync-alt fa-spin"></i>
+    <span class="fas fa-sync-alt fa-spin"></span>
   </div>
 </div>
 <div *ngIf="loaded" class="container">
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
         <div class="text-muted">
           <small>
-            <i class="fas fa-file-export" matTooltip="{{ source.branchName }}"></i>
+            <span class="fas fa-file-export" matTooltip="{{ source.branchName }}"></span>
             <span
               ><strong>Source Branch : {{ source.branchName }} </strong></span
             >
@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div *ngIf="targetLoaded" class="text-muted">
           <small>
-            <i class="fas fa-file-import" matTooltip="{{target.branchName}}"></i>
+            <span class="fas fa-file-import" matTooltip="{{target.branchName}}"></span>
             <span><strong>Target Branch : </strong></span>
             <span>
               <mdm-branch-selector
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
                   (click)="selectAll(MergeUsed.Source)"
                   class="button"
                 >
-                  <i class="fas fa-file-export" aria-hidden="true"></i>
+                  <span class="fas fa-file-export" aria-hidden="true"></span>
                   Use all of "{{source.branchName}}"
                 </button>
                 <button
@@ -129,7 +129,7 @@ SPDX-License-Identifier: Apache-2.0
                   (click)="selectAll(MergeUsed.Target)"
                   class="button"
                 >
-                  <i class="fas fa-file-import" aria-hidden="true"></i>
+                  <span class="fas fa-file-import" aria-hidden="true"></span>
                   Use all of "{{target.branchName}}"
                 </button>
               </mat-toolbar>
@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0
                   (click)="cancelAll()"
                   class="cancelButton"
                 >
-                  <i class="fas fa-edit" aria-hidden="true"></i>
+                  <span class="fas fa-edit" aria-hidden="true"></span>
                   Cancel All
                 </button>
               </mat-toolbar>

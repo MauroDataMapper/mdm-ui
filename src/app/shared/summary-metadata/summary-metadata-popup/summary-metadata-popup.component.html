@@ -18,23 +18,23 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div style="position: relative;" class="pxy-2">
     <button mat-button color="warn" type="button" (click)="this.close()" style="position: absolute; top: 8px; right: 8px;">
-        <i class="fas fa-times"></i>
+        <span class="fas fa-times"></span>
     </button>
     <h3 class='modal-title text-center'>{{data.label}}</h3>
     <p class="mb-2 text-center">{{data.description}}</p>
     <p class="mb-2 text-center" *ngIf='this.summary.summaryMetadataType==="map"'>
         <button mat-stroked-button (click)="this.dateFirst()" [disabled]="this.reportIndex == 0">
-            <i class="fas fa-fast-backward" aria-hidden="true"></i>
+            <span class="fas fa-fast-backward" aria-hidden="true"></span>
         </button>
         <button mat-stroked-button (click)="this.datePrev()" [disabled]="this.reportIndex == 0" class="ml-1 mr-1">
-            <i class="fas fa-step-backward" aria-hidden="true"></i>
+            <span class="fas fa-step-backward" aria-hidden="true"></span>
         </button>
         Report Date: <b>{{this.reportDate}}</b>
         <button mat-stroked-button (click)="this.dateNext()" [disabled]="this.reportIndex == this.data.summaryMetadataReports.length-1" class="ml-1 mr-1">
-            <i class="fas fa-step-forward" aria-hidden="true"></i>
+            <span class="fas fa-step-forward" aria-hidden="true"></span>
         </button>
         <button mat-stroked-button (click)="this.dateLast()" [disabled]="this.reportIndex == this.data.summaryMetadataReports.length-1">
-            <i class="fas fa-fast-forward" aria-hidden="true"></i>
+            <span class="fas fa-fast-forward" aria-hidden="true"></span>
         </button>
     </p>
     <div style="margin: 15px; height:100%">

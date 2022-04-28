@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
-          <i class="fas fa-ellipsis-v"></i>
+          <span class="fas fa-ellipsis-v"></span>
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showEdit"
             (click)="showForm()"
           >
-            <i class="fas fa-pencil-alt"></i> Edit Title
+            <span class="fas fa-pencil-alt"></span> Edit Title
           </button>
           <mat-divider></mat-divider>
           <button
@@ -54,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showSoftDelete || access.showPermanentDelete"
             class="warning"
           >
-            <i class="far fa-trash-alt warning"></i> Delete
+            <span class="far fa-trash-alt warning"></span> Delete
           </button>
         </mat-menu>
         <!-- End of first level menu -->
@@ -94,7 +94,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="User & Group Access"
             aria-label="User & Group Access"
           >
-            <i class="fas fa-user-lock"></i>
+            <span class="fas fa-user-lock"></span>
           </button>
         </div>
       </div>

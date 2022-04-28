@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <h4 mat-dialog-title>Bulk edit <span class="mdm--badge mdm--element-count">{{records.length}} </span></h4>
-<button mat-icon-button color="warn" type="button" class="close-modal paddingless" (click)="cancel();"> <i class="fas fa-times"></i> </button>
+<button mat-icon-button color="warn" type="button" class="close-modal paddingless" (click)="cancel();"> <span class="fas fa-times"></span> </button>
 <mat-dialog-content class="mat-typography">
     <p>You are editing the following record(s):</p>
     <table class="mdm--mat-table table-striped mdm--table-fixed">
@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
             <td style="width: 10%; max-width: 10%; text-align: center;">
               <span *ngIf="finalResult && finalResult[item.id] && finalResult[item.id].hasError">
                 <div class="text-center">
-                  <i class="fas fa-exclamation-triangle fa-2x warning"></i>
+                  <span class="fas fa-exclamation-triangle fa-2x warning"></span>
                 </div>
                 <div class="warning">
                   {{finalResult[item.id].result}}
@@ -54,11 +54,11 @@ SPDX-License-Identifier: Apache-2.0
               </span>
               <span *ngIf="finalResult && finalResult[item.id] && !finalResult[item.id].hasError && isProcessComplete">
                 <div class="text-center">
-                  <i class="far fa-check-circle fa-2x copyElementSuccess"></i>
+                  <span class="far fa-check-circle fa-2x copyElementSuccess"></span>
                 </div>
               </span>
               <span *ngIf="processing && finalResult && finalResult[item.id] && !finalResult[item.id].hasError">
-                <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+                <div class="text-center"><span class="fas fa-spinner fa-2x fa-spin"></span></div>
               </span>
             </td>
           </tr>

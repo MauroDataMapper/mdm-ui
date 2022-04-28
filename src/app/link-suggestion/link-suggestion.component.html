@@ -109,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0
             <div>
               <div class="mcTableMain">
                 <div class="mcTableTitle">
-                          <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                          <span class="title">Suggested Links<span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
                               <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model.successfullyAdded > 0">
                                   Successfully Added
                                   <span class="badge badge-success">{{model.successfullyAdded}}</span>
@@ -171,8 +171,8 @@ SPDX-License-Identifier: Apache-2.0
                           <div style="float:right;top:0;right:0;position: relative;"
                               *ngIf="suggest.results && suggest.results.length > 0">
                             <a style="font-size: 12px; font-style:italic; cursor: pointer;margin:5px;"
-                              (click)="toggleShowMore(suggest)">more suggestions <i class="fas fa-caret-down"
-                                                                                    aria-hidden="true"></i></a>
+                              (click)="toggleShowMore(suggest)">more suggestions <span class="fas fa-caret-down"
+                                                                                    aria-hidden="true"></span></a>
                           </div>
                           <div *ngIf="suggest.results && suggest.results.length === 0" style="font-style: italic;">
                             No Suggestions!
@@ -241,7 +241,7 @@ SPDX-License-Identifier: Apache-2.0
                           </button>
                         </div>
                         <div *ngIf="suggest.success">
-                          <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;</div>
+                          <div><span class="fas fa-check copyElementSuccess"></span>&nbsp;</div>
                         </div>
                         <div style="width:100%;height:100%;text-align: center" *ngIf="suggest.processing">
                           <div style="padding-top: 10%;">

@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
     <h4 class="marginless">Classified Elements</h4>
     <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
     <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-    <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+    <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
 </div>
 <!-- <div class="table-responsive"> -->
 <div class="table-responsive">

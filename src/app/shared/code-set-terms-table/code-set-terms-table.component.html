@@ -22,17 +22,17 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">
                 Terms
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()"></i>
+                <span class="fas fa-filter" (click)="filterClick()"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
             <div *ngIf="(access && access.showEdit) || clientSide">
                 <button mat-flat-button color="primary" (click)="toggleAddTermsSection()" *ngIf="!showAddTerm">
-                    <i class="fas fa-plus"></i>
+                    <span class="fas fa-plus"></span>
                     Add Term
                 </button>
                 <button mat-button color="warn" (click)="toggleAddTermsSection()" *ngIf="showAddTerm" matTooltip="Cancel adding terms">
-                    <i class="fas fa-times"></i>
+                    <span class="fas fa-times"></span>
                 </button>
             </div>
         </div>

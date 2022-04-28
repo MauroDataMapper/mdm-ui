@@ -25,8 +25,8 @@ SPDX-License-Identifier: Apache-2.0
       <span style="padding-right: 20px;">
         {{element.label}}
       </span>
-      <i style="color:#c62828; position: absolute;height: 1px;top: 30%;right:12px;cursor: pointer;"
-        [ngClass]="{'fas':true,'fa-times':true, 'not-allowed-cursor':processing}" (click)="remove($event, element)"></i>
+      <span style="color:#c62828; position: absolute;height: 1px;top: 30%;right:12px;cursor: pointer;"
+        [ngClass]="{'fas':true,'fa-times':true, 'not-allowed-cursor':processing}" (click)="remove($event, element)"></span>
     </div>
   </div>
 

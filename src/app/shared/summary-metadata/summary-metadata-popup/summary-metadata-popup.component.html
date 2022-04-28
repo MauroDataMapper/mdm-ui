@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
         <button mat-stroked-button (click)="this.datePrev()" [disabled]="this.reportIndex == 0" class="ml-1 mr-1">
             <span class="fas fa-step-backward" aria-hidden="true"></span>
         </button>
-        Report Date: <b>{{this.reportDate}}</b>
+        Report Date: <strong>{{this.reportDate}}</strong>
         <button mat-stroked-button (click)="this.dateNext()" [disabled]="this.reportIndex == this.data.summaryMetadataReports.length-1" class="ml-1 mr-1">
             <span class="fas fa-step-forward" aria-hidden="true"></span>
         </button>
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
                             <th mat-header-cell *matHeaderCellDef scope="col"> Category </th>
                             <td mat-cell *matCellDef="let element">
                                 <span>
-                                    <i *ngIf="element.keyColor" style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle;" [style.background-color]="element.keyColor">&nbsp;</i>
+                                    <strong *ngIf="element.keyColor" style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle;" [style.background-color]="element.keyColor">&nbsp;</strong>
                                     {{element.category}}
                                 </span>
                             </td>

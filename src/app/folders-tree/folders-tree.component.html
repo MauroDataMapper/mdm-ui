@@ -59,8 +59,8 @@ SPDX-License-Identifier: Apache-2.0
       <span class="fas fa-plus"></span> Add
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
-      <i *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></i>
-      <i *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></i>
+      <span *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></span>
+      <span *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></span>
       {{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites
     </button>
     <button type="button" mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
@@ -147,7 +147,7 @@ SPDX-License-Identifier: Apache-2.0
         </small>
         <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
           <span> | </span>
-          <i  class="fas fa-file-alt"></i>
+          <span  class="fas fa-file-alt"></span>
            <span *ngIf="node.modelVersion">{{node.modelVersion}}</span>
            <span *ngIf="node.version">{{node.version}}</span>
         </small>

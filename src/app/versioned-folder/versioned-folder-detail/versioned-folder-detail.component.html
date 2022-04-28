@@ -160,7 +160,7 @@ SPDX-License-Identifier: Apache-2.0
             [ngClass]="{ deletedDataModelTitle: detail?.deleted }"
           >
             <span class="dataModelTypeIcon">
-              <i matTooltip="Versioned Folder" class="fas fa-box"></i>
+              <span matTooltip="Versioned Folder" class="fas fa-box"></span>
             </span>
             <mdm-inline-text-edit
               [readOnly]="false"
@@ -236,7 +236,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div class="text-muted" *ngIf="detail?.documentationVersion">
           <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+            <span matTooltip="Documentation Version" class="fas fa-copy"></span>
             <span
               ><strong>Documentation Version: </strong
               >{{ detail.documentationVersion }}</span
@@ -248,10 +248,10 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="detail?.modelVersion && detail?.finalised"
         >
           <small>
-            <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+            <span matTooltip="Model Version" class="fas fa-file-alt"></span>
             <span> <strong>Version: </strong>{{ detail.modelVersion }} </span>
             <span *ngIf="detail.modelVersionTag" class="tag-name">
-              <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+              <span matTooltip="Model Version Tag" class="fas fa-tag"></span>
               <span>{{ detail.modelVersionTag }}</span>
             </span>
           </small>

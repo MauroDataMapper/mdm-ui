@@ -191,7 +191,6 @@ export class DataClassesListComponent implements AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    sortBy = 'idx';
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,

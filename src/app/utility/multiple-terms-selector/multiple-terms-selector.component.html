@@ -118,10 +118,10 @@ SPDX-License-Identifier: Apache-2.0
         <ng-template #pageListTemplate let-item>
           <div class="pagedElement">
             <div>
-              <i
+              <span
                 class="fas fa-times warning mr-2"
                 (click)="removeTerm(item)"
-              ></i>
+              ></span>
               <mdm-element-link [element]="item"></mdm-element-link>
             </div>
             <div>

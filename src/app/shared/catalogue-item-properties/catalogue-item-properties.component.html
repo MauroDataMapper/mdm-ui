@@ -66,7 +66,7 @@ SPDX-License-Identifier: Apache-2.0
     *ngIf="item?.documentationVersion"
   >
     <small>
-      <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+      <span matTooltip="Documentation Version" class="fas fa-copy"></span>
       <span
         ><strong>Documentation Version: </strong
         >{{ item.documentationVersion }}</span
@@ -88,10 +88,10 @@ SPDX-License-Identifier: Apache-2.0
     *ngIf="item?.modelVersion && item?.finalised"
   >
     <small>
-      <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+      <span matTooltip="Model Version" class="fas fa-file-alt"></span>
       <span><strong>Version: </strong>{{ item.modelVersion }}</span>
       <span *ngIf="item.modelVersionTag" class="tag-name">
-        <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+        <span matTooltip="Model Version Tag" class="fas fa-tag"></span>
         <span>{{ item.modelVersionTag }}</span>
       </span>
     </small>

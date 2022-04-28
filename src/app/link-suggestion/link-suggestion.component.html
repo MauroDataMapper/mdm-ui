@@ -28,8 +28,8 @@ SPDX-License-Identifier: Apache-2.0
               <div *ngIf="model.source.domainType === 'DataModel'">
                 <span class="mdm--badge">1</span>
                 <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank" rel="noopener"><i
-                  class="fas fa-external-link-alt"></i></a></span></span>
+                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank" rel="noopener"><span
+                  class="fas fa-external-link-alt"></span></a></span></span>
                 <mdm-model-selector-tree
                   [processing]="model.loadingSource"
                   [placeholder]="'Select Source Data Model...'"
@@ -58,8 +58,8 @@ SPDX-License-Identifier: Apache-2.0
             <div class="form-group">
               <span class="mdm--badge">2</span>
               <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                                  *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank" rel="noopener"><i
-              class="fas fa-external-link-alt"></i></a></span>
+                                                  *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank" rel="noopener"><span
+              class="fas fa-external-link-alt"></span></a></span>
               <mdm-model-selector-tree
                 [processing]="model.processing"
                 [placeholder]="'Select Target Data Model...'"
@@ -245,7 +245,7 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
                         <div style="width:100%;height:100%;text-align: center" *ngIf="suggest.processing">
                           <div style="padding-top: 10%;">
-                            <i style="font-size: 20px;" class="fas fa-sync-alt fa-spin"></i>
+                            <span style="font-size: 20px;" class="fas fa-sync-alt fa-spin"></span>
                           </div>
                         </div>
                       </td>

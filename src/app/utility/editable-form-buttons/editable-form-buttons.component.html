@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="!hideDelete && !editable.deletePending"
             (click)="deleteClicked()"
             aria-label="Delete">
-        <i [ngClass]="!displayDeleteIcon ? ['far','displayDeleteIcon','warning','']: ['far','fa-trash-alt','warning']"></i>
+        <span [ngClass]="!displayDeleteIcon ? ['far','displayDeleteIcon','warning','']: ['far','fa-trash-alt','warning']"></span>
     </button>
 
 

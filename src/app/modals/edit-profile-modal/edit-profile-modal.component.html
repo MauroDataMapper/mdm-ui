@@ -40,13 +40,13 @@ SPDX-License-Identifier: Apache-2.0
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
             <span *ngIf="field.minMultiplicity > 0">*</span>
-            <i
+            <span
               *ngIf="field.description"
               style="float: right"
               class="fas fa-info-circle helpIcon"
               [matTooltip]="field.description"
               matTooltipPosition="after"
-            ></i>
+            ></span>
           </td>
           <td class="elementDetailDescription">
             <mdm-content-editor

@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
                 <h4 class="marginless">
                   Groups <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 </h4>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </div>
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
                 <mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="table-responsive">
       <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table table-striped marginless">
           <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 40%;" columnName="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 40%;" columnName="name" scope="col">
                   <span [hidden]="!hideFilters">Name</span>
                   <div [hidden]="hideFilters">
                       <mat-form-field class="filter" floatLabel="never">
@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
               </td>
           </ng-container>
           <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef columnName="description" style="max-width: 50%;">
+              <th mat-header-cell *matHeaderCellDef columnName="description" style="max-width: 50%;" scope="col">
                   <span [hidden]="!hideFilters">Description</span>
               </th>
               <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
@@ -58,14 +58,14 @@ SPDX-License-Identifier: Apache-2.0
               <td mat-header-cell *matHeaderCellDef columnName="icons" style="width: 7%; text-align: center;"></td>
               <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
                   <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
-                    <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+                    <span class="fas fa-ellipsis-v"></span> <span style="display: none;">Menu</span>
                   </button>
                   <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
                       <button mat-menu-item (click)="editUser(record)">
-                          <i class="fas fa-pencil-alt"></i> Edit group
+                          <span class="fas fa-pencil-alt"></span> Edit group
                       </button>
                       <button mat-menu-item (click)="deleteUser(record)">
-                          <i class="far fa-trash-alt warning"></i> Delete group
+                          <span class="far fa-trash-alt warning"></span> Delete group
                       </button>
                   </mat-menu>
               </td>

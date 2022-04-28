@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="acceptButton"
         >
-          <i class="fas fa-check-square"></i>
+          <span class="fas fa-check-square"></span>
           Accept
         </button>
       </div>
@@ -45,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="button"
         >
-          <i class="fas fa-file-export" aria-hidden="true"></i>
+          <span class="fas fa-file-export" aria-hidden="true"></span>
           Use "{{ source.branchName }}"
         </button>
         <button
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="!isCommitting"
           class="button"
         >
-          <i class="fas fa-file-import" aria-hidden="true"></i>
+          <span class="fas fa-file-import" aria-hidden="true"></span>
           Use "{{ target.branchName }}"
         </button>
         <button
@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
           class="button"
           (click)="openEditor()"
         >
-          <i class="fas fa-edit" aria-hidden="true"></i>
+          <span class="fas fa-edit" aria-hidden="true"></span>
           Open Editor
         </button>
         <button
@@ -81,7 +81,7 @@ SPDX-License-Identifier: Apache-2.0
           class="button"
           (click)="linkScrolls(true)"
         >
-          <i class="fas fa-link" aria-hidden="true"></i>
+          <span class="fas fa-link" aria-hidden="true"></span>
           Link Scrolls
         </button>
         <button
@@ -93,7 +93,7 @@ SPDX-License-Identifier: Apache-2.0
           class="button"
           (click)="linkScrolls(false)"
         >
-          <i class="fas fa-unlink" aria-hidden="true"></i>
+          <span class="fas fa-unlink" aria-hidden="true"></span>
           Unlink Scrolls
         </button>
       </div>
@@ -106,7 +106,7 @@ SPDX-License-Identifier: Apache-2.0
         (click)="cancelCommit()"
         class="button"
       >
-        <i class="fas fa-edit" aria-hidden="true"></i>
+        <span class="fas fa-edit" aria-hidden="true"></span>
         Cancel Commit
       </button>
     </mat-toolbar>

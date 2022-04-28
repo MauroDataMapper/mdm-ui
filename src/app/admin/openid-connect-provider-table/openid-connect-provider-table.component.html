@@ -85,6 +85,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-sort-header
             style="cursor: pointer; max-width: 50%"
             columnName="label"
+            scope="col"
           >
             <span>Label</span>
           </th>
@@ -119,14 +120,14 @@ SPDX-License-Identifier: Apache-2.0
               color="primary"
               [matMenuTriggerFor]="actions"
             >
-              <i class="fas fa-ellipsis-v"></i>
+              <span class="fas fa-ellipsis-v"></span>
             </button>
             <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
               <button mat-menu-item (click)="editProvider(record)">
-                <i class="fas fa-pencil-alt"></i> Edit
+                <span class="fas fa-pencil-alt"></span> Edit
               </button>
               <button mat-menu-item (click)="deleteProvider(record)">
-                <i class="far fa-trash-alt warning"></i> Delete
+                <span class="far fa-trash-alt warning"></span> Delete
               </button>
             </mat-menu>
           </td>

@@ -22,11 +22,11 @@ SPDX-License-Identifier: Apache-2.0
             <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
                 <span *ngIf="!isOpen">
                     Show Model Tree
-                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></i>
+                    <span #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></span>
                 </span>
                 <span *ngIf="isOpen">
                     Hide Model Tree
-                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
+                    <span #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></span>
                 </span>
             </button>
         </div>

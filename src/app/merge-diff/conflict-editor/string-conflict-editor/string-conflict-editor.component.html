@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
     <h5>
       Source
       <small *ngIf="source">
-        <i class="fas fa-file-export" matTooltip="Source Branch"></i>
+        <span class="fas fa-file-export" matTooltip="Source Branch"></span>
         <strong>{{ source.branchName }}</strong>
       </small>
       <button
@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
         matTooltip="Take all changes from 'Source'"
         (click)="copyAllToResolved('source')"
       >
-        <i class="fas fa-angle-double-right"></i>
+        <span class="fas fa-angle-double-right"></span>
       </button>
     </h5>
     <div
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
     <h5>
       Target
       <small *ngIf="target">
-        <i class="fas fa-file-import" matTooltip="Target Branch"></i>
+        <span class="fas fa-file-import" matTooltip="Target Branch"></span>
         <strong>{{ target.branchName }}</strong>
       </small>
       <button
@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0
         matTooltip="Take all changes from 'Target'"
         (click)="copyAllToResolved('target')"
       >
-        <i class="fas fa-angle-double-left"></i>
+        <span class="fas fa-angle-double-left"></span>
       </button>
     </h5>
     <div

@@ -25,13 +25,13 @@ SPDX-License-Identifier: Apache-2.0
 		<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
 			<div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="!clientSide">
 				<button mat-flat-button color="primary" type="button" (click)="add()">
-					<i class="fas fa-plus" aria-hidden="true"></i>
+					<span class="fas fa-plus" aria-hidden="true"></span>
 					Add Enumeration
 				</button>
 			</div>
 			<div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="clientSide">
 				<button mat-flat-button color="primary" type="button" (click)="add()">
-					<i class="fas fa-plus" aria-hidden="true"></i>
+					<span class="fas fa-plus" aria-hidden="true"></span>
 					Add Enumeration
 				</button>
 			</div>
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
 <table mat-table #table [dataSource]="displayItems" cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)" class="mdm--mat-table table-striped">
 	<ng-container matColumnDef="group">
-		<th mat-header-cell *matHeaderCellDef columnName="group" style="max-width: 23%; width: 23%;">
+		<th mat-header-cell *matHeaderCellDef columnName="group" style="max-width: 23%; width: 23%;" scope="col">
 			Group
 		</th>
 		<td mat-cell *matCellDef="let record" [attr.colspan]="(record.isCategoryRow) ? 4 : 1" style="min-width: 25px; max-width: 10%; width: 10%; word-wrap: break-word;">
@@ -74,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
 		</td>
 	</ng-container>
 	<ng-container matColumnDef="key">
-		<th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="key">
+		<th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="key" scope="col">
 			Key
 		</th>
 		<td mat-cell *matCellDef="let record" [hidden]="record.isCategoryRow" style="max-width: 18%; width: 18%; text-align: left; word-wrap: break-word; overflow: hidden;" >
@@ -94,7 +94,7 @@ SPDX-License-Identifier: Apache-2.0
 
   </ng-container>
 	<ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="value">
+    <th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="value" scope="col">
       Value
 		</th>
 		<td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word; overflow: hidden;" [hidden]="record.isCategoryRow">
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="!record.isCategoryRow">
           <button mat-stroked-button color="primary" *ngIf="!clientSide && !isEditable && !record.inEdit" (click)="openEnumerationValues(record)">
             More details
-            <i class="fas fa-external-link-alt"></i>
+            <span class="fas fa-external-link-alt"></span>
           </button>
         </div>
       </td>
@@ -128,28 +128,28 @@ SPDX-License-Identifier: Apache-2.0
 			<div *ngIf="!record.isCategoryRow">
 				<div *ngIf="!record.inEdit && !record.inDelete">
 					<button mat-icon-button color="primary" type="button" class="paddingless" (click)="editClicked(record)">
-						<i class="fas fa-pencil-alt"></i>
+						<span class="fas fa-pencil-alt"></span>
 					</button>
 
 					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="deleteClicked(record)">
-						<i class="far fa-trash-alt"></i>
+						<span class="far fa-trash-alt"></span>
 					</button>
 				</div>
 				<div *ngIf="record.inDelete">
 					<button mat-icon-button color="accent" type="button" class="paddingless" (click)="confirmDeleteClicked(record)">
-						<i class="fas fa-check"></i>
+						<span class="fas fa-check"></span>
 					</button>
 					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="cancelDeleteClicked(record)">
-						<i class="fas fa-times"></i>
+						<span class="fas fa-times"></span>
 					</button>
 					<span style="font-size: 11px;"><br>Are you sure?</span>
 				</div>
 				<div *ngIf="record.inEdit">
 					<button mat-icon-button color="accent" type="submit" class="paddingless" (click)="saveClicked(record)">
-						<i class="fas fa-check"></i>
+						<span class="fas fa-check"></span>
 					</button>
 					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="cancelEditClicked(record)">
-						<i class="fas fa-times"></i>
+						<span class="fas fa-times"></span>
 					</button>
 				</div>
 			</div>

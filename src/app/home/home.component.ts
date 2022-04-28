@@ -52,7 +52,7 @@ const defaultHtmlContent = [
     key: 'content.home.detail.column_one',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--1 mt-3 mb-2">
-        <i class="fas fa-recycle fa-2x"></i>
+        <span class="fas fa-recycle fa-2x"></span>
     </span>
     <h4><strong>Automate</strong></h4>
     <p>
@@ -64,7 +64,7 @@ const defaultHtmlContent = [
     key: 'content.home.detail.column_two',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--2 mt-3 mb-2">
-        <i class="fas fa-balance-scale-right fa-2x"></i>
+        <span class="fas fa-balance-scale-right fa-2x"></span>
     </span>
     <h4><strong>Collaborate</strong></h4>
     <p>
@@ -76,7 +76,7 @@ const defaultHtmlContent = [
     key: 'content.home.detail.column_three',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--3 mt-3 mb-2">
-        <i class="fas fa-cogs fa-2x"></i>
+        <span class="fas fa-cogs fa-2x"></span>
     </span>
     <h4><strong>Generate</strong></h4>
     <p>

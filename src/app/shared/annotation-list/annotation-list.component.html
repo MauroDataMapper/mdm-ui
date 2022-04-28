@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="canAddAnnotation" class="mt-1">
                 <button mat-flat-button color="primary" type="button" (click)="add()" class="mt-1">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="fas fa-plus" aria-hidden="true"></span>
                     Add Comment
                 </button>
             </div>
@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
       <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
         <ng-container matColumnDef="lastUpdated">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated">Last Updated</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated" scope="col">Last Updated</th>
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                 <div *ngIf="!record.inEdit">
                     <div class="annotation-item-header">
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div *ngIf="canAddAnnotation">
                         <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && !canAddAnnotation">
-                            <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
+                            <span class="fas fa-comment"></span>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                         </button>
                     </div>
                     <div style="padding-top: 5px;">
@@ -128,7 +128,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 90%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 90%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
   </tr>
   <tr>
       <td><ngx-skeleton-loader count="1" appearance="line" [theme]="{'background-color': '#b7bbc5', 'width': '50%'}"></ngx-skeleton-loader></td>

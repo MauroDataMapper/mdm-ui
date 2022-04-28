@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
           style="float: left; margin-right: 40px;"
           matTooltip="Move up a level of hierarchy"
           (click)="this.click('goUp')">
-    <i class="fas fa-arrow-up"></i>
+    <span class="fas fa-arrow-up"></span>
   </button>
   <section>
           <button
@@ -36,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0
           matTooltip="Show Filter Tree"
           (click)="this.click('showTreeFilter')"
           *ngIf="isPopup">
-                  <i class="fas fa-filter"></i>
+                  <span class="fas fa-filter"></span>
           </button>
   </section>
   <section layout="row" style="margin-left: 4px;">
@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
             style="float: left; margin-left: 0px;"
             matTooltip="Zoom in"
             (click)="this.click('zoomIn')">
-      <i class="fas fa-plus"></i>
+      <span class="fas fa-plus"></span>
     </button>
     <button mat-stroked-button
             type="button"
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
             style="float: left; margin-left: 4px;"
             matTooltip="Reset zoom and canvas"
             (click)="this.click('resetZoom')">
-      <i class="fas fa-sync-alt"></i>
+      <span class="fas fa-sync-alt"></span>
     </button>
     <button mat-stroked-button
             type="button"
@@ -65,7 +65,7 @@ SPDX-License-Identifier: Apache-2.0
             style="float: left; margin-left: 4px;"
             matTooltip="Zoom out"
             (click)="this.click('zoomOut')">
-      <i class="fas fa-minus"></i>
+      <span class="fas fa-minus"></span>
     </button>
   </section>
 
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
           matTooltip="Popup in full screen"
           (click)="this.click('popUp')"
           *ngIf="!isPopup">
-          <i class="fas fa-expand"></i>
+          <span class="fas fa-expand"></span>
   </button>
   <button mat-stroked-button
           type="button"
@@ -88,7 +88,7 @@ SPDX-License-Identifier: Apache-2.0
           matTooltip="Close full screen"
           (click)="this.click('popDown')"
           *ngIf="isPopup">
-          <i class="fas fa-times"></i>
+          <span class="fas fa-times"></span>
   </button>
   <button mat-stroked-button
           type="button"
@@ -97,7 +97,7 @@ SPDX-License-Identifier: Apache-2.0
           style="float: right; margin-right: 20px;"
           matTooltip="Download as image"
           (click)="this.click('download')">
-          <i class="fas fa-file-download"></i>
+          <span class="fas fa-file-download"></span>
   </button>
 
 </div>

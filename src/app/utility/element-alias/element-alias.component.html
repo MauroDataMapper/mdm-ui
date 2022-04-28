@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
                 <li>
                     <span>{{alias}}</span>
                     <span class="aliasButton" *ngIf="!readOnly" (click)="remove(alias)">
-                        <i class="fas fa-times"></i>
+                        <span class="fas fa-times"></span>
                     </span>
                 </li>
             </ul>
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="input-group" style="max-width: 40%;">
             <input type="text" #typedAliasId id="aliasInput" (keypress)="onKeyPress($event)" [(ngModel)]="typedAlias" name="typedAlias" class="outlined-input form-control">
             <button mat-flat-button color="accent" type="button" class="paddingless" [disabled]="!typedAlias" (click)="add()" aria-label="Add alias" style="margin-left: 5px;">
-                <i class="fas fa-plus"></i>
+                <span class="fas fa-plus"></span>
             </button>
         </div>
     </div>

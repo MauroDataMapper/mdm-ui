@@ -141,7 +141,10 @@ a.mat-menu-item {
   max-width: 100%;
   position: relative;
 
-  i {
+  i,
+  span.fas,
+  span.fab,
+  span.far {
     width: 30px;
     text-align: center;
   }

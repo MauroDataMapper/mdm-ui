@@ -152,7 +152,7 @@ export class ElementsTableComponent implements AfterViewInit {
     };
 
     if (filters) {
-      Object.keys(filters).map(key => {
+      Object.keys(filters).forEach(key => {
         options[key] = filters[key];
       });
     }

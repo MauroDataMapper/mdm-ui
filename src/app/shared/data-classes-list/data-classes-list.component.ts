@@ -191,7 +191,6 @@ export class DataClassesListComponent implements AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    sortBy = 'idx';
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -284,19 +283,19 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   bulkEdit() {
-    const dataElementIdLst = [];
-    this.dataClassRecords.forEach((record) => {
-      if (record.checked) {
-        dataElementIdLst.push({
+    const dataClassIds = this.dataClassRecords
+      .filter((record) => record.checked)
+      .map((record) => {
+        return {
           id: record.id,
           domainType: record.domainType
-        });
-      }
-    });
+        };
+      });
+
     this.dialog
       .open(BulkEditModalComponent, {
         data: {
-          dataElementIdLst,
+          dataElementIdLst: dataClassIds,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },
@@ -306,8 +305,6 @@ export class DataClassesListComponent implements AfterViewInit {
       .subscribe((result) => {
         if (result) {
           this.dataClassRecords.forEach((x) => (x.checked = false));
-          // eslint-disable-next-line no-self-assign
-          this.dataClassRecords = this.dataClassRecords;
           this.checkAllCheckbox = false;
           this.bulkActionsVisible = 0;
           this.filterEvent.emit();
@@ -330,8 +327,6 @@ export class DataClassesListComponent implements AfterViewInit {
       .subscribe((result) => {
         if (result != null && result.status === 'ok') {
           this.dataClassRecords.forEach((x) => (x.checked = false));
-          // eslint-disable-next-line no-self-assign
-          this.dataClassRecords = this.dataClassRecords;
           this.checkAllCheckbox = false;
           this.bulkActionsVisible = 0;
           this.filterEvent.emit();

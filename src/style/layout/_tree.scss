@@ -289,7 +289,10 @@ ul.favourites li:focus {
   small {
   margin-right: 16px;
   font-size: 90%;
-    i {
+    i,
+    span.fas,
+    span.fab,
+    span.far {
       font-size: 17px;
       width: 20px;
       text-align: center;

@@ -61,18 +61,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab>
     <ng-template mat-tab-label>
       Rules
-      <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
-        <ngx-skeleton-loader
-          count="1"
-          appearance="circle"
-          [theme]="{
-            'border-radius': '5px',
-            height: '31px',
-            width: '28px',
-            'background-color': '#b7bbc5'
-          }"
-        ></ngx-skeleton-loader>
-      </span>
+      <mdm-skeleton-badge *ngIf="isLoadingRules"></mdm-skeleton-badge>
       ({{ rulesItemCount }})
     </ng-template>
     <div class="full-width">

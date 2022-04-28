@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
       <span [innerHtml]="message"></span>
       <mat-radio-group name="versionList" [(value)]="data.versionList" [(ngModel)]="data.versionList" (ngModelChange)="onVersionChange()" class="mb-0">
 
-        <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><i>(default)</i></small></mat-radio-button>
+        <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><em>(default)</em></small></mat-radio-button>
         <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionMajor"></span></small></div>
 
         <mat-radio-button value="Minor" [checked]="data.versionList == 'Minor'">Minor</mat-radio-button>

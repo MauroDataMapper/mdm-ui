@@ -196,6 +196,7 @@ import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-rel
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 @NgModule({
   declarations: [
@@ -363,7 +364,8 @@ import { TerminologyMainComponent } from '../../wizards/terminology/terminology-
     ProfileDataViewComponent,
     TermRelationshipListComponent,
     NewerVersionsComponent,
-    TerminologyMainComponent
+    TerminologyMainComponent,
+    SkeletonBadgeComponent
   ],
   imports: [
     AdminModule,
@@ -544,7 +546,8 @@ import { TerminologyMainComponent } from '../../wizards/terminology/terminology-
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
     NewerVersionsComponent,
-    TerminologyMainComponent
+    TerminologyMainComponent,
+    SkeletonBadgeComponent
   ]
 })
 export class CatalogueModule { }

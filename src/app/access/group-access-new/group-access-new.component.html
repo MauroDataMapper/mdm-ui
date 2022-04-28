@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
       <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
         <div *ngIf="canAddGroups" class="mt-1">
           <button mat-flat-button color="primary" type="button" (click)="add()">
-            <i class="fas fa-plus"></i>
+            <span class="fas fa-plus"></span>
             Add Group
           </button>
         </div>
@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
   <form>
     <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
       <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Group name</th>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
           <div *ngIf="!record.inEdit">
             {{ record.userGroup.name }}
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="access">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Access Level</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Access Level</th>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
           <div *ngIf="!record.inEdit">
             {{ record.groupRole.displayName }}
@@ -110,16 +110,16 @@ SPDX-License-Identifier: Apache-2.0
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
           <div *ngIf="!record.isNew">
             <button mat-icon-button color="warn" (click)="deleteRecord(record)" type="button" aria-label="Cancel edit">
-              <i class="far fa-trash-alt"></i>
+              <span class="far fa-trash-alt"></span>
             </button>
           </div>
           <div *ngIf="record.isNew">
             <div>
               <button mat-icon-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
-                <i class="fas fa-times"></i>
+                <span class="fas fa-times"></span>
               </button>
               <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record)" type="button" aria-label="Save record">
-                <i class="fas fa-check"></i>
+                <span class="fas fa-check"></span>
               </button>
             </div>
           </div>
@@ -137,9 +137,9 @@ SPDX-License-Identifier: Apache-2.0
   <div class="item" *ngIf="loading">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 11.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+        <th style="width: 33.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 43%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 11.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
     </tr>
     <tr>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

@@ -254,74 +254,51 @@ export class DataElementsListComponent implements AfterViewInit {
   }
 
   bulkEdit() {
-    const dataElementIdLst = [];
-    this.dataElementRecords.forEach((record) => {
-      if (record.checked) {
-        dataElementIdLst.push({
+    const dataElementIds = this.dataElementRecords
+      .filter((record) => record.checked)
+      .map((record) => {
+        return {
           id: record.id,
           domainType: record.domainType
-        });
-      }
-    });
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(BulkEditModalComponent, {
-        data: {
-          dataElementIdLst,
-          parentDataModel: this.parentDataModel,
-          parentDataClass: this.parentDataClass
-        },
-        panelClass: 'bulk-edit-modal'
-      });
+      }});
 
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-    promise
-      .then(() => {
+    this.dialog.open(BulkEditModalComponent, {
+      data: {
+        dataElementIdLst: dataElementIds,
+        parentDataModel: this.parentDataModel,
+        parentDataClass: this.parentDataClass
+      },
+      panelClass: 'bulk-edit-modal'
+    })
+    .afterClosed()
+    .subscribe((result) => {
+      if (result) {
         this.dataElementRecords.forEach((x) => (x.checked = false));
-        // eslint-disable-next-line no-self-assign
-        this.dataElementRecords = this.dataElementRecords;
         this.checkAllCheckbox = false;
         this.bulkActionsVisible = 0;
         this.filterEvent.emit();
-      })
-      .catch(() => {});
+      }
+    });
   }
 
   bulkDelete() {
     const dataElementIdLst = this.dataElementRecords.filter(record => record.checked);
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: {
-          dataElementIdLst,
-          parentDataModel: this.parentDataModel,
-          parentDataClass: this.parentDataClass
-        },
-        panelClass: 'bulk-delete-modal'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-    promise
-      .then(() => {
+    this.dialog.open(BulkDeleteModalComponent, {
+      data: {
+        dataElementIdLst,
+        parentDataModel: this.parentDataModel,
+        parentDataClass: this.parentDataClass
+      },
+      panelClass: 'bulk-delete-modal'
+    })
+    .afterClosed()
+    .subscribe((result) => {
+      if (result) {
         this.dataElementRecords.forEach((x) => (x.checked = false));
-        // eslint-disable-next-line no-self-assign
-        this.dataElementRecords = this.dataElementRecords;
         this.checkAllCheckbox = false;
         this.bulkActionsVisible = 0;
         this.filterEvent.emit();
-      })
-      .catch(() => {});
+      }
+    });
   }
 }

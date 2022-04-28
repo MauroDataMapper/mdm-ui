@@ -260,7 +260,8 @@ export class DataElementsListComponent implements AfterViewInit {
         return {
           id: record.id,
           domainType: record.domainType
-      }});
+        };
+      });
 
     this.dialog.open(BulkEditModalComponent, {
       data: {

@@ -35,11 +35,9 @@ import {
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import {
   DataModelDetail,
   DataModelDetailResponse,
-  ModelDomainType,
   ModelUpdatePayload,
   MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
@@ -382,24 +380,12 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go(
-        'mergediff',
-        {
-          sourceId: this.dataModel.id,
-          catalogueDomainType: MultiFacetAwareDomainType.DataModels
-        });
-    }
-
     return this.stateHandler.Go(
-      'modelsmerging',
-      new ModelMergingModel(
-        this.dataModel.id,
-        null,
-        ModelDomainType.DataModels
-      ),
-      null
-    );
+      'mergediff',
+      {
+        sourceId: this.dataModel.id,
+        catalogueDomainType: MultiFacetAwareDomainType.DataModels
+      });
   }
 
   showMergeGraph() {

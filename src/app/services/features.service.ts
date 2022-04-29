@@ -34,7 +34,6 @@ import { MessageHandlerService } from './utility/message-handler.service';
 export class FeaturesService implements OnDestroy {
   useSubscribedCatalogues: boolean;
   useVersionedFolders: boolean;
-  useMergeUiV2: boolean;
   useOpenIdConnect: boolean;
   useDigitalObjectIdentifiers: boolean;
   useIssueReporting: boolean;
@@ -92,12 +91,6 @@ export class FeaturesService implements OnDestroy {
       properties,
       'feature.use_versioned_folders',
       environment.features.useVersionedFolders
-    );
-
-    this.useMergeUiV2 = this.getBooleanValue(
-      properties,
-      'feature.use_merge_diff_ui',
-      environment.features.useMergeUiV2
     );
 
     this.useOpenIdConnect = this.getBooleanValue(

@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="!isEditorVisible && !editable.deletePending && !hideEdit"
             (click)="editClicked()"
             aria-label="Edit">
-        <i class="fas fa-pencil-alt editButton"></i>
+        <span class="fas fa-pencil-alt editButton"></span>
     </button>
 
     <!-- Delete -->
@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="!hideDelete && !editable.deletePending"
             (click)="deleteClicked()"
             aria-label="Delete">
-        <i [ngClass]="!displayDeleteIcon ? ['far','displayDeleteIcon','warning','']: ['far','fa-trash-alt','warning']"></i>
+        <span [ngClass]="!displayDeleteIcon ? ['far','displayDeleteIcon','warning','']: ['far','fa-trash-alt','warning']"></span>
     </button>
 
 
@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0
                 class="paddingless"
                 (click)="confirmDeleteClicked()"
                 aria-label="Confirm delete">
-            <i class="fas fa-check"></i>
+            <span class="fas fa-check"></span>
         </button>
 
         <!-- Cancel Delete-->
@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
                 class="paddingless"
                 (click)="cancelDeleteClicked()"
                 aria-label="Cancel delete">
-            <i class="fas fa-times"></i>
+            <span class="fas fa-times"></span>
         </button>
 
         <span [hidden]="textLocation != 'bottom'" style="font-size: 11px;"><br>Are you sure?</span>

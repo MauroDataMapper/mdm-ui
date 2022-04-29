@@ -16,28 +16,30 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { UserSettingsHandlerService } from '@mdm/services';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 import { ContentEditorComponent } from './content-editor.component';
 
 describe('ContentEditorComponent', () => {
-  let component: ContentEditorComponent;
-  let fixture: ComponentFixture<ContentEditorComponent>;
+  let harness: ComponentHarness<ContentEditorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ContentEditorComponent ]
-    })
-    .compileComponents();
-  }));
+  const userSettingsStub = {
+    get: jest.fn()
+  };
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ContentEditorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(ContentEditorComponent, {
+      providers: [
+        {
+          provide: UserSettingsHandlerService,
+          useValue: userSettingsStub
+        }
+      ]
+    });
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

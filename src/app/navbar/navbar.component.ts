@@ -49,7 +49,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   HDFLink: any;
   sideNav: any;
   pendingUsersCount = 0;
-  isLoggedIn = this.securityHandler.isLoggedIn();
+  isLoggedIn = false;
+  isAdministrator = false;
   features = this.sharedService.features;
 
   private unsubscribe$ = new Subject();
@@ -68,18 +69,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.broadcast
       .onUserLoggedIn()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.isLoggedIn = true);
+      .subscribe(() => {
+        this.isLoggedIn = true;
+        this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+      });
 
     this.broadcast
       .onUserLoggedOut()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.isLoggedIn = false);
+      .subscribe(() => {
+        this.isLoggedIn = false;
+        this.isAdministrator = false;
+      });
+
+    this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
 
     if (this.isLoggedIn) {
       this.profile = this.securityHandler.getCurrentUser();
-      // if (this.isAdmin()) {
-      //   this.getPendingUsers();
-      // }
     }
     this.backendURL = this.sharedService.backendURL;
 
@@ -139,11 +146,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.pendingUsersCount = data.body.count;
     });
   };
-
-  isAdmin = () => {
-    return this.securityHandler.isAdmin();
-  };
-
 
   login = () => {
     this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {

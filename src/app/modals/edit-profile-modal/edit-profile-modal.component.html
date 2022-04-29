@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <table *ngIf="this.profileData" class="table table-bordered">
+    <table *ngIf="this.profileData" class="table table-bordered" role="presentation">
       <tbody *ngFor="let section of this.profileData?.sections">
         <tr>
           <td [attr.colspan]="2" class="detailsRowHeader">
@@ -40,13 +40,13 @@ SPDX-License-Identifier: Apache-2.0
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
             <span *ngIf="field.minMultiplicity > 0">*</span>
-            <i
+            <span
               *ngIf="field.description"
               style="float: right"
               class="fas fa-info-circle helpIcon"
               [matTooltip]="field.description"
               matTooltipPosition="after"
-            ></i>
+            ></span>
           </td>
           <td class="elementDetailDescription">
             <mdm-content-editor
@@ -150,7 +150,7 @@ SPDX-License-Identifier: Apache-2.0
                 (click)="showAddElementToMarkdown(field)"
                 style="top: 3px; margin-left: 4px"
               >
-                <i class="fas fa-plus"></i>
+                <span class="fas fa-plus"></span>
                 Add Data Model
               </button>
             </div>
@@ -186,8 +186,8 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
-            <mat-error *ngIf="getValidationError(field.fieldName)">
-              {{ getValidationError(field.fieldName).message }}
+            <mat-error *ngIf="getValidationError(field.metadataPropertyName)">
+              {{ getValidationError(field.metadataPropertyName).message }}
             </mat-error>
           </td>
         </tr>
@@ -198,11 +198,11 @@ SPDX-License-Identifier: Apache-2.0
 <mat-dialog-actions align="end" class="pt-2 pb-2">
   <div>
     <span *ngIf="validationErrors.total === 0" class="mr-2">
-      <i class="fas fa-check-circle success"></i>
+      <span class="fas fa-check-circle success"></span>
       Profile is valid
     </span>
     <span *ngIf="validationErrors.total > 0" class="mr-2">
-      <i class="fas fa-exclamation-triangle warning" style="color: #f19e3f"></i>
+      <span class="fas fa-exclamation-triangle warning" style="color: #f19e3f"></span>
       There are {{validationErrors.total}} field(s) with issues
     </span>
     <button
@@ -228,7 +228,6 @@ SPDX-License-Identifier: Apache-2.0
       type="submit"
       class="custom"
       (click)="save()"
-      [disabled]="userForm.invalid"
     >
       {{ okBtnText }}
     </button>

@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
         <mdm-element-link [showTypeTitle]="true" [showTypeIcon]="true" [newWindow]="true" [element]="step.scope.parentFolder"></mdm-element-link>
     </div>
 
-    <span>Please enter the Data Model details: <i class="fas fa-info-circle helpIcon" style="margin: 5px;" (click)="loadHelp()" matTooltip="Help"></i></span>
+    <span>Please enter the Data Model details: <span class="fas fa-info-circle helpIcon" style="margin: 5px;" (click)="loadHelp()" matTooltip="Help"></span></span>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">
             <mat-label>Label</mat-label>
@@ -47,10 +47,12 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Description</mat-label>
-            <textarea matInput type="text" name="description" formControlName="description"></textarea>
-        </mat-form-field>
+      <label class="manual-material-label">Description</label>
+      <mdm-content-editor
+        [content]="description.value"
+        (contentChange)="description.setValue($event)"
+        [inEditMode]="true">
+      </mdm-content-editor>
     </div>
 
     <div class="mdm--form-input">

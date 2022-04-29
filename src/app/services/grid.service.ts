@@ -58,7 +58,7 @@ export class GridService {
     }
 
     if (filters) {
-      Object.keys(filters).map(key => {
+      Object.keys(filters).forEach(key => {
         options[key] = filters[key];
       });
     }

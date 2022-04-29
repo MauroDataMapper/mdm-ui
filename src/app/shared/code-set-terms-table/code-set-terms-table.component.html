@@ -22,17 +22,17 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">
                 Terms
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()"></i>
+                <span class="fas fa-filter" (click)="filterClick()"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
             <div *ngIf="(access && access.showEdit) || clientSide">
                 <button mat-flat-button color="primary" (click)="toggleAddTermsSection()" *ngIf="!showAddTerm">
-                    <i class="fas fa-plus"></i>
+                    <span class="fas fa-plus"></span>
                     Add Term
                 </button>
                 <button mat-button color="warn" (click)="toggleAddTermsSection()" *ngIf="showAddTerm" matTooltip="Cancel adding terms">
-                    <i class="fas fa-times"></i>
+                    <span class="fas fa-times"></span>
                 </button>
             </div>
         </div>
@@ -44,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="terminology">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="terminologyLabel" [disabled]="!hideFilters" style="cursor:pointer;width: 30%;" columnName="terminology">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="terminologyLabel" [disabled]="!hideFilters" style="cursor:pointer;width: 30%;" columnName="terminology" scope="col">
                 <span [hidden]="!hideFilters">Terminology</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="term">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="code" [disabled]="!hideFilters" style="cursor:pointer;width: 25%;" columnName="term">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="code" [disabled]="!hideFilters" style="cursor:pointer;width: 25%;" columnName="term" scope="col">
                 <span [hidden]="!hideFilters">Term</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -74,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="definition">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="definition" [disabled]="!hideFilters" style="cursor:pointer;width: 35%;" columnName="definition">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="definition" [disabled]="!hideFilters" style="cursor:pointer;width: 35%;" columnName="definition" scope="col">
                 <span [hidden]="!hideFilters">Definition</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -109,10 +109,10 @@ SPDX-License-Identifier: Apache-2.0
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 30%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 35%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-      <th style="width: 10%;" *ngIf="access && access.showEdit"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+      <th style="width: 30%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 25%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 35%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+      <th style="width: 10%;" scope="col" *ngIf="access && access.showEdit"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
   </tr>
   <tr>
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

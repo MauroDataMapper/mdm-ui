@@ -29,7 +29,7 @@ import {
 } from './security-handler.model';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   AdminSessionResponse,
   AuthenticatedResponse,
@@ -67,6 +67,7 @@ export class SecurityHandlerService {
     localStorage.removeItem('needsToResetPassword');
     localStorage.removeItem('email');
     localStorage.removeItem('userSettings');
+    localStorage.removeItem('isAdmin');
   }
 
   getUserFromLocalStorage(): UserDetails | null {
@@ -85,8 +86,7 @@ export class SecurityHandlerService {
       role: localStorage.getItem('role'),
       needsToResetPassword: Boolean(
         localStorage.getItem('needsToResetPassword')
-      ),
-      isAdmin: JSON.parse(localStorage.getItem('isAdmin'))
+      )
     };
   }
 
@@ -114,8 +114,6 @@ export class SecurityHandlerService {
       JSON.stringify({ username: user.username, expiry: expireDate })
     );
     localStorage.setItem('userId', user.id);
-    localStorage.setItem('isAdmin', user.isAdmin);
-
     localStorage.setItem(
       'email',
       JSON.stringify({ email: user.username, expiry: expireDate })
@@ -138,27 +136,21 @@ export class SecurityHandlerService {
       catchError((error: HttpErrorResponse) =>
         throwError(new SignInError(error))
       ),
-      switchMap((signInResponse: LoginResponse) =>
-        this.resources.session.isApplicationAdministration().pipe(
-          map((adminResponse: AdminSessionResponse) => {
-            const signIn = signInResponse.body;
-            const admin = adminResponse.body;
-            const user: UserDetails = {
-              id: signIn.id,
-              token: signIn.token,
-              firstName: signIn.firstName,
-              lastName: signIn.lastName,
-              email: signIn.emailAddress,
-              userName: signIn.emailAddress,
-              role: signIn.userRole?.toLowerCase() ?? '',
-              isAdmin: admin.applicationAdministrationSession ?? false,
-              needsToResetPassword: signIn.needsToResetPassword ?? false
-            };
-            this.addToLocalStorage(user);
-            return user;
-          })
-        )
-      )
+      map((response: LoginResponse) => {
+        const signIn = response.body;
+        const user: UserDetails = {
+          id: signIn.id,
+          token: signIn.token,
+          firstName: signIn.firstName,
+          lastName: signIn.lastName,
+          email: signIn.emailAddress,
+          userName: signIn.emailAddress,
+          role: signIn.userRole?.toLowerCase() ?? '',
+          needsToResetPassword: signIn.needsToResetPassword ?? false
+        };
+        this.addToLocalStorage(user);
+        return user;
+      })
     );
   }
 
@@ -245,11 +237,26 @@ export class SecurityHandlerService {
     return !!this.getUserFromLocalStorage();
   }
 
-  isAdmin() {
-    if (this.getCurrentUser()) {
-      return this.getCurrentUser().isAdmin;
+  isAdministrator(): Observable<boolean> {
+    if (!this.isLoggedIn()) {
+      return of(false);
     }
-    return false;
+
+    // Attempt to fetch from local storage first to avoid multiple network calls
+    const localState = this.getAdministratorStateFromLocalStorage();
+    if (localState !== undefined) {
+      return of(localState);
+    }
+
+    return this.resources.session
+      .isApplicationAdministration()
+      .pipe(
+        map((response: AdminSessionResponse) => {
+          const state = response.body.applicationAdministrationSession;
+          this.addAdministratorStateToLocalStorage(state);
+          return state;
+        })
+      );
   }
 
   getCurrentUser(): UserDetails | null {
@@ -313,7 +320,7 @@ export class SecurityHandlerService {
       showEdit: element.availableActions?.includes('update'),
       canEditDescription: element.availableActions?.includes('editDescription'),
       showFinalise: element.availableActions?.includes('finalise'),
-      showPermission: element.availableActions?.includes('update') || this.isAdmin(),
+      showPermission: element.availableActions?.includes('update'),
       showSoftDelete: element.availableActions?.includes('softDelete'),
       showPermanentDelete: element.availableActions?.includes('delete'),
       canAddAnnotation: element.availableActions?.includes('comment'),
@@ -358,5 +365,14 @@ export class SecurityHandlerService {
     const authorizationUrl = '/redirects/open-id-connect-redirect.html';
     const baseUrl = window.location.href.slice(0, window.location.href.indexOf('/#/'));
     return new URL(baseUrl + authorizationUrl);
+  }
+
+  private addAdministratorStateToLocalStorage(state: boolean) {
+    localStorage.setItem('isAdmin', String(state));
+  }
+
+  private getAdministratorStateFromLocalStorage(): boolean | undefined {
+    const state = localStorage.getItem('isAdmin');
+    return state ? JSON.parse(state) : undefined;
   }
 }

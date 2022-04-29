@@ -19,6 +19,32 @@ SPDX-License-Identifier: Apache-2.0
 
 <table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
+    <tr *ngIf="isInControlList('code')" data-cy="code">
+      <td class="detailsRowHeader">Code</td>
+      <td data-cy="value" *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.code"
+          [name]="'moduleNameCode'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('definition')" data-cy="definition">
+      <td class="detailsRowHeader">Definition</td>
+      <td data-cy="value" *ngIf="catalogueItem">
+        <mdm-inline-text-edit
+          [readOnly]="true"
+          [(ngModel)]="catalogueItem.definition"
+          [name]="'moduleNameDefinition'"
+          size="20"
+          [styleCss]="'dataModelDetailsLabel'"
+        >
+        </mdm-inline-text-edit>
+      </td>
+    </tr>
     <tr *ngIf="isInControlList('aliases')" data-cy="aliases" >
       <td class="detailsRowHeader">Aliases</td>
       <td data-cy="value">
@@ -43,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </tr>
     <tr *ngIf="isInControlList('multiplicity')" data-cy="multipicity">
-      <th class="detailsRowHeader">Multiplicity</th>
+      <th class="detailsRowHeader" scope="col">Multiplicity</th>
       <td data-cy="value" class="dataClassDetailsModelPath">
         <mdm-multiplicity
           [min]="catalogueItem.minMultiplicity"
@@ -118,7 +144,7 @@ SPDX-License-Identifier: Apache-2.0
     </tr>
 
     <tr *ngIf="isInControlList('dataType')" data-cy="data-type">
-      <th class="detailsRowHeader">Data Type</th>
+      <th class="detailsRowHeader" scope="col">Data Type</th>
       <td data-cy="value">
         <mdm-element-data-type
         *ngIf="catalogueItem"

@@ -46,6 +46,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-header-cell
             style="cursor: pointer; max-width: 95%; width: 95%"
             columnName="link"
+            scope="col"
           >
             <span>Link</span>
           </th>
@@ -59,6 +60,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-header-cell
             style="cursor: pointer; max-width: 5%; width: 5%"
             columnName="delete"
+            scope="col"
           ></th>
           <td *matCellDef="let link" mat-cell>
             <button
@@ -68,7 +70,7 @@ SPDX-License-Identifier: Apache-2.0
               type="button"
               aria-label="Delete Download Link"
             >
-              <i class="far fa-trash-alt"></i>
+              <span class="far fa-trash-alt"></span>
             </button>
           </td>
         </ng-container>

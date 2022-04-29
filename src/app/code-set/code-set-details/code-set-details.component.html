@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
           [matMenuTriggerFor]="userActions"
           style="position: relative; float: right; margin-right: 4px"
         >
-          <i class="fas fa-ellipsis-v"></i>
+          <span class="fas fa-ellipsis-v"></span>
           <span style="display: none">Menu</span>
         </button>
         <!--First level Menu-->
@@ -57,7 +57,16 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showEdit || access.canEditDescription"
             (click)="showForm()"
           >
-            <i class="fas fa-pencil-alt"></i> Edit Title
+            <span class="fas fa-pencil-alt"></span> Edit Title
+          </button>
+          <button
+            mat-menu-item
+            data-cy="edit-branch-name"
+            type="button"
+            *ngIf="canChangeBranchName"
+            (click)="editBranchName()"
+          >
+            <span class="fas fa-code-branch"></span> Edit Branch Name
           </button>
           <button
             mat-menu-item
@@ -66,10 +75,10 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showNewVersion"
             (click)="newVersion()"
           >
-            <i class="fas fa-copy"></i> Create a New Version
+            <span class="fas fa-copy"></span> Create a New Version
           </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
-                      <i class="fas fa-code-branch"></i> Merge
+                      <span class="fas fa-code-branch"></span> Merge
                     </button> -->
 
           <mat-divider></mat-divider>
@@ -78,10 +87,10 @@ SPDX-License-Identifier: Apache-2.0
             type="button"
             data-cy="restore"
             class="has-text-green"
-            *ngIf="codeSetDetail.deleted && isAdminUser"
+            *ngIf="codeSetDetail.deleted && isAdministrator"
             (click)="restore()"
           >
-            <i class="fas fa-trash-restore has-text-green"></i> Restore
+            <span class="fas fa-trash-restore has-text-green"></span> Restore
           </button>
           <button
             mat-menu-item
@@ -91,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="access.showDelete"
             class="warning"
           >
-            <i class="far fa-trash-alt warning"></i> Delete
+            <span class="far fa-trash-alt warning"></span> Delete
           </button>
         </mat-menu>
         <!-- End of first level menu -->
@@ -131,7 +140,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="User & Group Access"
             aria-label="User & Group Access"
           >
-            <i class="fas fa-user-lock"></i>
+            <span class="fas fa-user-lock"></span>
           </button>
         </div>
       </div>
@@ -150,7 +159,7 @@ SPDX-License-Identifier: Apache-2.0
             class="dataModelTypeIcon"
             *ngIf="codeSetDetail?.domainType == 'CodeSet'"
           >
-            <i matTooltip="Code Set" class="fas fa-list"></i>
+            <span matTooltip="Code Set" class="fas fa-list"></span>
           </span>
           <mdm-inline-text-edit
             [readOnly]="false"

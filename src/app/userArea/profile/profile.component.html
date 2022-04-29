@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container mb-1 forms-heading-container">
   <h4 class="marginless">My profile </h4>
-  <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
+  <span class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></span>
 </div>
 <div class="mb-2 mdm--profile-block" [hidden]="isChangingProfileImage">
   <div class="mdm-profile__image">
@@ -26,17 +26,17 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="mt-2 mb-4">
     <button mat-flat-button color="primary" [disabled]="isChangingProfileImage" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
-      <i class="fas fa-pencil-alt"></i> Edit image
+      <span class="fas fa-pencil-alt"></span> Edit image
     </button>
   </div>
 	<mat-menu #menuProfile>
 		<label mat-menu-item>
-			<i class="fas fa-camera"></i>
+			<span class="fas fa-camera"></span>
 			Change image
 			<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
 		</label>
 		<button mat-menu-item (click)="removeProfileImage()">
-			<i class="fas fa-times warning"></i>
+			<span class="fas fa-times warning"></span>
 			Remove image
 		</button>
 	</mat-menu>

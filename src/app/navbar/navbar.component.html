@@ -43,73 +43,73 @@ SPDX-License-Identifier: Apache-2.0
                             </div>
                             <div fxFlex="60" fxFlex.sm="100" fxFlex.xs="100">
                                 <div class="profile-name">{{profile.firstName}} {{profile.lastName}}</div>
-                                <div class="profile-role" *ngIf="profile.isAdmin">Administrator</div>
+                                <div class="profile-role" *ngIf="isAdministrator">Administrator</div>
                             </div>
                             <div fxFlex="10" fxFlex.sm="100" fxFlex.xs="100">
-                                <i class="fas fa-chevron-down"></i>
+                                <span class="fas fa-chevron-down"></span>
                             </div>
                         </div>
                         <mat-menu #menu="matMenu" yPosition="below" xPosition="before">
                             <div *ngIf="isLoggedIn">
                                 <h5 class="marginless text-muted menu-label">Account settings</h5>
                                 <a mat-menu-item uiSref="appContainer.userArea.profile">
-                                    <i class="fas fa-id-card"></i>
+                                    <span class="fas fa-id-card"></span>
                                     <span>My profile</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.userArea.settings">
-                                    <i class="fas fa-sliders-h"></i>
+                                    <span class="fas fa-sliders-h"></span>
                                     <span>Preferences</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.userArea.changePassword">
-                                  <i class="fas fa-unlock-alt"></i>
+                                  <span class="fas fa-unlock-alt"></span>
                                     <span>Change password</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.userArea.apiKeys">
-                                  <i class="fas fa-key"></i>
+                                  <span class="fas fa-key"></span>
                                   <span>API keys</span>
                                 </a>
                             </div>
-                            <div *ngIf="isAdmin()">
+                            <div *ngIf="isAdministrator">
                                 <h5 class="marginless text-muted menu-label">Admin settings</h5>
                                 <a mat-menu-item uiSref="appContainer.adminArea.home">
-                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span class="fas fa-tachometer-alt"></span>
                                     <span>Dashboard</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.modelManagement">
-                                    <i class="fas fa-list" aria-hidden="true"></i>
+                                    <span class="fas fa-list" aria-hidden="true"></span>
                                     <span>Model management</span>
                                 </a>
                                 <a mat-menu-item *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues">
-                                    <i class="fas fa-rss" aria-hidden="true"></i>
+                                    <span class="fas fa-rss" aria-hidden="true"></span>
                                     <span>Subscribed catalogues</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.emails">
-                                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                                    <span class="fas fa-envelope" aria-hidden="true"></span>
                                     <span>Emails</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.users">
-                                    <i class="fas fa-user" aria-hidden="true"></i>
+                                    <span class="fas fa-user" aria-hidden="true"></span>
                                     <span>Manage users</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers">
-                                  <i class="fas fa-user-clock"></i>
+                                  <span class="fas fa-user-clock"></span>
                                   <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.groups">
-                                    <i class="fas fa-users" aria-hidden="true"></i>
+                                    <span class="fas fa-users" aria-hidden="true"></span>
                                     <span>Manage groups</span>
                                 </a>
                                 <a mat-menu-item *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders">
-                                    <i class="fab fa-openid" aria-hidden="true"></i>
+                                    <span class="fab fa-openid" aria-hidden="true"></span>
                                     <span>OpenID Connect</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.configuration">
-                                    <i class="fas fa-cog" aria-hidden="true"></i>
+                                    <span class="fas fa-cog" aria-hidden="true"></span>
                                     <span>Configuration</span>
                                 </a>
                             </div>
                             <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
-                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="fas fa-sign-out-alt"></span>
                                 <span>Log out</span>
                             </button>
                         </mat-menu>
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </nav>
             <button mat-button id="mobile-trigger" (click)="sidenav.toggle()" aria-label="Toggle mobile menu">
-                <i class="fas fa-bars"></i>
+                <span class="fas fa-bars"></span>
             </button>
         </mat-toolbar>
     </div>
@@ -146,19 +146,19 @@ SPDX-License-Identifier: Apache-2.0
                 <div *ngIf="!isLoggedIn" class="aside-separator"></div>
                 <h5 class="menu-label text-muted pt-0 marginless">Main navigation</h5>
                 <a mat-menu-item uiSref="appContainer.mainApp.home" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-home"></i>
+                    <span class="fas fa-home"></span>
                     <span>Home</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel"  (click)="sidenav.toggle()"uiSrefActive="active">
-                    <i class="fas fa-folder-open"></i>
+                    <span class="fas fa-folder-open"></span>
                     <span>Browse</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-search"></i>
+                    <span class="fas fa-search"></span>
                     <span>Search</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.mainApp.about" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-info-circle"></i>
+                    <span class="fas fa-info-circle"></span>
                     <span>About</span>
                 </a>
             </div>
@@ -166,58 +166,58 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="isLoggedIn">
                 <h5 class="menu-label text-muted pt-0 marginless">Account settings</h5>
                 <a mat-menu-item uiSref="appContainer.userArea.profile" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-id-card"></i>
+                    <span class="fas fa-id-card"></span>
                     <span>My profile</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.userArea.settings" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-sliders-h"></i>
+                    <span class="fas fa-sliders-h"></span>
                     <span>Preferences</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.userArea.changePassword" (click)="sidenav.toggle()" uiSrefActive="active">
-                  <i class="fas fa-unlock-alt"></i>
+                  <span class="fas fa-unlock-alt"></span>
                     <span>Change password</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.userArea.apiKeys" (click)="sidenav.toggle()" uiSrefActive="active">
-                  <i class="fas fa-key"></i>
+                  <span class="fas fa-key"></span>
                   <span>API keys</span>
                 </a>
             </div>
-            <div *ngIf="isLoggedIn && isAdmin()">
+            <div *ngIf="isLoggedIn && isAdministrator">
                 <h5 class="menu-label text-muted pt-0 marginless">Admin settings</h5>
                 <a mat-menu-item uiSref="appContainer.adminArea.home" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="fas fa-tachometer-alt"></span>
                     <span>Dashboard</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.modelManagement" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-list" aria-hidden="true"></i>
+                    <span class="fas fa-list" aria-hidden="true"></span>
                     <span>Model management</span>
                 </a>
                 <a mat-menu-item *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues" (click)="sidenav.toggle()" uiSrefActive="active">
-                  <i class="fas fa-rss" aria-hidden="true"></i>
+                  <span class="fas fa-rss" aria-hidden="true"></span>
                   <span>Subscribed catalogues</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.emails" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span class="fas fa-envelope" aria-hidden="true"></span>
                     <span>Emails</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.users" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span class="fas fa-user" aria-hidden="true"></span>
                     <span>Manage users</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-user-clock"></i>
+                    <span class="fas fa-user-clock"></span>
                     <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.groups" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-users" aria-hidden="true"></i>
+                    <span class="fas fa-users" aria-hidden="true"></span>
                     <span>Manage groups</span>
                 </a>
                 <a mat-menu-item *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fab fa-openid" aria-hidden="true"></i>
+                    <span class="fab fa-openid" aria-hidden="true"></span>
                     <span>OpenID Connect</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.configuration" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span class="fas fa-cog" aria-hidden="true"></span>
                     <span>Configuration</span>
                 </a>
             </div>
@@ -228,7 +228,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
-            <i class="fas fa-sign-out-alt"></i>
+            <span class="fas fa-sign-out-alt"></span>
             <span>Log out</span>
         </button>
     </mat-sidenav>

@@ -38,6 +38,14 @@ form.mdm--form {
   }
 }
 
+.mdm--form-input {
+  label.manual-material-label {
+    font-size: 85%;
+    margin-left: 16px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
 /* Forms inside modal window */
 form.mdm--form.mdm--form-modal {
   width: 600px;

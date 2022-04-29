@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
             <h4 class="inline-block marginless">
                 <span class="dataModelTypeIcon">
-                    <i matTooltip="Data Standard" class="fas fa-external-link-alt"></i>
+                    <span matTooltip="Data Standard" class="fas fa-external-link-alt"></span>
                 </span>
                 <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="dataModel.label" name="labelName"
                     [inEditMode]="false" [styleCss]="'dataTypeDetailsLabel'">
@@ -33,15 +33,15 @@ SPDX-License-Identifier: Apache-2.0
             <div class="detail-icons">
                 <div class="text-muted">
                     <small>
-                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span class="fas fa-cube" matTooltip="Item type"></span>
                         <span><strong>Item type: </strong><span class="item-type">Federated Data Model</span></span>
                     </small>
                 </div>
                 <div class="text-muted">
                     <small>
-                        <i class="fas fa-file-code" matTooltip="Model type"></i>
-                        <span><strong>Model type: </strong><i class="fas {{getModelTypeIcon()}}"
-                                matTooltip="Model type"></i>{{dataModel.modelType}}</span>
+                        <span class="fas fa-file-code" matTooltip="Model type"></span>
+                        <span><strong>Model type: </strong><span class="fas {{getModelTypeIcon()}}"
+                                matTooltip="Model type"></span>{{dataModel.modelType}}</span>
                     </small>
                 </div>
             </div>
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
         <table class="table table-bordered mdm--table-fixed">
             <tbody>
                 <tr>
-                    <th class="detailsRowHeader">Description</th>
+                    <th class="detailsRowHeader" scope="col">Description</th>
                     <td class="elementDetailDescription">
                         <mdm-content-editor  [inEditMode]="false" [(content)]="dataModel.description" [element]="dataModel"
                             [property]="'description'">
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader">Folder</th>
+                    <th class="detailsRowHeader" scope="col">Folder</th>
                     <td class="elementDetailDescription">
                         <mdm-inline-text-edit [readOnly]="true" [inEditMode]="false"
                             [(ngModel)]="dataModel.folderLabel" class="dataModelDetailsLabel" name="folder">
@@ -69,13 +69,13 @@ SPDX-License-Identifier: Apache-2.0
                         <div *ngIf="!dataModel.isSubscribed" class="mr-1" style="float: right;">
                             <button mat-stroked-button color="accent" type="button" class=" warning"
                                 matTooltip="Subscribe" aria-label="Subscribe" [disabled]="processing" (click)="subscribeToModel()">
-                                <i class="fas fa-plus"></i><span class="ml-1">Subscribe</span>
+                                <span class="fas fa-plus"></span><span class="ml-1">Subscribe</span>
                             </button>
                         </div>
                         <div *ngIf="dataModel.isSubscribed" class="mr-1" style="float: right;">
                             <button mat-stroked-button color="warn" type="button" class=" warning"
                                 matTooltip="Unsubscribe" aria-label="Unsubscribe" [disabled]="processing" (click)="unsubscribeFromModel()">
-                                <i class="fas fa-minus"></i><span class="ml-1">Unsubscribe</span>
+                                <span class="fas fa-minus"></span><span class="ml-1">Unsubscribe</span>
                             </button>
                         </div>
                           <div style="clear: both;" *ngIf="processing">

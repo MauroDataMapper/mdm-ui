@@ -33,22 +33,22 @@ SPDX-License-Identifier: Apache-2.0
   <div class="table-responsive">
       <table mat-table [dataSource]="records" class="mdm--mat-table table-striped">
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef style="width:30%"> Name </th>
+          <th mat-header-cell *matHeaderCellDef style="width:30%" scope="col"> Name </th>
           <td mat-cell *matCellDef="let record"> {{record.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="key">
-          <th mat-header-cell *matHeaderCellDef style="width:40%"> Key </th>
+          <th mat-header-cell *matHeaderCellDef style="width:40%" scope="col"> Key </th>
           <td mat-cell *matCellDef="let record">
             <span>{{record.apiKey}}  </span>
             <span *ngIf="!record.expired"><button mat-stroked-button color="primary" type="button" class="pt-0 pb-0 pl-1 pr-1" (click)="copyToClipboard(record)">
-              <i class="fas fa-copy fa-sm mr-1"></i> <small>Copy</small></button>
+              <span class="fas fa-copy fa-sm mr-1"></span> <small>Copy</small></button>
             </span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="expiryDate">
-          <th mat-header-cell *matHeaderCellDef style="width:15%"> Expiry date </th>
+          <th mat-header-cell *matHeaderCellDef style="width:15%" scope="col"> Expiry date </th>
           <td mat-cell *matCellDef="let record">
             <div *ngIf="!record.expired">
               {{record.expiryDate}}
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
 
         <ng-container matColumnDef="refreshable">
-          <th mat-header-cell *matHeaderCellDef style="width: 10%; text-align: center;"> Refreshable </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 10%; text-align: center;" scope="col"> Refreshable </th>
           <td mat-cell *matCellDef="let record" style="text-align: center;">
             <div *ngIf="record.refreshable">
               Yes
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
 
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;"> Status </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;" scope="col"> Status </th>
           <td mat-cell *matCellDef="let record" style="text-align: center;">
               <span *ngIf="record.disabled" class="pill-card--red">Disabled</span>
               <span *ngIf="!record.disabled" class="pill-card--green">Active</span>
@@ -80,25 +80,25 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef style="width:10%"> </th>
+          <th mat-header-cell *matHeaderCellDef style="width:10%" scope="col"> </th>
           <td mat-cell *matCellDef="let record">
             <div style="margin-bottom: 3px;">
               <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
-                <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+                <span class="fas fa-ellipsis-v"></span> <span style="display: none;">Menu</span>
               </button>
               <mat-menu #actions="matMenu" yPosition="below" xPosition="after" class="mdm--mat-menu--actions">
                 <button mat-menu-item *ngIf="!record.expired && !record.disabled" (click)="disableKey(record)" aria-label="Disable Key">
-                  <i class="fas fa-ban warning"></i> Disable API Key
+                  <span class="fas fa-ban warning"></span> Disable API Key
                 </button>
                 <button mat-menu-item *ngIf="!record.expired && record.disabled" (click)="enableKey(record)" aria-label="Enable Key">
-                  <i class="fas fa-check"></i> Enable API Key
+                  <span class="fas fa-check"></span> Enable API Key
                 </button>
                 <button mat-menu-item *ngIf="record.expired && record.refreshable" (click)="refreshKey(record)" aria-label="Refresh Key">
-                  <i class="fas fa-redo"></i> Refresh API Key
+                  <span class="fas fa-redo"></span> Refresh API Key
                 </button>
                 <mat-divider></mat-divider>
                 <button mat-menu-item class="warning" (click)="removeKey(record)">
-                  <i class="far fa-trash-alt warning"></i> Delete Key
+                  <span class="far fa-trash-alt warning"></span> Delete Key
                 </button>
               </mat-menu>
               </div>
@@ -117,12 +117,12 @@ SPDX-License-Identifier: Apache-2.0
  <div class="item" *ngIf="isLoadingResults">
    <table class="mdm--mat-table mdm--skeleton-table">
      <tr>
-       <th style="width: 30%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-       <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-       <th style="width: 15%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-       <th style="width: 10%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-       <th style="width: 5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-       <th style="width: 10%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 30%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+       <th style="width: 40%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+       <th style="width: 15%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 10%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 10%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
    </tr>
    <tr>
        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

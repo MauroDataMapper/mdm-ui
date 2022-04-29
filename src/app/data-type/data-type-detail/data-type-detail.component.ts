@@ -106,7 +106,7 @@ export class DataTypeDetailComponent implements OnInit {
   };
 
   askToDelete(){
-    if (!this.sharedService.isAdminUser()) {
+    if (!this.access.showDelete) {
       return;
     }
 

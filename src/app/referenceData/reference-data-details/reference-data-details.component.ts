@@ -32,7 +32,7 @@ import {
   FinaliseModalComponent,
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
@@ -43,6 +43,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
+import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -53,8 +54,8 @@ export class ReferenceDataDetailsComponent implements OnInit {
   @Input() refDataModel: ReferenceDataModelDetail;
   originalRefDataModel: ReferenceDataModelDetail;
   showEdit = false;
-  isAdminUser: boolean;
   isLoggedIn: boolean;
+  isAdministrator = false;
   deleteInProgress: boolean;
   exporting: boolean;
   errorMessage = '';
@@ -79,9 +80,13 @@ export class ReferenceDataDetailsComponent implements OnInit {
     private validatorService: ValidatorService
   ) {}
 
+  get canChangeBranchName() {
+    return this.access.showEdit && this.refDataModel.branchName !== defaultBranchName;
+  }
+
   ngOnInit() {
-    this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
     this.loadExporterList();
     this.ReferenceModelDetails();
     this.originalRefDataModel = Object.assign({}, this.refDataModel);
@@ -111,7 +116,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   restore() {
-    if (!this.isAdminUser || !this.refDataModel.deleted) {
+    if (!this.isAdministrator || !this.refDataModel.deleted) {
       return;
     }
 
@@ -433,5 +438,35 @@ export class ReferenceDataDetailsComponent implements OnInit {
       if (refDataModel != null && refDataModel.status === 'ok') {
       }
     });
+  }
+
+  editBranchName() {
+    this.dialog.openChangeBranchName(this.refDataModel)
+      .pipe(
+        switchMap(dialogResult => {
+          const payload: ModelUpdatePayload = {
+            id: this.refDataModel.id,
+            domainType: this.refDataModel.domainType,
+            branchName: dialogResult.branchName
+          };
+
+          return this.resourcesService.referenceDataModel.update(payload.id, payload);
+        }),
+        catchError(error => {
+          this.messageHandler.showError(
+            'There was a problem updating the branch name.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Reference Data Model branch name updated successfully.');
+        this.stateHandler.Go(
+          'referencedatamodel',
+          { id: this.refDataModel.id },
+          { reload: true }
+        );
+      });
   }
 }

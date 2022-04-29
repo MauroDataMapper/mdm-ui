@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 			<div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="flex-start center">
 				<h4 class="marginless">
           Manage users <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
-          <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+          <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
 				</h4>
 			</div>
 			<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center" class="mt-1">
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
       <ng-container matColumnDef="firstName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="firstName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="firstName" scope="col">
           <span [hidden]="!hideFilters">First name</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="lastName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer; width: 12%;" columnName="lastName" scope="col">
           <span [hidden]="!hideFilters">Last name</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
       </ng-container>
 
       <ng-container matColumnDef="emailAddress">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="emailAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; width: 20%;" columnName="emailAddress" scope="col">
           <span [hidden]="!hideFilters">Email</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" floatLabel="never">
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="organisation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer; width: 12%" columnName="organisation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer; width: 12%" columnName="organisation" scope="col">
           <span [hidden]="!hideFilters">Organisation</span>
           <div [hidden]="hideFilters">
             <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="groups">
-        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; width: 24%;" columnName="groups">
+        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; width: 24%;" columnName="groups" scope="col">
           <span [hidden]="!hideFilters">Groups</span>
         </th>
         <td mat-cell *matCellDef="let record" style="text-align: left; word-break: break-word;">
@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="width: 5%; text-align: center;" columnName="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="width: 5%; text-align: center;" columnName="status" scope="col">
           <span [hidden]="!hideFilters">Status</span>
         </th>
         <td mat-cell *matCellDef="let record" style="text-align: center;">
@@ -116,21 +116,21 @@ SPDX-License-Identifier: Apache-2.0
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
           <div style="margin-bottom: 3px;">
             <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
-              <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+              <span class="fas fa-ellipsis-v"></span> <span style="display: none;">Menu</span>
             </button>
             <mat-menu #actions="matMenu" yPosition="below" xPosition="after" class="mdm--mat-menu--actions">
               <button mat-menu-item (click)="editUser(record)" aria-label="Edit user" *ngIf="record.showEdit">
-                <i class="fas fa-pencil-alt" color="primary"></i> Edit user
+                <span class="fas fa-pencil-alt" color="primary"></span> Edit user
               </button>
               <button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
-                <i class="fas fa-key" color="primary"></i> Reset password
+                <span class="fas fa-key" color="primary"></span> Reset password
               </button>
               <mat-divider></mat-divider>
               <button mat-menu-item class="warning"  *ngIf="!record.disabled && record.showDisable" (click)="toggleDeactivate(record)" aria-label="Deactivate">
-                <i class="fas fa-ban"></i> Deactivate
+                <span class="fas fa-ban"></span> Deactivate
               </button>
               <button mat-menu-item *ngIf="record.disabled && record.showDisable" (click)="toggleDeactivate(record)" aria-label="Activate">
-                <i class="fas fa-check"></i> Activate
+                <span class="fas fa-check"></span> Activate
               </button>
             </mat-menu>
           </div>

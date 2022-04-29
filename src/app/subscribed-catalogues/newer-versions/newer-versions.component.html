@@ -19,19 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="heading-container">
   <h4 class="marginless">
     <span>Newer Versions</span>
-    <span *ngIf="isLoadingResults" class="mdm--skeleton-badge">
-      <ngx-skeleton-loader
-        count="1"
-        appearance="circle"
-        [theme]="{
-          'border-radius': '5px',
-          height: '31px',
-          width: '28px',
-          'background-color': '#b7bbc5'
-        }"
-      >
-      </ngx-skeleton-loader>
-    </span>
+    <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
     <span
       class="mdm--badge mdm--element-count"
       *ngIf="!isLoadingResults && totalNewVersionCount"
@@ -54,6 +42,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-sort-header="label"
         style="max-width: 35%; width: 35%"
         columnName="label"
+        scope="col"
       >
         Label
       </th>
@@ -70,6 +59,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-sort-header="version"
         style="max-width: 45%; width: 45%"
         columnName="version"
+        scope="col"
       >
         Version
       </th>
@@ -84,6 +74,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-sort-header="version"
         style="max-width: 5%; width: 5%"
         columnName="navigate"
+        scope="col"
       ></th>
       <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
         <button
@@ -92,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
           (click)="navigateToNewerVersion(record)"
           style="position: relative; float: right; margin-right: 4px"
         >
-          <i class="fas fa-external-link-alt"></i>
+          <span class="fas fa-external-link-alt"></span>
         </button>
       </td>
     </ng-container>

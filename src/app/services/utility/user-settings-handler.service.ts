@@ -18,14 +18,31 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { map } from 'rxjs/operators';
+import { MdmResponse } from '@maurodatamapper/mdm-resources';
+import { ContentEditorFormat } from '@mdm/constants/ui.types';
+
+export interface UserSettings {
+  countPerTable?: number;
+  counts?: number[];
+  expandMoreDescription?: boolean;
+  favourites?: any[];
+  includeModelSuperseded?: boolean;
+  includeDocumentSuperseded?: boolean;
+  includeDeleted?: boolean;
+  showSupersededModels?: boolean;
+  includeSupersededDocModels?: boolean;
+  dataFlowDiagramsSetting?: any;
+  editorFormat?: ContentEditorFormat;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSettingsHandlerService {
-  defaultSettings = {
+  defaultSettings: UserSettings = {
     countPerTable: 20,
     counts: [5, 10, 20, 50],
     expandMoreDescription: false,
@@ -33,15 +50,17 @@ export class UserSettingsHandlerService {
     includeModelSuperseded: true,
     includeDocumentSuperseded: false,
     includeDeleted: false,
-    dataFlowDiagramsSetting: {}
+    dataFlowDiagramsSetting: {},
+    editorFormat: 'markdown'
   };
+
   constructor(
     private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService
   ) { }
 
   getUserSettings() {
-    let settings = JSON.parse(localStorage.getItem('userSettings'));
+    let settings = JSON.parse(localStorage.getItem('userSettings')) as UserSettings;
     if (!settings) {
       this.updateUserSettings(this.defaultSettings);
       settings = this.defaultSettings;
@@ -49,54 +68,55 @@ export class UserSettingsHandlerService {
     return settings;
   }
 
-  updateUserSettings(setting) {
-    localStorage.setItem('userSettings', JSON.stringify(setting));
+  updateUserSettings(settings: UserSettings) {
+    localStorage.setItem('userSettings', JSON.stringify(settings));
   }
 
-  initUserSettings() {
-
-    const promise = new Promise((resolve, reject) => {
-      this.resources.catalogueUser.userPreferences(localStorage.getItem('userId')).subscribe(res => {
-        const result = res.body;
-        let settings = null;
-        if (!result) {
-          settings = this.defaultSettings;
-        } else {
-          // check if we have added new items but they don't exists already, then add them
-          for (const property in this.defaultSettings) {
-            if (this.defaultSettings.hasOwnProperty(property) && !result[property]) {
-              result[property] = this.defaultSettings[property];
-            }
-          }
-            // save them into the localStorage
-          settings = result;
-        }
-        // save it locally
-        this.updateUserSettings(settings);
-        resolve(settings);
-      }, error => {
-          reject(error);
-        }
-      );
-    });
-    return promise;
-  }
-
-  init() {
-    if (this.securityHandler.isLoggedIn()) {
-      return this.initUserSettings();
+  loadForCurrentUser(): Observable<UserSettings> {
+    const user = this.securityHandler.getCurrentUser();
+    if (!user) {
+      return of({});
     }
+
+    return this.resources.catalogueUser.userPreferences(user.id)
+      .pipe(
+        map((response: MdmResponse<any>) => {
+          const body = response.body;
+
+          let settings: UserSettings = null;
+          if (!body) {
+            settings = this.defaultSettings;
+          } else {
+            // check if we have added new items but they don't exists already, then add them
+            for (const property in this.defaultSettings) {
+              if (this.defaultSettings.hasOwnProperty(property) && !body[property]) {
+                body[property] = this.defaultSettings[property];
+              }
+            }
+              // save them into the localStorage
+            settings = body;
+          }
+
+          // save it locally
+          this.updateUserSettings(settings);
+          return settings;
+        })
+      );
   }
 
-  update(setting, value) {
+  update(setting: keyof UserSettings, value: any) {
     const storage = this.getUserSettings();
-    storage[setting] = value;
-    this.updateUserSettings(storage);
+    const next = {
+      ...storage,
+      ...{ [setting]: value }
+    };
+
+    this.updateUserSettings(next);
   }
 
-  get(setting) {
+  get<T = any>(setting: keyof UserSettings): T {
     const storage = this.getUserSettings();
-    return storage[setting];
+    return storage[setting] as T;
   }
 
   removeAll() {
@@ -104,14 +124,11 @@ export class UserSettingsHandlerService {
   }
 
   saveOnServer(): Observable<any> {
-    return this.resources.catalogueUser.updateUserPreferences(localStorage.getItem('userId'), this.getUserSettings());
-  }
-
-  handleCountPerTable(items) {
-    let counts = this.get('counts');
-    if (items && items.length < 5) {
-      counts = [];
+    const user = this.securityHandler.getCurrentUser();
+    if (!user) {
+      return of({});
     }
-    return counts;
+
+    return this.resources.catalogueUser.updateUserPreferences(user.id, this.getUserSettings());
   }
 }

@@ -194,7 +194,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div *ngIf="totalItemCount > 0" style="float: right;">
               <span *ngIf="loading">
-                <i class="fas fa-sync-alt fa-spin"></i>
+                <span class="fas fa-sync-alt fa-spin"></span>
               </span>
               <span style="font-size: 11px; font-style: italic;">
                 {{currentRecord}} / {{totalItemCount}}
@@ -255,7 +255,7 @@ SPDX-License-Identifier: Apache-2.0
 
             <div *ngIf="totalItemCount > 0" style="float: right;">
               <span *ngIf="loading">
-                <i class="fas fa-sync-alt fa-spin"></i>
+                <span class="fas fa-sync-alt fa-spin"></span>
               </span>
               <span style="font-size: 11px; font-style: italic;">
                 {{currentRecord}} / {{totalItemCount}}
@@ -320,7 +320,7 @@ SPDX-License-Identifier: Apache-2.0
 
             <div *ngIf="totalItemCount > 0" style="float: right;">
               <span *ngIf="loading">
-                <i class="fas fa-sync-alt fa-spin"></i>
+                <span class="fas fa-sync-alt fa-spin"></span>
               </span>
               <span style="font-size: 11px; font-style: italic;">
                 {{currentRecord}} / {{totalItemCount}}
@@ -333,6 +333,6 @@ SPDX-License-Identifier: Apache-2.0
 </mat-dialog-content>
 <mat-dialog-actions align="start" class="pt-2 pb-2">
   <div style="margin-top: 10px;" *ngIf="showPrevBtn && formData.selectedType !== ''">
-    <button mat-stroked-button (click)="previousStep()"><i class="fas fa-chevron-left"></i> Previous step</button>
+    <button mat-stroked-button (click)="previousStep()"><span class="fas fa-chevron-left"></span> Previous step</button>
 </div>
 </mat-dialog-actions>

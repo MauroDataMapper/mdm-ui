@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fas fa-sitemap"></i>&nbsp; Models
+                    <span class="fas fa-sitemap"></span>&nbsp; Models
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div style="position: relative;">
@@ -32,10 +32,10 @@ SPDX-License-Identifier: Apache-2.0
                                 <span class="tree-top-actions">
 
                                     <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
-                                        <i class="fas fa-search"></i>
+                                        <span class="fas fa-search"></span>
                                     </button>
                                     <button type="button" mat-stroked-button [matMenuTriggerFor]="filterMenu" *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Filters" [disabled]="levels.current === 1" (click)="toggleFilterMenu()" aria-label="Filter">
-                                        <i class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></i>
+                                        <span class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></span>
                                     </button>
                                     <mat-menu #filterMenu="matMenu" class="filterMenu">
                                         <!-- <div mat-menu-item>
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
                                                 Show Superseded Models
                                             </mat-checkbox>
                                         </div> -->
-                                        <div *ngIf="isAdmin" mat-menu-item>
+                                        <div *ngIf="isAdministrator" mat-menu-item>
                                             <mat-checkbox name="includeDeleted" (ngModelChange)="toggleFilters('includeDeleted')" [(ngModel)]="includeDeleted">
                                                 Show Deleted Models
                                             </mat-checkbox>
@@ -51,49 +51,49 @@ SPDX-License-Identifier: Apache-2.0
                                     </mat-menu>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Reload Data Models Tree" [disabled]="levels.current === 1" (click)="reloadTree()" aria-label="Reload data models tree">
-                                        <i class="fas fa-sync-alt"></i>
+                                        <span class="fas fa-sync-alt"></span>
                                     </button>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="exportMenu" matTooltip="Export Models" aria-label="Export Models">
-                                        <i class="fas fa-download"></i>
+                                        <span class="fas fa-download"></span>
                                     </button>
 
                                     <mat-menu #exportMenu="matMenu" class="filterMenu">
                                       <button mat-menu-item (click)="changeState('export','dataModels')">
-                                        <i class="fas fa-file-alt dataModelTypeIcon marginless"></i> Export Data Models
+                                        <span class="fas fa-file-alt dataModelTypeIcon marginless"></span> Export Data Models
                                       </button>
                                       <button mat-menu-item (click)="changeState('export','terminologies')">
-                                        <i class="fas fa-book dataModelTypeIcon marginless"></i>  Export Terminologies
+                                        <span class="fas fa-book dataModelTypeIcon marginless"></span>  Export Terminologies
                                       </button>
                                       <!-- <button mat-menu-item (click)="changeState('export','codeSets')">
-                                        <i class="fas fa-list dataModelTypeIcon marginless"></i> Export Code Sets
+                                        <span class="fas fa-list dataModelTypeIcon marginless"></span> Export Code Sets
                                       </button> -->
                                       <!-- <button mat-menu-item (click)="changeState('export','referenceDataModels')">
-                                        <i class="fas fa-file-contract dataModelTypeIcon marginless"></i> Export Reference Data
+                                        <span class="fas fa-file-contract dataModelTypeIcon marginless"></span> Export Reference Data
                                       </button> -->
                                     </mat-menu>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="importMenu" matTooltip="Import Models" aria-label="Import Models">
-                                        <i class="fas fa-upload"></i>
+                                        <span class="fas fa-upload"></span>
                                     </button>
 
                                     <mat-menu #importMenu="matMenu" class="filterMenu">
                                       <button mat-menu-item (click)="changeState('import','dataModels')">
-                                        <i class="fas fa-file-alt dataModelTypeIcon marginless"></i> Import Data Models
+                                        <span class="fas fa-file-alt dataModelTypeIcon marginless"></span> Import Data Models
                                       </button>
                                       <button mat-menu-item (click)="changeState('import','terminologies')">
-                                        <i class="fas fa-book dataModelTypeIcon marginless"></i> Import Terminologies
+                                        <span class="fas fa-book dataModelTypeIcon marginless"></span> Import Terminologies
                                       </button>
                                       <!-- <button mat-menu-item (click)="changeState('import','codeSets')">
-                                        <i class="fas fa-list dataModelTypeIcon marginless"></i> Import Code Sets
+                                        <span class="fas fa-list dataModelTypeIcon marginless"></span> Import Code Sets
                                       </button> -->
                                       <button mat-menu-item (click)="changeState('import','referenceDataModels')">
-                                        <i class="fas fa-file-contract dataModelTypeIcon marginless"></i> Import Reference Data
+                                        <span class="fas fa-file-contract dataModelTypeIcon marginless"></span> Import Reference Data
                                       </button>
                                     </mat-menu>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
-                                        <i class="fas fa-folder-plus"></i>
+                                        <span class="fas fa-folder-plus"></span>
                                     </button>
                                 </span>
                             </div>
@@ -111,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
                                 aria-label="Previous level"
                                 [disabled]="levels.current === 0"
                                 (click)="levels.backToTree()">
-                            <i class="fas fa-arrow-left"></i>
+                            <span class="fas fa-arrow-left"></span>
                         </button>
 
                         <button mat-button
@@ -122,7 +122,7 @@ SPDX-License-Identifier: Apache-2.0
                                 aria-label="Next level"
                                 [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
                                 (click)="levels.focusTreeItem(null)">
-                            <i class="fas fa-arrow-right"></i>
+                            <span class="fas fa-arrow-right"></span>
                         </button>
                     </div>
 
@@ -144,7 +144,7 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div class="loading-spinner" *ngIf="reloading">
                         <div>
-                            <i class="fas fa-sync-alt fa-spin"></i>
+                            <span class="fas fa-sync-alt fa-spin"></span>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@ SPDX-License-Identifier: Apache-2.0
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fas fa-tags"></i>&nbsp; Classifications
+                    <span class="fas fa-tags"></span>&nbsp; Classifications
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div>
@@ -185,10 +185,10 @@ SPDX-License-Identifier: Apache-2.0
                                 <input type="text" class="form-control outlined-input" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search classifications..." (ngModelChange)="filterClassifications()">
                                 <span class="tree-top-actions">
                                     <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
-                                        <i class="fas fa-search"></i>
+                                        <span class="fas fa-search"></span>
                                     </button>
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="onAddClassifier()" aria-label="Create a new classification">
-                                        <i class="fas fa-folder-plus"></i>
+                                        <span class="fas fa-folder-plus"></span>
                                     </button>
                                 </span>
                             </div>
@@ -224,7 +224,7 @@ SPDX-License-Identifier: Apache-2.0
 
             <mat-tab *ngIf="isLoggedIn()">
                 <ng-template mat-tab-label>
-                    <i class="fas fa-star"></i> &nbsp; Favourites
+                    <span class="fas fa-star"></span> &nbsp; Favourites
                 </ng-template>
                 <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: auto" *ngIf="currentTab === 'favourites'">
                     <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>

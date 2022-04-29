@@ -34,10 +34,10 @@ SPDX-License-Identifier: Apache-2.0
       </h5>
       <h5 *ngIf="source" class="text-muted">
         <small>
-          <i
+          <span
             class="fas fa-file-export"
             matTooltip="{{ source.branchName }}"
-          ></i>
+          ></span>
           <span
             ><strong>Source Branch : {{ source.branchName }} </strong></span
           >
@@ -45,10 +45,10 @@ SPDX-License-Identifier: Apache-2.0
       </h5>
       <h5 *ngIf="target" class="text-muted">
         <small>
-          <i
+          <span
             class="fas fa-file-import"
             matTooltip="{{ target.branchName }}"
-          ></i>
+          ></span>
           <span
             ><strong>Target Branch : {{ target.branchName }} </strong></span
           >
@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
             }"
             *ngFor="let item of items"
           >
-            <i
+            <span
               mat-list-icon
               class="fas"
               [ngClass]="{
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
                 'fa-minus-square': item.type === mergeType.Deletion,
                 'fa-pen-square': item.type === mergeType.Modification
               }"
-            ></i>
+            ></span>
             <mdm-path-name
               [path]="item.path"
               [suffixLabel]="item.branchNameSelected | uppercase"

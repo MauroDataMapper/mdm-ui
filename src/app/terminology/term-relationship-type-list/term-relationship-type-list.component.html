@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div class="mt-1">
                 <button mat-flat-button color="primary" (click)="openCreateRelationshipTypeDialog()">
-                    <i class="fas fa-plus" aria-hidden="true"></i> Add Relationship Type
+                    <span class="fas fa-plus" aria-hidden="true"></span> Add Relationship Type
                 </button>
             </div>
         </div>
@@ -36,28 +36,28 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <table mat-table matSort matSortDisableClear [dataSource]="relationshipTypes" class="mdm--mat-table table-striped">
     <ng-container matColumnDef="label">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;">Label</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;" scope="col">Label</th>
       <td mat-cell *matCellDef="let item">
         {{item.label}}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="displayLabel">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;">Display Label</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;" scope="col">Display Label</th>
       <td mat-cell *matCellDef="let item">
         {{item.displayLabel}}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef [style.display]="canEdit || canDelete ? '':'none'">Actions</th>
+      <th mat-header-cell *matHeaderCellDef [style.display]="canEdit || canDelete ? '':'none'" scope="col">Actions</th>
       <td mat-cell *matCellDef="let item" [style.display]="canEdit || canDelete ? '':'none'">
         <div style="display: flex;">
           <button *ngIf="canEdit" mat-icon-button color="primary" type="button" (click)="editRelationshipType(item)" aria-label="Edit" matTooltip="Edit">
-            <i class="fas fa-pencil-alt"></i>
+            <span class="fas fa-pencil-alt"></span>
           </button>
           <button *ngIf="canDelete" mat-icon-button color="warn" type="button" (click)="deleteRelationshipType(item)" class="warning" aria-label="Delete" matTooltip="Delete">
-            <i class="far fa-trash-alt"></i>
+            <span class="far fa-trash-alt"></span>
           </button>
         </div>
       </td>

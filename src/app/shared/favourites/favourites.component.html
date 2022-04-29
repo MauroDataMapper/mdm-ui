@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
                 (keyup)="onSearchInputKeyDown()">
         <span class="tree-top-actions">
             <button mat-stroked-button type="button" matTooltipPosition="below" matTooltip="Search"  (click)="search()" aria-label="Search">
-                <i class="fas fa-search"></i>
+                <span class="fas fa-search"></span>
             </button>
         </span>
     </div>
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
     </ul>
     <div class="loading-spinner" *ngIf="reloading">
         <div>
-            <i class="fas fa-sync-alt fa-spin"></i>
+            <span class="fas fa-sync-alt fa-spin"></span>
         </div>
     </div>
     <div *ngIf="favourites && favourites.length ===0 && !reloading" class="noFavourites">

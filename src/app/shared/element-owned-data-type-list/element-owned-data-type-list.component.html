@@ -21,25 +21,25 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-start center">
             <h4 class="marginless">
                 Data Types
-                <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
+                <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
                 <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="isEditable && !parent.finalised" class="mt-1">
                 <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="dataTypeBulkActions" *ngIf="bulkActionsVisible > 0">
                   Bulk actions
-                  <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
+                  <span class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></span>
               </button>
               <mat-menu #dataTypeBulkActions="matMenu" class="mdm--mat-menu--actions">
                   <button mat-menu-item class="warning" (click)="bulkDelete()">
-                      <i class="far fa-trash-alt"></i> Delete selected rows
+                      <span class="far fa-trash-alt"></span> Delete selected rows
                   </button>
               </mat-menu>
 
               <button mat-flat-button color="primary" type="button" class="ml-1" (click)="addDataType()">
-                  <i class="fas fa-plus" aria-hidden="true"></i>
+                  <span class="fas fa-plus" aria-hidden="true"></span>
                   Add Data Type
               </button>
             </div>
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive">
     <table mat-table matSort [dataSource]="type === 'static'? dataSource : records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="label">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="label" scope="col">
                 <span [hidden]="!hideFilters">Name</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -62,13 +62,13 @@ SPDX-License-Identifier: Apache-2.0
                 <div>
                     <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link>
                     <div *ngIf="record.imported">
-                      <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+                      <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<span class="fas fa-info-circle"></span></span>
                     </div>
                 </div>
             </td>
         </ng-container>
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description" scope="col">
                 <span [hidden]="!hideFilters">Description</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -84,7 +84,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="domainType">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true" scope="col">
                 <span [hidden]="!hideFilters">Type</span>
                 <div [hidden]="hideFilters">
                     <mat-label>Type</mat-label>
@@ -108,7 +108,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="checkbox">
-          <th mat-header-cell *matHeaderCellDef style="cursor:pointer;width: 90px;text-align: center;">
+          <th mat-header-cell *matHeaderCellDef style="cursor:pointer;width: 90px;text-align: center;" scope="col">
               <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
                   <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
               </mat-checkbox>
@@ -129,10 +129,10 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 3%;" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
-        <th style="width: 25%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+        <th style="width: 3%;" scope="col" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
+        <th style="width: 25%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 40%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 25%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
         <td style="width: 10%;" *ngIf="isEditable && !parent.finalised"></td>
     </tr>
     <tr>

@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
             <div style="height: 100px" *ngIf="reloading">
                 <div class="loading-spinner">
                     <div>
-                        <i class="fas fa-sync-alt fa-spin"></i>
+                        <span class="fas fa-sync-alt fa-spin"></span>
                     </div>
                 </div>
             </div>
@@ -86,15 +86,15 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div style="padding-top: 20px;">
                     <button mat-stroked-button color="warn" type="button" class="custom mr-1 mb-1" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
-                        <i class="far fa-trash-alt warning"></i> Delete <strong class="warning">Permanently</strong>
+                        <span class="far fa-trash-alt warning"></span> Delete <strong class="warning">Permanently</strong>
                     </button>
 
                     <button mat-flat-button color="warn" type="button" class="custom" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
-                        <i class="far fa-trash-alt"></i> Mark as Deleted
+                        <span class="far fa-trash-alt"></span> Mark as Deleted
                     </button>
 
                     <span class="warning" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
-                        <i class="fas fa-sync-alt fa-spin"></i> Deleting...
+                        <span class="fas fa-sync-alt fa-spin"></span> Deleting...
                     </span>
                     <div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
                         {{deleteSuccessMessage}}

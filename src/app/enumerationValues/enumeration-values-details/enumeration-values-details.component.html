@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
          <div class="text-muted">
             <small>
-               <i class="fas fa-cube" matTooltip="Item type"></i>
+               <span class="fas fa-cube" matTooltip="Item type"></span>
                <span><strong>Item type: </strong><span class="item-type">Enumeration Value</span></span>
             </small>
          </div>
@@ -34,20 +34,20 @@ SPDX-License-Identifier: Apache-2.0
    <table class="table table-bordered mdm--table-fixed">
       <tbody>
          <tr>
-            <th class="detailsRowHeader">Data Type</th>
+            <th class="detailsRowHeader" scope="col">Data Type</th>
             <td class="elementDetailDescription">
                <mdm-element-link [element]="parent" [parentDataModel]="{id:parentDataModel}"></mdm-element-link>
             </td>
          </tr>
          <tr>
-            <th class="detailsRowHeader">Data Type</th>
+            <th class="detailsRowHeader" scope="col">Data Type</th>
             <td class="elementDetailDescription">
                <mdm-element-link [element]="element" [parentDataModel]="{id:parentDataModel}"></mdm-element-link>
             </td>
          </tr>
          <tr>
 
-            <th class="detailsRowHeader">Data Model</th>
+            <th class="detailsRowHeader" scope="col">Data Model</th>
             <td class="elementDetailDescription">
                <mdm-model-path [path]="breadcrumbs"></mdm-model-path>
             </td>

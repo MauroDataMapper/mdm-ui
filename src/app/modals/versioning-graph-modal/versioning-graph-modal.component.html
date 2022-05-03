@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
   class="close-modal paddingless"
   mat-dialog-close
 >
-  <i class="fas fa-times"></i>
+  <span class="fas fa-times"></span>
 </button>
 <mat-dialog-content class="mat-typography" *ngIf="catalogueItem">
   <mdm-diagram-tab
@@ -32,6 +32,6 @@ SPDX-License-Identifier: Apache-2.0
     mode="model-merging-graph"
     [isPopup]="false"
     [canMoveUp]="false"
-    class="block"
+    class="block mdm-diagram-tab"
   ></mdm-diagram-tab>
 </mat-dialog-content>

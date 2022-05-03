@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="modal-body pxy-2">
       <div style="display: flex; flex-flow: column; gap: 20px;">
         <div class="card term-relationship-source">
-          <div class="card-header"><b>Source Term *</b> - {{sourceTerm?.label}}</div>
+          <div class="card-header"><strong>Source Term *</strong> - {{sourceTerm?.label}}</div>
           <div class="card-body">
             <p class="card-text">{{data.sourceTerm.description}}</p>
           </div>
@@ -43,15 +43,15 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div class="card term-relationship-target">
           <div class="card-header">
-            <div><b>Target Term *</b> - <span *ngIf="useExistingTerms">{{targetTerm?.label}}</span><span *ngIf="!useExistingTerms">{{form.value.targetTerm?.code}}: {{form.value.targetTerm?.definition}}</span></div>
+            <div><strong>Target Term *</strong> - <span *ngIf="useExistingTerms">{{targetTerm?.label}}</span><span *ngIf="!useExistingTerms">{{form.value.targetTerm?.code}}: {{form.value.targetTerm?.definition}}</span></div>
           </div>
           <div class="card-body">
             <div style="text-align: right; margin-bottom: 10px;">
               <button mat-flat-button color="primary" type="button" (click)="useExistingTerms = false" *ngIf="useExistingTerms" style="font-size: 0.9rem;">
-                <i class="fas fa-plus"></i> Add New Term
+                <span class="fas fa-plus"></span> Add New Term
               </button>
               <button mat-flat-button type="button" (click)="useExistingTerms = true" *ngIf="!useExistingTerms" style="background-color: #dddddd; font-size: 0.9rem;">
-                <i class="fas fa-arrow-alt-circle-left"></i> Back
+                <span class="fas fa-arrow-alt-circle-left"></span> Back
               </button>
             </div>
             <div *ngIf="useExistingTerms" class="card">

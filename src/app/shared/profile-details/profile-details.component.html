@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<table *ngIf="this.currentProfileDetails" class="table table-bordered">
+<table *ngIf="this.currentProfileDetails" class="table table-bordered" role="presentation">
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>
       <td [attr.colspan]="2" class="detailsRowHeader">
@@ -26,13 +26,13 @@ SPDX-License-Identifier: Apache-2.0
     <tr *ngFor="let field of section.fields">
       <td class="detailsRowHeader">
         {{ field.fieldName }}
-        <i
+        <span
           *ngIf="field.description"
           style="float: right"
           class="fas fa-info-circle helpIcon"
           [matTooltip]="field.description"
           matTooltipPosition="after"
-        ></i>
+        ></span>
       </td>
       <td class="elementDetailDescription">
         <mdm-content-editor

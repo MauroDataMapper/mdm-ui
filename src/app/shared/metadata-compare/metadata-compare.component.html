@@ -19,10 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 <div>
     <table *ngIf="diffColumnWidth" class="table table-bordered" style="table-layout: fixed;width: 100%;">
         <thead>
-            <th [ngStyle]="{'min-width': '35px', 'width': diffColumnWidth +'px'}"></th>
-            <th style="min-width: 8px;">Namespace</th>
-            <th style="min-width: 8px;">Key</th>
-            <th style="min-width: 8px;">Value</th>
+            <th [ngStyle]="{'min-width': '35px', 'width': diffColumnWidth +'px'}" scope="col"></th>
+            <th style="min-width: 8px;" scope="col">Namespace</th>
+            <th style="min-width: 8px;" scope="col">Key</th>
+            <th style="min-width: 8px;" scope="col">Value</th>
         </thead>
         <tbody>
             <tr *ngFor="let metadata of diffs">

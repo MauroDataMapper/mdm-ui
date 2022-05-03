@@ -19,10 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 
 <h4 mat-dialog-title>Bulk delete <span class="mdm--badge mdm--element-count">{{records.length}} </span></h4>
 <button mat-icon-button color="warn" type="button" class="close-modal paddingless" mat-dialog-close *ngIf="!successCount">
-  <i class="fas fa-times"></i>
+  <span class="fas fa-times"></span>
 </button>
 <button mat-icon-button color="warn" type="button" class="close-modal paddingless" (click)="closeAndRefresh()" *ngIf="successCount > 0">
-  <i class="fas fa-times"></i>
+  <span class="fas fa-times"></span>
 </button>
 
 <mat-dialog-content class="mat-typography">
@@ -31,9 +31,9 @@ SPDX-License-Identifier: Apache-2.0
     <table class="mdm--mat-table table-striped mdm--table-fixed">
         <thead>
             <tr>
-                <th style="width: 55%; max-width: 55%;">Name</th>
-                <th style="text-align: center;">Type</th>
-                <th style="width: 20%; max-width: 20%; text-align: center;">Status</th>
+                <th style="width: 55%; max-width: 55%;" scope="col">Name</th>
+                <th style="text-align: center;" scope="col">Type</th>
+                <th style="width: 20%; max-width: 20%; text-align: center;" scope="col">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -42,15 +42,15 @@ SPDX-License-Identifier: Apache-2.0
                   <span>{{record.label}}</span>
                 </td>
                 <div *ngIf="record.imported">
-                  <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<i class="fas fa-info-circle"></i></span>
+                  <span class="badge badge-success item-type-imported" title="Reference: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">External Reference &nbsp;<span class="fas fa-info-circle"></span></span>
                 </div>
                 <div *ngIf="record.extended">
-                  <span class="badge badge-primary item-type-extended" title="Extended: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">Extended Data Class &nbsp;<i class="fas fa-info-circle"></i></span>
+                  <span class="badge badge-primary item-type-extended" title="Extended: {{record.breadcrumbs | joinArray:' / ':'label'}} / {{record.label}}">Extended Data Class &nbsp;<span class="fas fa-info-circle"></span></span>
                 </div>
                 <td>
                     <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
                         <div class="text-center">
-                            <i class="fas fa-exclamation-triangle fa-2x warning"></i>
+                            <span class="fas fa-exclamation-triangle fa-2x warning"></span>
                         </div>
                         <div class="warning">
                           {{finalResult[record.id].result}}
@@ -58,11 +58,11 @@ SPDX-License-Identifier: Apache-2.0
                     </span>
                     <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError && isProcessComplete">
                         <div class="text-center">
-                            <i class="far fa-check-circle fa-2x copyElementSuccess"></i>
+                            <span class="far fa-check-circle fa-2x copyElementSuccess"></span>
                         </div>
                     </span>
                     <span *ngIf="processing && finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-                        <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+                        <div class="text-center"><span class="fas fa-spinner fa-2x fa-spin"></span></div>
                     </span>
                 </td>
             </tr>
@@ -73,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="full-width">
     <div *ngIf="!processing && isProcessComplete" class="mt-2" style="text-align: left;">
       <div class="alert alert-success" *ngIf="!failCount">
-          <strong><i class="far fa-check-circle fa-2x copyElementSuccess" style="vertical-align: middle; display: inline-block; margin-right: 5px;"></i> Success!</strong> All selected records have been successfully removed!
+          <strong><span class="far fa-check-circle fa-2x copyElementSuccess" style="vertical-align: middle; display: inline-block; margin-right: 5px;"></span> Success!</strong> All selected records have been successfully removed!
       </div>
       <div class="alert alert-danger" *ngIf="failCount > 0">
           <strong>Error!</strong> {{failCount}} Error(s) in deletion process!

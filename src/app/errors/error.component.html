@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="jumbotron errorMessage" style="text-align: left">
-  <h2><i class="fas fa-bug"></i> {{ errorHeader }}</h2>
+  <h2><span class="fas fa-bug"></span> {{ errorHeader }}</h2>
   <p>{{ errorMessage }}</p>
 </div>
 <div>
@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
       target="_blank"
       rel="noopener"
     >
-      <i class="fas fa-share"></i>
+      <span class="fas fa-share"></span>
       Report issue
     </a>
   </p>
@@ -46,13 +46,13 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div>
   <button mat-stroked-button color="primary" type="button" class="mr-1" (click)="copyDetails()">
-    <i class="fas fa-clipboard"></i> Copy details
+    <span class="fas fa-clipboard"></span> Copy details
   </button>
   <mat-slide-toggle (change)="changeShowDetails()"
     >Show details</mat-slide-toggle
   >
   <div [hidden]="!showDetails" class="mt-1">
-    <table class="table dataModelDetailTable mdm--table-fixed">
+    <table class="table dataModelDetailTable mdm--table-fixed" role="presentation">
       <tbody>
         <tr *ngFor="let item of dataSource">
           <td class="detailsRowHeader">{{ item.field }}</td>

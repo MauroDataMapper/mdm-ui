@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
           [options]="{lineNumbers: true,theme: 'default',mode: 'text/x-sql'}">
         </ngx-codemirror>
         <mat-action-row style="padding-right: 24px;" [hidden]="isEdit">
-          <button mat-button color="primary" type="button" [hidden]="isEdit" (click)="edit()"> <i class="fas fa-pencil-alt"></i> Edit</button>
+          <button mat-button color="primary" type="button" [hidden]="isEdit" (click)="edit()"> <span class="fas fa-pencil-alt"></span> Edit</button>
         </mat-action-row>
         <mat-action-row style="padding-right: 24px;" [hidden]="!isEdit">
           <button mat-button color="warn" [hidden]="!isEdit" (click)="edit()">Cancel</button>

@@ -16,10 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-html, body, mdm-root, #mdm-ui, mdm-ui-view {
+html, body, .mdm-root, #mdm-ui, .mdm-ui-view {
   height: 100%;
 }
-body, mdm-root {
+body, .mdm-root {
   display: flex;
   flex-direction: column;
 }
@@ -259,26 +259,11 @@ span.mchighlighter {
   margin-left: 2px;
 }
 
-ngx-skeleton-loader .loader {
-  margin: 0!important;
-}
-
 .mdm--skeleton-table {
     th:first-of-type, td:first-of-type {
       padding-left: 24px;
     }
-    ngx-skeleton-loader {
-      display: flex;
-    }
 }
-
-.mdm--skeleton-badge ngx-skeleton-loader {
-    display: inline-flex;
-    justify-content: center;
-    vertical-align: middle;
-    margin: 0px 3px;
-}
-
 
 .mat-tab-label, .mat-tab-link {
   color: rgba(0, 0, 0, 0.97)!important;

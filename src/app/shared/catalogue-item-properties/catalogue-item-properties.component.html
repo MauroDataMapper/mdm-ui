@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="text-muted" data-cy="item-type">
     <small class="block">
       <div>
-        <i class="fas fa-cube" matTooltip="Item type"></i>
+        <span class="fas fa-cube" matTooltip="Item type"></span>
         <strong>Item type: </strong>
         <span class="item-type">{{ itemType }}</span>
       </div>
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="text-muted" data-cy="authority" *ngIf="item?.authority">
     <small>
-      <i class="far fa-building" matTooltip="Authority"></i>
+      <span class="far fa-building" matTooltip="Authority"></span>
       <span><strong>Authority: </strong>{{ item.authority.label }}</span>
     </small>
   </div>
@@ -66,7 +66,7 @@ SPDX-License-Identifier: Apache-2.0
     *ngIf="item?.documentationVersion"
   >
     <small>
-      <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+      <span matTooltip="Documentation Version" class="fas fa-copy"></span>
       <span
         ><strong>Documentation Version: </strong
         >{{ item.documentationVersion }}</span
@@ -75,7 +75,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="text-muted" data-cy="last-update" *ngIf="item?.lastUpdated">
     <small>
-      <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+      <span class="far fa-calendar-alt" matTooltip="Last update"></span>
       <span
         ><strong>Last update: </strong>
         {{ item.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</span
@@ -88,17 +88,17 @@ SPDX-License-Identifier: Apache-2.0
     *ngIf="item?.modelVersion && item?.finalised"
   >
     <small>
-      <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+      <span matTooltip="Model Version" class="fas fa-file-alt"></span>
       <span><strong>Version: </strong>{{ item.modelVersion }}</span>
       <span *ngIf="item.modelVersionTag" class="tag-name">
-        <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+        <span matTooltip="Model Version Tag" class="fas fa-tag"></span>
         <span>{{ item.modelVersionTag }}</span>
       </span>
     </small>
   </div>
   <div class="text-muted" data-cy="branch" *ngIf="item?.branchName">
     <small>
-      <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+      <span class="fas fa-code-branch" matTooltip="Branch name"></span>
       <span><strong>Branch: </strong></span>
       <span>
         <mdm-branch-selector [catalogueItem]="item"></mdm-branch-selector>

@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
             <h4 class="marginless">
                 <span class="dataModelTypeIcon">
-                    <i matTooltip="Data Standard" class="fas fa-rss"></i>
+                    <span matTooltip="Data Standard" class="fas fa-rss"></span>
                 </span>
                 <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="subscribedCatalogue.label" name="labelName"
                     [inEditMode]="false" [styleCss]="'dataTypeDetailsLabel'">
@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
             <div class="detail-icons">
                 <div class="text-muted">
                     <small>
-                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span class="fas fa-cube" matTooltip="Item type"></span>
                         <span><strong>Item type: </strong><span class="item-type">Subscribed Catalogue</span></span>
                     </small>
                 </div>
@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
         <table class="table table-bordered mdm--table-fixed">
             <tbody>
                 <tr>
-                    <th class="detailsRowHeader">Description</th>
+                    <th class="detailsRowHeader" scope="col">Description</th>
                     <td class="elementDetailDescription">
                         <mdm-content-editor [content]="subscribedCatalogue.description" [element]="subscribedCatalogue"
                             [property]="'description'">

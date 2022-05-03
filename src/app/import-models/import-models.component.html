@@ -26,23 +26,23 @@ SPDX-License-Identifier: Apache-2.0
           Import Reference Data Model
         </h4>
         <h4 *ngIf="importType === 'terminologies'">Import a new Terminology</h4>
-        <i
+        <span
           class="fas fa-info-circle helpIcon"
           (click)="loadHelp()"
           matTooltip="Help"
-        ></i>
+        ></span>
       </div>
     </div>
     <div class="panel-body">
       <div *ngIf="importers" style="margin-top: 16px">
         <h4 class="marginless">
           Select an importer<sup class="required">*</sup>
-          <i
+          <span
             *ngIf="importerHelp"
             class="fas fa-info-circle helpIcon"
             (click)="loadImporterHelp()"
             matTooltip="Help"
-          ></i>
+          ></span>
         </h4>
 
         <mat-form-field appearance="outline" class="mb-2 full-width">

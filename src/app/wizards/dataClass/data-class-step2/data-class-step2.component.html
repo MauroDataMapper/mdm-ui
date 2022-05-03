@@ -95,7 +95,7 @@ SPDX-License-Identifier: Apache-2.0
         <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-striped">
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label"
-                    sortable="true" filterable="true">
+                    sortable="true" filterable="true" scope="col">
                     Name
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
@@ -105,7 +105,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description" sortable="true" filterable="true">
+                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description" sortable="true" filterable="true" scope="col">
                     Description
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
@@ -116,13 +116,13 @@ SPDX-License-Identifier: Apache-2.0
             </ng-container>
             <ng-container matColumnDef="status">
 
-                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%; text-align: center;">
+                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%; text-align: center;" scope="col">
                     Status
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
                     <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
                         <div class="text-center">
-                                <i class="fas fa-exclamation-triangle fa-2x warning"></i>
+                                <span class="fas fa-exclamation-triangle fa-2x warning"></span>
                         </div>
                         <div class="warning">
                             <mdm-more-description description="{{finalResult[record.id].result}}"></mdm-more-description>
@@ -130,11 +130,11 @@ SPDX-License-Identifier: Apache-2.0
                     </span>
                     <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError && isProcessComplete">
                         <div class="text-center">
-                            <i class="far fa-check-circle fa-2x copyElementSuccess"></i>
+                            <span class="far fa-check-circle fa-2x copyElementSuccess"></span>
                         </div>
                     </span>
                     <span *ngIf="processing && finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-                        <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+                        <div class="text-center"><span class="fas fa-spinner fa-2x fa-spin"></span></div>
                     </span>
                 </td>
             </ng-container>

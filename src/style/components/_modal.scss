@@ -77,7 +77,10 @@ button.mat-menu-item {
   color: #575757;
 }
 
-button.mat-menu-item i {
+button.mat-menu-item i,
+button.mat-menu-item span.fas,
+button.mat-menu-item span.fab,
+button.mat-menu-item span.far {
   width: 24px;
 }
 button:focus {

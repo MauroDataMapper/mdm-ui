@@ -22,19 +22,19 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">
                 Links
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddLink" class="mt-1">
-                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <span class="fas fa-external-link-alt fa-xs"></span></button>
                 <button mat-flat-button color="primary" (click)="add()">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="fas fa-plus" aria-hidden="true"></span>
                     Add Link
                 </button>
             </div>
             <div *ngIf="access && !access.canAddLink && showLinkSuggestion" class="mt-1">
-                <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <span class="fas fa-external-link-alt fa-xs"></span></button>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" >
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="source">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 25%; width: 25%;" columnName="name">
+            <th mat-header-cell *matHeaderCellDef style="max-width: 25%; width: 25%;" columnName="name" scope="col">
                 Source
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left;">
@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="link">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header='linkType' [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header='linkType' [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name" scope="col">
                 <span [hidden]="!hideFilters">Link</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
@@ -85,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="target">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 22%; width: 22%;" columnName="name">
+            <th mat-header-cell *matHeaderCellDef style="max-width: 22%; width: 22%;" columnName="name" scope="col">
                 Target
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left;">
@@ -139,9 +139,9 @@ SPDX-License-Identifier: Apache-2.0
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 23%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 15%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 27%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+      <th style="width: 23%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 15%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 27%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
   </tr>
   <tr>
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

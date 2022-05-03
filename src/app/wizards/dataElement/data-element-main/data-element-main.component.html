@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
             <div fxFlex  fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
                 <button mat-stroked-button color="primary" class="custom" *ngIf="i !== 0" matStepperPrevious>
-                    <i class="fas fa-chevron-left"></i>
+                    <span class="fas fa-chevron-left"></span>
                     Previous step
                 </button>
             </div>
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
                 <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || isProcessComplete" (click)="save()">Submit Data Element</button>
                 <button mat-stroked-button type="button" color="primary" class="custom" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="step.invalid">
                     Next step
-                    <i class="fas fa-chevron-right"></i>
+                    <span class="fas fa-chevron-right"></span>
                 </button>
                 <button mat-button color="warn" (click)="closeWizard()">
                     Close

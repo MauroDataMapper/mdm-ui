@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
       <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-start center">
           <h4 class="marginless">
               Types
-              <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
+              <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
               <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
           </h4>
       </div>
@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" *ngIf="!isLoadingResults">
   <table mat-table [dataSource]="records" class="mdm--mat-table table-striped">
       <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="label">
+          <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="label" scope="col">
               Name
           </th>
           <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
           </td>
       </ng-container>
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef style="max-width: 40%;width: 40%;" columnName="description">
+        <th mat-header-cell *matHeaderCellDef style="max-width: 40%;width: 40%;" columnName="description" scope="col">
             Description
         </th>
         <td mat-cell *matCellDef="let record">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="domainType">
+        <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="domainType" scope="col">
           Type
         </th>
         <td mat-cell *matCellDef="let record">
@@ -72,9 +72,9 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 25%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+      <th style="width: 25%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 40%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 25%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
   </tr>
   <tr>
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>

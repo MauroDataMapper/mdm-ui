@@ -24,25 +24,25 @@ SPDX-License-Identifier: Apache-2.0
               <p class="marginless pl-2 text-muted">Account settings</p>
               <li>
                   <a role="menuitem" uiSref="appContainer.userArea.profile" uiSrefActive="active">
-                      <i class="fas fa-id-card"></i>
+                      <span class="fas fa-id-card"></span>
                       <span>My profile</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.userArea.settings" uiSrefActive="active">
-                      <i class="fas fa-sliders-h"></i>
+                      <span class="fas fa-sliders-h"></span>
                       <span>Preferences</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.userArea.changePassword" uiSrefActive="active">
-                    <i class="fas fa-unlock-alt"></i>
+                    <span class="fas fa-unlock-alt"></span>
                       <span>Change password</span>
                   </a>
               </li>
               <li>
                 <a role="menuitem" uiSref="appContainer.userArea.apiKeys" uiSrefActive="active">
-                    <i class="fas fa-key"></i>
+                    <span class="fas fa-key"></span>
                     <span>API keys</span>
                 </a>
               </li>
@@ -52,55 +52,55 @@ SPDX-License-Identifier: Apache-2.0
               <p class="marginless pl-2 text-muted">Admin settings</p>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.home" uiSrefActive="active">
-                      <i class="fas fa-tachometer-alt"></i>
+                      <span class="fas fa-tachometer-alt"></span>
                       <span>Dashboard</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.modelManagement" uiSrefActive="active">
-                      <i class="fas fa-list" aria-hidden="true"></i>
+                      <span class="fas fa-list" aria-hidden="true"></span>
                       <span>Model management</span>
                   </a>
               </li>
               <li>
                 <a role="menuitem" *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues" uiSrefActive="active">
-                    <i class="fas fa-rss" aria-hidden="true"></i>
+                    <span class="fas fa-rss" aria-hidden="true"></span>
                     <span>Subscribed catalogues</span>
                 </a>
             </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.emails" uiSrefActive="active">
-                      <i class="fas fa-envelope" aria-hidden="true"></i>
+                      <span class="fas fa-envelope" aria-hidden="true"></span>
                       <span>Emails</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.users" uiSrefActive="active">
-                      <i class="fas fa-user" aria-hidden="true"></i>
+                      <span class="fas fa-user" aria-hidden="true"></span>
                       <span>Manage users</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.pendingUsers" uiSrefActive="active">
-                      <i class="fas fa-user-clock"></i>
+                      <span class="fas fa-user-clock"></span>
                       <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                   </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.groups" uiSrefActive="active">
-                      <i class="fas fa-users" aria-hidden="true"></i>
+                      <span class="fas fa-users" aria-hidden="true"></span>
                       <span>Manage groups</span>
                   </a>
               </li>
               <li>
                 <a role="menuitem" *ngIf="features.useOpenIdConnect" uiSref="appContainer.adminArea.openIdConnectProviders" uiSrefActive="active">
-                    <i class="fab fa-openid" aria-hidden="true"></i>
+                    <span class="fab fa-openid" aria-hidden="true"></span>
                     <span>OpenID Connect</span>
                 </a>
               </li>
               <li>
                   <a role="menuitem" uiSref="appContainer.adminArea.configuration" uiSrefActive="active">
-                      <i class="fas fa-cog" aria-hidden="true"></i>
+                      <span class="fas fa-cog" aria-hidden="true"></span>
                       <span>Configuration</span>
                   </a>
               </li>

@@ -86,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
           class="mr-1"
           (click)="editCustomProfile()"
         >
-          <i class="fas fa-pencil-alt"></i> Edit
+          <span class="fas fa-pencil-alt"></span> Edit
         </button>
 
         <button
@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
           class="mr-1"
           [matMenuTriggerFor]="editMenu"
         >
-          <i class="fas fa-pencil-alt"></i> Edit
+          <span class="fas fa-pencil-alt"></span> Edit
         </button>
 
         <button
@@ -107,16 +107,16 @@ SPDX-License-Identifier: Apache-2.0
           mat-icon-button
           [matMenuTriggerFor]="additionalActions"
         >
-          <i class="fas fa-ellipsis-v"></i>
+          <span class="fas fa-ellipsis-v"></span>
           <span style="display: none">Menu</span>
         </button>
 
         <mat-menu #editMenu="matMenu">
           <button mat-menu-item data-cy="edit-description" (click)="editDefaultProfileDescription()">
-            <i class="fas fa-pencil-alt"></i> Edit Description
+            <span class="fas fa-pencil-alt"></span> Edit Description
           </button>
           <button mat-menu-item data-cy="edit-all" (click)="editDefaultProfileFull()">
-            <i class="fas fa-pencil-alt"></i> Edit
+            <span class="fas fa-pencil-alt"></span> Edit
           </button>
         </mat-menu>
 
@@ -129,7 +129,7 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="Submit this catalogue item to a Digital Object Identifier (DOI) system"
             [matMenuTriggerFor]="doiSubmitActions"
           >
-            <i class="fas fa-paper-plane has-text-green"></i> DOI submission
+            <span class="fas fa-paper-plane has-text-green"></span> DOI submission
           </button>
           <mat-divider *ngIf="canSubmitForDoi">
           </mat-divider>
@@ -141,7 +141,7 @@ SPDX-License-Identifier: Apache-2.0
             class="mr-1"
             (click)="deleteCustomProfile()"
           >
-            <i class="fas fa-trash-alt warning"></i> Remove profile
+            <span class="fas fa-trash-alt warning"></span> Remove profile
           </button>
         </mat-menu>
 
@@ -153,7 +153,7 @@ SPDX-License-Identifier: Apache-2.0
             class="mr-1"
             (click)="submitForDoi('draft')"
           >
-            <i class="far fa-file"></i> Draft
+            <span class="far fa-file"></span> Draft
           </button>
           <button
             *ngIf="doiState === 'not submitted' || doiState === 'draft'"
@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0
             class="mr-1"
             (click)="submitForDoi('finalise')"
           >
-            <i class="fas fa-check has-text-green"></i> Final
+            <span class="fas fa-check has-text-green"></span> Final
           </button>
           <button
             *ngIf="doiState === 'draft' || doiState === 'final'"
@@ -171,7 +171,7 @@ SPDX-License-Identifier: Apache-2.0
             class="mr-1"
             (click)="submitForDoi('retire')"
           >
-            <i class="far fa-stop-circle warning"></i> Retire
+            <span class="far fa-stop-circle warning"></span> Retire
           </button>
         </mat-menu>
       </div>

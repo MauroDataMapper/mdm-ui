@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="table-responsive">
         <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 78%; width: 78%;" columnName="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 78%; width: 78%;" columnName="name" scope="col">
                     <span [hidden]="!hideFilters">Name</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="version">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="version" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="version" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="version" scope="col">
                     <span [hidden]="!hideFilters">Version</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">

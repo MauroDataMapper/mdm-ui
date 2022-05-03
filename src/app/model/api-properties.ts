@@ -189,6 +189,27 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     publiclyVisible: true
   },
   {
+    key: 'content.about.application.name',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.about.content',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.about.contact.details',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
     key: 'content.footer.copyright',
     category: 'Content',
     editType: ApiPropertyEditType.Value,

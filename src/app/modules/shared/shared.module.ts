@@ -91,7 +91,8 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     FlexLayoutModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
-    CodemirrorModule
+    CodemirrorModule,
+    UIRouterModule
   ],
   exports: [
     EditableFormButtonsComponent,

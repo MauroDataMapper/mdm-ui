@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":reviewer(jamesrwelch)",
+    ":label(dependencies)",
+    "schedule:nonOfficeHours"
+  ]
+}

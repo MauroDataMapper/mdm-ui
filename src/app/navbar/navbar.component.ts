@@ -29,7 +29,10 @@ import { EditingService } from '@mdm/services/editing.service';
 import { ThemingService } from '@mdm/services/theming.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { catchError, map, takeUntil } from 'rxjs/operators';
-import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ApiProperty,
+  ApiPropertyIndexResponse
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-navbar',
@@ -37,7 +40,6 @@ import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-reso
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-
   profilePictureReloadIndex = 0;
   profile: any;
   logoUrl: string;
@@ -62,16 +64,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private broadcast: BroadcastService,
     private editingService: EditingService,
     private theming: ThemingService,
-    private resources: MdmResourcesService) { }
+    private resources: MdmResourcesService
+  ) {}
 
   ngOnInit() {
-
     this.broadcast
       .onUserLoggedIn()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.isLoggedIn = true;
-        this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+        this.securityHandler
+          .isAdministrator()
+          .subscribe((state) => (this.isAdministrator = state));
       });
 
     this.broadcast
@@ -83,7 +87,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
 
     this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
 
     if (this.isLoggedIn) {
       this.profile = this.securityHandler.getCurrentUser();
@@ -124,12 +130,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        map((response: ApiPropertyIndexResponse) => response.body.items.filter(p => p.key.startsWith('theme.logo.'))),
+        map((response: ApiPropertyIndexResponse) =>
+          response.body.items.filter((p) => p.key.startsWith('theme.logo.'))
+        ),
         catchError(() => [])
       )
       .subscribe((properties: ApiProperty[]) => {
-        const logoUrl = properties.find(p => p.key === 'theme.logo.url');
-        const logoWidth = properties.find(p => p.key === 'theme.logo.width');
+        const logoUrl = properties.find((p) => p.key === 'theme.logo.url');
+        const logoWidth = properties.find((p) => p.key === 'theme.logo.width');
 
         if (logoUrl) {
           this.logoUrl = logoUrl.value;
@@ -142,22 +150,30 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   getPendingUsers = () => {
-    this.sharedService.pendingUsersCount().subscribe(data => {
+    this.sharedService.pendingUsersCount().subscribe((data) => {
       this.pendingUsersCount = data.body.count;
     });
   };
 
   login = () => {
-    this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {
-      if (user) {
-        if (user.needsToResetPassword) {
-          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.changePassword' });
-          return;
+    this.dialog
+      .open(LoginModalComponent, {})
+      .afterClosed()
+      .subscribe((user) => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcast.userLoggedIn({
+              nextRoute: 'appContainer.userArea.changePassword'
+            });
+            return;
+          }
+          this.profile = user;
+          this.broadcast.userLoggedIn({
+            nextRoute:
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+          });
         }
-        this.profile = user;
-        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-      }
-    });
+      });
   };
 
   logout = () => {
@@ -168,18 +184,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.dialog.open(ForgotPasswordModalComponent, {});
   };
   register = () => {
-    const dialog = this.dialog.open(RegisterModalComponent, { panelClass: 'register-modal' });
+    const dialog = this.dialog.open(RegisterModalComponent, {
+      panelClass: 'register-modal'
+    });
 
     this.editingService.configureDialogRef(dialog);
 
-    dialog.afterClosed().subscribe(user => {
+    dialog.afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.change-password' });
+          this.broadcast.userLoggedIn({
+            nextRoute: 'appContainer.userArea.change-password'
+          });
           return;
         }
         this.profile = user;
-        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+        this.broadcast.userLoggedIn({
+          nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+        });
       }
     });
   };

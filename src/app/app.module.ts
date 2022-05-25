@@ -16,10 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
+import {
+  APP_BASE_HREF,
+  HashLocationStrategy,
+  LocationStrategy
+} from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DEFAULT_OPTIONS
+} from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '@env/environment';
@@ -39,6 +46,7 @@ import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
 import { BulkEditModule } from './bulk-edit/bulk-edit.module';
+import { CatalogueSearchModule } from './catalogue-search/catalogue-search.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,7 +65,8 @@ import { BulkEditModule } from './bulk-edit/bulk-edit.module';
       defaultHttpRequestOptions: { withCredentials: true },
       apiEndpoint: environment.apiEndpoint
     }),
-    MergeDiffModule
+    MergeDiffModule,
+    CatalogueSearchModule
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
@@ -66,8 +75,15 @@ import { BulkEditModule } from './bulk-edit/bulk-edit.module';
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: MatDialogRef, useValue: {} },
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true, autoFocus: false } },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestProgressInterceptor, multi: true }
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: { hasBackdrop: true, autoFocus: false }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestProgressInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [UiViewComponent]
 })

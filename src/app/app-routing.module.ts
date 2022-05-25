@@ -55,7 +55,13 @@ import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import {
+  HookResult,
+  StateObject,
+  Transition,
+  TransitionService,
+  UIRouter
+} from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
@@ -68,6 +74,8 @@ import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
 import { SecurityHandlerService, SharedService } from './services';
 import { BulkEditContainerComponent } from './bulk-edit/bulk-edit-container/bulk-edit-container.component';
 import { TerminologyMainComponent } from './wizards/terminology/terminology-main/terminology-main.component';
+import { CatalogueSearchComponent } from './catalogue-search/catalogue-search/catalogue-search.component';
+import { FeaturesService } from './services/features.service';
 
 /**
  * Collection of all page state routes.
@@ -328,7 +336,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
-      url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
+      url:
+        '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
       component: DataElementMainComponent
     },
     {
@@ -415,7 +424,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
-      url: '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
+      url:
+        '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
       component: FederatedDataModelMainComponent,
       params: {
         tabView: { dynamic: true, value: null, squash: true },
@@ -430,6 +440,15 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       data: {
         allowAnonymous: true
       }
+    },
+    {
+      name: 'appContainer.mainApp.catalogueSearch',
+      url: '/search',
+      component: CatalogueSearchComponent,
+      data: {
+        allowAnonymous: true,
+        featureSwitch: 'useCatalogueSearch'
+      }
     }
   ]
 };
@@ -437,13 +456,16 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-const editingViewTransitionHooks = (transitions: TransitionService, editing: EditingService) => {
-
+const editingViewTransitionHooks = (
+  transitions: TransitionService,
+  editing: EditingService
+) => {
   /**
    * Check each state transition where the "from" view state is marked as editable.
    */
   const canLeaveStateCriteria = {
-    from: (state: StateObject) => state.name && editing.isRouteEditable(state.name)
+    from: (state: StateObject) =>
+      state.name && editing.isRouteEditable(state.name)
   };
 
   /**
@@ -466,12 +488,13 @@ const editingViewTransitionHooks = (transitions: TransitionService, editing: Edi
  * @see {@link StateRoleAccessService}
  */
 const roleTransitionHooks = (transitions: TransitionService) => {
-
   /**
    * Before starting a transition, check if the user/role has access to this route.
    */
   const canAccessRoute = (transition: Transition): HookResult => {
-    const securityHandler = transition.injector().get<SecurityHandlerService>(SecurityHandlerService);
+    const securityHandler = transition
+      .injector()
+      .get<SecurityHandlerService>(SecurityHandlerService);
     const shared = transition.injector().get<SharedService>(SharedService);
     const state = transition.$to();
     shared.current = state.name;
@@ -483,7 +506,27 @@ const roleTransitionHooks = (transitions: TransitionService) => {
     return securityHandler.isLoggedIn();
   };
 
+  /**
+   * Before starting a transition, check if the route is locked behind a feature switch.
+   */
+  const isRouteFeatureSwitchEnabled = (transition: Transition): HookResult => {
+    const features = transition
+      .injector()
+      .get<FeaturesService>(FeaturesService);
+    const state = transition.$to();
+    const featureSwitchName = state.data?.featureSwitch;
+
+    if (!featureSwitchName) {
+      // Not blocked by feature switch, continue as normal
+      return true;
+    }
+
+    const enabled: boolean = features[featureSwitchName];
+    return enabled;
+  };
+
   transitions.onStart({}, canAccessRoute);
+  transitions.onStart({}, isRouteFeatureSwitchEnabled);
 };
 
 /**
@@ -499,10 +542,12 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
 };
 
 @NgModule({
-  imports: [UIRouterModule.forChild({
-    states: pageRoutes.states,
-    config: routerConfigFn
-  })],
+  imports: [
+    UIRouterModule.forChild({
+      states: pageRoutes.states,
+      config: routerConfigFn
+    })
+  ],
   providers: [
     {
       provide: LocationStrategy,
@@ -511,5 +556,5 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
   ]
 })
 export class AppRoutingModule {
-  constructor() { }
+  constructor() {}
 }

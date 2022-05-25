@@ -29,20 +29,27 @@ export const environment = {
   HDFLink: '',
   themeName: 'default',
   appTitle: 'Mauro Data Mapper',
-  appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
+  appDescription:
+    'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
   issueReporting: {
     defaultUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new/choose',
-    systemErrorUrl: 'https://github.com/MauroDataMapper/mdm-ui/issues/new?assignees=&labels=system%20error&template=system_error_report.md&title='
+    systemErrorUrl:
+      'https://github.com/MauroDataMapper/mdm-ui/issues/new?assignees=&labels=system%20error&template=system_error_report.md&title='
   },
   documentation: {
     url: 'https://maurodatamapper.github.io/',
     pages: {
-      Create_a_new_model: 'user-guides/create-a-data-model/create-a-data-model/',
-      Edit_model_details: 'user-guides/create-a-data-model/create-a-data-model/#3-complete-new-data-model-form',
-      Exporting_models: 'user-guides/exporting-data-models/exporting-data-models/',
-      Importing_DataModels_Using_Excel: 'user-guides/import-data-model-from-excel/import-data-model-from-excel/',
-      Preferences: 'user-guides/user-profile/user-profile/#3-update-preferences',
+      Create_a_new_model:
+        'user-guides/create-a-data-model/create-a-data-model/',
+      Edit_model_details:
+        'user-guides/create-a-data-model/create-a-data-model/#3-complete-new-data-model-form',
+      Exporting_models:
+        'user-guides/exporting-data-models/exporting-data-models/',
+      Importing_DataModels_Using_Excel:
+        'user-guides/import-data-model-from-excel/import-data-model-from-excel/',
+      Preferences:
+        'user-guides/user-profile/user-profile/#3-update-preferences',
       Search_Help: 'user-guides/how-to-search/how-to-search/',
       User_profile: 'user-guides/user-profile/user-profile/',
       Merge_conflicts: null
@@ -60,7 +67,8 @@ export const environment = {
     useMergeUiV2: true,
     useOpenIdConnect: true,
     useDigitalObjectIdentifiers: true,
-    useIssueReporting: true
+    useIssueReporting: true,
+    useCatalogueSearch: false
   }
 };
 

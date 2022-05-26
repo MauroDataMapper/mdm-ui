@@ -5,5 +5,7 @@
     ":reviewer(jamesrwelch)",
     ":label(dependencies)",
     "schedule:nonOfficeHours"
-  ]
+  ],
+  "rebaseWhen": "conflicted",
+  "prConcurrentLimit": 5
 }

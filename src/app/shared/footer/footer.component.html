@@ -16,24 +16,34 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<footer>
-    <div class="container">
-        <div class="footer--container" flex fxLayout="row" fxLayoutAlign="space-between">
-            <div class="footer--logo">
-                <p class="text-muted">Powered by:</p>
-                <img class="mdm-logo" src="assets/images/mdm-logo.png" alt="Mauro Data Mapper logo" />
-            </div>
-            <div>
-                <div class="footer--box" flex fxLayout="column" fxLayoutAlign="space-between">
-                    <div class="footer--links">
-                        <a *ngIf="documentation && documentation.url" href="{{documentation.url}}" target="_blank" rel="noopener">Documentation</a>
-                        <a *ngIf="features.useIssueReporting && issueReporting.defaultUrl && issueReporting.defaultUrl.length > 0" href="{{issueReporting.defaultUrl}}" target="_blank" rel="noopener">Report Issue</a>
-                    </div>
-                </div>
-                <div class="footer--box mt-2">
-                    <small class="text-muted">{{copyright}}</small>
-                </div>
-            </div>
-        </div>
+<footer class="mdm-footer">
+  <div class="mdm-footer__container">
+    <div class="mdm-footer__main">
+      <div *ngIf="links" class="mdm-footer__main--links">
+        <ul>
+          <li *ngFor="let link of links">
+            <a
+              *ngIf="link.href"
+              [href]="link.href"
+              [target]="link.target ?? '_blank'"
+              >{{ link.label }}</a
+            >
+            <a
+              [id]="link.routerLink"
+              *ngIf="link.routerLink"
+              [uiSref]="link.routerLink"
+              [target]="link.target ?? '_blank'"
+              >{{ link.label }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="version" class="mdm-footer__main--text">
+        <small>Version {{ version }}</small>
+      </div>
+      <div class="mdm-footer__main--text">
+        <small>Copyright &copy; {{ year }} {{ copyright }}</small>
+      </div>
     </div>
+  </div>
 </footer>

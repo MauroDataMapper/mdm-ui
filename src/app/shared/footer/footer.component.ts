@@ -16,43 +16,57 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
-import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { FeaturesService } from '@mdm/services/features.service';
-import { SharedService } from '@mdm/services/shared.service';
-import { catchError } from 'rxjs/operators';
+import { Component, Input } from '@angular/core';
 
-const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxford Biomedical Research Centre';
+/**
+ * Define the details for a link in the layout and navigation components.
+ */
+export interface FooterLink {
+  /**
+   * The display label to apply to the link.
+   */
+  label: string;
+
+  /**
+   * If this is a hyperlink, provide the href for the anchor tag.
+   *
+   * @see {@link routerLink}
+   */
+  href?: string;
+
+  /**
+   * If this is a router link to another component, provide the route name to transition to.
+   *
+   * @see {@link href}
+   */
+  routerLink?: string;
+
+  /**
+   * State the target to use on the anchor tag.
+   */
+  target?: '_blank' | '_self';
+}
 
 @Component({
   selector: 'mdm-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
-  copyright: string = defaultFooterCopyright;
-  documentation = this.shared.documentation;
-  issueReporting = this.shared.issueReporting;
-  features: FeaturesService;
+export class FooterComponent {
+  /**
+   * Provide a list of ordered links to other pages/websites to display in the footer.
+   */
+  @Input() links?: FooterLink[];
 
-  constructor(
-    private shared: SharedService,
-    private resources: MdmResourcesService) { }
+  /**
+   * Provide the version number to display in the footer. If not required, leave this blank.
+   */
+  @Input() version?: string;
 
-  ngOnInit() {
-    this.features = this.shared.features;
+  /**
+   * Provide the name to use in the copyright message.
+   */
+  @Input() copyright?: string = 'Powered by Mauro Data Mapper.';
 
-    this.resources.apiProperties
-      .listPublic()
-      .pipe(
-        catchError(() => {
-          this.copyright = defaultFooterCopyright;
-          return [];
-        })
-      )
-      .subscribe((response: ApiPropertyIndexResponse) => {
-        this.copyright = response.body.items.find(p => p.key === 'content.footer.copyright')?.value ?? defaultFooterCopyright;
-      });
-  }
+  year = new Date().getFullYear();
 }

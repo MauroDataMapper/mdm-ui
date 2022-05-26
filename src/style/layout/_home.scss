@@ -16,6 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+.app-footer {
+  margin-top: 32px;
+  flex-shrink: 0;
+}
+
 .bdi--hero-header {
   padding: 0 16px 24px 16px;
   h3:first-child {
@@ -53,7 +58,6 @@ SPDX-License-Identifier: Apache-2.0
   }
 }
 
-
 .flex-block > div {
-  flex-basis: auto!important;
+  flex-basis: auto !important;
 }

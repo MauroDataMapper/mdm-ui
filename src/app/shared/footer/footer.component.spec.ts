@@ -16,56 +16,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
-import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { of } from 'rxjs';
+import { UISref } from '@uirouter/angular';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
+import { MockDirective } from 'ng-mocks';
 
 describe('FooterComponent', () => {
-  let component: FooterComponent;
-  let fixture: ComponentFixture<FooterComponent>;
+  let harness: ComponentHarness<FooterComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatTooltipModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {
-            apiProperties: {
-              listPublic: () => of()
-            }
-          }
-        }
-      ],
-      declarations: [
-        ProfilePictureComponent,
-        ByteArrayToBase64Pipe,
-        FooterComponent
-      ]
-    })
-      .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FooterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(FooterComponent, {
+      declarations: [MockDirective(UISref)]
+    });
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness?.isComponentCreated).toBeTruthy();
+    expect(harness.component.copyright).toBe('Powered by Mauro Data Mapper.');
+    expect(harness.component.year).toBe(new Date().getFullYear());
   });
 });

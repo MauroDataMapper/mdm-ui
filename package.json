@@ -7,10 +7,10 @@
     "build": "ng build",
     "dist": "ng build --configuration production --output-path=dist/mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\") && npm run dist-archive",
     "dist-archive": "tar zcvf dist/mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \".$MDM_UI_THEME_NAME\").tgz -C dist mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\")",
-    "test": "jest",
-    "test-with-coverage": "jest --coverage",
-    "test-watch": "jest --watch",
-    "test-clearCache": "jest --clearCache",
+    "test": "ng test",
+    "test:watch": "ng test --watch",
+    "test-clearCache": "ng test --clearCache",
+    "test-with-coverage": "ng test --coverage",
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --fix",
     "eslint-nofix": "tsc --noEmit && eslint . --ext ts",
@@ -19,7 +19,8 @@
     "e2e": "ng e2e",
     "postinstall": "ngcc",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version",
-    "license-check": "license-check-and-add -f license-check-and-add-config.json"
+    "license-check": "license-check-and-add -f license-check-and-add-config.json",
+    "pr-checks": "npm run license-check check && npm run eslint && npm run test"
   },
   "private": true,
   "dependencies": {

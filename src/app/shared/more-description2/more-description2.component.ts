@@ -16,55 +16,43 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 
 @Component({
-  selector: 'mdm-more-description',
-  templateUrl: './more-description.component.html',
-  styleUrls: ['./more-description.component.sass']
+  selector: 'mdm-more-description2',
+  templateUrl: './more-description2.component.html',
+  styleUrls: ['./more-description2.component.sass']
 })
-export class MoreDescriptionComponent implements OnInit {
+export class MoreDescriptionComponent2 implements OnInit, AfterViewInit {
   @Input() description: string;
   @Input() length: any;
 
-  maxLength = 100;
-  showMore = false;
-  shortDesc: string;
-  fullDesc: string;
+  showMore = true;
+  isOverflowing = false
+  @ViewChild('descriptionContent', { static: false })
+  descriptionContent: ElementRef
+
   constructor(
-    userSettingsHandler: UserSettingsHandlerService,
-    private markdownParser: MarkdownParserService
+    userSettingsHandler: UserSettingsHandlerService
   ) {
     this.showMore = userSettingsHandler.get('expandMoreDescription');
   }
 
   ngOnInit() {
-    if (this.length !== undefined) {
-      this.maxLength = this.length;
-    }
+  }
 
-    this.shortDesc = this.createShortDescription();
-    this.fullDesc = this.markdownParser.parse(this.description, 'html');
+  ngAfterViewInit() {
+    this.isOverflowing = this.checkOverflow(this.descriptionContent.nativeElement)
   }
 
   toggle() {
     this.showMore = !this.showMore;
   }
 
-  createShortDescription() {
-    if(this.description.includes(">")) {
-      return "Hello, World!"
-    }
-    const desc = this.markdownParser.parse(this.description, 'text');
-    if (desc && desc.length > this.maxLength) {
-      let subStr = desc.substring(0, this.maxLength);
-      const lastIndexOf = subStr.lastIndexOf(' ');
-      subStr = subStr.substring(0, lastIndexOf);
-      return `${subStr}...`;
-    } else {
-      return desc;
-    }
+  checkOverflow (element): boolean {
+    return element.offsetHeight < element.scrollHeight;
   }
+
 }

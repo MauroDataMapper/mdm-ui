@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { FormsModule } from '@angular/forms';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { MoreDescriptionComponent2 } from '@mdm/shared/more-description2/more-description2.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -52,11 +53,13 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
+import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 
 @NgModule({
   declarations: [
     EditableFormButtonsComponent,
     MoreDescriptionComponent,
+    MoreDescriptionComponent2,
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
@@ -98,6 +101,7 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     EditableFormButtonsComponent,
     FormsModule,
     MoreDescriptionComponent,
+    MoreDescriptionComponent2,
     UIRouterModule,
     MaterialModule,
     McSelectComponent,

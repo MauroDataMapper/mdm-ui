@@ -54,9 +54,6 @@ export class MoreDescriptionComponent implements OnInit {
   }
 
   createShortDescription() {
-    if(this.description.includes(">")) {
-      return "Hello, World!"
-    }
     const desc = this.markdownParser.parse(this.description, 'text');
     if (desc && desc.length > this.maxLength) {
       let subStr = desc.substring(0, this.maxLength);

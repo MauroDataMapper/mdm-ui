@@ -17,9 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <span [hidden]="!this.description || this.description.length == 0">
-  <div [class]="showMore?'content-full':'content-hidden'">
+  <div #descriptionContent [class]="showMore?'content-full':'content-hidden'">
     <mdm-content-editor
-      #descriptionContent
       [(content)]="this.description"
       [inEditMode]="false"
       style="height: 100%"

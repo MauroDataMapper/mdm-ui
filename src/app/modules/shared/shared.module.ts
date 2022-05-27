@@ -54,12 +54,12 @@ import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-b
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
+import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor.component';
 
 @NgModule({
   declarations: [
     EditableFormButtonsComponent,
     MoreDescriptionComponent,
-    MoreDescriptionComponent2,
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
@@ -84,24 +84,23 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
     CatalogueItemPropertiesComponent,
     ElementIconComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    MatPasswordStrengthModule,
-    NgxJsonViewerModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    NgxSkeletonLoaderModule,
-    CodemirrorModule,
-    UIRouterModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        MatPasswordStrengthModule,
+        NgxJsonViewerModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+        NgxSkeletonLoaderModule,
+        CodemirrorModule,
+        UIRouterModule
+    ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
     MoreDescriptionComponent,
-    MoreDescriptionComponent2,
     UIRouterModule,
     MaterialModule,
     McSelectComponent,

@@ -38,10 +38,9 @@ SPDX-License-Identifier: Apache-2.0
           </li>
         </ul>
       </div>
-      <div *ngIf="version" class="mdm-footer__main--text">
-        <small>Version {{ version }}</small>
-      </div>
       <div class="mdm-footer__main--text">
+        <small>Mauro Data Mapper </small>
+        <small *ngIf="version">(Version {{ version }}) </small>
         <small>Copyright &copy; {{ year }} {{ copyright }}</small>
       </div>
     </div>

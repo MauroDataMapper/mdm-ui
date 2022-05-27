@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
 import { HtmlButtonMode } from '../html-editor/html-editor.component';
@@ -49,6 +49,9 @@ export class ContentEditorComponent implements OnInit {
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;
   @Input() htmlOptions: ContentEditorHtmlOptions;
+
+  @ViewChild('contentContainer', { static: false })
+  contentContainer: ElementRef
 
   ButtonModeTypes = HtmlButtonMode;
 

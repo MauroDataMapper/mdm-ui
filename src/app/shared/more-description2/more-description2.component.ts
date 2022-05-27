@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
-import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
+import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor.component';
 
 @Component({
   selector: 'mdm-more-description2',

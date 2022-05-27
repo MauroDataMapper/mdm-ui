@@ -197,6 +197,7 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import {MoreDescriptionComponent2} from '@mdm/shared/more-description2/more-description2.component';
 
 @NgModule({
   declarations: [
@@ -238,6 +239,7 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ElementStatusComponent,
     ElementClassificationsComponent,
     ElementAliasComponent,
+    MoreDescriptionComponent2,
     PropertiesDirective,
     ElementDataTypeComponent,
     MultiplicityComponent,

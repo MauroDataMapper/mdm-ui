@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { FormsModule } from '@angular/forms';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
-import { MoreDescriptionComponent2 } from '@mdm/shared/more-description2/more-description2.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -53,13 +52,15 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
-import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
-import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { JoditAngularModule } from 'jodit-angular';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 
 @NgModule({
   declarations: [
     EditableFormButtonsComponent,
-    MoreDescriptionComponent,
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
@@ -82,7 +83,12 @@ import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor
     PathNameComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent
   ],
     imports: [
         CommonModule,
@@ -95,12 +101,12 @@ import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor
         ReactiveFormsModule,
         NgxSkeletonLoaderModule,
         CodemirrorModule,
-        UIRouterModule
+        JoditAngularModule,
+      UIRouterModule
     ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
-    MoreDescriptionComponent,
     UIRouterModule,
     MaterialModule,
     McSelectComponent,
@@ -132,7 +138,13 @@ import {ContentEditorComponent} from '@mdm/utility/content-editor/content-editor
     ModelIconComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent,
+
   ]
 })
 export class SharedModule {}

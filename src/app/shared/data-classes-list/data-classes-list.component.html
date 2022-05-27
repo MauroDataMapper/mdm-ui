@@ -86,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
        <td mat-cell *matCellDef="let record" style="word-wrap: break-word;">
          <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
            <span style="font-style: italic;font-size:11px;">Description:</span>
-           <mdm-more-description2 description="{{record.description}}"></mdm-more-description2>
+           <mdm-more-description description="{{record.description}}"></mdm-more-description>
          </div>
          <div *ngIf="record.domainType == 'DataElement'" style="margin-bottom:9px;">
            <span style="font-style: italic;font-size:13px;">Data Type:</span>

@@ -103,7 +103,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
       this.records = data;
       this.access = this.securityHandler.elementAccess(this.codeSet);
-      if (this.codeSet.availableActions.includes("update") && !this.codeSet.finalised) {
+      if (this.codeSet.availableActions.includes('update') && !this.codeSet.finalised) {
         this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
       } else {
         this.displayedColumns = ['terminology', 'term', 'definition'];

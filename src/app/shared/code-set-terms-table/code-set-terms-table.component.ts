@@ -71,6 +71,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.access = this.securityHandler.elementAccess(this.codeSet);
     if (this.access && this.access.showEdit) {
       this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
     } else {

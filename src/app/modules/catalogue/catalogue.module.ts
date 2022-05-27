@@ -158,7 +158,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
 import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
-import { NgxTextDiffModule } from 'ngx-text-diff';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
 import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
 import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
@@ -381,7 +380,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     HttpClientModule,
     ImageCropperModule,
     ReactiveFormsModule,
-    NgxTextDiffModule,
     SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,
@@ -550,4 +548,4 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     SkeletonBadgeComponent
   ]
 })
-export class CatalogueModule { }
+export class CatalogueModule {}

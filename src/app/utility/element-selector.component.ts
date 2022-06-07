@@ -16,49 +16,82 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTableDataSource } from '@angular/material/table';
 import { MessageService } from '../services/message.service';
 import { ContentSearchHandlerService } from '../services/content-search.handler.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 import { of, fromEvent } from 'rxjs';
-import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
+import {
+  debounceTime,
+  switchMap,
+  map,
+  filter,
+  distinctUntilChanged
+} from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
-import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, Terminology, TerminologyIndexResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import {
+  ContainerDomainType,
+  FolderIndexResponse,
+  MdmTreeItemListResponse,
+  Terminology,
+  TerminologyIndexResponse,
+  SearchQueryParameters
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-selector',
   templateUrl: './element-selector.component.html',
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state(
+        'collapsed',
+        style({ height: '0px', minHeight: '0', visibility: 'hidden' })
+      ),
       state('expanded', style({ height: '*', visibility: 'visible' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
   ],
   styleUrls: ['./element-selector.component.sass']
 })
 export class ElementSelectorComponent implements OnInit {
-
-  @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
-
+  @ViewChild('searchInputControl', { static: false }) set content(
+    content: ElementRef
+  ) {
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement, 'keyup').pipe(
-        map((event: any) => {
-          return event.target.value;
-        }),
-        filter(res => res.length >= 0),
-        debounceTime(500),
-        distinctUntilChanged()).subscribe(() => {
-
+      fromEvent(content.nativeElement, 'keyup')
+        .pipe(
+          map((event: any) => {
+            return event.target.value;
+          }),
+          filter((res) => res.length >= 0),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe(() => {
           this.dataSource = new MatTableDataSource<any>(null);
           this.loading = false;
           this.totalItemCount = 0;
           this.currentRecord = 0;
           this.fetch(40, 0);
-
         });
       this.searchControlInput = content;
     }
@@ -108,9 +141,10 @@ export class ElementSelectorComponent implements OnInit {
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef,
     private gridService: GridService
-  ) { }
+  ) {}
 
-  isExpansionDetailRow = (i: number, row: object) => row.hasOwnProperty('detailRow');
+  isExpansionDetailRow = (i: number, row: object) =>
+    row.hasOwnProperty('detailRow');
 
   closeHelp(): void {
     this.dialogRef.close();
@@ -136,7 +170,11 @@ export class ElementSelectorComponent implements OnInit {
   }
 
   reLoad() {
-    if (['DataModel', 'DataClass', 'CodeSet'].indexOf(this.formData.selectedType) !== -1) {
+    if (
+      ['DataModel', 'DataClass', 'CodeSet'].indexOf(
+        this.formData.selectedType
+      ) !== -1
+    ) {
       this.loadAllDataModels();
     }
 
@@ -150,7 +188,6 @@ export class ElementSelectorComponent implements OnInit {
       this.loadTerminologies();
     }
     this.showPrevBtn = true;
-
   }
   previousStep = () => {
     this.formData.step = 0;
@@ -163,57 +200,73 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list(ContainerDomainType.Folders, { domainType: 'dataModels' }).subscribe((data) => {
-      this.rootNode = {
-        children: data.body,
-        isRoot: true
-      };
-      this.reloading = false;
-    }, () => {
-      this.reloading = false;
-    });
+    this.resourceService.tree
+      .list(ContainerDomainType.Folders, { domainType: 'dataModels' })
+      .subscribe(
+        (data) => {
+          this.rootNode = {
+            children: data.body,
+            isRoot: true
+          };
+          this.reloading = false;
+        },
+        () => {
+          this.reloading = false;
+        }
+      );
   }
   loadAllFolders = () => {
     this.loading = true;
-    this.resourceService.folder.list().subscribe((data: FolderIndexResponse) => {
-      this.loading = false;
-      this.rootNode = {
-        children: data.body.items,
-        isRoot: true
-      };
-    }, () => {
-      this.loading = false;
-    });
+    this.resourceService.folder.list().subscribe(
+      (data: FolderIndexResponse) => {
+        this.loading = false;
+        this.rootNode = {
+          children: data.body.items,
+          isRoot: true
+        };
+      },
+      () => {
+        this.loading = false;
+      }
+    );
   };
 
   loadTerminologies = () => {
     this.reloading = true;
-    this.resourceService.terminology.list({ all: true }).subscribe((res: TerminologyIndexResponse) => {
-      if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
-        let i = res.body.items.length - 1;
-        while (i >= 0) {
-          let found = false;
-          this.data.notAllowedToSelectIds.forEach((terminologyId) => {
-            if (terminologyId === res.body.items[i].id) {
-              found = true;
+    this.resourceService.terminology.list({ all: true }).subscribe(
+      (res: TerminologyIndexResponse) => {
+        if (
+          this.data.notAllowedToSelectIds &&
+          this.data.notAllowedToSelectIds.length > 0
+        ) {
+          let i = res.body.items.length - 1;
+          while (i >= 0) {
+            let found = false;
+            this.data.notAllowedToSelectIds.forEach((terminologyId) => {
+              if (terminologyId === res.body.items[i].id) {
+                found = true;
+              }
+            });
+            if (found) {
+              res.body.items.splice(i, 1);
             }
-          });
-          if (found) {
-            res.body.items.splice(i, 1);
+            i--;
           }
-          i--;
         }
+        this.terminologies = res.body.items;
+      },
+      () => {
+        this.reloading = false;
       }
-      this.terminologies = res.body.items;
-    }, () => {
-      this.reloading = false;
-    });
+    );
   };
 
   onTerminologySelect = (terminology: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
     if (terminology != null) {
-      this.formData.currentContext = this.terminologies.find((data: any) => data.label === terminology.label);
+      this.formData.currentContext = this.terminologies.find(
+        (data: any) => data.label === terminology.label
+      );
       this.fetch(40, 0);
     } else {
       this.totalItemCount = 0;
@@ -233,10 +286,20 @@ export class ElementSelectorComponent implements OnInit {
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
       // eslint-disable-next-line no-prototype-builtins
-      const requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
-      if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing === false) {
+      const requiredNum =
+        this.dataSource.data.filter((x) => !x.hasOwnProperty('detailRow'))
+          .length + this.pageSize;
+      if (
+        this.totalItemCount + this.pageSize > requiredNum &&
+        this.isProcessing === false
+      ) {
         this.isProcessing = true;
-        this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length, true);
+        this.fetch(
+          this.pageSize,
+          this.dataSource.data.filter((x) => !x.hasOwnProperty('detailRow'))
+            .length,
+          true
+        );
       }
     }
   }
@@ -259,10 +322,13 @@ export class ElementSelectorComponent implements OnInit {
   }
 
   public searchTextChanged2() {
-    of(this.searchInput).pipe(debounceTime(400), switchMap(() => {
-      this.formData.showSearchResult = true;
-      return this.fetch(10, 0);
-    }));
+    of(this.searchInput).pipe(
+      debounceTime(400),
+      switchMap(() => {
+        this.formData.showSearchResult = true;
+        return this.fetch(10, 0);
+      })
+    );
   }
 
   public searchTextChanged() {
@@ -273,79 +339,104 @@ export class ElementSelectorComponent implements OnInit {
     this.fetch(40, 0);
   }
 
-  public fetch(pageSize: number, offset: number, infiniteScrollCall: boolean = false): any {
-    if ((!this.searchInput || (this.searchInput && this.searchInput.trim().length === 0)) && this.formData.currentContext) {
+  public fetch(
+    pageSize: number,
+    offset: number,
+    infiniteScrollCall: boolean = false
+  ): any {
+    if (
+      (!this.searchInput ||
+        (this.searchInput && this.searchInput.trim().length === 0)) &&
+      this.formData.currentContext
+    ) {
       // offset = offset / pageSize;
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
-      this.loadAllContextElements(this.formData.currentContext, this.formData.selectedType, pageSize, offset);
+      this.loadAllContextElements(
+        this.formData.currentContext,
+        this.formData.selectedType,
+        pageSize,
+        offset
+      );
     } else {
       this.formData.searchResultOffset = offset;
 
       this.loading = true;
       //  offset = offset / pageSize;
       // $scope.safeApply();
-      this.contextSearchHandler.search(
-        this.formData.currentContext,
-        this.searchInput,
-        pageSize,
-        offset,
-        [this.formData.selectedType],
-        undefined,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ).subscribe(res => {
-        const rows = [];
-        this.loading = false;
-        res.body.items.forEach(element => {
-         if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
+      this.contextSearchHandler
+        .search(
+          this.formData.currentContext,
+          this.searchInput,
+          pageSize,
+          offset,
+          [this.formData.selectedType],
+          undefined,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        )
+        .subscribe((res) => {
+          const rows = [];
+          this.loading = false;
+          res.body.items.forEach((element) => {
+            if (element.hasOwnProperty('breadcrumbs')) {
+              rows.push(element, { detailRow: true, element });
+            } else {
+              rows.push(element);
+            }
+          });
+
+          // if(element.hasOwnProperty("breadcrumbs"))
+          if (infiniteScrollCall === true) {
+            this.isProcessing = true;
+            if (this.dataSource.data) {
+              this.dataSource.data = this.dataSource.data.concat(rows);
+              this.dataSource._updateChangeSubscription();
+            } else {
+              this.dataSource = new MatTableDataSource<any>(rows);
+            }
+            this.totalItemCount = res.body.count;
+            this.currentRecord = this.dataSource.data.filter(
+              (x) => !x.hasOwnProperty('detailRow')
+            ).length;
+            this.dataSource._updateChangeSubscription();
+            this.noData = false;
+            this.isProcessing = false;
           } else {
-            rows.push(element);
+            this.isProcessing = true;
+            this.dataSource = new MatTableDataSource<any>(rows);
+            this.currentRecord = this.dataSource.data.filter(
+              (x) => !x.hasOwnProperty('detailRow')
+            ).length;
+            this.totalItemCount = res.body.count;
+            this.noData = false;
+            this.isProcessing = false;
           }
         });
-
-        // if(element.hasOwnProperty("breadcrumbs"))
-        if (infiniteScrollCall === true) {
-          this.isProcessing = true;
-          if (this.dataSource.data) {
-            this.dataSource.data = this.dataSource.data.concat(rows);
-            this.dataSource._updateChangeSubscription();
-          } else {
-            this.dataSource = new MatTableDataSource<any>(rows);
-          }
-          this.totalItemCount = res.body.count;
-          this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
-          this.dataSource._updateChangeSubscription();
-          this.noData = false;
-          this.isProcessing = false;
-        } else {
-          this.isProcessing = true;
-          this.dataSource = new MatTableDataSource<any>(rows);
-          this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
-          this.totalItemCount = res.body.count;
-          this.noData = false;
-          this.isProcessing = false;
-        }
-      });
     }
   }
 
   loadAllDataElements(dataClass) {
-    return this.resourceService.dataElement.list(dataClass.modelId, dataClass.id);
+    return this.resourceService.dataElement.list(
+      dataClass.modelId,
+      dataClass.id
+    );
   }
   loadAllContextElements(currentContext, selectedType, pageSize, offset) {
-    if (currentContext.domainType === 'DataClass' && selectedType === 'DataElement') {
+    if (
+      currentContext.domainType === 'DataClass' &&
+      selectedType === 'DataElement'
+    ) {
       this.loading = true;
       this.formData.searchResultOffset = offset;
       this.loadAllDataElements(currentContext).subscribe((result) => {
         const rows = [];
-        result.body.items.forEach(element => {
-         if (element.hasOwnProperty('breadcrumbs')) {
+        result.body.items.forEach((element) => {
+          if (element.hasOwnProperty('breadcrumbs')) {
             rows.push(element, { detailRow: true, element });
           } else {
             rows.push(element);
@@ -360,63 +451,76 @@ export class ElementSelectorComponent implements OnInit {
         }
         this.loading = false;
       });
-    } else if (currentContext.domainType === 'DataModel' && selectedType === 'DataType') {
+    } else if (
+      currentContext.domainType === 'DataModel' &&
+      selectedType === 'DataType'
+    ) {
       this.formData.searchResultOffset = offset;
       this.loading = true;
-      this.loadAllDataTypes(currentContext, pageSize, offset).subscribe((result) => {
-        const rows = [];
+      this.loadAllDataTypes(currentContext, pageSize, offset).subscribe(
+        (result) => {
+          const rows = [];
 
-        result.body.items.forEach(element => {
-         if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
+          result.body.items.forEach((element) => {
+            if (element.hasOwnProperty('breadcrumbs')) {
+              rows.push(element, { detailRow: true, element });
+            } else {
+              rows.push(element);
+            }
+          });
+          this.formData.searchResult = result.items;
+          this.calculateDisplayedSoFar(result.body);
+          this.termsList = rows;
+          if (this.dataSource.data) {
+            this.dataSource.data = this.dataSource.data.concat(this.termsList);
           } else {
-            rows.push(element);
+            this.dataSource.data = this.termsList;
           }
-        });
-        this.formData.searchResult = result.items;
-        this.calculateDisplayedSoFar(result.body);
-        this.termsList = rows;
-        if (this.dataSource.data) {
-          this.dataSource.data = this.dataSource.data.concat(this.termsList);
-        } else {
-          this.dataSource.data = this.termsList;
+          this.totalItemCount = result.body.count;
+          this.currentRecord = this.dataSource.data.filter(
+            (x) => !x.hasOwnProperty('detailRow')
+          ).length;
+          this.dataSource._updateChangeSubscription();
+          this.noData = false;
+          this.isProcessing = false;
+          this.loading = false;
         }
-        this.totalItemCount = result.body.count;
-        this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
-        this.dataSource._updateChangeSubscription();
-        this.noData = false;
-        this.isProcessing = false;
-        this.loading = false;
-      });
+      );
       this.loading = false;
-    } else if (currentContext.domainType === 'Terminology' && selectedType === 'Term') {
-
+    } else if (
+      currentContext.domainType === 'Terminology' &&
+      selectedType === 'Term'
+    ) {
       this.formData.searchResultOffset = offset;
       this.loading = true;
-      this.loadAllTerms(currentContext, pageSize, offset).subscribe(result => {
-        this.isProcessing = true;
-        const rows = [];
-        result.body.items.forEach(element => {
-         if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
-          } else {
-            rows.push(element);
-          }
-        });
+      this.loadAllTerms(currentContext, pageSize, offset).subscribe(
+        (result) => {
+          this.isProcessing = true;
+          const rows = [];
+          result.body.items.forEach((element) => {
+            if (element.hasOwnProperty('breadcrumbs')) {
+              rows.push(element, { detailRow: true, element });
+            } else {
+              rows.push(element);
+            }
+          });
 
-        this.termsList = rows;
-        this.totalItemCount = result.body.count;
-        if (this.dataSource.data) {
-          this.dataSource.data = this.dataSource.data.concat(this.termsList);
-        } else {
-          this.dataSource.data = this.termsList;
+          this.termsList = rows;
+          this.totalItemCount = result.body.count;
+          if (this.dataSource.data) {
+            this.dataSource.data = this.dataSource.data.concat(this.termsList);
+          } else {
+            this.dataSource.data = this.termsList;
+          }
+          this.currentRecord = this.dataSource.data.filter(
+            (x) => !x.hasOwnProperty('detailRow')
+          ).length;
+          this.dataSource._updateChangeSubscription();
+          this.noData = false;
+          this.isProcessing = false;
+          this.loading = false;
         }
-        this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
-        this.dataSource._updateChangeSubscription();
-        this.noData = false;
-        this.isProcessing = false;
-        this.loading = false;
-      });
+      );
     }
   }
   loadAllTerms(terminology, pageSize, pageIndex) {
@@ -440,7 +544,12 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
   loadAllDataTypes(dataModel, pageSize, pageIndex) {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, 'label', 'asc');
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      'label',
+      'asc'
+    );
     return this.resourceService.dataType.list(dataModel.id, options);
   }
   searchInTree(treeSearchDomainType) {
@@ -451,20 +560,26 @@ export class ElementSelectorComponent implements OnInit {
     }
     this.formData.inSearchMode = true;
     this.reloading = true;
-    const options: TreeItemSearchQueryParameters = {
+    const options: SearchQueryParameters = {
       searchTerm: this.formData.treeSearchText,
       domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search(ContainerDomainType.Folders, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
-      this.reloading = false;
-      this.rootNode = {
-        children: result.body,
-        isRoot: true
-      };
-    });
+    this.resourceService.tree
+      .search(
+        ContainerDomainType.Folders,
+        this.formData.treeSearchText,
+        options
+      )
+      .subscribe((result: MdmTreeItemListResponse) => {
+        this.reloading = false;
+        this.rootNode = {
+          children: result.body,
+          isRoot: true
+        };
+      });
   }
-  onContextSelected = element => {
+  onContextSelected = (element) => {
     if (element && element.length > 0) {
       this.formData.currentContext = element[0];
     } else {

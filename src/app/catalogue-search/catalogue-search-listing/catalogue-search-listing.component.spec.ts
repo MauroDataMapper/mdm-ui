@@ -167,6 +167,44 @@ describe('CatalogueSearchListingComponent', () => {
       expect(harness.component.resultSet.totalResults).toBe(totalResults);
       expect(harness.component.resultSet.items).toBe(catalogueItems);
       expect(harness.component.status).toBe('ready');
+      expect(harness.component.paginator).toBeTruthy();
+    });
+
+    it('should paginate results', () => {
+      const totalResults = 100;
+      const catalogueItems: CatalogueItemSearchResult[] = [
+        {
+          label: 'item 1',
+          domainType: CatalogueItemDomainType.DataModel,
+          breadcrumbs: []
+        },
+        {
+          label: 'item 2',
+          domainType: CatalogueItemDomainType.DataClass,
+          breadcrumbs: []
+        },
+        {
+          label: 'item 3',
+          domainType: CatalogueItemDomainType.DataElement,
+          breadcrumbs: []
+        }
+      ];
+
+      resourcesStub.catalogueItem.search.mockImplementationOnce(() => {
+        return of({
+          body: {
+            count: totalResults,
+            items: catalogueItems
+          }
+        });
+      });
+
+      harness.component.onPageChange();
+
+      expect(harness.component.resultSet.totalResults).toBe(totalResults);
+      expect(harness.component.resultSet.items).toBe(catalogueItems);
+      expect(harness.component.status).toBe('ready');
+      expect(harness.component.paginator).toBeTruthy();      
     });
 
     it('should display an error when search fails', () => {

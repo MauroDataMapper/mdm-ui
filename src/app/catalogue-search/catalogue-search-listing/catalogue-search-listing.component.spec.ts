@@ -204,7 +204,7 @@ describe('CatalogueSearchListingComponent', () => {
       expect(harness.component.resultSet.totalResults).toBe(totalResults);
       expect(harness.component.resultSet.items).toBe(catalogueItems);
       expect(harness.component.status).toBe('ready');
-      expect(harness.component.paginator).toBeTruthy();      
+      expect(harness.component.paginator).toBeTruthy();
     });
 
     it('should display an error when search fails', () => {

@@ -25,14 +25,28 @@ import {
   ElementRef,
   HostListener,
   SimpleChanges,
-  ChangeDetectorRef, OnChanges, ViewChild
+  ChangeDetectorRef,
+  OnChanges,
+  ViewChild
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { CatalogueItemDomainType, ContainerDomainType, FolderIndexResponse, MdmTreeItem, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map
+} from 'rxjs/operators';
+import {
+  CatalogueItemDomainType,
+  ContainerDomainType,
+  FolderIndexResponse,
+  MdmTreeItem,
+  MdmTreeItemListResponse,
+  SearchQueryParameters
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -115,29 +129,40 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  constructor(private resources: MdmResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private changeRef: ChangeDetectorRef) {
-  }
+  constructor(
+    private resources: MdmResourcesService,
+    private securityHandler: SecurityHandlerService,
+    private userSettingsHandler: UserSettingsHandlerService,
+    private changeRef: ChangeDetectorRef
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.defaultElements) {
       if (!this.multiple) {
-        this.searchCriteria = this.selectedElements[0] ? this.selectedElements[0].label : null;
+        this.searchCriteria = this.selectedElements[0]
+          ? this.selectedElements[0].label
+          : null;
       }
     }
 
     if (changes.searchCriteria) {
       if (!this.multiple) {
         if (this.selectedElements && this.selectedElements.length > 0) {
-          const label = this.selectedElements[0] ? this.selectedElements[0].label : '';
-          if (this.selectedElements &&
-            this.searchCriteria.trim().toLowerCase() === label.trim().toLowerCase() &&
-            label.trim().toLowerCase() !== '') {
+          const label = this.selectedElements[0]
+            ? this.selectedElements[0].label
+            : '';
+          if (
+            this.selectedElements &&
+            this.searchCriteria.trim().toLowerCase() ===
+              label.trim().toLowerCase() &&
+            label.trim().toLowerCase() !== ''
+          ) {
             return;
           }
         }
       }
 
-      const options: TreeItemSearchQueryParameters = {
+      const options: SearchQueryParameters = {
         searchTerm: this.searchCriteria,
         domainType: this.treeSearchDomainType,
         includeDocumentSuperseded: true,
@@ -147,12 +172,14 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
-          this.filteredRootNode = {
-            children: result.body,
-            isRoot: true
-          };
-        });
+        this.resources.tree
+          .search(ContainerDomainType.Folders, this.searchCriteria, options)
+          .subscribe((result: MdmTreeItemListResponse) => {
+            this.filteredRootNode = {
+              children: result.body,
+              isRoot: true
+            };
+          });
       } else {
         this.inSearchMode = false;
         this.reload();
@@ -165,97 +192,113 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
     this.reload();
 
-    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
-      return event.target.value;
-    }),
-      filter((res: any) => res.length >= 0),
-      debounceTime(500),
-      distinctUntilChanged()
-    ).subscribe((text: string) => {
-      if (text.length !== 0) {
-        if (!this.multiple) {
-          if (this.selectedElements && this.selectedElements.length > 0) {
-            const label = this.selectedElements[0]?.label ? this.selectedElements[0].label : '';
-            if (this.selectedElements && text?.trim().toLowerCase() === label?.trim().toLowerCase() && label?.trim().toLowerCase() !== '') {
-              return;
+    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res: any) => res.length >= 0),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        if (text.length !== 0) {
+          if (!this.multiple) {
+            if (this.selectedElements && this.selectedElements.length > 0) {
+              const label = this.selectedElements[0]?.label
+                ? this.selectedElements[0].label
+                : '';
+              if (
+                this.selectedElements &&
+                text?.trim().toLowerCase() === label?.trim().toLowerCase() &&
+                label?.trim().toLowerCase() !== ''
+              ) {
+                return;
+              }
             }
           }
-        }
-        if (this.searchCriteria.trim().length > 0) {
-          this.inSearchMode = true;
-          this.resources.tree.search(ContainerDomainType.Folders, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
-            this.filteredRootNode = {
-              children: result.body,
-              isRoot: true
-            };
-          });
+          if (this.searchCriteria.trim().length > 0) {
+            this.inSearchMode = true;
+            this.resources.tree
+              .search(ContainerDomainType.Folders, this.searchCriteria)
+              .subscribe((result: MdmTreeItemListResponse) => {
+                this.filteredRootNode = {
+                  children: result.body,
+                  isRoot: true
+                };
+              });
+          } else {
+            this.inSearchMode = false;
+            this.reload();
+          }
         } else {
-          this.inSearchMode = false;
           this.reload();
         }
-      } else {
-        this.reload();
-      }
-    });
+      });
   }
 
   loadFolder(folder) {
-    const id = (folder && folder.id) ? folder.id : null;
+    const id = folder && folder.id ? folder.id : null;
     this.loading = true;
     if (folder?.id) {
-      this.resources.folder.get(id).subscribe((data: FolderIndexResponse) => {
-        const children = data.body.items;
-        this.loading = false;
-        this.rootNode = {
-          children,
-          isRoot: true
-        };
-        this.filteredRootNode = this.rootNode;
-      }, () => {
-        this.loading = false;
-      });
-    }
-    else {
-      this.resources.tree.list(
-        ContainerDomainType.Folders,
-        {
-          foldersOnly: true,
-          modelCreatableOnly: true
-        })
-        .subscribe((data: MdmTreeItemListResponse) => {
-          // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
-          // outside the component and passed into this component as an @Input(), making this a "dumb" component.
-          // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for
-          // the future.
-          const children = this.folderFilterFn ? this.filterFolderTreeItems(data.body) : data.body;
+      this.resources.folder.get(id).subscribe(
+        (data: FolderIndexResponse) => {
+          const children = data.body.items;
           this.loading = false;
           this.rootNode = {
             children,
             isRoot: true
           };
           this.filteredRootNode = this.rootNode;
-
-          if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
-            // If a node has already been initially selected, update the input field to
-            // display it
-            this.searchCriteria = this.selectedElements[0].label;
-          }
-
-        }, () => {
+        },
+        () => {
           this.loading = false;
-        });
+        }
+      );
+    } else {
+      this.resources.tree
+        .list(ContainerDomainType.Folders, {
+          foldersOnly: true,
+          modelCreatableOnly: true
+        })
+        .subscribe(
+          (data: MdmTreeItemListResponse) => {
+            // TODO: this is not a very "Angular way" of filtering data for a component, really the data should be filterd
+            // outside the component and passed into this component as an @Input(), making this a "dumb" component.
+            // Issue currently is that this component is already heavily used and cannot be refactored yet, consider for
+            // the future.
+            const children = this.folderFilterFn
+              ? this.filterFolderTreeItems(data.body)
+              : data.body;
+            this.loading = false;
+            this.rootNode = {
+              children,
+              isRoot: true
+            };
+            this.filteredRootNode = this.rootNode;
+
+            if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
+              // If a node has already been initially selected, update the input field to
+              // display it
+              this.searchCriteria = this.selectedElements[0].label;
+            }
+          },
+          () => {
+            this.loading = false;
+          }
+        );
     }
   }
 
   loadTree(model) {
-    const id = (model && model.id) ? model.id : null;
+    const id = model && model.id ? model.id : null;
     this.loading = true;
     let options: any = {};
     if (!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()) {
       if (this.userSettingsHandler.get('includeSupersededDocModels') || false) {
         options = {
           queryStringParams: {
-            includeModelSuperseded: true,
+            includeModelSuperseded: true
           }
         };
       }
@@ -269,26 +312,31 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list(ContainerDomainType.Folders, options.queryStringParams);
-
+    let method = this.resources.tree.list(
+      ContainerDomainType.Folders,
+      options.queryStringParams
+    );
 
     if (id) {
       method = this.resources.tree.get('folders', 'dataModel', id, options);
     }
 
-    method.subscribe(data => {
-      this.loading = false;
-      this.rootNode = {
-        children: data.body,
-        isRoot: true
-      };
-      this.filteredRootNode = this.rootNode;
-      if (this.defaultCheckedMap && this.markChildren) {
-        this.markChildren(this.filteredRootNode);
+    method.subscribe(
+      (data) => {
+        this.loading = false;
+        this.rootNode = {
+          children: data.body,
+          isRoot: true
+        };
+        this.filteredRootNode = this.rootNode;
+        if (this.defaultCheckedMap && this.markChildren) {
+          this.markChildren(this.filteredRootNode);
+        }
+      },
+      () => {
+        this.loading = false;
       }
-    }, () => {
-      this.loading = false;
-    });
+    );
   }
 
   remove(event, element) {
@@ -305,7 +353,10 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   elementExists(element) {
     let i = 0;
     while (this.selectedElements && i < this.selectedElements.length) {
-      if (this.selectedElements[i] && this.selectedElements[i].id === element.id) {
+      if (
+        this.selectedElements[i] &&
+        this.selectedElements[i].id === element.id
+      ) {
         return { element: this.selectedElements[i], index: i };
       }
       i++;
@@ -332,13 +383,14 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   checkValidationError() {
     this.hasValidationError = false;
     if (this.isRequired && this.showValidationError) {
-
       if (this.multiple && this.selectedElements.length === 0) {
         this.hasValidationError = true;
       }
-      if (!this.multiple &&
+      if (
+        !this.multiple &&
         (!this.selectedElements ||
-          (this.selectedElements && this.selectedElements.length === 0))) {
+          (this.selectedElements && this.selectedElements.length === 0))
+      ) {
         this.hasValidationError = true;
       }
     }
@@ -351,7 +403,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     }
     this.showTree = !this.showTree;
   }
-
 
   onNodeClick(node: MdmTreeItem) {
     this.selectNode(node);
@@ -383,7 +434,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     }
 
     this.selectedElements.push(node);
-
 
     if (this.onSelect) {
       this.onSelect(this.selectedElements);
@@ -423,11 +473,11 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   };
 
   // TODO
-  onAddFolder = () => { };
+  onAddFolder = () => {};
 
   private filterFolderTreeItems(folders?: MdmTreeItem[]): MdmTreeItem[] {
     // Recursively filter the folder items and their children
-    return folders.filter(folder => {
+    return folders.filter((folder) => {
       if (folder.children && folder.children.length > 0) {
         folder.children = this.filterFolderTreeItems(folder.children);
         folder.hasChildFolders = folder.children && folder.children.length > 0;

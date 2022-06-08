@@ -68,7 +68,7 @@ export const environment = {
     useOpenIdConnect: true,
     useDigitalObjectIdentifiers: true,
     useIssueReporting: true,
-    useCatalogueSearch: false
+    useCatalogueSearch: true
   }
 };
 

@@ -76,6 +76,7 @@ import { BulkEditContainerComponent } from './bulk-edit/bulk-edit-container/bulk
 import { TerminologyMainComponent } from './wizards/terminology/terminology-main/terminology-main.component';
 import { CatalogueSearchComponent } from './catalogue-search/catalogue-search/catalogue-search.component';
 import { FeaturesService } from './services/features.service';
+import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
 
 /**
  * Collection of all page state routes.
@@ -448,6 +449,22 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       data: {
         allowAnonymous: true,
         featureSwitch: 'useCatalogueSearch'
+      }
+    },
+    {
+      name: 'appContainer.mainApp.catalogueSearchListing',
+      url:
+        '/search/listing?{search:string}&{page:int}&{sort:string}&{order:string}',
+      component: CatalogueSearchListingComponent,
+      data: {
+        allowAnonymous: true,
+        featureSwitch: 'useCatalogueSearch'
+      },
+      params: {
+        search: null,
+        page: null,
+        sort: null,
+        order: null
       }
     }
   ]

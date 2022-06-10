@@ -80,7 +80,8 @@ export const mapStateParamsToSearchParameters = (
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
-    order: query?.order ?? undefined
+    order: query?.order ?? undefined,
+    pageSize: query?.pageSize ?? undefined,
   };
 };
 
@@ -91,7 +92,8 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.search && { search: parameters.search }),
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
-    ...(parameters.order && { order: parameters.order })
+    ...(parameters.order && { order: parameters.order }),
+    ...(parameters.pageSize && { pageSize: parameters.pageSize })
   };
 };
 

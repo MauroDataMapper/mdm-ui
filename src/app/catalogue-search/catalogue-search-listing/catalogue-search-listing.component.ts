@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
@@ -27,7 +27,7 @@ import {
   CatalogueSearchResultSet,
   mapStateParamsToSearchParameters
 } from '../catalogue-search.types';
-import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { PageEvent } from '@angular/material/paginator';
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
@@ -37,7 +37,6 @@ export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
   styleUrls: ['./catalogue-search-listing.component.scss']
 })
 export class CatalogueSearchListingComponent implements OnInit {
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   status: SearchListingStatus = 'init';
   parameters: CatalogueSearchParameters = {};
   searchTerms?: string;
@@ -54,8 +53,6 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters = mapStateParamsToSearchParameters(
       this.routerGlobals.params
     );
-    this.parameters.page = this.paginator?.pageIndex ?? 0;
-    this.parameters.pageSize = this.paginator?.pageSize ?? 20;
     this.searchTerms = this.parameters.search;
 
     if (!this.parameters.search || this.parameters.search === '') {
@@ -72,10 +69,13 @@ export class CatalogueSearchListingComponent implements OnInit {
     });
   }
 
-  onPageChange() {
-    this.parameters.page = this.paginator.pageIndex;
-    this.parameters.pageSize = this.paginator.pageSize;
-    this.performSearch();
+  onPageChange(event: PageEvent) {
+    this.status = 'loading';
+    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', {
+      search: this.searchTerms,
+      page: event.pageIndex,
+      pageSize: event.pageSize
+    });
   }
 
   private setEmptyResultPage() {

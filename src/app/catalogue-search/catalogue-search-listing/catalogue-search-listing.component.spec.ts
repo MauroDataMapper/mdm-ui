@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { PageEvent } from '@angular/material/paginator';
 import {
   CatalogueItemDomainType,
   CatalogueItemSearchResult
@@ -167,44 +168,18 @@ describe('CatalogueSearchListingComponent', () => {
       expect(harness.component.resultSet.totalResults).toBe(totalResults);
       expect(harness.component.resultSet.items).toBe(catalogueItems);
       expect(harness.component.status).toBe('ready');
-      expect(harness.component.paginator).toBeTruthy();
     });
 
-    it('should paginate results', () => {
-      const totalResults = 100;
-      const catalogueItems: CatalogueItemSearchResult[] = [
-        {
-          label: 'item 1',
-          domainType: CatalogueItemDomainType.DataModel,
-          breadcrumbs: []
-        },
-        {
-          label: 'item 2',
-          domainType: CatalogueItemDomainType.DataClass,
-          breadcrumbs: []
-        },
-        {
-          label: 'item 3',
-          domainType: CatalogueItemDomainType.DataElement,
-          breadcrumbs: []
-        }
-      ];
+    it('should handle a PageEvent', () => {
+      const pageEvent: PageEvent = {
+        pageIndex: 6,
+        previousPageIndex: 5,
+        pageSize: 3,
+        length: 100,
+      };
 
-      resourcesStub.catalogueItem.search.mockImplementationOnce(() => {
-        return of({
-          body: {
-            count: totalResults,
-            items: catalogueItems
-          }
-        });
-      });
-
-      harness.component.onPageChange();
-
-      expect(harness.component.resultSet.totalResults).toBe(totalResults);
-      expect(harness.component.resultSet.items).toBe(catalogueItems);
-      expect(harness.component.status).toBe('ready');
-      expect(harness.component.paginator).toBeTruthy();
+      harness.component.onPageChange(pageEvent);
+      expect(harness.component.status).toBe('loading');
     });
 
     it('should display an error when search fails', () => {

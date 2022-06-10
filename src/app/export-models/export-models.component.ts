@@ -16,14 +16,26 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { StateService } from '@uirouter/core/';
+import { UIRouterGlobals } from '@uirouter/core/';
+import {
+  CatalogueItemDomainType,
+  Exporter,
+  ExporterIndexResponse,
+  ExportQueryParameters,
+  MdmTreeItem,
+  ModelDomain
+} from '@maurodatamapper/mdm-resources';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
+import { StateHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-models-export',
@@ -31,20 +43,16 @@ import { StateService } from '@uirouter/core/';
   styleUrls: ['./export-models.component.scss']
 })
 export class ExportModelsComponent implements OnInit {
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  step: any;
-  selectedDataModels: any;
-  showExport = null;
-  selectedModels: any[] = [];
-  selectedExporter = null;
-  defaultModels = [];
-  form = {};
-  selectedExporterObj: any;
-  selectedExporterStr: any;
+  step = 1;
+  selectedDataModels: MdmTreeItem[];
+  selectedExporter: Exporter = null;
   processing = false;
-  exportersList = [];
-  exportedFileIsReady: any;
-  exportType: any;
+  exporters: Exporter[] = [];
+  exportedFileIsReady = false;
+  exportType: ModelDomain;
+  asynchronous = false;
+  downloadLinks = new Array<HTMLAnchorElement>();
+
   constructor(
     private changeDedRef: ChangeDetectorRef,
     private securityHandler: SecurityHandlerService,
@@ -52,24 +60,40 @@ export class ExportModelsComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private exportHandler: ExportHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
-    private renderer: Renderer2,
     private title: Title,
-    private stateService: StateService
-  ) {
+    private routerGlobals: UIRouterGlobals,
+    private stateHandler: StateHandlerService
+  ) {}
+
+  get treeDomainType() {
+    switch (this.exportType) {
+      case 'dataModels':
+        return CatalogueItemDomainType.DataModel;
+      case 'terminologies':
+        return CatalogueItemDomainType.Terminology;
+      case 'codeSets':
+        return CatalogueItemDomainType.CodeSet;
+      case 'referenceDataModels':
+        return CatalogueItemDomainType.ReferenceDataModel;
+      default:
+        return null;
+    }
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.exportType = this.stateService.params.exportType ? this.stateService.params.exportType : 'dataModels';
+    this.exportType = this.routerGlobals.params.exportType
+      ? this.routerGlobals.params.exportType
+      : 'dataModels';
     this.loadExporterList();
     this.step = 1;
     this.title.setTitle('Export Models');
   }
 
-  onSelect = select => {
-    if (select && select.length > 0) {
+  // Must be an arrow function because the design of mdm-model-selector-tree does not follow standard
+  // Angular input/output bindings
+  onModelsSelected = (items: MdmTreeItem[]) => {
+    if (items && items.length > 0) {
       this.step = 2;
-      this.showExport = 'true';
       this.changeDedRef.detectChanges();
     } else {
       this.step = 1;
@@ -77,91 +101,111 @@ export class ExportModelsComponent implements OnInit {
   };
 
   loadExporterList() {
-    this.exportersList = [];
-    this.securityHandler.isAuthenticated().subscribe(result => {
-      if (!result.body.authenticatedSession) {
-        return;
-      }
+    this.securityHandler
+      .isAuthenticated()
+      .pipe(
+        switchMap((response) => {
+          if (!response.body.authenticatedSession) {
+            return EMPTY;
+          }
 
-      if (this.exportType === 'dataModels') {
-        this.resources.dataModel.exporters().subscribe(result2 => {
-          this.exportersList = result2.body;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        });
-      } else if (this.exportType === 'terminologies') {
-        this.resources.terminology.exporters().subscribe(result2 => {
-          this.exportersList = result2.body;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        });
-      } else if (this.exportType === 'codeSets') {
-        this.resources.codeSet.exporters().subscribe(result2 => {
-          this.exportersList = result2.body;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        });
-      } else if (this.exportType === 'referenceDataModels') {
-         this.resources.referenceDataModel.exporters().subscribe(result2 => {
-           this.exportersList = result2.body;
-         }, error => {
-           this.messageHandler.showError('There was a problem loading exporters list.', error);
-         });
-       }
-    });
-  }
-
-  exporterChanged() {
-    if (this.selectedExporterStr) {
-      this.selectedExporterObj = this.selectedExporterStr;
-    } else {
-      this.selectedExporterObj = null;
-    }
+          return this.resources
+            .getExportableResource(this.exportType)
+            .exporters();
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'A problem occurred whilst finding available exporters.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((exporters: ExporterIndexResponse) => {
+        this.exporters = exporters.body;
+      });
   }
 
   reset() {
     this.step = 1;
     this.selectedDataModels = [];
     this.selectedExporter = null;
-    this.selectedExporterObj = null;
-    this.defaultModels = [];
-    this.selectedExporterStr = null;
-    Array.from(this.aLink.nativeElement.children).forEach(child => {
-      this.renderer.removeChild(this.aLink.nativeElement, child);
-    });
+    this.removeDownloadLinks();
   }
 
-  export = () => {
+  export() {
     this.exportedFileIsReady = false;
     this.processing = true;
-    this.exportHandler.exportDataModel(this.selectedDataModels, this.selectedExporterObj, this.exportType).subscribe(result => {
-      if (result != null) {
-        this.exportedFileIsReady = true;
-        this.processing = false;
-        const label = this.selectedDataModels.length === 1 ? this.selectedDataModels[0].label : this.exportType;
-        const fileName = this.exportHandler.createFileName(label, this.selectedExporterObj);
-        const file = new Blob([result.body], {
-          type: this.selectedExporterObj.fileType
-        });
-        const link = this.exportHandler.createBlobLink(file, fileName);
-        Array.from(this.aLink.nativeElement.children).forEach(child => {
-          this.renderer.removeChild(this.aLink.nativeElement, child);
-        });
-        this.processing = false;
-        this.renderer.appendChild(this.aLink.nativeElement, link);
-        this.messageHandler.showSuccess('Data Model(s) exported successfully.');
-      } else {
-        this.processing = false;
-        this.messageHandler.showError('There was a problem exporting the Data Model(s).', '');
-      }
-    }, error => {
-      this.processing = false;
-      this.messageHandler.showError('There was a problem exporting the Data Model(s).', error);
-    }
-    );
-  };
 
-  loadHelp = () => {
+    const options: ExportQueryParameters = this.asynchronous
+      ? { asynchronous: true }
+      : undefined;
+
+    this.exportHandler
+      .exportDataModel(
+        this.selectedDataModels,
+        this.selectedExporter,
+        this.exportType,
+        options
+      )
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem exporting the model(s).',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe((response) => {
+        this.handleExporterResponse(response);
+      });
+  }
+
+  loadHelp() {
     this.helpDialogueHandler.open('Exporting_models');
-  };
+  }
+
+  private handleExporterResponse(response: HttpResponse<ArrayBuffer>) {
+    if (response.status === 202) {
+      this.handleAsyncExporterResponse();
+      return;
+    }
+
+    this.handleStandardExporterResponse(response);
+  }
+
+  private handleStandardExporterResponse(response: HttpResponse<ArrayBuffer>) {
+    this.exportedFileIsReady = true;
+    const label =
+      this.selectedDataModels.length === 1
+        ? this.selectedDataModels[0].label
+        : this.exportType;
+
+    const fileName = this.exportHandler.createFileName(
+      label,
+      this.selectedExporter
+    );
+
+    const file = new Blob([response.body], {
+      type: this.selectedExporter.fileType
+    });
+
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.removeDownloadLinks();
+    this.downloadLinks.push(link);
+    this.messageHandler.showSuccess('The model(s) were exported successfully.');
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model(s) has started. You can continue working while the export continues.'
+    );
+    this.stateHandler.Go('alldatamodel');
+  }
+
+  private removeDownloadLinks() {
+    this.downloadLinks = [];
+  }
 }

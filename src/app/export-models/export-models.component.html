@@ -17,65 +17,138 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4 *ngIf="exportType === 'dataModels'">Export Data Models </h4>
-    <h4 *ngIf="exportType === 'codeSets'">Export Code Set </h4>
-    <h4 *ngIf="exportType === 'referenceDataModels'">Export Reference Model </h4>
-    <h4 *ngIf="exportType === 'terminologies'">Export Terminologies </h4>
-    <span class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></span>
+  <h4 *ngIf="exportType === 'dataModels'">Export Data Models</h4>
+  <h4 *ngIf="exportType === 'codeSets'">Export Code Set</h4>
+  <h4 *ngIf="exportType === 'referenceDataModels'">Export Reference Model</h4>
+  <h4 *ngIf="exportType === 'terminologies'">Export Terminologies</h4>
+  <span
+    class="fas fa-info-circle helpIcon"
+    (click)="loadHelp()"
+    matTooltipPosition="below"
+    matTooltip="Help"
+  ></span>
 </div>
 
 <div class="mt-2 mb-2">
-    <h4 *ngIf="exportType === 'dataModels'" class="marginless">Select your Data Model(s):</h4>
-    <h4 *ngIf="exportType === 'codeSets'" class="marginless">Select your Code Set(s):</h4>
-    <h4 *ngIf="exportType === 'referenceDataModels'" class="marginless">Select your Reference Model(s):</h4>
-    <h4 *ngIf="exportType === 'terminologies'" class="marginless">Select your Terminology:</h4>
-        <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
-                                [onSelect]="onSelect"
-                                [multiple]="true"
-                                ngDefaultControl
-                                name="selectedDataModels"
-                                [treeSearchDomainType]="'DataModel, Terminology'"
-                                [accepts]="['DataModel', 'Terminology']"
-                                [defaultElements]="selectedDataModels"
-                                [placeholder]="'Select Data Model...'"
-                                (ngModelChange)="selectedDataModels = $event">
-        </mdm-model-selector-tree>
+  <h4 *ngIf="exportType === 'dataModels'" class="marginless">
+    Select your Data Model(s):
+  </h4>
+  <h4 *ngIf="exportType === 'codeSets'" class="marginless">
+    Select your Code Set(s):
+  </h4>
+  <h4 *ngIf="exportType === 'referenceDataModels'" class="marginless">
+    Select your Reference Model(s):
+  </h4>
+  <h4 *ngIf="exportType === 'terminologies'" class="marginless">
+    Select your Terminology:
+  </h4>
+  <mdm-model-selector-tree
+    [(ngModel)]="selectedDataModels"
+    [onSelect]="onModelsSelected"
+    [multiple]="true"
+    ngDefaultControl
+    name="selectedDataModels"
+    [treeSearchDomainType]="treeDomainType"
+    [accepts]="[treeDomainType]"
+    [defaultElements]="selectedDataModels"
+    [placeholder]="'Select Data Model...'"
+    (ngModelChange)="selectedDataModels = $event"
+  >
+  </mdm-model-selector-tree>
 </div>
 <div *ngIf="step === 2">
-    <mat-form-field appearance="outline" class="mb-2 full-width">
-        <mat-label>Select an exporter</mat-label>
-        <mat-select aria-label="selectedExporterStr" name="selectedExporterStr" [(ngModel)]="selectedExporterStr" placeholder="Select..." [disabled]="processing" (selectionChange)="exporterChanged()" required>
-            <mat-option *ngFor="let item of exportersList" [value]="item">{{item.displayName}}</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <div class="mb-2" *ngIf="selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1">
-        <div class="errorMessage" style="padding-top: 5px;padding-left: 6px;font-style: italic;">
-            <strong>{{selectedExporterObj.displayName}}</strong> does not support multiple Data Models export!<br>
-            <div *ngFor="let item of (exportersList  | filter); let i = index">
-                <span *ngIf="i ==0">
-                    The following exporters support multiple Data Models export:
-                </span>
-                <div style="padding-left: 3px;">
-                    {{item.displayName}}
-                </div>
-            </div>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Select an exporter</mat-label>
+    <mat-select
+      aria-label="Select an exporter"
+      name="selectedExporter"
+      [(value)]="selectedExporter"
+      placeholder="Select..."
+      [disabled]="processing"
+      required
+    >
+      <mat-option *ngFor="let item of exporters" [value]="item">{{
+        item.displayName
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="mdm-export-models__checkbox-option">
+    <mat-checkbox [(ngModel)]="asynchronous"
+      >Export in the background</mat-checkbox
+    >
+    <mdm-alert alertStyle="info" [showIcon]="true">
+      <p>
+        When checked, the selected model(s) will be exported by Mauro in the
+        background, allowing you to continue to work in Mauro Data Mapper. The
+        exports will eventually be created for you to use.
+      </p>
+      <p>
+        This option is recommended if the selected models are large, as it may
+        take some time for Mauro to export them.
+      </p>
+    </mdm-alert>
+  </div>
+  <div
+    class="mb-2 mt-2"
+    *ngIf="
+      selectedExporter &&
+      !selectedExporter.canExportMultipleDomains &&
+      selectedDataModels.length > 1
+    "
+  >
+    <div
+      class="errorMessage"
+      style="padding-top: 5px; padding-left: 6px; font-style: italic"
+    >
+      <strong>{{ selectedExporter.displayName }}</strong> does not support
+      multiple Data Models export!<br />
+      <div *ngFor="let item of exporters | filter; let i = index">
+        <span *ngIf="i == 0">
+          The following exporters support multiple Data Models export:
+        </span>
+        <div style="padding-left: 3px">
+          {{ item.displayName }}
         </div>
+      </div>
     </div>
-    <div style="clear: both;">
-        <button mat-button color="warn" type="reset" [disabled]="processing" (click)="reset()">Reset</button>
-        <button mat-flat-button
-                color="primary"
-                class="custom"
-                type="submit"
-                (click)="export()"
-                [disabled]="!selectedExporterObj  || (selectedModels && selectedDataModels.length==0) || processing || (selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1)">
-                Export Model(s)
-        </button>
-    </div>
-    <div style="clear: both;" *ngIf="processing">
-        <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
-    </div>
-    <div style="margin-bottom: 3px;padding-left: 5px;">
-        <div id="exportFileDownload" #aLink></div>
-    </div>
+  </div>
+  <div style="clear: both">
+    <button
+      mat-button
+      color="warn"
+      type="reset"
+      [disabled]="processing"
+      (click)="reset()"
+    >
+      Reset
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      class="custom"
+      type="submit"
+      (click)="export()"
+      [disabled]="
+        !selectedExporter ||
+        selectedDataModels.length == 0 ||
+        processing ||
+        (selectedExporter &&
+          !selectedExporter.canExportMultipleDomains &&
+          selectedDataModels.length > 1)
+      "
+    >
+      Export Model(s)
+    </button>
+  </div>
+  <div style="clear: both" *ngIf="processing">
+    <mat-progress-bar
+      value="50"
+      bufferValue="75"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+  <div class="mt-2">
+    <mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
+  </div>
 </div>

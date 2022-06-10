@@ -52,11 +52,15 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { JoditAngularModule } from 'jodit-angular';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 
 @NgModule({
   declarations: [
     EditableFormButtonsComponent,
-    MoreDescriptionComponent,
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
@@ -79,25 +83,30 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     PathNameComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    MatPasswordStrengthModule,
-    NgxJsonViewerModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    NgxSkeletonLoaderModule,
-    CodemirrorModule,
-    UIRouterModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        MatPasswordStrengthModule,
+        NgxJsonViewerModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+        NgxSkeletonLoaderModule,
+        CodemirrorModule,
+        JoditAngularModule,
+      UIRouterModule
+    ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
-    MoreDescriptionComponent,
     UIRouterModule,
     MaterialModule,
     McSelectComponent,
@@ -129,7 +138,13 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     ModelIconComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent,
+
   ]
 })
 export class SharedModule {}

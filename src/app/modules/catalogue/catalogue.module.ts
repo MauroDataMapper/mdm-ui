@@ -32,9 +32,7 @@ import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/adva
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
@@ -164,9 +162,6 @@ import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/refe
 import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
 import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { JoditAngularModule } from 'jodit-angular';
-import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
 import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
@@ -196,6 +191,7 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-description.component';
 
 @NgModule({
   declarations: [
@@ -209,9 +205,7 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     DiagramPopupComponent,
     DiagramToolbarComponent,
     HistoryComponent,
-    MarkdownTextAreaComponent,
     DateFromToComponent,
-    MarkdownDirective,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
@@ -339,8 +333,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ReferenceDataValuesComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
     ApiPropertyTableComponent,
@@ -389,7 +381,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    JoditAngularModule,
     PipesModule
   ],
   exports: [
@@ -400,9 +391,7 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     SummaryMetadataPopupComponent,
     ExportModelsComponent,
     HistoryComponent,
-    MarkdownTextAreaComponent,
     DateFromToComponent,
-    MarkdownDirective,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
@@ -525,8 +514,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ReferenceDataDetailsComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     ConstraintsRulesComponent,
     SubscribedCatalogueMainComponent,
     SubscribedCatalogueDetailComponent,
@@ -545,7 +532,8 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ProfileDataViewComponent,
     NewerVersionsComponent,
     TerminologyMainComponent,
-    SkeletonBadgeComponent
+    SkeletonBadgeComponent,
+    MoreDescriptionComponent
   ]
 })
 export class CatalogueModule {}

@@ -24,9 +24,8 @@ import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-
   templateUrl: './more-description.component.html',
   styleUrls: ['./more-description.component.sass']
 })
-export class MoreDescriptionComponent implements OnInit, AfterViewInit {
+export class MoreDescriptionComponent implements AfterViewInit {
   @Input() description: string;
-  @Input() length: any;
 
   showMore = true;
   isOverflowing = false;
@@ -39,9 +38,6 @@ export class MoreDescriptionComponent implements OnInit, AfterViewInit {
     this.showMore = userSettingsHandler.get('expandMoreDescription');
   }
 
-  ngOnInit() {
-  }
-
   ngAfterViewInit() {
     this.isOverflowing = this.checkOverflow(this.descriptionContent.nativeElement);
   }
@@ -50,7 +46,7 @@ export class MoreDescriptionComponent implements OnInit, AfterViewInit {
     this.showMore = !this.showMore;
   }
 
-  checkOverflow (element): boolean {
+  private checkOverflow (element): boolean {
     return element.offsetHeight < element.scrollHeight;
   }
 

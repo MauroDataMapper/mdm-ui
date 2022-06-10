@@ -21,20 +21,23 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'mdm-paginator',
-  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="length" showFirstLastButtons (page)="changed($event)"></mat-paginator>'
+  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex" [length]="length" showFirstLastButtons (page)="changed($event)"></mat-paginator>'
 })
 export class MdmPaginatorComponent extends MatPaginator implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.pageSize = 20;
     this.pageSizeOptions = [5, 10, 20, 50];
 
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
-      this.pageSize = settings.countPerTable;
+      // If there is no pageSize specified then use the settings value, if any
+      this.pageSize = this.pageSize ?? settings.countPerTable;
       this.pageSizeOptions =  settings.counts;
     }
+
+    // If still no pageSize then default to 20
+    this.pageSize = this.pageSize ?? 20;
   }
 
   get pageOffset() {

@@ -64,11 +64,9 @@ export class CatalogueSearchService {
     params: CatalogueSearchParameters
   ): [number, PageParameters] {
     const page = params.page ?? 1;
-    // TODO: add with pagination
-    // const pageParams = this.pagination.buildPageParameters(page, params.pageSize);
     const pageParams: PageParameters = {
-      max: 10,
-      offset: 0
+      max: params.pageSize,
+      offset: page * params.pageSize
     };
     return [page, pageParams];
   }

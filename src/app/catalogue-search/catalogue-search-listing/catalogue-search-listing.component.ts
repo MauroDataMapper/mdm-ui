@@ -27,6 +27,7 @@ import {
   CatalogueSearchResultSet,
   mapStateParamsToSearchParameters
 } from '../catalogue-search.types';
+import { PageEvent } from '@angular/material/paginator';
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
@@ -65,6 +66,15 @@ export class CatalogueSearchListingComponent implements OnInit {
   updateSearch() {
     this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', {
       search: this.searchTerms
+    });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.status = 'loading';
+    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', {
+      search: this.searchTerms,
+      page: event.pageIndex,
+      pageSize: event.pageSize
     });
   }
 

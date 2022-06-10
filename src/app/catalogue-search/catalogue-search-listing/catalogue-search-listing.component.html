@@ -79,5 +79,8 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
     </div>
+    <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':resultSet?.totalResults < resultSet?.pageSize}">
+      <mdm-paginator [length]="resultSet?.totalResults" [pageIndex]="resultSet?.page" [pageSize]="resultSet?.pageSize" (page)="onPageChange($event)" showFirstLastButtons> </mdm-paginator>
+    </div>
   </div>
 </div>

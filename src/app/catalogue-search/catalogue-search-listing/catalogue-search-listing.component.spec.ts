@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { PageEvent } from '@angular/material/paginator';
 import {
   CatalogueItemDomainType,
   CatalogueItemSearchResult
@@ -167,6 +168,18 @@ describe('CatalogueSearchListingComponent', () => {
       expect(harness.component.resultSet.totalResults).toBe(totalResults);
       expect(harness.component.resultSet.items).toBe(catalogueItems);
       expect(harness.component.status).toBe('ready');
+    });
+
+    it('should handle a PageEvent', () => {
+      const pageEvent: PageEvent = {
+        pageIndex: 6,
+        previousPageIndex: 5,
+        pageSize: 3,
+        length: 100,
+      };
+
+      harness.component.onPageChange(pageEvent);
+      expect(harness.component.status).toBe('loading');
     });
 
     it('should display an error when search fails', () => {

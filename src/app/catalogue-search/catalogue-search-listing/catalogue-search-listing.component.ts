@@ -28,8 +28,16 @@ import {
   mapStateParamsToSearchParameters
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
+import { SortByOption, SortOrder } from '@mdm/shared/sort-by/sort-by.component';
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
+
+/**
+ * These options must be of the form '{propertyToSortBy}-{order}' where propertyToSortBy
+ * can be any property on the objects you are sorting and order must be of type
+ * {@link SortOrder }
+ */
+ export type SearchListingSortByOption = 'label-asc' | 'label-desc';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -41,6 +49,16 @@ export class CatalogueSearchListingComponent implements OnInit {
   parameters: CatalogueSearchParameters = {};
   searchTerms?: string;
   resultSet?: CatalogueSearchResultSet;
+  sortBy?: SortByOption;
+  /**
+   * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
+   * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
+   */
+   searchListingSortByOptions: SortByOption[] = [
+    { value: 'label-asc', displayName: 'Label (a-z)' },
+    { value: 'label-desc', displayName: 'Label (z-a)' },
+  ];
+  sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -55,6 +73,11 @@ export class CatalogueSearchListingComponent implements OnInit {
     );
     this.searchTerms = this.parameters.search;
 
+    this.sortBy = this.setSortByFromRouteOrAsDefault(
+      this.parameters.sort,
+      this.parameters.order
+    );
+
     if (!this.parameters.search || this.parameters.search === '') {
       this.setEmptyResultPage();
       return;
@@ -63,19 +86,31 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.performSearch();
   }
 
+
+  /**
+   * Update the search by using the state router.
+   */
   updateSearch() {
-    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', {
-      search: this.searchTerms
-    });
+    this.status = 'loading';
+    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', this.parameters);
+  }
+
+  onSearchTerm() {
+    this.parameters.search = this.searchTerms;
+    this.updateSearch();
   }
 
   onPageChange(event: PageEvent) {
-    this.status = 'loading';
-    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', {
-      search: this.searchTerms,
-      page: event.pageIndex,
-      pageSize: event.pageSize
-    });
+    this.parameters.page = event.pageIndex;
+    this.parameters.pageSize = event.pageSize;
+    this.updateSearch();
+  }
+
+  onSelectSortBy(selected: SortByOption) {
+    const sortBy = selected.value as SearchListingSortByOption;
+    this.parameters.sort = this.getSortFromSortByOptionString(sortBy);
+    this.parameters.order = this.getOrderFromSortByOptionString(sortBy);
+    this.updateSearch();
   }
 
   private setEmptyResultPage() {
@@ -106,5 +141,38 @@ export class CatalogueSearchListingComponent implements OnInit {
         this.resultSet = resultSet;
         this.status = 'ready';
       });
+  }
+
+  /**
+   * Match route params sort and order to sortBy option or return the default value if not set.
+   *
+   * @param sort the route string value for which property is being sorted on.
+   * @param order the order in which to sort that propery
+   * @returns a SortByOption object with value matching the route string sortBy value or the default sortBy option.
+   */
+   private setSortByFromRouteOrAsDefault(
+    sort: string | undefined,
+    order: string | undefined
+  ): SortByOption {
+    if (!sort || !order) {
+      return this.sortByDefaultOption;
+    }
+    const valueString = `${sort}-${order}`;
+
+    const filteredOptionsList = this.searchListingSortByOptions.filter(
+      (item: SortByOption) => item.value === valueString
+    );
+
+    return filteredOptionsList.length === 0
+      ? this.sortByDefaultOption
+      : filteredOptionsList[0];
+  }
+
+  private getSortFromSortByOptionString(sortBy: string) {
+    return sortBy.split('-')[0];
+  }
+
+  private getOrderFromSortByOptionString(sortBy: string) {
+    return sortBy.split('-')[1] as SortOrder;
   }
 }

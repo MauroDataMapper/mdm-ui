@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="container">
   <div class="mdm-search-listing__search">
-    <form role="form" name="search" (submit)="updateSearch()">
+    <form role="form" name="search" (submit)="onSearchTerm()">
       <mat-form-field
         appearance="outline"
         class="mdm-search-listing__search-input"
@@ -52,6 +52,11 @@ SPDX-License-Identifier: Apache-2.0
           <div class="vertically-aligned">
             {{ resultSet?.totalResults }} results found
           </div>
+          <mdm-sort-by
+            [value]="sortBy"
+            [options]="searchListingSortByOptions"
+            (valueChange)="onSelectSortBy($event)"
+          ></mdm-sort-by>
         </div>
       </div>
     </div>

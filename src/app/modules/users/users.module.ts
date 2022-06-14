@@ -27,6 +27,8 @@ import { SharedModule } from '../shared/shared.module';
 import { UsersRoutesModule } from '../users-routes/users-routes.module';
 import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
 import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
+import { AsyncJobListComponent } from '@mdm/userArea/async-job-list/async-job-list.component';
+import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-job-detail.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
     ImgCroppieComponent,
     UserDetailsComponent,
     ChangePasswordComponent,
-    ApiKeysComponent
+    ApiKeysComponent,
+    AsyncJobListComponent,
+    AsyncJobDetailComponent
   ],
   imports: [CommonModule, ImageCropperModule, SharedModule, UsersRoutesModule],
   exports: [

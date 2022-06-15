@@ -88,7 +88,7 @@ export class SearchFiltersComponent implements OnInit {
   onDomainTypeChange(event: MatCheckboxChange, changedDomainType: SearchFilterDomainType) {
     // Determine the checked state of each of the options
     this.allDomainTypes.forEach((domainType) => {
-      if (domainType.domainType == changedDomainType.domainType) {
+      if (domainType.domainType === changedDomainType.domainType) {
         domainType.checked = event.checked;
       }
     });

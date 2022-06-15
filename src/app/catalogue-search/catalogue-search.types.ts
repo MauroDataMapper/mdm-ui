@@ -65,6 +65,11 @@ export interface CatalogueSearchParameters {
    * Optionally provide filter values to control what search results are returned.
    */
   filters?: CatalogueSearchFilters;
+
+  /**
+   * Optionally filter by domain type(s)
+   */
+  domainTypes?: string[];
 }
 
 /**
@@ -76,12 +81,25 @@ export interface CatalogueSearchParameters {
 export const mapStateParamsToSearchParameters = (
   query: StateParams
 ): CatalogueSearchParameters => {
+
+  let domainTypes: string[] = [];
+
+  // There can be many domain types selected in the filter, each one of which is passed in a
+  // separate &domainTypes query parameter. If there is exactly one of these parameters, then
+  // it comes from the router as a string. If there is more than one then they come as an array.
+  // Here we make sure that we always end up with an array.
+  if (typeof(query?.domainTypes) === 'string') {
+    domainTypes = [query?.domainTypes];
+  } else if (query?.domainTypes instanceof Array) {
+    domainTypes = query?.domainTypes;
+  }
   return {
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
     order: query?.order ?? undefined,
     pageSize: query?.pageSize ?? undefined,
+    domainTypes,
   };
 };
 
@@ -93,7 +111,8 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
     ...(parameters.order && { order: parameters.order }),
-    ...(parameters.pageSize && { pageSize: parameters.pageSize })
+    ...(parameters.pageSize && { pageSize: parameters.pageSize }),
+    ...(parameters.domainTypes && { domainTypes: parameters.domainTypes }),
   };
 };
 

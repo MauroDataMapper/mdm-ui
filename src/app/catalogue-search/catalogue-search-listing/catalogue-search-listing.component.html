@@ -61,7 +61,15 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-md-3">
+        <mdm-search-filters
+          [domainTypes]="parameters.domainTypes"
+          [fields]="filters"
+          (filterChange)="onFilterChanged($event)"
+          (filterReset)="onFilterReset()"
+        ></mdm-search-filters>
+      </div>
+      <div class="col-md-9">
         <mdm-catalogue-item-search-result
           *ngFor="let item of resultSet.items"
           [item]="item"

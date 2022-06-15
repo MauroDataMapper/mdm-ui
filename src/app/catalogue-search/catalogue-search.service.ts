@@ -76,7 +76,8 @@ export class CatalogueSearchService {
   ): SearchQueryParameters {
     return {
       sort: params.sort,
-      order: params.order
+      order: params.order,
+      domainTypes: params.domainTypes,
     };
   }
 

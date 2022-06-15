@@ -58,6 +58,7 @@ import { JoditAngularModule } from 'jodit-angular';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
+import { SearchFiltersComponent } from '@mdm/catalogue-search/search-filters/search-filters.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
+    SearchFiltersComponent,
   ],
     imports: [
         CommonModule,
@@ -147,7 +149,7 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
-
+    SearchFiltersComponent,
   ]
 })
 export class SharedModule {}

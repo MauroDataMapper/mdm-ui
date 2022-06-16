@@ -20,13 +20,12 @@ SPDX-License-Identifier: Apache-2.0
   <div class="mdm-search-filters__header">
     <h3>Filters</h3>
   </div>
-  <div class="mdm-search-filters__controls">
+  <div>
     <div class="mdm-search-filters__section">
       <h4>Domain Type</h4>
-      <ul *ngFor="let domainType of allDomainTypes">
-        <li>
+      <ul>
+        <li *ngFor="let domainType of allDomainTypes">
           <mat-checkbox
-            #menuItems
             color="primary"
             [checked]="domainType.checked"
             [value]="domainType.domainType"
@@ -36,6 +35,27 @@ SPDX-License-Identifier: Apache-2.0
         </li>
       </ul>
     </div>
+    <div class="mdm-search-filters__section">
+      <h4>Matching</h4>
+      <ul>
+        <li>
+          <mat-checkbox
+            color="primary"
+            [checked]="labelOnlyFilter.checked"
+            (change)="onLabelOnlyChange($event)">
+            Label Only
+          </mat-checkbox>
+        </li>
+        <li>
+          <mat-checkbox
+            color="primary"
+            [checked]="exactMatchFilter.checked"
+            (change)="onExactMatchChange($event)">
+            Exact Match
+          </mat-checkbox>
+        </li>        
+      </ul>
+    </div>    
     <div *ngFor="let field of fields">
       <mat-form-field [appearance]="appearance">
         <mat-label>{{ field.label }}</mat-label>

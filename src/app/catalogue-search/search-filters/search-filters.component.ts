@@ -40,6 +40,11 @@ export interface SearchFilterDomainType {
   checked: boolean;
 }
 
+export interface SearchFilterCheckbox {
+  name: string;
+  checked: boolean;
+}
+
 @Component({
   selector: 'mdm-search-filters',
   templateUrl: './search-filters.component.html',
@@ -49,6 +54,10 @@ export class SearchFiltersComponent implements OnInit {
   @Input() fields: SearchFilterField[] = [];
 
   @Input() domainTypes: string[] = [];
+
+  @Input() labelOnly = false;
+
+  @Input() exactMatch = false;
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
 
@@ -64,9 +73,23 @@ export class SearchFiltersComponent implements OnInit {
     {name: 'Enumeration Value', domainType: 'EnumerationValue', checked: false},
   ];
 
+  labelOnlyFilter: SearchFilterCheckbox = {
+    name: 'labelOnly',
+    checked: false,
+  };
+
+  exactMatchFilter: SearchFilterCheckbox = {
+    name: 'labelOnly',
+    checked: false,
+  };
+
   ngOnInit(): void {
     // For each domain type option, set checked to true if that domain type appeared in the search parameters
     this.allDomainTypes.forEach((domainType) => domainType.checked = this.domainTypes.indexOf(domainType.domainType) > -1);
+
+    this.labelOnlyFilter.checked = this.labelOnly;
+
+    this.exactMatchFilter.checked = this.exactMatch;
   }
 
   get hasValues() {
@@ -98,5 +121,17 @@ export class SearchFiltersComponent implements OnInit {
 
     // And emit that list
     this.filterChange.emit({ name: 'domainTypes', value: checked });
+  }
+
+  onLabelOnlyChange(event: MatCheckboxChange,) {
+    this.labelOnlyFilter.checked = event.checked;
+
+    this.filterChange.emit({ name: 'labelOnly', value: event.checked });
+  }
+
+  onExactMatchChange(event: MatCheckboxChange,) {
+    this.exactMatchFilter.checked = event.checked;
+
+    this.filterChange.emit({ name: 'exactMatch', value: event.checked });
   }
 }

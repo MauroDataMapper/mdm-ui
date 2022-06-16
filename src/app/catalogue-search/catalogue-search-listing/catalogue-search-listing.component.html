@@ -64,6 +64,8 @@ SPDX-License-Identifier: Apache-2.0
       <div class="col-md-3">
         <mdm-search-filters
           [domainTypes]="parameters.domainTypes"
+          [labelOnly]="parameters.labelOnly"
+          [exactMatch]="parameters.exactMatch"
           [fields]="filters"
           (filterChange)="onFilterChanged($event)"
           (filterReset)="onFilterReset()"

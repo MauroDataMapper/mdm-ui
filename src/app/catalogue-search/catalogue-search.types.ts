@@ -70,6 +70,16 @@ export interface CatalogueSearchParameters {
    * Optionally filter by domain type(s)
    */
   domainTypes?: string[];
+
+  /**
+   * Optionally match on label only
+   */
+  labelOnly?: boolean;
+
+  /**
+   * Optionally do an exact match on the search term
+   */
+   exactMatch?: boolean;
 }
 
 /**
@@ -100,6 +110,8 @@ export const mapStateParamsToSearchParameters = (
     order: query?.order ?? undefined,
     pageSize: query?.pageSize ?? undefined,
     domainTypes,
+    labelOnly: query?.labelOnly === 'true' ? true : undefined,
+    exactMatch: query?.exactMatch === 'true' ? true : undefined,
   };
 };
 
@@ -113,6 +125,8 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.order && { order: parameters.order }),
     ...(parameters.pageSize && { pageSize: parameters.pageSize }),
     ...(parameters.domainTypes && { domainTypes: parameters.domainTypes }),
+    ...(parameters.labelOnly && { labelOnly: parameters.labelOnly }),
+    ...(parameters.exactMatch && { exactMatch: parameters.exactMatch }),
   };
 };
 

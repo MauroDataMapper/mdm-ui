@@ -26,12 +26,19 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
+import { DomainExport } from '@maurodatamapper/mdm-resources';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { MessageHandlerService } from '../utility/message-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExportHandlerService {
-  constructor(private resources: MdmResourcesService) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService
+  ) {}
 
   createFileName(label: string, exporter: Exporter) {
     const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
@@ -104,5 +111,32 @@ export class ExportHandlerService {
     // DO NOT set target!!!!!
     // link.setAttribute('target', '_blank');
     return link;
+  }
+
+  downloadDomainExport(item: DomainExport) {
+    this.resources.domainExports
+      .download(item.id, {}, { responseType: 'arraybuffer' })
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem downloading this export.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((response: HttpResponse<ArrayBuffer>) => {
+        const blob = new Blob([response.body], {
+          type: item.export.contentType
+        });
+        // Create a temporary anchor to click and trigger the browser to save the downloaded file
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', item.export.fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
   }
 }

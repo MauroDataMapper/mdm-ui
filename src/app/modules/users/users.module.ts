@@ -29,6 +29,8 @@ import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-pa
 import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
 import { AsyncJobListComponent } from '@mdm/userArea/async-job-list/async-job-list.component';
 import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-job-detail.component';
+import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
+import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-jo
     ChangePasswordComponent,
     ApiKeysComponent,
     AsyncJobListComponent,
-    AsyncJobDetailComponent
+    AsyncJobDetailComponent,
+    DomainExportsListComponent,
+    DomainExportsDetailComponent
   ],
   imports: [CommonModule, ImageCropperModule, SharedModule, UsersRoutesModule],
   exports: [

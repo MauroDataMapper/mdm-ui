@@ -80,6 +80,14 @@ export interface CatalogueSearchParameters {
    * Optionally do an exact match on the search term
    */
    exactMatch?: boolean;
+
+   /**
+    * Optionally filter on dates, as yyyy-MM-dd
+    */
+   lastUpdatedAfter?: string;
+   lastUpdatedBefore?: string;
+   createdAfter?: string;
+   createdBefore?: string;
 }
 
 /**
@@ -112,6 +120,10 @@ export const mapStateParamsToSearchParameters = (
     domainTypes,
     labelOnly: query?.labelOnly === 'true' ? true : undefined,
     exactMatch: query?.exactMatch === 'true' ? true : undefined,
+    lastUpdatedAfter: query?.lastUpdatedAfter ?? undefined,
+    lastUpdatedBefore: query?.lastUpdatedBefore ?? undefined,
+    createdAfter: query?.createdAfter ?? undefined,
+    createdBefore: query?.createdBefore ?? undefined,
   };
 };
 
@@ -127,6 +139,10 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.domainTypes && { domainTypes: parameters.domainTypes }),
     ...(parameters.labelOnly && { labelOnly: parameters.labelOnly }),
     ...(parameters.exactMatch && { exactMatch: parameters.exactMatch }),
+    ...(parameters.lastUpdatedAfter && { lastUpdatedAfter: parameters.lastUpdatedAfter }),
+    ...(parameters.lastUpdatedBefore && { lastUpdatedBefore: parameters.lastUpdatedBefore }),
+    ...(parameters.createdAfter && { createdAfter: parameters.createdAfter }),
+    ...(parameters.createdBefore && { createdBefore: parameters.createdBefore }),
   };
 };
 

@@ -45,6 +45,11 @@ export interface SearchFilterCheckbox {
   checked: boolean;
 }
 
+export interface SearchFilterDate {
+  name: string;
+  value?: string;
+}
+
 @Component({
   selector: 'mdm-search-filters',
   templateUrl: './search-filters.component.html',
@@ -58,6 +63,14 @@ export class SearchFiltersComponent implements OnInit {
   @Input() labelOnly = false;
 
   @Input() exactMatch = false;
+
+  @Input() lastUpdatedAfter = null;
+
+  @Input() lastUpdatedBefore = null;
+
+  @Input() createdAfter = null;
+
+  @Input() createdBefore = null;
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
 
@@ -83,6 +96,26 @@ export class SearchFiltersComponent implements OnInit {
     checked: false,
   };
 
+  lastUpdatedAfterFilter: SearchFilterDate = {
+    name: 'lastUpdatedAfter',
+    value: null,
+  };
+
+  lastUpdatedBeforeFilter: SearchFilterDate = {
+    name: 'lastUpdatedBefore',
+    value: null,
+  };
+
+  createdAfterFilter: SearchFilterDate = {
+    name: 'createdAfter',
+    value: null,
+  };
+
+  createdBeforeFilter: SearchFilterDate = {
+    name: 'createdBefore',
+    value: null,
+  };
+
   ngOnInit(): void {
     // For each domain type option, set checked to true if that domain type appeared in the search parameters
     this.allDomainTypes.forEach((domainType) => domainType.checked = this.domainTypes.indexOf(domainType.domainType) > -1);
@@ -90,6 +123,14 @@ export class SearchFiltersComponent implements OnInit {
     this.labelOnlyFilter.checked = this.labelOnly;
 
     this.exactMatchFilter.checked = this.exactMatch;
+
+    this.lastUpdatedAfterFilter.value = this.lastUpdatedAfter;
+
+    this.lastUpdatedBeforeFilter.value = this.lastUpdatedBefore;
+
+    this.createdAfterFilter.value = this.createdAfter;
+
+    this.createdBeforeFilter.value = this.createdBefore;
   }
 
   get hasValues() {
@@ -133,5 +174,19 @@ export class SearchFiltersComponent implements OnInit {
     this.exactMatchFilter.checked = event.checked;
 
     this.filterChange.emit({ name: 'exactMatch', value: event.checked });
+  }
+
+  onDateChange(name: string, event) {
+    // If date is not null, format as yyyy-MM-dd but ignoring timezone
+    let formatted: String = null;
+
+    if (event.value) {
+      const yyyy: String = event.value.getFullYear().toString();
+      const mm: String = (parseInt(event.value.getMonth(), 10) + 1).toString().padStart(2, '0');
+      const dd: String = (event.value.getDate()).toString().padStart(2, '0');
+
+      formatted = `${yyyy}-${mm}-${dd}`;
+    }
+    this.filterChange.emit({ name, value: formatted});
   }
 }

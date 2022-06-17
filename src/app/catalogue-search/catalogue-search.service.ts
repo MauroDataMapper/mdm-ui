@@ -102,6 +102,10 @@ export class CatalogueSearchService {
       order: params.order,
       domainTypes: params.domainTypes,
       labelOnly: params.labelOnly,
+      lastUpdatedAfter: params.lastUpdatedAfter,
+      lastUpdatedBefore: params.lastUpdatedBefore,
+      createdAfter: params.createdAfter,
+      createdBefore: params.createdBefore,
     };
   }
 

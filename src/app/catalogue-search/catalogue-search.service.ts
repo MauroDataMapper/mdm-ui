@@ -45,7 +45,7 @@ export class CatalogueSearchService {
     const query: SearchQueryParameters = {
       ...this.getCommonQueryParameters(params),
       ...pageParams,
-      searchTerm: params.search
+      searchTerm: this.getSearchTerm(params),
     };
 
     return this.searchCatalogue(query).pipe(
@@ -58,6 +58,29 @@ export class CatalogueSearchService {
         };
       })
     );
+  }
+
+  /**
+   * If the exactMatch parameter is set then wrap then enclose the search term in quotes, if it
+   * is not already so wrapped
+   *
+   * @param params
+   *
+   * @returns string The search term in quotes
+   */
+  private getSearchTerm(
+    params: CatalogueSearchParameters
+  ): string {
+    let search = params.search;
+    if (params.exactMatch) {
+      if (search[0] !== '"') {
+        search = '"' + search;
+      }
+      if (search[search.length - 1] !== '"') {
+        search = search + '"';
+      }
+    }
+    return search;
   }
 
   private getPageParameters(
@@ -76,7 +99,14 @@ export class CatalogueSearchService {
   ): SearchQueryParameters {
     return {
       sort: params.sort,
-      order: params.order
+      order: params.order,
+      domainTypes: params.domainTypes,
+      labelOnly: params.labelOnly,
+      lastUpdatedAfter: params.lastUpdatedAfter,
+      lastUpdatedBefore: params.lastUpdatedBefore,
+      createdAfter: params.createdAfter,
+      createdBefore: params.createdBefore,
+      classifiers: params.classifiers,
     };
   }
 

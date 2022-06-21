@@ -454,7 +454,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.catalogueSearchListing',
       url:
-        '/search/listing?{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}',
+        '/search/listing?{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}&{classifiers:string}',
       component: CatalogueSearchListingComponent,
       data: {
         allowAnonymous: true,
@@ -473,6 +473,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         lastUpdatedBefore: null,
         createdAfter: null,
         createdBefore: null,
+        classifiers: null,
       }
     }
   ]

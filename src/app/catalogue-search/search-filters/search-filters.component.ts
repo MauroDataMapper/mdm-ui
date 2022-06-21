@@ -20,6 +20,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectChange } from '@angular/material/select';
+import { Classifier, ClassifierIndexResponse } from '@maurodatamapper/mdm-resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 export interface SearchFilterField {
   name: string;
@@ -72,6 +74,8 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() createdBefore = null;
 
+  @Input() classifiers: string[] = [];
+
   @Input() appearance: MatFormFieldAppearance = 'outline';
 
   @Output() filterChange = new EventEmitter<SearchFilterChange>();
@@ -116,7 +120,23 @@ export class SearchFiltersComponent implements OnInit {
     value: null,
   };
 
+  classifiersFilter: Classifier[] = [];
+
+  isReady = false;
+
+  constructor(
+    private resources: MdmResourcesService
+  ) {}
+
   ngOnInit(): void {
+    this.resources.classifier
+    .list({ all: true })
+    .subscribe((result: ClassifierIndexResponse) => {
+      this.classifiersFilter = result.body.items;
+
+      this.isReady = true;
+    });
+
     // For each domain type option, set checked to true if that domain type appeared in the search parameters
     this.allDomainTypes.forEach((domainType) => domainType.checked = this.domainTypes.indexOf(domainType.domainType) > -1);
 
@@ -188,5 +208,9 @@ export class SearchFiltersComponent implements OnInit {
       formatted = `${yyyy}-${mm}-${dd}`;
     }
     this.filterChange.emit({ name, value: formatted});
+  }
+
+  onClassifiersChange(event: MatSelectChange) {
+    this.filterChange.emit({ name: 'classifiers', value: event.value });
   }
 }

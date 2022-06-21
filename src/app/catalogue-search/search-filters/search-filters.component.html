@@ -86,31 +86,16 @@ SPDX-License-Identifier: Apache-2.0
         </mat-datepicker-toggle>
         <mat-datepicker #createdBefore></mat-datepicker>
       </mat-form-field>            
-  </div>             
-    <div *ngFor="let field of fields">
-      <mat-form-field [appearance]="appearance">
-        <mat-label>{{ field.label }}</mat-label>
-        <!-- Enumeration -->
-        <mat-select
-          *ngIf="field.dataType === 'enumeration'"
-          [value]="field.currentValue"
-          (selectionChange)="selectionChanged(field.name, $event)"
-        >
-          <mat-option *ngFor="let value of field.allowedValues" [value]="value">{{
-            value
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button
-        *ngIf="field.currentValue"
-        mat-icon-button
-        aria-label="Clear"
-        matTooltip="Clear"
-        (click)="clearSelection(field.name)"
-      >
-        <span class="fa-solid fa-xmark"></span>
-      </button>
     </div>
+    <div class="mdm-search-filters__section" *ngIf="isReady">
+    <h4>Classifiers</h4>
+    <div>
+        <mat-select (selectionChange)="onClassifiersChange($event)" multiple placeholder="Classifiers" class="form-control" [(ngModel)]="classifiers">
+          <mat-option *ngFor="let classifier of classifiersFilter" [value]="classifier.label">
+                {{classifier.label}}</mat-option>
+        </mat-select>
+    </div>
+  </div>
     <div class="mdm-search-filters__footer">
       <button *ngIf="hasValues" mat-flat-button color="primary" (click)="clearAll()">
         Clear all

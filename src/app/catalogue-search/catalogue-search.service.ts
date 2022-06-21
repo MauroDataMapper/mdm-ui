@@ -106,6 +106,7 @@ export class CatalogueSearchService {
       lastUpdatedBefore: params.lastUpdatedBefore,
       createdAfter: params.createdAfter,
       createdBefore: params.createdBefore,
+      classifiers: params.classifiers,
     };
   }
 

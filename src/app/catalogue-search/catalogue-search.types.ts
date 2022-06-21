@@ -88,6 +88,11 @@ export interface CatalogueSearchParameters {
    lastUpdatedBefore?: string;
    createdAfter?: string;
    createdBefore?: string;
+
+   /**
+    * AND matching on classifiers
+    */
+   classifiers?: string[];
 }
 
 /**
@@ -102,6 +107,8 @@ export const mapStateParamsToSearchParameters = (
 
   let domainTypes: string[] = [];
 
+  let classifiers: string[] = [];
+
   // There can be many domain types selected in the filter, each one of which is passed in a
   // separate &domainTypes query parameter. If there is exactly one of these parameters, then
   // it comes from the router as a string. If there is more than one then they come as an array.
@@ -111,6 +118,13 @@ export const mapStateParamsToSearchParameters = (
   } else if (query?.domainTypes instanceof Array) {
     domainTypes = query?.domainTypes;
   }
+
+  if (typeof(query?.classifiers) === 'string') {
+    classifiers = [query?.classifiers];
+  } else if (query?.classifiers instanceof Array) {
+    classifiers = query?.classifiers;
+  }
+
   return {
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
@@ -124,6 +138,7 @@ export const mapStateParamsToSearchParameters = (
     lastUpdatedBefore: query?.lastUpdatedBefore ?? undefined,
     createdAfter: query?.createdAfter ?? undefined,
     createdBefore: query?.createdBefore ?? undefined,
+    classifiers,
   };
 };
 
@@ -143,6 +158,7 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.lastUpdatedBefore && { lastUpdatedBefore: parameters.lastUpdatedBefore }),
     ...(parameters.createdAfter && { createdAfter: parameters.createdAfter }),
     ...(parameters.createdBefore && { createdBefore: parameters.createdBefore }),
+    ...(parameters.classifiers && { classifiers: parameters.classifiers }),
   };
 };
 

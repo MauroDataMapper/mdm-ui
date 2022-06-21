@@ -17,15 +17,29 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { TerminologyDetail, TermRelationshipType, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  TerminologyDetail,
+  TermRelationshipType,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { CreateTermRelationshipTypeDialogComponent } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { EditingService } from '@mdm/services/editing.service';
 
 class CreateTermRelationshipTypeForm {
   id?: Uuid;
@@ -34,12 +48,16 @@ class CreateTermRelationshipTypeForm {
   parentalRelationship = false;
   childRelationship = false;
 
-  constructor(readonly terminology: TerminologyDetail, relationshipType?: TermRelationshipType) {
+  constructor(
+    readonly terminology: TerminologyDetail,
+    relationshipType?: TermRelationshipType
+  ) {
     if (relationshipType) {
       this.id = relationshipType.id || null;
       this.label = relationshipType.label;
       this.displayLabel = relationshipType.displayLabel;
-      this.parentalRelationship = relationshipType.parentalRelationship || false;
+      this.parentalRelationship =
+        relationshipType.parentalRelationship || false;
       this.childRelationship = relationshipType.childRelationship || false;
     }
   }
@@ -50,7 +68,8 @@ class CreateTermRelationshipTypeForm {
   templateUrl: './term-relationship-type-list.component.html',
   styleUrls: ['./term-relationship-type-list.component.scss']
 })
-export class TermRelationshipTypeListComponent implements OnInit, OnChanges, AfterViewInit {
+export class TermRelationshipTypeListComponent
+  implements OnInit, OnChanges, AfterViewInit {
   @Input() terminology: TerminologyDetail;
   @Input() pageSize = 10;
   @Input() canEdit = false;
@@ -58,22 +77,36 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
   @Output() totalCount = new EventEmitter<number>();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
   displayedColumns: string[] = ['label', 'displayLabel', 'actions'];
-  relationshipTypes: MdmTableDataSource<TermRelationshipType> = new MdmTableDataSource();
+  relationshipTypes: MdmTableDataSource<
+    TermRelationshipType
+  > = new MdmTableDataSource();
   isLoadingResults = false;
   reloadEvent = new EventEmitter<string>();
   totalItemCount = 0;
 
-  constructor(private resources: MdmResourcesService, private dialog: MatDialog) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private editing: EditingService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.terminology) {
       if (this.relationshipTypes && this.terminology) {
         // Update action functions when terminology changed
-        this.relationshipTypes.fetchFunction = options => this.resources.termRelationshipTypes.list(this.terminology.id, options);
-        this.relationshipTypes.deleteFunction = (item: TermRelationshipType) => this.resources.termRelationshipTypes.remove(this.terminology.id, item.id);
+        this.relationshipTypes.fetchFunction = (options) =>
+          this.resources.termRelationshipTypes.list(
+            this.terminology.id,
+            options
+          );
+        this.relationshipTypes.deleteFunction = (item: TermRelationshipType) =>
+          this.resources.termRelationshipTypes.remove(
+            this.terminology.id,
+            item.id
+          );
 
         // Ignore first change as it will be handle by ngAfterViewInit() after MatSort and MatPaginator initialised
         if (!changes.terminology.isFirstChange) {
@@ -85,7 +118,7 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
 
   ngOnInit() {
     // Keep track of item count
-    this.relationshipTypes.count.subscribe(c => {
+    this.relationshipTypes.count.subscribe((c) => {
       this.totalItemCount = c;
       this.totalCount.emit(this.totalItemCount);
     });
@@ -93,13 +126,17 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
 
   ngAfterViewInit() {
     // Reset pageIndex on reload
-    this.reloadEvent.subscribe(() => this.paginator.pageIndex = 0);
+    this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     // Reset pageIndex on re-order
-    this.sort?.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.sort?.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     // Update table data source on sorting, paging, or reload events
-    merge(this.sort?.sortChange, this.paginator?.page, this.reloadEvent).subscribe(() => {
+    merge(
+      this.sort?.sortChange,
+      this.paginator?.page,
+      this.reloadEvent
+    ).subscribe(() => {
       this.refreshFetchOptions();
       this.relationshipTypes.fetchData();
     });
@@ -114,7 +151,7 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
   refreshFetchOptions() {
     this.relationshipTypes.pageable = {
       max: this.paginator?.pageSize || this.pageSize,
-      offset: (this.paginator?.pageIndex * this.paginator?.pageSize) || 0
+      offset: this.paginator?.pageIndex * this.paginator?.pageSize || 0
     };
     this.relationshipTypes.sortable = {
       sort: this.sort?.active,
@@ -123,30 +160,37 @@ export class TermRelationshipTypeListComponent implements OnInit, OnChanges, Aft
   }
 
   openCreateRelationshipTypeDialog(): void {
-    const dialogRef = this.dialog.open(CreateTermRelationshipTypeDialogComponent, {
-      data: new CreateTermRelationshipTypeForm(this.terminology)
-    });
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this.relationshipTypes.fetchData();
-      }
-    });
+    this.editing
+      .openDialog(CreateTermRelationshipTypeDialogComponent, {
+        data: new CreateTermRelationshipTypeForm(this.terminology)
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.relationshipTypes.fetchData();
+        }
+      });
   }
 
   editRelationshipType(termRelationshipType: TermRelationshipType) {
     if (this.canEdit) {
-      this.resources.termRelationshipTypes.get(this.terminology.id, termRelationshipType.id).subscribe(trt => {
-        const dialogRef = this.dialog.open(CreateTermRelationshipTypeDialogComponent, {
-          data: new CreateTermRelationshipTypeForm(this.terminology, trt.body)
+      this.resources.termRelationshipTypes
+        .get(this.terminology.id, termRelationshipType.id)
+        .subscribe((trt) => {
+          this.editing
+            .openDialog(CreateTermRelationshipTypeDialogComponent, {
+              data: new CreateTermRelationshipTypeForm(
+                this.terminology,
+                trt.body
+              )
+            })
+            .afterClosed()
+            .subscribe((data) => {
+              if (data) {
+                this.relationshipTypes.fetchData();
+              }
+            });
         });
-
-        dialogRef.afterClosed().subscribe(data => {
-          if (data) {
-            this.relationshipTypes.fetchData();
-          }
-        });
-      });
     }
   }
 

@@ -76,7 +76,6 @@ import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/da
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
 import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
 import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
-import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -191,7 +190,7 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-description.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 
 @NgModule({
   declarations: [
@@ -252,7 +251,6 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     DataTypeStep2Component,
     DataElementsListComponent,
     DataClassesListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -437,7 +435,6 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     DataTypeStep2Component,
     DataClassesListComponent,
     DataElementsListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,

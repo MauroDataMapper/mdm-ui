@@ -29,7 +29,6 @@ import {
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   FolderDetail,
@@ -50,8 +49,6 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class FolderComponent
   extends BaseComponent
   implements OnInit, OnDestroy {
-
-
   readonly domainType = 'folders';
 
   folder: FolderDetail;
@@ -83,8 +80,7 @@ export class FolderComponent
     private securityHandler: SecurityHandlerService,
     private broadcast: BroadcastService,
     private title: Title,
-    private dialog: MatDialog,
-    private  editingService: EditingService,
+    private editingService: EditingService,
     private messageHandler: MessageHandlerService
   ) {
     super();
@@ -119,9 +115,9 @@ export class FolderComponent
     this.afterSave = (result: { body: { id: any } }) =>
       this.folderDetails(result.body.id);
 
-    this.activeTab = this.tabs
-      .getByName(this.uiRouterGlobals.params.tabView)
-      .index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
 
     this.tabSelected(this.activeTab);
   }
@@ -167,19 +163,14 @@ export class FolderComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go(
-      'folder',
-      { tabView: tab.name },
-      { notify: false }
-    );
+    this.stateHandler.Go('folder', { tabView: tab.name }, { notify: false });
   }
 
   save(folderUpdates: Array<DefaultProfileItem>) {
-
     const resource = {
-        id: this.folder.id,
-        label: this.folder.label,
-        domainType: this.folder.domainType
+      id: this.folder.id,
+      label: this.folder.label,
+      domainType: this.folder.domainType
     };
 
     folderUpdates.forEach((item) => {

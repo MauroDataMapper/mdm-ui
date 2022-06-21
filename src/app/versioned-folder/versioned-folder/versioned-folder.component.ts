@@ -16,16 +16,35 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  Uuid,
+  VersionedFolderDetail,
+  VersionedFolderDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
+import {
+  AnnotationViewOption,
+  TabCollection,
+  TabDescriptor
+} from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  MessageService,
+  SecurityHandlerService,
+  SharedService,
+  StateHandlerService
+} from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -37,8 +56,9 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './versioned-folder.component.html',
   styleUrls: ['./versioned-folder.component.scss']
 })
-export class VersionedFolderComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class VersionedFolderComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   parentId: Uuid;
@@ -68,9 +88,9 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) {
+    private editingService: EditingService
+  ) {
     super();
   }
 
@@ -99,7 +119,8 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     this.subscriptions.push(
       this.messages.changeSearch.subscribe((show: boolean) => {
         this.showSearch = show;
-      }));
+      })
+    );
   }
 
   ngAfterViewInit(): void {
@@ -107,7 +128,7 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
 
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -118,7 +139,8 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     this.stateHandler.Go(
       'versionedFolder',
       { tabView: selected.name },
-      { notify: false });
+      { notify: false }
+    );
   }
 
   toggleShowSearch() {
@@ -135,15 +157,20 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     });
 
     this.resources.versionedFolder
-      .update(this.detail.id,resource)
+      .update(this.detail.id, resource)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Versioned Folder.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe((response: VersionedFolderDetailResponse) => {
-        this.messageHandler.showSuccess('Versioned Folder updated successfully.');
+        this.messageHandler.showSuccess(
+          'Versioned Folder updated successfully.'
+        );
         this.detail = response.body;
         this.catalogueItem = response.body;
       });

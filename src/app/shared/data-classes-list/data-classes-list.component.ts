@@ -38,8 +38,14 @@ import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-mo
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DataClass, DataClassDetail, DataClassIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
+import {
+  DataClass,
+  DataClassDetail,
+  DataClassIndexResponse,
+  DataModelDetail
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-classes-list',
@@ -78,6 +84,7 @@ export class DataClassesListComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
     private dialog: MatDialog,
+    private editing: EditingService,
     private gridService: GridService,
     private messageHandler: MessageHandlerService
   ) {}
@@ -113,7 +120,9 @@ export class DataClassesListComponent implements AfterViewInit {
         }),
         map((data: DataClassIndexResponse) => {
           if (this.parentDataClass.extendsDataClasses) {
-            this.totalDataClassCount = data.body.count + (this.parentDataClass.extendsDataClasses.length as number);
+            this.totalDataClassCount =
+              data.body.count +
+              (this.parentDataClass.extendsDataClasses.length as number);
           } else {
             this.totalDataClassCount = data.body.count;
           }
@@ -127,10 +136,12 @@ export class DataClassesListComponent implements AfterViewInit {
       )
       .subscribe((data) => {
         if (this.parentDataClass.extendsDataClasses) {
-          const extendedDC = this.parentDataClass.extendsDataClasses.map(dc => {
-            dc['extended'] = true;
-            return dc;
-          });
+          const extendedDC = this.parentDataClass.extendsDataClasses.map(
+            (dc) => {
+              dc['extended'] = true;
+              return dc;
+            }
+          );
           this.dataClassRecords = [...data, ...extendedDC];
         } else {
           this.dataClassRecords = data;
@@ -292,8 +303,8 @@ export class DataClassesListComponent implements AfterViewInit {
         };
       });
 
-    this.dialog
-      .open(BulkEditModalComponent, {
+    this.editing
+      .openDialog(BulkEditModalComponent, {
         data: {
           dataElementIdLst: dataClassIds,
           parentDataModel: this.parentDataModel,
@@ -313,7 +324,9 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   bulkDelete() {
-    const dataElementIdLst = this.dataClassRecords.filter(record => record.checked);
+    const dataElementIdLst = this.dataClassRecords.filter(
+      (record) => record.checked
+    );
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {

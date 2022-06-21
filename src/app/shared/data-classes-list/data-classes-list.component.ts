@@ -37,7 +37,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   DataClass,
   DataClassDetail,
@@ -196,11 +196,11 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   dataClassesFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: {}
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -233,7 +233,7 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   // Drag and drop
-  dropItem(event: CdkDragDrop<any[]>) {
+  dropItem(event: CdkDragDrop<any, any, DataClassDetail>) {
     moveItemInArray(
       this.dataClassRecords,
       event.previousIndex,
@@ -247,7 +247,7 @@ export class DataClassesListComponent implements AfterViewInit {
     this.table.renderRows();
   }
 
-  updateOrder(item, newPosition) {
+  updateOrder(item: CdkDrag<DataClassDetail>, newPosition: number) {
     const resource: DataClass = {
       label: item.data.label,
       domainType: item.data.domainType,

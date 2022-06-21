@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 export class BaseDataGrid {
   displayedColumns: string[];
-  records: Array<any>;
+  records: Array<RuleModel>;
   totalItemCount: number;
 }
 
@@ -27,7 +27,7 @@ export class RuleRepresentation {
   id: string;
   rule: RuleModel;
   language: string;
-  representation: any;
+  representation: string;
 }
 
 export class RuleModel {
@@ -62,7 +62,6 @@ import {
   AddRuleRepresentationModalComponent,
   RuleLanguages
 } from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { catchError, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';

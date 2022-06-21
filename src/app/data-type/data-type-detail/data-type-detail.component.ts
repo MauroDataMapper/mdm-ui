@@ -129,7 +129,7 @@ export class DataTypeDetailComponent implements OnInit {
         const dataElementsCount = result.count;
 
         let message =
-          "<p class='marginless'>Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?</p>";
+          '<p class=\'marginless\'>Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Type?</p>';
         if (dataElementsCount > 0) {
           message += `<p>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:</p>`;
 

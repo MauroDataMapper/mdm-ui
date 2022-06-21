@@ -109,7 +109,9 @@ export class VersionedFolderComponent
     this.showExtraTabs = this.shared.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView);
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    );
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Versioned Folder');

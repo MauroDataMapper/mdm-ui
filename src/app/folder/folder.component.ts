@@ -34,7 +34,8 @@ import {
   FolderDetail,
   FolderDetailResponse,
   PermissionsResponse,
-  SecurableDomainType
+  SecurableDomainType,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -101,7 +102,7 @@ export class FolderComponent
     this.title.setTitle('Folder');
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
-    this.folderDetails(this.uiRouterGlobals.params.id);
+    this.folderDetails(this.uiRouterGlobals.params.id as Uuid);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
         this.showSecuritySection = message;
@@ -112,11 +113,11 @@ export class FolderComponent
         this.showSearch = message;
       }
     );
-    this.afterSave = (result: { body: { id: any } }) =>
+    this.afterSave = (result: { body: { id: Uuid } }) =>
       this.folderDetails(result.body.id);
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView
+      this.uiRouterGlobals.params.tabView as string
     ).index;
 
     this.tabSelected(this.activeTab);
@@ -140,7 +141,7 @@ export class FolderComponent
     });
   }
 
-  folderPermissions(id: any) {
+  folderPermissions(id: Uuid) {
     this.resources.security
       .permissions(SecurableDomainType.Folders, id)
       .subscribe((permissions: PermissionsResponse) => {

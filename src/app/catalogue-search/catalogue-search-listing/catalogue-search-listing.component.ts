@@ -29,6 +29,7 @@ import {
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption, SortOrder } from '@mdm/shared/sort-by/sort-by.component';
+import { SearchFilterChange, SearchFilterField } from '../search-filters/search-filters.component';
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
@@ -59,6 +60,9 @@ export class CatalogueSearchListingComponent implements OnInit {
     { value: 'label-desc', displayName: 'Label (z-a)' },
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
+
+
+  filters: SearchFilterField[] = [];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -111,6 +115,16 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.sort = this.getSortFromSortByOptionString(sortBy);
     this.parameters.order = this.getOrderFromSortByOptionString(sortBy);
     this.updateSearch();
+  }
+
+  onFilterChanged(event: SearchFilterChange) {
+    console.log(event);
+    this.parameters[event.name] = event.value;
+    this.updateSearch();
+  }
+
+  onFilterReset() {
+    // TODO do something
   }
 
   private setEmptyResultPage() {

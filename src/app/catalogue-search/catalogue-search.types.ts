@@ -65,6 +65,34 @@ export interface CatalogueSearchParameters {
    * Optionally provide filter values to control what search results are returned.
    */
   filters?: CatalogueSearchFilters;
+
+  /**
+   * Optionally filter by domain type(s)
+   */
+  domainTypes?: string[];
+
+  /**
+   * Optionally match on label only
+   */
+  labelOnly?: boolean;
+
+  /**
+   * Optionally do an exact match on the search term
+   */
+   exactMatch?: boolean;
+
+   /**
+    * Optionally filter on dates, as yyyy-MM-dd
+    */
+   lastUpdatedAfter?: string;
+   lastUpdatedBefore?: string;
+   createdAfter?: string;
+   createdBefore?: string;
+
+   /**
+    * AND matching on classifiers
+    */
+   classifiers?: string[];
 }
 
 /**
@@ -76,12 +104,41 @@ export interface CatalogueSearchParameters {
 export const mapStateParamsToSearchParameters = (
   query: StateParams
 ): CatalogueSearchParameters => {
+
+  let domainTypes: string[] = [];
+
+  let classifiers: string[] = [];
+
+  // There can be many domain types selected in the filter, each one of which is passed in a
+  // separate &domainTypes query parameter. If there is exactly one of these parameters, then
+  // it comes from the router as a string. If there is more than one then they come as an array.
+  // Here we make sure that we always end up with an array.
+  if (typeof(query?.domainTypes) === 'string') {
+    domainTypes = [query?.domainTypes];
+  } else if (query?.domainTypes instanceof Array) {
+    domainTypes = query?.domainTypes;
+  }
+
+  if (typeof(query?.classifiers) === 'string') {
+    classifiers = [query?.classifiers];
+  } else if (query?.classifiers instanceof Array) {
+    classifiers = query?.classifiers;
+  }
+
   return {
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
     order: query?.order ?? undefined,
     pageSize: query?.pageSize ?? undefined,
+    domainTypes,
+    labelOnly: query?.labelOnly === 'true' ? true : undefined,
+    exactMatch: query?.exactMatch === 'true' ? true : undefined,
+    lastUpdatedAfter: query?.lastUpdatedAfter ?? undefined,
+    lastUpdatedBefore: query?.lastUpdatedBefore ?? undefined,
+    createdAfter: query?.createdAfter ?? undefined,
+    createdBefore: query?.createdBefore ?? undefined,
+    classifiers,
   };
 };
 
@@ -93,7 +150,15 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
     ...(parameters.order && { order: parameters.order }),
-    ...(parameters.pageSize && { pageSize: parameters.pageSize })
+    ...(parameters.pageSize && { pageSize: parameters.pageSize }),
+    ...(parameters.domainTypes && { domainTypes: parameters.domainTypes }),
+    ...(parameters.labelOnly && { labelOnly: parameters.labelOnly }),
+    ...(parameters.exactMatch && { exactMatch: parameters.exactMatch }),
+    ...(parameters.lastUpdatedAfter && { lastUpdatedAfter: parameters.lastUpdatedAfter }),
+    ...(parameters.lastUpdatedBefore && { lastUpdatedBefore: parameters.lastUpdatedBefore }),
+    ...(parameters.createdAfter && { createdAfter: parameters.createdAfter }),
+    ...(parameters.createdBefore && { createdBefore: parameters.createdBefore }),
+    ...(parameters.classifiers && { classifiers: parameters.classifiers }),
   };
 };
 

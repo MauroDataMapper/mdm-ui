@@ -16,12 +16,50 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-ul {
-  list-style-type: none;
-  margin-top: 4px;
-  padding-left: 0;
-  padding-right: 0;
+@use '~@angular/material' as mat;
+
+@mixin mdm-search-filters-theme($theme) {
+  $primary: map-get($theme, primary);
+
+  $search-filters-heading-background-color: mat.get-color-from-palette($primary);
+  $search-filters-heading-color: mat.get-color-from-palette(
+    $primary,
+    '500-contrast'
+  );
+
+  .mdm-search-filters {
+    &__header {
+      border-radius: 2px;
+      background-color: $search-filters-heading-background-color;
+      color: $search-filters-heading-color;
+  
+      h3 {
+        font-weight: 500;
+        margin: 0.2em 0.635em;
+        vertical-align: middle;
+      }
+    }
+  
+    &__section {
+      margin-top: 1em;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-top: 4px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
 }
+
+
+$search-result-header-padding: 0.5em 0.5em;
+$search-result-content-padding: 0.8em 1.2em;
+$search-result-border-radius: 4px;
+
+
 
 .mat-datepicker-input {
   width: 85%;
@@ -34,6 +72,9 @@ mat-icon {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.54);
 }
+
+
+
 
 /*$search-filters-heading-background-color: $color-mauro-dark-green;
 $search-filters-heading-color: $color-white;

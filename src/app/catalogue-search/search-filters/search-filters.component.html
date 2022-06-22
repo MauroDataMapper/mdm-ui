@@ -16,22 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="highlight-box mdm-search-filters">
+<div class="mdm-search-filters">
   <div class="mdm-search-filters__header">
     <h3>Filters</h3>
   </div>
   <div>
     <div class="mdm-search-filters__section">
-      <h4>Domain Type</h4>
-      <div>
+        <mat-label>Domain Type</mat-label>
         <mat-select (selectionChange)="onDomainTypeChange($event)" multiple placeholder="Domain Types" class="form-control" [(ngModel)]="domainTypes">
           <mat-option *ngFor="let domainType of domainTypesFilter" [value]="domainType.domainType">
                 {{domainType.name}}</mat-option>
         </mat-select>
     </div>
-    </div>
     <div class="mdm-search-filters__section">
-      <h4>Matching</h4>
+      <mat-label>Matching</mat-label>
       <ul>
         <li>
           <mat-checkbox
@@ -52,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
       </ul>
     </div>   
     <div class="mdm-search-filters__section">
-      <h4>Dates</h4>
+      <mat-label>Dates</mat-label>
       <mat-form-field appearance="fill">
         <mat-label>Updated After</mat-label>
         <input matInput [matDatepicker]="lastUpdatedAfter" (dateChange)="onDateChange('lastUpdatedAfter', $event)" [value]="lastUpdatedAfterFilter.value">
@@ -87,13 +85,11 @@ SPDX-License-Identifier: Apache-2.0
       </mat-form-field>            
     </div>
     <div class="mdm-search-filters__section" *ngIf="isReady">
-    <h4>Classifiers</h4>
-    <div>
+    <mat-label>Classifiers</mat-label>
         <mat-select (selectionChange)="onClassifiersChange($event)" multiple placeholder="Classifiers" class="form-control" [(ngModel)]="classifiers">
           <mat-option *ngFor="let classifier of classifiersFilter" [value]="classifier.label">
                 {{classifier.label}}</mat-option>
         </mat-select>
-    </div>
   </div>
     <div class="mdm-search-filters__footer">
       <button *ngIf="hasValues" mat-flat-button color="primary" (click)="clearAll()">

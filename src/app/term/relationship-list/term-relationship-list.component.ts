@@ -30,7 +30,8 @@ import {
   TermDetail,
   TerminologyDetail,
   TermRelationship,
-  TermRelationshipType
+  TermRelationshipType,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
@@ -67,6 +68,23 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     private editing: EditingService
   ) {}
 
+  get relationships() {
+    return this._relationships.value;
+  }
+
+  set relationships(relationships: TermRelationship[]) {
+    this._relationships.next(relationships);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  get relationshipTypes() {
+    return this._relationshipTypes.value;
+  }
+
+  set relationshipTypes(relationshipTypes: TermRelationshipType[]) {
+    this._relationshipTypes.next(relationshipTypes);
+  }
+
   ngOnInit() {}
 
   ngOnChanges(changes) {
@@ -78,7 +96,7 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   fetchRelationships() {
     if (this.term) {
       this.resources.term
-        .termRelationships(this.term.terminology.id, this.term.id, {
+        .termRelationships(this.term.terminology.id as Uuid, this.term.id, {
           sort: 'label',
           order: 'asc'
         })
@@ -108,22 +126,6 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     }
   }
 
-  get relationships() {
-    return this._relationships.value;
-  }
-
-  set relationships(relationships: TermRelationship[]) {
-    this._relationships.next(relationships);
-  }
-
-  get relationshipTypes() {
-    return this._relationshipTypes.value;
-  }
-
-  set relationshipTypes(relationshipTypes: TermRelationshipType[]) {
-    this._relationshipTypes.next(relationshipTypes);
-  }
-
   filterByRelationshipType(relationshipType: TermRelationshipType) {
     return this.relationships
       .filter((r) => r.relationshipType.id === relationshipType.id)
@@ -143,7 +145,7 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   deleteRelationship(termRelationship: TermRelationship) {
     this.resources.terms
       .removeTermRelationship(
-        this.term.terminology.id,
+        this.term.terminology.id as Uuid,
         termRelationship.sourceTerm.id,
         termRelationship.id
       )
@@ -155,7 +157,10 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   openAddRelationshipDialog(): void {
     this.editing
       .openDialog(CreateTermRelationshipDialogComponent, {
-        data: new CreateTermRelationshipForm(this.term.terminology, this.term)
+        data: new CreateTermRelationshipForm(
+          this.term.terminology as TerminologyDetail,
+          this.term
+        )
       })
       .afterClosed()
       .subscribe((data) => {

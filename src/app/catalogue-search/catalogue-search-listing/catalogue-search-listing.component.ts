@@ -118,7 +118,6 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onFilterChanged(event: SearchFilterChange) {
-    console.log(event);
     this.parameters[event.name] = event.value;
     this.updateSearch();
   }

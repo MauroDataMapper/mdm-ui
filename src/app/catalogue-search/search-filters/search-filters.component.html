@@ -23,17 +23,12 @@ SPDX-License-Identifier: Apache-2.0
   <div>
     <div class="mdm-search-filters__section">
       <h4>Domain Type</h4>
-      <ul>
-        <li *ngFor="let domainType of allDomainTypes">
-          <mat-checkbox
-            color="primary"
-            [checked]="domainType.checked"
-            [value]="domainType.domainType"
-            (change)="onDomainTypeChange($event, domainType)"
-            >{{ domainType.name }}
-          </mat-checkbox>
-        </li>
-      </ul>
+      <div>
+        <mat-select (selectionChange)="onDomainTypeChange($event)" multiple placeholder="Domain Types" class="form-control" [(ngModel)]="domainTypes">
+          <mat-option *ngFor="let domainType of domainTypesFilter" [value]="domainType.domainType">
+                {{domainType.name}}</mat-option>
+        </mat-select>
+    </div>
     </div>
     <div class="mdm-search-filters__section">
       <h4>Matching</h4>

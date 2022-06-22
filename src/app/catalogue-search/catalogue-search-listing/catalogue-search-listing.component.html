@@ -47,7 +47,10 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div *ngIf="status === 'ready'">
     <div class="row">
-      <div class="col">
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-9">
         <div class="mdm-search-listing__sort-row">
           <div class="vertically-aligned">
             {{ resultSet?.totalResults }} results found
@@ -97,10 +100,10 @@ SPDX-License-Identifier: Apache-2.0
             </ul>
           </mdm-alert>
         </div>
+        <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':resultSet?.totalResults < resultSet?.pageSize}">
+          <mdm-paginator [length]="resultSet?.totalResults" [pageIndex]="resultSet?.page" [pageSize]="resultSet?.pageSize" (page)="onPageChange($event)" showFirstLastButtons> </mdm-paginator>
+        </div>
       </div>
-    </div>
-    <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':resultSet?.totalResults < resultSet?.pageSize}">
-      <mdm-paginator [length]="resultSet?.totalResults" [pageIndex]="resultSet?.page" [pageSize]="resultSet?.pageSize" (page)="onPageChange($event)" showFirstLastButtons> </mdm-paginator>
     </div>
   </div>
 </div>

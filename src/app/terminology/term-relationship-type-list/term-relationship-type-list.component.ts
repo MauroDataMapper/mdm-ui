@@ -30,8 +30,10 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import {
+  FilterQueryParameters,
   TerminologyDetail,
   TermRelationshipType,
+  TermRelationshipTypeDetailResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -97,7 +99,9 @@ export class TermRelationshipTypeListComponent
     if (changes.terminology) {
       if (this.relationshipTypes && this.terminology) {
         // Update action functions when terminology changed
-        this.relationshipTypes.fetchFunction = (options) =>
+        this.relationshipTypes.fetchFunction = (
+          options: FilterQueryParameters
+        ) =>
           this.resources.termRelationshipTypes.list(
             this.terminology.id,
             options
@@ -176,7 +180,7 @@ export class TermRelationshipTypeListComponent
     if (this.canEdit) {
       this.resources.termRelationshipTypes
         .get(this.terminology.id, termRelationshipType.id)
-        .subscribe((trt) => {
+        .subscribe((trt: TermRelationshipTypeDetailResponse) => {
           this.editing
             .openDialog(CreateTermRelationshipTypeDialogComponent, {
               data: new CreateTermRelationshipTypeForm(

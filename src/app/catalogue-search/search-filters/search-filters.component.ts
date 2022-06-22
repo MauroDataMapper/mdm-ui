@@ -196,8 +196,8 @@ export class SearchFiltersComponent implements OnInit {
   }
 
   onDateClear(name: string) {
-    this.filterChange.emit({ name: name, value: null });
-  }  
+    this.filterChange.emit({ name, value: null });
+  }
 
   onClassifiersChange(event: MatSelectChange) {
     this.filterChange.emit({ name: 'classifiers', value: event.value });

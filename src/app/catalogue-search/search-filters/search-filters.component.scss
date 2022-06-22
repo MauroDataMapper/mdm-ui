@@ -23,6 +23,18 @@ ul {
   padding-right: 0;
 }
 
+.mat-datepicker-input {
+  width: 85%;
+}
+
+mat-icon {
+  position: relative;
+  float: right;
+  top: -8px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.54);
+}
+
 /*$search-filters-heading-background-color: $color-mauro-dark-green;
 $search-filters-heading-color: $color-white;
 $search-filters-header-padding: 0.2em 1.2em;

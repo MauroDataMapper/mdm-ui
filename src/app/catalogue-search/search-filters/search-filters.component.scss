@@ -16,50 +16,54 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-ul {
-  list-style-type: none;
-  margin-top: 4px;
-  padding-left: 0;
-  padding-right: 0;
+@use '~@angular/material' as mat;
+
+@mixin mdm-search-filters-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  $search-filters-heading-background-color: mat.get-color-from-palette($primary);
+  $search-filters-heading-color: mat.get-color-from-palette(
+    $primary,
+    '500-contrast'
+  );
+
+  .mdm-search-filters {
+    &__header {
+      border-radius: 2px;
+      background-color: $search-filters-heading-background-color;
+      color: $search-filters-heading-color;
+  
+      h3 {
+        font-weight: 500;
+        padding-left: 4px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        vertical-align: middle;
+      }
+    }
+  
+    &__section {
+      margin-top: 1em;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-top: 4px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .mat-datepicker-input {
+      width: 85%;
+    }
+    
+    mat-icon {
+      position: relative;
+      float: right;
+      top: -8px;
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.54);
+    }
+  }
 }
-
-/*$search-filters-heading-background-color: $color-mauro-dark-green;
-$search-filters-heading-color: $color-white;
-$search-filters-header-padding: 0.2em 1.2em;
-
-$search-filters-content-color: $color-mauro-light-gold;
-$search-filters-content-padding: 1.2em 1.2em;
-
-$search-filters-border-radius: 4px;
-
-$search-filters-clear-button-width: 40px;
-
-.mdm-search-filters {
-  &__header {
-    border-radius: $search-filters-border-radius;
-    padding: $search-filters-header-padding;
-    background-color: $search-filters-heading-background-color;
-    color: $search-filters-heading-color;
-
-    h3 {
-      font-weight: 500;
-      margin: 0.2em 0.635em;
-      vertical-align: middle;
-    }
-  }
-
-  &__controls {
-    border-radius: $search-filters-border-radius;
-    padding: $search-filters-content-padding;
-    background-color: $search-filters-content-color;
-
-    .mat-form-field {
-      // Input field should take up remaining width of container. Assumes we know the exact width of the clear button though
-      width: calc(100% - $search-filters-clear-button-width);
-    }
-  }
-
-  &__footer {
-    text-align: right;
-  }
-}*/

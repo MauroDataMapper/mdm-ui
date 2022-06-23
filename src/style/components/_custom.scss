@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
 @import '../../app//shared/models/models.component.scss';
 @import '../../app/shared/alert/alert.component.scss';
 @import '../../app/catalogue-search/catalogue-item-search-result/catalogue-item-search-result.component.scss';
+@import '../../app/catalogue-search/search-filters/search-filters.component.scss';
 
 /* Combine all custom component theme mixins into one */
 @mixin mdm-custom-components-theme($theme) {
@@ -31,4 +32,5 @@ SPDX-License-Identifier: Apache-2.0
   @include mdm-models-tree-theme($theme);
   @include mdm-alert-theme($theme);
   @include mdm-catalogue-item-search-result-theme($theme);
+  @include mdm-search-filters-theme($theme);
 }

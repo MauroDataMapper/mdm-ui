@@ -132,7 +132,7 @@ export const mapStateParamsToSearchParameters = (
     order: query?.order ?? undefined,
     pageSize: query?.pageSize ?? undefined,
     domainTypes,
-    labelOnly: query?.labelOnly === 'true' ? true : undefined,
+    labelOnly: query?.labelOnly === 'false' ? false : true,
     exactMatch: query?.exactMatch === 'true' ? true : undefined,
     lastUpdatedAfter: query?.lastUpdatedAfter ?? undefined,
     lastUpdatedBefore: query?.lastUpdatedBefore ?? undefined,

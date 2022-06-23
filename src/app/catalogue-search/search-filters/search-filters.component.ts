@@ -39,7 +39,6 @@ export interface SearchFilterChange {
 export interface SearchFilterDomainType {
   name: string;
   domainType: string;
-  checked: boolean;
 }
 
 export interface SearchFilterCheckbox {
@@ -82,12 +81,12 @@ export class SearchFiltersComponent implements OnInit {
 
   @Output() filterReset = new EventEmitter<void>();
 
-  allDomainTypes: SearchFilterDomainType[] = [
-    {name: 'Data Model', domainType: 'DataModel', checked: false},
-    {name: 'Data Class', domainType: 'DataClass', checked: false},
-    {name: 'Data Element', domainType: 'DataElement', checked: false},
-    {name: 'Data Type', domainType: 'DataType', checked: false},
-    {name: 'Enumeration Value', domainType: 'EnumerationValue', checked: false},
+  domainTypesFilter: SearchFilterDomainType[] = [
+    {name: 'Data Model', domainType: 'DataModel'},
+    {name: 'Data Class', domainType: 'DataClass'},
+    {name: 'Data Element', domainType: 'DataElement'},
+    {name: 'Data Type', domainType: 'DataType'},
+    {name: 'Enumeration Value', domainType: 'EnumerationValue'},
   ];
 
   labelOnlyFilter: SearchFilterCheckbox = {
@@ -137,9 +136,6 @@ export class SearchFiltersComponent implements OnInit {
       this.isReady = true;
     });
 
-    // For each domain type option, set checked to true if that domain type appeared in the search parameters
-    this.allDomainTypes.forEach((domainType) => domainType.checked = this.domainTypes.indexOf(domainType.domainType) > -1);
-
     this.labelOnlyFilter.checked = this.labelOnly;
 
     this.exactMatchFilter.checked = this.exactMatch;
@@ -165,23 +161,12 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name });
   }
 
-  clearAll() {
+  resetAll() {
     this.filterReset.emit();
   }
 
-  onDomainTypeChange(event: MatCheckboxChange, changedDomainType: SearchFilterDomainType) {
-    // Determine the checked state of each of the options
-    this.allDomainTypes.forEach((domainType) => {
-      if (domainType.domainType === changedDomainType.domainType) {
-        domainType.checked = event.checked;
-      }
-    });
-
-    // Make a string array containing only the 'domainType' properties of those selected
-    const checked = this.allDomainTypes.filter( p => p.checked).map(p => p.domainType);
-
-    // And emit that list
-    this.filterChange.emit({ name: 'domainTypes', value: checked });
+  onDomainTypeChange(event: MatSelectChange) {
+    this.filterChange.emit({ name: 'domainTypes', value: event.value });
   }
 
   onLabelOnlyChange(event: MatCheckboxChange,) {
@@ -208,6 +193,10 @@ export class SearchFiltersComponent implements OnInit {
       formatted = `${yyyy}-${mm}-${dd}`;
     }
     this.filterChange.emit({ name, value: formatted});
+  }
+
+  onDateClear(name: string) {
+    this.filterChange.emit({ name, value: null });
   }
 
   onClassifiersChange(event: MatSelectChange) {

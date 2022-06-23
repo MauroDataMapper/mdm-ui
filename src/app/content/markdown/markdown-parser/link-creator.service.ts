@@ -17,18 +17,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LinkCreatorService {
+  constructor(private elementTypes: ElementTypesService) {}
 
-  constructor(private elementTypes: ElementTypesService, private broadcastSvc: BroadcastService) { }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public createLink(href, title, text) {
+  public createLink(href: string): string {
     href = href.split('^').join(' ');
 
     let elementType = '';
@@ -41,7 +38,7 @@ export class LinkCreatorService {
     // let dataElementName = '';
     let terminologyName = '';
     // let codeSetName = '';
-    elements.forEach(item => {
+    elements.forEach((item) => {
       const itmElements = item.split(':');
       if (elements.indexOf(item) === elements.length - 1) {
         elementType = itmElements[0];
@@ -140,7 +137,7 @@ export class LinkCreatorService {
       return this.elementTypes.getLinkUrl(mcElement);
     }
 
-    if (elementType === 'http' || elementType ==='mailto') {
+    if (elementType === 'http' || elementType === 'mailto') {
       return href;
     }
   }

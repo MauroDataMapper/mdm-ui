@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { Navigatable } from '@maurodatamapper/mdm-resources';
 import {
   CatalogueItemDomainType,
   MdmResponse,
@@ -545,7 +546,9 @@ export class ElementTypesService {
    * @param element Catalogue element containing the information requried to produce a named link.
    * @returns An observable to subscribe to which will return the named link to the element.
    */
-  getNamedLinkIdentifier(element): Observable<string> {
+  getNamedLinkIdentifier(
+    element: Modelable & Navigatable & { [key: string]: any }
+  ): Observable<string> {
     const baseTypes = this.getTypes();
 
     const dataTypeNames = this.getTypesForBaseTypeArray('DataType').map(
@@ -592,7 +595,7 @@ export class ElementTypesService {
     }
 
     if (
-      element.domainType === 'DataType' ||
+      (element.domainType as string) === 'DataType' ||
       dataTypeNames.includes(element.element?.domainType)
     ) {
       let isHierarchical = false;

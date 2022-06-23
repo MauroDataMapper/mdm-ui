@@ -73,9 +73,12 @@ SPDX-License-Identifier: Apache-2.0
     [dataSource]="records"
     class="mdm--mat-table mat-elevation-z3 table-striped"
   >
+    <<<<<<< HEAD
     <caption>
       Metadata
     </caption>
+    ======= >>>>>>> 843b5bdf (gh-418 Add autocomplete style search to content
+    editors)
     <ng-container matColumnDef="namespace">
       <th
         mat-header-cell
@@ -207,6 +210,7 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-content-editor
               [(content)]="record.edit.value"
               [inEditMode]="true"
+              [rootElement]="parent"
               [markdownOptions]="{ showHelpText: false }"
               [htmlOptions]="{ useBasicButtons: true }"
             >
@@ -271,6 +275,7 @@ SPDX-License-Identifier: Apache-2.0
           [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
         ></ngx-skeleton-loader>
       </th>
+      <th></th>
     </tr>
     <tr>
       <td>

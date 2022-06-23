@@ -21,9 +21,9 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import * as marked from 'marked';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
-import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
-import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
+import { CustomTokenizerService } from './custom-tokenizer.service';
+import { CustomHtmlRendererService } from './custom-html-renderer.service';
+import { CustomTextRendererService } from './custom-text-renderer.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -31,19 +31,21 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MarkdownParserService {
-
-  constructor(private elementTypes: ElementTypesService,
+  constructor(
+    private elementTypes: ElementTypesService,
     private tokenizer: CustomTokenizerService,
     private customHtmlRendererService: CustomHtmlRendererService,
     private customTextRendererService: CustomTextRendererService,
     private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService) {
-  }
+    private broadcastSvc: BroadcastService
+  ) {}
 
-  public parse(source: string, renderType : string) {
-
+  public parse(source: string, renderType: string) {
     // Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
-     source = source?.replace(/\[([^\]]+)\]\(([^\)]+)\)/gm, ($0, $1, $2) => `[${$1}](${$2.replace(/\s/gm, '^')})`);
+    source = source?.replace(
+      /\[([^\]]+)\]\(([^\)]+)\)/gm,
+      ($0, $1, $2) => `[${$1}](${$2.replace(/\s/gm, '^')})`
+    );
 
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {
@@ -54,20 +56,22 @@ export class MarkdownParserService {
     marked.marked.setOptions({
       renderer,
       gfm: true,
-      breaks: true,
+      breaks: true
     });
 
     if (source) {
-       source = marked.marked(source);
-       source = source?.replace('\\r\\n','');
+      source = marked.marked(source);
+      source = source?.replace('\\r\\n', '');
       return source;
     }
   }
 
   public createMarkdownLink(element): Observable<string> {
-    const dataTypeNames = this.elementTypes.getTypesForBaseTypeArray('DataType').map((dt) => {
-      return dt.id;
-    });
+    const dataTypeNames = this.elementTypes
+      .getTypesForBaseTypeArray('DataType')
+      .map((dt) => {
+        return dt.id;
+      });
 
     let parentId = null;
     if (element.domainType === 'DataClass') {
@@ -77,27 +81,32 @@ export class MarkdownParserService {
       parentId = element.breadcrumbs[0].id;
     }
 
-    return this.elementTypes.getNamedLinkIdentifier(element)
-      .pipe(
-        map(namedLink => {
-          if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
-            if (!parentId) {
-              return `[${element.element.label}](${namedLink})`;
-            } else {
-              return `[${element.label}](${namedLink})`;
-            }
+    return this.elementTypes.getNamedLinkIdentifier(element).pipe(
+      map((namedLink) => {
+        if (
+          element.domainType === 'DataType' ||
+          dataTypeNames.includes(element.element?.domainType)
+        ) {
+          if (!parentId) {
+            return `[${element.element.label}](${namedLink})`;
+          } else {
+            return `[${element.label}](${namedLink})`;
           }
+        }
 
-          if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
-            if (!parentId) {
-              return `[${element.element.label}](${namedLink})`;
-            }
-            else {
-              return `[${element.label}](${namedLink})`;
-            }
+        if (
+          element.domainType === 'DataElement' ||
+          element.element?.domainType === 'DataElement'
+        ) {
+          if (!parentId) {
+            return `[${element.element.label}](${namedLink})`;
+          } else {
+            return `[${element.label}](${namedLink})`;
           }
+        }
 
-          return `[${element.label}](${namedLink})`;
-        }));
+        return `[${element.label}](${namedLink})`;
+      })
+    );
   }
 }

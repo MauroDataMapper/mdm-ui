@@ -36,7 +36,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new/group-access-new.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
@@ -52,11 +51,6 @@ import { PathNameComponent } from './path-name/path-name.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
-import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
-import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { JoditAngularModule } from 'jodit-angular';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
@@ -74,7 +68,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     EnumerationCompareComponent,
     ErrorComponent,
     MdmPaginatorComponent,
-    SafePipe,
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
@@ -90,10 +83,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
     ElementIconComponent,
-    MarkdownTextAreaComponent,
-    MarkdownDirective,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
@@ -113,7 +102,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    JoditAngularModule,
     UIRouterModule
   ],
   exports: [
@@ -134,7 +122,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     MdmPaginatorComponent,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    SafePipe,
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
@@ -151,10 +138,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
     ElementIconComponent,
-    MarkdownTextAreaComponent,
-    MarkdownDirective,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,

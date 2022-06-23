@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
-import { MarkdownParserService } from '../utility/markdown/markdown-parser/markdown-parser.service';
+import { MarkdownParserService } from './markdown-parser/markdown-parser.service';
 
 @Directive({
   selector: '[mdmMarkdown]'
@@ -28,7 +28,9 @@ export class MarkdownDirective implements OnInit {
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('markdown')
   set markdown(markdown: string) {
-    if (this.markdownInternal === markdown) { return; }
+    if (this.markdownInternal === markdown) {
+      return;
+    }
 
     this.markdownInternal = markdown;
     this.renderMarkdown();
@@ -46,7 +48,6 @@ export class MarkdownDirective implements OnInit {
   ngOnInit(): void {
     this.renderMarkdown();
   }
-
 
   private renderMarkdown() {
     if (this.markdown) {

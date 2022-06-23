@@ -20,13 +20,26 @@ SPDX-License-Identifier: Apache-2.0
   <div class="mdm-search-filters__header">
     <h3>Filters</h3>
   </div>
+  <button mat-stroked-button color="primary" type="button" class="w-100" (click)="resetAll()">
+    Reset All
+  </button>
   <div>
     <div class="mdm-search-filters__section">
-        <mat-label>Domain Type</mat-label>
-        <mat-select (selectionChange)="onDomainTypeChange($event)" multiple placeholder="Domain Types" class="form-control" [(ngModel)]="domainTypes">
-          <mat-option *ngFor="let domainType of domainTypesFilter" [value]="domainType.domainType">
-                {{domainType.name}}</mat-option>
-        </mat-select>
+      <mat-label>Domain Type</mat-label>
+      <mat-select
+        (selectionChange)="onDomainTypeChange($event)"
+        multiple
+        placeholder="Domain Types"
+        class="form-control"
+        [(ngModel)]="domainTypes"
+      >
+        <mat-option
+          *ngFor="let domainType of domainTypesFilter"
+          [value]="domainType.domainType"
+        >
+          {{ domainType.name }}</mat-option
+        >
+      </mat-select>
     </div>
     <div class="mdm-search-filters__section">
       <mat-label>Matching</mat-label>
@@ -35,7 +48,8 @@ SPDX-License-Identifier: Apache-2.0
           <mat-checkbox
             color="primary"
             [checked]="labelOnlyFilter.checked"
-            (change)="onLabelOnlyChange($event)">
+            (change)="onLabelOnlyChange($event)"
+          >
             Label Only
           </mat-checkbox>
         </li>
@@ -43,58 +57,102 @@ SPDX-License-Identifier: Apache-2.0
           <mat-checkbox
             color="primary"
             [checked]="exactMatchFilter.checked"
-            (change)="onExactMatchChange($event)">
+            (change)="onExactMatchChange($event)"
+          >
             Exact Match
           </mat-checkbox>
-        </li>        
+        </li>
       </ul>
-    </div>   
+    </div>
     <div class="mdm-search-filters__section">
       <mat-label>Dates</mat-label>
-      <mat-form-field appearance="fill">
-        <mat-label>Updated After</mat-label>
-        <input matInput [matDatepicker]="lastUpdatedAfter" (dateChange)="onDateChange('lastUpdatedAfter', $event)" [value]="lastUpdatedAfterFilter.value">
-        <mat-icon matDatepickerToggleIcon (click)="onDateClear('lastUpdatedAfter')">clear</mat-icon>
-        <mat-datepicker-toggle matSuffix [for]="lastUpdatedAfter">
-        </mat-datepicker-toggle>
-        <mat-datepicker #lastUpdatedAfter></mat-datepicker>
-      </mat-form-field> 
-      <mat-form-field appearance="fill">
-        <mat-label>Updated Before</mat-label>
-        <input matInput [matDatepicker]="lastUpdatedBefore" (dateChange)="onDateChange('lastUpdatedBefore', $event)" [value]="lastUpdatedBeforeFilter.value">
-        <mat-icon matDatepickerToggleIcon (click)="onDateClear('lastUpdatedBefore')">clear</mat-icon>
-        <mat-datepicker-toggle matSuffix [for]="lastUpdatedBefore">
-        </mat-datepicker-toggle>
-        <mat-datepicker #lastUpdatedBefore></mat-datepicker>
-      </mat-form-field>   
-      <mat-form-field appearance="fill">
-        <mat-label>Created After</mat-label>
-        <input matInput [matDatepicker]="createdAfter" (dateChange)="onDateChange('createdAfter', $event)" [value]="createdAfterFilter.value">
-        <mat-icon matDatepickerToggleIcon (click)="onDateClear('createdAfter')">clear</mat-icon>
-        <mat-datepicker-toggle matSuffix [for]="createdAfter">
-        </mat-datepicker-toggle>
-        <mat-datepicker #createdAfter></mat-datepicker>
-      </mat-form-field> 
-      <mat-form-field appearance="fill">
-        <mat-label>Created Before</mat-label>
-        <input matInput [matDatepicker]="createdBefore" (dateChange)="onDateChange('createdBefore', $event)" [value]="createdBeforeFilter.value">
-        <mat-icon matDatepickerToggleIcon (click)="onDateClear('createdBefore')">clear</mat-icon>
-        <mat-datepicker-toggle matSuffix [for]="createdBefore">
-        </mat-datepicker-toggle>
-        <mat-datepicker #createdBefore></mat-datepicker>
-      </mat-form-field>            
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Updated After</mat-label>
+          <input
+            matInput
+            [matDatepicker]="lastUpdatedAfter"
+            (dateChange)="onDateChange('lastUpdatedAfter', $event)"
+            [value]="lastUpdatedAfterFilter.value"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('lastUpdatedAfter')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle matSuffix [for]="lastUpdatedAfter">
+          </mat-datepicker-toggle>
+          <mat-datepicker #lastUpdatedAfter></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Updated Before</mat-label>
+          <input
+            matInput
+            [matDatepicker]="lastUpdatedBefore"
+            (dateChange)="onDateChange('lastUpdatedBefore', $event)"
+            [value]="lastUpdatedBeforeFilter.value"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('lastUpdatedBefore')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle matSuffix [for]="lastUpdatedBefore">
+          </mat-datepicker-toggle>
+          <mat-datepicker #lastUpdatedBefore></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Created After</mat-label>
+          <input
+            matInput
+            [matDatepicker]="createdAfter"
+            (dateChange)="onDateChange('createdAfter', $event)"
+            [value]="createdAfterFilter.value"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('createdAfter')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle matSuffix [for]="createdAfter">
+          </mat-datepicker-toggle>
+          <mat-datepicker #createdAfter></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Created Before</mat-label>
+          <input
+            matInput
+            [matDatepicker]="createdBefore"
+            (dateChange)="onDateChange('createdBefore', $event)"
+            [value]="createdBeforeFilter.value"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('createdBefore')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle matSuffix [for]="createdBefore">
+          </mat-datepicker-toggle>
+          <mat-datepicker #createdBefore></mat-datepicker>
+        </mat-form-field>
+      </div>
     </div>
     <div class="mdm-search-filters__section" *ngIf="isReady">
-    <mat-label>Classifiers</mat-label>
-        <mat-select (selectionChange)="onClassifiersChange($event)" multiple placeholder="Classifiers" class="form-control" [(ngModel)]="classifiers">
-          <mat-option *ngFor="let classifier of classifiersFilter" [value]="classifier.label">
-                {{classifier.label}}</mat-option>
-        </mat-select>
-  </div>
-    <div class="mdm-search-filters__footer">
-      <button *ngIf="hasValues" mat-flat-button color="primary" (click)="clearAll()">
-        Clear all
-      </button>
+      <mat-label>Classifiers</mat-label>
+      <mat-select
+        (selectionChange)="onClassifiersChange($event)"
+        multiple
+        placeholder="Classifiers"
+        class="form-control"
+        [(ngModel)]="classifiers"
+      >
+        <mat-option
+          *ngFor="let classifier of classifiersFilter"
+          [value]="classifier.label"
+        >
+          {{ classifier.label }}</mat-option
+        >
+      </mat-select>
     </div>
   </div>
 </div>

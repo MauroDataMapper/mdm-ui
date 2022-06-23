@@ -161,7 +161,7 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name });
   }
 
-  clearAll() {
+  resetAll() {
     this.filterReset.emit();
   }
 

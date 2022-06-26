@@ -61,9 +61,12 @@ SPDX-License-Identifier: Apache-2.0
     mat-icon {
       position: relative;
       float: right;
-      top: -8px;
       cursor: pointer;
-      color: rgba(0, 0, 0, 0.54);
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    mat-icon.clear-date {
+      top: -8px;
     }
   }
 }

@@ -49,6 +49,8 @@ import { MarkupDisplayModalComponent } from './markup-display-modal/markup-displ
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 import { ChangeBranchNameModalComponent } from './change-branch-name-modal/change-branch-name-modal.component';
+import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 
 const defaultAceConfig: AceConfigInterface = {
 };
@@ -67,7 +69,8 @@ const defaultAceConfig: AceConfigInterface = {
     SharedModule,
     AceModule,
     CatalogueModule,
-    PipesModule
+    PipesModule,
+    FoldersTreeModule,
   ],
   declarations: [
     RegisterModalComponent,
@@ -91,7 +94,8 @@ const defaultAceConfig: AceConfigInterface = {
     ApiKeysModalComponent,
     MarkupDisplayModalComponent,
     DefaultProfileEditorModalComponent,
-    ChangeBranchNameModalComponent
+    ChangeBranchNameModalComponent,
+    CatalogueItemSelectModalComponent,
   ],
   providers: [
     ModalService,

@@ -31,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SecurityHandlerService } from '@mdm/services';
 import { empty } from 'rxjs';
 import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
+import { ComponentSelectorRule } from 'codelyzer';
 
 interface SecurityHandlerServiceStub {
   isLoggedIn: jest.Mock;

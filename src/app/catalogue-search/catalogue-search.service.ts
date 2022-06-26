@@ -51,7 +51,7 @@ export class CatalogueSearchService {
     return this.searchCatalogue(query).pipe(
       map((searchResults) => {
         return {
-          totalResults: searchResults.count,
+          count: searchResults.count,
           pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
           page,
           items: searchResults.items

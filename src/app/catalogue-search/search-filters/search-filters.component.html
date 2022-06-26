@@ -29,6 +29,17 @@ SPDX-License-Identifier: Apache-2.0
   >
     Reset All
   </button>
+  <div class="mdm-search-filters__section">
+  <div class="input-group mb-3">
+    <button type="button" class="form-control" aria-label="Choose a catalogue item" (click)="openCatalogueItemSelectModal()">{{ context ? context.label : 'Choose a catalogue item'}}</button>
+    <div class="input-group-append">
+      <span class="input-group-text"><mat-icon
+        (click)="onContextClear()"
+        >clear</mat-icon
+      ></span>
+    </div>
+  </div>  
+  </div>
   <div>
     <div class="mdm-search-filters__section">
       <mat-label>Domain Type</mat-label>
@@ -81,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
             (dateChange)="onDateChange('lastUpdatedAfter', $event)"
             [value]="lastUpdatedAfterFilter.value"
           />
-          <mat-icon
+          <mat-icon class="clear-date"
             matDatepickerToggleIcon
             (click)="onDateClear('lastUpdatedAfter')"
             >clear</mat-icon
@@ -98,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0
             (dateChange)="onDateChange('lastUpdatedBefore', $event)"
             [value]="lastUpdatedBeforeFilter.value"
           />
-          <mat-icon
+          <mat-icon class="clear-date"
             matDatepickerToggleIcon
             (click)="onDateClear('lastUpdatedBefore')"
             >clear</mat-icon
@@ -115,7 +126,7 @@ SPDX-License-Identifier: Apache-2.0
             (dateChange)="onDateChange('createdAfter', $event)"
             [value]="createdAfterFilter.value"
           />
-          <mat-icon
+          <mat-icon class="clear-date"
             matDatepickerToggleIcon
             (click)="onDateClear('createdAfter')"
             >clear</mat-icon
@@ -132,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0
             (dateChange)="onDateChange('createdBefore', $event)"
             [value]="createdBeforeFilter.value"
           />
-          <mat-icon
+          <mat-icon class="clear-date"
             matDatepickerToggleIcon
             (click)="onDateClear('createdBefore')"
             >clear</mat-icon

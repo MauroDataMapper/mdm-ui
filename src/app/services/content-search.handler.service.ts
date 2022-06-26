@@ -23,6 +23,13 @@ import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 
+export interface SearchContext {
+  domainType: string;
+  id: string;
+  label: string;
+  dataModel?: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -30,7 +37,7 @@ export class ContentSearchHandlerService {
 
     constructor(public resources: MdmResourcesService, public validator: ValidatorService, public elementTypes: ElementTypesService) { }
 
-    search(contextElement, searchText, limit, offset,
+    search(contextElement: SearchContext, searchText, limit, offset,
            domainTypes, labelOnly, dataModelTypes,
            classifiers, classifierFilter,
            lastUpdatedAfter, lastUpdatedBefore, createdAfter, createdBefore): Observable<any> {

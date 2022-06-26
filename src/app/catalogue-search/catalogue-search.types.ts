@@ -30,6 +30,17 @@ export type CatalogueSearchFilters = {
  */
 export interface CatalogueSearchParameters {
   /**
+   * If provided, the domain type and ID of a context element i.e. the catalogue item within
+   * which searching should be restricted to. When the context element is a Data Class, we also need the
+   * owning Data Model Id.
+   */
+  contextDomainType?: string;
+  contextId?: string;
+  contextLabel?: string;
+  contextParentId?: string;
+  contextDataModelId?: string;
+
+  /**
    * If provided, provides the search terms for full text search.
    */
   search?: string;
@@ -126,6 +137,11 @@ export const mapStateParamsToSearchParameters = (
   }
 
   return {
+    contextDomainType: query?.contextDomainType ?? undefined,
+    contextId: query?.contextId ?? undefined,
+    contextLabel: query?.contextLabel ?? undefined,
+    contextParentId: query?.contextParentId ?? undefined,
+    contextDataModelId: query?.contextDataModelId ?? undefined,
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
@@ -146,6 +162,11 @@ export const mapSearchParametersToRawParams = (
   parameters: CatalogueSearchParameters
 ): RawParams => {
   return {
+    ...(parameters.contextDomainType && { search: parameters.contextDomainType }),
+    ...(parameters.contextId && { search: parameters.contextId }),
+    ...(parameters.contextParentId && { search: parameters.contextParentId }),
+    ...(parameters.contextLabel && { search: parameters.contextLabel }),
+    ...(parameters.contextDataModelId && { search: parameters.contextDataModelId }),
     ...(parameters.search && { search: parameters.search }),
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
@@ -163,7 +184,7 @@ export const mapSearchParametersToRawParams = (
 };
 
 export interface CatalogueSearchResultSet {
-  totalResults: number;
+  count: number;
   pageSize: number;
   page: number;
   items: CatalogueItemSearchResult[];

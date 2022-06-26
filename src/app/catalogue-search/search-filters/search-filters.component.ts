@@ -18,13 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectChange } from '@angular/material/select';
 import {
   Classifier,
   ClassifierIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemSelectModalComponent } from '@mdm/modals/catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { SearchContext } from '@mdm/services';
 
 export interface SearchFilterField {
   name: string;
@@ -32,6 +35,14 @@ export interface SearchFilterField {
   dataType: 'enumeration';
   allowedValues?: string[];
   currentValue?: string;
+}
+
+export interface SearchContextChange {
+  domainType?: string;
+  id?: string;
+  label?: string;
+  parent?: string;
+  dataModel?: string;
 }
 
 export interface SearchFilterChange {
@@ -62,6 +73,8 @@ export interface SearchFilterDate {
 export class SearchFiltersComponent implements OnInit {
   @Input() fields: SearchFilterField[] = [];
 
+  @Input() context: SearchContext = null;
+
   @Input() domainTypes: string[] = [];
 
   @Input() labelOnly = false;
@@ -79,6 +92,8 @@ export class SearchFiltersComponent implements OnInit {
   @Input() classifiers: string[] = [];
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
+
+  @Output() contextChange = new EventEmitter<SearchContextChange>();
 
   @Output() filterChange = new EventEmitter<SearchFilterChange>();
 
@@ -126,7 +141,10 @@ export class SearchFiltersComponent implements OnInit {
 
   isReady = false;
 
-  constructor(private resources: MdmResourcesService) {}
+  constructor(
+    private resources: MdmResourcesService,
+    public dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.resources.classifier
@@ -204,5 +222,26 @@ export class SearchFiltersComponent implements OnInit {
 
   onClassifiersChange(event: MatSelectChange) {
     this.filterChange.emit({ name: 'classifiers', value: event.value });
+  }
+
+  onContextClear() {
+    this.contextChange.emit(null);
+  }
+
+  openCatalogueItemSelectModal() {
+    this.dialog.open(CatalogueItemSelectModalComponent, { }).afterClosed().subscribe((catalogueItem) => {
+      if (catalogueItem) {
+        // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
+        this.contextChange.emit(
+          {
+            domainType: catalogueItem.domainType,
+            id: catalogueItem.id,
+            label: catalogueItem.label,
+            parent: catalogueItem.parentId ?? null,
+            dataModel: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
+          }
+        );
+      }
+    });
   }
 }

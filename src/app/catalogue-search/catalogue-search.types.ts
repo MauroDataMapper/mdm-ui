@@ -16,10 +16,31 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemSearchResult } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  CatalogueItemSearchResult,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { RawParams, StateParams } from '@uirouter/core';
 
 export type SortOrder = 'asc' | 'desc';
+
+/**
+ * These options must be of the form '{propertyToSortBy}-{order}' where propertyToSortBy
+ * can be any property on the objects you are sorting and order must be of type
+ * {@link SortOrder }
+ */
+export type SearchListingSortByOption = 'label-asc' | 'label-desc';
+
+export const getSortFromSortByOptionString = (sortBy: string) => {
+  return sortBy.split('-')[0];
+};
+
+export const getOrderFromSortByOptionString = (sortBy: string) => {
+  return sortBy.split('-')[1] as SortOrder;
+};
+
+export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
 export type CatalogueSearchFilters = {
   [key: string]: string | undefined;
@@ -29,7 +50,7 @@ export type CatalogueSearchFilters = {
  * Represents a single element within which a search should occur.
  */
 export interface CatalogueSearchContext {
-  domainType: string;
+  domainType: CatalogueItemDomainType;
   id: string;
   label: string;
   parentId?: string;
@@ -44,11 +65,12 @@ export interface CatalogueSearchParameters {
    * If provided, a search context element i.e. the catalogue item within
    * which searching should be restricted to.
    */
-   contextDomainType?: string;
-   contextId?: string;
-   contextLabel?: string;
-   contextParentId?: string;
-   contextDataModelId?: string;
+  context?: CatalogueSearchContext;
+  // contextDomainType?: CatalogueItemDomainType;
+  // contextId?: string;
+  // contextLabel?: string;
+  // contextParentId?: string;
+  // contextDataModelId?: string;
 
   /**
    * If provided, provides the search terms for full text search.
@@ -100,20 +122,20 @@ export interface CatalogueSearchParameters {
   /**
    * Optionally do an exact match on the search term
    */
-   exactMatch?: boolean;
+  exactMatch?: boolean;
 
-   /**
-    * Optionally filter on dates, as yyyy-MM-dd
-    */
-   lastUpdatedAfter?: string;
-   lastUpdatedBefore?: string;
-   createdAfter?: string;
-   createdBefore?: string;
+  /**
+   * Optionally filter on dates, as yyyy-MM-dd
+   */
+  lastUpdatedAfter?: string;
+  lastUpdatedBefore?: string;
+  createdAfter?: string;
+  createdBefore?: string;
 
-   /**
-    * AND matching on classifiers
-    */
-   classifiers?: string[];
+  /**
+   * AND matching on classifiers
+   */
+  classifiers?: string[];
 }
 
 /**
@@ -125,7 +147,6 @@ export interface CatalogueSearchParameters {
 export const mapStateParamsToSearchParameters = (
   query: StateParams
 ): CatalogueSearchParameters => {
-
   let domainTypes: string[] = [];
 
   let classifiers: string[] = [];
@@ -134,24 +155,34 @@ export const mapStateParamsToSearchParameters = (
   // separate &domainTypes query parameter. If there is exactly one of these parameters, then
   // it comes from the router as a string. If there is more than one then they come as an array.
   // Here we make sure that we always end up with an array.
-  if (typeof(query?.domainTypes) === 'string') {
+  if (typeof query?.domainTypes === 'string') {
     domainTypes = [query?.domainTypes];
   } else if (query?.domainTypes instanceof Array) {
     domainTypes = query?.domainTypes;
   }
 
-  if (typeof(query?.classifiers) === 'string') {
+  if (typeof query?.classifiers === 'string') {
     classifiers = [query?.classifiers];
   } else if (query?.classifiers instanceof Array) {
     classifiers = query?.classifiers;
   }
 
+  const hasContext = query?.contextDomainType && query?.contextId;
+  const context: CatalogueSearchContext = {
+    id: query?.contextId,
+    domainType: query?.contextDomainType,
+    label: query?.contextLabel,
+    parentId: query?.contextParentId,
+    dataModelId: query?.contextDataModelId
+  };
+
   return {
-    contextDomainType: query?.contextDomainType ?? undefined,
-    contextId: query?.contextId ?? undefined,
-    contextLabel: query?.contextLabel ?? undefined,
-    contextParentId: query?.contextParentId ?? undefined,
-    contextDataModelId: query?.contextDataModelId ?? undefined,
+    // contextDomainType: query?.contextDomainType ?? undefined,
+    // contextId: query?.contextId ?? undefined,
+    // contextLabel: query?.contextLabel ?? undefined,
+    // contextParentId: query?.contextParentId ?? undefined,
+    // contextDataModelId: query?.contextDataModelId ?? undefined,
+    ...(hasContext && context),
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
@@ -164,7 +195,7 @@ export const mapStateParamsToSearchParameters = (
     lastUpdatedBefore: query?.lastUpdatedBefore ?? undefined,
     createdAfter: query?.createdAfter ?? undefined,
     createdBefore: query?.createdBefore ?? undefined,
-    classifiers,
+    classifiers
   };
 };
 
@@ -172,11 +203,17 @@ export const mapSearchParametersToRawParams = (
   parameters: CatalogueSearchParameters
 ): RawParams => {
   return {
-    ...(parameters.contextDomainType && { search: parameters.contextDomainType }),
-    ...(parameters.contextId && { search: parameters.contextId }),
-    ...(parameters.contextParentId && { search: parameters.contextParentId }),
-    ...(parameters.contextLabel && { search: parameters.contextLabel }),
-    ...(parameters.contextDataModelId && { search: parameters.contextDataModelId }),
+    ...(parameters.context?.domainType && {
+      search: parameters.context.domainType
+    }),
+    ...(parameters.context?.id && { search: parameters.context.id }),
+    ...(parameters.context?.parentId && {
+      search: parameters.context.parentId
+    }),
+    ...(parameters.context?.label && { search: parameters.context.label }),
+    ...(parameters.context?.dataModelId && {
+      search: parameters.context.dataModelId
+    }),
     ...(parameters.search && { search: parameters.search }),
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
@@ -185,11 +222,17 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.domainTypes && { domainTypes: parameters.domainTypes }),
     ...(parameters.labelOnly && { labelOnly: parameters.labelOnly }),
     ...(parameters.exactMatch && { exactMatch: parameters.exactMatch }),
-    ...(parameters.lastUpdatedAfter && { lastUpdatedAfter: parameters.lastUpdatedAfter }),
-    ...(parameters.lastUpdatedBefore && { lastUpdatedBefore: parameters.lastUpdatedBefore }),
+    ...(parameters.lastUpdatedAfter && {
+      lastUpdatedAfter: parameters.lastUpdatedAfter
+    }),
+    ...(parameters.lastUpdatedBefore && {
+      lastUpdatedBefore: parameters.lastUpdatedBefore
+    }),
     ...(parameters.createdAfter && { createdAfter: parameters.createdAfter }),
-    ...(parameters.createdBefore && { createdBefore: parameters.createdBefore }),
-    ...(parameters.classifiers && { classifiers: parameters.classifiers }),
+    ...(parameters.createdBefore && {
+      createdBefore: parameters.createdBefore
+    }),
+    ...(parameters.classifiers && { classifiers: parameters.classifiers })
   };
 };
 

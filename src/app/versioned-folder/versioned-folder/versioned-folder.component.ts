@@ -16,20 +16,33 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  Uuid,
+  VersionedFolderDetail,
+  VersionedFolderDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { AnnotationViewOption, TabCollection, TabDescriptor } from '@mdm/model/ui.model';
+import {
+  AnnotationViewOption,
+  TabCollection,
+  TabDescriptor
+} from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, MessageService, SecurityHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  MessageService,
+  SecurityHandlerService,
+  SharedService,
+  StateHandlerService
+} from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY, Subject, Subscription } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -37,8 +50,9 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './versioned-folder.component.html',
   styleUrls: ['./versioned-folder.component.scss']
 })
-export class VersionedFolderComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class VersionedFolderComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   parentId: Uuid;
@@ -47,7 +61,6 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
   activeTab: TabDescriptor;
   access: Access;
 
-  showSearch = false;
   showExtraTabs = false;
 
   annotationsView: AnnotationViewOption = 'default';
@@ -55,10 +68,13 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
   isLoadingHistory = true;
   rulesItemCount = 0;
   isLoadingRules = true;
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
-
-  private subscriptions: Subscription[] = [];
-  private unsubscribe$ = new Subject<void>();
+  tabs = new TabCollection([
+    'search',
+    'description',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -68,9 +84,9 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) {
+    private editingService: EditingService
+  ) {
     super();
   }
 
@@ -89,28 +105,17 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     this.showExtraTabs = this.shared.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView);
+    const tabView: string = this.uiRouterGlobals.params.tabView;
+    this.activeTab = this.tabs.getByName(tabView ?? 'description');
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Versioned Folder');
 
     this.loadDetails(this.parentId);
-
-    this.subscriptions.push(
-      this.messages.changeSearch.subscribe((show: boolean) => {
-        this.showSearch = show;
-      }));
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   tabSelected(tab: TabDescriptor | number) {
@@ -118,7 +123,8 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     this.stateHandler.Go(
       'versionedFolder',
       { tabView: selected.name },
-      { notify: false });
+      { notify: false }
+    );
   }
 
   toggleShowSearch() {
@@ -135,15 +141,20 @@ export class VersionedFolderComponent extends BaseComponent implements OnInit, A
     });
 
     this.resources.versionedFolder
-      .update(this.detail.id,resource)
+      .update(this.detail.id, resource)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Versioned Folder.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe((response: VersionedFolderDetailResponse) => {
-        this.messageHandler.showSuccess('Versioned Folder updated successfully.');
+        this.messageHandler.showSuccess(
+          'Versioned Folder updated successfully.'
+        );
         this.detail = response.body;
         this.catalogueItem = response.body;
       });

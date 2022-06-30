@@ -48,10 +48,10 @@ export class CatalogueSearchService {
     const query: SearchQueryParameters = {
       ...this.getCommonQueryParameters(params),
       ...pageParams,
-      searchTerm: this.getSearchTerm(params),
+      searchTerm: this.getSearchTerm(params)
     };
 
-    return this.searchCatalogue(query).pipe(
+    return this.searchCatalogue(query, params.context).pipe(
       map((searchResults) => {
         return {
           count: searchResults.count,
@@ -63,74 +63,75 @@ export class CatalogueSearchService {
     );
   }
 
-   /**
-    * Search for catalogue items. If context is not null then search within that context (for example within a Folder
-    * or DataModel), otherwise search the whole catalogue.
-    *
-    * @param context A context (i.e. specific item) within which to search. Can be null.
-    * @param parameters
-    * @returns Observable<any>
-    */
-    contextualSearch(
-      context: CatalogueSearchContext,
-      parameters: CatalogueSearchParameters
-  ): Observable<any>    {
+  // /**
+  //  * Search for catalogue items. If context is not null then search within that context (for example within a Folder
+  //  * or DataModel), otherwise search the whole catalogue.
+  //  *
+  //  * @param context A context (i.e. specific item) within which to search. Can be null.
+  //  * @param parameters
+  //  * @returns Observable<any>
+  //  */
+  // contextualSearch(
+  //   context: CatalogueSearchContext,
+  //   parameters: CatalogueSearchParameters
+  // ): Observable<any> {
+  //   const searchQueryParameters: SearchQueryParameters = this.getSearchQueryParameters(
+  //     parameters
+  //   );
 
-      const searchQueryParameters: SearchQueryParameters = this.getSearchQueryParameters(parameters);
+  //   if (context == null) {
+  //     return this.searchCatalogue(searchQueryParameters).pipe(
+  //       map((searchResults) => {
+  //         return {
+  //           count: searchResults.count,
+  //           pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  //           page: parameters.page,
+  //           items: searchResults.items
+  //         };
+  //       })
+  //     );
+  //   } else {
+  //     return this.searchCatalogueItem(context, searchQueryParameters).pipe(
+  //       map((searchResults) => {
+  //         return {
+  //           count: searchResults.count,
+  //           pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  //           page: parameters.page,
+  //           items: searchResults.items
+  //         };
+  //       })
+  //     );
+  //   }
+  // }
 
-      if (context == null) {
-          return this.searchCatalogue(searchQueryParameters).pipe(
-            map((searchResults) => {
-              return {
-                count: searchResults.count,
-                pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-                page: parameters.page,
-                items: searchResults.items
-              };
-            })
-          );
-      } else {
-        return this.searchCatalogueItem(context, searchQueryParameters).pipe(
-          map((searchResults) => {
-            return {
-              count: searchResults.count,
-              pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-              page: parameters.page,
-              items: searchResults.items
-            };
-          })
-        );
-      }
+  /**
+   * Map CatalogueSearchParameters to SearchQueryParameters
+   *
+   * @param catalogueSearchParams
+   *
+   * @returns SearchQueryParameters
+   */
+  private getSearchQueryParameters(
+    catalogueSearchParams: CatalogueSearchParameters
+  ): SearchQueryParameters {
+    const params: SearchQueryParameters = {
+      searchTerm: this.getSearchTerm(catalogueSearchParams),
+      labelOnly: catalogueSearchParams.labelOnly,
+      lastUpdatedBefore: catalogueSearchParams.lastUpdatedBefore,
+      lastUpdatedAfter: catalogueSearchParams.lastUpdatedAfter,
+      createdAfter: catalogueSearchParams.createdAfter,
+      createdBefore: catalogueSearchParams.createdBefore,
+      domainTypes: catalogueSearchParams.domainTypes,
+      dataModelTypes: [],
+      classifiers: catalogueSearchParams.classifiers,
+      sort: catalogueSearchParams.sort,
+      order: catalogueSearchParams.order,
+      max: catalogueSearchParams.pageSize,
+      offset: (catalogueSearchParams.page ?? 1) * catalogueSearchParams.pageSize
+    };
+
+    return params;
   }
-
-
-
-/**
- * Map CatalogueSearchParameters to SearchQueryParameters
- *
- * @param catalogueSearchParams
- *
- * @returns SearchQueryParameters
- */
- private getSearchQueryParameters(catalogueSearchParams: CatalogueSearchParameters): SearchQueryParameters {
-  const params: SearchQueryParameters = {
-    searchTerm: this.getSearchTerm(catalogueSearchParams),
-    labelOnly: catalogueSearchParams.labelOnly,
-    lastUpdatedBefore: catalogueSearchParams.lastUpdatedBefore,
-    lastUpdatedAfter: catalogueSearchParams.lastUpdatedAfter,
-    createdAfter: catalogueSearchParams.createdAfter,
-    createdBefore: catalogueSearchParams.createdBefore,
-    domainTypes: catalogueSearchParams.domainTypes,
-    dataModelTypes: [],
-    classifiers: catalogueSearchParams.classifiers,
-    sort: catalogueSearchParams.sort,
-    order: catalogueSearchParams.order,
-    max: catalogueSearchParams.pageSize,
-    offset: (catalogueSearchParams.page ?? 1) * catalogueSearchParams.pageSize
-  };
-
-  return params;
- }
 
   /**
    * If the exactMatch parameter is set then wrap then enclose the search term in quotes, if it
@@ -140,9 +141,7 @@ export class CatalogueSearchService {
    *
    * @returns string The search term in quotes
    */
-  private getSearchTerm(
-    params: CatalogueSearchParameters
-  ): string {
+  private getSearchTerm(params: CatalogueSearchParameters): string {
     let search = params.search;
     if (params.exactMatch) {
       if (search[0] !== '"') {
@@ -178,7 +177,7 @@ export class CatalogueSearchService {
       lastUpdatedBefore: params.lastUpdatedBefore,
       createdAfter: params.createdAfter,
       createdBefore: params.createdBefore,
-      classifiers: params.classifiers,
+      classifiers: params.classifiers
     };
   }
 
@@ -189,71 +188,83 @@ export class CatalogueSearchService {
    * @returns
    */
   private searchCatalogue(
-    query: SearchQueryParameters
+    query: SearchQueryParameters,
+    context?: CatalogueSearchContext
   ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
+    if (context) {
+      if (context.domainType === CatalogueItemDomainType.DataClass) {
+        // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
+        return this.resources.dataClass
+          .search(context.dataModelId, context.id, query)
+          .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+      }
+
+      return this.resources
+        .getSearchableResource(context.domainType)
+        .search(context.id, query)
+        .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+    }
+
     return this.resources.catalogueItem
       .search(query)
       .pipe(map((response: CatalogueItemSearchResponse) => response.body));
   }
 
-  /**
-   * Search within a specific catalogute item (the context)
-   *
-   * @param context
-   * @param query
-   * @returns
-   */
-  private searchCatalogueItem(
-    context: CatalogueSearchContext,
-    query: SearchQueryParameters
-  ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
+  // /**
+  //  * Search within a specific catalogute item (the context)
+  //  *
+  //  * @param context
+  //  * @param query
+  //  * @returns
+  //  */
+  // private searchCatalogueItem(
+  //   context: CatalogueSearchContext,
+  //   query: SearchQueryParameters
+  // ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
+  //   // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
+  //   if (context.domainType === CatalogueItemDomainType.DataClass) {
+  //     const resource = this.resources.dataClass;
 
-    // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
-    if (context.domainType === CatalogueItemDomainType.DataClass) {
-      const resource = this.resources.dataClass;
+  //     return resource
+  //       .search(context.dataModelId, context.id, query)
+  //       .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+  //   } else {
+  //     const resource: SearchableItemResource = this.getSearchableItemResource(
+  //       context.domainType
+  //     );
 
-      return resource.search(
-        context.dataModelId,
-        context.id,
-        query
-      ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
-    } else {
-      const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
+  //     if (resource == null) {
+  //       return throwError('No searchable resource');
+  //     } else {
+  //       return resource
+  //         .search(context.id, query)
+  //         .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+  //     }
+  //   }
+  // }
 
-      if (resource == null) {
-        return throwError('No searchable resource');
-      } else {
-        return resource.search(
-          context.id,
-          query
-        ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
-      }
-    }
-  }
+  // private getSearchableItemResource(domain: string): SearchableItemResource {
+  //   switch (domain) {
+  //     case CatalogueItemDomainType.Folder:
+  //       return this.resources.folder;
 
-  private getSearchableItemResource(domain: string): SearchableItemResource
-  {
-    switch (domain) {
-      case CatalogueItemDomainType.Folder:
-        return this.resources.folder;
+  //     case CatalogueItemDomainType.DataModel:
+  //       return this.resources.dataModel;
 
-      case CatalogueItemDomainType.DataModel:
-        return this.resources.dataModel;
+  //     case CatalogueItemDomainType.Terminology:
+  //       return this.resources.terminology;
 
-      case CatalogueItemDomainType.Terminology:
-        return this.resources.terminology;
+  //     case CatalogueItemDomainType.CodeSet:
+  //       return this.resources.codeSet;
 
-      case CatalogueItemDomainType.CodeSet:
-        return this.resources.codeSet;
+  //     case CatalogueItemDomainType.ReferenceDataModel:
+  //       return this.resources.referenceDataModel;
 
-      case CatalogueItemDomainType.ReferenceDataModel:
-        return this.resources.referenceDataModel;
+  //     case CatalogueItemDomainType.VersionedFolder:
+  //       return this.resources.versionedFolder;
 
-      case CatalogueItemDomainType.VersionedFolder:
-        return this.resources.versionedFolder;
-
-      default:
-        return null;
-    }
-  }
+  //     default:
+  //       return null;
+  //   }
+  // }
 }

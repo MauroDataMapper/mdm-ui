@@ -29,7 +29,7 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
-
+import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-item-search.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,15 @@ import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
     CatalogueSearchAdvancedFormComponent,
     SearchFiltersComponent,
     BreadcrumbComponent,
+    CatalogueItemSearchComponent
   ],
-  imports: [CommonModule, FoldersTreeModule, SharedModule, MaterialModule, CatalogueModule]
+  imports: [
+    CommonModule,
+    FoldersTreeModule,
+    SharedModule,
+    MaterialModule
+    //CatalogueModule
+  ],
+  exports: [CatalogueItemSearchComponent]
 })
 export class CatalogueSearchModule {}

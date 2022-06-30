@@ -191,7 +191,8 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-description.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 
 @NgModule({
   declarations: [
@@ -381,7 +382,8 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    PipesModule
+    PipesModule,
+    CatalogueSearchModule
   ],
   exports: [
     MarkedPipe,

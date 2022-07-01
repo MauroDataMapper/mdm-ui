@@ -69,6 +69,8 @@ export class CatalogueSearchListingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.info(this.routerGlobals.params);
+
     this.parameters = mapStateParamsToSearchParameters(
       this.routerGlobals.params
     );

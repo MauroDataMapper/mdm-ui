@@ -36,23 +36,6 @@ import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanc
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
 import { CatalogueSearchComponent } from './catalogue-search.component';
 
-interface catalogueSearchFormStub {
-  reset: jest.Mock;
-  searchTerms: jest.Mock;
-}
-interface catalogueSearchAdvancedFormStub {
-  reset: jest.Mock;
-  context: jest.Mock;
-  domainTypes: jest.Mock;
-  labelOnly: jest.Mock;
-  exactMatch: jest.Mock;
-  classifiers: jest.Mock;
-  createdAfter: jest.Mock;
-  createdBefore: jest.Mock;
-  lastUpdatedAfter: jest.Mock;
-  lastUpdatedBefore: jest.Mock;
-  formatDate: jest.Mock;
-}
 interface StateHandlerServiceStub {
   Go: jest.Mock;
 }
@@ -64,25 +47,6 @@ describe('CatalogueSearchComponent', () => {
     Go: jest.fn()
   };
 
-  // const catalogueSearchAdvancedFormStub: catalogueSearchAdvancedFormStub = {
-  //   reset: jest.fn(),
-  //   context: jest.fn(),
-  //   domainTypes: jest.fn(),
-  //   labelOnly: jest.fn(),
-  //   exactMatch: jest.fn(),
-  //   classifiers: jest.fn(),
-  //   createdAfter: jest.fn(),
-  //   createdBefore: jest.fn(),
-  //   lastUpdatedAfter: jest.fn(),
-  //   lastUpdatedBefore: jest.fn(),
-  //   formatDate: jest.fn()
-  // };
-
-  // const catalogueSearchFormStub: catalogueSearchFormStub = {
-  //   reset: jest.fn(),
-  //   searchTerms: jest.fn()
-  // };
-
   const resourcesStub = {
     classifier: {
       list: jest.fn()
@@ -92,10 +56,6 @@ describe('CatalogueSearchComponent', () => {
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(CatalogueSearchComponent, {
       declarations: [
-        // catalogueSearchAdvancedFormStub,
-        // catalogueSearchFormStub
-        // MockComponent(CatalogueSearchFormComponent),
-        // MockComponent(CatalogueSearchAdvancedFormComponent)
         CatalogueSearchFormComponent,
         CatalogueSearchAdvancedFormComponent
       ],
@@ -164,10 +124,8 @@ describe('CatalogueSearchComponent', () => {
       }
     );
 
-    // Act
     harness.component.search();
 
-    // Assert
     expect(stateHandlerStub.Go).toHaveBeenCalledWith(
       'appContainer.mainApp.catalogueSearchListing',
       {
@@ -184,8 +142,6 @@ describe('CatalogueSearchComponent', () => {
         search: 'testSearch'
       }
     );
-
-    //"classifiers": [undefined], "contextDomain": null, "contextId": null, "createdAfter": "1983-06-21", "createdBefore": "1983-06-22", "domainTypes": ["DomainTypes"], "exactMatch": true, "labelOnly": true, "lastUpdatedAfter": "1983-06-23", "lastUpdatedBefore": "1983-06-24", "search": ""}
   });
 
   it('should ResetValues', () => {

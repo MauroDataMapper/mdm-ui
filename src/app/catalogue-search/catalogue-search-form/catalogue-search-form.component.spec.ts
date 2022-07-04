@@ -16,8 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, TestBed } from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
 import {
   ComponentHarness,
   setupTestModuleForComponent

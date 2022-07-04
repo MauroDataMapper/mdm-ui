@@ -18,25 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Component,
-  ElementRef,
-  EventEmitter,
   Input,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+  OnInit} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { Title } from '@angular/platform-browser';
-import { ProfileField } from '@maurodatamapper/mdm-resources';
-import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { Search } from 'brace';
-import { clear } from 'console';
-import {
-  CatalogueSearchFilters,
-  CatalogueSearchParameters
-} from '../catalogue-search.types';
 
 /**
  * Top-level component that represents the overall Catalogue Search page.

@@ -16,7 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   CatalogueItemDomainType,
@@ -30,7 +29,6 @@ import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
-import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
@@ -73,7 +71,7 @@ describe('CatalogueSearchComponent', () => {
   });
 
   beforeEach(() => {
-    //SET UP TEST DATA
+    // SET UP TEST DATA
     resourcesStub.classifier.list.mockImplementationOnce(() =>
       of({
         body: {
@@ -90,12 +88,12 @@ describe('CatalogueSearchComponent', () => {
   });
 
   it('should Use values to call the router', () => {
-    //set up serachform data
+    // set up serachform data
     harness.component.catalogueSearchFormComponent.formGroup = new FormGroup({
       searchTerms: new FormControl('testSearch')
     });
 
-    //set up advanced form data
+    // set up advanced form data
     const value: MdmTreeItem[] = [];
     const testClassifier: Classifier = {
       domainType: CatalogueItemDomainType.Classifier,

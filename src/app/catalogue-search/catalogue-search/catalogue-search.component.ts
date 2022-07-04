@@ -17,8 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Classifier, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { StateHandlerService } from '@mdm/services';
 import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';

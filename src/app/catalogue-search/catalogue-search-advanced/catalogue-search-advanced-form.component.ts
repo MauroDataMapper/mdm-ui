@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,
@@ -26,7 +26,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Component({
-  selector: 'catalogue-search-advanced-form',
+  selector: 'mdm-catalogue-search-advanced-form',
   templateUrl: './catalogue-search-advanced-form.component.html',
   styleUrls: ['./catalogue-search-advanced-form.component.scss']
 })

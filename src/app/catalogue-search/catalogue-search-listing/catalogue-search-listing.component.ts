@@ -69,8 +69,6 @@ export class CatalogueSearchListingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.info(this.routerGlobals.params);
-
     this.parameters = mapStateParamsToSearchParameters(
       this.routerGlobals.params
     );
@@ -93,6 +91,7 @@ export class CatalogueSearchListingComponent implements OnInit {
    * Update the search by using the state router.
    */
   updateSearch() {
+    this.status = 'loading';
     this.stateRouter.Go(
       'appContainer.mainApp.catalogueSearchListing',
       this.parameters

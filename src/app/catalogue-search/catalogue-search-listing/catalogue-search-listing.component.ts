@@ -38,7 +38,7 @@ export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
  * can be any property on the objects you are sorting and order must be of type
  * {@link SortOrder }
  */
- export type SearchListingSortByOption = 'label-asc' | 'label-desc';
+export type SearchListingSortByOption = 'label-asc' | 'label-desc';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -55,9 +55,9 @@ export class CatalogueSearchListingComponent implements OnInit {
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
    */
-   searchListingSortByOptions: SortByOption[] = [
+  searchListingSortByOptions: SortByOption[] = [
     { value: 'label-asc', displayName: 'Label (a-z)' },
-    { value: 'label-desc', displayName: 'Label (z-a)' },
+    { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
@@ -87,13 +87,14 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.performSearch();
   }
 
-
   /**
    * Update the search by using the state router.
    */
   updateSearch() {
-    this.status = 'loading';
-    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', this.parameters);
+    this.stateRouter.Go(
+      'appContainer.mainApp.catalogueSearchListing',
+      this.parameters
+    );
   }
 
   onSearchTerm() {
@@ -168,7 +169,7 @@ export class CatalogueSearchListingComponent implements OnInit {
    * @param order the order in which to sort that propery
    * @returns a SortByOption object with value matching the route string sortBy value or the default sortBy option.
    */
-   private setSortByFromRouteOrAsDefault(
+  private setSortByFromRouteOrAsDefault(
     sort: string | undefined,
     order: string | undefined
   ): SortByOption {

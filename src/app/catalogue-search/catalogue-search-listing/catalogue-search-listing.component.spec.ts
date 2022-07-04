@@ -22,6 +22,7 @@ import {
   CatalogueItemSearchResult
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { StateHandlerService } from '@mdm/services';
 import {
   ComponentHarness,
   setupTestModuleForComponent
@@ -50,6 +51,10 @@ const resourcesStub: MdmResourcesServiceStub = {
 describe('CatalogueSearchListingComponent', () => {
   let harness: ComponentHarness<CatalogueSearchListingComponent>;
 
+  const stateRouterStub = {
+    Go: jest.fn()
+  };
+
   const setupComponentTest = async (parameters: CatalogueSearchParameters) => {
     const params = mapSearchParametersToRawParams(parameters);
 
@@ -66,6 +71,10 @@ describe('CatalogueSearchListingComponent', () => {
         {
           provide: MdmResourcesService,
           useValue: resourcesStub
+        },
+        {
+          provide: StateHandlerService,
+          useValue: stateRouterStub
         }
       ]
     });
@@ -132,6 +141,7 @@ describe('CatalogueSearchListingComponent', () => {
 
     beforeEach(async () => {
       harness = await setupComponentTest(parameters);
+      stateRouterStub.Go.mockReset();
     });
 
     it('should display the expected search results', () => {
@@ -175,11 +185,14 @@ describe('CatalogueSearchListingComponent', () => {
         pageIndex: 6,
         previousPageIndex: 5,
         pageSize: 3,
-        length: 100,
+        length: 100
       };
 
       harness.component.onPageChange(pageEvent);
-      expect(harness.component.status).toBe('loading');
+      expect(stateRouterStub.Go).toHaveBeenCalledWith(
+        'appContainer.mainApp.catalogueSearchListing',
+        expect.any(Object)
+      );
     });
 
     it('should display an error when search fails', () => {

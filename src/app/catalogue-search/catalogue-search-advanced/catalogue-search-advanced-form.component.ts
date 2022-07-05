@@ -16,7 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
@@ -34,6 +38,7 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   advancedSearch: boolean;
   formGroup: FormGroup;
   classifications: Classifier[];
+  @Output() searchEvent = new EventEmitter<string>();
 
   get context() {
     return this.formGroup.get('context');
@@ -130,14 +135,18 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   reset() {
-    this.formGroup.controls.context.setValue(null);
-    this.formGroup.controls.domainTypes.setValue('');
-    this.formGroup.controls.labelOnly.setValue(false);
-    this.formGroup.controls.exactMatch.setValue(false);
-    this.formGroup.controls.classifiers.setValue('');
-    this.formGroup.controls.createdAfter.setValue(null);
-    this.formGroup.controls.createdBefore.setValue(null);
-    this.formGroup.controls.lastUpdatedAfter.setValue(null);
-    this.formGroup.controls.lastUpdatedBefore.setValue(null);
+    this.context.reset();
+    this.domainTypes.reset();
+    this.labelOnly.reset();
+    this.exactMatch.reset();
+    this.classifiers.reset();
+    this.createdAfter.reset();
+    this.createdBefore.reset();
+    this.lastUpdatedAfter.reset();
+    this.lastUpdatedBefore.reset();
+  }
+
+  callParentSearch() {
+    this.searchEvent.emit('advancedFormCallSearch');
   }
 }

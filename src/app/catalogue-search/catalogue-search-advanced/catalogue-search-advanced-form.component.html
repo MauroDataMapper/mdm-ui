@@ -29,7 +29,11 @@ SPDX-License-Identifier: Apache-2.0
 
 <div>
   <ng-template [ngIf]="advancedSearch">
-    <form [formGroup]="formGroup" role="form">
+    <form
+      [formGroup]="formGroup"
+      (keyup.enter)="callParentSearch()"
+      role="form"
+    >
       <h5 class="marginless">Apply Restrictions and filters:</h5>
       <ng-template [ngIf]="true">
         <div class="row search-section">

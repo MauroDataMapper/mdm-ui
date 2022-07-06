@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,13 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-
-.search-button {
-  padding-right: 15px;
-  float: right;
-}
-
-.mdm-catalogue-search-advanced-form {
-  padding-left: 15px;
-}
+-->
+<form
+  [formGroup]="formGroup"
+  role="form"
+  autocomplete="on"
+  name="catalogueSearchFormComponent"
+  (keyup.enter)="callParentSearch()"
+>
+  <div class="container">
+    <div class="mdm-form-input row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search the Catalogue...</mat-label>
+          <input
+            matInput
+            type="text"
+            name="searchTerms"
+            formControlName="searchTerms"
+            autocomplete="on"
+            placeholder=""
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>

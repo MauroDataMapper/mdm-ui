@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
           <a
             class="nav-item nav-link"
             *ngIf="!features.useCatalogueSearch"
-            uiSref="appContainer.mainApp.twoSidePanel.catalogue.search"
+            uiSref="appContainer.mainApp.catalogueSearch"
             uiSrefActive="active"
             >Search</a
           >
@@ -275,7 +275,7 @@ SPDX-License-Identifier: Apache-2.0
         </a>
         <a
           mat-menu-item
-          uiSref="appContainer.mainApp.twoSidePanel.catalogue.search"
+          uiSref="appContainer.mainApp.catalogueSearch"
           (click)="sidenav.toggle()"
           uiSrefActive="active"
         >

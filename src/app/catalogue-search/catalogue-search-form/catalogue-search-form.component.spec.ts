@@ -39,6 +39,6 @@ describe('CatalogueSearchFormComponent', () => {
     harness.component.ngOnInit();
     harness.component.searchTerms.setValue('testSearch');
     harness.component.reset();
-    expect(harness.component.searchTerms.value).toBe('');
+    expect(harness.component.searchTerms.value).toBe(null);
   });
 });

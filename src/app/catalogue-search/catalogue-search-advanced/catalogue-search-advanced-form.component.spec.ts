@@ -59,10 +59,10 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
 
     harness.component.reset();
     expect(harness.component.context.value).toBe(null);
-    expect(harness.component.domainTypes.value).toBe('');
-    expect(harness.component.labelOnly.value).toBe(false);
-    expect(harness.component.exactMatch.value).toBe(false);
-    expect(harness.component.classifiers.value).toBe('');
+    expect(harness.component.domainTypes.value).toBe(null);
+    expect(harness.component.labelOnly.value).toBe(null);
+    expect(harness.component.exactMatch.value).toBe(null);
+    expect(harness.component.classifiers.value).toBe(null);
     expect(harness.component.createdAfter.value).toBe(null);
     expect(harness.component.createdBefore.value).toBe(null);
     expect(harness.component.lastUpdatedAfter.value).toBe(null);

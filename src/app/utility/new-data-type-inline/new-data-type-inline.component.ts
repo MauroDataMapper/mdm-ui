@@ -72,6 +72,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.validate();
+    console.log(this.parentDataModel);
     if (this.parentScopeHandler) {
       this.parentScopeHandler.$broadcast('newDataTypeInlineUpdated', {
         model: this.model,
@@ -192,6 +193,6 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   };
 
   toggleAdvanced(): void  {
-    this.advanced = !this.advanced
+    this.advanced = !this.advanced;
   }
 }

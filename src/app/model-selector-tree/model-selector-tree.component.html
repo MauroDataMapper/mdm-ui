@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 
   <div class="modelSelectorTree" style="position: relative;">
-    <div [ngClass]="{'input-group':true,'has-error': hasValidationError}" [hidden]="showInputGroup">
+    <div [ngClass]="{'input-group':true,'has-error': hasValidationError}" [hidden]="!showInputGroup">
       <input #searchInputTreeControl type="text" [readonly]="readOnlySearchInput" [disabled]="processing"
         class="form-control outlined-input" [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }'
         focus="inputClick()" (click)="toggleTree()" placeholder="{{placeholderStr}}" [required]="isRequired">
@@ -61,6 +61,7 @@ SPDX-License-Identifier: Apache-2.0
                           enable-context-menu="true"
                           (addFolderEvent)="onAddFolder()"
                           [doNotShowDataClasses]="doNotShowDataClasses"
+                          [doNotShowChildDataClasses]="doNotShowChildDataClasses"
                           [doNotShowTerms]="doNotShowTerms"
                           [justShowFolders]="justShowFolders"
                           [defaultCheckedMap]="defaultCheckedMap"

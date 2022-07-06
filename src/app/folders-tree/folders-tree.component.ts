@@ -212,7 +212,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     if (node?.domainType === CatalogueItemDomainType.DataClass && this.doNotShowChildDataClasses) {
       return false;
-    }    
+    }
 
     if (this.expandOnNodeClickFor && !this.expandOnNodeClickFor?.includes(node?.domainType)) {
       return false;

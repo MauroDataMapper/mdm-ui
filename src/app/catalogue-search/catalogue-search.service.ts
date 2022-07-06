@@ -209,7 +209,7 @@ export class CatalogueSearchService {
   ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
 
     // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
-    if (context.domainType == CatalogueItemDomainType.DataClass) {
+    if (context.domainType === CatalogueItemDomainType.DataClass) {
       const resource = this.resources.dataClass;
 
       return resource.search(
@@ -235,7 +235,7 @@ export class CatalogueSearchService {
   {
     switch (domain) {
       case CatalogueItemDomainType.Folder:
-        return this.resources.folder;      
+        return this.resources.folder;
 
       case CatalogueItemDomainType.DataModel:
         return this.resources.dataModel;
@@ -247,10 +247,10 @@ export class CatalogueSearchService {
         return this.resources.codeSet;
 
       case CatalogueItemDomainType.ReferenceDataModel:
-        return this.resources.referenceDataModel;    
+        return this.resources.referenceDataModel;
 
       case CatalogueItemDomainType.VersionedFolder:
-        return this.resources.versionedFolder;    
+        return this.resources.versionedFolder;
 
       default:
         return null;

@@ -172,7 +172,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.status = 'loading';
 
     this.catalogueSearch
-      .contextualSearch(this.context, this.parameters)  
+      .contextualSearch(this.context, this.parameters)
       .pipe(
         catchError((error) => {
           this.status = 'error';

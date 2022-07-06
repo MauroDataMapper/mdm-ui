@@ -42,7 +42,7 @@ export interface CatalogueSearchContext {
 export interface CatalogueSearchParameters {
   /**
    * If provided, a search context element i.e. the catalogue item within
-   * which searching should be restricted to. 
+   * which searching should be restricted to.
    */
    contextDomainType?: string;
    contextId?: string;

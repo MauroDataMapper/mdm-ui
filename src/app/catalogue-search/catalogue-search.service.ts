@@ -64,13 +64,13 @@ export class CatalogueSearchService {
   }
 
    /**
-     * Search for catalogue items. If context is not null then search within that context (for example within a Folder
-     * or DataModel), otherwise search the whole catalogue.
-     * 
-     * @param context A context (i.e. specific item) within which to search. Can be null.
-     * @param parameters 
-     * @returns Observable<any>
-     */
+    * Search for catalogue items. If context is not null then search within that context (for example within a Folder
+    * or DataModel), otherwise search the whole catalogue.
+    *
+    * @param context A context (i.e. specific item) within which to search. Can be null.
+    * @param parameters
+    * @returns Observable<any>
+    */
     contextualSearch(
       context: CatalogueSearchContext,
       parameters: CatalogueSearchParameters
@@ -78,7 +78,7 @@ export class CatalogueSearchService {
 
       const searchQueryParameters: SearchQueryParameters = this.getSearchQueryParameters(parameters);
 
-      if (context == null) {          
+      if (context == null) {
           return this.searchCatalogue(searchQueryParameters).pipe(
             map((searchResults) => {
               return {
@@ -125,12 +125,12 @@ export class CatalogueSearchService {
     classifiers: catalogueSearchParams.classifiers,
     sort: catalogueSearchParams.sort,
     order: catalogueSearchParams.order,
-    max: catalogueSearchParams.pageSize, 
+    max: catalogueSearchParams.pageSize,
     offset: (catalogueSearchParams.page ?? 1) * catalogueSearchParams.pageSize
   };
 
   return params;
- }  
+ }
 
   /**
    * If the exactMatch parameter is set then wrap then enclose the search term in quotes, if it
@@ -184,9 +184,9 @@ export class CatalogueSearchService {
 
   /**
    * Search the entire catalogue
-   * 
+   *
    * @param query
-   * @returns 
+   * @returns
    */
   private searchCatalogue(
     query: SearchQueryParameters
@@ -198,9 +198,10 @@ export class CatalogueSearchService {
 
   /**
    * Search within a specific catalogute item (the context)
-   * @param context 
-   * @param query 
-   * @returns 
+   *
+   * @param context
+   * @param query
+   * @returns
    */
   private searchCatalogueItem(
     context: CatalogueSearchContext,
@@ -210,10 +211,10 @@ export class CatalogueSearchService {
     const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
 
     return resource.search(
-      context.id, 
+      context.id,
       query
     ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
-  }  
+  }
 
   private getSearchableItemResource(domain: string): SearchableItemResource
   {
@@ -227,5 +228,5 @@ export class CatalogueSearchService {
       default:
         return null;
     }
-  }  
+  }
 }

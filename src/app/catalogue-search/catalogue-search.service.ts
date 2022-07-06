@@ -27,7 +27,7 @@ import {
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   CatalogueSearchContext,
@@ -210,10 +210,14 @@ export class CatalogueSearchService {
 
     const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
 
-    return resource.search(
-      context.id,
-      query
-    ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
+    if (resource == null) {
+      return throwError('No searchable resource');
+    } else {
+      return resource.search(
+        context.id,
+        query
+      ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
+    }
   }
 
   private getSearchableItemResource(domain: string): SearchableItemResource

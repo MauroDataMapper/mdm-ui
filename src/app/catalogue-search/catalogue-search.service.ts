@@ -208,27 +208,50 @@ export class CatalogueSearchService {
     query: SearchQueryParameters
   ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
 
-    const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
+    // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
+    if (context.domainType == CatalogueItemDomainType.DataClass) {
+      const resource = this.resources.dataClass;
 
-    if (resource == null) {
-      return throwError('No searchable resource');
-    } else {
       return resource.search(
+        context.dataModelId,
         context.id,
         query
       ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
+    } else {
+      const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
+
+      if (resource == null) {
+        return throwError('No searchable resource');
+      } else {
+        return resource.search(
+          context.id,
+          query
+        ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
+      }
     }
   }
 
   private getSearchableItemResource(domain: string): SearchableItemResource
   {
     switch (domain) {
+      case CatalogueItemDomainType.Folder:
+        return this.resources.folder;      
+
       case CatalogueItemDomainType.DataModel:
         return this.resources.dataModel;
-      case CatalogueItemDomainType.Folder:
-        return this.resources.folder;
+
       case CatalogueItemDomainType.Terminology:
         return this.resources.terminology;
+
+      case CatalogueItemDomainType.CodeSet:
+        return this.resources.codeSet;
+
+      case CatalogueItemDomainType.ReferenceDataModel:
+        return this.resources.referenceDataModel;    
+
+      case CatalogueItemDomainType.VersionedFolder:
+        return this.resources.versionedFolder;    
+
       default:
         return null;
     }

@@ -64,6 +64,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() isRequired: any;
   @Input() showValidationError: any;
   @Input() doNotShowDataClasses: any;
+  @Input() doNotShowChildDataClasses: any;
   @Input() doNotShowTerms: any;
   @Input() justShowFolders: any;
   @Input() placeholder: any;

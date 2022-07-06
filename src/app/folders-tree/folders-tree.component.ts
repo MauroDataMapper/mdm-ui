@@ -66,6 +66,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
 
   @Input() doNotShowDataClasses: any;
+  @Input() doNotShowChildDataClasses: any;
   @Input() doNotShowTerms: any;
   @Input() justShowFolders: any;
   @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
@@ -208,6 +209,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     if (node?.domainType === CatalogueItemDomainType.DataModel && this.doNotShowDataClasses) {
       return false;
     }
+
+    if (node?.domainType === CatalogueItemDomainType.DataClass && this.doNotShowChildDataClasses) {
+      return false;
+    }    
 
     if (this.expandOnNodeClickFor && !this.expandOnNodeClickFor?.includes(node?.domainType)) {
       return false;

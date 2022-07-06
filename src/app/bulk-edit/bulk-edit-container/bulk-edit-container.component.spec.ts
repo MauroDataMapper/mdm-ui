@@ -17,14 +17,21 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, DataModelDetail, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  DataModelDetail,
+  DataModelDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 import { StateParams, UIRouterGlobals } from '@uirouter/core';
 import { of } from 'rxjs';
-import { BulkEditStep } from '../types/bulk-edit-types';
+import { BulkEditStep } from '../bulk-edit.types';
 import { BulkEditContainerComponent } from './bulk-edit-container.component';
 
 interface MdmDataModelResourceStub {
@@ -94,41 +101,40 @@ describe('BulkEditBaseComponent', () => {
   };
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(
-      BulkEditContainerComponent,
-      {
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: resourcesStub
-          },
-          {
-            provide: UIRouterGlobals,
-            useValue: uiRouterGlobalsStub
-          },
-          {
-            provide: Title,
-            useValue: titleStub
-          },
-          {
-            provide: EditingService,
-            useValue: editingStub
-          },
-          {
-            provide: MessageHandlerService,
-            useValue: messageHandlerStub
-          }
-        ]
-      });
+    harness = await setupTestModuleForComponent(BulkEditContainerComponent, {
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: resourcesStub
+        },
+        {
+          provide: UIRouterGlobals,
+          useValue: uiRouterGlobalsStub
+        },
+        {
+          provide: Title,
+          useValue: titleStub
+        },
+        {
+          provide: EditingService,
+          useValue: editingStub
+        },
+        {
+          provide: MessageHandlerService,
+          useValue: messageHandlerStub
+        }
+      ]
+    });
 
     uiRouterGlobalsStub.params.id = id;
   });
 
   beforeEach(() => {
-    resourcesStub.dataModel.get
-      .mockImplementationOnce(() => of<DataModelDetailResponse>({
+    resourcesStub.dataModel.get.mockImplementationOnce(() =>
+      of<DataModelDetailResponse>({
         body: dataModel
-      }));
+      })
+    );
   });
 
   it('should create', () => {
@@ -140,7 +146,9 @@ describe('BulkEditBaseComponent', () => {
 
     expect(harness.component.parent).toBe(dataModel);
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
-    expect(titleStub.setTitle).toHaveBeenCalledWith(`Bulk Edit - ${dataModel.label}`);
+    expect(titleStub.setTitle).toHaveBeenCalledWith(
+      `Bulk Edit - ${dataModel.label}`
+    );
     expect(editingStub.start).toHaveBeenCalled();
   });
 

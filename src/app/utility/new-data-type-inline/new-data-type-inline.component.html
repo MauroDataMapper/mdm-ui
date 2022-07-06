@@ -27,43 +27,18 @@ SPDX-License-Identifier: Apache-2.0
 					<mdm-model-path [path]="[parentDataModel]"></mdm-model-path>
 				</td>
 			</tr>
-			<tr>
-				<td class="detailsRowHeader">Label *</td>
-				<td>
-					<mat-form-field appearance="outline" class="full-width">
-						<input matInput name="label" [(ngModel)]="model.label" required>
-					</mat-form-field>
-				</td>
-
-			</tr>
-			<tr>
-				<td class="detailsRowHeader">Description</td>
-				<td>
-          <mdm-content-editor
-            [(content)]="model.description"
-            [inEditMode]="true">
-          </mdm-content-editor>
-				</td>
-			</tr>
-			<tr *ngIf="showClassification">
-				<td class="detailsRowHeader">Classifications</td>
-				<td>
-					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event">
-					</mdm-element-classifications>
-				</td>
-			</tr>
-			<tr class="type" style="border-top: 0px;">
-				<td class="detailsRowHeader">Type *</td>
-				<td>
-					<div class="mdm--form-input">
-						<mat-form-field appearance="outline" class="full-width">
-							<mat-select name="dataModelType"  [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
-                        <mat-option [value]="dt.id" *ngFor="let dt of allDataTypes" [hidden]="dt.displayLabel === 'ModelDataType'">{{dt.displayLabel}}</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-				</td>
-			</tr>
+      <tr class="type" style="border-top: 0px;">
+        <td class="detailsRowHeader">Type *</td>
+        <td>
+          <div class="mdm--form-input">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-select name="dataModelType"  [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
+                <mat-option [value]="dt.id" *ngFor="let dt of allDataTypes" [hidden]="dt.displayLabel === 'ModelDataType'">{{dt.displayLabel}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
 			<tr class="type" *ngIf="model.domainType != 'PrimitiveType'">
 				<td class="detailsRowHeader">
 					<span *ngIf="model.domainType === 'EnumerationType'">Enumeration (key,value) *</span>
@@ -160,7 +135,37 @@ SPDX-License-Identifier: Apache-2.0
 					</div>
 				</td>
 			</tr>
+      <tr *ngIf="!showLabelAndDescription && model.domainType != 'PrimitiveType' && model.domainType != 'EnumerationType'">
+        <td colspan="2" style="text-align: right;">
+          <mat-slide-toggle (change)="toggleAdvanced()">Advanced Options</mat-slide-toggle>
+        </td>
+      </tr>
+      <tr *ngIf="showLabelAndDescription || model.domainType === 'PrimitiveType' || model.domainType === 'EnumerationType' || this.advanced">
+        <td class="detailsRowHeader">Data Type Label *</td>
+        <td>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput name="label" [(ngModel)]="model.label" required>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr *ngIf="showLabelAndDescription || model.domainType === 'PrimitiveType' || model.domainType === 'EnumerationType' || this.advanced">
+        <td class="detailsRowHeader">Description</td>
+        <td>
+          <mdm-content-editor
+            [(content)]="model.description"
+            [inEditMode]="true">
+          </mdm-content-editor>
+        </td>
+      </tr>
+      <tr *ngIf="showClassification">
+        <td class="detailsRowHeader">Classifications</td>
+        <td>
+          <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event">
+          </mdm-element-classifications>
+        </td>
+      </tr>
 		</tbody>
 	</table>
+
   </form>
 </div>

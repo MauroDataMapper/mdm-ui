@@ -34,6 +34,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   @Input() parentDataModel;
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
+  @Input() showLabelAndDescription = false;
 
   @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: any = {
@@ -52,6 +53,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   terminologies: Terminology[];
   codesets: CodeSet[];
   referenceDataModels: ReferenceDataModel[];
+  advanced = false;
 
   constructor(
     private resourceService: MdmResourcesService,
@@ -188,4 +190,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     this.validate();
     this.sendValidationStatus();
   };
+
+  toggleAdvanced(): void  {
+    this.advanced = !this.advanced
+  }
 }

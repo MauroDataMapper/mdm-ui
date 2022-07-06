@@ -18,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, TemplateRef } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Observable, of } from 'rxjs';
@@ -38,7 +42,7 @@ const editableRouteNames = [
   'appContainer.adminArea.user',
   'appContainer.adminArea.group',
   'appContainer.adminArea.subscribedCatalogue',
-  'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit'
+  'appContainer.mainApp.bulkEdit'
 ];
 
 export interface EditableObject {
@@ -54,20 +58,23 @@ export interface EditableObject {
   providedIn: 'root'
 })
 export class EditingService {
-
   private _isEditing = false;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   /**
    * Mark the application as starting edits.
    */
-  start(): void { this._isEditing = true; }
+  start(): void {
+    this._isEditing = true;
+  }
 
   /**
    * Mark the application as stopping edits.
    */
-  stop(): void { this._isEditing = false; }
+  stop(): void {
+    this._isEditing = false;
+  }
 
   /**
    * Determine if something in the application is editing currently.
@@ -91,7 +98,7 @@ export class EditingService {
       return;
     }
 
-    this._isEditing = items.some(item => item.inEdit);
+    this._isEditing = items.some((item) => item.inEdit);
   }
 
   /**
@@ -107,12 +114,20 @@ export class EditingService {
    * place. If not or the user allows the transition, the original tab click event will be carried out.
    */
   setTabGroupClickEvent(tabGroup: MatTabGroup) {
-    tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, index: number) => {
-      this.confirmCancelAsync().subscribe(confirm => {
+    tabGroup._handleClick = (
+      tab: MatTab,
+      tabHeader: MatTabHeader,
+      index: number
+    ) => {
+      this.confirmCancelAsync().subscribe((confirm) => {
         if (confirm) {
           // Manually stop "editing" so that other transition hooks don't trigger another confirmation message
           this.stop();
-          MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
+          MatTabGroup.prototype._handleClick.apply(tabGroup, [
+            tab,
+            tabHeader,
+            index
+          ]);
         }
       });
     };
@@ -144,10 +159,8 @@ export class EditingService {
     dialogRef.disableClose = true;
     dialogRef
       .backdropClick()
-      .pipe(
-        switchMap(() => this.confirmCancelAsync())
-      )
-      .subscribe(confirm => {
+      .pipe(switchMap(() => this.confirmCancelAsync()))
+      .subscribe((confirm) => {
         if (confirm) {
           dialogRef.close();
         }
@@ -164,7 +177,10 @@ export class EditingService {
    *
    * @see configureDialogRef()
    */
-  openDialog<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R> {
+  openDialog<T, D = any, R = any>(
+    componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+    config?: MatDialogConfig<D>
+  ): MatDialogRef<T, R> {
     const dialogRef = this.dialog.open(componentOrTemplateRef, config);
     this.configureDialogRef(dialogRef);
     return dialogRef;
@@ -180,7 +196,10 @@ export class EditingService {
    *
    * @see confirmLeaveAsync()
    */
-  confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');
+  confirmLeave = (): boolean =>
+    this.confirmStop(
+      'Are you sure you want to leave this view? Any unsaved changes will be lost.'
+    );
 
   /**
    * Confirm if it is safe to leave a view to transition to another asynchronously.
@@ -192,7 +211,10 @@ export class EditingService {
    *
    * @see confirmLeave()
    */
-  confirmLeaveAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to leave this view? Any unsaved changes will be lost.');
+  confirmLeaveAsync = (): Observable<boolean> =>
+    this.confirmStopAsync(
+      'Are you sure you want to leave this view? Any unsaved changes will be lost.'
+    );
 
   /**
    * Confirm if it is safe to leave a view to transition to another asynchronously.
@@ -201,7 +223,10 @@ export class EditingService {
    *
    * This confirmation uses the Angular Material `MatDialog` which returns observables.
    */
-  confirmCancelAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to cancel? Any unsaved changes will be lost.');
+  confirmCancelAsync = (): Observable<boolean> =>
+    this.confirmStopAsync(
+      'Are you sure you want to cancel? Any unsaved changes will be lost.'
+    );
 
   private confirmStop(message: string): boolean {
     if (!this._isEditing) {
@@ -227,8 +252,6 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-      .pipe(
-        map(result => result.status === ModalDialogStatus.Ok)
-      );
+      .pipe(map((result) => result.status === ModalDialogStatus.Ok));
   }
 }

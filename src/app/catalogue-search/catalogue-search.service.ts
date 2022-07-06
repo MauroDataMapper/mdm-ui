@@ -18,16 +18,19 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  CatalogueItemDomainType,
   CatalogueItemSearchResponse,
   CatalogueItemSearchResult,
   MdmIndexBody,
   PageParameters,
+  SearchableItemResource,
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
   CatalogueSearchResultSet
 } from './catalogue-search.types';
@@ -59,6 +62,75 @@ export class CatalogueSearchService {
       })
     );
   }
+
+   /**
+     * Search for catalogue items. If context is not null then search within that context (for example within a Folder
+     * or DataModel), otherwise search the whole catalogue.
+     * 
+     * @param context A context (i.e. specific item) within which to search. Can be null.
+     * @param parameters 
+     * @returns Observable<any>
+     */
+    contextualSearch(
+      context: CatalogueSearchContext,
+      parameters: CatalogueSearchParameters
+  ): Observable<any>    {
+
+      const searchQueryParameters: SearchQueryParameters = this.getSearchQueryParameters(parameters);
+
+      if (context == null) {          
+          return this.searchCatalogue(searchQueryParameters).pipe(
+            map((searchResults) => {
+              return {
+                count: searchResults.count,
+                pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+                page: parameters.page,
+                items: searchResults.items
+              };
+            })
+          );
+      } else {
+        return this.searchCatalogueItem(context, searchQueryParameters).pipe(
+          map((searchResults) => {
+            return {
+              count: searchResults.count,
+              pageSize: parameters.pageSize!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+              page: parameters.page,
+              items: searchResults.items
+            };
+          })
+        );
+      }
+  }
+
+
+
+/**
+ * Map CatalogueSearchParameters to SearchQueryParameters
+ *
+ * @param catalogueSearchParams
+ *
+ * @returns SearchQueryParameters
+ */
+ private getSearchQueryParameters(catalogueSearchParams: CatalogueSearchParameters): SearchQueryParameters {
+  const params: SearchQueryParameters = {
+    searchTerm: this.getSearchTerm(catalogueSearchParams),
+    labelOnly: catalogueSearchParams.labelOnly,
+    lastUpdatedBefore: catalogueSearchParams.lastUpdatedBefore,
+    lastUpdatedAfter: catalogueSearchParams.lastUpdatedAfter,
+    createdAfter: catalogueSearchParams.createdAfter,
+    createdBefore: catalogueSearchParams.createdBefore,
+    domainTypes: catalogueSearchParams.domainTypes,
+    dataModelTypes: [],
+    classifiers: catalogueSearchParams.classifiers,
+    sort: catalogueSearchParams.sort,
+    order: catalogueSearchParams.order,
+    max: catalogueSearchParams.pageSize, 
+    offset: (catalogueSearchParams.page ?? 1) * catalogueSearchParams.pageSize
+  };
+
+  return params;
+ }  
 
   /**
    * If the exactMatch parameter is set then wrap then enclose the search term in quotes, if it
@@ -110,6 +182,12 @@ export class CatalogueSearchService {
     };
   }
 
+  /**
+   * Search the entire catalogue
+   * 
+   * @param query
+   * @returns 
+   */
   private searchCatalogue(
     query: SearchQueryParameters
   ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
@@ -117,4 +195,37 @@ export class CatalogueSearchService {
       .search(query)
       .pipe(map((response: CatalogueItemSearchResponse) => response.body));
   }
+
+  /**
+   * Search within a specific catalogute item (the context)
+   * @param context 
+   * @param query 
+   * @returns 
+   */
+  private searchCatalogueItem(
+    context: CatalogueSearchContext,
+    query: SearchQueryParameters
+  ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
+
+    const resource: SearchableItemResource = this.getSearchableItemResource(context.domainType);
+
+    return resource.search(
+      context.id, 
+      query
+    ).pipe(map((response: CatalogueItemSearchResponse) => response.body));
+  }  
+
+  private getSearchableItemResource(domain: string): SearchableItemResource
+  {
+    switch (domain) {
+      case CatalogueItemDomainType.DataModel:
+        return this.resources.dataModel;
+      case CatalogueItemDomainType.Folder:
+        return this.resources.folder;
+      case CatalogueItemDomainType.Terminology:
+        return this.resources.terminology;
+      default:
+        return null;
+    }
+  }  
 }

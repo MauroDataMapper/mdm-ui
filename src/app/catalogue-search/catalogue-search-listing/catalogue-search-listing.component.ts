@@ -17,20 +17,20 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { MessageHandlerService, SearchContext, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
-import { ContentSearchHandlerService } from '@mdm/services';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
   CatalogueSearchResultSet,
   mapStateParamsToSearchParameters
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption, SortOrder } from '@mdm/shared/sort-by/sort-by.component';
-import { SearchContextChange, SearchFilterChange } from '../search-filters/search-filters.component';
+import { SearchFilterChange } from '../search-filters/search-filters.component';
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
@@ -52,7 +52,7 @@ export class CatalogueSearchListingComponent implements OnInit {
   searchTerms?: string;
   resultSet?: CatalogueSearchResultSet;
   sortBy?: SortByOption;
-  context: SearchContext = null;
+  context: CatalogueSearchContext = null;
   /**
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
@@ -67,7 +67,6 @@ export class CatalogueSearchListingComponent implements OnInit {
     private routerGlobals: UIRouterGlobals,
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
-    private contentSearch: ContentSearchHandlerService,
     private messageHandler: MessageHandlerService
   ) {}
 
@@ -82,7 +81,8 @@ export class CatalogueSearchListingComponent implements OnInit {
         domainType: this.parameters.contextDomainType,
         id: this.parameters.contextId,
         label: this.parameters.contextLabel,
-        dataModel: this.parameters.contextDataModelId,
+        dataModelId: this.parameters.contextDataModelId,
+        parentId: this.parameters.contextParentId,
       };
     }
 
@@ -109,12 +109,12 @@ export class CatalogueSearchListingComponent implements OnInit {
     );
   }
 
-  onContextChanged(event: SearchContextChange) {
-    this.parameters.contextDomainType = event ? event.domainType : null;
+  onContextChanged(event: CatalogueSearchContext) {
     this.parameters.contextId = event ? event.id : null;
+    this.parameters.contextDomainType = event ? event.domainType : null;
     this.parameters.contextLabel = event ? event.label : null;
-    this.parameters.contextParentId = event ? event.parent : null;
-    this.parameters.contextDataModelId = event ? event.dataModel : null;
+    this.parameters.contextDataModelId = event ? event.dataModelId : null;
+    this.parameters.contextParentId = event ? event.parentId : null;
     this.updateSearch();
   }
 
@@ -171,22 +171,8 @@ export class CatalogueSearchListingComponent implements OnInit {
   private performSearch() {
     this.status = 'loading';
 
-    this.contentSearch
-      .search(
-        this.context,
-        this.parameters.search,
-        this.parameters.pageSize,
-        this.parameters.page,
-        this.parameters.domainTypes,
-        this.parameters.labelOnly,
-        [],
-        this.parameters.classifiers,
-        null,
-        this.parameters.lastUpdatedAfter ? new Date(this.parameters.lastUpdatedAfter) : null,
-        this.parameters.lastUpdatedBefore ? new Date(this.parameters.lastUpdatedBefore) : null,
-        this.parameters.createdAfter ? new Date(this.parameters.createdAfter) : null,
-        this.parameters.createdBefore ? new Date(this.parameters.createdBefore) : null,
-        )
+    this.catalogueSearch
+      .contextualSearch(this.context, this.parameters)  
       .pipe(
         catchError((error) => {
           this.status = 'error';
@@ -198,7 +184,7 @@ export class CatalogueSearchListingComponent implements OnInit {
         })
       )
       .subscribe((resultSet) => {
-        this.resultSet = resultSet.body;
+        this.resultSet = resultSet;
         this.status = 'ready';
       });
   }

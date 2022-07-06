@@ -26,19 +26,29 @@ export type CatalogueSearchFilters = {
 };
 
 /**
+ * Represents a single element within which a search should occur.
+ */
+export interface CatalogueSearchContext {
+  domainType: string;
+  id: string;
+  label: string;
+  parentId?: string;
+  dataModelId?: string;
+}
+
+/**
  * Represents the parameters to drive a Catalogue Search.
  */
 export interface CatalogueSearchParameters {
   /**
-   * If provided, the domain type and ID of a context element i.e. the catalogue item within
-   * which searching should be restricted to. When the context element is a Data Class, we also need the
-   * owning Data Model Id.
+   * If provided, a search context element i.e. the catalogue item within
+   * which searching should be restricted to. 
    */
-  contextDomainType?: string;
-  contextId?: string;
-  contextLabel?: string;
-  contextParentId?: string;
-  contextDataModelId?: string;
+   contextDomainType?: string;
+   contextId?: string;
+   contextLabel?: string;
+   contextParentId?: string;
+   contextDataModelId?: string;
 
   /**
    * If provided, provides the search terms for full text search.

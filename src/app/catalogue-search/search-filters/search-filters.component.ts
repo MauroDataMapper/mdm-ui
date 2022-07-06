@@ -27,7 +27,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { CatalogueItemSelectModalComponent } from '@mdm/modals/catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SearchContext } from '@mdm/services';
+import { CatalogueSearchContext } from '../catalogue-search.types';
 
 export interface SearchFilterField {
   name: string;
@@ -35,14 +35,6 @@ export interface SearchFilterField {
   dataType: 'enumeration';
   allowedValues?: string[];
   currentValue?: string;
-}
-
-export interface SearchContextChange {
-  domainType?: string;
-  id?: string;
-  label?: string;
-  parent?: string;
-  dataModel?: string;
 }
 
 export interface SearchFilterChange {
@@ -73,7 +65,7 @@ export interface SearchFilterDate {
 export class SearchFiltersComponent implements OnInit {
   @Input() fields: SearchFilterField[] = [];
 
-  @Input() context: SearchContext = null;
+  @Input() context: CatalogueSearchContext = null;
 
   @Input() domainTypes: string[] = [];
 
@@ -93,7 +85,7 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
 
-  @Output() contextChange = new EventEmitter<SearchContextChange>();
+  @Output() contextChange = new EventEmitter<CatalogueSearchContext>();
 
   @Output() filterChange = new EventEmitter<SearchFilterChange>();
 
@@ -237,8 +229,8 @@ export class SearchFiltersComponent implements OnInit {
             domainType: catalogueItem.domainType,
             id: catalogueItem.id,
             label: catalogueItem.label,
-            parent: catalogueItem.parentId ?? null,
-            dataModel: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
+            parentId: catalogueItem.parentId ?? null,
+            dataModelId: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
           }
         );
       }

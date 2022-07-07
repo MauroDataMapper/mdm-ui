@@ -199,7 +199,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: NewVersionComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit',
+      name: 'appContainer.mainApp.bulkEdit',
       url: '/:domainType/bulkEdit/:id',
       component: BulkEditContainerComponent
     },

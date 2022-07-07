@@ -277,7 +277,7 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   openBulkEdit() {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', { id: this.dataModel.id, domainType: this.dataModel.domainType });
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', { id: this.dataModel.id, domainType: this.dataModel.domainType });
   }
 
   editBranchName() {

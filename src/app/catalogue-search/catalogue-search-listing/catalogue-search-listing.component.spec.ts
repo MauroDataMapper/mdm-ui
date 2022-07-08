@@ -129,7 +129,7 @@ describe('CatalogueSearchListingComponent', () => {
     });
 
     it('should render an empty state to the page', () => {
-      expect(harness.component.resultSet.totalResults).toBe(0);
+      expect(harness.component.resultSet.count).toBe(0);
       expect(harness.component.status).toBe('ready');
     });
   });
@@ -175,7 +175,7 @@ describe('CatalogueSearchListingComponent', () => {
 
       harness.component.ngOnInit();
 
-      expect(harness.component.resultSet.totalResults).toBe(totalResults);
+      expect(harness.component.resultSet.count).toBe(totalResults);
       expect(harness.component.resultSet.items).toBe(catalogueItems);
       expect(harness.component.status).toBe('ready');
     });

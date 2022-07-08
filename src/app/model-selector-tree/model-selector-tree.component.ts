@@ -64,6 +64,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() isRequired: any;
   @Input() showValidationError: any;
   @Input() doNotShowDataClasses: any;
+  @Input() doNotShowChildDataClasses: any;
   @Input() doNotShowTerms: any;
   @Input() justShowFolders: any;
   @Input() placeholder: any;
@@ -80,6 +81,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() usedInModalDialogue: any;
   @Input() doNotApplySettingsFilter: any;
   @Input() folderFilterFn: (f: MdmTreeItem) => boolean;
+  @Input() showInputGroup = true;
   @Output() checkChange = new EventEmitter<any>();
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
@@ -192,7 +194,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
     this.reload();
 
-    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
+    if (this.showInputGroup) {
+      fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
       .pipe(
         map((event: any) => {
           return event.target.value;
@@ -235,6 +238,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           this.reload();
         }
       });
+    }
   }
 
   loadFolder(folder) {

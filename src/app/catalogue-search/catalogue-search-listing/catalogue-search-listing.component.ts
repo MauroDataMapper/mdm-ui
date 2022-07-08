@@ -23,6 +23,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
   CatalogueSearchResultSet,
   mapStateParamsToSearchParameters
@@ -51,6 +52,7 @@ export class CatalogueSearchListingComponent implements OnInit {
   searchTerms?: string;
   resultSet?: CatalogueSearchResultSet;
   sortBy?: SortByOption;
+  context: CatalogueSearchContext = null;
   /**
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
@@ -74,6 +76,16 @@ export class CatalogueSearchListingComponent implements OnInit {
     );
     this.searchTerms = this.parameters.search;
 
+    if (this.parameters.contextDomainType && this.parameters.contextId) {
+      this.context = {
+        domainType: this.parameters.contextDomainType,
+        id: this.parameters.contextId,
+        label: this.parameters.contextLabel,
+        dataModelId: this.parameters.contextDataModelId,
+        parentId: this.parameters.contextParentId,
+      };
+    }
+
     this.sortBy = this.setSortByFromRouteOrAsDefault(
       this.parameters.sort,
       this.parameters.order
@@ -95,6 +107,15 @@ export class CatalogueSearchListingComponent implements OnInit {
       'appContainer.mainApp.catalogueSearchListing',
       this.parameters
     );
+  }
+
+  onContextChanged(event: CatalogueSearchContext) {
+    this.parameters.contextId = event ? event.id : null;
+    this.parameters.contextDomainType = event ? event.domainType : null;
+    this.parameters.contextLabel = event ? event.label : null;
+    this.parameters.contextDataModelId = event ? event.dataModelId : null;
+    this.parameters.contextParentId = event ? event.parentId : null;
+    this.updateSearch();
   }
 
   onSearchTerm() {
@@ -121,6 +142,11 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onFilterReset() {
+    this.parameters.contextDomainType = undefined;
+    this.parameters.contextId = undefined;
+    this.parameters.contextLabel = undefined;
+    this.parameters.contextParentId = undefined;
+    this.parameters.contextDataModelId = undefined;
     this.parameters.domainTypes = [];
     this.parameters.labelOnly = undefined;
     this.parameters.exactMatch = undefined;
@@ -134,7 +160,7 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   private setEmptyResultPage() {
     this.resultSet = {
-      totalResults: 0,
+      count: 0,
       page: 1,
       pageSize: 10,
       items: []
@@ -144,8 +170,9 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   private performSearch() {
     this.status = 'loading';
+
     this.catalogueSearch
-      .search(this.parameters)
+      .contextualSearch(this.context, this.parameters)
       .pipe(
         catchError((error) => {
           this.status = 'error';

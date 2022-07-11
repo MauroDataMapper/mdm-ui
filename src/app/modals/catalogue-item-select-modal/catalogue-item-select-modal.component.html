@@ -16,47 +16,37 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tab-group>
-  <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
-    <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
-    <mdm-bulk-edit-editor
-      *ngIf="tab"
-      [rootItem]="context.rootItem"
-      [(tab)]="tabs[index]"
-    ></mdm-bulk-edit-editor>
-  </mat-tab>
-</mat-tab-group>
+<div class="modal-header pxy-2">
+  <h4 class="modal-title marginless">Choose a Catalogue Item</h4>
+</div>
+<div class="modal-body pxy-2">
+  <div class="mr-4 w-100 overflow-auto">
+    <mdm-model-selector-tree
+      [ngModel]="context"
+      [onSelect]="onContextSelected"
+      ngDefaultControl
+      [placeholder]="'Choose a Folder, Data Model or Data Class'"
+      [accepts]="['Folder', 'DataModel', 'DataClass', 'ReferenceDataModel']"
+      [multiple]="false"
+      [alwaysShowTree]="true"
+      [usedInModalDialogue]="true"
+      [showInputGroup]="false"
+      [doNotShowChildDataClasses]="true"
+      >
+    </mdm-model-selector-tree>
+  </div>
+</div>
 <div class="modal-footer pxy-2">
-  <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
-    Close
-  </button>
-  <button
-    mat-button
-    color="warn"
-    type="button"
-    class="mr-1"
-    (click)="previous()"
-  >
-    Back
-  </button>
-  <button
-    mat-stroked-button
-    type="button"
-    color="primary"
-    type="button"
-    class="mr-1"
-    (click)="validate()"
-  >
-    Validate
+  <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
+    Cancel
   </button>
   <button
     mat-flat-button
-    type="button"
     color="primary"
     type="button"
-    class="mr-1"
-    (click)="save()"
+    [disabled]="isOkDisabled"
+    [mat-dialog-close]="context"
   >
-    Save All
+    OK
   </button>
 </div>

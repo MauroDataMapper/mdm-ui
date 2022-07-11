@@ -21,18 +21,26 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { CatalogueSearchComponent } from './catalogue-search/catalogue-search.component';
+import { CatalogueSearchFormComponent } from './catalogue-search-form/catalogue-search-form.component';
 import { CatalogueSearchListingComponent } from './catalogue-search-listing/catalogue-search-listing.component';
 import { CatalogueItemSearchResultComponent } from './catalogue-item-search-result/catalogue-item-search-result.component';
+import { CatalogueSearchAdvancedFormComponent } from './catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { SearchFiltersComponent } from './search-filters/search-filters.component';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+
 
 @NgModule({
   declarations: [
     CatalogueSearchComponent,
+    CatalogueSearchFormComponent,
     CatalogueSearchListingComponent,
     CatalogueItemSearchResultComponent,
-    BreadcrumbComponent
+    CatalogueSearchAdvancedFormComponent,
+    SearchFiltersComponent,
+    BreadcrumbComponent,
   ],
-  imports: [CommonModule, SharedModule, MaterialModule, CatalogueModule]
+  imports: [CommonModule, FoldersTreeModule, SharedModule, MaterialModule, CatalogueModule]
 })
 export class CatalogueSearchModule {}

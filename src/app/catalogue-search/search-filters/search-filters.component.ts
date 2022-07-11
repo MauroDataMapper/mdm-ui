@@ -18,10 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectChange } from '@angular/material/select';
-import { Classifier, ClassifierIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  Classifier,
+  ClassifierIndexResponse
+} from '@maurodatamapper/mdm-resources';
+import { CatalogueItemSelectModalComponent } from '@mdm/modals/catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { CatalogueSearchContext } from '../catalogue-search.types';
 
 export interface SearchFilterField {
   name: string;
@@ -54,10 +60,12 @@ export interface SearchFilterDate {
 @Component({
   selector: 'mdm-search-filters',
   templateUrl: './search-filters.component.html',
-  styleUrls: ['./search-filters.component.scss'],
+  styleUrls: ['./search-filters.component.scss']
 })
 export class SearchFiltersComponent implements OnInit {
   @Input() fields: SearchFilterField[] = [];
+
+  @Input() context: CatalogueSearchContext = null;
 
   @Input() domainTypes: string[] = [];
 
@@ -77,46 +85,48 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
 
+  @Output() contextChange = new EventEmitter<CatalogueSearchContext>();
+
   @Output() filterChange = new EventEmitter<SearchFilterChange>();
 
   @Output() filterReset = new EventEmitter<void>();
 
   domainTypesFilter: SearchFilterDomainType[] = [
-    {name: 'Data Model', domainType: 'DataModel'},
-    {name: 'Data Class', domainType: 'DataClass'},
-    {name: 'Data Element', domainType: 'DataElement'},
-    {name: 'Data Type', domainType: 'DataType'},
-    {name: 'Enumeration Value', domainType: 'EnumerationValue'},
+    { name: 'Data Model', domainType: 'DataModel' },
+    { name: 'Data Class', domainType: 'DataClass' },
+    { name: 'Data Element', domainType: 'DataElement' },
+    { name: 'Data Type', domainType: 'DataType' },
+    { name: 'Enumeration Value', domainType: 'EnumerationValue' }
   ];
 
   labelOnlyFilter: SearchFilterCheckbox = {
     name: 'labelOnly',
-    checked: false,
+    checked: false
   };
 
   exactMatchFilter: SearchFilterCheckbox = {
     name: 'labelOnly',
-    checked: false,
+    checked: false
   };
 
   lastUpdatedAfterFilter: SearchFilterDate = {
     name: 'lastUpdatedAfter',
-    value: null,
+    value: null
   };
 
   lastUpdatedBeforeFilter: SearchFilterDate = {
     name: 'lastUpdatedBefore',
-    value: null,
+    value: null
   };
 
   createdAfterFilter: SearchFilterDate = {
     name: 'createdAfter',
-    value: null,
+    value: null
   };
 
   createdBeforeFilter: SearchFilterDate = {
     name: 'createdBefore',
-    value: null,
+    value: null
   };
 
   classifiersFilter: Classifier[] = [];
@@ -124,17 +134,18 @@ export class SearchFiltersComponent implements OnInit {
   isReady = false;
 
   constructor(
-    private resources: MdmResourcesService
+    private resources: MdmResourcesService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.resources.classifier
-    .list({ all: true })
-    .subscribe((result: ClassifierIndexResponse) => {
-      this.classifiersFilter = result.body.items;
+      .list({ all: true })
+      .subscribe((result: ClassifierIndexResponse) => {
+        this.classifiersFilter = result.body.items;
 
-      this.isReady = true;
-    });
+        this.isReady = true;
+      });
 
     this.labelOnlyFilter.checked = this.labelOnly;
 
@@ -169,13 +180,13 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name: 'domainTypes', value: event.value });
   }
 
-  onLabelOnlyChange(event: MatCheckboxChange,) {
+  onLabelOnlyChange(event: MatCheckboxChange) {
     this.labelOnlyFilter.checked = event.checked;
 
     this.filterChange.emit({ name: 'labelOnly', value: event.checked });
   }
 
-  onExactMatchChange(event: MatCheckboxChange,) {
+  onExactMatchChange(event: MatCheckboxChange) {
     this.exactMatchFilter.checked = event.checked;
 
     this.filterChange.emit({ name: 'exactMatch', value: event.checked });
@@ -187,19 +198,42 @@ export class SearchFiltersComponent implements OnInit {
 
     if (event.value) {
       const yyyy: String = event.value.getFullYear().toString();
-      const mm: String = (parseInt(event.value.getMonth(), 10) + 1).toString().padStart(2, '0');
-      const dd: String = (event.value.getDate()).toString().padStart(2, '0');
+      const mm: String = (parseInt(event.value.getMonth(), 10) + 1)
+        .toString()
+        .padStart(2, '0');
+      const dd: String = event.value.getDate().toString().padStart(2, '0');
 
       formatted = `${yyyy}-${mm}-${dd}`;
     }
-    this.filterChange.emit({ name, value: formatted});
+    this.filterChange.emit({ name, value: formatted });
   }
 
   onDateClear(name: string) {
-    this.filterChange.emit({ name, value: null });
+    this.filterChange.emit({ name, value: undefined });
   }
 
   onClassifiersChange(event: MatSelectChange) {
     this.filterChange.emit({ name: 'classifiers', value: event.value });
+  }
+
+  onContextClear() {
+    this.contextChange.emit(null);
+  }
+
+  openCatalogueItemSelectModal() {
+    this.dialog.open(CatalogueItemSelectModalComponent, { }).afterClosed().subscribe((catalogueItem) => {
+      if (catalogueItem) {
+        // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
+        this.contextChange.emit(
+          {
+            domainType: catalogueItem.domainType,
+            id: catalogueItem.id,
+            label: catalogueItem.label,
+            parentId: catalogueItem.parentId ?? null,
+            dataModelId: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
+          }
+        );
+      }
+    });
   }
 }

@@ -23,6 +23,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
   CatalogueSearchResultSet,
   mapStateParamsToSearchParameters
@@ -38,7 +39,7 @@ export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
  * can be any property on the objects you are sorting and order must be of type
  * {@link SortOrder }
  */
- export type SearchListingSortByOption = 'label-asc' | 'label-desc';
+export type SearchListingSortByOption = 'label-asc' | 'label-desc';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -51,13 +52,14 @@ export class CatalogueSearchListingComponent implements OnInit {
   searchTerms?: string;
   resultSet?: CatalogueSearchResultSet;
   sortBy?: SortByOption;
+  context: CatalogueSearchContext = null;
   /**
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
    */
-   searchListingSortByOptions: SortByOption[] = [
+  searchListingSortByOptions: SortByOption[] = [
     { value: 'label-asc', displayName: 'Label (a-z)' },
-    { value: 'label-desc', displayName: 'Label (z-a)' },
+    { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
@@ -74,6 +76,16 @@ export class CatalogueSearchListingComponent implements OnInit {
     );
     this.searchTerms = this.parameters.search;
 
+    if (this.parameters.contextDomainType && this.parameters.contextId) {
+      this.context = {
+        domainType: this.parameters.contextDomainType,
+        id: this.parameters.contextId,
+        label: this.parameters.contextLabel,
+        dataModelId: this.parameters.contextDataModelId,
+        parentId: this.parameters.contextParentId,
+      };
+    }
+
     this.sortBy = this.setSortByFromRouteOrAsDefault(
       this.parameters.sort,
       this.parameters.order
@@ -87,13 +99,23 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.performSearch();
   }
 
-
   /**
    * Update the search by using the state router.
    */
   updateSearch() {
-    this.status = 'loading';
-    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', this.parameters);
+    this.stateRouter.Go(
+      'appContainer.mainApp.catalogueSearchListing',
+      this.parameters
+    );
+  }
+
+  onContextChanged(event: CatalogueSearchContext) {
+    this.parameters.contextId = event ? event.id : null;
+    this.parameters.contextDomainType = event ? event.domainType : null;
+    this.parameters.contextLabel = event ? event.label : null;
+    this.parameters.contextDataModelId = event ? event.dataModelId : null;
+    this.parameters.contextParentId = event ? event.parentId : null;
+    this.updateSearch();
   }
 
   onSearchTerm() {
@@ -120,6 +142,11 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onFilterReset() {
+    this.parameters.contextDomainType = undefined;
+    this.parameters.contextId = undefined;
+    this.parameters.contextLabel = undefined;
+    this.parameters.contextParentId = undefined;
+    this.parameters.contextDataModelId = undefined;
     this.parameters.domainTypes = [];
     this.parameters.labelOnly = undefined;
     this.parameters.exactMatch = undefined;
@@ -133,7 +160,7 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   private setEmptyResultPage() {
     this.resultSet = {
-      totalResults: 0,
+      count: 0,
       page: 1,
       pageSize: 10,
       items: []
@@ -143,8 +170,9 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   private performSearch() {
     this.status = 'loading';
+
     this.catalogueSearch
-      .search(this.parameters)
+      .contextualSearch(this.context, this.parameters)
       .pipe(
         catchError((error) => {
           this.status = 'error';
@@ -168,7 +196,7 @@ export class CatalogueSearchListingComponent implements OnInit {
    * @param order the order in which to sort that propery
    * @returns a SortByOption object with value matching the route string sortBy value or the default sortBy option.
    */
-   private setSortByFromRouteOrAsDefault(
+  private setSortByFromRouteOrAsDefault(
     sort: string | undefined,
     order: string | undefined
   ): SortByOption {

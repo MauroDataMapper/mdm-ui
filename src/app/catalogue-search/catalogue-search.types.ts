@@ -26,9 +26,30 @@ export type CatalogueSearchFilters = {
 };
 
 /**
+ * Represents a single element within which a search should occur.
+ */
+export interface CatalogueSearchContext {
+  domainType: string;
+  id: string;
+  label: string;
+  parentId?: string;
+  dataModelId?: string;
+}
+
+/**
  * Represents the parameters to drive a Catalogue Search.
  */
 export interface CatalogueSearchParameters {
+  /**
+   * If provided, a search context element i.e. the catalogue item within
+   * which searching should be restricted to.
+   */
+   contextDomainType?: string;
+   contextId?: string;
+   contextLabel?: string;
+   contextParentId?: string;
+   contextDataModelId?: string;
+
   /**
    * If provided, provides the search terms for full text search.
    */
@@ -126,6 +147,11 @@ export const mapStateParamsToSearchParameters = (
   }
 
   return {
+    contextDomainType: query?.contextDomainType ?? undefined,
+    contextId: query?.contextId ?? undefined,
+    contextLabel: query?.contextLabel ?? undefined,
+    contextParentId: query?.contextParentId ?? undefined,
+    contextDataModelId: query?.contextDataModelId ?? undefined,
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
@@ -146,6 +172,11 @@ export const mapSearchParametersToRawParams = (
   parameters: CatalogueSearchParameters
 ): RawParams => {
   return {
+    ...(parameters.contextDomainType && { search: parameters.contextDomainType }),
+    ...(parameters.contextId && { search: parameters.contextId }),
+    ...(parameters.contextParentId && { search: parameters.contextParentId }),
+    ...(parameters.contextLabel && { search: parameters.contextLabel }),
+    ...(parameters.contextDataModelId && { search: parameters.contextDataModelId }),
     ...(parameters.search && { search: parameters.search }),
     ...(parameters.page && { page: parameters.page }),
     ...(parameters.sort && { sort: parameters.sort }),
@@ -163,7 +194,7 @@ export const mapSearchParametersToRawParams = (
 };
 
 export interface CatalogueSearchResultSet {
-  totalResults: number;
+  count: number;
   pageSize: number;
   page: number;
   items: CatalogueItemSearchResult[];

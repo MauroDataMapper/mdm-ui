@@ -17,8 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MultiFacetAwareItem, ProfileContext } from '@maurodatamapper/mdm-resources';
-import { BulkEditContext, BulkEditProfileContext } from '../types/bulk-edit-types';
+import {
+  MultiFacetAwareItem,
+  ProfileContext
+} from '@maurodatamapper/mdm-resources';
+import { BulkEditContext, BulkEditProfileContext } from '../bulk-edit.types';
 
 @Component({
   selector: 'mdm-bulk-edit-editor-group',
@@ -38,8 +41,10 @@ export class BulkEditEditorGroupComponent implements OnInit {
   tabs: BulkEditProfileContext[];
 
   ngOnInit(): void {
-    this.tabs = this.context.profiles.map<BulkEditProfileContext>(profile => {
-      const multiFacetAwareItems = this.context.elements.map<MultiFacetAwareItem>(element => {
+    this.tabs = this.context.profiles.map<BulkEditProfileContext>((profile) => {
+      const multiFacetAwareItems = this.context.elements.map<
+        MultiFacetAwareItem
+      >((element) => {
         return {
           multiFacetAwareItemDomainType: element.domainType,
           multiFacetAwareItemId: element.id

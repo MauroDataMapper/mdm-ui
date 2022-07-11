@@ -18,14 +18,22 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { DataModelDetail, DataModelDetailResponse, ProfileContext } from '@maurodatamapper/mdm-resources';
+import {
+  DataModelDetail,
+  DataModelDetailResponse,
+  ProfileContext
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService, MessageHandlerService, BroadcastService } from '@mdm/services';
+import {
+  StateHandlerService,
+  MessageHandlerService,
+  BroadcastService
+} from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BulkEditContext, BulkEditStep } from '../types/bulk-edit-types';
+import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 
 @Component({
   selector: 'mdm-bulk-edit-container',
@@ -46,21 +54,27 @@ export class BulkEditContainerComponent implements OnInit {
     private uiRouterGlobals: UIRouterGlobals,
     private messageHandler: MessageHandlerService,
     private title: Title,
-    private editing: EditingService) { }
+    private editing: EditingService
+  ) {}
 
   ngOnInit(): void {
     this.context = {
-      catalogueItemId: this.uiRouterGlobals.params.id,
-      domainType: this.uiRouterGlobals.params.domainType,
+      rootItem: {
+        id: this.uiRouterGlobals.params.id,
+        domainType: this.uiRouterGlobals.params.domainType
+      },
       elements: [],
       profiles: []
     };
 
     this.resource.dataModel
-      .get(this.context.catalogueItemId)
+      .get(this.context.rootItem.id)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the parent catalogue item.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem getting the parent catalogue item.',
+            error
+          );
           return EMPTY;
         })
       )
@@ -90,18 +104,22 @@ export class BulkEditContainerComponent implements OnInit {
 
   save(profiles: ProfileContext[]) {
     this.resource.profile
-      .saveMany(
-        this.context.domainType,
-        this.context.catalogueItemId,
-        { profilesProvided: profiles })
+      .saveMany(this.context.rootItem.domainType, this.context.rootItem.id, {
+        profilesProvided: profiles
+      })
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem saving the profiles.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the profiles.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Profile information was saved successfully.');
+        this.messageHandler.showSuccess(
+          'Profile information was saved successfully.'
+        );
       });
   }
 }

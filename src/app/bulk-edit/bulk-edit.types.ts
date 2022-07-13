@@ -16,7 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemDomainType, DataElementDetail, MultiFacetAwareDomainType, MultiFacetAwareItem, Profile, ProfileContextCollection, ProfileSummary, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItem,
+  DataElementDetail,
+  MultiFacetAwareItem,
+  Profile,
+  ProfileContextCollection,
+  ProfileSummary
+} from '@maurodatamapper/mdm-resources';
 
 export enum BulkEditStep {
   Selection,
@@ -24,8 +31,7 @@ export enum BulkEditStep {
 }
 
 export class BulkEditContext {
-  catalogueItemId: Uuid;
-  domainType: CatalogueItemDomainType | MultiFacetAwareDomainType;
+  rootItem: CatalogueItem;
   elements: DataElementDetail[];
   profiles: ProfileSummary[];
 }

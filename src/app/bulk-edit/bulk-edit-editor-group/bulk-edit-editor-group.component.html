@@ -21,20 +21,13 @@ SPDX-License-Identifier: Apache-2.0
     <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
     <mdm-bulk-edit-editor
       *ngIf="tab"
-      [catalogueItemId]="context.catalogueItemId"
-      [domainType]="context.domainType"
+      [rootItem]="context.rootItem"
       [(tab)]="tabs[index]"
     ></mdm-bulk-edit-editor>
   </mat-tab>
 </mat-tab-group>
 <div class="modal-footer pxy-2">
-  <button
-    mat-button
-    color="warn"
-    type="button"
-    class="mr-1"
-    (click)="cancel()"
-  >
+  <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
     Close
   </button>
   <button

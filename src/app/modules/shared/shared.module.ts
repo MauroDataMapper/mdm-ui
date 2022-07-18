@@ -58,7 +58,6 @@ import { JoditAngularModule } from 'jodit-angular';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
-import { SearchFiltersComponent } from '@mdm/catalogue-search/search-filters/search-filters.component';
 
 @NgModule({
   declarations: [
@@ -91,23 +90,22 @@ import { SearchFiltersComponent } from '@mdm/catalogue-search/search-filters/sea
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent,
-    SearchFiltersComponent,
+    SortByComponent
   ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        MaterialModule,
-        ReactiveFormsModule,
-        MatPasswordStrengthModule,
-        NgxJsonViewerModule,
-        FlexLayoutModule,
-        ReactiveFormsModule,
-        NgxSkeletonLoaderModule,
-        CodemirrorModule,
-        JoditAngularModule,
-      UIRouterModule
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    MatPasswordStrengthModule,
+    NgxJsonViewerModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    NgxSkeletonLoaderModule,
+    CodemirrorModule,
+    JoditAngularModule,
+    UIRouterModule
+  ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
@@ -148,8 +146,7 @@ import { SearchFiltersComponent } from '@mdm/catalogue-search/search-filters/sea
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent,
-    SearchFiltersComponent,
+    SortByComponent
   ]
 })
 export class SharedModule {}

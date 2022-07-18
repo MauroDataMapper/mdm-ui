@@ -16,24 +16,70 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { StateHandlerService } from '@mdm/services';
+import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
+import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
 
-/**
- * Top-level component that represents the overall Catalogue Search page.
- *
- * This acts as the landing page to the catalogue search, holding just the form for
- * entering search criteria.
- */
 @Component({
   selector: 'mdm-catalogue-search',
   templateUrl: './catalogue-search.component.html',
   styleUrls: ['./catalogue-search.component.scss']
 })
 export class CatalogueSearchComponent implements OnInit {
-  constructor(private title: Title) {}
+  constructor(private stateHandler: StateHandlerService) {}
 
-  ngOnInit(): void {
-    this.title.setTitle('Catalogue search');
+  @ViewChild(CatalogueSearchFormComponent, { static: true })
+  catalogueSearchFormComponent: CatalogueSearchFormComponent;
+  @ViewChild(CatalogueSearchAdvancedFormComponent, { static: true })
+  catalogueSearchAdvancedFormComponent: CatalogueSearchAdvancedFormComponent;
+
+  ngOnInit(): void {}
+
+  reset() {
+    this.catalogueSearchFormComponent.reset();
+    this.catalogueSearchAdvancedFormComponent.reset();
+  }
+
+  search() {
+    const context: MdmTreeItem | undefined | null = this
+      .catalogueSearchAdvancedFormComponent.context.value?.[0];
+
+    this.stateHandler.Go('appContainer.mainApp.catalogueSearchListing', {
+      contextDomainType: context?.domainType ?? null,
+      contextId: context?.id ?? null,
+      contextLabel: context?.label ?? null,
+      contextParentId: context?.parentId ?? null,
+      contextDataModelId: context?.modelId ?? null,
+
+      search: this.catalogueSearchFormComponent.searchTerms.value,
+
+      labelOnly: this.catalogueSearchAdvancedFormComponent.labelOnly.value,
+      exactMatch: this.catalogueSearchAdvancedFormComponent.exactMatch.value,
+      domainTypes: this.catalogueSearchAdvancedFormComponent.domainTypes.value,
+
+      classifiers: this.catalogueSearchAdvancedFormComponent.classifierNames,
+
+      lastUpdatedAfter:
+        this.catalogueSearchAdvancedFormComponent.formatDate(
+          this.catalogueSearchAdvancedFormComponent.lastUpdatedAfter.value
+        ) ?? null,
+
+      lastUpdatedBefore:
+        this.catalogueSearchAdvancedFormComponent.formatDate(
+          this.catalogueSearchAdvancedFormComponent.lastUpdatedBefore.value
+        ) ?? null,
+
+      createdAfter:
+        this.catalogueSearchAdvancedFormComponent.formatDate(
+          this.catalogueSearchAdvancedFormComponent.createdAfter.value
+        ) ?? null,
+
+      createdBefore:
+        this.catalogueSearchAdvancedFormComponent.formatDate(
+          this.catalogueSearchAdvancedFormComponent.createdBefore.value
+        ) ?? null
+    });
   }
 }

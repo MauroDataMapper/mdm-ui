@@ -96,7 +96,7 @@ describe('SearchFiltersComponent', () => {
 
     it('should raise a filter reset event to clear all filters', () => {
       const spy = jest.spyOn(harness.component.filterReset, 'emit');
-      harness.component.clearAll();
+      harness.component.resetAll();
       expect(spy).toHaveBeenCalled();
     });
   });

@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
@@ -71,7 +70,6 @@ export class DataModelDetailComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
@@ -81,15 +79,20 @@ export class DataModelDetailComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService) { }
+    private validatorService: ValidatorService
+  ) {}
 
   get canChangeBranchName() {
-    return this.access.showEdit && this.dataModel.branchName !== defaultBranchName;
+    return (
+      this.access.showEdit && this.dataModel.branchName !== defaultBranchName
+    );
   }
 
   ngOnInit() {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
     this.loadExporterList();
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
@@ -118,10 +121,6 @@ export class DataModelDetailComponent implements OnInit {
 
   toggleSecuritySection() {
     this.dialog.openSecurityAccess(this.dataModel, 'dataModel');
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   delete(permanent) {
@@ -261,7 +260,9 @@ export class DataModelDetailComponent implements OnInit {
           }
         );
     } else {
-      this.messageHandler.showError('There is an error with the label please correct and try again');
+      this.messageHandler.showError(
+        'There is an error with the label please correct and try again'
+      );
     }
   }
 
@@ -277,13 +278,17 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   openBulkEdit() {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', { id: this.dataModel.id, domainType: this.dataModel.domainType });
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
+    });
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.dataModel)
+    this.dialog
+      .openChangeBranchName(this.dataModel)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ModelUpdatePayload = {
             id: this.dataModel.id,
             domainType: this.dataModel.domainType,
@@ -292,7 +297,7 @@ export class DataModelDetailComponent implements OnInit {
 
           return this.resourcesService.dataModel.update(payload.id, payload);
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -301,7 +306,9 @@ export class DataModelDetailComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Data Model branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Data Model branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'datamodel',
           { id: this.dataModel.id },
@@ -361,13 +368,10 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newVersionModel',
-      {
-        id: this.dataModel.id,
-        domainType: this.dataModel.domainType
-      }
-    );
+    this.stateHandler.Go('newVersionModel', {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
+    });
   }
 
   compare(dataModel = null) {
@@ -383,12 +387,10 @@ export class DataModelDetailComponent implements OnInit {
 
   merge() {
     if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go(
-        'mergediff',
-        {
-          sourceId: this.dataModel.id,
-          catalogueDomainType: MultiFacetAwareDomainType.DataModels
-        });
+      return this.stateHandler.Go('mergediff', {
+        sourceId: this.dataModel.id,
+        catalogueDomainType: MultiFacetAwareDomainType.DataModels
+      });
     }
 
     return this.stateHandler.Go(
@@ -403,14 +405,15 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   showMergeGraph() {
-    this.dialog.open<VersioningGraphModalComponent, VersioningGraphModalConfiguration>(
+    this.dialog.open<
       VersioningGraphModalComponent,
-      {
-        data: {
-          catalogueItem: this.dataModel
-        },
-        panelClass: 'versioning-graph-modal'
-      });
+      VersioningGraphModalConfiguration
+    >(VersioningGraphModalComponent, {
+      data: {
+        catalogueItem: this.dataModel
+      },
+      panelClass: 'versioning-graph-modal'
+    });
   }
 
   export(exporter) {

@@ -54,7 +54,6 @@ export class FolderDetailComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
     private messageHandlerService: MessageHandlerService,
     private folderHandler: FolderHandlerService,
@@ -86,10 +85,6 @@ export class FolderDetailComponent implements OnInit {
 
   toggleSecuritySection() {
     this.dialog.openSecurityAccess(this.folder, 'folder');
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   askForSoftDelete() {

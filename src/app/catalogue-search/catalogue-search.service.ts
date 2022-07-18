@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  CatalogueItemDomainType,
   CatalogueItemSearchResponse,
   CatalogueItemSearchResult,
   MdmIndexBody,
@@ -28,8 +29,11 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
-  CatalogueSearchResultSet
+  CatalogueSearchResultSet,
+  defaultPage,
+  defaultPageSize
 } from './catalogue-search.types';
 
 @Injectable({
@@ -45,13 +49,13 @@ export class CatalogueSearchService {
     const query: SearchQueryParameters = {
       ...this.getCommonQueryParameters(params),
       ...pageParams,
-      searchTerm: this.getSearchTerm(params),
+      searchTerm: this.getSearchTerm(params)
     };
 
-    return this.searchCatalogue(query).pipe(
+    return this.searchCatalogue(query, params.context).pipe(
       map((searchResults) => {
         return {
-          totalResults: searchResults.count,
+          count: searchResults.count,
           pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
           page,
           items: searchResults.items
@@ -68,9 +72,7 @@ export class CatalogueSearchService {
    *
    * @returns string The search term in quotes
    */
-  private getSearchTerm(
-    params: CatalogueSearchParameters
-  ): string {
+  private getSearchTerm(params: CatalogueSearchParameters): string {
     let search = params.search;
     if (params.exactMatch) {
       if (search[0] !== '"') {
@@ -86,10 +88,11 @@ export class CatalogueSearchService {
   private getPageParameters(
     params: CatalogueSearchParameters
   ): [number, PageParameters] {
-    const page = params.page ?? 1;
+    const page = params.page ?? defaultPage;
+    const pageSize = params.pageSize ?? defaultPageSize;
     const pageParams: PageParameters = {
-      max: params.pageSize,
-      offset: page * params.pageSize
+      max: pageSize,
+      offset: page * pageSize
     };
     return [page, pageParams];
   }
@@ -106,13 +109,34 @@ export class CatalogueSearchService {
       lastUpdatedBefore: params.lastUpdatedBefore,
       createdAfter: params.createdAfter,
       createdBefore: params.createdBefore,
-      classifiers: params.classifiers,
+      classifiers: params.classifiers
     };
   }
 
+  /**
+   * Search the entire catalogue
+   *
+   * @param query
+   * @returns
+   */
   private searchCatalogue(
-    query: SearchQueryParameters
+    query: SearchQueryParameters,
+    context?: CatalogueSearchContext
   ): Observable<MdmIndexBody<CatalogueItemSearchResult>> {
+    if (context) {
+      if (context.domainType === CatalogueItemDomainType.DataClass) {
+        // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
+        return this.resources.dataClass
+          .search(context.dataModelId, context.id, query)
+          .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+      }
+
+      return this.resources
+        .getSearchableResource(context.domainType)
+        .search(context.id, query)
+        .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+    }
+
     return this.resources.catalogueItem
       .search(query)
       .pipe(map((response: CatalogueItemSearchResponse) => response.body));

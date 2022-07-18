@@ -199,7 +199,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: NewVersionComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit',
+      name: 'appContainer.mainApp.bulkEdit',
       url: '/:domainType/bulkEdit/:id',
       component: BulkEditContainerComponent
     },
@@ -454,26 +454,34 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.catalogueSearchListing',
       url:
-        '/search/listing?{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}&{classifiers:string}',
+        '/search/listing?{contextDomainType:string}&{contextId:string}&{contextLabel:string}&{contextParentId:string}&{contextDataModelId:string}&{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}&{classifiers:string}',
       component: CatalogueSearchListingComponent,
       data: {
-        allowAnonymous: true,
-        featureSwitch: 'useCatalogueSearch'
+        allowAnonymous: true
       },
       params: {
+        contextDomainType: null,
+        contextId: null,
+        contextLabel: null,
+        contextParentId: null,
+        contextDataModelId: null,
         search: null,
         page: null,
         sort: null,
         order: null,
         pageSize: null,
-        domainTypes: null,
-        labelOnly: null,
-        exactMatch: null,
+        labelOnly: 'false',
+        exactMatch: 'false',
+        domainTypes: {
+          array: 'auto'
+        },
+        classifiers: {
+          array: 'auto'
+        },
         lastUpdatedAfter: null,
         lastUpdatedBefore: null,
         createdAfter: null,
-        createdBefore: null,
-        classifiers: null,
+        createdBefore: null
       }
     }
   ]

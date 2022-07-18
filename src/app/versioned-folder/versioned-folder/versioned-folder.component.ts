@@ -48,7 +48,7 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY, Subject, Subscription } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -67,7 +67,6 @@ export class VersionedFolderComponent
   activeTab: TabDescriptor;
   access: Access;
 
-  showSearch = false;
   showExtraTabs = false;
 
   annotationsView: AnnotationViewOption = 'default';
@@ -75,10 +74,13 @@ export class VersionedFolderComponent
   isLoadingHistory = true;
   rulesItemCount = 0;
   isLoadingRules = true;
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
-
-  private subscriptions: Subscription[] = [];
-  private unsubscribe$ = new Subject<void>();
+  tabs = new TabCollection([
+    'search',
+    'description',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -109,9 +111,8 @@ export class VersionedFolderComponent
     this.showExtraTabs = this.shared.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView as string
-    );
+    const tabView: string = this.uiRouterGlobals.params.tabView;
+    this.activeTab = this.tabs.getByName(tabView ?? 'description');
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Versioned Folder');

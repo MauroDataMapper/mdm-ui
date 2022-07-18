@@ -55,7 +55,6 @@ export class FolderComponent
   folder: FolderDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
-  showSearch = false;
   parentId: string;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
@@ -70,7 +69,13 @@ export class FolderComponent
   isLoadingRules = true;
   access: Access;
   annotationsView = 'default';
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'search',
+    'description',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -116,9 +121,8 @@ export class FolderComponent
     this.afterSave = (result: { body: { id: Uuid } }) =>
       this.folderDetails(result.body.id);
 
-    this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView as string
-    ).index;
+    const tabView: string = this.uiRouterGlobals.params.tabView;
+    this.activeTab = this.tabs.getByName(tabView ?? 'description').index;
 
     this.tabSelected(this.activeTab);
   }
@@ -149,10 +153,6 @@ export class FolderComponent
           this.folder[attrname] = permissions.body[attrname];
         });
       });
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   ngOnDestroy() {

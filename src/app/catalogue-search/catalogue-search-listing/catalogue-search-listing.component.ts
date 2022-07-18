@@ -23,22 +23,19 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
+  CatalogueSearchContext,
   CatalogueSearchParameters,
   CatalogueSearchResultSet,
-  mapStateParamsToSearchParameters
+  getOrderFromSortByOptionString,
+  getSortFromSortByOptionString,
+  mapSearchParametersToRawParams,
+  mapStateParamsToSearchParameters,
+  SearchListingSortByOption,
+  SearchListingStatus
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
-import { SortByOption, SortOrder } from '@mdm/shared/sort-by/sort-by.component';
-import { SearchFilterChange, SearchFilterField } from '../search-filters/search-filters.component';
-
-export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
-
-/**
- * These options must be of the form '{propertyToSortBy}-{order}' where propertyToSortBy
- * can be any property on the objects you are sorting and order must be of type
- * {@link SortOrder }
- */
- export type SearchListingSortByOption = 'label-asc' | 'label-desc';
+import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
+import { SearchFilterChange } from '../search-filters/search-filters.component';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -55,14 +52,11 @@ export class CatalogueSearchListingComponent implements OnInit {
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent
    */
-   searchListingSortByOptions: SortByOption[] = [
+  searchListingSortByOptions: SortByOption[] = [
     { value: 'label-asc', displayName: 'Label (a-z)' },
-    { value: 'label-desc', displayName: 'Label (z-a)' },
+    { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
-
-
-  filters: SearchFilterField[] = [];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -76,7 +70,6 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.routerGlobals.params
     );
     this.searchTerms = this.parameters.search;
-
     this.sortBy = this.setSortByFromRouteOrAsDefault(
       this.parameters.sort,
       this.parameters.order
@@ -90,13 +83,25 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.performSearch();
   }
 
-
   /**
    * Update the search by using the state router.
    */
   updateSearch() {
-    this.status = 'loading';
-    this.stateRouter.Go('appContainer.mainApp.catalogueSearchListing', this.parameters);
+    const routeParams = mapSearchParametersToRawParams(this.parameters);
+
+    // Force a reload and do not inherit from previous UI router transition. This fixes an
+    // issue when clearing the model context so that the context query params can be removed from
+    // the transition URL
+    this.stateRouter.Go(
+      'appContainer.mainApp.catalogueSearchListing',
+      routeParams,
+      { reload: true, inherit: false }
+    );
+  }
+
+  onContextChanged(event: CatalogueSearchContext) {
+    this.parameters.context = event;
+    this.updateSearch();
   }
 
   onSearchTerm() {
@@ -112,24 +117,32 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   onSelectSortBy(selected: SortByOption) {
     const sortBy = selected.value as SearchListingSortByOption;
-    this.parameters.sort = this.getSortFromSortByOptionString(sortBy);
-    this.parameters.order = this.getOrderFromSortByOptionString(sortBy);
+    this.parameters.sort = getSortFromSortByOptionString(sortBy);
+    this.parameters.order = getOrderFromSortByOptionString(sortBy);
     this.updateSearch();
   }
 
   onFilterChanged(event: SearchFilterChange) {
-    console.log(event);
     this.parameters[event.name] = event.value;
     this.updateSearch();
   }
 
   onFilterReset() {
-    // TODO do something
+    this.parameters.context = undefined;
+    this.parameters.domainTypes = [];
+    this.parameters.labelOnly = undefined;
+    this.parameters.exactMatch = undefined;
+    this.parameters.lastUpdatedAfter = undefined;
+    this.parameters.lastUpdatedBefore = undefined;
+    this.parameters.createdAfter = undefined;
+    this.parameters.createdBefore = undefined;
+    this.parameters.classifiers = [];
+    this.updateSearch();
   }
 
   private setEmptyResultPage() {
     this.resultSet = {
-      totalResults: 0,
+      count: 0,
       page: 1,
       pageSize: 10,
       items: []
@@ -139,6 +152,7 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   private performSearch() {
     this.status = 'loading';
+
     this.catalogueSearch
       .search(this.parameters)
       .pipe(
@@ -164,7 +178,7 @@ export class CatalogueSearchListingComponent implements OnInit {
    * @param order the order in which to sort that propery
    * @returns a SortByOption object with value matching the route string sortBy value or the default sortBy option.
    */
-   private setSortByFromRouteOrAsDefault(
+  private setSortByFromRouteOrAsDefault(
     sort: string | undefined,
     order: string | undefined
   ): SortByOption {
@@ -180,13 +194,5 @@ export class CatalogueSearchListingComponent implements OnInit {
     return filteredOptionsList.length === 0
       ? this.sortByDefaultOption
       : filteredOptionsList[0];
-  }
-
-  private getSortFromSortByOptionString(sortBy: string) {
-    return sortBy.split('-')[0];
-  }
-
-  private getOrderFromSortByOptionString(sortBy: string) {
-    return sortBy.split('-')[1] as SortOrder;
   }
 }

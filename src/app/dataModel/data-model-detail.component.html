@@ -20,8 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <form name="form" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="dataModel">
-
-       <button
+        <button
           type="button"
           data-cy="user-actions-menu"
           mat-icon-button
@@ -70,14 +69,14 @@ SPDX-License-Identifier: Apache-2.0
             <span class="fas fa-code-branch"></span> Edit Branch Name
           </button>
           <button
-          mat-menu-item
-          data-cy="edit-label"
-          type="button"
-          *ngIf="access.showEdit"
-          (click)="openBulkEdit()"
-        >
-          <span class="fas fa-clone"></span> Bulk Edit
-        </button>
+            mat-menu-item
+            data-cy="edit-label"
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="openBulkEdit()"
+          >
+            <span class="fas fa-clone"></span> Bulk Edit
+          </button>
           <button
             mat-menu-item
             data-cy="compare"
@@ -227,29 +226,6 @@ SPDX-License-Identifier: Apache-2.0
               </div>
             </div>
           </mat-menu>
-        </div>
-        <div
-          style="
-            position: relative;
-            float: right;
-            margin-right: 8px;
-            margin-left: 8px;
-          "
-          [hidden]="editMode || deleteInProgress"
-        >
-          <button
-            mat-icon-button
-            data-cy="search"
-            color="primary"
-            type="button"
-            class="paddingless"
-            (click)="toggleShowSearch()"
-            [disabled]="processing"
-            matTooltip="Search"
-            aria-label="Search"
-          >
-            <span class="fas fa-search"></span>
-          </button>
         </div>
       </div>
 

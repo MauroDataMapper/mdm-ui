@@ -31,20 +31,21 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 
   <div class="modelSelectorTree" style="position: relative;">
-    <div [ngClass]="{'input-group':true,'has-error': hasValidationError}">
-      <input #searchInputTreeControl type="text" [readonly]="readOnlySearchInput" [disabled]="processing" class="form-control outlined-input"
-        [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }' focus="inputClick()" (click)="toggleTree()"
-        placeholder="{{placeholderStr}}" [required]="isRequired">
-
+    <div [ngClass]="{'input-group':true,'has-error': hasValidationError}" [hidden]="!showInputGroup">
+      <input #searchInputTreeControl type="text" [readonly]="readOnlySearchInput" [disabled]="processing"
+        class="form-control outlined-input" [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }'
+        focus="inputClick()" (click)="toggleTree()" placeholder="{{placeholderStr}}" [required]="isRequired">
+      
       <span class="import-folder-actions">
-        <button mat-stroked-button type="button" [disabled]="processing" *ngIf="!multiple" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
+        <button mat-stroked-button type="button" [disabled]="processing" *ngIf="!multiple"
+          [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
           <span class="fas fa-times warning" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></span>
         </button>
-        <button mat-stroked-button type="button" [disabled]="processing" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
+        <button mat-stroked-button type="button" [disabled]="processing"
+          [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
           <span class="fas fa-list" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></span>
         </button>
       </span>
-
     </div>
 
     <div class="has-error">
@@ -60,6 +61,7 @@ SPDX-License-Identifier: Apache-2.0
                           enable-context-menu="true"
                           (addFolderEvent)="onAddFolder()"
                           [doNotShowDataClasses]="doNotShowDataClasses"
+                          [doNotShowChildDataClasses]="doNotShowChildDataClasses"
                           [doNotShowTerms]="doNotShowTerms"
                           [justShowFolders]="justShowFolders"
                           [defaultCheckedMap]="defaultCheckedMap"

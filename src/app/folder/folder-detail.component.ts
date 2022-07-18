@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { FolderHandlerService } from '../services/handlers/folder-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';

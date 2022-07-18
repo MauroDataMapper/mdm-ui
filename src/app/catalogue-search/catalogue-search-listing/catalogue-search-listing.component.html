@@ -47,9 +47,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div *ngIf="status === 'ready'">
     <div class="row">
-      <div class="col-md-3">
-
-      </div>
+      <div class="col-md-3"></div>
       <div class="col-md-9">
         <div class="mdm-search-listing__sort-row">
           <div class="vertically-aligned">
@@ -66,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="row">
       <div class="col-md-3">
         <mdm-search-filters
-          [context]="context"
+          [context]="parameters.context"
           [domainTypes]="parameters.domainTypes"
           [labelOnly]="parameters.labelOnly"
           [exactMatch]="parameters.exactMatch"
@@ -74,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
           [lastUpdatedBefore]="parameters.lastUpdatedBefore"
           [createdAfter]="parameters.createdAfter"
           [createdBefore]="parameters.createdBefore"
-          [classifiers]="parameters.classifiers" 
+          [classifiers]="parameters.classifiers"
           (contextChange)="onContextChanged($event)"
           (filterChange)="onFilterChanged($event)"
           (filterReset)="onFilterReset()"
@@ -101,8 +99,18 @@ SPDX-License-Identifier: Apache-2.0
             </ul>
           </mdm-alert>
         </div>
-        <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':resultSet?.count < resultSet?.pageSize}">
-          <mdm-paginator [length]="resultSet?.count" [pageIndex]="resultSet?.page" [pageSize]="resultSet?.pageSize" (page)="onPageChange($event)" showFirstLastButtons> </mdm-paginator>
+        <div
+          class="mdm--mat-pagination"
+          [ngClass]="{ 'is-hidden': resultSet?.count < resultSet?.pageSize }"
+        >
+          <mdm-paginator
+            [length]="resultSet?.count"
+            [pageIndex]="resultSet?.page"
+            [pageSize]="resultSet?.pageSize"
+            (page)="onPageChange($event)"
+            showFirstLastButtons
+          >
+          </mdm-paginator>
         </div>
       </div>
     </div>

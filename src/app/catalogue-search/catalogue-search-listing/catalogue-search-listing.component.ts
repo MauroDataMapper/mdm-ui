@@ -28,6 +28,7 @@ import {
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
+  mapSearchParametersToRawParams,
   mapStateParamsToSearchParameters,
   SearchListingSortByOption,
   SearchListingStatus
@@ -70,17 +71,6 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.routerGlobals.params
     );
     this.searchTerms = this.parameters.search;
-
-    // if (this.parameters.contextDomainType && this.parameters.contextId) {
-    //   this.context = {
-    //     domainType: this.parameters.contextDomainType,
-    //     id: this.parameters.contextId,
-    //     label: this.parameters.contextLabel,
-    //     dataModelId: this.parameters.contextDataModelId,
-    //     parentId: this.parameters.contextParentId
-    //   };
-    // }
-
     this.sortBy = this.setSortByFromRouteOrAsDefault(
       this.parameters.sort,
       this.parameters.order
@@ -98,19 +88,20 @@ export class CatalogueSearchListingComponent implements OnInit {
    * Update the search by using the state router.
    */
   updateSearch() {
+    const routeParams = mapSearchParametersToRawParams(this.parameters);
+
+    // Force a reload and do not inherit from previous UI router transition. This fixes an
+    // issue when clearing the model context so that the context query params can be removed from
+    // the transition URL
     this.stateRouter.Go(
       'appContainer.mainApp.catalogueSearchListing',
-      this.parameters
+      routeParams,
+      { reload: true, inherit: false }
     );
   }
 
   onContextChanged(event: CatalogueSearchContext) {
     this.parameters.context = event;
-    // this.parameters.contextId = event ? event.id : null;
-    // this.parameters.contextDomainType = event ? event.domainType : null;
-    // this.parameters.contextLabel = event ? event.label : null;
-    // this.parameters.contextDataModelId = event ? event.dataModelId : null;
-    // this.parameters.contextParentId = event ? event.parentId : null;
     this.updateSearch();
   }
 
@@ -138,11 +129,6 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onFilterReset() {
-    // this.parameters.contextDomainType = undefined;
-    // this.parameters.contextId = undefined;
-    // this.parameters.contextLabel = undefined;
-    // this.parameters.contextParentId = undefined;
-    // this.parameters.contextDataModelId = undefined;
     this.parameters.context = undefined;
     this.parameters.domainTypes = [];
     this.parameters.labelOnly = undefined;
@@ -170,7 +156,6 @@ export class CatalogueSearchListingComponent implements OnInit {
 
     this.catalogueSearch
       .search(this.parameters)
-      //.contextualSearch(this.context, this.parameters)
       .pipe(
         catchError((error) => {
           this.status = 'error';

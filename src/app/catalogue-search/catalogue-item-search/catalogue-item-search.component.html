@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="mdm-search-listing__sort-row">
           <div class="vertically-aligned">
             <span class="mdm-search-listing__result-count"
-              >{{ resultSet?.totalResults }} results found</span
+              >{{ resultSet?.count }} results found</span
             >
             <a
               uiSref="appContainer.mainApp.catalogueSearchListing"
@@ -75,7 +75,7 @@ SPDX-License-Identifier: Apache-2.0
           [showBreadcrumb]="true"
         ></mdm-catalogue-item-search-result>
         <div
-          *ngIf="resultSet.totalResults === 0"
+          *ngIf="resultSet.count === 0"
           class="mdm-search-listing__no-results"
         >
           <mdm-alert alertStyle="info">
@@ -92,11 +92,11 @@ SPDX-License-Identifier: Apache-2.0
         <div
           class="mdm--mat-pagination"
           [ngClass]="{
-            'is-hidden': resultSet?.totalResults < resultSet?.pageSize
+            'is-hidden': resultSet?.count < resultSet?.pageSize
           }"
         >
           <mdm-paginator
-            [length]="resultSet?.totalResults"
+            [length]="resultSet?.count"
             [pageIndex]="resultSet?.page"
             [pageSize]="resultSet?.pageSize"
             (page)="onPageChange($event)"

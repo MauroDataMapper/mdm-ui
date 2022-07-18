@@ -18,12 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   CatalogueItemDomainType,
-  CatalogueItemSearchResult,
-  Uuid
+  CatalogueItemSearchResult
 } from '@maurodatamapper/mdm-resources';
 import { RawParams, StateParams } from '@uirouter/core';
 
 export type SortOrder = 'asc' | 'desc';
+
+export const defaultPage = 0; // Zero-based page numbers for MatPaginator
+export const defaultPageSize = 50;
 
 /**
  * These options must be of the form '{propertyToSortBy}-{order}' where propertyToSortBy
@@ -66,11 +68,6 @@ export interface CatalogueSearchParameters {
    * which searching should be restricted to.
    */
   context?: CatalogueSearchContext;
-  // contextDomainType?: CatalogueItemDomainType;
-  // contextId?: string;
-  // contextLabel?: string;
-  // contextParentId?: string;
-  // contextDataModelId?: string;
 
   /**
    * If provided, provides the search terms for full text search.
@@ -177,12 +174,7 @@ export const mapStateParamsToSearchParameters = (
   };
 
   return {
-    // contextDomainType: query?.contextDomainType ?? undefined,
-    // contextId: query?.contextId ?? undefined,
-    // contextLabel: query?.contextLabel ?? undefined,
-    // contextParentId: query?.contextParentId ?? undefined,
-    // contextDataModelId: query?.contextDataModelId ?? undefined,
-    ...(hasContext && context),
+    ...(hasContext && { context }),
     search: query?.search ?? undefined,
     page: query?.page ?? undefined,
     sort: query?.sort ?? undefined,
@@ -204,15 +196,17 @@ export const mapSearchParametersToRawParams = (
 ): RawParams => {
   return {
     ...(parameters.context?.domainType && {
-      search: parameters.context.domainType
+      contextDomainType: parameters.context.domainType
     }),
-    ...(parameters.context?.id && { search: parameters.context.id }),
+    ...(parameters.context?.id && { contextId: parameters.context.id }),
     ...(parameters.context?.parentId && {
-      search: parameters.context.parentId
+      contextParentId: parameters.context.parentId
     }),
-    ...(parameters.context?.label && { search: parameters.context.label }),
+    ...(parameters.context?.label && {
+      contextLabel: parameters.context.label
+    }),
     ...(parameters.context?.dataModelId && {
-      search: parameters.context.dataModelId
+      contextDataModelId: parameters.context.dataModelId
     }),
     ...(parameters.search && { search: parameters.search }),
     ...(parameters.page && { page: parameters.page }),

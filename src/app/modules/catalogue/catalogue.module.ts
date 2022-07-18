@@ -35,7 +35,6 @@ import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
-import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { NotFoundComponent } from '@mdm/errors/not-found/not-found.component';
 import { DataModelDefaultComponent } from '@mdm/utility/data-model-default.component';
 import { ServerErrorComponent } from '@mdm/errors/server-error/server-error.component';
@@ -210,7 +209,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
@@ -397,7 +395,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,

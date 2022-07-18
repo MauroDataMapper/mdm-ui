@@ -188,7 +188,7 @@ export class DataModelDetailComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              "Are you sure you want to <span class='warning'>permanently</span> delete this Data Model?"
+              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
           }
         },
         {

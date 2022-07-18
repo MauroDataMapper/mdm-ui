@@ -48,7 +48,6 @@ export class CatalogueSearchListingComponent implements OnInit {
   searchTerms?: string;
   resultSet?: CatalogueSearchResultSet;
   sortBy?: SortByOption;
-  //context: CatalogueSearchContext = null;
   /**
    * Each new option must have a {@link SearchListingSortByOption} as a value to ensure
    * the catalogue-search-listing page can interpret the result emitted by the SortByComponent

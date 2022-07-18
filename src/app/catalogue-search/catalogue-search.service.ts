@@ -131,6 +131,13 @@ export class CatalogueSearchService {
           .pipe(map((response: CatalogueItemSearchResponse) => response.body));
       }
 
+      if (context.domainType === CatalogueItemDomainType.Terminology) {
+        // Terminology and terms are a special case. Otherwise use a generic approach for SearchableItemResource
+        return this.resources.term
+          .search(context.id, query)
+          .pipe(map((response: CatalogueItemSearchResponse) => response.body));
+      }
+
       return this.resources
         .getSearchableResource(context.domainType)
         .search(context.id, query)

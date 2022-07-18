@@ -384,19 +384,10 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go('mergediff', {
-        sourceId: this.dataModel.id,
-        catalogueDomainType: MultiFacetAwareDomainType.DataModels
-      });
-    }
-
-    return this.stateHandler.Go(
-      'mergediff',
-      {
-        sourceId: this.dataModel.id,
-        catalogueDomainType: MultiFacetAwareDomainType.DataModels
-      });
+    return this.stateHandler.Go('mergediff', {
+      sourceId: this.dataModel.id,
+      catalogueDomainType: MultiFacetAwareDomainType.DataModels
+    });
   }
 
   showMergeGraph() {

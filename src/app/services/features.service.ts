@@ -37,7 +37,6 @@ export class FeaturesService implements OnDestroy {
   useOpenIdConnect: boolean;
   useDigitalObjectIdentifiers: boolean;
   useIssueReporting: boolean;
-  useCatalogueSearch: boolean;
 
   private unsubscribe$ = new Subject();
 
@@ -109,12 +108,6 @@ export class FeaturesService implements OnDestroy {
       properties,
       'feature.use_issue_reporting',
       environment.features.useIssueReporting
-    );
-
-    this.useCatalogueSearch = this.getBooleanValue(
-      properties,
-      'feature.use_catalogue_search',
-      environment.features.useCatalogueSearch
     );
   }
 

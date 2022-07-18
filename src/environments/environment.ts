@@ -66,8 +66,7 @@ export const environment = {
     useVersionedFolders: true,
     useOpenIdConnect: true,
     useDigitalObjectIdentifiers: true,
-    useIssueReporting: true,
-    useCatalogueSearch: true
+    useIssueReporting: true
   }
 };
 

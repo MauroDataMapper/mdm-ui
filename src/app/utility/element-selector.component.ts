@@ -27,7 +27,6 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTableDataSource } from '@angular/material/table';
 import { MessageService } from '../services/message.service';
-import { ContentSearchHandlerService } from '../services/content-search.handler.service';
 import {
   animate,
   state,
@@ -53,6 +52,8 @@ import {
   TerminologyIndexResponse,
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
+import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
+import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -138,7 +139,7 @@ export class ElementSelectorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resourceService: MdmResourcesService,
     private messageService: MessageService,
-    private contextSearchHandler: ContentSearchHandlerService,
+    private catalogueSearch: CatalogueSearchService,
     private cd: ChangeDetectorRef,
     private gridService: GridService
   ) {}
@@ -360,63 +361,62 @@ export class ElementSelectorComponent implements OnInit {
     } else {
       this.formData.searchResultOffset = offset;
 
-      this.loading = true;
-      //  offset = offset / pageSize;
-      // $scope.safeApply();
-      this.contextSearchHandler
-        .search(
-          this.formData.currentContext,
-          this.searchInput,
-          pageSize,
-          offset,
-          [this.formData.selectedType],
-          undefined,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        )
-        .subscribe((res) => {
-          const rows = [];
-          this.loading = false;
-          res.body.items.forEach((element) => {
-            if (element.hasOwnProperty('breadcrumbs')) {
-              rows.push(element, { detailRow: true, element });
-            } else {
-              rows.push(element);
-            }
-          });
+      const hasSearchContext = this.formData.currentContext;
 
-          // if(element.hasOwnProperty("breadcrumbs"))
-          if (infiniteScrollCall === true) {
-            this.isProcessing = true;
-            if (this.dataSource.data) {
-              this.dataSource.data = this.dataSource.data.concat(rows);
-              this.dataSource._updateChangeSubscription();
-            } else {
-              this.dataSource = new MatTableDataSource<any>(rows);
-            }
-            this.totalItemCount = res.body.count;
-            this.currentRecord = this.dataSource.data.filter(
-              (x) => !x.hasOwnProperty('detailRow')
-            ).length;
-            this.dataSource._updateChangeSubscription();
-            this.noData = false;
-            this.isProcessing = false;
+      const parameters: CatalogueSearchParameters = {
+        search: this.searchInput,
+        page: offset,
+        pageSize,
+        domainTypes: [this.formData.selectedType],
+        labelOnly: true,
+        ...(hasSearchContext && {
+          context: {
+            id: this.formData.currentContext.id,
+            domainType: this.formData.currentContext.domainType,
+            label: this.formData.currentContext.label
+          }
+        })
+      };
+
+      this.loading = true;
+
+      this.catalogueSearch.search(parameters).subscribe((resultSet) => {
+        const rows = [];
+        this.loading = false;
+        resultSet.items.forEach((element) => {
+          if (element.hasOwnProperty('breadcrumbs')) {
+            rows.push(element, { detailRow: true, element });
           } else {
-            this.isProcessing = true;
-            this.dataSource = new MatTableDataSource<any>(rows);
-            this.currentRecord = this.dataSource.data.filter(
-              (x) => !x.hasOwnProperty('detailRow')
-            ).length;
-            this.totalItemCount = res.body.count;
-            this.noData = false;
-            this.isProcessing = false;
+            rows.push(element);
           }
         });
+
+        if (infiniteScrollCall === true) {
+          this.isProcessing = true;
+          if (this.dataSource.data) {
+            this.dataSource.data = this.dataSource.data.concat(rows);
+            this.dataSource._updateChangeSubscription();
+          } else {
+            this.dataSource = new MatTableDataSource<any>(rows);
+          }
+          this.totalItemCount = resultSet.count;
+          this.currentRecord = this.dataSource.data.filter(
+            (x) => !x.hasOwnProperty('detailRow')
+          ).length;
+          this.dataSource._updateChangeSubscription();
+          this.noData = false;
+          this.isProcessing = false;
+        } else {
+          this.isProcessing = true;
+          this.dataSource = new MatTableDataSource<any>(rows);
+          this.currentRecord = this.dataSource.data.filter(
+            (x) => !x.hasOwnProperty('detailRow')
+          ).length;
+          this.totalItemCount = resultSet.count;
+          this.noData = false;
+          this.isProcessing = false;
+        }
+      });
     }
   }
 

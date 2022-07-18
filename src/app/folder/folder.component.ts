@@ -113,11 +113,6 @@ export class FolderComponent
         this.showSecuritySection = message;
       }
     );
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
     this.afterSave = (result: { body: { id: Uuid } }) =>
       this.folderDetails(result.body.id);
 

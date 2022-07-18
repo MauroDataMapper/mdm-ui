@@ -48,7 +48,7 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -81,6 +81,8 @@ export class VersionedFolderComponent
     'annotations',
     'history'
   ]);
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private resources: MdmResourcesService,
@@ -118,12 +120,6 @@ export class VersionedFolderComponent
     this.title.setTitle('Versioned Folder');
 
     this.loadDetails(this.parentId);
-
-    this.subscriptions.push(
-      this.messages.changeSearch.subscribe((show: boolean) => {
-        this.showSearch = show;
-      })
-    );
   }
 
   ngAfterViewInit(): void {
@@ -131,8 +127,6 @@ export class VersionedFolderComponent
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

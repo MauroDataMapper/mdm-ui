@@ -16,16 +16,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  AfterViewChecked,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { Subscription } from 'rxjs';
+import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
@@ -51,10 +43,8 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 })
 export class DataModelComponent
   extends BaseComponent
-  implements OnInit, OnDestroy, AfterViewChecked {
+  implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  subscription: Subscription;
-  showSearch = false;
   parentId: string;
 
   dataModel: DataModelDetail;
@@ -66,6 +56,7 @@ export class DataModelComponent
   semanticLinks: any[] = [];
   access: Access;
   tabs = new TabCollection([
+    'search',
     'description',
     'schema',
     'types',
@@ -93,7 +84,6 @@ export class DataModelComponent
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private sharedService: SharedService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
@@ -118,19 +108,13 @@ export class DataModelComponent
     this.parentId = this.uiRouterGlobals.params.id;
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView
+      this.uiRouterGlobals.params.tabView ?? 'description'
     ).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
 
     this.dataModelDetails(this.parentId);
-
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
@@ -161,7 +145,10 @@ export class DataModelComponent
   }
 
   ngAfterViewChecked(): void {
-    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+    if (
+      this.tabGroup &&
+      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+    ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
@@ -214,17 +201,6 @@ export class DataModelComponent
           this.catalogueItem[attrname] = permissions.body[attrname];
         });
       });
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      // unsubscribe to ensure no memory leaks
-      this.subscription.unsubscribe();
-    }
   }
 
   schemaCountEmitter($event) {

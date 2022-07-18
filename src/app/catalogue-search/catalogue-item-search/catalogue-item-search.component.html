@@ -16,9 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container">
+<div *ngIf="context" class="container-fluid">
   <div class="mdm-search-listing__search">
-    <form role="form" name="search" (submit)="onSearchTerm()">
+    <form role="form" name="search" (submit)="startSearch()">
       <mat-form-field
         appearance="outline"
         class="mdm-search-listing__search-input"
@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
           name="search"
           [(ngModel)]="searchTerms"
         />
-        <button mat-icon-button matSuffix type="submit">
+        <button mat-icon-button matSuffix type="submit" aria-label="Search">
           <mat-icon fontSet="fas" fontIcon="fa-search"></mat-icon>
         </button>
       </mat-form-field>
@@ -47,11 +47,17 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div *ngIf="status === 'ready'">
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-9">
+      <div class="col">
         <div class="mdm-search-listing__sort-row">
           <div class="vertically-aligned">
-            {{ resultSet?.count }} results found
+            <span class="mdm-search-listing__result-count"
+              >{{ resultSet?.count }} results found</span
+            >
+            <a
+              uiSref="appContainer.mainApp.catalogueSearchListing"
+              [uiParams]="routeParams"
+              >Refine search</a
+            >
           </div>
           <mdm-sort-by
             [value]="sortBy"
@@ -62,23 +68,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
     <div class="row">
-      <div class="col-md-3">
-        <mdm-search-filters
-          [context]="parameters.context"
-          [domainTypes]="parameters.domainTypes"
-          [labelOnly]="parameters.labelOnly"
-          [exactMatch]="parameters.exactMatch"
-          [lastUpdatedAfter]="parameters.lastUpdatedAfter"
-          [lastUpdatedBefore]="parameters.lastUpdatedBefore"
-          [createdAfter]="parameters.createdAfter"
-          [createdBefore]="parameters.createdBefore"
-          [classifiers]="parameters.classifiers"
-          (contextChange)="onContextChanged($event)"
-          (filterChange)="onFilterChanged($event)"
-          (filterReset)="onFilterReset()"
-        ></mdm-search-filters>
-      </div>
-      <div class="col-md-9">
+      <div class="col">
         <mdm-catalogue-item-search-result
           *ngFor="let item of resultSet.items"
           [item]="item"
@@ -101,7 +91,9 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div
           class="mdm--mat-pagination"
-          [ngClass]="{ 'is-hidden': resultSet?.count < resultSet?.pageSize }"
+          [ngClass]="{
+            'is-hidden': resultSet?.count < resultSet?.pageSize
+          }"
         >
           <mdm-paginator
             [length]="resultSet?.count"

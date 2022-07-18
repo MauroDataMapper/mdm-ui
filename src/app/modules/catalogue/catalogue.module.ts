@@ -35,7 +35,6 @@ import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
-import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { NotFoundComponent } from '@mdm/errors/not-found/not-found.component';
 import { DataModelDefaultComponent } from '@mdm/utility/data-model-default.component';
 import { ServerErrorComponent } from '@mdm/errors/server-error/server-error.component';
@@ -191,7 +190,8 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-description.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 
 @NgModule({
   declarations: [
@@ -209,7 +209,6 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
@@ -381,7 +380,8 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    PipesModule
+    PipesModule,
+    CatalogueSearchModule
   ],
   exports: [
     MarkedPipe,
@@ -395,7 +395,6 @@ import {MoreDescriptionComponent} from '@mdm/shared/more-description/more-descri
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,

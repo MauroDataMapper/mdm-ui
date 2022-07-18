@@ -90,22 +90,22 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent,
+    SortByComponent
   ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        MaterialModule,
-        ReactiveFormsModule,
-        MatPasswordStrengthModule,
-        NgxJsonViewerModule,
-        FlexLayoutModule,
-        ReactiveFormsModule,
-        NgxSkeletonLoaderModule,
-        CodemirrorModule,
-        JoditAngularModule,
-      UIRouterModule
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    MatPasswordStrengthModule,
+    NgxJsonViewerModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    NgxSkeletonLoaderModule,
+    CodemirrorModule,
+    JoditAngularModule,
+    UIRouterModule
+  ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
@@ -146,7 +146,7 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent,
+    SortByComponent
   ]
 })
 export class SharedModule {}

@@ -20,15 +20,29 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ContainerUpdatePayload, MultiFacetAwareDomainType, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ContainerUpdatePayload,
+  MultiFacetAwareDomainType,
+  VersionedFolderDetail,
+  VersionedFolderDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
-import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import {
+  FinaliseModalComponent,
+  FinaliseModalResponse
+} from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService, MessageHandlerService, MessageService, SecurityHandlerService, StateHandlerService, ValidatorService } from '@mdm/services';
+import {
+  BroadcastService,
+  MessageHandlerService,
+  SecurityHandlerService,
+  StateHandlerService,
+  ValidatorService
+} from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
@@ -39,7 +53,6 @@ import { catchError, finalize, switchMap } from 'rxjs/operators';
   styleUrls: ['./versioned-folder-detail.component.scss']
 })
 export class VersionedFolderDetailComponent implements OnInit {
-
   @Input() detail: VersionedFolderDetail;
 
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
@@ -51,7 +64,6 @@ export class VersionedFolderDetailComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messages: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
@@ -59,7 +71,8 @@ export class VersionedFolderDetailComponent implements OnInit {
     private dialog: MatDialog,
     private title: Title,
     private editing: EditingService,
-    private validator: ValidatorService) { }
+    private validator: ValidatorService
+  ) {}
 
   get canChangeBranchName() {
     return this.access.showEdit && this.detail.branchName !== defaultBranchName;
@@ -69,10 +82,6 @@ export class VersionedFolderDetailComponent implements OnInit {
     this.access = this.securityHandler.elementAccess(this.detail);
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
     this.original = Object.assign({}, this.detail);
-  }
-
-  toggleShowSearch() {
-    this.messages.toggleSearch();
   }
 
   showSecurityDialog() {
@@ -92,32 +101,36 @@ export class VersionedFolderDetailComponent implements OnInit {
 
   save() {
     if (!this.validator.validateLabel(this.detail.label)) {
-      this.messageHandler.showError('There is an error with the label. Please correct and try again.');
+      this.messageHandler.showError(
+        'There is an error with the label. Please correct and try again.'
+      );
       return;
     }
 
     this.resourcesService.versionedFolder
-      .update(
-        this.detail.id,
-        {
-          id: this.detail.id,
-          label: this.detail.label
-        })
+      .update(this.detail.id, {
+        id: this.detail.id,
+        label: this.detail.label
+      })
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Versioned Folder.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(
-        (response: VersionedFolderDetailResponse) => {
-          this.messageHandler.showSuccess('Versioned Folder updated successfully.');
-          this.isEditing = false;
-          this.original = response.body;
-          this.editing.stop();
-          this.afterSave.emit(response.body);
-          this.broadcast.reloadCatalogueTree();
-        });
+      .subscribe((response: VersionedFolderDetailResponse) => {
+        this.messageHandler.showSuccess(
+          'Versioned Folder updated successfully.'
+        );
+        this.isEditing = false;
+        this.original = response.body;
+        this.editing.stop();
+        this.afterSave.emit(response.body);
+        this.broadcast.reloadCatalogueTree();
+      });
   }
 
   askForSoftDelete() {
@@ -213,33 +226,29 @@ export class VersionedFolderDetailComponent implements OnInit {
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newVersionModel',
-      {
-        id: this.detail.id,
-        domainType: this.detail.domainType
-      }
-    );
+    this.stateHandler.Go('newVersionModel', {
+      id: this.detail.id,
+      domainType: this.detail.domainType
+    });
   }
 
   merge() {
-    return this.stateHandler.Go(
-      'mergediff',
-      {
-        sourceId: this.detail.id,
-        catalogueDomainType: MultiFacetAwareDomainType.VersionedFolders
-      });
+    return this.stateHandler.Go('mergediff', {
+      sourceId: this.detail.id,
+      catalogueDomainType: MultiFacetAwareDomainType.VersionedFolders
+    });
   }
 
   showMergeGraph() {
-    this.dialog.open<VersioningGraphModalComponent, VersioningGraphModalConfiguration>(
+    this.dialog.open<
       VersioningGraphModalComponent,
-      {
-        data: {
-          catalogueItem: this.detail
-        },
-        panelClass: 'versioning-graph-modal'
-      });
+      VersioningGraphModalConfiguration
+    >(VersioningGraphModalComponent, {
+      data: {
+        catalogueItem: this.detail
+      },
+      panelClass: 'versioning-graph-modal'
+    });
   }
 
   private delete(permanent: boolean) {
@@ -252,7 +261,7 @@ export class VersionedFolderDetailComponent implements OnInit {
     this.resourcesService.versionedFolder
       .remove(this.detail.id, { permanent })
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem deleting the Versioned Folder.',
             error
@@ -263,32 +272,35 @@ export class VersionedFolderDetailComponent implements OnInit {
           this.processing = false;
         })
       )
-      .subscribe(
-        () => {
-          this.broadcast.reloadCatalogueTree();
-          if (permanent) {
-            this.stateHandler.Go(
-              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
-            );
-          } else {
-            this.stateHandler.reload();
-          }
-        });
+      .subscribe(() => {
+        this.broadcast.reloadCatalogueTree();
+        if (permanent) {
+          this.stateHandler.Go(
+            'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+          );
+        } else {
+          this.stateHandler.reload();
+        }
+      });
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.detail)
+    this.dialog
+      .openChangeBranchName(this.detail)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ContainerUpdatePayload = {
             id: this.detail.id,
             domainType: this.detail.domainType,
             branchName: dialogResult.branchName
           };
 
-          return this.resourcesService.versionedFolder.update(payload.id, payload);
+          return this.resourcesService.versionedFolder.update(
+            payload.id,
+            payload
+          );
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -297,7 +309,9 @@ export class VersionedFolderDetailComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Versioned Folder branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Versioned Folder branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'versionedFolder',
           { id: this.detail.id },

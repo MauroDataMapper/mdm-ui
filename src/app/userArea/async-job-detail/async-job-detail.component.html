@@ -33,26 +33,26 @@ SPDX-License-Identifier: Apache-2.0
   <table class="table table-bordered mdm--table-fixed">
     <tbody>
       <tr>
-        <td class="detailsRowHeader">Started by user</td>
+        <th class="detailsRowHeader">Started by user</th>
         <td>
           {{ job.startedByUser }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Time started</td>
+        <th class="detailsRowHeader">Time started</th>
         <td>
           {{ job.dateTimeStarted | date: 'dd/MM/yyyy h:mm a' }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Status</td>
+        <th class="detailsRowHeader">Status</th>
         <td>
           <span class="{{ getStatusIconStyle(job.status) }}"></span>
           {{ job.status | titlecase }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Location</td>
+        <th class="detailsRowHeader">Location</th>
         <td>
           {{ job.location }}
         </td>

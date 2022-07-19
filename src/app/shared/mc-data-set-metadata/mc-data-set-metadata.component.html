@@ -17,156 +17,281 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-        <div fxFlex  fxLayout="row" fxFlex="70" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-        <h4 class="marginless">
-                Properties
-                <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
-                <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{totalItemCount}}</span>
-                <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
-            </h4>
-        </div>
-        <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-            <div *ngIf="access && access.canAddMetadata" class="mt-1">
-                <button mat-flat-button color="primary" type="button" (click)="add()">
-                    <span class="fas fa-plus" aria-hidden="true"></span>
-                    Add Property
-                </button>
-            </div>
-        </div>
+  <div
+    fxFlex
+    fxLayout="row"
+    fxLayout.md="row"
+    fxLayout.sm="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="space-around"
+  >
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="70"
+      fxFlex.md="60"
+      fxFlex.sm="60"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-start center"
+    >
+      <h4 class="marginless">
+        Properties
+        <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
+        <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{
+          totalItemCount
+        }}</span>
+        <span
+          class="fas fa-filter"
+          (click)="filterClick()"
+          matTooltip="Toggle search"
+        ></span>
+      </h4>
     </div>
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="30"
+      fxFlex.md="40"
+      fxFlex.sm="40"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-end center"
+      fxLayoutAlign.xs="flex-start center"
+    >
+      <div *ngIf="access && access.canAddMetadata" class="mt-1">
+        <button mat-flat-button color="primary" type="button" (click)="add()">
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          Add Property
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="table-responsive">
-    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
-        <ng-container matColumnDef="namespace">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="max-width: 25%;width: 25%;cursor:pointer;" scope="col">
-                <span [hidden]="!hideFilters">Namespace</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Namespace</mat-label>
-                        <input #filters matInput name="namespace" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let rec; let i = index">
-                <div *ngIf="!rec.inEdit">
-                    {{rec.namespace}}
-                </div>
-                <div *ngIf="rec.inEdit" style="width:100%; margin-top: 8px;">
-                    <mdm-select [width]="'250px'"
-                                [acceptTypedInput]="true"
-                                [valueType]="'static'"
-                                [staticValues]="namespaces"
-                                [defaultValue]="rec.namespace"
-                                [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
-                                [record]="records[i]"
-                                [minInputLength]="0"
-                                [idProperty]="'id'"
-                                [displayProperty]="'namespace'"
-                                [searchProperty]="'namespace'"
-                                (selectEvent)="onNamespaceSelect($event[0],$event[1])"
-                                name="test"
-                                style="max-width: 250px;">
-                        <ng-template #lineContent let-item>
-                            <div>{{item.namespace}}</div>
-                        </ng-template>
-                    </mdm-select>
-                    <small *ngIf="rec.edit.errors && rec.edit.errors['namespace']" class="errorMessage">{{rec.edit.errors['namespace']}}</small>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="key">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="!hideFilters" style="cursor:pointer;max-width: 20%;width: 20%;" scope="col">
-                <span [hidden]="!hideFilters">Key</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Key</mat-label>
-                        <input #filters matInput name="key" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let record ; let i = index">
-                <div *ngIf="!record.inEdit">
-                    {{record.key}}
-                </div>
-                <div *ngIf="record.inEdit" style="width: 100%; margin-top: 8px;">
-                    <mdm-select [width]="'100%'"
-                                [acceptTypedInput]="true"
-                                [valueType]="'static'"
-                                [staticValues]="record.metadataKeys"
-                                [defaultValue]="record.key"
-                                [hasError]="record.edit.errors && record.edit.errors['key']"
-                                [record]="records[i]"
-                                [minInputLength]="0"
-                                [idProperty]="'id'"
-                                [displayProperty]="'key'"
-                                [searchProperty]="'key'"
-                                (selectEvent)="onKeySelect($event[0],$event[1])">
-                        <ng-template #lineContent let-item>
-                            <div>{{item.key}}</div>
-                        </ng-template>
-                    </mdm-select>
-                    <small *ngIf="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer; width: 50%;" scope="col">
-                <span [hidden]="!hideFilters">Value</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Value</mat-label>
-                        <input #filters matInput name="value" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let record">
-                <div *ngIf="!record.inEdit" style="margin-top: 8px;">
-                    <mdm-more-description [description]="record.value"></mdm-more-description>
-                </div>
-                <div *ngIf="record.inEdit" style="margin-top: 8px;">
-                    <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-                        <mdm-content-editor [(content)]="record.edit.value"
-                                            [inEditMode]="true"
-                                            [markdownOptions]="{ showHelpText: false }"
-                                            [htmlOptions]="{ useBasicButtons: true }">
-                        </mdm-content-editor>
-                        <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
-                    </div>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="btns">
-            <td mat-header-cell *matHeaderCellDef style="width: 5%"></td>
-            <td mat-cell *matCellDef="let record;  let i = index" style="text-align: center;">
-                <div *ngIf="access && access.canAddMetadata">
-                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0])" ></mdm-table-buttons>
-                </div>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+  <table
+    mat-table
+    matSort
+    [dataSource]="records"
+    class="mdm--mat-table mat-elevation-z3 table-striped"
+  >
+    <ng-container matColumnDef="namespace">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [disabled]="!hideFilters"
+        style="max-width: 25%; width: 25%; cursor: pointer"
+        scope="col"
+      >
+        <span [hidden]="!hideFilters">Namespace</span>
+        <div [hidden]="hideFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Namespace</mat-label>
+            <input #filters matInput name="namespace" (keyup)="applyFilter()" />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let rec; let i = index">
+        <div *ngIf="!rec.inEdit">
+          {{ rec.namespace }}
+        </div>
+        <div *ngIf="rec.inEdit" style="width: 100%; margin-top: 8px">
+          <mdm-select
+            [width]="'250px'"
+            [acceptTypedInput]="true"
+            [valueType]="'static'"
+            [staticValues]="namespaces"
+            [defaultValue]="rec.namespace"
+            [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
+            [record]="records[i]"
+            [minInputLength]="0"
+            [idProperty]="'id'"
+            [displayProperty]="'namespace'"
+            [searchProperty]="'namespace'"
+            (selectEvent)="onNamespaceSelect($event[0], $event[1])"
+            name="test"
+            style="max-width: 250px"
+          >
+            <ng-template #lineContent let-item>
+              <div>{{ item.namespace }}</div>
+            </ng-template>
+          </mdm-select>
+          <small
+            *ngIf="rec.edit.errors && rec.edit.errors['namespace']"
+            class="errorMessage"
+            >{{ rec.edit.errors['namespace'] }}</small
+          >
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="key">
+      <th
+        mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef
+        [disabled]="!hideFilters"
+        style="cursor: pointer; max-width: 20%; width: 20%"
+        scope="col"
+      >
+        <span [hidden]="!hideFilters">Key</span>
+        <div [hidden]="hideFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Key</mat-label>
+            <input #filters matInput name="key" (keyup)="applyFilter()" />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let record; let i = index">
+        <div *ngIf="!record.inEdit">
+          {{ record.key }}
+        </div>
+        <div *ngIf="record.inEdit" style="width: 100%; margin-top: 8px">
+          <mdm-select
+            [width]="'100%'"
+            [acceptTypedInput]="true"
+            [valueType]="'static'"
+            [staticValues]="record.metadataKeys"
+            [defaultValue]="record.key"
+            [hasError]="record.edit.errors && record.edit.errors['key']"
+            [record]="records[i]"
+            [minInputLength]="0"
+            [idProperty]="'id'"
+            [displayProperty]="'key'"
+            [searchProperty]="'key'"
+            (selectEvent)="onKeySelect($event[0], $event[1])"
+          >
+            <ng-template #lineContent let-item>
+              <div>{{ item.key }}</div>
+            </ng-template>
+          </mdm-select>
+          <small
+            *ngIf="record.edit.errors && record.edit.errors['key']"
+            class="errorMessage"
+            >{{ record.edit.errors['key'] }}</small
+          >
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [disabled]="!hideFilters"
+        style="cursor: pointer; width: 50%"
+        scope="col"
+      >
+        <span [hidden]="!hideFilters">Value</span>
+        <div [hidden]="hideFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Value</mat-label>
+            <input #filters matInput name="value" (keyup)="applyFilter()" />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let record">
+        <div *ngIf="!record.inEdit" style="margin-top: 8px">
+          <mdm-more-description
+            [description]="record.value"
+          ></mdm-more-description>
+        </div>
+        <div *ngIf="record.inEdit" style="margin-top: 8px">
+          <div
+            class="form-group"
+            [ngClass]="{
+              'has-error': record.edit.errors && record.edit.errors['value']
+            }"
+          >
+            <mdm-content-editor
+              [(content)]="record.edit.value"
+              [inEditMode]="true"
+              [markdownOptions]="{ showHelpText: false }"
+              [htmlOptions]="{ useBasicButtons: true }"
+            >
+            </mdm-content-editor>
+            <small
+              *ngIf="record.edit.errors && record.edit.errors['value']"
+              class="errorMessage"
+              >{{ record.edit.errors['value'] }}</small
+            >
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="btns">
+      <td mat-header-cell *matHeaderCellDef style="width: 5%"></td>
+      <td
+        mat-cell
+        *matCellDef="let record; let i = index"
+        style="text-align: center"
+      >
+        <div *ngIf="access && access.canAddMetadata">
+          <mdm-table-buttons
+            [record]="record"
+            [index]="i"
+            (save)="save($event[0], $event[1])"
+            (delete)="delete($event[0], $event[1])"
+            [validate]="validate"
+            (cancelEdit)="cancelEdit($event[0], $event[1])"
+            (edit)="onEdit($event[0])"
+          ></mdm-table-buttons>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </div>
-<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+>
   <p class="marginless">There are no Properties in this table.</p>
 </div>
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--table-fixed mdm--skeleton-table">
     <tr>
-      <th style="width: 40%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 20%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 150px;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th></th>
+      <th style="width: 40%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 20%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 150px" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
+        ></ngx-skeleton-loader>
+      </th> 
     </tr>
     <tr>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td style="display: flex; justify-content: flex-end"><ngx-skeleton-loader count="2" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td style="display: flex; justify-content: flex-end">
+        <ngx-skeleton-loader
+          count="2"
+          appearance="circle"
+          [theme]="{ 'border-radius': '10px' }"
+        ></ngx-skeleton-loader>
+      </td>
     </tr>
   </table>
 </div>
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
-    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+>
+  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

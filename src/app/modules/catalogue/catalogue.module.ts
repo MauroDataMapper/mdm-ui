@@ -151,7 +151,6 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
-import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
@@ -318,7 +317,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
@@ -501,7 +499,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,

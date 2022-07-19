@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, Output, EventEmitter } from '@angular/core';
+import { FilterQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 export class GridService {
   @Output() reloadEvent = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
   applyFilter = (filters: any[]) => {
     const filter = {};
@@ -41,7 +42,13 @@ export class GridService {
     }
   };
 
-  constructOptions(pageSize? : number, pageIndex? : number, sortBy? : string, sortType? : string, filters? : {}) {
+  constructOptions(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: {}
+  ): FilterQueryParameters {
     const options = {};
 
     if (pageSize) {
@@ -58,7 +65,7 @@ export class GridService {
     }
 
     if (filters) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         options[key] = filters[key];
       });
     }

@@ -267,7 +267,7 @@ export class ReferenceDataDetailsComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              "Are you sure you want to <span class='warning'>permanently</span> delete this Reference Data Model?"
+              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Reference Data Model?'
           }
         },
         {

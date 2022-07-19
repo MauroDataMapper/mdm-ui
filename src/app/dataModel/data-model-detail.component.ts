@@ -22,7 +22,6 @@ import { EMPTY, forkJoin, of } from 'rxjs';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { SharedService } from '../services/shared.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,7 +37,6 @@ import {
   DataModelDetail,
   DataModelDetailResponse,
   Exporter,
-  ModelDomainType,
   ModelUpdatePayload,
   MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';

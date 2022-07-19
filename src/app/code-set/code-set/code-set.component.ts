@@ -31,7 +31,6 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -54,7 +53,6 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class CodeSetComponent
   extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   codeSetModel: CodeSetDetail;
   showSecuritySection: boolean;
@@ -80,7 +78,14 @@ export class CodeSetComponent
   canEditDescription: boolean;
   showEditDescription = false;
   access: Access;
-  tabs = new TabCollection(['description', 'terms', 'links', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'terms',
+    'links',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -89,7 +94,6 @@ export class CodeSetComponent
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService,
     private securityHandler: SecurityHandlerService
@@ -159,11 +163,12 @@ export class CodeSetComponent
         }
 
         this.tabGroup?.realignInkBar();
-        this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+        this.activeTab = this.tabs.getByName(
+          this.uiRouterGlobals.params.tabView as string
+        ).index;
         this.tabSelected(this.activeTab);
       });
   }
-
 
   CodeSetPermissions() {
     this.resourcesService.security
@@ -188,11 +193,7 @@ export class CodeSetComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go(
-      'codeSet',
-      { tabView: tab.name },
-      { notify: false }
-    );
+    this.stateHandler.Go('codeSet', { tabView: tab.name }, { notify: false });
   }
 
   rulesCountEmitter($event) {
@@ -206,7 +207,9 @@ export class CodeSetComponent
   }
 
   watchDataModelObject() {
-    const access: Access = this.securityHandler.elementAccess(this.codeSetModel);
+    const access: Access = this.securityHandler.elementAccess(
+      this.codeSetModel
+    );
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.canEditDescription = access.canEditDescription;
@@ -224,21 +227,22 @@ export class CodeSetComponent
       resource[item.propertyName] = item.value;
     });
 
-     this.resourcesService.codeSet
-    .update(this.codeSetModel.id, resource)
-    .pipe( catchError(error =>
-      {
-        this.messageHandler.showError(  'There was a problem updating the Code Set.',   error );
-        return EMPTY ;
-      }))
-    .subscribe(
-      (res) => {
+    this.resourcesService.codeSet
+      .update(this.codeSetModel.id, resource)
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Code Set.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((res) => {
         this.editingService.stop();
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.catalogueItem = res.body;
         this.codeSetModel = res.body;
-      }
-    );
-
+      });
   }
 }

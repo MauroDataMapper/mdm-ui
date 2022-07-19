@@ -235,7 +235,7 @@ export class BulkEditEditorComponent implements OnInit {
 
   private getColumnForProfileField(field: ProfileField): ColDef {
     const column: ColDef = {
-      headerTooltip: field.description ?? 'Missing Description',
+      headerTooltip: field.description,
       headerName: field.fieldName,
       field: field.metadataPropertyName,
       editable: !field.uneditable,

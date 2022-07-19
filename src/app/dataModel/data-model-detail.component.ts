@@ -186,7 +186,7 @@ export class DataModelDetailComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
+              "Are you sure you want to <span class='warning'>permanently</span> delete this Data Model?"
           }
         },
         {
@@ -384,19 +384,10 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go('mergediff', {
-        sourceId: this.dataModel.id,
-        catalogueDomainType: MultiFacetAwareDomainType.DataModels
-      });
-    }
-
-    return this.stateHandler.Go(
-      'mergediff',
-      {
-        sourceId: this.dataModel.id,
-        catalogueDomainType: MultiFacetAwareDomainType.DataModels
-      });
+    return this.stateHandler.Go('mergediff', {
+      sourceId: this.dataModel.id,
+      catalogueDomainType: MultiFacetAwareDomainType.DataModels
+    });
   }
 
   showMergeGraph() {

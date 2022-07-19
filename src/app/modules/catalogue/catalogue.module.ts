@@ -75,7 +75,6 @@ import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/da
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
 import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
 import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
-import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -152,7 +151,6 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
-import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
@@ -251,7 +249,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     DataTypeStep2Component,
     DataElementsListComponent,
     DataClassesListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -320,7 +317,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
@@ -436,7 +432,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     DataTypeStep2Component,
     DataClassesListComponent,
     DataElementsListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -504,7 +499,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,

@@ -37,9 +37,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { DataClass, DataElement } from '@maurodatamapper/mdm-resources';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  DataClass,
+  DataClassDetail,
+  DataElement,
+  DataElementIndexResponse,
+  DataModelDetail
+} from '@maurodatamapper/mdm-resources';
+import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MessageHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-elements-list',
@@ -52,9 +59,9 @@ export class DataElementsListComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
-  @Input() parentDataModel: any;
-  @Input() grandParentDataClass: any;
-  @Input() parentDataClass: any;
+  @Input() parentDataModel: DataModelDetail;
+  @Input() grandParentDataClass: DataClassDetail;
+  @Input() parentDataClass: DataClassDetail;
   @Input() loadingData: any;
   @Input() isEditable: any;
   checkAllCheckbox = false;
@@ -62,7 +69,7 @@ export class DataElementsListComponent implements AfterViewInit {
   processing: boolean;
   failCount: number;
   total: number;
-  dataElementRecords: any[] = [];
+  dataElementRecords: DataElement[] = [];
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
@@ -78,6 +85,7 @@ export class DataElementsListComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
     private dialog: MatDialog,
+    private editing: EditingService,
     private gridService: GridService,
     private messageHandler: MessageHandlerService
   ) {}
@@ -104,7 +112,7 @@ export class DataElementsListComponent implements AfterViewInit {
             this.filter
           );
         }),
-        map((data: any) => {
+        map((data: DataElementIndexResponse) => {
           this.totalDataElementCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
@@ -114,11 +122,11 @@ export class DataElementsListComponent implements AfterViewInit {
           return [];
         })
       )
-      .subscribe((data) => {
+      .subscribe((data: DataElement[]) => {
         this.dataElementRecords = data;
         this.isLoadingResults = false;
       });
-      this.changeRef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   openEdit(dataClass: DataClass) {
@@ -172,7 +180,7 @@ export class DataElementsListComponent implements AfterViewInit {
   }
 
   // Drag and drop
-  dropItem(event: CdkDragDrop<any[]>) {
+  dropItem(event: CdkDragDrop<any, any, DataElement>) {
     moveItemInArray(
       this.dataElementRecords,
       event.previousIndex,
@@ -186,10 +194,10 @@ export class DataElementsListComponent implements AfterViewInit {
     this.table.renderRows();
   }
 
-  updateOrder(item, newPosition) {
+  updateOrder(item: CdkDrag<DataElement>, newPosition: number) {
     const resource: DataElement = {
       id: item.data.id,
-      domainType : item.data.domainType,
+      domainType: item.data.domainType,
       label: item.data.label,
       index: newPosition
     };
@@ -217,11 +225,11 @@ export class DataElementsListComponent implements AfterViewInit {
   }
 
   dataElementsFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: {}
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -263,43 +271,47 @@ export class DataElementsListComponent implements AfterViewInit {
         };
       });
 
-    this.dialog.open(BulkEditModalComponent, {
-      data: {
-        dataElementIdLst: dataElementIds,
-        parentDataModel: this.parentDataModel,
-        parentDataClass: this.parentDataClass
-      },
-      panelClass: 'bulk-edit-modal'
-    })
-    .afterClosed()
-    .subscribe((result) => {
-      if (result) {
-        this.dataElementRecords.forEach((x) => (x.checked = false));
-        this.checkAllCheckbox = false;
-        this.bulkActionsVisible = 0;
-        this.filterEvent.emit();
-      }
-    });
+    this.editing
+      .openDialog(BulkEditModalComponent, {
+        data: {
+          dataElementIdLst: dataElementIds,
+          parentDataModel: this.parentDataModel,
+          parentDataClass: this.parentDataClass
+        },
+        panelClass: 'bulk-edit-modal'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.checkAllCheckbox = false;
+          this.bulkActionsVisible = 0;
+          this.filterEvent.emit();
+        }
+      });
   }
 
   bulkDelete() {
-    const dataElementIdLst = this.dataElementRecords.filter(record => record.checked);
-    this.dialog.open(BulkDeleteModalComponent, {
-      data: {
-        dataElementIdLst,
-        parentDataModel: this.parentDataModel,
-        parentDataClass: this.parentDataClass
-      },
-      panelClass: 'bulk-delete-modal'
-    })
-    .afterClosed()
-    .subscribe((result) => {
-      if (result) {
-        this.dataElementRecords.forEach((x) => (x.checked = false));
-        this.checkAllCheckbox = false;
-        this.bulkActionsVisible = 0;
-        this.filterEvent.emit();
-      }
-    });
+    const dataElementIdLst = this.dataElementRecords.filter(
+      (record) => record.checked
+    );
+    this.dialog
+      .open(BulkDeleteModalComponent, {
+        data: {
+          dataElementIdLst,
+          parentDataModel: this.parentDataModel,
+          parentDataClass: this.parentDataClass
+        },
+        panelClass: 'bulk-delete-modal'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.checkAllCheckbox = false;
+          this.bulkActionsVisible = 0;
+          this.filterEvent.emit();
+        }
+      });
   }
 }

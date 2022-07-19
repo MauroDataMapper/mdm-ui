@@ -16,7 +16,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import {
@@ -42,7 +48,7 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -52,7 +58,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class VersionedFolderComponent
   extends BaseComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   parentId: Uuid;
@@ -75,6 +81,8 @@ export class VersionedFolderComponent
     'annotations',
     'history'
   ]);
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private resources: MdmResourcesService,
@@ -116,6 +124,11 @@ export class VersionedFolderComponent
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   tabSelected(tab: TabDescriptor | number) {

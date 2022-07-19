@@ -31,11 +31,14 @@ SPDX-License-Identifier: Apache-2.0
     [columnDefs]="columns"
     [rowData]="rows"
     [frameworkComponents]="frameworkComponents"
+    [tooltipShowDelay]="0"
   >
   </ag-grid-angular>
 
   <span *ngIf="totalValidationErrors > 0" class="mr-2">
-    <span class="fas fa-exclamation-triangle warning mdm-bulk-edit-editor__validation--warning"></span>
+    <span
+      class="fas fa-exclamation-triangle warning mdm-bulk-edit-editor__validation--warning"
+    ></span>
     There are {{ totalValidationErrors }} field(s) with issues
   </span>
 </div>

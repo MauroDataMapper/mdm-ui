@@ -62,7 +62,8 @@ import {
   ModelDomain,
   CatalogueItemDomainType,
   SearchableItemResource,
-  ContainerDomain
+  ContainerDomain,
+  MdmAsyncJobsResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -180,6 +181,7 @@ export class MdmResourcesService {
   );
   pluginDoi = new MdmPluginDoiResource(this.resourcesConfig, this.restHandler);
   merge = new MdmMergeResource(this.resourcesConfig, this.restHandler);
+  asyncJobs = new MdmAsyncJobsResource(this.resourcesConfig, this.restHandler);
 
   constructor(
     private resourcesConfig: MdmResourcesConfiguration,

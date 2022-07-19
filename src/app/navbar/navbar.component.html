@@ -131,6 +131,10 @@ SPDX-License-Identifier: Apache-2.0
                   <span class="fas fa-key"></span>
                   <span>API keys</span>
                 </a>
+                <a mat-menu-item uiSref="appContainer.userArea.asyncJobs">
+                  <span class="fas fa-tasks"></span>
+                  <span>Jobs</span>
+                </a>
               </div>
               <div *ngIf="isAdministrator">
                 <h5 class="marginless text-muted menu-label">Admin settings</h5>
@@ -322,6 +326,15 @@ SPDX-License-Identifier: Apache-2.0
         >
           <span class="fas fa-key"></span>
           <span>API keys</span>
+        </a>
+        <a
+          mat-menu-item
+          uiSref="appContainer.userArea.asyncJobs"
+          (click)="sidenav.toggle()"
+          uiSrefActive="active"
+        >
+          <span class="fas fa-tasks"></span>
+          <span>Jobs</span>
         </a>
       </div>
       <div *ngIf="isLoggedIn && isAdministrator">

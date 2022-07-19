@@ -80,8 +80,10 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   defaultProfileMetadataNamespace: string;
   defaultProfileView: string;
   otherDefaultProfileView: string;
+  useDefaultProfileSimplifiedEntry = false;
 
   private readonly defaultProfileNamespacePropertyKey = 'ui.default.profile.namespace';
+  private readonly useDefaultProfileSimplifiedEntryPropertyKey = 'ui.default.profile.simplified_entry';
 
   get isCurrentViewCustomProfile() {
     return this.currentView !== 'default' && this.currentView !== 'other' && this.currentView !== 'addnew';
@@ -642,6 +644,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {
     this.defaultProfileMetadataNamespace = this.getContentProperty(properties, this.defaultProfileNamespacePropertyKey);
+    this.useDefaultProfileSimplifiedEntry = (this.getContentProperty(properties, this.useDefaultProfileSimplifiedEntryPropertyKey) === 'true');
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
@@ -695,10 +698,20 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           const namespace = defaultProfileProperties[0].find(property => property.key === 'namespace');
           const name = defaultProfileProperties[0].find(property => property.key === 'name');
           const version = defaultProfileProperties[0].find(property => property.key === 'version');
-          if (namespace !== undefined && name !== undefined && version !== undefined) {
+          if (!this.useDefaultProfileSimplifiedEntry &&
+              namespace !== undefined && name !== undefined && version !== undefined) {
             responses = this.usedProfiles.filter(usedProfile =>
               usedProfile.namespace === namespace.value && usedProfile.name === name.value && usedProfile.version === version.value
             ).concat(responses);
+
+          } else {
+            for (const property_item of defaultProfileProperties[0]) {
+              if (property_item !== undefined ) {//
+                responses = this.usedProfiles.filter(usedProfile =>
+                  ((decodeURIComponent(usedProfile.name) + '/' + usedProfile.version) === property_item.value)
+                ).concat(responses);
+              }
+            }
           }
         },
         complete: () => {

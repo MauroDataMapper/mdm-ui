@@ -53,10 +53,10 @@ import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/ca
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
-import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
   declarations: [
@@ -86,10 +86,7 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    MarkedPipe,
-    FileSizePipe,
-    MauroItemTreeComponent,
-    ElementLabelComponent
+    FileSizePipe
   ],
   imports: [
     CommonModule,
@@ -102,7 +99,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    UIRouterModule
+    UIRouterModule,
+    ContentModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -141,10 +139,7 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    MarkedPipe,
-    FileSizePipe,
-    MauroItemTreeComponent,
-    ElementLabelComponent
+    FileSizePipe
   ]
 })
 export class SharedModule {}

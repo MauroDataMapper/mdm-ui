@@ -170,7 +170,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
@@ -181,6 +180,7 @@ import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataMode
 import { ModelHeaderComponent } from '../../model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
 import { ContentModule } from '@mdm/content/content.module';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 
 @NgModule({
   providers: [
@@ -503,7 +503,6 @@ import { ContentModule } from '@mdm/content/content.module';
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent
   ]

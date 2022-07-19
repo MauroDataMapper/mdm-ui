@@ -90,7 +90,7 @@ export class ElementSearchDialogComponent implements OnInit {
         }),
         switchMap((value) => {
           return this.resources
-            .getSearchableItemResource(this.data.root.domainType)
+            .getSearchableResource(this.data.root.domainType)
             .search(this.data.root.id, {
               searchTerm: value,
               max: 10,

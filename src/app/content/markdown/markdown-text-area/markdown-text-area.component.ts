@@ -74,7 +74,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   get allowAutocompleteSearch() {
     return (
       this.rootElement &&
-      this.resources.getSearchableItemResource(this.rootElement.domainType)
+      this.resources.getSearchableResource(this.rootElement.domainType)
     );
   }
 

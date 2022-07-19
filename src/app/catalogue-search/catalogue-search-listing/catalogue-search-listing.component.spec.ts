@@ -191,6 +191,7 @@ describe('CatalogueSearchListingComponent', () => {
       harness.component.onPageChange(pageEvent);
       expect(stateRouterStub.Go).toHaveBeenCalledWith(
         'appContainer.mainApp.catalogueSearchListing',
+        expect.any(Object),
         expect.any(Object)
       );
     });

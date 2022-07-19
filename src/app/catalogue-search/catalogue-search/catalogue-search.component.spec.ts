@@ -88,13 +88,21 @@ describe('CatalogueSearchComponent', () => {
   });
 
   it('should Use values to call the router', () => {
-    // set up serachform data
+    // set up searchform data
     harness.component.catalogueSearchFormComponent.formGroup = new FormGroup({
       searchTerms: new FormControl('testSearch')
     });
 
+    const context: MdmTreeItem = {
+      domainType: CatalogueItemDomainType.Folder,
+      id: 'testId',
+      label: 'testContextLabel',
+      parentId: 'testParentId',
+      modelId: 'testModelId',
+      availableActions: null
+    };
     // set up advanced form data
-    const value: MdmTreeItem[] = [];
+    const contextTest: MdmTreeItem[] = [context];
     const testClassifier: Classifier = {
       domainType: CatalogueItemDomainType.Classifier,
       label: 'testLabel1'
@@ -107,7 +115,7 @@ describe('CatalogueSearchComponent', () => {
 
     harness.component.catalogueSearchAdvancedFormComponent.formGroup = new FormGroup(
       {
-        context: new FormControl(value),
+        context: new FormControl(contextTest),
         domainTypes: new FormControl([
           ModelDomainType.DataModels,
           ModelDomainType.Classifiers
@@ -127,9 +135,12 @@ describe('CatalogueSearchComponent', () => {
     expect(stateHandlerStub.Go).toHaveBeenCalledWith(
       'appContainer.mainApp.catalogueSearchListing',
       {
+        contextDomainType: context.domainType,
+        contextId: context.id,
+        contextLabel: context.label,
+        contextParentId: context.parentId,
+        contextDataModelId: context.modelId,
         classifiers: ['testLabel1', 'testLabel2'],
-        contextDomain: null,
-        contextId: null,
         createdAfter: '1983-06-21',
         createdBefore: '1983-06-22',
         domainTypes: ['dataModels', 'classifiers'],

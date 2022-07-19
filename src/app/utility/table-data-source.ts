@@ -18,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
-import { MdmIndexResponse, MdmResponse, PageParameters } from '@maurodatamapper/mdm-resources';
+import {
+  MdmIndexResponse,
+  MdmResponse,
+  PageParameters
+} from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
 import { tap } from 'rxjs/operators';
 
@@ -30,13 +34,26 @@ export interface Sortable {
 export class MdmTableDataSource<T> extends DataSource<T> {
   readonly count = new BehaviorSubject<number>(0);
   private _dataStream = new BehaviorSubject<T[]>([]);
-  private _fetchFunction = new BehaviorSubject<(options?: any) => Observable<MdmIndexResponse<T>>>(() => EMPTY);
-  private _updateFunction = new BehaviorSubject<(options?: any) => Observable<MdmResponse<T>>>(() => EMPTY);
-  private _deleteFunction = new BehaviorSubject<(options?: any) => Observable<any>>(() => EMPTY);
-  private _pageable = new BehaviorSubject<PageParameters>({max: 10, offset: 0});
+  private _fetchFunction = new BehaviorSubject<
+    (options?: any) => Observable<MdmIndexResponse<T>>
+  >(() => EMPTY);
+  private _updateFunction = new BehaviorSubject<
+    (options?: any) => Observable<MdmResponse<T>>
+  >(() => EMPTY);
+  private _deleteFunction = new BehaviorSubject<
+    (options?: any) => Observable<any>
+  >(() => EMPTY);
+  private _pageable = new BehaviorSubject<PageParameters>({
+    max: 10,
+    offset: 0
+  });
   private _sortable = new BehaviorSubject<Sortable>({});
 
-  constructor(fetchFunction?: (options?: any) => Observable<MdmIndexResponse<T>>, updateFunction?: (options?: any) => Observable<MdmResponse<T>>, deleteFunction?: (options?: any) => Observable<any>) {
+  constructor(
+    fetchFunction?: (options?: any) => Observable<MdmIndexResponse<T>>,
+    updateFunction?: (options?: any) => Observable<MdmResponse<T>>,
+    deleteFunction?: (options?: any) => Observable<any>
+  ) {
     super();
 
     if (fetchFunction) {
@@ -52,24 +69,13 @@ export class MdmTableDataSource<T> extends DataSource<T> {
     }
   }
 
-  connect(_: CollectionViewer): Observable<T[] | readonly T[]> {
-    return this._dataStream;
-  }
-
-  disconnect(_: CollectionViewer): void {
-    this._dataStream.complete();
-    this._fetchFunction.complete();
-    this._updateFunction.complete();
-    this._deleteFunction.complete();
-    this._pageable.complete();
-    this._sortable.complete();
-  }
-
   get fetchFunction() {
     return this._fetchFunction.value;
   }
 
-  set fetchFunction(fetchFunc: (options?: any) => Observable<MdmIndexResponse<T>>) {
+  set fetchFunction(
+    fetchFunc: (options?: any) => Observable<MdmIndexResponse<T>>
+  ) {
     this._fetchFunction.next(fetchFunc);
   }
 
@@ -97,20 +103,38 @@ export class MdmTableDataSource<T> extends DataSource<T> {
     this._pageable.next(page);
   }
 
-  get sortable () {
+  get sortable() {
     return this._sortable.value;
   }
 
-  set sortable (sort: Sortable) {
+  set sortable(sort: Sortable) {
     this._sortable.next(sort);
   }
 
   get fetchOptions() {
-    const combined = {...this._pageable.value, ...this._sortable.value};
+    const combined = { ...this._pageable.value, ...this._sortable.value };
     // Remove null or empty properties (e.g. {sort: ''})
     return Object.keys(combined)
-      .filter((k) => combined[k] !== undefined && combined[k] !== null && combined[k] !== '')
+      .filter(
+        (k) =>
+          combined[k] !== undefined &&
+          combined[k] !== null &&
+          combined[k] !== ''
+      )
       .reduce((a, k) => ({ ...a, [k]: combined[k] }), {});
+  }
+
+  connect(_: CollectionViewer): Observable<T[] | readonly T[]> {
+    return this._dataStream;
+  }
+
+  disconnect(_: CollectionViewer): void {
+    this._dataStream.complete();
+    this._fetchFunction.complete();
+    this._updateFunction.complete();
+    this._deleteFunction.complete();
+    this._pageable.complete();
+    this._sortable.complete();
   }
 
   refresh() {
@@ -123,11 +147,11 @@ export class MdmTableDataSource<T> extends DataSource<T> {
     }
 
     this.fetchFunction(this.fetchOptions).subscribe(
-      data => {
+      (data) => {
         this.count.next(data.body.count);
         this._dataStream.next(data.body.items);
       },
-      error => console.error(error)
+      (error) => console.error(error)
     );
   }
 
@@ -136,9 +160,7 @@ export class MdmTableDataSource<T> extends DataSource<T> {
       throw new Error('Update function not provided');
     }
 
-    return this.updateFunction(item).pipe(
-      tap(() => this.fetchData())
-    );
+    return this.updateFunction(item).pipe(tap(() => this.fetchData()));
   }
 
   deleteItem(item: T) {
@@ -146,8 +168,6 @@ export class MdmTableDataSource<T> extends DataSource<T> {
       throw new Error('Delete function not provided');
     }
 
-    return this.deleteFunction(item).pipe(
-      tap(() => this.fetchData())
-    );
+    return this.deleteFunction(item).pipe(tap(() => this.fetchData()));
   }
 }

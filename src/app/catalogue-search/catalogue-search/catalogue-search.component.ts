@@ -47,13 +47,17 @@ export class CatalogueSearchComponent implements OnInit {
       .catalogueSearchAdvancedFormComponent.context.value?.[0];
 
     this.stateHandler.Go('appContainer.mainApp.catalogueSearchListing', {
+      contextDomainType: context?.domainType ?? null,
+      contextId: context?.id ?? null,
+      contextLabel: context?.label ?? null,
+      contextParentId: context?.parentId ?? null,
+      contextDataModelId: context?.modelId ?? null,
+
       search: this.catalogueSearchFormComponent.searchTerms.value,
+
       labelOnly: this.catalogueSearchAdvancedFormComponent.labelOnly.value,
       exactMatch: this.catalogueSearchAdvancedFormComponent.exactMatch.value,
       domainTypes: this.catalogueSearchAdvancedFormComponent.domainTypes.value,
-
-      contextId: context?.id ?? null,
-      contextDomain: context?.domainType ?? null,
 
       classifiers: this.catalogueSearchAdvancedFormComponent.classifierNames,
 

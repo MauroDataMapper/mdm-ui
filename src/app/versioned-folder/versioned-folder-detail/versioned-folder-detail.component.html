@@ -32,18 +32,18 @@ SPDX-License-Identifier: Apache-2.0
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
           <button
-          mat-menu-item
-          type="button"
-          *ngIf="access.showFinalise"
-          class="has-text-green"
-          (click)="finalise()"
-        >
-          <i
-            class="fas fa-check-circle has-text-green"
-            aria-hidden="true"
-          ></i>
-          Finalise
-        </button>
+            mat-menu-item
+            type="button"
+            *ngIf="access.showFinalise"
+            class="has-text-green"
+            (click)="finalise()"
+          >
+            <i
+              class="fas fa-check-circle has-text-green"
+              aria-hidden="true"
+            ></i>
+            Finalise
+          </button>
           <button
             mat-menu-item
             type="button"
@@ -69,7 +69,12 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span class="fas fa-copy"></span> Create a New Version
           </button>
-          <button mat-menu-item type="button" *ngIf="access.canMergeInto" (click)="merge()">
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.canMergeInto"
+            (click)="merge()"
+          >
             <span class="fas fa-window-restore"></span> Merge...
           </button>
           <button mat-menu-item type="button" (click)="showMergeGraph()">
@@ -122,29 +127,6 @@ SPDX-License-Identifier: Apache-2.0
             aria-label="User & Group Access"
           >
             <span class="fas fa-user-lock"></span>
-          </button>
-        </div>
-
-        <div
-          style="
-            position: relative;
-            float: right;
-            margin-right: 8px;
-            margin-left: 8px;
-          "
-          [hidden]="isEditing"
-        >
-          <button
-            mat-icon-button
-            color="primary"
-            type="button"
-            class="paddingless"
-            (click)="toggleShowSearch()"
-            [disabled]="processing"
-            matTooltip="Search"
-            aria-label="Search"
-          >
-            <span class="fas fa-search"></span>
           </button>
         </div>
       </div>
@@ -261,7 +243,9 @@ SPDX-License-Identifier: Apache-2.0
             <span class="fas fa-code-branch" matTooltip="Branch name"></span>
             <span><strong>Branch: </strong></span>
             <span>
-              <mdm-branch-selector [catalogueItem]="detail"></mdm-branch-selector>
+              <mdm-branch-selector
+                [catalogueItem]="detail"
+              ></mdm-branch-selector>
             </span>
           </small>
         </div>

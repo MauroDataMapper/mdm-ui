@@ -17,18 +17,24 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue, SubscribedCatalogueResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  SubscribedCatalogue,
+  SubscribedCatalogueTypeResponse,
+  SubscribedCatalogueResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  SharedService,
+  StateHandlerService
+} from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
-
-interface SubscribedCatalogueComponentErrors {
-  label?: string;
-  url?: string;
-  apiKey?: string;
-}
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -36,10 +42,11 @@ interface SubscribedCatalogueComponentErrors {
   styleUrls: ['./subscribed-catalogue.component.scss']
 })
 export class SubscribedCatalogueComponent implements OnInit {
-
-  catalogue: SubscribedCatalogue;
-  errors: SubscribedCatalogueComponentErrors;
+  catalogueId?: Uuid;
+  connectionTypes: string[] = [];
   isCreating: boolean;
+
+  formGroup: FormGroup;
 
   constructor(
     private resources: MdmResourcesService,
@@ -48,7 +55,34 @@ export class SubscribedCatalogueComponent implements OnInit {
     private shared: SharedService,
     private messageHandler: MessageHandlerService,
     private title: Title,
-    private editingService: EditingService) { }
+    private editingService: EditingService
+  ) {
+    this.createFormGroup();
+  }
+
+  get label() {
+    return this.formGroup.get('label');
+  }
+
+  get description() {
+    return this.formGroup.get('description');
+  }
+
+  get url() {
+    return this.formGroup.get('url');
+  }
+
+  get type() {
+    return this.formGroup.get('type');
+  }
+
+  get apiKey() {
+    return this.formGroup.get('apiKey');
+  }
+
+  get refreshPeriod() {
+    return this.formGroup.get('refreshPeriod');
+  }
 
   ngOnInit(): void {
     if (!this.shared.features.useSubscribedCatalogues) {
@@ -57,82 +91,112 @@ export class SubscribedCatalogueComponent implements OnInit {
     }
 
     this.editingService.start();
-    const catalogueId : Uuid = this.routerGobals.params.id;
+    this.catalogueId = this.routerGobals.params.id;
 
-    if (catalogueId) {
-      this.isCreating = false;
-      this.title.setTitle('Subscribed Catalogue - Edit Subscription');
+    this.resources.subscribedCatalogues
+      .types()
+      .pipe(
+        switchMap((typesResponse: SubscribedCatalogueTypeResponse) => {
+          this.connectionTypes = typesResponse.body;
 
-      this.resources.admin
-        .getSubscribedCatalogue(catalogueId)
-        .subscribe(
-          (data: SubscribedCatalogueResponse) => this.catalogue = data.body,
-          error => {
-            this.messageHandler.showError('Unable to get the subscribed catalogue.', error);
-            this.navigateToParent();
+          if (this.catalogueId) {
+            this.isCreating = false;
+            this.title.setTitle('Subscribed Catalogue - Edit Subscription');
+
+            return this.resources.admin
+              .getSubscribedCatalogue(this.catalogueId)
+              .pipe(
+                map(
+                  (cataloguesResponse: SubscribedCatalogueResponse) =>
+                    cataloguesResponse.body
+                )
+              );
+          }
+
+          this.isCreating = true;
+          this.title.setTitle('Subscribed Catalogue - Add Subscription');
+          return of({
+            label: '',
+            url: ''
           });
-    }
-    else {
-      this.isCreating = true;
-      this.title.setTitle('Subscribed Catalogue - Add Subscription');
-
-      this.catalogue = {
-        label: '',
-        url: ''
-      };
-    }
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'Unable to get the subscribed catalogue.',
+            error
+          );
+          this.navigateToParent();
+          return EMPTY;
+        })
+      )
+      .subscribe((catalogue: SubscribedCatalogue) => {
+        this.createFormGroup(catalogue);
+      });
   }
 
   save() {
-    if (!this.validate()) {
+    if (this.formGroup.invalid) {
       return;
     }
 
-    if (this.catalogue.id) {
-      this.resources.admin
-        .updateSubscribedCatalogue(this.catalogue.id, this.catalogue)
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Subscribed catalogue updated successfully.');
-            this.navigateToParent();
-          },
-          error => this.messageHandler.showError('There was a problem updating the subscribed catalogue.', error));
-    }
-    else {
-      this.resources.admin
-        .saveSubscribedCatalogues(this.catalogue)
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Subscribed catalogue saved successfully.');
-            this.navigateToParent();
-          },
-          error => this.messageHandler.showError('There was a problem saving the subscribed catalogue.', error));
-    }
+    const catalogue: SubscribedCatalogue = {
+      id: this.catalogueId,
+      label: this.label.value,
+      description: this.description.value,
+      url: this.url.value,
+      subscribedCatalogueType: this.type.value,
+      apiKey: this.apiKey.value,
+      refreshPeriod: this.refreshPeriod.value
+    };
+
+    const request$: Observable<SubscribedCatalogueResponse> = this.isCreating
+      ? this.resources.admin.saveSubscribedCatalogues(catalogue)
+      : this.resources.admin.updateSubscribedCatalogue(
+          this.catalogueId,
+          catalogue
+        );
+
+    request$
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem ${
+              this.isCreating ? 'saving' : 'updating'
+            } the subscribed catalogue.`,
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(
+          `Subscribed catalogue ${
+            this.isCreating ? 'saved' : 'updated'
+          } successfully.`
+        );
+        this.navigateToParent();
+      });
   }
 
   cancel() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }
     });
   }
 
-  validate() {
-    let isValid = true;
-    this.errors = {};
-
-    if (this.catalogue.label.trim().length === 0) {
-      this.errors.label = 'Label cannot be empty';
-      isValid = false;
-    }
-
-    if (this.catalogue.url.trim().length === 0) {
-      this.errors.url = 'URL cannot be empty';
-      isValid = false;
-    }
-
-    return isValid;
+  private createFormGroup(catalogue?: SubscribedCatalogue) {
+    this.formGroup = new FormGroup({
+      label: new FormControl(catalogue?.label, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+      description: new FormControl(catalogue?.description),
+      url: new FormControl(catalogue?.url, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+      type: new FormControl(catalogue?.subscribedCatalogueType, [
+        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      ]),
+      apiKey: new FormControl(catalogue?.apiKey),
+      refreshPeriod: new FormControl(catalogue?.refreshPeriod)
+    });
   }
 
   private navigateToParent() {

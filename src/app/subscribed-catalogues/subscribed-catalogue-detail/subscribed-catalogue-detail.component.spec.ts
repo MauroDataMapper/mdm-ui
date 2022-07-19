@@ -26,15 +26,18 @@ describe('SubscribedCatalogueDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubscribedCatalogueDetailComponent ]
-    })
-    .compileComponents();
+      declarations: [SubscribedCatalogueDetailComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubscribedCatalogueDetailComponent);
     component = fixture.componentInstance;
-    component.subscribedCatalogue = { url: '', label: '' };
+    component.subscribedCatalogue = {
+      url: '',
+      label: '',
+      subscribedCatalogueType: 'test'
+    };
     fixture.detectChanges();
   });
 

@@ -187,9 +187,9 @@ pipeline {
     }
 
     stage('Sonarqube') {
-      // when {
-      //   branch 'develop'
-      // }
+      when {
+        branch 'develop'
+      }
       steps {
         withSonarQubeEnv('JenkinsQube') {
           nvm('') {

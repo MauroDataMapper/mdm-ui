@@ -16,15 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  CatalogueItem,
-  Profile,
-  ProfileContextCollection,
-  ProfileField
-} from '@maurodatamapper/mdm-resources';
-import { BroadcastService, MessageHandlerService } from '@mdm/services';
+import { Profile, ProfileField } from '@maurodatamapper/mdm-resources';
+import { MessageHandlerService } from '@mdm/services';
 import {
   CellClassParams,
   CellClassRules,
@@ -41,6 +35,11 @@ import { BulkEditDataRow, BulkEditProfileContext } from '../bulk-edit.types';
 import { CheckboxCellRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DateCellEditorComponent } from './cell-editors/date-cell-editor/date-cell-editor.component';
 import { BulkEditProfileService } from '../bulk-edit-profile.service';
+import {
+  MauroItem,
+  MauroProfileUpdatePayload,
+  MauroProfileValidationResult
+} from '@mdm/mauro/mauro-item.types';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -48,7 +47,7 @@ import { BulkEditProfileService } from '../bulk-edit-profile.service';
   styleUrls: ['./bulk-edit-editor.component.scss']
 })
 export class BulkEditEditorComponent implements OnInit {
-  @Input() rootItem: CatalogueItem;
+  @Input() rootItem: MauroItem;
 
   @Output() backEvent = new EventEmitter<void>();
 
@@ -64,15 +63,14 @@ export class BulkEditEditorComponent implements OnInit {
     dateCellEditor: DateCellEditorComponent
   };
 
-  validated: ProfileContextCollection;
+  validated: MauroProfileValidationResult[];
   totalValidationErrors = 0;
   loaded = false;
   columns: ColGroupDef[] = [];
   rows: BulkEditDataRow[] = [];
   cellRules: CellClassRules = {
-    'mdm-bulk-edit-editor__invalid': (params) =>
-      this.showValidationError(params),
-    'mdm-bulk-edit-editor__readonly': (params) =>
+    'mdm-bulk-editor__invalid': (params) => this.showValidationError(params),
+    'mdm-bulk-editor__readonly': (params) =>
       !params.colDef.editable &&
       params.colDef.cellRenderer !== 'checkboxCellRenderer'
   };
@@ -86,29 +84,16 @@ export class BulkEditEditorComponent implements OnInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private bulkEditProfiles: BulkEditProfileService,
-    private broadcast: BroadcastService
+    private bulkEditProfiles: BulkEditProfileService
   ) {}
 
   ngOnInit(): void {
     this.load();
-
-    this.broadcast.on('validateBulkEdit').subscribe(() => {
-      this.validate();
-    });
   }
 
   load() {
     this.bulkEditProfiles
-      .getMany(this.rootItem, {
-        multiFacetAwareItems: this.tab.multiFacetAwareItems,
-        profileProviderServices: [
-          {
-            name: this.tab.profile.name,
-            namespace: this.tab.profile.namespace
-          }
-        ]
-      })
+      .getMany(this.rootItem, this.tab.identifiers, this.tab.profileProvider)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -120,12 +105,8 @@ export class BulkEditEditorComponent implements OnInit {
       )
       .subscribe((profiles) => {
         this.tab.editedProfiles = profiles;
-        this.columns = this.getColumnsForProfile(
-          profiles.profilesProvided[0].profile
-        );
-        this.rows = profiles.profilesProvided.map((profileContext) =>
-          this.mapProfileToRow(profileContext.profile)
-        );
+        this.columns = this.getColumnsForProfile(profiles[0]);
+        this.rows = profiles.map((profile) => this.mapProfileToRow(profile));
 
         this.validate();
         this.loaded = true;
@@ -157,25 +138,48 @@ export class BulkEditEditorComponent implements OnInit {
     this.totalValidationErrors = 0;
 
     this.bulkEditProfiles
-      .validateMany(this.rootItem, {
-        profilesProvided: this.tab.editedProfiles.profilesProvided
-      })
+      .validateMany(
+        this.rootItem,
+        this.tab.profileProvider,
+        this.tab.editedProfiles
+      )
+      .subscribe((results) => {
+        this.validated = results;
+        this.totalValidationErrors = this.validated.reduce((current, next) => {
+          return current + (next.errors?.length ?? 0);
+        }, 0);
+        // Trigger grid redraw at correct time
+        setTimeout(() => this.gridApi?.redrawRows(), 0);
+      });
+  }
+
+  save() {
+    const payloads: MauroProfileUpdatePayload[] = this.tab.editedProfiles.map(
+      (profile) => {
+        return {
+          profile,
+          identifier: this.tab.identifiers.find(
+            (identifier) => identifier.id === profile.id
+          )
+        };
+      }
+    );
+
+    this.bulkEditProfiles
+      .saveMany(this.rootItem, this.tab.profileProvider, payloads)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.validated = error.error as ProfileContextCollection;
-          this.totalValidationErrors = this.validated.profilesProvided.reduce(
-            (current, next) => {
-              return current + (next.errors?.total ?? 0);
-            },
-            0
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem saving changes for '${this.tab.displayName}'.`,
+            error
           );
-          this.gridApi?.redrawRows();
           return EMPTY;
         })
       )
       .subscribe(() => {
-        this.validated = null;
-        this.gridApi?.redrawRows();
+        this.messageHandler.showSuccess(
+          `'${this.tab.displayName}' was saved successfully.`
+        );
       });
   }
 
@@ -187,12 +191,12 @@ export class BulkEditEditorComponent implements OnInit {
     const data = params.data as BulkEditDataRow;
     let hasError = false;
 
-    this.validated.profilesProvided.forEach((profileProvided) => {
+    this.validated.forEach((validationResult) => {
       if (
-        profileProvided.profile.label === data.element &&
-        profileProvided.errors
+        validationResult.profile.label === data.element &&
+        validationResult.errors
       ) {
-        profileProvided.errors.errors.forEach((error) => {
+        validationResult.errors.forEach((error) => {
           if (error.metadataPropertyName === params.colDef.field) {
             hasError = true;
           }
@@ -257,6 +261,12 @@ export class BulkEditEditorComponent implements OnInit {
       column.cellEditorParams = {
         values: [''].concat(field.allowedValues.sort())
       };
+    }
+
+    if (field.dataType === 'model') {
+      column.editable = false;
+      column.valueGetter = (params) =>
+        params.data[field.metadataPropertyName].label;
     }
 
     return column;

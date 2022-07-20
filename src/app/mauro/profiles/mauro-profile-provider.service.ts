@@ -16,19 +16,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  CatalogueItem,
-  ProfileContextCollection,
+  Profile,
   ProfileContextIndexPayload,
   ProfileContextIndexResponse,
   ProfileContextPayload,
+  ProfileProvider,
   ProfileSummary,
   ProfileSummaryIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import {
+  MauroIdentifier,
+  MauroItem,
+  MauroProfileUpdatePayload,
+  MauroProfileValidationResult
+} from '../mauro-item.types';
+import { ProfileProviderService } from './profile-provider-service';
 
 /**
  * Profile provider service that manages profiles directly via Mauro.
@@ -36,82 +44,98 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class MauroProfileProviderService {
+export class MauroProfileProviderService implements ProfileProviderService {
   constructor(private resources: MdmResourcesService) {}
 
-  /**
-   * Gets a list of profiles used on a particular catalogue item.
-   *
-   * @param item The catalogue item to check.
-   * @returns An observable of an array of {@link ProfileSummary} objects.
-   */
-  usedProfiles(item: CatalogueItem): Observable<ProfileSummary[]> {
+  usedProfiles(item: MauroItem): Observable<ProfileSummary[]> {
     return this.resources.profile
       .usedProfiles(item.domainType, item.id)
       .pipe(map((response: ProfileSummaryIndexResponse) => response.body));
   }
 
-  /**
-   * Gets a list of profiles not used on a particular catalogue item.
-   *
-   * @param item The catalogue item to check.
-   * @returns An observable of an array of {@link ProfileSummary} objects.
-   */
-  unusedProfiles(item: CatalogueItem): Observable<ProfileSummary[]> {
+  unusedProfiles(item: MauroItem): Observable<ProfileSummary[]> {
     return this.resources.profile
       .unusedProfiles(item.domainType, item.id)
       .pipe(map((response: ProfileSummaryIndexResponse) => response.body));
   }
 
-  /**
-   * Get all profile objects for a set of child catalogue items under a given root item.
-   *
-   * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of child catalogue items to get profiles for, and the profile providers
-   * to map to the child items.
-   * @returns An observable containing the collection of profile objects for each child item.
-   */
   getMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextIndexPayload
-  ): Observable<ProfileContextCollection> {
+    rootItem: MauroItem,
+    identifiers: MauroIdentifier[],
+    provider: ProfileProvider
+  ): Observable<Profile[]> {
+    const payload: ProfileContextIndexPayload = {
+      multiFacetAwareItems: identifiers.map((identifier) => {
+        return {
+          multiFacetAwareItemDomainType: identifier.domainType,
+          multiFacetAwareItemId: identifier.id
+        };
+      }),
+      profileProviderServices: [provider]
+    };
+
     return this.resources.profile
       .getMany(rootItem.domainType, rootItem.id, payload)
-      .pipe(map((response: ProfileContextIndexResponse) => response.body));
+      .pipe(
+        map((response: ProfileContextIndexResponse) =>
+          response.body.profilesProvided.map((provided) => provided.profile)
+        )
+      );
   }
 
-  /**
-   * Save all profile objects for a set of child catalogue items under a given root item.
-   *
-   * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of profile objects to save. Each profile provided must be mapped to a child
-   * item of the root model.
-   * @returns An observable containing the collection of profile objects for each child item.
-   */
   saveMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextPayload
-  ): Observable<ProfileContextCollection> {
+    rootItem: MauroItem,
+    provider: ProfileProvider,
+    payloads: MauroProfileUpdatePayload[]
+  ): Observable<Profile[]> {
+    const payload: ProfileContextPayload = {
+      profilesProvided: payloads.map((pl) => {
+        return {
+          profile: pl.profile,
+          profileProviderService: provider
+        };
+      })
+    };
+
     return this.resources.profile
       .saveMany(rootItem.domainType, rootItem.id, payload)
-      .pipe(map((response: ProfileContextIndexResponse) => response.body));
+      .pipe(
+        map((response: ProfileContextIndexResponse) =>
+          response.body.profilesProvided.map((provided) => provided.profile)
+        )
+      );
   }
 
-  /**
-   * Validate all profile objects for a set of child catalogue items under a given root item.
-   *
-   * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of profile objects to validate. Each profile provided must be mapped to a child
-   * item of the root model.
-   * @returns An observable containing the collection of profile objects for each child item. Each profile may contain validation
-   * errors to review.
-   */
   validateMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextPayload
-  ): Observable<ProfileContextCollection> {
+    rootItem: MauroItem,
+    provider: ProfileProvider,
+    profiles: Profile[]
+  ): Observable<MauroProfileValidationResult[]> {
+    const payload: ProfileContextPayload = {
+      profilesProvided: profiles.map((profile) => {
+        return {
+          profile,
+          profileProviderService: provider
+        };
+      })
+    };
+
     return this.resources.profile
       .validateMany(rootItem.domainType, rootItem.id, payload)
-      .pipe(map((response: ProfileContextIndexResponse) => response.body));
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          // The HttpErrorResponse will contain the validation errors. Wrap this in a ProfileContextIndexResponse
+          // object so it can passed through to the rest of the observable pipe and still get processed
+          return of({ body: error.error });
+        }),
+        map((response: ProfileContextIndexResponse) =>
+          response.body.profilesProvided.map((provided) => {
+            return {
+              profile: provided.profile,
+              errors: provided.errors?.errors
+            };
+          })
+        )
+      );
   }
 }

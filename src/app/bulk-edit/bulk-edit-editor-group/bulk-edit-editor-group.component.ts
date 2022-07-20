@@ -17,10 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  MultiFacetAwareItem,
-  ProfileContext
-} from '@maurodatamapper/mdm-resources';
+import { MauroIdentifier } from '@mdm/mauro/mauro-item.types';
 import { BulkEditContext, BulkEditProfileContext } from '../bulk-edit.types';
 
 @Component({
@@ -31,8 +28,6 @@ import { BulkEditContext, BulkEditProfileContext } from '../bulk-edit.types';
 export class BulkEditEditorGroupComponent implements OnInit {
   @Output() onCancel = new EventEmitter<void>();
   @Output() onPrevious = new EventEmitter<void>();
-  @Output() onValidate = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<ProfileContext[]>();
 
   /** Two way binding */
   @Input() context: BulkEditContext;
@@ -42,19 +37,10 @@ export class BulkEditEditorGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.tabs = this.context.profiles.map<BulkEditProfileContext>((profile) => {
-      const multiFacetAwareItems = this.context.elements.map<
-        MultiFacetAwareItem
-      >((element) => {
-        return {
-          multiFacetAwareItemDomainType: element.domainType,
-          multiFacetAwareItemId: element.id
-        };
-      });
-
       return {
         displayName: profile.displayName,
-        profile,
-        multiFacetAwareItems,
+        profileProvider: profile,
+        identifiers: this.context.elements as MauroIdentifier[],
         editedProfiles: null
       };
     });
@@ -66,18 +52,5 @@ export class BulkEditEditorGroupComponent implements OnInit {
 
   previous() {
     this.onPrevious.emit();
-  }
-
-  validate() {
-    this.onValidate.emit();
-  }
-
-  save() {
-    const profiles: ProfileContext[] = [];
-    this.tabs.forEach((tab) => {
-      profiles.push(...tab.editedProfiles.profilesProvided);
-    });
-
-    this.onSave.emit(profiles);
   }
 }

@@ -16,7 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="modal-body pxy-2">
+<div class="modal-body mdm-bulk-editor">
+  <mat-toolbar>
+    <button mat-icon-button matTooltip="Validate changes" (click)="validate()">
+      <span class="fas fa-clipboard-check"></span>
+    </button>
+    <button mat-icon-button matTooltip="Save changes" (click)="save()">
+      <span class="fas fa-save"></span>
+    </button>
+    <span class="spacer"></span>
+    <span
+      *ngIf="totalValidationErrors === 0"
+      class="mdm-bulk-editor__validation"
+    >
+      <span class="fas fa-check mdm-bulk-editor__validation--success"></span>
+      Valid
+    </span>
+    <span *ngIf="totalValidationErrors > 0" class="mdm-bulk-editor__validation">
+      <span
+        class="fas fa-exclamation-triangle warning mdm-bulk-editor__validation--warning"
+      ></span>
+      {{ totalValidationErrors }} validation issue(s)
+    </span>
+  </mat-toolbar>
   <ag-grid-angular
     *ngIf="loaded"
     #agGrid
@@ -34,11 +56,4 @@ SPDX-License-Identifier: Apache-2.0
     [tooltipShowDelay]="0"
   >
   </ag-grid-angular>
-
-  <span *ngIf="totalValidationErrors > 0" class="mr-2">
-    <span
-      class="fas fa-exclamation-triangle warning mdm-bulk-edit-editor__validation--warning"
-    ></span>
-    There are {{ totalValidationErrors }} field(s) with issues
-  </span>
 </div>

@@ -16,10 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@import "style/abstracts/variables";
+@import 'style/abstracts/variables';
 
-.mdm-bulk-edit-editor {
+.mdm-bulk-editor {
+  .spacer {
+    flex: 1 1 auto;
+  }
+
   &__validation {
+    font-size: 16px;
+
+    &--success {
+      color: $defaultSuccessColor;
+    }
+
     &--warning {
       color: $defaultWarningColor;
     }
@@ -27,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0
 }
 
 :host::ng-deep {
-  .mdm-bulk-edit-editor {
+  .mdm-bulk-editor {
     &__invalid {
       border: 1px solid red !important;
     }

@@ -39,6 +39,7 @@ import {
   MauroProfileValidationResult,
   MauroUpdatePayload
 } from '../mauro-item.types';
+import { ProfileProviderService } from './profile-provider-service';
 
 /**
  * Profile provider definition for the Default Profile.
@@ -46,6 +47,14 @@ import {
 export const defaultProfileProvider: ProfileProvider = {
   name: 'DefaultProfileProviderService',
   namespace: 'uk.ac.ox.softeng.maurodatamapper.internal.default'
+};
+
+export const isDefaultProvider = (provider: ProfileProvider) => {
+  return (
+    provider &&
+    provider.name === defaultProfileProvider.name &&
+    provider.namespace === defaultProfileProvider.namespace
+  );
 };
 
 export const defaultProfileSectionName = 'Default';
@@ -153,7 +162,7 @@ const urlField: ProfileField = {
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultProfileProviderService {
+export class DefaultProfileProviderService implements ProfileProviderService {
   constructor(
     private itemProvider: MauroItemProviderService,
     private itemUpdater: MauroItemUpdateService
@@ -171,7 +180,7 @@ export class DefaultProfileProviderService {
     identifier: MauroIdentifier,
     provider: ProfileProvider
   ): Observable<Profile> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -180,22 +189,12 @@ export class DefaultProfileProviderService {
       .pipe(map((item) => this.mapItemToProfile(item)));
   }
 
-  /**
-   * Get multiple profiles based on the given Mauro catalogue item identifiers and profile provider.
-   *
-   * @param rootItem The root catalogue item to base all further items under.
-   * @param identifiers An array of {@link MauroIdentifier} objects containing identification information.
-   * At least an ID and domain type is required, but some domain types based on hierarchy require further details.
-   * @param provider The namespace/name of the profile provider to use.
-   * @returns An array of {@link Profile} objects which are mapped to the requested catalogue items in an
-   * observable stream.
-   */
   getMany(
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
   ): Observable<Profile[]> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -218,7 +217,7 @@ export class DefaultProfileProviderService {
     provider: ProfileProvider,
     profile: Profile
   ): Observable<Profile> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -242,7 +241,7 @@ export class DefaultProfileProviderService {
     provider: ProfileProvider,
     payloads: MauroProfileUpdatePayload[]
   ): Observable<Profile[]> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -270,7 +269,7 @@ export class DefaultProfileProviderService {
     provider: ProfileProvider,
     profile: Profile
   ): Observable<MauroProfileValidationResult> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -289,18 +288,12 @@ export class DefaultProfileProviderService {
     });
   }
 
-  /**
-   * Validates multiple profiles based on the given profile provider.
-   *
-   * @param provider The namespace/name of the profile provider to use.
-   * @param profile The profiles to validate.
-   * @returns An array of result objects containing the profiles and a possible list of errors found, via an observable stream.
-   */
   validateMany(
+    rootItem: MauroItem,
     provider: ProfileProvider,
     profiles: Profile[]
   ): Observable<MauroProfileValidationResult[]> {
-    if (!this.isDefaultProvider(provider)) {
+    if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
@@ -309,12 +302,6 @@ export class DefaultProfileProviderService {
     );
   }
 
-  /**
-   * Identify which profiles from this profile provider have been applied to a Mauro catalogue item.
-   *
-   * @param item The catalogue item to check.
-   * @returns An array of {@link ProfileSummary} objects detailing the profiles applied to this item.
-   */
   usedProfiles(item: MauroItem): Observable<ProfileSummary[]> {
     return of([
       {
@@ -342,25 +329,10 @@ export class DefaultProfileProviderService {
     ]);
   }
 
-  /**
-   * Identify which profiles from this profile provider have _not_ been applied to a Mauro catalogue item.
-   *
-   * @param item The catalogue item to check.
-   * @returns An array of {@link ProfileSummary} objects detailing the profiles _not_ applied to this item.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  unusedProfiles(item: MauroItem): Observable<ProfileSummary[]> {
+  unusedProfiles(): Observable<ProfileSummary[]> {
     // For this provider, every item always has a "default" profile, so there are
     // never any unused profiles
     return of([]);
-  }
-
-  private isDefaultProvider(provider: ProfileProvider) {
-    return (
-      provider &&
-      provider.name === defaultProfileProvider.name &&
-      provider.namespace === defaultProfileProvider.namespace
-    );
   }
 
   private mapItemToProfile(item: MauroItem): Profile {
@@ -574,11 +546,11 @@ export class DefaultProfileProviderService {
         fld.metadataPropertyName === multiplicityField.metadataPropertyName
     );
 
-    if (!field) {
+    if (!field || !field.currentValue || field.currentValue?.length === 0) {
       return [];
     }
 
-    if (!/[0-9]+..[0-9]+/gm.test(field.currentValue)) {
+    if (!/[0-9]+..[0-9]+$/gm.test(field.currentValue)) {
       return [
         {
           fieldName: multiplicityField.fieldName,

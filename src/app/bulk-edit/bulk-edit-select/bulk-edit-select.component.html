@@ -29,7 +29,6 @@ SPDX-License-Identifier: Apache-2.0
           required
           formControlName="elements"
           [compareWith]="elementCompare"
-          [(ngModel)]="context.elements"
         >
           <mat-option
             *ngFor="let element of availableElements"
@@ -51,13 +50,13 @@ SPDX-License-Identifier: Apache-2.0
           required
           formControlName="profiles"
           [compareWith]="profileCompare"
-          [(ngModel)]="context.profiles"
         >
           <mat-option
             *ngFor="let profile of availableProfiles"
             [value]="profile"
           >
-            {{ profile.displayName }} ({{ profile.version }})
+            {{ profile.displayName }}
+            {{ profile.version ? '(' + profile.version + ')' : '' }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="setupForm && profiles.errors?.required">

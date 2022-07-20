@@ -614,6 +614,9 @@ describe('DefaultProfileProviderService', () => {
     it.each(sampleItems)(
       'should pass every valid profile mapped to each %p',
       (domainType, props) => {
+        // Root item isn't required for default profile provider but is a required parameter
+        const rootItem = {} as MauroItem;
+
         const item: MauroItem = {
           id: '123',
           domainType,
@@ -636,7 +639,11 @@ describe('DefaultProfileProviderService', () => {
         );
 
         const expected$ = cold('(a|)', { a: validations });
-        const actual$ = service.validateMany(defaultProfileProvider, profiles);
+        const actual$ = service.validateMany(
+          rootItem,
+          defaultProfileProvider,
+          profiles
+        );
         expect(actual$).toBeObservable(expected$);
       }
     );
@@ -686,18 +693,11 @@ describe('DefaultProfileProviderService', () => {
       [CatalogueItemDomainType.Classifier, []]
     ];
 
-    it.each(supportedDomains)(
-      'should always say there are no unused profiles for %p',
-      (domainType, _) => {
-        const expected$ = cold('(a|)', { a: [] });
-        const actual$ = service.unusedProfiles({
-          id: '123',
-          domainType,
-          label: 'test'
-        });
-        expect(actual$).toBeObservable(expected$);
-      }
-    );
+    it('should always say there are no unused profiles', () => {
+      const expected$ = cold('(a|)', { a: [] });
+      const actual$ = service.unusedProfiles();
+      expect(actual$).toBeObservable(expected$);
+    });
 
     it.each(supportedDomains)(
       'should always list the default profile as used for %p item',

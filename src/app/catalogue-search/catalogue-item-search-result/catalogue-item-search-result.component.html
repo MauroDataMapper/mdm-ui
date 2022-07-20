@@ -40,10 +40,8 @@ SPDX-License-Identifier: Apache-2.0
       *ngIf="item.description"
       class="mdm-catalogue-item-search-result__content"
     >
-      <mdm-content-editor
-        [inEditMode]="false"
-        [content]="item.description"
-      ></mdm-content-editor>
+    <mdm-more-description [description]="item.description">
+    </mdm-more-description>
     </div>
     <div class="mdm-catalogue-item-search-result__footer">
       <a [href]="linkUrl">View Details</a>

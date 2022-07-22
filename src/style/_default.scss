@@ -16,10 +16,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-html, body, .mdm-root, #mdm-ui, .mdm-ui-view {
+html,
+body,
+.mdm-root,
+#mdm-ui,
+.mdm-ui-view {
   height: 100%;
 }
-body, .mdm-root {
+body,
+.mdm-root {
   display: flex;
   flex-direction: column;
 }
@@ -30,7 +35,8 @@ main {
 strong {
   font-weight: 600;
 }
-ol li, ul li {
+ol li,
+ul li {
   font-size: $defaultFontSize;
 }
 @media only screen and (min-width: 1600px) {
@@ -67,12 +73,14 @@ a.mat-stroked-button {
   }
 }
 
-a.show-more, a.show-less {
-  color: #3279B5;
-  text-decoration:none;
+a.show-more,
+a.show-less {
+  color: #3279b5;
+  text-decoration: none;
   cursor: pointer;
 }
-.pill-card--red, .pill-card--green {
+.pill-card--red,
+.pill-card--green {
   padding: 5px 10px;
   list-style: none;
   font-size: 16px;
@@ -81,11 +89,11 @@ a.show-more, a.show-less {
 }
 .pill-card--red {
   color: #fff;
-  background-color: #A5122A;
+  background-color: #a5122a;
 }
 .pill-card--green {
   color: #fff;
-  background-color: #0A8535;
+  background-color: #0a8535;
   // color: #0A8535;
   //   background-color: rgba(29,201,183,.1);
 }
@@ -93,7 +101,9 @@ hr {
   margin-top: 16px;
   margin-bottom: 16px;
 }
-.mat-body, .mat-body-1, .mat-typography {
+.mat-body,
+.mat-body-1,
+.mat-typography {
   @include respond-to($tablet) {
     font: 500 16px/24px Nunito Sans, sans-serif;
   }
@@ -108,13 +118,13 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .fa.fa-remove:before {
-  content: "\f2ed";
+  content: '\f2ed';
 }
 
-.input-group > .custom-select:not(:last-child), .input-group > .form-control:not(:last-child) {
+.input-group > .custom-select:not(:last-child),
+.input-group > .form-control:not(:last-child) {
   border-radius: 5px;
 }
-
 
 /* Breadcrumbs */
 .breadcrumbClassification.emptyBackground {
@@ -145,12 +155,12 @@ mat-progress-bar.mat-progress-bar.mat-primary {
   }
 }
 .breadcrumbClassification > li {
-	display: inline-block;
+  display: inline-block;
 }
 .breadcrumbClassification > li + li:before {
   padding: 0px 0px 0px 3px;
   color: #000;
-  content: "/";
+  content: '/';
 }
 
 .breadcrumbClassification > li.breadcrumbRemoveButton:before {
@@ -158,7 +168,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .mdm--shadow-block {
-  box-shadow: 0 0 13px 0 rgba(82,63,105,.05);
+  box-shadow: 0 0 13px 0 rgba(82, 63, 105, 0.05);
   background-color: #fff;
   margin-bottom: 20px;
   border-radius: 4px;
@@ -189,7 +199,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 a {
-  color: #3279B5;
+  color: #3279b5;
 }
 
 .breadcrumb {
@@ -197,15 +207,14 @@ a {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   padding: 4px 8px;
-  margin-bottom: 1rem;
   list-style: none;
   background-color: #e9ecef;
-//   background-color: #6F6F6F;
-    color: #266CA8;
-  border-radius: .25rem;
+  //   background-color: #6F6F6F;
+  color: #266ca8;
+  border-radius: 0.25rem;
   margin-bottom: 0;
   a {
-      color: #266CA8;
+    color: #266ca8;
   }
 }
 
@@ -213,8 +222,8 @@ a {
   @include size();
   div {
     position: absolute;
-    top:70%;
-    left:40%;
+    top: 70%;
+    left: 40%;
   }
   i {
     font-size: 75px;
@@ -226,33 +235,29 @@ a {
 }
 
 .badge-success {
-    background-color: #028821;
+  background-color: #028821;
 }
 
 .mat-checkbox-layout {
-   white-space: normal !important;
- }
+  white-space: normal !important;
+}
 
- .mat-checkbox-inner-container {
-   margin: 6px 8px auto 0 !important;
- }
+.mat-checkbox-inner-container {
+  margin: 6px 8px auto 0 !important;
+}
 
 // Background colour for mchighlighter pipe
 span.mchighlighter {
   background-color: #fbff00;
 }
 
-
-
 .mdm-hidden-checkbox-label {
-    display: none;
+  display: none;
 }
 
-
-.mdm--mat-menu--actions .warning{
+.mdm--mat-menu--actions .warning {
   color: #a5122a;
 }
-
 
 .fas.fa-filter {
   cursor: pointer;
@@ -260,17 +265,19 @@ span.mchighlighter {
 }
 
 .mdm--skeleton-table {
-    th:first-of-type, td:first-of-type {
-      padding-left: 24px;
-    }
+  th:first-of-type,
+  td:first-of-type {
+    padding-left: 24px;
+  }
 }
 
-.mat-tab-label, .mat-tab-link {
-  color: rgba(0, 0, 0, 0.97)!important;
+.mat-tab-label,
+.mat-tab-link {
+  color: rgba(0, 0, 0, 0.97) !important;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-infix {
-  padding: .6em .2em 1em .2em!important;
+  padding: 0.6em 0.2em 1em 0.2em !important;
 }
 
 .mdm-openid-connect-icon {

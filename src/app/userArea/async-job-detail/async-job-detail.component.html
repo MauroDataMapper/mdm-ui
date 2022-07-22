@@ -23,36 +23,32 @@ SPDX-License-Identifier: Apache-2.0
     </h4>
     <p>{{ job.jobName }}</p>
   </div>
-  <!-- <div>
-    <p>{{ job.startedByUser }}</p>
-    <p>{{ job.dateTimeStarted | date: 'dd/MM/yyyy h:mm a' }}</p>
-    <p>{{ job.status | titlecase }}</p>
-    <p>{{ job.message }}</p>
-    <p>{{ job.location }}</p>
-  </div> -->
   <table class="table table-bordered mdm--table-fixed">
+    <caption>
+      Job details
+    </caption>
     <tbody>
       <tr>
-        <td class="detailsRowHeader">Started by user</td>
+        <th class="detailsRowHeader" scope="row">Started by user</th>
         <td>
           {{ job.startedByUser }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Time started</td>
+        <th class="detailsRowHeader" scope="row">Time started</th>
         <td>
           {{ job.dateTimeStarted | date: 'dd/MM/yyyy h:mm a' }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Status</td>
+        <th class="detailsRowHeader" scope="row">Status</th>
         <td>
           <span class="{{ getStatusIconStyle(job.status) }}"></span>
           {{ job.status | titlecase }}
         </td>
       </tr>
       <tr>
-        <td class="detailsRowHeader">Location</td>
+        <th class="detailsRowHeader" scope="row">Location</th>
         <td>
           {{ job.location }}
         </td>

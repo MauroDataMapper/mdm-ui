@@ -82,11 +82,6 @@ export class FederatedDataModelMainComponent
     this.getFederatedDataModel(true);
   }
 
-  tabSelected(index: number) {
-    const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
-  }
-
   onNewerVersionsHasErrored() {
     this.showNewerVersionsTab = false;
   }

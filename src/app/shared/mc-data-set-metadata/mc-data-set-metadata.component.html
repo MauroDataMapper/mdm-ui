@@ -73,6 +73,9 @@ SPDX-License-Identifier: Apache-2.0
     [dataSource]="records"
     class="mdm--mat-table mat-elevation-z3 table-striped"
   >
+    <caption>
+      Metadata
+    </caption>
     <ng-container matColumnDef="namespace">
       <th
         mat-header-cell
@@ -267,7 +270,7 @@ SPDX-License-Identifier: Apache-2.0
           count="1"
           [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
         ></ngx-skeleton-loader>
-      </th> 
+      </th>
     </tr>
     <tr>
       <td>

@@ -54,11 +54,15 @@ export class FederatedDataModelMainComponent
     this.catalogueId = this.uiRouterGlobals.params.parentId;
     if (!this.catalogueId || !this.isGuid(this.catalogueId)) {
       this.stateHandler.NotFound({ location: false });
+      return;
     }
 
     this.modelId = this.uiRouterGlobals.params.id;
-    if (!this.modelId || !this.isGuid(this.modelId)) {
+    // modelId may not be in a UUID format, this depends on the catalogue type e.g. Atom. There
+    // should definitely be a modelId passed through the query string though
+    if (!this.modelId) {
       this.stateHandler.NotFound({ location: false });
+      return;
     }
 
     this.title.setTitle('Federated Data Model');

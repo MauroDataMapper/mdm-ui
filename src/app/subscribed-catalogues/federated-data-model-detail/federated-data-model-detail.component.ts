@@ -140,58 +140,6 @@ export class FederatedDataModelDetailComponent implements OnInit {
           'Successfully subscribed to data model.'
         );
       });
-
-    // this.dialog
-    //   .open<
-    //     NewFederatedSubscriptionModalComponent,
-    //     NewFederatedSubscriptionModalConfig,
-    //     NewFederatedSubscriptionModalResponse
-    //   >(NewFederatedSubscriptionModalComponent, {
-    //     data: {
-    //       contentLinks: this.dataModel.links
-    //     },
-    //     minWidth: 600
-    //   })
-    //   .afterClosed()
-    //   .pipe(
-    //     filter((response) => response?.status === ModalDialogStatus.Ok),
-    //     switchMap((response) => {
-    //       this.processing = true;
-
-    //       const payload: SubscribedDataModelPayload = {
-    //         subscribedModel: {
-    //           subscribedModelId: this.dataModel.modelId,
-    //           subscribedModelType: this.dataModel.modelType,
-    //           folderId: response.folder.id
-    //         },
-    //         ...(response.contentLink && {
-    //           url: response.contentLink.url,
-    //           contentType: response.contentLink.contentType
-    //         })
-    //       };
-
-    //       return this.resources.subscribedCatalogues.saveSubscribedModel(
-    //         this.dataModel.catalogueId,
-    //         payload
-    //       );
-    //     }),
-    //     catchError((error) => {
-    //       this.messageHandler.showError(
-    //         'There was a problem subscribing to the data model.',
-    //         error
-    //       );
-    //       return [];
-    //     }),
-    //     finalize(() => {
-    //       this.processing = false;
-    //       this.reloading.emit();
-    //     })
-    //   )
-    //   .subscribe(() => {
-    //     this.messageHandler.showSuccess(
-    //       'Successfully subscribed to data model.'
-    //     );
-    //   });
   }
 
   unsubscribeFromModel() {

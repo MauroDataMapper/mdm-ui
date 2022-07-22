@@ -28,6 +28,7 @@ import { DateCellEditorComponent } from './bulk-edit-editor/cell-editors/date-ce
 import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { BulkEditSelectComponent } from './bulk-edit-select/bulk-edit-select.component';
 import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit-editor-group.component';
+import { MarkdownCellEditorComponent } from './bulk-edit-editor/cell-editors/markdown-cell-editor/markdown-cell-editor.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit
     CheckboxCellRendererComponent,
     DateCellEditorComponent,
     BulkEditSelectComponent,
-    BulkEditEditorGroupComponent
+    BulkEditEditorGroupComponent,
+    MarkdownCellEditorComponent
   ],
   imports: [
     CommonModule,

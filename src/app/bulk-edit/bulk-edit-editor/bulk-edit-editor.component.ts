@@ -42,6 +42,7 @@ import {
   NavigatableProfile
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
+import { MarkdownCellEditorComponent } from './cell-editors/markdown-cell-editor/markdown-cell-editor.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -63,7 +64,8 @@ export class BulkEditEditorComponent implements OnInit {
   frameworkComponents = {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
-    pathCellRenderer: PathCellRendererComponent
+    pathCellRenderer: PathCellRendererComponent,
+    markdownCellEditor: MarkdownCellEditorComponent
   };
 
   validated: MauroProfileValidationResult[];
@@ -289,6 +291,15 @@ export class BulkEditEditorComponent implements OnInit {
       column.editable = false;
       column.valueGetter = (params) =>
         params.data[field.metadataPropertyName].label;
+    }
+
+    if (field.dataType === 'text') {
+      column.cellEditor = 'markdownCellEditor';
+      column.cellEditorPopup = true;
+      column.cellEditorPopupPosition = 'under';
+      column.suppressKeyboardEvent = (params) => {
+        return params.event.key === 'Enter';
+      };
     }
 
     return column;

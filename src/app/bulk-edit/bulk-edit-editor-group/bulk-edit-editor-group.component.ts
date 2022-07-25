@@ -40,7 +40,7 @@ export class BulkEditEditorGroupComponent implements OnInit {
       return {
         displayName: profile.displayName,
         profileProvider: profile,
-        identifiers: this.context.elements as MauroIdentifier[],
+        identifiers: this.context.childItems as MauroIdentifier[],
         editedProfiles: null
       };
     });

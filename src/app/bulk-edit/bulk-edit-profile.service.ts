@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  CatalogueItemDomainType,
   isModelDomainType,
   Profile,
   ProfileProvider,
@@ -77,7 +78,7 @@ export class BulkEditProfileService {
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
   ): Observable<Profile[]> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
@@ -103,7 +104,7 @@ export class BulkEditProfileService {
     provider: ProfileProvider,
     payloads: MauroProfileUpdatePayload[]
   ): Observable<Profile[]> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
@@ -130,7 +131,7 @@ export class BulkEditProfileService {
     provider: ProfileProvider,
     profiles: Profile[]
   ): Observable<MauroProfileValidationResult[]> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
@@ -140,6 +141,13 @@ export class BulkEditProfileService {
       rootItem,
       provider,
       profiles
+    );
+  }
+
+  private isCorrectDomainType(domainType: CatalogueItemDomainType) {
+    return (
+      isModelDomainType(domainType) ||
+      domainType === CatalogueItemDomainType.DataClass
     );
   }
 

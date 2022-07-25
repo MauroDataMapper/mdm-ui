@@ -16,3 +16,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+.mdm-bulk-edit {
+  &__container-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+
+    button {
+      margin-right: 8px;
+    }
+  }
+}

@@ -162,7 +162,6 @@ describe('BulkEditProfileService', () => {
     const badDomains = [
       CatalogueItemDomainType.Folder,
       CatalogueItemDomainType.VersionedFolder,
-      CatalogueItemDomainType.DataClass,
       CatalogueItemDomainType.DataElement,
       CatalogueItemDomainType.Term
     ];

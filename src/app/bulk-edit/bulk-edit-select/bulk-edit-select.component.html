@@ -16,53 +16,120 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="bulk-edit-select-container pxy-2">
-  <div class="modal-body pxy-2">
-    <p>Please select the elements and profiles you wish to edit.</p>
-  </div>
-  <form class="mdm--form mdm--form-configuration" [formGroup]="setupForm">
+<div class="mdm-bulk-edit pxy-2">
+  <form [formGroup]="setupForm">
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Element(s)</mat-label>
-        <mat-select
-          multiple
-          required
-          formControlName="elements"
-          [compareWith]="elementCompare"
-        >
+        <mat-label>Domain type</mat-label>
+        <mat-select required formControlName="childDomainType">
           <mat-option
-            *ngFor="let element of availableElements"
-            [value]="element"
+            *ngFor="let option of childDomainTypeOptions"
+            [value]="option.domainType"
           >
-            {{ element.label }}
+            {{ option.displayName }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="setupForm && elements.errors?.required">
-          At least one element is required
+        <mat-hint
+          >Select the domain type to find available child items</mat-hint
+        >
+        <mat-error *ngIf="setupForm && childDomainType.errors?.required">
+          Please select a domain type
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Profile(s)</mat-label>
-        <mat-select
-          multiple
-          required
-          formControlName="profiles"
-          [compareWith]="profileCompare"
+    <div *ngIf="loading" class="mdm-bulk-edit__selection">
+      Finding elements...
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div
+      *ngIf="availableChildItems.length === 0"
+      class="mdm-bulk-edit__selection"
+    >
+      <p>
+        Select a domain type that contains child catalogue items to continue.
+      </p>
+    </div>
+    <div
+      *ngIf="availableChildItems.length > 0"
+      class="mdm-bulk-edit__selection"
+    >
+      <p>
+        Please select the elements from this model and profiles you wish to
+        edit.
+      </p>
+      <div class="mdm-bulk-edit__select-filter">
+        <span
+          [ngClass]="{
+            'mdm-bulk-edit__select-count--invalid': childItems.errors?.required
+          }"
+          >Selected {{ this.context.childItems.length }} /
+          {{ availableChildItems.length }}</span
         >
-          <mat-option
-            *ngFor="let profile of availableProfiles"
-            [value]="profile"
+        <button
+          mat-stroked-button
+          primary="color"
+          (click)="childItemSelector.selectAll()"
+        >
+          Select all
+        </button>
+        <button
+          mat-stroked-button
+          primary="color"
+          (click)="childItemSelector.deselectAll()"
+        >
+          Clear all
+        </button>
+        <label for="filter-child-items" class="sr-only">Filter</label>
+        <input
+          type="search"
+          id="filter-child-items"
+          formControlName="filter"
+          class="outlined-input"
+          placeholder="Filter..."
+        />
+        <span *ngIf="filter.value">
+          Found {{ filteredChildItems.length }} /
+          {{ availableChildItems.length }}
+        </span>
+      </div>
+      <mat-selection-list
+        #childItemSelector
+        color="accent"
+        formControlName="childItems"
+        class="mdm-bulk-edit__select-list"
+      >
+        <mat-list-option *ngFor="let item of filteredChildItems" [value]="item">
+          <strong matLine>{{ item.label }}</strong>
+          <mdm-breadcrumb
+            *ngIf="showBreadcrumbs"
+            matLine
+            [item]="item"
+          ></mdm-breadcrumb>
+        </mat-list-option>
+      </mat-selection-list>
+      <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Profile(s)</mat-label>
+          <mat-select
+            multiple
+            required
+            formControlName="profiles"
+            [compareWith]="profileCompare"
           >
-            {{ profile.displayName }}
-            {{ profile.version ? '(' + profile.version + ')' : '' }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="setupForm && profiles.errors?.required">
-          At least one profile is required
-        </mat-error>
-      </mat-form-field>
+            <mat-option
+              *ngFor="let profile of availableProfiles"
+              [value]="profile"
+            >
+              {{ profile.displayName }}
+              {{ profile.version ? '(' + profile.version + ')' : '' }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>Select one or more profiles to edit</mat-hint>
+          <mat-error *ngIf="setupForm && profiles.errors?.required">
+            At least one profile is required
+          </mat-error>
+        </mat-form-field>
+      </div>
     </div>
   </form>
   <div class="modal-footer pxy-2">
@@ -78,7 +145,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <button
       [disabled]="!setupForm.valid"
-      mat-stroked-button
+      mat-flat-button
       type="button"
       color="primary"
       type="button"

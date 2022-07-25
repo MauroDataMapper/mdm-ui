@@ -282,14 +282,6 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     requiresReload: true
   },
   {
-    key: 'feature.use_catalogue_search',
-    category: 'Features',
-    editType: ApiPropertyEditType.Boolean,
-    isSystem: true,
-    publiclyVisible: true,
-    requiresReload: true
-  },
-  {
     key: 'ui.default.profile.namespace',
     category: 'UI',
     editType: ApiPropertyEditType.Value,

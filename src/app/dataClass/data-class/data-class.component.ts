@@ -22,14 +22,10 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import {
-  MessageHandlerService,
-  SecurityHandlerService
-  } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import {
   DataClass,
   DataClassDetail,
@@ -51,8 +47,6 @@ export class DataClassComponent
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassDetail;
   showSecuritySection: boolean;
-  subscription: Subscription;
-  showSearch = false;
   showExtraTabs = false;
   activeTab: any;
   parentDataClass = { id: null };
@@ -63,7 +57,15 @@ export class DataClassComponent
   error = '';
   aliases: any[] = [];
   access: Access;
-  tabs = new TabCollection(['description', 'elements', 'context', 'data', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'elements',
+    'context',
+    'data',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   newMinText: any;
   newMaxText: any;
@@ -105,18 +107,14 @@ export class DataClassComponent
       this.parentDataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
     this.title.setTitle('Data Class');
-
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
 
     this.dataClassDetails(
       this.uiRouterGlobals.params.dataModelId,
@@ -126,7 +124,10 @@ export class DataClassComponent
   }
 
   ngAfterViewChecked(): void {
-    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+    if (
+      this.tabGroup &&
+      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+    ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
@@ -254,10 +255,6 @@ export class DataClassComponent
           }
         );
     }
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   tabSelected(index: number) {

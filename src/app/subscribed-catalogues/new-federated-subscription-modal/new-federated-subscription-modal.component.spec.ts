@@ -16,42 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CommonModule } from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 
 import { NewFederatedSubscriptionModalComponent } from './new-federated-subscription-modal.component';
 
 describe('NewFederatedSubscriptionModalComponent', () => {
-  let component: NewFederatedSubscriptionModalComponent;
-  let fixture: ComponentFixture<NewFederatedSubscriptionModalComponent>;
+  let harness: ComponentHarness<NewFederatedSubscriptionModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule,
-        MatButtonModule,
-        MatDialogModule
-      ],
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent<
+      NewFederatedSubscriptionModalComponent
+    >(NewFederatedSubscriptionModalComponent, {
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
-      ],
-      declarations: [ NewFederatedSubscriptionModalComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NewFederatedSubscriptionModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+        { provide: MatDialogRef, useValue: {} }
+      ]
+    });
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

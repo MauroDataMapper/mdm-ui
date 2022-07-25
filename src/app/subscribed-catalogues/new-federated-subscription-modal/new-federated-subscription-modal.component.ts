@@ -17,22 +17,25 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FolderDetail } from '@maurodatamapper/mdm-resources';
+import {
+  FolderDetail,
+  Importer,
+  PublishedDataModelLink
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface NewFederatedSubscriptionModalConfig {
-  okBtn?: string;
-  cancelBtn?: string;
-  btnType?: string;
-  modalTitle?: string;
-  message?: string;
-  inputLabel?: string;
+  contentLinks: PublishedDataModelLink[];
+  importers: Importer[];
 }
 
 export interface NewFederatedSubscriptionModalResponse {
   status: ModalDialogStatus;
   folder?: FolderDetail;
+  contentLink?: PublishedDataModelLink;
+  importer?: Importer;
 }
 
 @Component({
@@ -41,40 +44,53 @@ export interface NewFederatedSubscriptionModalResponse {
   styleUrls: ['./new-federated-subscription-modal.component.scss']
 })
 export class NewFederatedSubscriptionModalComponent implements OnInit {
+  contentLinks: PublishedDataModelLink[];
+  importers: Importer[];
 
-  okBtn: string;
-  cancelBtn: string;
-  btnType: string;
-  modalTitle: string;
-  message: string;
-  inputLabel: string;
-  selectedFolders: FolderDetail[];
+  formGroup: FormGroup = new FormGroup({
+    folder: new FormControl(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    format: new FormControl(null),
+    importer: new FormControl(null)
+  });
 
-  get folder(): FolderDetail {
-    if (this.selectedFolders && this.selectedFolders[0]) {
-      return this.selectedFolders[0];
-    }
+  get format() {
+    return this.formGroup.get('format');
+  }
 
-    return undefined;
+  get folder() {
+    return this.formGroup.get('folder');
+  }
+
+  get importer() {
+    return this.formGroup.get('importer');
   }
 
   constructor(
-    private dialogRef: MatDialogRef<NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalResponse>,
-    @Inject(MAT_DIALOG_DATA) public data: NewFederatedSubscriptionModalConfig) { }
+    private dialogRef: MatDialogRef<
+      NewFederatedSubscriptionModalComponent,
+      NewFederatedSubscriptionModalResponse
+    >,
+    @Inject(MAT_DIALOG_DATA) public data: NewFederatedSubscriptionModalConfig
+  ) {}
 
   ngOnInit(): void {
-    this.okBtn = this.data.okBtn ? this.data.okBtn : 'Subscribe';
-    this.btnType = this.data.btnType ? this.data.btnType : 'primary';
-    this.cancelBtn = this.data.cancelBtn ? this.data.cancelBtn : 'Cancel';
-    this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
-    this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
-    this.message = this.data.message;
+    this.contentLinks = this.data.contentLinks;
+    this.importers = this.data.importers ?? [];
   }
 
   confirm() {
-    if (this.folder) {
-      this.dialogRef.close({ status: ModalDialogStatus.Ok, folder: this.folder });
+    if (this.formGroup.invalid) {
+      return;
     }
+
+    const selectedFolders = this.folder.value as FolderDetail[];
+
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      folder: selectedFolders[0],
+      contentLink: this.format.value,
+      importer: this.importer.value
+    });
   }
 
   cancel() {

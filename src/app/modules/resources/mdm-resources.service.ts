@@ -63,7 +63,8 @@ import {
   CatalogueItemDomainType,
   SearchableItemResource,
   ContainerDomain,
-  MdmAsyncJobsResource
+  MdmAsyncJobsResource,
+  ImportableResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -231,6 +232,40 @@ export class MdmResourcesService {
       domainType === CatalogueItemDomainType.VersionedFolder
     ) {
       return this.versionedFolder;
+    }
+
+    return null;
+  }
+
+  getImportableResource(
+    domainType: ModelDomain | CatalogueItemDomainType
+  ): ImportableResource {
+    if (
+      domainType === 'dataModels' ||
+      domainType === CatalogueItemDomainType.DataModel
+    ) {
+      return this.dataModel;
+    }
+
+    if (
+      domainType === 'terminologies' ||
+      domainType === CatalogueItemDomainType.Terminology
+    ) {
+      return this.terminology;
+    }
+
+    if (
+      domainType === 'codeSets' ||
+      domainType === CatalogueItemDomainType.CodeSet
+    ) {
+      return this.codeSet;
+    }
+
+    if (
+      domainType === 'referenceDataModels' ||
+      domainType === CatalogueItemDomainType.ReferenceDataModel
+    ) {
+      return this.referenceDataModel;
     }
 
     return null;

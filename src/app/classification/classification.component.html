@@ -22,48 +22,6 @@ SPDX-License-Identifier: Apache-2.0
   ></mdm-classification-details>
 </div>
 
-<div *ngIf="showSearch">
-  <div class="mdm--shadow-block">
-    <div class="panel">
-      <div class="panel-heading">
-        <div class="heading-container">
-          <h4 class="marginless">Search</h4>
-          <div style="float: right">
-            <button
-              mat-button
-              color="warn"
-              type="button"
-              class="paddingless"
-              (click)="toggleShowSearch()"
-              aria-disabled="false"
-              matTooltip="Close"
-              aria-label="Close"
-            >
-              <span class="fas fa-times"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="panel-body panel-table">
-        <mdm-advanced-search-bar
-          [parent]="result"
-          [showRestrictTo]="false"
-          [doNotShowDataModelInModelPath]="false"
-          [doNotDisplayModelPathStatus]="false"
-          [showDomainTypes]="[
-            'Folder',
-            'DataModel',
-            'DataClass',
-            'DataType',
-            'DataElement'
-          ]"
-        >
-        </mdm-advanced-search-bar>
-      </div>
-    </div>
-  </div>
-</div>
-
 <mat-tab-group
   #tab
   [selectedIndex]="activeTab"

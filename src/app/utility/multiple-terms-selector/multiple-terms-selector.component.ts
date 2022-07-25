@@ -26,13 +26,26 @@ import {
   Input
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
 import { EMPTY, fromEvent } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map
+} from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
-import { Term, TermIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  Term,
+  TermIndexResponse,
+  Terminology,
+  TerminologyIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
+import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
+import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -85,23 +98,27 @@ export class MultipleTermsSelectorComponent {
     this.selectedTermsChange.emit(this.selectedItems);
   }
 
-  @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
-
+  @ViewChild('searchInputControl', { static: false }) set content(
+    content: ElementRef
+  ) {
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement, 'keyup').pipe(map((event: any) => {
-        return event.target.value;
-      }),
-        filter(res => res.length >= 0),
-        debounceTime(500),
-        distinctUntilChanged()
-      ).subscribe(() => {
-        this.dataSource = new MatTableDataSource<any>(null);
-        this.loading = false;
-        this.totalItemCount = 0;
-        this.currentRecord = 0;
-        this.isProcessing = false;
-        this.fetch(40, 0);
-      });
+      fromEvent(content.nativeElement, 'keyup')
+        .pipe(
+          map((event: any) => {
+            return event.target.value;
+          }),
+          filter((res) => res.length >= 0),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe(() => {
+          this.dataSource = new MatTableDataSource<any>(null);
+          this.loading = false;
+          this.totalItemCount = 0;
+          this.currentRecord = 0;
+          this.isProcessing = false;
+          this.fetch(40, 0);
+        });
       this.searchControlInput = content;
     }
     this.cd.detectChanges();
@@ -109,10 +126,11 @@ export class MultipleTermsSelectorComponent {
 
   constructor(
     private resources: MdmResourcesService,
-    private contextSearchHandler: ContentSearchHandlerService,
+    private catalogueSearch: CatalogueSearchService,
     private cd: ChangeDetectorRef,
     private gridService: GridService,
-    private messageHandler: MessageHandlerService) {
+    private messageHandler: MessageHandlerService
+  ) {
     this.loadTerminologies();
   }
 
@@ -145,72 +163,81 @@ export class MultipleTermsSelectorComponent {
     const options = this.gridService.constructOptions(pageSize, offset);
     this.selectorSection.loading = true;
 
-    this.resources.terms.list(terminology.id, options).subscribe((result: TermIndexResponse) => {
-      // make check=true if element is already selected
-      result.body.items.forEach(item => {
-        item.terminology = terminology;
-      });
+    this.resources.terms
+      .list(terminology.id, options)
+      .subscribe((result: TermIndexResponse) => {
+        // make check=true if element is already selected
+        result.body.items.forEach((item) => {
+          item.terminology = terminology;
+        });
 
-      this.selectorSection.searchResult = result.body.items;
-      this.calculateDisplayedSoFar(result);
-      this.selectorSection.loading = false;
-      this.totalItemCount = result.body.count;
-      if (this.dataSource.data) {
-        this.dataSource.data = this.dataSource.data.concat(
-          this.selectorSection.searchResult
-        );
-        this.currentRecord = this.dataSource.data.length;
-        this.loading = false;
-        this.isProcessing = false;
-      } else {
-        this.dataSource.data = this.selectorSection.searchResult;
-        this.currentRecord = this.dataSource.data.length;
-        this.isProcessing = false;
-        this.loading = false;
-      }
-    });
+        this.selectorSection.searchResult = result.body.items;
+        this.calculateDisplayedSoFar(result.body.count);
+        this.selectorSection.loading = false;
+        this.totalItemCount = result.body.count;
+        if (this.dataSource.data) {
+          this.dataSource.data = this.dataSource.data.concat(
+            this.selectorSection.searchResult
+          );
+          this.currentRecord = this.dataSource.data.length;
+          this.loading = false;
+          this.isProcessing = false;
+        } else {
+          this.dataSource.data = this.selectorSection.searchResult;
+          this.currentRecord = this.dataSource.data.length;
+          this.isProcessing = false;
+          this.loading = false;
+        }
+      });
   }
 
   fetch(pageSize: number, offset: number) {
-    if (this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology) {
+    if (
+      this.selectorSection.termSearchText.length === 0 &&
+      this.selectorSection.selectedTerminology
+    ) {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
-      return this.loadAllTerms(this.selectorSection.selectedTerminology, pageSize, offset);
+      return this.loadAllTerms(
+        this.selectorSection.selectedTerminology,
+        pageSize,
+        offset
+      );
     } else {
       this.selectorSection.searchResultOffset = offset;
+
+      const parameters: CatalogueSearchParameters = {
+        context: {
+          id: this.selectorSection.selectedTerminology.id,
+          domainType: this.selectorSection.selectedTerminology.domainType,
+          label: this.selectorSection.selectedTerminology.label
+        },
+        search: this.selectorSection.termSearchText,
+        pageSize: this.selectorSection.searchResultPageSize,
+        page:
+          offset === 0 ? 0 : this.selectorSection.searchResultPageSize / offset,
+        domainTypes: [CatalogueItemDomainType.Term],
+        labelOnly: true
+      };
+
       this.loading = true;
 
-      const position = offset;
-      this.contextSearchHandler
-        .search(
-          this.selectorSection.selectedTerminology,
-          this.selectorSection.termSearchText,
-          this.selectorSection.searchResultPageSize,
-          position,
-          ['Term'],
-          true,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null)
-        .subscribe(result => {
-          this.selectorSection.searchResult = result.body.items;
+      this.catalogueSearch.search(parameters).subscribe(
+        (resultSet) => {
+          this.selectorSection.searchResult = resultSet.items;
           // make check=true if element is already selected
-          result.body.items.forEach((item) => {
+          resultSet.items.forEach((item) => {
             item.terminology = this.selectorSection.selectedTerminology;
             if (this.selectorSection.selectedTerms[item.id]) {
               item.checked = true;
             }
           });
 
-          this.calculateDisplayedSoFar(result);
+          this.calculateDisplayedSoFar(resultSet.count);
           this.loading = false;
           this.isProcessing = false;
           this.selectorSection.loading = false;
 
-          this.totalItemCount = result.body.count;
+          this.totalItemCount = resultSet.count;
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(
               this.selectorSection.searchResult
@@ -224,13 +251,14 @@ export class MultipleTermsSelectorComponent {
             this.isProcessing = false;
             this.loading = false;
           }
-
-        }, () => {
+        },
+        () => {
           this.loading = false;
           this.isProcessing = false;
-        });
+        }
+      );
     }
-  };
+  }
 
   onTableScroll(e) {
     const tableViewHeight = e.target.offsetHeight; // viewport: ~500px
@@ -242,26 +270,29 @@ export class MultipleTermsSelectorComponent {
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
       const requiredNum = this.dataSource.data.length + this.pageSize;
-      if (this.totalItemCount + this.pageSize > requiredNum && !this.isProcessing) {
+      if (
+        this.totalItemCount + this.pageSize > requiredNum &&
+        !this.isProcessing
+      ) {
         this.isProcessing = true;
         this.fetch(this.pageSize, this.dataSource.data.length);
       }
     }
   }
 
-  calculateDisplayedSoFar(result) {
-    this.selectorSection.searchResultTotal = result.body.count;
-    if (result.body.count >= this.selectorSection.searchResultPageSize) {
+  calculateDisplayedSoFar(resultTotal: number) {
+    this.selectorSection.searchResultTotal = resultTotal;
+    if (resultTotal >= this.selectorSection.searchResultPageSize) {
       const total =
         (this.selectorSection.searchResultOffset + 1) *
         this.selectorSection.searchResultPageSize;
-      if (total >= result.body.count) {
-        this.selectorSection.searchResultDisplayedSoFar = result.body.count;
+      if (total >= resultTotal) {
+        this.selectorSection.searchResultDisplayedSoFar = resultTotal;
       } else {
         this.selectorSection.searchResultDisplayedSoFar = total;
       }
     } else {
-      this.selectorSection.searchResultDisplayedSoFar = result.body.count;
+      this.selectorSection.searchResultDisplayedSoFar = resultTotal;
     }
   }
 
@@ -281,7 +312,6 @@ export class MultipleTermsSelectorComponent {
           const local = this.selectorSection.selectedTermsArray;
           this.selectorSection.selectedTermsArray = [];
           this.selectorSection.selectedTermsArray = Object.assign([], local);
-
         }
         i--;
       }
@@ -304,7 +334,7 @@ export class MultipleTermsSelectorComponent {
       }
       i--;
     }
-    this.selectorSection.searchResult.forEach(item => {
+    this.selectorSection.searchResult.forEach((item) => {
       if (item.id === $item.id) {
         if (item.checked) {
           item.checked = false;
@@ -332,8 +362,11 @@ export class MultipleTermsSelectorComponent {
     this.resources.terms
       .list(this.selectorSection.selectedTerminology.id, options)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting all the terms.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem getting all the terms.',
+            error
+          );
           return EMPTY;
         })
       )

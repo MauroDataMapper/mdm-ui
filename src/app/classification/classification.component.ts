@@ -35,7 +35,13 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { TabCollection } from '@mdm/model/ui.model';
-import { CatalogueItemDomainType, ClassifierDetail, ClassifierDetailResponse, SecurableDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  ClassifierDetail,
+  ClassifierDetailResponse,
+  SecurableDomainType,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -47,7 +53,6 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class ClassificationComponent
   extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   @Input() afterSave: any;
@@ -59,7 +64,6 @@ export class ClassificationComponent
   result: ClassifierDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
-  showSearch = false;
   parentId: string;
   activeTab: number;
   catalogueItemsCount: any;
@@ -68,7 +72,12 @@ export class ClassificationComponent
   codeSetsCount: any;
   loading = false;
   catalogueItems: any;
-  tabs = new TabCollection(['description', 'classifiedElements', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'classifiedElements',
+    'annotations',
+    'history'
+  ]);
 
   annotationsView = 'default';
   descriptionView = 'default';
@@ -81,7 +90,8 @@ export class ClassificationComponent
     private stateHandler: StateHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private messageHandler: MessageHandlerService) {
+    private messageHandler: MessageHandlerService
+  ) {
     super();
   }
 
@@ -94,7 +104,6 @@ export class ClassificationComponent
     if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
-
 
     this.title.setTitle('Classifier');
     this.classifierDetails(this.uiRouterGlobals.params.id as string);
@@ -110,22 +119,18 @@ export class ClassificationComponent
         this.showSecuritySection = message;
       }
     );
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
     this.afterSave = (result: { body: { id: Uuid } }) =>
       this.classifierDetails(result.body.id);
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    ).index;
     this.tabSelected(this.activeTab);
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
-
 
   classifierDetails(id: Uuid) {
     this.resourcesService.classifier
@@ -163,10 +168,6 @@ export class ClassificationComponent
       });
   }
 
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
-  }
-
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks
@@ -176,11 +177,14 @@ export class ClassificationComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go('classification', { tabView: tab.name }, { notify: false });
+    this.stateHandler.Go(
+      'classification',
+      { tabView: tab.name },
+      { notify: false }
+    );
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
-
     const resource = {
       id: this.result.id
     };
@@ -188,7 +192,6 @@ export class ClassificationComponent
     saveItems.forEach((item: DefaultProfileItem) => {
       resource[item.propertyName] = item.value;
     });
-
 
     this.resourcesService.classifier.update(this.result.id, resource).subscribe(
       (result: ClassifierDetailResponse) => {

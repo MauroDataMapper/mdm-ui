@@ -29,7 +29,6 @@ import { DataClassMainComponent } from './wizards/dataClass/data-class-main/data
 import { DataTypeMainComponent } from './wizards/dataType/data-type-main/data-type-main.component';
 import { HomeComponent } from './home/home.component';
 import { ImportModelsComponent } from './import-models/import-models.component';
-import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
@@ -270,14 +269,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
           raw: true
         }
       },
-      data: {
-        allowAnonymous: true
-      }
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.search',
-      url: '/search',
-      component: SearchComponent,
       data: {
         allowAnonymous: true
       }

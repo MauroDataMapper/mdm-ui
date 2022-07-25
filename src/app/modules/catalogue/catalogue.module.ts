@@ -28,11 +28,9 @@ import { SharedModule } from '../shared/shared.module';
 import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
-import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
-import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { NotFoundComponent } from '@mdm/errors/not-found/not-found.component';
@@ -99,7 +97,6 @@ import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
 import { HomeComponent } from '@mdm/home/home.component';
 import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
-import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
 import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
@@ -196,14 +193,12 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     MarkedPipe,
     FolderComponent,
     FolderDetailComponent,
-    AdvancedSearchBarComponent,
     ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
     DiagramToolbarComponent,
     HistoryComponent,
-    DateFromToComponent,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
@@ -273,7 +268,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     DataElementStep2Component,
     HomeComponent,
     ImportModelsComponent,
-    SearchComponent,
     TerminologyComponent,
     TermListComponent,
     TermRelationshipTypeListComponent,
@@ -383,11 +377,9 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     MarkedPipe,
     FolderComponent,
     FolderDetailComponent,
-    AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ExportModelsComponent,
     HistoryComponent,
-    DateFromToComponent,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
@@ -456,7 +448,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     DataElementStep2Component,
     HomeComponent,
     ImportModelsComponent,
-    SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
     TermListComponent,

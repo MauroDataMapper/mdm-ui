@@ -24,7 +24,6 @@ export * from './handlers/folder-handler.service';
 export * from './handlers/export-handler.service';
 export * from './handlers/state-handler.service';
 export * from './handlers/security-handler.service';
-export * from './content-search.handler.service';
 export * from './data-element-bulk-edit-dialog.service';
 export * from './helpDialogue.service';
 export * from './broadcast.service';

@@ -21,12 +21,22 @@ import { Title } from '@angular/platform-browser';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
-import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
+import {
+  NewFederatedSubscriptionModalComponent,
+  NewFederatedSubscriptionModalConfig,
+  NewFederatedSubscriptionModalResponse
+} from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { FolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  FolderDetailResponse,
+  Importer,
+  ImporterIndexResponse,
+  SubscribedDataModelPayload
+} from '@maurodatamapper/mdm-resources';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -34,7 +44,6 @@ import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
   styleUrls: ['./federated-data-model-detail.component.scss']
 })
 export class FederatedDataModelDetailComponent implements OnInit {
-
   @Input() dataModel: FederatedDataModel;
   @Output() reloading = new EventEmitter();
 
@@ -44,7 +53,8 @@ export class FederatedDataModelDetailComponent implements OnInit {
     private resources: MdmResourcesService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private title: Title) {}
+    private title: Title
+  ) {}
 
   ngOnInit(): void {
     this.title.setTitle(`Federated Data Model - ${this.dataModel.label}`);
@@ -52,37 +62,72 @@ export class FederatedDataModelDetailComponent implements OnInit {
   }
 
   getModelTypeIcon() {
-    return getCatalogueItemDomainTypeIcon(this.dataModel.modelType);
+    return this.dataModel.modelType
+      ? getCatalogueItemDomainTypeIcon(this.dataModel.modelType)
+      : 'fa-database';
   }
 
   subscribeToModel() {
-    this.dialog
-      .open<NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse>(
-        NewFederatedSubscriptionModalComponent,
-        {
-          data: {
-            modalTitle: 'Subscribe to Data Model',
-            btnType: 'primary',
-            inputLabel: 'Folder name',
-            message: 'Please select the folder to subscribe this data model to.'
-          }
-        }
-      )
-      .afterClosed()
+    const importable = this.resources.getImportableResource(
+      this.dataModel.modelType
+    );
+
+    const importersRequest$: Observable<Importer[]> = importable
+      ? importable
+          .importers()
+          .pipe(map((response: ImporterIndexResponse) => response.body))
+      : of([]);
+
+    importersRequest$
       .pipe(
-        filter(response => response?.status === ModalDialogStatus.Ok),
-        switchMap(response => {
+        switchMap((importers) => {
+          return this.dialog
+            .open<
+              NewFederatedSubscriptionModalComponent,
+              NewFederatedSubscriptionModalConfig,
+              NewFederatedSubscriptionModalResponse
+            >(NewFederatedSubscriptionModalComponent, {
+              data: {
+                contentLinks: this.dataModel.links,
+                importers
+              },
+              minWidth: 600
+            })
+            .afterClosed();
+        }),
+        filter((response) => response?.status === ModalDialogStatus.Ok),
+        switchMap((response) => {
           this.processing = true;
-          return this.resources.subscribedCatalogues.saveSubscribedModel(
-            this.dataModel.catalogueId,
-            {
+
+          const payload: SubscribedDataModelPayload = {
+            subscribedModel: {
               subscribedModelId: this.dataModel.modelId,
               subscribedModelType: this.dataModel.modelType,
               folderId: response.folder.id
-            });
+            },
+            ...(response.contentLink && {
+              url: response.contentLink.url,
+              contentType: response.contentLink.contentType
+            }),
+            ...(response.importer && {
+              importerProviderService: {
+                name: response.importer.name,
+                namespace: response.importer.namespace,
+                version: response.importer.version
+              }
+            })
+          };
+
+          return this.resources.subscribedCatalogues.saveSubscribedModel(
+            this.dataModel.catalogueId,
+            payload
+          );
         }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem subscribing to the data model.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem subscribing to the data model.',
+            error
+          );
           return [];
         }),
         finalize(() => {
@@ -91,7 +136,9 @@ export class FederatedDataModelDetailComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Successfully subscribed to data model.');
+        this.messageHandler.showSuccess(
+          'Successfully subscribed to data model.'
+        );
       });
   }
 
@@ -110,7 +157,8 @@ export class FederatedDataModelDetailComponent implements OnInit {
           this.processing = true;
           return this.resources.subscribedCatalogues.removeSubscribedModel(
             this.dataModel.catalogueId,
-            this.dataModel.subscriptionId);
+            this.dataModel.subscriptionId
+          );
         }),
         finalize(() => {
           this.processing = false;
@@ -118,18 +166,28 @@ export class FederatedDataModelDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => this.messageHandler.showSuccess('Successfully unsubscribed from data model.'),
-        error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
+        () =>
+          this.messageHandler.showSuccess(
+            'Successfully unsubscribed from data model.'
+          ),
+        (error) =>
+          this.messageHandler.showError(
+            'There was a problem unsubscribing from the data model.',
+            error
+          )
+      );
   }
 
-   setFolderLabelToForm() {
+  setFolderLabelToForm() {
     if (!this.dataModel.folderId) {
       return;
     }
 
     this.resources.folder
-      .get(this.dataModel.folderId, {}, {handleGetErrors : false})
-      .subscribe((response: FolderDetailResponse) => this.dataModel.folderLabel = response.body.label);
-
-}
+      .get(this.dataModel.folderId, {}, { handleGetErrors: false })
+      .subscribe(
+        (response: FolderDetailResponse) =>
+          (this.dataModel.folderLabel = response.body.label)
+      );
+  }
 }

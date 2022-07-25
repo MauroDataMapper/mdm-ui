@@ -30,15 +30,14 @@ import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
   templateUrl: './federated-data-model-main.component.html',
   styleUrls: ['./federated-data-model-main.component.scss']
 })
-export class FederatedDataModelMainComponent extends BaseComponent implements OnInit {
-
+export class FederatedDataModelMainComponent
+  extends BaseComponent
+  implements OnInit {
   catalogueId: string;
   modelId: string;
   dataModel: FederatedDataModel;
   activeTab: any;
-  tabs = new TabCollection([
-    'newVersion'
-  ]);
+  tabs = new TabCollection(['newVersion']);
   showNewerVersionsTab = true;
 
   constructor(
@@ -46,7 +45,8 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
     private subscribedCatalogues: SubscribedCataloguesService,
-    private title: Title) {
+    private title: Title
+  ) {
     super();
   }
 
@@ -54,11 +54,15 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.catalogueId = this.uiRouterGlobals.params.parentId;
     if (!this.catalogueId || !this.isGuid(this.catalogueId)) {
       this.stateHandler.NotFound({ location: false });
+      return;
     }
 
     this.modelId = this.uiRouterGlobals.params.id;
-    if (!this.modelId || !this.isGuid(this.modelId)) {
+    // modelId may not be in a UUID format, this depends on the catalogue type e.g. Atom. There
+    // should definitely be a modelId passed through the query string though
+    if (!this.modelId) {
       this.stateHandler.NotFound({ location: false });
+      return;
     }
 
     this.title.setTitle('Federated Data Model');
@@ -78,11 +82,6 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.getFederatedDataModel(true);
   }
 
-  tabSelected(index: number) {
-    const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
-  }
-
   onNewerVersionsHasErrored() {
     this.showNewerVersionsTab = false;
   }
@@ -91,13 +90,21 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     this.subscribedCatalogues
       .getFederatedDataModels(this.catalogueId)
       .subscribe(
-        models => {
-          this.dataModel = models.find(model => model.modelId === this.modelId);
+        (models) => {
+          this.dataModel = models.find(
+            (model) => model.modelId === this.modelId
+          );
+
           if (reloadView) {
             this.reloadView();
           }
         },
-        errors => this.messageHandler.showError('There was a problem getting the Federated Data Model', errors));
+        (errors) =>
+          this.messageHandler.showError(
+            'There was a problem getting the Federated Data Model',
+            errors
+          )
+      );
   }
 
   private reloadView() {
@@ -109,6 +116,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
       },
       {
         reload: true
-      });
+      }
+    );
   }
 }

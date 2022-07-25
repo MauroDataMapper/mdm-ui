@@ -17,20 +17,60 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="modal-header pxy-2">
-    <h4 class='modal-title marginless'>{{modalTitle}}</h4>
+  <h4 class="modal-title marginless">Subscribe to Model</h4>
 </div>
 <div class="modal-body pxy-2">
-    <p [innerHtml]="message"></p>
-    <mdm-model-selector-tree
-        ngDefaultControl
-        name="Folder"
-        [(ngModel)]="selectedFolders"
+  <form role="form" [formGroup]="formGroup">
+    <div class="mb-2">
+      <p>Select the folder to import this model to.</p>
+      <mdm-model-selector-tree
+        [ngModel]="folder.value"
+        (ngModelChange)="folder.setValue($event)"
+        [ngModelOptions]="{ standalone: true }"
         [treeSearchDomainType]="'Folder'"
         [justShowFolders]="true"
-        [accepts]="['Folder']" >
-    </mdm-model-selector-tree>
+        [accepts]="['Folder']"
+      >
+      </mdm-model-selector-tree>
+    </div>
+    <p>You may also choose the following optional settings:</p>
+    <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select content type</mat-label>
+        <mat-select formControlName="format">
+          <mat-option *ngFor="let link of contentLinks" [value]="link">
+            {{ link.contentType }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="importers && importers.length > 0">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select importer</mat-label>
+        <mat-select formControlName="importer">
+          <mat-option></mat-option>
+          <mat-option *ngFor="let importer of importers" [value]="importer">
+            {{ importer.displayName }}
+          </mat-option>
+        </mat-select>
+        <mat-hint
+          >Leave this blank to let Mauro determine an importer to use</mat-hint
+        >
+      </mat-form-field>
+    </div>
+  </form>
 </div>
 <div class="modal-footer pxy-2">
-    <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">{{cancelBtn}}</button>
-    <button mat-flat-button color="{{btnType}}" type="button" [disabled]="!folder" (click)="confirm()">{{okBtn}}</button>
+  <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">
+    Cancel
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    [disabled]="formGroup.invalid"
+    (click)="confirm()"
+  >
+    Subscribe
+  </button>
 </div>

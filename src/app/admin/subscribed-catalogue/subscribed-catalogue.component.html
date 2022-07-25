@@ -17,49 +17,84 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container mb-2 forms-heading-container">
-    <h4>
-        <span *ngIf="catalogue.id">Edit Subscribed Catalogue</span>
-        <span *ngIf="!catalogue.id">Add Subscribed Catalogue</span>
-    </h4>
+  <h4>
+    <span *ngIf="catalogueId">Edit Subscribed Catalogue</span>
+    <span *ngIf="!catalogueId">Add Subscribed Catalogue</span>
+  </h4>
 </div>
-<form name="subscribedCatForm" class="mdm--form mb-2">
+<form name="subscribedCatForm" class="mdm--form mb-2" [formGroup]="formGroup">
   <mat-form-field appearance="outline">
     <mat-label>Label</mat-label>
-    <input matInput name="name" [(ngModel)]="catalogue.label" required />
-    <mat-error *ngIf="errors && errors.label">
-      {{errors.label}}
-    </mat-error>
+    <input matInput name="name" formControlName="label" required />
+    <mat-error *ngIf="label?.errors?.required">Label is required</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Description</mat-label>
-    <input matInput name="description" [(ngModel)]="catalogue.description" />
+    <input matInput name="description" formControlName="description" />
   </mat-form-field>
-  <mat-form-field appearance="outline" hintLabel="Provide the domain URL to the Mauro system to connect to">
+  <mat-form-field
+    appearance="outline"
+    hintLabel="Provide the domain URL to the Mauro system to connect to"
+  >
     <mat-label>URL</mat-label>
-    <input matInput name="url" [(ngModel)]="catalogue.url" required />
-    <mat-error *ngIf="errors && errors.url">
-      {{errors.url}}
-    </mat-error>
+    <input matInput name="url" formControlName="url" required />
+    <mat-error *ngIf="url?.errors?.required">URL is required</mat-error>
   </mat-form-field>
-  <mat-form-field appearance="outline" hintLabel="An API key is required to view non-public models in the subscribed catalogue">
+  <mat-form-field appearance="outline">
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="type">
+      <mat-option *ngFor="let type of connectionTypes" [value]="type">{{
+        type
+      }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="type?.errors?.required"
+      >Connection type is required</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field
+    appearance="outline"
+    hintLabel="An API key is required to view non-public models in the subscribed catalogue"
+  >
     <mat-label>API Key</mat-label>
-    <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" />
-    <mat-error *ngIf="errors && errors.apiKey">
-      {{errors.apiKey}}
-    </mat-error>
+    <input matInput name="apiKey" formControlName="apiKey" />
   </mat-form-field>
-  <mat-form-field appearance="outline" style="max-width: 200px;">
+  <mat-form-field appearance="outline" style="max-width: 200px">
     <mat-label>Refresh period (days)</mat-label>
-    <input type="number" matInput name="refreshPeriod" [(ngModel)]="catalogue.refreshPeriod" />
+    <input
+      type="number"
+      matInput
+      name="refreshPeriod"
+      formControlName="refreshPeriod"
+    />
   </mat-form-field>
   <div>
-    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+    <button
+      mat-button
+      color="warn"
+      type="button"
+      class="mr-1"
+      (click)="cancel()"
+    >
       Cancel
     </button>
-    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="catalogue.id">
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      (click)="save()"
+      *ngIf="catalogueId"
+      [disabled]="formGroup.invalid"
+    >
       Update subscription
     </button>
-    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!catalogue.id">
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      (click)="save()"
+      *ngIf="!catalogueId"
+      [disabled]="formGroup.invalid"
+    >
       Add subscription
     </button>
   </div>

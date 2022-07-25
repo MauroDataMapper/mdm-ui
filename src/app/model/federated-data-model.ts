@@ -16,7 +16,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AvailableDataModel, CatalogueItemDomainType, SubscribedDataModel } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  PublishedDataModel,
+  PublishedDataModelLink,
+  SubscribedDataModel
+} from '@maurodatamapper/mdm-resources';
 
 export class FederatedDataModel {
   catalogueId: string;
@@ -24,24 +29,33 @@ export class FederatedDataModel {
   label: string;
   description?: string;
   modelType?: CatalogueItemDomainType;
+  dateCreated?: string;
+  datePublished?: string;
+  lastUpdated?: string;
+  links?: PublishedDataModelLink[];
   subscriptionId?: string;
   folderId?: string;
   folderLabel?: string;
-  version? : string;
+  version?: string;
 
   constructor(
     catalogueId: string,
-    available?: AvailableDataModel,
-    subscription?: SubscribedDataModel) {
-      this.catalogueId = catalogueId;
-      this.modelId = available?.modelId;
-      this.label = available?.label;
-      this.description = available?.description;
-      this.version = available?.version;
-      this.modelType = available?.modelType;
-      this.subscriptionId = subscription?.id;
-      this.folderId = subscription?.folderId;
-    }
+    published?: PublishedDataModel,
+    subscription?: SubscribedDataModel
+  ) {
+    this.catalogueId = catalogueId;
+    this.modelId = published?.modelId;
+    this.label = published?.label;
+    this.description = published?.description;
+    this.version = published?.version;
+    this.modelType = published?.modelType;
+    this.dateCreated = published?.dateCreated;
+    this.datePublished = published?.datePublished;
+    this.lastUpdated = published?.lastUpdated;
+    this.links = published?.links;
+    this.subscriptionId = subscription?.id;
+    this.folderId = subscription?.folderId;
+  }
 
   get isSubscribed(): boolean {
     return this.subscriptionId !== undefined;

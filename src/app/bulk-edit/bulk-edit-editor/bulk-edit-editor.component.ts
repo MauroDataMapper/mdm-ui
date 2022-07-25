@@ -27,6 +27,7 @@ import {
   ColGroupDef,
   ColumnApi,
   GridApi,
+  GridOptions,
   GridReadyEvent
 } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
@@ -43,6 +44,7 @@ import {
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
 import { MarkdownCellEditorComponent } from './cell-editors/markdown-cell-editor/markdown-cell-editor.component';
+import { MarkdownEditOverlayComponent } from './overlays/markdown-edit-overlay/markdown-edit-overlay.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -65,7 +67,8 @@ export class BulkEditEditorComponent implements OnInit {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
     pathCellRenderer: PathCellRendererComponent,
-    markdownCellEditor: MarkdownCellEditorComponent
+    markdownCellEditor: MarkdownCellEditorComponent,
+    markdownEditOverlay: MarkdownEditOverlayComponent
   };
 
   validated: MauroProfileValidationResult[];
@@ -82,6 +85,28 @@ export class BulkEditEditorComponent implements OnInit {
 
   defaultColDef: ColDef = {
     minWidth: 200
+  };
+
+  /** TESTING ONLY! For experimenting with text editing features */
+  textEditStyle: 'cell-editor' | 'excel-like' | 'grid-overlay' = 'grid-overlay';
+  currentTextValue: string;
+
+  gridOptions: GridOptions = {
+    onCellClicked: (event) => {
+      if (event.colDef.cellRendererParams.editWithSingularEditor) {
+        if (this.textEditStyle === 'excel-like') {
+          this.currentTextValue = event.value;
+        } else if (this.textEditStyle === 'grid-overlay') {
+          console.log(event);
+          this.gridOptions.loadingOverlayComponentParams = {
+            value: event.value,
+            node: event.node,
+            column: event.column
+          };
+          this.gridApi.showLoadingOverlay();
+        }
+      }
+    }
   };
 
   private gridApi: GridApi;
@@ -293,12 +318,26 @@ export class BulkEditEditorComponent implements OnInit {
         params.data[field.metadataPropertyName].label;
     }
 
-    if (field.dataType === 'text') {
+    if (field.dataType === 'text' && this.textEditStyle === 'cell-editor') {
       column.cellEditor = 'markdownCellEditor';
       column.cellEditorPopup = true;
       column.cellEditorPopupPosition = 'under';
       column.suppressKeyboardEvent = (params) => {
         return params.event.key === 'Enter';
+      };
+    }
+
+    if (field.dataType === 'text' && this.textEditStyle === 'excel-like') {
+      column.editable = false;
+      column.cellRendererParams = {
+        editWithSingularEditor: true
+      };
+    }
+
+    if (field.dataType === 'text' && this.textEditStyle === 'grid-overlay') {
+      //column.editable = false;
+      column.cellRendererParams = {
+        editWithSingularEditor: true
       };
     }
 

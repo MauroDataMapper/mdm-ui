@@ -41,6 +41,12 @@ SPDX-License-Identifier: Apache-2.0
       {{ totalValidationErrors }} validation issue(s)
     </span>
   </mat-toolbar>
+  <mdm-markdown-text-area
+    *ngIf="textEditStyle === 'excel-like'"
+    inEditMode="true"
+    hideHelpText="true"
+    [description]="currentTextValue"
+  ></mdm-markdown-text-area>
   <ag-grid-angular
     *ngIf="loaded"
     #agGrid
@@ -56,6 +62,8 @@ SPDX-License-Identifier: Apache-2.0
     [rowData]="rows"
     [frameworkComponents]="frameworkComponents"
     [tooltipShowDelay]="0"
+    [gridOptions]="gridOptions"
+    [loadingOverlayComponent]="'markdownEditOverlay'"
   >
   </ag-grid-angular>
 </div>

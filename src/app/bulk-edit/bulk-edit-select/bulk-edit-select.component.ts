@@ -26,11 +26,11 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-  CatalogueItem,
   DataElement,
   DataElementIndexResponse,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EMPTY, Observable, Subject } from 'rxjs';
@@ -98,7 +98,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
 
           // Load correct profiles based on Data Elements
           // TODO: change for future domain type support
-          const dataElement = this.availableElements[0];
+          const dataElement = this.availableElements[0] as MauroItem;
           return this.loadAvailableProfiles(dataElement);
         }),
         map((profiles) => {
@@ -145,9 +145,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
       );
   }
 
-  private loadAvailableProfiles(
-    item: CatalogueItem
-  ): Observable<ProfileSummary[]> {
+  private loadAvailableProfiles(item: MauroItem): Observable<ProfileSummary[]> {
     return this.bulkEditProfiles.listAvailableProfiles(item).pipe(
       catchError((error) => {
         this.messageHandler.showError(

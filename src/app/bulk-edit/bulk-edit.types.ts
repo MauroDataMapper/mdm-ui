@@ -19,11 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import {
   CatalogueItem,
   DataElementDetail,
-  MultiFacetAwareItem,
   Profile,
-  ProfileContextCollection,
+  ProfileProvider,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
+import { MauroIdentifier } from '@mdm/mauro/mauro-item.types';
 
 export enum BulkEditStep {
   Selection,
@@ -38,9 +38,9 @@ export class BulkEditContext {
 
 export interface BulkEditProfileContext {
   displayName: string;
-  profile: any;
-  multiFacetAwareItems: MultiFacetAwareItem[];
-  editedProfiles: ProfileContextCollection;
+  profileProvider: ProfileProvider;
+  identifiers: MauroIdentifier[];
+  editedProfiles: Profile[];
 }
 
 export interface BulkEditDataRow {

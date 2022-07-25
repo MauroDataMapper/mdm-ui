@@ -38,13 +38,8 @@ interface MdmDataModelResourceStub {
   get: jest.Mock;
 }
 
-interface MdmProfileResourcesStub {
-  saveMany: jest.Mock;
-}
-
 interface MdmResourcesStub {
   dataModel: MdmDataModelResourceStub;
-  profile: MdmProfileResourcesStub;
 }
 
 interface UIRouterGlobalsStub {
@@ -69,9 +64,6 @@ describe('BulkEditBaseComponent', () => {
   const resourcesStub: MdmResourcesStub = {
     dataModel: {
       get: jest.fn()
-    },
-    profile: {
-      saveMany: jest.fn()
     }
   };
 
@@ -161,15 +153,5 @@ describe('BulkEditBaseComponent', () => {
     harness.component.currentStep = BulkEditStep.Editor;
     harness.component.previous();
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
-  });
-
-  it('should save profiles', () => {
-    resourcesStub.profile.saveMany.mockImplementationOnce(() => of({}));
-
-    harness.component.ngOnInit();
-    harness.component.save([]);
-
-    expect(resourcesStub.profile.saveMany).toHaveBeenCalled();
-    expect(messageHandlerStub.showSuccess).toHaveBeenCalled();
   });
 });

@@ -20,15 +20,10 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   DataModelDetail,
-  DataModelDetailResponse,
-  ProfileContext
+  DataModelDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {
-  StateHandlerService,
-  MessageHandlerService,
-  BroadcastService
-} from '@mdm/services';
+import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
@@ -50,7 +45,6 @@ export class BulkEditContainerComponent implements OnInit {
   constructor(
     private stateHandler: StateHandlerService,
     private resource: MdmResourcesService,
-    private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
     private messageHandler: MessageHandlerService,
     private title: Title,
@@ -96,30 +90,5 @@ export class BulkEditContainerComponent implements OnInit {
 
   previous() {
     this.currentStep = this.currentStep - 1;
-  }
-
-  validate() {
-    this.broadcast.dispatch('validateBulkEdit');
-  }
-
-  save(profiles: ProfileContext[]) {
-    this.resource.profile
-      .saveMany(this.context.rootItem.domainType, this.context.rootItem.id, {
-        profilesProvided: profiles
-      })
-      .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(
-            'There was a problem saving the profiles.',
-            error
-          );
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.messageHandler.showSuccess(
-          'Profile information was saved successfully.'
-        );
-      });
   }
 }

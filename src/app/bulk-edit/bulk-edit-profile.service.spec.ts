@@ -17,33 +17,48 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  CatalogueItem,
   CatalogueItemDomainType,
-  Profile,
-  ProfileContextCollection,
-  ProfileContextIndexPayload,
-  ProfileContextPayload,
   ProfileProvider,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { DefaultProfileProviderService } from '@mdm/mauro/profiles/default-profile-provider.service';
 import { MauroProfileProviderService } from '@mdm/mauro/profiles/mauro-profile-provider.service';
-import { createMauroProfileProviderServiceStub } from '@mdm/mauro/profiles/mauro-profile-provider.service.spec';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
 import { Observable } from 'rxjs';
 import { BulkEditProfileService } from './bulk-edit-profile.service';
 
 describe('BulkEditProfileService', () => {
+  const createProfileProviderServiceStub = () => {
+    return {
+      usedProfiles: jest.fn() as jest.MockedFunction<
+        (item: MauroItem) => Observable<ProfileSummary[]>
+      >,
+      unusedProfiles: jest.fn() as jest.MockedFunction<
+        (item: MauroItem) => Observable<ProfileSummary[]>
+      >,
+      getMany: jest.fn(),
+      saveMany: jest.fn(),
+      validateMany: jest.fn()
+    };
+  };
+
   let service: BulkEditProfileService;
 
-  const mauroProfilesStub = createMauroProfileProviderServiceStub();
+  const mauroProfileProvider = createProfileProviderServiceStub();
+  const defaultProfileProvider = createProfileProviderServiceStub();
 
   beforeEach(() => {
     service = setupTestModuleForService(BulkEditProfileService, {
       providers: [
         {
           provide: MauroProfileProviderService,
-          useValue: mauroProfilesStub
+          useValue: mauroProfileProvider
+        },
+        {
+          provide: DefaultProfileProviderService,
+          useValue: defaultProfileProvider
         }
       ]
     });
@@ -54,28 +69,40 @@ describe('BulkEditProfileService', () => {
   });
 
   describe('list available profiles', () => {
-    const item: CatalogueItem = {
+    const item: MauroItem = {
       id: '123',
-      domainType: CatalogueItemDomainType.DataModel
+      domainType: CatalogueItemDomainType.DataModel,
+      label: 'test'
     };
 
     const testListAvailableProfiles = (
       used: ProfileSummary[],
       unused: ProfileSummary[]
     ) => {
-      mauroProfilesStub.usedProfiles.mockImplementationOnce((ci) => {
-        expect(ci.domainType).toBe(item.domainType);
-        expect(ci.id).toBe(item.id);
+      mauroProfileProvider.usedProfiles.mockImplementationOnce((it) => {
+        expect(it).toStrictEqual(item);
         return cold('-a|', { a: used });
       });
 
-      mauroProfilesStub.unusedProfiles.mockImplementationOnce((ci) => {
-        expect(ci.domainType).toBe(item.domainType);
-        expect(ci.id).toBe(item.id);
+      defaultProfileProvider.usedProfiles.mockImplementationOnce((it) => {
+        expect(it).toStrictEqual(item);
+        return cold('-a|', { a: used });
+      });
+
+      mauroProfileProvider.unusedProfiles.mockImplementationOnce((it) => {
+        expect(it).toStrictEqual(item);
         return cold('-a|', { a: unused });
       });
 
-      const expected$ = cold('--(a|)', { a: [...used, ...unused] });
+      defaultProfileProvider.unusedProfiles.mockImplementationOnce((it) => {
+        expect(it).toStrictEqual(item);
+        return cold('-a|', { a: unused });
+      });
+
+      // Duplicate used/unused concatenations to simulate coming from both profile provider services
+      const expectedProfiles = [...used, ...unused, ...used, ...unused];
+
+      const expected$ = cold('--(a|)', { a: expectedProfiles });
 
       const actual$ = service.listAvailableProfiles(item);
       expect(actual$).toBeObservable(expected$);
@@ -142,11 +169,12 @@ describe('BulkEditProfileService', () => {
 
     const testRootItem = <R>(
       domain: CatalogueItemDomainType,
-      action: (item: CatalogueItem) => Observable<R>
+      action: (item: MauroItem) => Observable<R>
     ) => {
-      const rootItem: CatalogueItem = {
+      const rootItem: MauroItem = {
         domainType: domain,
-        id: '123'
+        id: '123',
+        label: 'test'
       };
 
       const expected$ = cold('#', null, new Error());
@@ -158,7 +186,7 @@ describe('BulkEditProfileService', () => {
       'should throw an error on getMany if domain is %p',
       (domain) => {
         testRootItem(domain, (item) =>
-          service.getMany(item, {} as ProfileContextIndexPayload)
+          service.getMany(item, [], {} as ProfileProvider)
         );
       }
     );
@@ -167,7 +195,7 @@ describe('BulkEditProfileService', () => {
       'should throw an error on saveMany if domain is %p',
       (domain) => {
         testRootItem(domain, (item) =>
-          service.saveMany(item, {} as ProfileContextPayload)
+          service.saveMany(item, {} as ProfileProvider, [])
         );
       }
     );
@@ -176,163 +204,9 @@ describe('BulkEditProfileService', () => {
       'should throw an error on validateMany if domain is %p',
       (domain) => {
         testRootItem(domain, (item) =>
-          service.validateMany(item, {} as ProfileContextPayload)
+          service.validateMany(item, {} as ProfileProvider, [])
         );
       }
     );
-  });
-
-  describe('get many', () => {
-    it('should get all profiles from Mauro', () => {
-      const rootItem: CatalogueItem = {
-        domainType: CatalogueItemDomainType.DataModel,
-        id: '123'
-      };
-
-      const provider: ProfileProvider = {
-        name: 'profile',
-        namespace: 'test.profile'
-      };
-
-      const payload: ProfileContextIndexPayload = {
-        multiFacetAwareItems: [],
-        profileProviderServices: [provider]
-      };
-
-      const expectedResult: ProfileContextCollection = {
-        count: 1,
-        profilesProvided: [
-          {
-            profile: {
-              id: rootItem.id,
-              domainType: rootItem.domainType,
-              label: 'profile',
-              sections: []
-            },
-            profileProviderService: provider
-          }
-        ]
-      };
-
-      mauroProfilesStub.getMany.mockImplementationOnce((ci, pl) => {
-        expect(ci).toBe(rootItem);
-        expect(pl).toBe(payload);
-        return cold('--a|', { a: expectedResult });
-      });
-
-      const expected$ = cold('--a|', { a: expectedResult });
-      const actual$ = service.getMany(rootItem, payload);
-      expect(actual$).toBeObservable(expected$);
-    });
-  });
-
-  describe('save many', () => {
-    it('should save all profiles to Mauro', () => {
-      const rootItem: CatalogueItem = {
-        domainType: CatalogueItemDomainType.DataModel,
-        id: '123'
-      };
-
-      const profile: Profile = {
-        id: rootItem.id,
-        domainType: rootItem.domainType,
-        label: 'profile',
-        sections: []
-      };
-
-      const provider: ProfileProvider = {
-        name: 'profile',
-        namespace: 'test.profile'
-      };
-
-      const payload: ProfileContextPayload = {
-        profilesProvided: [
-          {
-            profile,
-            profileProviderService: provider
-          }
-        ]
-      };
-
-      const expectedResult: ProfileContextCollection = {
-        count: 1,
-        profilesProvided: [
-          {
-            profile: {
-              id: rootItem.id,
-              domainType: rootItem.domainType,
-              label: 'profile',
-              sections: []
-            },
-            profileProviderService: provider
-          }
-        ]
-      };
-
-      mauroProfilesStub.saveMany.mockImplementationOnce((ci, pl) => {
-        expect(ci).toBe(rootItem);
-        expect(pl).toBe(payload);
-        return cold('--a|', { a: expectedResult });
-      });
-
-      const expected$ = cold('--a|', { a: expectedResult });
-      const actual$ = service.saveMany(rootItem, payload);
-      expect(actual$).toBeObservable(expected$);
-    });
-  });
-
-  describe('validate many', () => {
-    it('should validate all profiles via Mauro', () => {
-      const rootItem: CatalogueItem = {
-        domainType: CatalogueItemDomainType.DataModel,
-        id: '123'
-      };
-
-      const profile: Profile = {
-        id: rootItem.id,
-        domainType: rootItem.domainType,
-        label: 'profile',
-        sections: []
-      };
-
-      const provider: ProfileProvider = {
-        name: 'profile',
-        namespace: 'test.profile'
-      };
-
-      const payload: ProfileContextPayload = {
-        profilesProvided: [
-          {
-            profile,
-            profileProviderService: provider
-          }
-        ]
-      };
-
-      const expectedResult: ProfileContextCollection = {
-        count: 1,
-        profilesProvided: [
-          {
-            profile: {
-              id: rootItem.id,
-              domainType: rootItem.domainType,
-              label: 'profile',
-              sections: []
-            },
-            profileProviderService: provider
-          }
-        ]
-      };
-
-      mauroProfilesStub.validateMany.mockImplementationOnce((ci, pl) => {
-        expect(ci).toBe(rootItem);
-        expect(pl).toBe(payload);
-        return cold('--a|', { a: expectedResult });
-      });
-
-      const expected$ = cold('--a|', { a: expectedResult });
-      const actual$ = service.validateMany(rootItem, payload);
-      expect(actual$).toBeObservable(expected$);
-    });
   });
 });

@@ -52,7 +52,6 @@ export enum HtmlButtonMode {
   templateUrl: './html-editor.component.html'
 })
 export class HtmlEditorComponent implements OnInit {
-
   /* Inputs for manual properties */
   @Input() inEditMode: boolean;
   @Input() description: string;
@@ -73,7 +72,8 @@ export class HtmlEditorComponent implements OnInit {
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
     private elementTypesService: ElementTypesService,
-    private linkCreator: LinkCreatorService) { }
+    private linkCreator: LinkCreatorService
+  ) {}
 
   ngOnInit(): void {
     const standardButtons = [
@@ -111,11 +111,11 @@ export class HtmlEditorComponent implements OnInit {
       'redo',
       '|',
       'hr',
-      'copyformat',
-      'fullsize',
+      'copyformat'
     ];
 
-    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
+    const buttons =
+      this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
 
     this.editorConfig = {
       buttons,
@@ -139,22 +139,30 @@ export class HtmlEditorComponent implements OnInit {
 
     const focusNode = editor.selection.sel.focusNode;
 
-    component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(element => {
-      if (!element) {
-        return;
+    component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(
+      (element) => {
+        if (!element) {
+          return;
+        }
+
+        component.elementTypesService
+          .getNamedLinkIdentifier(element)
+          .subscribe((namedLink) => {
+            const href = component.linkCreator.createLink(
+              namedLink,
+              null,
+              null
+            );
+            const html = editor.create.fromHTML(
+              `<a href='${href}' title='${element.label}'>${element.label}</a>`
+            );
+
+            editor.selection.setCursorIn(focusNode);
+            editor.selection.insertHTML(html);
+          });
       }
-
-      component.elementTypesService.getNamedLinkIdentifier(element)
-        .subscribe(namedLink => {
-          const href = component.linkCreator.createLink(namedLink, null, null);
-          const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
-
-          editor.selection.setCursorIn(focusNode);
-          editor.selection.insertHTML(html);
-        });
-    });
+    );
 
     component.elementDialogService.open([], []);
   }
-
 }

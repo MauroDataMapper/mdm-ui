@@ -25,10 +25,12 @@ import {
   CellValueChangedEvent,
   ColDef,
   ColGroupDef,
+  Column,
   ColumnApi,
   GridApi,
   GridOptions,
-  GridReadyEvent
+  GridReadyEvent,
+  RowNode
 } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -88,16 +90,19 @@ export class BulkEditEditorComponent implements OnInit {
   };
 
   /** TESTING ONLY! For experimenting with text editing features */
-  textEditStyle: 'cell-editor' | 'excel-like' | 'grid-overlay' = 'grid-overlay';
+  textEditStyle: 'cell-editor' | 'excel-like' | 'grid-overlay' = 'excel-like';
   currentTextValue: string;
+  currentNode: RowNode;
+  currentColumn: Column;
 
   gridOptions: GridOptions = {
     onCellClicked: (event) => {
-      if (event.colDef.cellRendererParams.editWithSingularEditor) {
+      if (event.colDef.cellRendererParams?.editWithSingularEditor) {
         if (this.textEditStyle === 'excel-like') {
           this.currentTextValue = event.value;
+          this.currentNode = event.node;
+          this.currentColumn = event.column;
         } else if (this.textEditStyle === 'grid-overlay') {
-          console.log(event);
           this.gridOptions.loadingOverlayComponentParams = {
             value: event.value,
             node: event.node,
@@ -105,9 +110,23 @@ export class BulkEditEditorComponent implements OnInit {
           };
           this.gridApi.showLoadingOverlay();
         }
+      } else {
+        this.currentNode = undefined;
+        this.currentColumn = undefined;
       }
     }
   };
+
+  updateCellFromExcelLikeEditor() {
+    if (!this.currentNode || !this.currentColumn) {
+      return;
+    }
+
+    this.currentNode.setDataValue(this.currentColumn, this.currentTextValue);
+
+    this.currentNode = undefined;
+    this.currentColumn = undefined;
+  }
 
   private gridApi: GridApi;
   private gridColumnApi: ColumnApi;
@@ -329,6 +348,7 @@ export class BulkEditEditorComponent implements OnInit {
 
     if (field.dataType === 'text' && this.textEditStyle === 'excel-like') {
       column.editable = false;
+      column.enableCellChangeFlash = true;
       column.cellRendererParams = {
         editWithSingularEditor: true
       };

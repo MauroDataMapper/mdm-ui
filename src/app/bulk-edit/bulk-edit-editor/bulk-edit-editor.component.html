@@ -18,11 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="modal-body mdm-bulk-editor">
   <mat-toolbar>
-    <button mat-icon-button matTooltip="Validate changes" (click)="validate()">
+    <button mat-button color="primary" (click)="validate()">
       <span class="fas fa-clipboard-check"></span>
+      Validate
     </button>
-    <button mat-icon-button matTooltip="Save changes" (click)="save()">
+    <button mat-button color="primary" (click)="save()">
       <span class="fas fa-save"></span>
+      Save
     </button>
     <span class="spacer"></span>
     <span

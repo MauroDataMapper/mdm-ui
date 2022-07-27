@@ -202,15 +202,15 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
       return [
         {
           domainType: CatalogueItemDomainType.ModelDataType,
-          displayName: 'Data types'
+          displayName: 'Data Types'
         },
         {
           domainType: CatalogueItemDomainType.DataClass,
-          displayName: 'Data classes'
+          displayName: 'Data Classes'
         },
         {
           domainType: CatalogueItemDomainType.DataElement,
-          displayName: 'Data elements'
+          displayName: 'Data Elements'
         }
       ];
     }
@@ -221,7 +221,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
       return [
         {
           domainType: CatalogueItemDomainType.DataElement,
-          displayName: 'Data elements'
+          displayName: 'Data Elements'
         }
       ];
     }

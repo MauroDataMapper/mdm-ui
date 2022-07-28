@@ -35,8 +35,11 @@ $error-color: #a5122a;
 
   &__select-list {
     margin: 1.5em 0;
-    max-height: 70vh;
-    overflow-y: auto;
+  }
+
+  &__scoll-viewport {
+    height: 50vh;
+    width: 100%;
   }
 
   &__select-filter {

@@ -67,14 +67,14 @@ SPDX-License-Identifier: Apache-2.0
         <button
           mat-stroked-button
           primary="color"
-          (click)="childItemSelector.selectAll()"
+          (click)="selectAllChildItems()"
         >
           Select all
         </button>
         <button
           mat-stroked-button
           primary="color"
-          (click)="childItemSelector.deselectAll()"
+          (click)="deselectAllChildItems()"
         >
           Clear all
         </button>
@@ -92,19 +92,30 @@ SPDX-License-Identifier: Apache-2.0
         </span>
       </div>
       <mat-selection-list
-        #childItemSelector
         color="accent"
-        formControlName="childItems"
         class="mdm-bulk-edit__select-list"
+        (selectionChange)="childItemSelected($event)"
       >
-        <mat-list-option *ngFor="let item of filteredChildItems" [value]="item">
-          <strong matLine>{{ item.label }}</strong>
-          <mdm-breadcrumb
-            *ngIf="showBreadcrumbs"
-            matLine
-            [item]="item"
-          ></mdm-breadcrumb>
-        </mat-list-option>
+        <cdk-virtual-scroll-viewport
+          itemSize="20"
+          class="mdm-bulk-edit__scoll-viewport"
+        >
+          <mat-list-option
+            *cdkVirtualFor="
+              let item of filteredChildItems;
+              templateCacheSize: 0
+            "
+            [value]="item"
+            [selected]="childItemSelections.isSelected(item)"
+          >
+            <strong matLine>{{ item.label }}</strong>
+            <mdm-breadcrumb
+              *ngIf="showBreadcrumbs"
+              matLine
+              [item]="item"
+            ></mdm-breadcrumb>
+          </mat-list-option>
+        </cdk-virtual-scroll-viewport>
       </mat-selection-list>
       <div class="mdm--form-input">
         <mat-form-field appearance="outline" class="full-width">

@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   Component,
   EventEmitter,
@@ -25,6 +26,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectionListChange } from '@angular/material/list';
 import {
   CatalogueItemDomainType,
   FilterQueryParameters,
@@ -71,6 +73,10 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   availableChildItems: MauroItem[] = [];
   filteredChildItems: MauroItem[] = [];
   loading = false;
+
+  // Using the cdkVirtualScrollViewport directive means we need to manually
+  // keep track of child items selected
+  childItemSelections = new SelectionModel<MauroItem>(true);
 
   setupForm = new FormGroup({
     childDomainType: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
@@ -187,6 +193,30 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
 
   next() {
     this.onNext.emit();
+  }
+
+  childItemSelected(selection: MatSelectionListChange) {
+    selection.options.forEach((option) => {
+      option.selected
+        ? this.childItemSelections.select(option.value)
+        : this.childItemSelections.deselect(option.value);
+    });
+
+    this.syncChildItemSelectionsWithForm();
+  }
+
+  selectAllChildItems() {
+    this.childItemSelections.select(...this.availableChildItems);
+    this.syncChildItemSelectionsWithForm();
+  }
+
+  deselectAllChildItems() {
+    this.childItemSelections.clear();
+    this.syncChildItemSelectionsWithForm();
+  }
+
+  private syncChildItemSelectionsWithForm() {
+    this.childItems.setValue(this.childItemSelections.selected);
   }
 
   private resetContext() {

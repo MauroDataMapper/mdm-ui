@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-catalogue-item-select-modal',
@@ -50,11 +49,5 @@ export class CatalogueItemSelectModalComponent implements OnInit {
       this.context = selected[0];
     }
     this.isOkDisabled = this.context === null;
-  };
-
-  filterFn = (f: MdmTreeItem) => {
-    console.log(f.domainType);
-
-    return ['Folder', 'VersionedFolder'].includes(f.domainType);
   };
 }

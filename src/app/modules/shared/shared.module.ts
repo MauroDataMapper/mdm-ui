@@ -58,6 +58,7 @@ import { JoditAngularModule } from 'jodit-angular';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
+import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent
+    SortByComponent,
+    BreadcrumbComponent
   ],
   imports: [
     CommonModule,
@@ -146,7 +148,8 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
     HtmlEditorComponent,
     ContentEditorComponent,
     MoreDescriptionComponent,
-    SortByComponent
+    SortByComponent,
+    BreadcrumbComponent
   ]
 })
 export class SharedModule {}

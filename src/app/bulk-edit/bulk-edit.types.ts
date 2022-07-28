@@ -17,13 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  CatalogueItem,
-  DataElementDetail,
+  CatalogueItemDomainType,
   Profile,
   ProfileProvider,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
-import { MauroIdentifier } from '@mdm/mauro/mauro-item.types';
+import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
 
 export enum BulkEditStep {
   Selection,
@@ -31,8 +30,9 @@ export enum BulkEditStep {
 }
 
 export class BulkEditContext {
-  rootItem: CatalogueItem;
-  elements: DataElementDetail[];
+  rootItem: MauroIdentifier;
+  childDomainType?: CatalogueItemDomainType;
+  childItems: MauroItem[];
   profiles: ProfileSummary[];
 }
 
@@ -44,7 +44,7 @@ export interface BulkEditProfileContext {
 }
 
 export interface BulkEditDataRow {
-  element: string;
+  label: string;
   profile: Profile;
   [key: string]: any;
 }

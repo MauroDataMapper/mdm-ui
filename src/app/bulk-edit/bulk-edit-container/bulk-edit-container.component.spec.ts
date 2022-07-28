@@ -17,12 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Title } from '@angular/platform-browser';
-import {
-  CatalogueItemDomainType,
-  DataModelDetail,
-  DataModelDetailResponse
-} from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
+import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -30,17 +27,9 @@ import {
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
 import { StateParams, UIRouterGlobals } from '@uirouter/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BulkEditStep } from '../bulk-edit.types';
 import { BulkEditContainerComponent } from './bulk-edit-container.component';
-
-interface MdmDataModelResourceStub {
-  get: jest.Mock;
-}
-
-interface MdmResourcesStub {
-  dataModel: MdmDataModelResourceStub;
-}
 
 interface UIRouterGlobalsStub {
   params: StateParams;
@@ -61,10 +50,10 @@ interface MessageHandlerStub {
 describe('BulkEditBaseComponent', () => {
   let harness: ComponentHarness<BulkEditContainerComponent>;
 
-  const resourcesStub: MdmResourcesStub = {
-    dataModel: {
-      get: jest.fn()
-    }
+  const itemProviderStub = {
+    get: jest.fn() as jest.MockedFunction<
+      (identifier: MauroIdentifier) => Observable<MauroItem>
+    >
   };
 
   const uiRouterGlobalsStub: UIRouterGlobalsStub = {
@@ -84,7 +73,7 @@ describe('BulkEditBaseComponent', () => {
   };
 
   const id = '123';
-  const dataModel: DataModelDetail = {
+  const dataModel: MauroItem = {
     id,
     label: 'test',
     domainType: CatalogueItemDomainType.DataModel,
@@ -96,8 +85,8 @@ describe('BulkEditBaseComponent', () => {
     harness = await setupTestModuleForComponent(BulkEditContainerComponent, {
       providers: [
         {
-          provide: MdmResourcesService,
-          useValue: resourcesStub
+          provide: MauroItemProviderService,
+          useValue: itemProviderStub
         },
         {
           provide: UIRouterGlobals,
@@ -122,11 +111,7 @@ describe('BulkEditBaseComponent', () => {
   });
 
   beforeEach(() => {
-    resourcesStub.dataModel.get.mockImplementationOnce(() =>
-      of<DataModelDetailResponse>({
-        body: dataModel
-      })
-    );
+    itemProviderStub.get.mockImplementationOnce(() => of(dataModel));
   });
 
   it('should create', () => {

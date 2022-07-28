@@ -193,7 +193,7 @@ export class BulkEditEditorComponent implements OnInit {
 
     this.validated.forEach((validationResult) => {
       if (
-        validationResult.profile.label === data.element &&
+        validationResult.profile.label === data.label &&
         validationResult.errors
       ) {
         validationResult.errors.forEach((error) => {
@@ -218,8 +218,8 @@ export class BulkEditEditorComponent implements OnInit {
     const elementGroup: ColGroupDef = {
       children: [
         {
-          headerName: 'Element',
-          field: 'element',
+          headerName: 'Item',
+          field: 'label',
           pinned: 'left'
         }
       ]
@@ -281,7 +281,7 @@ export class BulkEditEditorComponent implements OnInit {
     });
 
     return {
-      element: profile.label,
+      label: profile.label,
       profile,
       ...data
     };

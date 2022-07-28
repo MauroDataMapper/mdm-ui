@@ -16,10 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  Input,
-  OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -151,10 +148,7 @@ export class DataClassDetailsComponent implements OnInit {
   }
 
   save() {
-
-    if (
-      this.validator.validateLabel(this.dataClass.label)) {
-
+    if (this.validator.validateLabel(this.dataClass.label)) {
       const resource: DataClass = {
         id: this.dataClass.id,
         label: this.dataClass.label,
@@ -173,7 +167,7 @@ export class DataClassDetailsComponent implements OnInit {
               this.editMode = false;
               this.broadcast.reloadCatalogueTree();
               this.editingService.stop();
-           },
+            },
             (error) => {
               this.messageHandler.showError(
                 'There was a problem updating the Data Class.',
@@ -210,7 +204,6 @@ export class DataClassDetailsComponent implements OnInit {
     }
   }
 
-
   showForm() {
     this.editingService.start();
     this.editMode = true;
@@ -220,5 +213,14 @@ export class DataClassDetailsComponent implements OnInit {
     this.dataClass = Object.assign({}, this.originalDataClass);
     this.editMode = false;
     this.editingService.stop();
+  }
+
+  openBulkEdit() {
+    this.stateHandler.Go('appContainer.mainApp.bulkEditDataClass', {
+      domainType: this.dataClass.domainType,
+      dataModelId: this.dataClass.model,
+      dataClassId: this.dataClass.parentDataClass,
+      id: this.dataClass.id
+    });
   }
 }

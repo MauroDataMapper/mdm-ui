@@ -70,6 +70,15 @@ SPDX-License-Identifier: Apache-2.0
           </button>
           <button
             mat-menu-item
+            data-cy="edit-label"
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="openBulkEdit()"
+          >
+            <span class="fas fa-clone"></span> Bulk Edit
+          </button>
+          <button
+            mat-menu-item
             type="button"
             data-cy="create-new-version"
             *ngIf="access.showNewVersion"

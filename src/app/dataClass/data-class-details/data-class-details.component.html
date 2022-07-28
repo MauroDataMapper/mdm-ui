@@ -45,6 +45,15 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span class="fas fa-pencil-alt"></span> Edit Title
           </button>
+          <button
+            mat-menu-item
+            data-cy="edit-label"
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="openBulkEdit()"
+          >
+            <span class="fas fa-clone"></span> Bulk Edit
+          </button>
           <mat-divider></mat-divider>
           <button
             mat-menu-item

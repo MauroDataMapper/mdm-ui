@@ -18,11 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import {
-  DataModelDetail,
-  DataModelDetailResponse
-} from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
@@ -37,14 +34,14 @@ import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
-  parent: DataModelDetail;
+  parent: MauroItem;
   currentStep: BulkEditStep = BulkEditStep.Selection;
 
   public Steps = BulkEditStep;
 
   constructor(
     private stateHandler: StateHandlerService,
-    private resource: MdmResourcesService,
+    private itemProvider: MauroItemProviderService,
     private uiRouterGlobals: UIRouterGlobals,
     private messageHandler: MessageHandlerService,
     private title: Title,
@@ -55,14 +52,16 @@ export class BulkEditContainerComponent implements OnInit {
     this.context = {
       rootItem: {
         id: this.uiRouterGlobals.params.id,
-        domainType: this.uiRouterGlobals.params.domainType
+        domainType: this.uiRouterGlobals.params.domainType,
+        model: this.uiRouterGlobals.params.dataModelId,
+        parentDataClass: this.uiRouterGlobals.params.dataClassId
       },
-      elements: [],
+      childItems: [],
       profiles: []
     };
 
-    this.resource.dataModel
-      .get(this.context.rootItem.id)
+    this.itemProvider
+      .get(this.context.rootItem)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -72,8 +71,8 @@ export class BulkEditContainerComponent implements OnInit {
           return EMPTY;
         })
       )
-      .subscribe((response: DataModelDetailResponse) => {
-        this.parent = response.body;
+      .subscribe((item: MauroItem) => {
+        this.parent = item;
         this.title.setTitle(`Bulk Edit - ${this.parent.label}`);
         this.editing.start();
       });

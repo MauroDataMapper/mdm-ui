@@ -29,7 +29,8 @@ import {
   CatalogueItemDomainType,
   FilterQueryParameters,
   MdmIndexResponse,
-  ProfileSummary
+  ProfileSummary,
+  TermIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -273,10 +274,35 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         filters
       );
     } else if (this.context.childDomainType === CatalogueItemDomainType.Term) {
-      request$ =
+      // This is a workaround for the fact that the `all` param doesn't work on Term lists
+      // (a backend check to avoid huge term lists being processed). Basically do one request to get the total count,
+      // then provide `max: count` to get one full page of results.  This isn't ideal and should be revisited at a
+      // later date, but should work for now
+      if (
         this.context.rootItem.domainType === CatalogueItemDomainType.CodeSet
-          ? this.resources.codeSet.terms(this.context.rootItem.id, filters)
-          : this.resources.term.list(this.context.rootItem.id, filters);
+      ) {
+        request$ = this.resources.codeSet
+          .terms(this.context.rootItem.id, { max: 1 })
+          .pipe(
+            switchMap((response: TermIndexResponse) =>
+              this.resources.codeSet.terms(this.context.rootItem.id, {
+                ...filters,
+                max: response.body.count
+              })
+            )
+          );
+      } else {
+        request$ = this.resources.term
+          .list(this.context.rootItem.id, { max: 1 })
+          .pipe(
+            switchMap((response: TermIndexResponse) =>
+              this.resources.term.list(this.context.rootItem.id, {
+                ...filters,
+                max: response.body.count
+              })
+            )
+          );
+      }
     } else {
       request$ = of({ body: { count: 0, items: [] } });
     }

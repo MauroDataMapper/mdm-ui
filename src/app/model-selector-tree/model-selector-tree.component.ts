@@ -81,6 +81,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() usedInModalDialogue: any;
   @Input() doNotApplySettingsFilter: any;
   @Input() folderFilterFn: (f: MdmTreeItem) => boolean;
+  @Input() filterByDomainType: CatalogueItemDomainType[];
   @Input() showInputGroup = true;
   @Output() checkChange = new EventEmitter<any>();
   @Output() ngModelChange = new EventEmitter<any>();

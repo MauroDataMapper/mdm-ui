@@ -196,11 +196,11 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   }
 
   childItemSelected(selection: MatSelectionListChange) {
-    selection.options.forEach((option) => {
+    selection.options.forEach((option) =>
       option.selected
         ? this.childItemSelections.select(option.value)
-        : this.childItemSelections.deselect(option.value);
-    });
+        : this.childItemSelections.deselect(option.value)
+    );
 
     this.syncChildItemSelectionsWithForm();
   }

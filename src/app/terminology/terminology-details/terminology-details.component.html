@@ -73,6 +73,15 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span class="fas fa-code-branch"></span> Edit Branch Name
           </button>
+          <button
+            mat-menu-item
+            data-cy="edit-label"
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="openBulkEdit()"
+          >
+            <span class="fas fa-clone"></span> Bulk Edit
+          </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <span class="fas fa-balance-scale-right" aria-hidden="true"></span> Compare
                    </button> -->

@@ -202,6 +202,14 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: BulkEditContainerComponent
     },
     {
+      name: 'appContainer.mainApp.bulkEditDataClass',
+      url: '/:domainType/bulkEdit/:dataModelId/:dataClassId/:id',
+      component: BulkEditContainerComponent,
+      params: {
+        dataClassId: null
+      }
+    },
+    {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
       url: '/dataModel/:id/{tabView:string}',
       component: DataModelComponent,

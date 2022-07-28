@@ -69,10 +69,13 @@ export class CodeSetDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private title: Title,
     private editingService: EditingService
-  ) { }
+  ) {}
 
   get canChangeBranchName() {
-    return this.access.showEdit && this.codeSetDetail.branchName !== defaultBranchName;
+    return (
+      this.access.showEdit &&
+      this.codeSetDetail.branchName !== defaultBranchName
+    );
   }
 
   public showAddElementToMarkdown() {
@@ -81,7 +84,9 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
     this.codeSetDetails();
     this.originalCodeSetDetail = Object.assign({}, this.codeSetDetail);
   }
@@ -250,6 +255,13 @@ export class CodeSetDetailsComponent implements OnInit {
     this.codeSetDetail = Object.assign({}, this.originalCodeSetDetail);
   }
 
+  openBulkEdit() {
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
+      id: this.codeSetDetail.id,
+      domainType: this.codeSetDetail.domainType
+    });
+  }
+
   finalise() {
     this.resourcesService.codeSet
       .latestModelVersion(this.codeSetDetail.id)
@@ -301,19 +313,17 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newVersionModel',
-      {
-        id: this.codeSetDetail.id,
-        domainType: this.codeSetDetail.domainType
-      }
-    );
+    this.stateHandler.Go('newVersionModel', {
+      id: this.codeSetDetail.id,
+      domainType: this.codeSetDetail.domainType
+    });
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.codeSetDetail)
+    this.dialog
+      .openChangeBranchName(this.codeSetDetail)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ModelUpdatePayload = {
             id: this.codeSetDetail.id,
             domainType: this.codeSetDetail.domainType,
@@ -322,7 +332,7 @@ export class CodeSetDetailsComponent implements OnInit {
 
           return this.resourcesService.codeSet.update(payload.id, payload);
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -331,7 +341,9 @@ export class CodeSetDetailsComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Code Set branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Code Set branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'codeset',
           { id: this.codeSetDetail.id },

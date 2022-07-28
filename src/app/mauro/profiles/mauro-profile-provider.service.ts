@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  CatalogueItemDomainType,
   Profile,
   ProfileContextIndexPayload,
   ProfileContextIndexResponse,
@@ -74,8 +75,10 @@ export class MauroProfileProviderService implements ProfileProviderService {
       profileProviderServices: [provider]
     };
 
+    const actualRootItem = this.useCorrectRootItem(rootItem);
+
     return this.resources.profile
-      .getMany(rootItem.domainType, rootItem.id, payload)
+      .getMany(actualRootItem.domainType, actualRootItem.id, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
           response.body.profilesProvided.map((provided) => provided.profile)
@@ -97,8 +100,10 @@ export class MauroProfileProviderService implements ProfileProviderService {
       })
     };
 
+    const actualRootItem = this.useCorrectRootItem(rootItem);
+
     return this.resources.profile
-      .saveMany(rootItem.domainType, rootItem.id, payload)
+      .saveMany(actualRootItem.domainType, actualRootItem.id, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
           response.body.profilesProvided.map((provided) => provided.profile)
@@ -120,8 +125,10 @@ export class MauroProfileProviderService implements ProfileProviderService {
       })
     };
 
+    const actualRootItem = this.useCorrectRootItem(rootItem);
+
     return this.resources.profile
-      .validateMany(rootItem.domainType, rootItem.id, payload)
+      .validateMany(actualRootItem.domainType, actualRootItem.id, payload)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           // The HttpErrorResponse will contain the validation errors. Wrap this in a ProfileContextIndexResponse
@@ -137,5 +144,17 @@ export class MauroProfileProviderService implements ProfileProviderService {
           })
         )
       );
+  }
+
+  private useCorrectRootItem(rootItem: MauroItem) {
+    // The profile "...Many" endpoints only work on model types, but Data Classes can be supported assuming that
+    // the root item used is the parent Data Model
+    return rootItem.domainType === CatalogueItemDomainType.DataClass
+      ? {
+          id: rootItem.model,
+          domainType: CatalogueItemDomainType.DataModel,
+          label: ''
+        }
+      : rootItem;
   }
 }

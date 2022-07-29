@@ -1,0 +1,21 @@
+.mdm-text-area-cell-editor {
+  padding: 18px;
+
+  &__input {
+    textarea {
+      border-radius: 3px;
+
+      &:focus {
+        // Copy colours from agGrid styles
+        border-color: rgba(33, 150, 243, 0.4);
+        box-shadow: 0 0 2px 0.1rem rgb(33 150 243 / 40%);
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

@@ -29,6 +29,7 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { BulkEditSelectComponent } from './bulk-edit-select/bulk-edit-select.component';
 import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit-editor-group.component';
 import { MarkdownEditOverlayComponent } from './bulk-edit-editor/overlays/markdown-edit-overlay/markdown-edit-overlay.component';
+import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/text-area-cell-editor/text-area-cell-editor.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { MarkdownEditOverlayComponent } from './bulk-edit-editor/overlays/markdo
     DateCellEditorComponent,
     BulkEditSelectComponent,
     BulkEditEditorGroupComponent,
-    MarkdownEditOverlayComponent
+    MarkdownEditOverlayComponent,
+    TextAreaCellEditorComponent
   ],
   imports: [
     CommonModule,

@@ -46,6 +46,7 @@ import {
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
 import { MarkdownEditOverlayComponent } from './overlays/markdown-edit-overlay/markdown-edit-overlay.component';
+import { TextAreaCellEditorComponent } from './cell-editors/text-area-cell-editor/text-area-cell-editor.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -68,6 +69,7 @@ export class BulkEditEditorComponent implements OnInit {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
     pathCellRenderer: PathCellRendererComponent,
+    textAreaCellEditor: TextAreaCellEditorComponent,
     markdownEditOverlay: MarkdownEditOverlayComponent
   };
 
@@ -310,8 +312,14 @@ export class BulkEditEditorComponent implements OnInit {
     }
 
     if (field.dataType === 'text') {
-      column.cellRendererParams = {
-        editWithSingularEditor: true
+      // column.cellRendererParams = {
+      //   editWithSingularEditor: true
+      // };
+      column.cellEditor = 'textAreaCellEditor';
+      //column.cellEditor = 'agLargeTextCellEditor';
+      column.cellEditorParams = {
+        rows: 10,
+        cols: 50
       };
     }
 

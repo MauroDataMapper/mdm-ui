@@ -1,0 +1,19 @@
+<div class="mdm-text-area-cell-editor">
+  <div class="mdm-text-area-cell-editor__input">
+    <textarea
+      #valueInput
+      aria-label="Input editor"
+      [rows]="params.rows ?? 10"
+      [cols]="params.cols ?? 50"
+      [(ngModel)]="value"
+      (keydown)="onKeyDown($event)"
+    ></textarea>
+  </div>
+  <div class="mdm-text-area-cell-editor__footer">
+    <span><strong>Shift + Enter</strong> for new line</span>
+    <button mat-button matTooltip="Use editor to enter content">
+      <span class="fas fa-edit"></span>
+      Edit
+    </button>
+  </div>
+</div>

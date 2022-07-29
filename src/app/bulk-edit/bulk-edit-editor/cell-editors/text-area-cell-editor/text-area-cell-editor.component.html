@@ -11,7 +11,12 @@
   </div>
   <div class="mdm-text-area-cell-editor__footer">
     <span><strong>Shift + Enter</strong> for new line</span>
-    <button mat-button matTooltip="Use editor to enter content">
+    <button
+      *ngIf="params.onEditClick"
+      mat-button
+      matTooltip="Use editor to enter content"
+      (click)="onEdit()"
+    >
       <span class="fas fa-edit"></span>
       Edit
     </button>

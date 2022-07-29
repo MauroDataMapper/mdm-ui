@@ -25,15 +25,13 @@ import {
   CellValueChangedEvent,
   ColDef,
   ColGroupDef,
-  Column,
   ColumnApi,
   GridApi,
-  GridOptions,
   GridReadyEvent,
-  RowNode
+  ICellEditorParams
 } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../bulk-edit.types';
 import { CheckboxCellRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DateCellEditorComponent } from './cell-editors/date-cell-editor/date-cell-editor.component';
@@ -45,8 +43,14 @@ import {
   NavigatableProfile
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
-import { MarkdownEditOverlayComponent } from './overlays/markdown-edit-overlay/markdown-edit-overlay.component';
 import { TextAreaCellEditorComponent } from './cell-editors/text-area-cell-editor/text-area-cell-editor.component';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  FullContentEditDialogComponent,
+  FullContentEditDialogData,
+  FullContentEditDialogResponse
+} from './dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -69,8 +73,7 @@ export class BulkEditEditorComponent implements OnInit {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
     pathCellRenderer: PathCellRendererComponent,
-    textAreaCellEditor: TextAreaCellEditorComponent,
-    markdownEditOverlay: MarkdownEditOverlayComponent
+    textAreaCellEditor: TextAreaCellEditorComponent
   };
 
   validated: MauroProfileValidationResult[];
@@ -89,25 +92,20 @@ export class BulkEditEditorComponent implements OnInit {
     minWidth: 200
   };
 
-  gridOptions: GridOptions = {
-    onCellClicked: (event) => {
-      if (event.colDef.cellRendererParams?.editWithSingularEditor) {
-        this.gridOptions.loadingOverlayComponentParams = {
-          value: event.value,
-          node: event.node,
-          column: event.column
-        };
-        this.gridApi.showLoadingOverlay();
-      }
+  nonStandardColWidths = [
+    {
+      field: 'description',
+      width: 300
     }
-  };
+  ];
 
   private gridApi: GridApi;
   private gridColumnApi: ColumnApi;
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private bulkEditProfiles: BulkEditProfileService
+    private bulkEditProfiles: BulkEditProfileService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -231,12 +229,29 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   private screenResize() {
+    const nonStandardFields = this.nonStandardColWidths.map((c) => c.field);
+
     const columnIds = this.gridColumnApi
       .getAllColumns()
+      .filter((col) => !nonStandardFields.includes(col.getColDef().field))
       .map((col) => col.getColId());
 
     this.excludeAutoResizeColumns(columnIds);
     this.gridColumnApi.autoSizeColumns(columnIds);
+
+    this.nonStandardColWidths
+      .map((nscw) => {
+        const col = this.gridColumnApi
+          .getAllColumns()
+          .find((col) => col.getColDef().field === nscw.field);
+        return {
+          col,
+          width: nscw.width
+        };
+      })
+      .forEach((value) => {
+        this.gridColumnApi.setColumnWidth(value.col, value.width);
+      });
   }
 
   private excludeAutoResizeColumns(columnIds) {
@@ -312,14 +327,13 @@ export class BulkEditEditorComponent implements OnInit {
     }
 
     if (field.dataType === 'text') {
-      // column.cellRendererParams = {
-      //   editWithSingularEditor: true
-      // };
       column.cellEditor = 'textAreaCellEditor';
-      //column.cellEditor = 'agLargeTextCellEditor';
       column.cellEditorParams = {
         rows: 10,
-        cols: 50
+        cols: 50,
+        onEditClick: (value: string, params: ICellEditorParams) => {
+          this.editUsingFullContentEditor(value, field.fieldName, params);
+        }
       };
     }
 
@@ -339,5 +353,34 @@ export class BulkEditEditorComponent implements OnInit {
       profile,
       ...data
     };
+  }
+
+  private editUsingFullContentEditor(
+    value: string,
+    fieldName: string,
+    params: ICellEditorParams
+  ) {
+    this.dialog
+      .open<
+        FullContentEditDialogComponent,
+        FullContentEditDialogData,
+        FullContentEditDialogResponse
+      >(FullContentEditDialogComponent, {
+        data: {
+          title: params.data.label,
+          subTitle: fieldName,
+          value
+        },
+        minWidth: 800,
+        maxHeight: 600
+      })
+      .afterClosed()
+      .pipe(filter((response) => response.status === ModalDialogStatus.Ok))
+      .subscribe((response) => {
+        const node = params.node;
+        const column = params.column;
+        node.setDataValue(column, response.value);
+        this.gridApi.flashCells({ rowNodes: [node], columns: [column] });
+      });
   }
 }

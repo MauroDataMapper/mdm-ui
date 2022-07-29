@@ -28,8 +28,8 @@ import { DateCellEditorComponent } from './bulk-edit-editor/cell-editors/date-ce
 import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { BulkEditSelectComponent } from './bulk-edit-select/bulk-edit-select.component';
 import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit-editor-group.component';
-import { MarkdownEditOverlayComponent } from './bulk-edit-editor/overlays/markdown-edit-overlay/markdown-edit-overlay.component';
 import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/text-area-cell-editor/text-area-cell-editor.component';
+import { FullContentEditDialogComponent } from './bulk-edit-editor/dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -39,8 +39,8 @@ import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/tex
     DateCellEditorComponent,
     BulkEditSelectComponent,
     BulkEditEditorGroupComponent,
-    MarkdownEditOverlayComponent,
-    TextAreaCellEditorComponent
+    TextAreaCellEditorComponent,
+    FullContentEditDialogComponent
   ],
   imports: [
     CommonModule,

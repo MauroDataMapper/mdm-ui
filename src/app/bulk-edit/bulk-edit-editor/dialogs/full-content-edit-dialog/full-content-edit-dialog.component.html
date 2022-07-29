@@ -1,0 +1,26 @@
+<div class="mdm-full-content-edit-dialog">
+  <h4 *ngIf="data.title" mat-dialog-title>{{ data.title }}</h4>
+  <h5 *ngIf="data.subTitle">{{ data.subTitle }}</h5>
+  <mat-dialog-content>
+    <mdm-content-editor
+      inEditMode="true"
+      [(content)]="value"
+    ></mdm-content-editor>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="modal-footer pxy-2">
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button mat-flat-button color="primary" type="button" (click)="save()">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

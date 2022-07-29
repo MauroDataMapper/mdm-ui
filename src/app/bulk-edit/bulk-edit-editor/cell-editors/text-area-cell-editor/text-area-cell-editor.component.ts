@@ -5,6 +5,7 @@ import { ICellEditorParams } from 'ag-grid-community';
 interface TextAreaCellEditorParams {
   rows?: number;
   cols?: number;
+  onEditClick?: (value: string, params: ICellEditorParams) => void;
 }
 
 @Component({
@@ -48,5 +49,14 @@ export class TextAreaCellEditorComponent implements ICellEditorAngularComp {
     if (event.key === 'Enter' && event.shiftKey) {
       event.stopPropagation();
     }
+  }
+
+  onEdit() {
+    if (!this.params.onEditClick) {
+      return;
+    }
+
+    this.params.onEditClick(this.value, this.params);
+    this.params.api.stopEditing();
   }
 }

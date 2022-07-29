@@ -241,16 +241,16 @@ export class BulkEditEditorComponent implements OnInit {
 
     this.nonStandardColWidths
       .map((nscw) => {
-        const col = this.gridColumnApi
+        const column = this.gridColumnApi
           .getAllColumns()
           .find((col) => col.getColDef().field === nscw.field);
         return {
-          col,
+          column,
           width: nscw.width
         };
       })
       .forEach((value) => {
-        this.gridColumnApi.setColumnWidth(value.col, value.width);
+        this.gridColumnApi.setColumnWidth(value.column, value.width);
       });
   }
 

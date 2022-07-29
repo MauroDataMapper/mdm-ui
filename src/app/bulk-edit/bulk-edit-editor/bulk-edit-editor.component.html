@@ -41,20 +41,6 @@ SPDX-License-Identifier: Apache-2.0
       {{ totalValidationErrors }} validation issue(s)
     </span>
   </mat-toolbar>
-  <div *ngIf="textEditStyle === 'excel-like' && currentNode && currentColumn">
-    <mdm-markdown-text-area
-      inEditMode="true"
-      hideHelpText="true"
-      [(description)]="currentTextValue"
-    ></mdm-markdown-text-area>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="updateCellFromExcelLikeEditor()"
-    >
-      Update
-    </button>
-  </div>
   <ag-grid-angular
     *ngIf="loaded"
     #agGrid

@@ -45,7 +45,6 @@ import {
   NavigatableProfile
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
-import { MarkdownCellEditorComponent } from './cell-editors/markdown-cell-editor/markdown-cell-editor.component';
 import { MarkdownEditOverlayComponent } from './overlays/markdown-edit-overlay/markdown-edit-overlay.component';
 
 @Component({
@@ -69,7 +68,6 @@ export class BulkEditEditorComponent implements OnInit {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
     pathCellRenderer: PathCellRendererComponent,
-    markdownCellEditor: MarkdownCellEditorComponent,
     markdownEditOverlay: MarkdownEditOverlayComponent
   };
 
@@ -89,44 +87,18 @@ export class BulkEditEditorComponent implements OnInit {
     minWidth: 200
   };
 
-  /** TESTING ONLY! For experimenting with text editing features */
-  textEditStyle: 'cell-editor' | 'excel-like' | 'grid-overlay' = 'excel-like';
-  currentTextValue: string;
-  currentNode: RowNode;
-  currentColumn: Column;
-
   gridOptions: GridOptions = {
     onCellClicked: (event) => {
       if (event.colDef.cellRendererParams?.editWithSingularEditor) {
-        if (this.textEditStyle === 'excel-like') {
-          this.currentTextValue = event.value;
-          this.currentNode = event.node;
-          this.currentColumn = event.column;
-        } else if (this.textEditStyle === 'grid-overlay') {
-          this.gridOptions.loadingOverlayComponentParams = {
-            value: event.value,
-            node: event.node,
-            column: event.column
-          };
-          this.gridApi.showLoadingOverlay();
-        }
-      } else {
-        this.currentNode = undefined;
-        this.currentColumn = undefined;
+        this.gridOptions.loadingOverlayComponentParams = {
+          value: event.value,
+          node: event.node,
+          column: event.column
+        };
+        this.gridApi.showLoadingOverlay();
       }
     }
   };
-
-  updateCellFromExcelLikeEditor() {
-    if (!this.currentNode || !this.currentColumn) {
-      return;
-    }
-
-    this.currentNode.setDataValue(this.currentColumn, this.currentTextValue);
-
-    this.currentNode = undefined;
-    this.currentColumn = undefined;
-  }
 
   private gridApi: GridApi;
   private gridColumnApi: ColumnApi;
@@ -337,25 +309,7 @@ export class BulkEditEditorComponent implements OnInit {
         params.data[field.metadataPropertyName].label;
     }
 
-    if (field.dataType === 'text' && this.textEditStyle === 'cell-editor') {
-      column.cellEditor = 'markdownCellEditor';
-      column.cellEditorPopup = true;
-      column.cellEditorPopupPosition = 'under';
-      column.suppressKeyboardEvent = (params) => {
-        return params.event.key === 'Enter';
-      };
-    }
-
-    if (field.dataType === 'text' && this.textEditStyle === 'excel-like') {
-      column.editable = false;
-      column.enableCellChangeFlash = true;
-      column.cellRendererParams = {
-        editWithSingularEditor: true
-      };
-    }
-
-    if (field.dataType === 'text' && this.textEditStyle === 'grid-overlay') {
-      //column.editable = false;
+    if (field.dataType === 'text') {
       column.cellRendererParams = {
         editWithSingularEditor: true
       };

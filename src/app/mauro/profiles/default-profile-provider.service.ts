@@ -37,7 +37,8 @@ import {
   MauroItem,
   MauroProfileUpdatePayload,
   MauroProfileValidationResult,
-  MauroUpdatePayload
+  MauroUpdatePayload,
+  NavigatableProfile
 } from '../mauro-item.types';
 import { ProfileProviderService } from './profile-provider-service';
 
@@ -193,14 +194,19 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
-  ): Observable<Profile[]> {
+  ): Observable<NavigatableProfile[]> {
     if (!isDefaultProvider(provider)) {
       return EMPTY;
     }
 
     return this.itemProvider
       .getMany(identifiers)
-      .pipe(map((items) => items.map((item) => this.mapItemToProfile(item))));
+      .pipe(map((items) => items.map((item) => {
+        return {
+          ...this.mapItemToProfile(item),
+          breadcrumbs: item.breadcrumbs
+        };
+      })));
   }
 
   /**

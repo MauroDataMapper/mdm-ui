@@ -35,7 +35,8 @@ import {
   MauroIdentifier,
   MauroItem,
   MauroProfileUpdatePayload,
-  MauroProfileValidationResult
+  MauroProfileValidationResult,
+  NavigatableProfile
 } from '../mauro-item.types';
 import { ProfileProviderService } from './profile-provider-service';
 
@@ -64,7 +65,7 @@ export class MauroProfileProviderService implements ProfileProviderService {
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
-  ): Observable<Profile[]> {
+  ): Observable<NavigatableProfile[]> {
     const payload: ProfileContextIndexPayload = {
       multiFacetAwareItems: identifiers.map((identifier) => {
         return {
@@ -81,7 +82,12 @@ export class MauroProfileProviderService implements ProfileProviderService {
       .getMany(actualRootItem.domainType, actualRootItem.id, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
-          response.body.profilesProvided.map((provided) => provided.profile)
+          response.body.profilesProvided.map((provided) => {
+            return {
+              ...provided.profile,
+              breadcrumbs: provided.multiFacetAwareItem?.breadcrumbs
+            };
+          })
         )
       );
   }

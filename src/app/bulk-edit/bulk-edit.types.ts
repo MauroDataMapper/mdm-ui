@@ -22,7 +22,11 @@ import {
   ProfileProvider,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
-import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
+import {
+  MauroIdentifier,
+  MauroItem,
+  NavigatableProfile
+} from '@mdm/mauro/mauro-item.types';
 
 export enum BulkEditStep {
   Selection,
@@ -45,6 +49,6 @@ export interface BulkEditProfileContext {
 
 export interface BulkEditDataRow {
   label: string;
-  profile: Profile;
+  profile: NavigatableProfile;
   [key: string]: any;
 }

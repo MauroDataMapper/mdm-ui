@@ -28,7 +28,8 @@ import {
   MauroIdentifier,
   MauroItem,
   MauroProfileUpdatePayload,
-  MauroProfileValidationResult
+  MauroProfileValidationResult,
+  NavigatableProfile
 } from '@mdm/mauro/mauro-item.types';
 import {
   DefaultProfileProviderService,
@@ -77,7 +78,7 @@ export class BulkEditProfileService {
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
-  ): Observable<Profile[]> {
+  ): Observable<NavigatableProfile[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)

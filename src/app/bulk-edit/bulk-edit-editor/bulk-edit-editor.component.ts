@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Profile, ProfileField } from '@maurodatamapper/mdm-resources';
+import { ProfileField } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import {
   CellClassParams,
@@ -38,8 +38,10 @@ import { BulkEditProfileService } from '../bulk-edit-profile.service';
 import {
   MauroItem,
   MauroProfileUpdatePayload,
-  MauroProfileValidationResult
+  MauroProfileValidationResult,
+  NavigatableProfile
 } from '@mdm/mauro/mauro-item.types';
+import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -60,7 +62,8 @@ export class BulkEditEditorComponent implements OnInit {
    */
   frameworkComponents = {
     checkboxCellRenderer: CheckboxCellRendererComponent,
-    dateCellEditor: DateCellEditorComponent
+    dateCellEditor: DateCellEditorComponent,
+    pathCellRenderer: PathCellRendererComponent
   };
 
   validated: MauroProfileValidationResult[];
@@ -211,15 +214,34 @@ export class BulkEditEditorComponent implements OnInit {
     const columnIds = this.gridColumnApi
       .getAllColumns()
       .map((col) => col.getColId());
+
+    this.excludeAutoResizeColumns(columnIds);
     this.gridColumnApi.autoSizeColumns(columnIds);
   }
 
-  private getColumnsForProfile(profile: Profile): ColGroupDef[] {
+  private excludeAutoResizeColumns(columnIds) {
+    const pathColKey = 'Path';
+    const pathId = this.gridColumnApi.getColumn(pathColKey).getColId();
+    const pathIndex = columnIds.indexOf(pathId);
+    if (pathIndex > -1) {
+      columnIds.splice(pathIndex, 1);
+    }
+  }
+
+  private getColumnsForProfile(profile: NavigatableProfile): ColGroupDef[] {
     const elementGroup: ColGroupDef = {
       children: [
         {
           headerName: 'Item',
           field: 'label',
+          pinned: 'left'
+        },
+        {
+          headerName: 'Path',
+          field: 'path',
+          cellRenderer: 'pathCellRenderer',
+          cellRendererParams: { profile },
+          resizable: true,
           pinned: 'left'
         }
       ]
@@ -272,7 +294,7 @@ export class BulkEditEditorComponent implements OnInit {
     return column;
   }
 
-  private mapProfileToRow(profile: Profile): BulkEditDataRow {
+  private mapProfileToRow(profile: NavigatableProfile): BulkEditDataRow {
     const data = {};
     profile.sections.forEach((section) => {
       section.fields.forEach((field) => {

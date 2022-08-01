@@ -16,6 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import {
+  CatalogueItemDomainType,
+  Modelable,
+  Navigatable
+} from '@maurodatamapper/mdm-resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { PathElement, PathElementType } from './path-name.model';
 import { PathNameService } from './path-name.service';
@@ -32,55 +37,100 @@ describe('PathNameService', () => {
   });
 
   describe('parsing path name', () => {
-    it.each([undefined, null, ''])('should return nothing when no path is provided', (path) => {
-      const actual = service.parse(path);
-      expect(actual).toBeNull();
-    });
+    it.each([undefined, null, ''])(
+      'should return nothing when no path is provided',
+      (path) => {
+        const actual = service.parse(path);
+        expect(actual).toBeNull();
+      }
+    );
 
     const pathCases: Array<[string, PathElement[]]> = [
       [
         'dm:Test Data Model',
         [
-          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' }
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            label: 'Test Data Model'
+          }
         ]
       ],
       [
         'dm:Test Data Model$another-branch',
         [
-          { type: PathElementType.DataModel, typeName: 'Data model', version: 'another-branch', label: 'Test Data Model' }
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            version: 'another-branch',
+            label: 'Test Data Model'
+          }
         ]
       ],
       [
         'dm:Test Data Model$2.0.0',
         [
-          { type: PathElementType.DataModel, typeName: 'Data model', version: '2.0.0', label: 'Test Data Model' }
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            version: '2.0.0',
+            label: 'Test Data Model'
+          }
         ]
       ],
       [
         'te:Test Terminology',
         [
-          { type: PathElementType.Terminology, typeName: 'Terminology', label: 'Test Terminology' }
+          {
+            type: PathElementType.Terminology,
+            typeName: 'Terminology',
+            label: 'Test Terminology'
+          }
         ]
       ],
       [
         'cs:Test Code Set',
         [
-          { type: PathElementType.CodeSet, typeName: 'Code set', label: 'Test Code Set' }
+          {
+            type: PathElementType.CodeSet,
+            typeName: 'Code set',
+            label: 'Test Code Set'
+          }
         ]
       ],
       [
         'dm:Test Data Model|dc:Test Data Class',
         [
-          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' },
-          { type: PathElementType.DataClass, typeName: 'Data class', label: 'Test Data Class' }
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            label: 'Test Data Model'
+          },
+          {
+            type: PathElementType.DataClass,
+            typeName: 'Data class',
+            label: 'Test Data Class'
+          }
         ]
       ],
       [
         'dm:Test Data Model|dc:Test Data Class|de:Test Data Element',
         [
-          { type: PathElementType.DataModel, typeName: 'Data model', label: 'Test Data Model' },
-          { type: PathElementType.DataClass, typeName: 'Data class', label: 'Test Data Class' },
-          { type: PathElementType.DataElement, typeName: 'Data element', label: 'Test Data Element' }
+          {
+            type: PathElementType.DataModel,
+            typeName: 'Data model',
+            label: 'Test Data Model'
+          },
+          {
+            type: PathElementType.DataClass,
+            typeName: 'Data class',
+            label: 'Test Data Class'
+          },
+          {
+            type: PathElementType.DataElement,
+            typeName: 'Data element',
+            label: 'Test Data Element'
+          }
         ]
       ],
       [
@@ -172,7 +222,8 @@ describe('PathNameService', () => {
       (path: string, expected: PathElement[]) => {
         const actual = service.parse(path);
         expect(actual).toMatchObject(expected);
-      });
+      }
+    );
 
     const badPathCases = [
       'dm',
@@ -189,6 +240,135 @@ describe('PathNameService', () => {
         expect(() => {
           service.parse(path);
         }).toThrow();
-      });
+      }
+    );
+  });
+
+  describe('create from breadcrumbs', () => {
+    it('should return nothing when no item is given', () => {
+      const actual = service.createFromBreadcrumbs(null);
+      expect(actual).toBeNull();
+    });
+
+    const testCases: [string, Modelable & Navigatable][] = [
+      [
+        'dm:data model',
+        {
+          domainType: CatalogueItemDomainType.DataModel,
+          id: '1',
+          label: 'data model',
+          breadcrumbs: []
+        }
+      ],
+      [
+        'dm:data model|dc:data class',
+        {
+          domainType: CatalogueItemDomainType.DataClass,
+          id: '1',
+          label: 'data class',
+          breadcrumbs: [
+            {
+              domainType: CatalogueItemDomainType.DataModel,
+              id: '2',
+              label: 'data model'
+            }
+          ]
+        }
+      ],
+      [
+        'dm:data model|dc:data class|dc:child class',
+        {
+          domainType: CatalogueItemDomainType.DataClass,
+          id: '1',
+          label: 'child class',
+          breadcrumbs: [
+            {
+              domainType: CatalogueItemDomainType.DataModel,
+              id: '2',
+              label: 'data model'
+            },
+            {
+              domainType: CatalogueItemDomainType.DataClass,
+              id: '3',
+              label: 'data class'
+            }
+          ]
+        }
+      ],
+      [
+        'dm:data model|dc:data class|de:data element',
+        {
+          domainType: CatalogueItemDomainType.DataElement,
+          id: '1',
+          label: 'data element',
+          breadcrumbs: [
+            {
+              domainType: CatalogueItemDomainType.DataModel,
+              id: '2',
+              label: 'data model'
+            },
+            {
+              domainType: CatalogueItemDomainType.DataClass,
+              id: '3',
+              label: 'data class'
+            }
+          ]
+        }
+      ],
+      [
+        'dm:data model|dc:data class|dc:child class|de:data element',
+        {
+          domainType: CatalogueItemDomainType.DataElement,
+          id: '1',
+          label: 'data element',
+          breadcrumbs: [
+            {
+              domainType: CatalogueItemDomainType.DataModel,
+              id: '2',
+              label: 'data model'
+            },
+            {
+              domainType: CatalogueItemDomainType.DataClass,
+              id: '3',
+              label: 'data class'
+            },
+            {
+              domainType: CatalogueItemDomainType.DataClass,
+              id: '4',
+              label: 'child class'
+            }
+          ]
+        }
+      ],
+      [
+        'te:terminology',
+        {
+          domainType: CatalogueItemDomainType.Terminology,
+          id: '1',
+          label: 'terminology',
+          breadcrumbs: []
+        }
+      ],
+      [
+        'te:terminology|tm:first term',
+        {
+          domainType: CatalogueItemDomainType.Term,
+          id: '1',
+          label: 'first term',
+          breadcrumbs: [
+            {
+              domainType: CatalogueItemDomainType.Terminology,
+              id: '2',
+              label: 'terminology'
+            }
+          ]
+        }
+      ]
+    ];
+
+    it.each(testCases)('should return the path %p', (expectedPath, item) => {
+      const actualPath = service.createFromBreadcrumbs(item);
+      expect(actualPath).toBe(expectedPath);
+    });
   });
 });

@@ -20,6 +20,11 @@ SPDX-License-Identifier: Apache-2.0
 /**
  * Prefixes used in Mauro to represent Fully Qualified Paths (FQPs).
  */
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+
+/**
+ * Prefixes used in Mauro to represent Fully Qualified Paths (FQPs).
+ */
 export enum PathElementType {
   ApiKey = 'ak',
   Annotation = 'ann',
@@ -66,53 +71,73 @@ export enum PathElementType {
   VersionLink = 'vl'
 }
 
-export const pathElementTypeNames = new Map<PathElementType, string>(
+export const pathElementTypeNames = new Map<PathElementType, string>([
+  [PathElementType.ApiKey, 'API key'],
+  [PathElementType.Annotation, 'Annotation'],
+  [PathElementType.ApiProperty, 'API property'],
+  [PathElementType.Authority, 'Authority'],
+  [PathElementType.Classifier, 'Classifier'],
+  [PathElementType.CodeSet, 'Code set'],
+  [PathElementType.CatalogueUser, 'Catalogue user'],
+  [PathElementType.DataClass, 'Data class'],
+  [PathElementType.DataClassComponent, 'Data class component'],
+  [PathElementType.DataElement, 'Data element'],
+  [PathElementType.DataElementComponent, 'Data element component'],
+  [PathElementType.DataFlow, 'Data flow'],
+  [PathElementType.DataModel, 'Data model'],
+  [PathElementType.EnumerationType, 'Enumeration type'],
+  [PathElementType.Edit, 'Edit'],
+  [PathElementType.EnumerationValue, 'Enumeration value'],
+  [PathElementType.Folder, 'Folder'],
+  [PathElementType.GroupRole, 'Group role'],
+  [PathElementType.Metadata, 'Metadata'],
+  [PathElementType.ReferenceDataElement, 'Reference data element'],
+  [PathElementType.ReferenceDataModel, 'Reference data model'],
+  [PathElementType.ReferenceEnumerationType, 'Reference enumeration type'],
+  [PathElementType.ReferenceDataValue, 'Reference data value'],
+  [PathElementType.ReferenceEnumerationValue, 'Reference enumeration value'],
+  [PathElementType.ReferenceFile, 'Reference file'],
+  [PathElementType.RuleRepresentation, 'Rule representation'],
+  [PathElementType.ReferenceSummaryMetadata, 'Reference summary metadata'],
   [
-    [ PathElementType.ApiKey, 'API key'],
-    [ PathElementType.Annotation, 'Annotation'],
-    [ PathElementType.ApiProperty, 'API property'],
-    [ PathElementType.Authority, 'Authority'],
-    [ PathElementType.Classifier, 'Classifier'],
-    [ PathElementType.CodeSet, 'Code set'],
-    [ PathElementType.CatalogueUser, 'Catalogue user'],
-    [ PathElementType.DataClass, 'Data class'],
-    [ PathElementType.DataClassComponent, 'Data class component'],
-    [ PathElementType.DataElement, 'Data element'],
-    [ PathElementType.DataElementComponent, 'Data element component'],
-    [ PathElementType.DataFlow, 'Data flow'],
-    [ PathElementType.DataModel, 'Data model'],
-    [ PathElementType.EnumerationType, 'Enumeration type'],
-    [ PathElementType.Edit, 'Edit'],
-    [ PathElementType.EnumerationValue, 'Enumeration value'],
-    [ PathElementType.Folder, 'Folder'],
-    [ PathElementType.GroupRole, 'Group role'],
-    [ PathElementType.Metadata, 'Metadata'],
-    [ PathElementType.ReferenceDataElement, 'Reference data element'],
-    [ PathElementType.ReferenceDataModel, 'Reference data model'],
-    [ PathElementType.ReferenceEnumerationType, 'Reference enumeration type'],
-    [ PathElementType.ReferenceDataValue, 'Reference data value'],
-    [ PathElementType.ReferenceEnumerationValue, 'Reference enumeration value'],
-    [ PathElementType.ReferenceFile, 'Reference file'],
-    [ PathElementType.RuleRepresentation, 'Rule representation'],
-    [ PathElementType.ReferenceSummaryMetadata, 'Reference summary metadata'],
-    [ PathElementType.ReferenceSummaryMetadataReport, 'Reference summary metadata report'],
-    [ PathElementType.Rule, 'Rule'],
-    [ PathElementType.SemanticLink, 'Semantic link'],
-    [ PathElementType.SummaryMetadata, 'Summary metadata'],
-    [ PathElementType.SummaryMetadataReport, 'Summary metadata report'],
-    [ PathElementType.SecurableResourceGroupRole, 'Securable resource group role'],
-    [ PathElementType.SubscribedCatalogue, 'Subscribed catalogue'],
-    [ PathElementType.SubscribedModel, 'Subscribed model'],
-    [ PathElementType.Terminology, 'Terminology'],
-    [ PathElementType.Term, 'Term'],
-    [ PathElementType.TermRelationship, 'Term relationship'],
-    [ PathElementType.TermRelationshipType, 'Term relationship type'],
-    [ PathElementType.UserGroup, 'User group'],
-    [ PathElementType.UserImageFile, 'User image file'],
-    [ PathElementType.VersionedFolder, 'Versioned folder'],
-    [ PathElementType.VersionLink, 'Version link']
-  ]
-);
+    PathElementType.ReferenceSummaryMetadataReport,
+    'Reference summary metadata report'
+  ],
+  [PathElementType.Rule, 'Rule'],
+  [PathElementType.SemanticLink, 'Semantic link'],
+  [PathElementType.SummaryMetadata, 'Summary metadata'],
+  [PathElementType.SummaryMetadataReport, 'Summary metadata report'],
+  [PathElementType.SecurableResourceGroupRole, 'Securable resource group role'],
+  [PathElementType.SubscribedCatalogue, 'Subscribed catalogue'],
+  [PathElementType.SubscribedModel, 'Subscribed model'],
+  [PathElementType.Terminology, 'Terminology'],
+  [PathElementType.Term, 'Term'],
+  [PathElementType.TermRelationship, 'Term relationship'],
+  [PathElementType.TermRelationshipType, 'Term relationship type'],
+  [PathElementType.UserGroup, 'User group'],
+  [PathElementType.UserImageFile, 'User image file'],
+  [PathElementType.VersionedFolder, 'Versioned folder'],
+  [PathElementType.VersionLink, 'Version link']
+]);
+
+export const pathElementDomainTypes = new Map<
+  CatalogueItemDomainType,
+  PathElementType
+>([
+  [CatalogueItemDomainType.CodeSet, PathElementType.CodeSet],
+  [CatalogueItemDomainType.DataClass, PathElementType.DataClass],
+  [CatalogueItemDomainType.DataElement, PathElementType.DataElement],
+  [CatalogueItemDomainType.DataModel, PathElementType.DataModel],
+  [CatalogueItemDomainType.EnumerationType, PathElementType.EnumerationType],
+  [CatalogueItemDomainType.Folder, PathElementType.Folder],
+  [
+    CatalogueItemDomainType.ReferenceDataModel,
+    PathElementType.ReferenceDataModel
+  ],
+  [CatalogueItemDomainType.Term, PathElementType.Term],
+  [CatalogueItemDomainType.Terminology, PathElementType.Terminology],
+  [CatalogueItemDomainType.VersionedFolder, PathElementType.VersionedFolder]
+]);
 
 export interface PathProperty {
   name: string;

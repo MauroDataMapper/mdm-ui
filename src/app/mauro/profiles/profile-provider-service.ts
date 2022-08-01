@@ -26,7 +26,8 @@ import {
   MauroIdentifier,
   MauroItem,
   MauroProfileUpdatePayload,
-  MauroProfileValidationResult
+  MauroProfileValidationResult,
+  NavigatableProfile
 } from '../mauro-item.types';
 
 /**
@@ -56,14 +57,14 @@ export interface ProfileProviderService {
    * @param identifiers An array of {@link MauroIdentifier} objects containing identification information.
    * At least an ID and domain type is required, but some domain types based on hierarchy require further details.
    * @param provider The namespace/name of the profile provider to use.
-   * @returns An array of {@link Profile} objects which are mapped to the requested catalogue items in an
+   * @returns An array of {@link NavigatableProfile} objects which are mapped to the requested catalogue items in an
    * observable stream.
    */
   getMany(
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
-  ): Observable<Profile[]>;
+  ): Observable<NavigatableProfile[]>;
 
   /**
    * Validates multiple profiles based on the given profile provider.

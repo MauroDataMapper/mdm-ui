@@ -25,7 +25,6 @@ import { CatalogueSearchFormComponent } from './catalogue-search-form/catalogue-
 import { CatalogueSearchListingComponent } from './catalogue-search-listing/catalogue-search-listing.component';
 import { CatalogueItemSearchResultComponent } from './catalogue-item-search-result/catalogue-item-search-result.component';
 import { CatalogueSearchAdvancedFormComponent } from './catalogue-search-advanced/catalogue-search-advanced-form.component';
-import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-item-search.component';
@@ -38,7 +37,6 @@ import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-
     CatalogueItemSearchResultComponent,
     CatalogueSearchAdvancedFormComponent,
     SearchFiltersComponent,
-    BreadcrumbComponent,
     CatalogueItemSearchComponent
   ],
   imports: [

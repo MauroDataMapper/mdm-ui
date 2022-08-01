@@ -16,23 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="mdm-bulk-edit__container-controls">
-  <button mat-stroked-button color="primary" type="button" (click)="previous()">
-    <span class="fas fa-tasks"></span>
-    Select items
-  </button>
-  <button mat-stroked-button color="warn" type="button" (click)="cancel()">
-    <span class="fas fa-door-open"></span>
-    Close
-  </button>
+<div class="mdm-full-content-edit-dialog">
+  <h4 *ngIf="data.title" mat-dialog-title>{{ data.title }}</h4>
+  <h5 *ngIf="data.subTitle">{{ data.subTitle }}</h5>
+  <mat-dialog-content>
+    <mdm-content-editor
+      inEditMode="true"
+      [(content)]="value"
+    ></mdm-content-editor>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="modal-footer pxy-2">
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button mat-flat-button color="primary" type="button" (click)="save()">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
 </div>
-<mat-tab-group class="pxy-2">
-  <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
-    <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
-    <mdm-bulk-edit-editor
-      *ngIf="tab"
-      [rootItem]="context.rootItem"
-      [(tab)]="tabs[index]"
-    ></mdm-bulk-edit-editor>
-  </mat-tab>
-</mat-tab-group>

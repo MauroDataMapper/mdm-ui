@@ -296,5 +296,21 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true
+  },
+  {
+    key: 'security.restrict.root.folder',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'security.restrict.classifier.create',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

@@ -16,10 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  OnInit,
-  Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -38,7 +35,8 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,
   TerminologyDetail,
-  TerminologyDetailResponse} from '@maurodatamapper/mdm-resources';
+  TerminologyDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Access } from '@mdm/model/access';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -53,7 +51,7 @@ import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-b
 export class TerminologyDetailsComponent implements OnInit {
   @Input() mcTerminology: TerminologyDetail;
 
-  originalTerminology:TerminologyDetail;
+  originalTerminology: TerminologyDetail;
   openEditFormVal: any;
   processing = false;
   exportError = null;
@@ -82,7 +80,10 @@ export class TerminologyDetailsComponent implements OnInit {
   ) {}
 
   get canChangeBranchName() {
-    return this.access.showEdit && this.mcTerminology.branchName !== defaultBranchName;
+    return (
+      this.access.showEdit &&
+      this.mcTerminology.branchName !== defaultBranchName
+    );
   }
 
   ngOnInit() {
@@ -91,12 +92,12 @@ export class TerminologyDetailsComponent implements OnInit {
   }
 
   terminologyDetails() {
-    this.originalTerminology = Object.assign({},this.mcTerminology);
+    this.originalTerminology = Object.assign({}, this.mcTerminology);
     this.access = this.securityHandler.elementAccess(this.mcTerminology);
     this.loadExporterList();
   }
 
-  save(){
+  save() {
     const resource: ModelUpdatePayload = {
       id: this.mcTerminology.id,
       label: this.mcTerminology.label,
@@ -251,13 +252,10 @@ export class TerminologyDetailsComponent implements OnInit {
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newversionmodel',
-      {
-        id: this.mcTerminology.id,
-        domainType: this.mcTerminology.domainType
-      }
-    );
+    this.stateHandler.Go('newversionmodel', {
+      id: this.mcTerminology.id,
+      domainType: this.mcTerminology.domainType
+    });
   }
 
   finalise() {
@@ -316,6 +314,13 @@ export class TerminologyDetailsComponent implements OnInit {
     this.editMode = false;
   }
 
+  openBulkEdit() {
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
+      id: this.mcTerminology.id,
+      domainType: this.mcTerminology.domainType
+    });
+  }
+
   loadExporterList() {
     this.exportList = [];
     this.securityHandler.isAuthenticated().subscribe((result) => {
@@ -342,9 +347,10 @@ export class TerminologyDetailsComponent implements OnInit {
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.mcTerminology)
+    this.dialog
+      .openChangeBranchName(this.mcTerminology)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ModelUpdatePayload = {
             id: this.mcTerminology.id,
             domainType: this.mcTerminology.domainType,
@@ -353,7 +359,7 @@ export class TerminologyDetailsComponent implements OnInit {
 
           return this.resources.terminology.update(payload.id, payload);
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -362,7 +368,9 @@ export class TerminologyDetailsComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Terminology branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Terminology branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'terminology',
           { id: this.mcTerminology.id },

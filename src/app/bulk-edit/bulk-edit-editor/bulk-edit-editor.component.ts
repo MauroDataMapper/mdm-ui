@@ -16,15 +16,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  CatalogueItem,
-  Profile,
-  ProfileContextCollection,
-  ProfileField
-} from '@maurodatamapper/mdm-resources';
-import { BroadcastService, MessageHandlerService } from '@mdm/services';
+import { ProfileField } from '@maurodatamapper/mdm-resources';
+import { MessageHandlerService } from '@mdm/services';
 import {
   CellClassParams,
   CellClassRules,
@@ -33,14 +27,30 @@ import {
   ColGroupDef,
   ColumnApi,
   GridApi,
-  GridReadyEvent
+  GridReadyEvent,
+  ICellEditorParams
 } from 'ag-grid-community';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../bulk-edit.types';
 import { CheckboxCellRendererComponent } from './cell-renderers/checkbox-cell-renderer/checkbox-cell-renderer.component';
 import { DateCellEditorComponent } from './cell-editors/date-cell-editor/date-cell-editor.component';
 import { BulkEditProfileService } from '../bulk-edit-profile.service';
+import {
+  MauroItem,
+  MauroProfileUpdatePayload,
+  MauroProfileValidationResult,
+  NavigatableProfile
+} from '@mdm/mauro/mauro-item.types';
+import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
+import { TextAreaCellEditorComponent } from './cell-editors/text-area-cell-editor/text-area-cell-editor.component';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  FullContentEditDialogComponent,
+  FullContentEditDialogData,
+  FullContentEditDialogResponse
+} from './dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-bulk-edit-editor',
@@ -48,7 +58,7 @@ import { BulkEditProfileService } from '../bulk-edit-profile.service';
   styleUrls: ['./bulk-edit-editor.component.scss']
 })
 export class BulkEditEditorComponent implements OnInit {
-  @Input() rootItem: CatalogueItem;
+  @Input() rootItem: MauroItem;
 
   @Output() backEvent = new EventEmitter<void>();
 
@@ -61,18 +71,19 @@ export class BulkEditEditorComponent implements OnInit {
    */
   frameworkComponents = {
     checkboxCellRenderer: CheckboxCellRendererComponent,
-    dateCellEditor: DateCellEditorComponent
+    dateCellEditor: DateCellEditorComponent,
+    pathCellRenderer: PathCellRendererComponent,
+    textAreaCellEditor: TextAreaCellEditorComponent
   };
 
-  validated: ProfileContextCollection;
+  validated: MauroProfileValidationResult[];
   totalValidationErrors = 0;
   loaded = false;
   columns: ColGroupDef[] = [];
   rows: BulkEditDataRow[] = [];
   cellRules: CellClassRules = {
-    'mdm-bulk-edit-editor__invalid': (params) =>
-      this.showValidationError(params),
-    'mdm-bulk-edit-editor__readonly': (params) =>
+    'mdm-bulk-editor__invalid': (params) => this.showValidationError(params),
+    'mdm-bulk-editor__readonly': (params) =>
       !params.colDef.editable &&
       params.colDef.cellRenderer !== 'checkboxCellRenderer'
   };
@@ -81,34 +92,29 @@ export class BulkEditEditorComponent implements OnInit {
     minWidth: 200
   };
 
+  nonStandardColWidths = [
+    {
+      field: 'description',
+      width: 300
+    }
+  ];
+
   private gridApi: GridApi;
   private gridColumnApi: ColumnApi;
 
   constructor(
     private messageHandler: MessageHandlerService,
     private bulkEditProfiles: BulkEditProfileService,
-    private broadcast: BroadcastService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.load();
-
-    this.broadcast.on('validateBulkEdit').subscribe(() => {
-      this.validate();
-    });
   }
 
   load() {
     this.bulkEditProfiles
-      .getMany(this.rootItem, {
-        multiFacetAwareItems: this.tab.multiFacetAwareItems,
-        profileProviderServices: [
-          {
-            name: this.tab.profile.name,
-            namespace: this.tab.profile.namespace
-          }
-        ]
-      })
+      .getMany(this.rootItem, this.tab.identifiers, this.tab.profileProvider)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -120,12 +126,8 @@ export class BulkEditEditorComponent implements OnInit {
       )
       .subscribe((profiles) => {
         this.tab.editedProfiles = profiles;
-        this.columns = this.getColumnsForProfile(
-          profiles.profilesProvided[0].profile
-        );
-        this.rows = profiles.profilesProvided.map((profileContext) =>
-          this.mapProfileToRow(profileContext.profile)
-        );
+        this.columns = this.getColumnsForProfile(profiles[0]);
+        this.rows = profiles.map((profile) => this.mapProfileToRow(profile));
 
         this.validate();
         this.loaded = true;
@@ -157,25 +159,48 @@ export class BulkEditEditorComponent implements OnInit {
     this.totalValidationErrors = 0;
 
     this.bulkEditProfiles
-      .validateMany(this.rootItem, {
-        profilesProvided: this.tab.editedProfiles.profilesProvided
-      })
+      .validateMany(
+        this.rootItem,
+        this.tab.profileProvider,
+        this.tab.editedProfiles
+      )
+      .subscribe((results) => {
+        this.validated = results;
+        this.totalValidationErrors = this.validated.reduce((current, next) => {
+          return current + (next.errors?.length ?? 0);
+        }, 0);
+        // Trigger grid redraw at correct time
+        setTimeout(() => this.gridApi?.redrawRows(), 0);
+      });
+  }
+
+  save() {
+    const payloads: MauroProfileUpdatePayload[] = this.tab.editedProfiles.map(
+      (profile) => {
+        return {
+          profile,
+          identifier: this.tab.identifiers.find(
+            (identifier) => identifier.id === profile.id
+          )
+        };
+      }
+    );
+
+    this.bulkEditProfiles
+      .saveMany(this.rootItem, this.tab.profileProvider, payloads)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.validated = error.error as ProfileContextCollection;
-          this.totalValidationErrors = this.validated.profilesProvided.reduce(
-            (current, next) => {
-              return current + (next.errors?.total ?? 0);
-            },
-            0
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem saving changes for '${this.tab.displayName}'.`,
+            error
           );
-          this.gridApi?.redrawRows();
           return EMPTY;
         })
       )
       .subscribe(() => {
-        this.validated = null;
-        this.gridApi?.redrawRows();
+        this.messageHandler.showSuccess(
+          `'${this.tab.displayName}' was saved successfully.`
+        );
       });
   }
 
@@ -187,12 +212,12 @@ export class BulkEditEditorComponent implements OnInit {
     const data = params.data as BulkEditDataRow;
     let hasError = false;
 
-    this.validated.profilesProvided.forEach((profileProvided) => {
+    this.validated.forEach((validationResult) => {
       if (
-        profileProvided.profile.label === data.element &&
-        profileProvided.errors
+        validationResult.profile.label === data.label &&
+        validationResult.errors
       ) {
-        profileProvided.errors.errors.forEach((error) => {
+        validationResult.errors.forEach((error) => {
           if (error.metadataPropertyName === params.colDef.field) {
             hasError = true;
           }
@@ -204,18 +229,54 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   private screenResize() {
+    const nonStandardFields = this.nonStandardColWidths.map((c) => c.field);
+
     const columnIds = this.gridColumnApi
       .getAllColumns()
+      .filter((col) => !nonStandardFields.includes(col.getColDef().field))
       .map((col) => col.getColId());
+
+    this.excludeAutoResizeColumns(columnIds);
     this.gridColumnApi.autoSizeColumns(columnIds);
+
+    this.nonStandardColWidths
+      .map((nscw) => {
+        const column = this.gridColumnApi
+          .getAllColumns()
+          .find((col) => col.getColDef().field === nscw.field);
+        return {
+          column,
+          width: nscw.width
+        };
+      })
+      .forEach((value) => {
+        this.gridColumnApi.setColumnWidth(value.column, value.width);
+      });
   }
 
-  private getColumnsForProfile(profile: Profile): ColGroupDef[] {
+  private excludeAutoResizeColumns(columnIds) {
+    const pathColKey = 'Path';
+    const pathId = this.gridColumnApi.getColumn(pathColKey).getColId();
+    const pathIndex = columnIds.indexOf(pathId);
+    if (pathIndex > -1) {
+      columnIds.splice(pathIndex, 1);
+    }
+  }
+
+  private getColumnsForProfile(profile: NavigatableProfile): ColGroupDef[] {
     const elementGroup: ColGroupDef = {
       children: [
         {
-          headerName: 'Element',
-          field: 'element',
+          headerName: 'Item',
+          field: 'label',
+          pinned: 'left'
+        },
+        {
+          headerName: 'Path',
+          field: 'path',
+          cellRenderer: 'pathCellRenderer',
+          cellRendererParams: { profile },
+          resizable: true,
           pinned: 'left'
         }
       ]
@@ -259,10 +320,27 @@ export class BulkEditEditorComponent implements OnInit {
       };
     }
 
+    if (field.dataType === 'model') {
+      column.editable = false;
+      column.valueGetter = (params) =>
+        params.data[field.metadataPropertyName].label;
+    }
+
+    if (field.dataType === 'text') {
+      column.cellEditor = 'textAreaCellEditor';
+      column.cellEditorParams = {
+        rows: 10,
+        cols: 50,
+        onEditClick: (value: string, params: ICellEditorParams) => {
+          this.editUsingFullContentEditor(value, field.fieldName, params);
+        }
+      };
+    }
+
     return column;
   }
 
-  private mapProfileToRow(profile: Profile): BulkEditDataRow {
+  private mapProfileToRow(profile: NavigatableProfile): BulkEditDataRow {
     const data = {};
     profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
@@ -271,9 +349,38 @@ export class BulkEditEditorComponent implements OnInit {
     });
 
     return {
-      element: profile.label,
+      label: profile.label,
       profile,
       ...data
     };
+  }
+
+  private editUsingFullContentEditor(
+    value: string,
+    fieldName: string,
+    params: ICellEditorParams
+  ) {
+    this.dialog
+      .open<
+        FullContentEditDialogComponent,
+        FullContentEditDialogData,
+        FullContentEditDialogResponse
+      >(FullContentEditDialogComponent, {
+        data: {
+          title: params.data.label,
+          subTitle: fieldName,
+          value
+        },
+        minWidth: 800,
+        maxHeight: 600
+      })
+      .afterClosed()
+      .pipe(filter((response) => response.status === ModalDialogStatus.Ok))
+      .subscribe((response) => {
+        const node = params.node;
+        const column = params.column;
+        node.setDataValue(column, response.value);
+        this.gridApi.flashCells({ rowNodes: [node], columns: [column] });
+      });
   }
 }

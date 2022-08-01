@@ -18,14 +18,25 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
-  CatalogueItem,
+  CatalogueItemDomainType,
   isModelDomainType,
-  ProfileContextCollection,
-  ProfileContextIndexPayload,
-  ProfileContextPayload,
+  Profile,
+  ProfileProvider,
   ProfileSummary
 } from '@maurodatamapper/mdm-resources';
+import {
+  MauroIdentifier,
+  MauroItem,
+  MauroProfileUpdatePayload,
+  MauroProfileValidationResult,
+  NavigatableProfile
+} from '@mdm/mauro/mauro-item.types';
+import {
+  DefaultProfileProviderService,
+  isDefaultProvider
+} from '@mdm/mauro/profiles/default-profile-provider.service';
 import { MauroProfileProviderService } from '@mdm/mauro/profiles/mauro-profile-provider.service';
+import { ProfileProviderService } from '@mdm/mauro/profiles/profile-provider-service';
 import { forkJoin, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -36,7 +47,10 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class BulkEditProfileService {
-  constructor(private mauroProfiles: MauroProfileProviderService) {}
+  constructor(
+    private mauroProfiles: MauroProfileProviderService,
+    private defaultProfiles: DefaultProfileProviderService
+  ) {}
 
   /**
    * List all available profiles that apply to a catalogue item - both used and unused.
@@ -44,74 +58,115 @@ export class BulkEditProfileService {
    * @param item A catalogue item, including domain type, to identify profiles available.
    * @returns An observable of an array of {@link ProfileSummary} objects.
    */
-  listAvailableProfiles(item: CatalogueItem): Observable<ProfileSummary[]> {
+  listAvailableProfiles(item: MauroItem): Observable<ProfileSummary[]> {
     return forkJoin([
-      this.mauroProfiles.usedProfiles(item),
-      this.mauroProfiles.unusedProfiles(item)
-    ]).pipe(map(([used, unused]) => [...used, ...unused]));
+      this.listAvailableProfilesFromProvider(this.defaultProfiles, item),
+      this.listAvailableProfilesFromProvider(this.mauroProfiles, item)
+    ]).pipe(map(([defaults, mauro]) => [...defaults, ...mauro]));
   }
 
   /**
    * Get all profile objects for a set of child catalogue items under a given root item.
    *
    * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of child catalogue items to get profiles for, and the profile providers
-   * to map to the child items.
+   * @param identifiers An array of {@link MauroIdentifier} objects containing identification information.
+   * At least an ID and domain type is required, but some domain types based on hierarchy require further details.
+   * @param provider The namespace/name of the profile provider to use.
    * @returns An observable containing the collection of profile objects for each child item.
    */
   getMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextIndexPayload
-  ): Observable<ProfileContextCollection> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    rootItem: MauroItem,
+    identifiers: MauroIdentifier[],
+    provider: ProfileProvider
+  ): Observable<NavigatableProfile[]> {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
 
-    return this.mauroProfiles.getMany(rootItem, payload);
+    return this.getProviderService(provider).getMany(
+      rootItem,
+      identifiers,
+      provider
+    );
   }
 
   /**
    * Save all profile objects for a set of child catalogue items under a given root item.
    *
-   * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of profile objects to save. Each profile provided must be mapped to a child
-   * item of the root model.
+   * @param rootItem The root catalogue item to base all further items under.
+   * @param provider The namespace/name of the profile provider to use.
+   * @param payloads An array of profile/identifier pairs, containing the data to update.
    * @returns An observable containing the collection of profile objects for each child item.
    */
   saveMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextPayload
-  ): Observable<ProfileContextCollection> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    rootItem: MauroItem,
+    provider: ProfileProvider,
+    payloads: MauroProfileUpdatePayload[]
+  ): Observable<Profile[]> {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
 
-    return this.mauroProfiles.saveMany(rootItem, payload);
+    return this.getProviderService(provider).saveMany(
+      rootItem,
+      provider,
+      payloads
+    );
   }
 
   /**
    * Validate all profile objects for a set of child catalogue items under a given root item.
    *
    * @param rootItem The root model to locate the child items. This must be a model.
-   * @param payload The payload containing the list of profile objects to validate. Each profile provided must be mapped to a child
-   * item of the root model.
+   * @param provider The namespace/name of the profile provider to use.
+   * @param profiles The profiles to validate.
    * @returns An observable containing the collection of profile objects for each child item. Each profile may contain validation
    * errors to review.
    */
   validateMany(
-    rootItem: CatalogueItem,
-    payload: ProfileContextPayload
-  ): Observable<ProfileContextCollection> {
-    if (!isModelDomainType(rootItem.domainType)) {
+    rootItem: MauroItem,
+    provider: ProfileProvider,
+    profiles: Profile[]
+  ): Observable<MauroProfileValidationResult[]> {
+    if (!this.isCorrectDomainType(rootItem.domainType)) {
       return throwError(
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
 
-    return this.mauroProfiles.validateMany(rootItem, payload);
+    return this.getProviderService(provider).validateMany(
+      rootItem,
+      provider,
+      profiles
+    );
+  }
+
+  private isCorrectDomainType(domainType: CatalogueItemDomainType) {
+    return (
+      isModelDomainType(domainType) ||
+      domainType === CatalogueItemDomainType.DataClass
+    );
+  }
+
+  private listAvailableProfilesFromProvider(
+    provider: ProfileProviderService,
+    item: MauroItem
+  ) {
+    return forkJoin([
+      provider.usedProfiles(item),
+      provider.unusedProfiles(item)
+    ]).pipe(map(([used, unused]) => [...used, ...unused]));
+  }
+
+  private getProviderService(
+    provider: ProfileProvider
+  ): ProfileProviderService {
+    return isDefaultProvider(provider)
+      ? this.defaultProfiles
+      : this.mauroProfiles;
   }
 }

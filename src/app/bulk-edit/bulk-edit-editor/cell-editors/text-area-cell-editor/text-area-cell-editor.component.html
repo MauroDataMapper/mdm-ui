@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2022 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,41 +15,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-
-$error-color: #a5122a;
-
-.mdm-bulk-edit {
-  width: 90%;
-  margin: 0 auto;
-
-  &__selection {
-    margin: 1.5em 0;
-  }
-
-  &__select-count {
-    &--invalid {
-      color: $error-color;
-    }
-  }
-
-  &__select-list {
-    margin: 1.5em 0;
-  }
-
-  &__scoll-viewport {
-    height: 50vh;
-    width: 100%;
-  }
-
-  &__select-filter {
-    button,
-    input {
-      margin: 0 0.5em;
-    }
-
-    input[type='search'] {
-      padding: 0.375rem 0.75rem;
-    }
-  }
-}
+-->
+<div class="mdm-text-area-cell-editor">
+  <div class="mdm-text-area-cell-editor__input">
+    <textarea
+      #valueInput
+      aria-label="Input editor"
+      [rows]="params.rows ?? 10"
+      [cols]="params.cols ?? 50"
+      [(ngModel)]="value"
+      (keydown)="onKeyDown($event)"
+    ></textarea>
+  </div>
+  <div class="mdm-text-area-cell-editor__footer">
+    <span><strong>Shift + Enter</strong> for new line</span>
+    <button
+      *ngIf="params.onEditClick"
+      mat-button
+      matTooltip="Edit the text using a full editor"
+      (click)="onEdit()"
+    >
+      <span class="fas fa-external-link-alt"></span>
+      Pop-out
+    </button>
+  </div>
+</div>

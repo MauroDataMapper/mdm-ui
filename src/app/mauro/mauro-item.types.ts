@@ -17,6 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
+  Breadcrumb,
   CatalogueItem,
   MdmResponse,
   Profile,
@@ -82,4 +83,8 @@ export interface MauroProfileUpdatePayload {
 export interface MauroProfileValidationResult {
   profile: Profile;
   errors?: ProfileValidationError[];
+}
+
+export interface NavigatableProfile extends Profile {
+  breadcrumbs?: Breadcrumb[];
 }

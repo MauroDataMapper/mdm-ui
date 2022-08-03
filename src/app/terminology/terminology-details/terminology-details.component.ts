@@ -244,7 +244,7 @@ export class TerminologyDetailsComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              "Are you sure you want to <span class='warning'>permanently</span> delete this Terminology?"
+              'Are you sure you want to <span class="warning">permanently</span> delete this Terminology?'
           }
         },
         {
@@ -253,7 +253,7 @@ export class TerminologyDetailsComponent implements OnInit {
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message:
-              "<strong>Note: </strong>All its 'Terms' will be deleted <span class='warning'>permanently</span>."
+              '<strong>Note: </strong>All its "Terms" will be deleted <span class="warning">permanently</span>.'
           }
         }
       )

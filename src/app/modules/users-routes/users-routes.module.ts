@@ -26,6 +26,8 @@ import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-pa
 import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
 import { AsyncJobListComponent } from '@mdm/userArea/async-job-list/async-job-list.component';
 import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-job-detail.component';
+import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
+import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
 
 export const pageRoutes = {
   states: [
@@ -64,6 +66,19 @@ export const pageRoutes = {
       url: '/profile/jobs/{id}',
       component: AsyncJobDetailComponent,
       params: { id: { value: null, squash: true } }
+    },
+    {
+      name: 'appContainer.userArea.domainExports',
+      url: '/profile/exports',
+      component: DomainExportsListComponent
+    },
+    {
+      name: 'appContainer.userArea.domainExportsDetail',
+      url: '/profile/exports/{id}',
+      component: DomainExportsDetailComponent,
+      params: {
+        id: { value: null, squash: true }
+      }
     }
   ]
 };

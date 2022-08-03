@@ -54,7 +54,6 @@ import { ElementDataTypeComponent } from '@mdm/shared/element-data-type/element-
 import { MultiplicityComponent } from '@mdm/shared/multiplicity/multiplicity.component';
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
-import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
@@ -225,7 +224,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
-    FileSizePipe,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -404,7 +402,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
-    FileSizePipe,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,

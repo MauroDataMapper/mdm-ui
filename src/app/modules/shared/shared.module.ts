@@ -60,6 +60,7 @@ import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    MarkedPipe
+    MarkedPipe,
+    FileSizePipe
   ],
   imports: [
     CommonModule,
@@ -152,7 +154,8 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    MarkedPipe
+    MarkedPipe,
+    FileSizePipe
   ]
 })
 export class SharedModule {}

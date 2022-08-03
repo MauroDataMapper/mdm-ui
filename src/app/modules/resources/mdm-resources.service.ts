@@ -67,7 +67,9 @@ import {
   ImportableResource,
   ForkableResource,
   BranchableResource,
-  ExportableResource
+  ExportableResource,
+  MdmDomainExportsResource,
+  CommonResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -186,11 +188,39 @@ export class MdmResourcesService {
   pluginDoi = new MdmPluginDoiResource(this.resourcesConfig, this.restHandler);
   merge = new MdmMergeResource(this.resourcesConfig, this.restHandler);
   asyncJobs = new MdmAsyncJobsResource(this.resourcesConfig, this.restHandler);
+  domainExports = new MdmDomainExportsResource(
+    this.resourcesConfig,
+    this.restHandler
+  );
 
   constructor(
     private resourcesConfig: MdmResourcesConfiguration,
     private restHandler: MdmRestHandlerService
   ) {}
+
+  getCommonResource(domain: string): CommonResource {
+    if (domain === 'dataModels' || domain === 'DataModel') {
+      return this.dataModel;
+    }
+
+    if (domain === 'terminologies' || domain === 'Terminology') {
+      return this.terminology;
+    }
+
+    if (domain === 'codeSets' || domain === 'CodeSet') {
+      return this.codeSet;
+    }
+
+    if (domain === 'referenceDataModels' || domain === 'ReferenceDataModel') {
+      return this.referenceDataModel;
+    }
+
+    if (domain === 'domainExports') {
+      return this.domainExports;
+    }
+
+    return null;
+  }
 
   getSearchableResource(
     domainType: ModelDomain | ContainerDomain | CatalogueItemDomainType

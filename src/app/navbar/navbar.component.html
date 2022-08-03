@@ -135,6 +135,10 @@ SPDX-License-Identifier: Apache-2.0
                   <span class="fas fa-tasks"></span>
                   <span>Jobs</span>
                 </a>
+                <a mat-menu-item uiSref="appContainer.userArea.domainExports">
+                  <span class="fas fa-download"></span>
+                  <span>Exported models</span>
+                </a>
               </div>
               <div *ngIf="isAdministrator">
                 <h5 class="marginless text-muted menu-label">Admin settings</h5>
@@ -335,6 +339,15 @@ SPDX-License-Identifier: Apache-2.0
         >
           <span class="fas fa-tasks"></span>
           <span>Jobs</span>
+        </a>
+        <a
+          mat-menu-item
+          uiSref="appContainer.userArea.domainExports"
+          (click)="sidenav.toggle()"
+          uiSrefActive="active"
+        >
+          <span class="fas fa-download"></span>
+          <span>Exported models</span>
         </a>
       </div>
       <div *ngIf="isLoggedIn && isAdministrator">

@@ -18,7 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import {
+  isResponseAccepted,
+  MdmResourcesService
+} from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
@@ -26,8 +29,21 @@ import { BroadcastService } from '../services/broadcast.service';
 import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
-import { SharedService } from '@mdm/services';
+import {
+  CatalogueItemDomainType,
+  Importer,
+  ImporterDetailResponse,
+  ImporterIndexResponse,
+  ImporterParameterGroup,
+  ImportResult,
+  ImportResultIndexResponse,
+  MdmIndexBody,
+  MdmTreeItem,
+  ModelDomain
+} from '@maurodatamapper/mdm-resources';
+import { catchError, finalize } from 'rxjs/operators';
+import { EMPTY, timer } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mdm-import',
@@ -35,22 +51,19 @@ import { SharedService } from '@mdm/services';
   styleUrls: ['./import-models.component.sass']
 })
 export class ImportModelsComponent implements OnInit {
-  importers: any;
+  importers: Importer[];
   importHasError: boolean;
   importErrors: any;
 
-  selectedImporterGroups = [];
+  selectedImporterGroups: ImporterParameterGroup[] = [];
   step = 1;
-  importerHelp: any;
+  importerHelp: string;
 
-  selectedImporterStr: any;
-  selectedImporterObj: any;
+  selectedImporter: Importer;
 
   importingInProgress: boolean;
   importCompleted: boolean;
-  importResult: any;
-
-  formData = new FormData();
+  importResult?: MdmIndexBody<ImportResult>;
 
   formOptionsMap = {
     Integer: 'number',
@@ -64,9 +77,12 @@ export class ImportModelsComponent implements OnInit {
     int: 'number',
     File: 'file'
   };
-  importType: any;
+  importType: ModelDomain;
 
-  allowedFolderTreeDomainTypes = [CatalogueItemDomainType.Folder];
+  allowedFolderTreeDomainTypes = [
+    CatalogueItemDomainType.Folder,
+    CatalogueItemDomainType.VersionedFolder
+  ];
 
   constructor(
     private title: Title,
@@ -76,19 +92,14 @@ export class ImportModelsComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
-    private modelTree: ModelTreeService,
-    private shared: SharedService
-  ) { }
+    private modelTree: ModelTreeService
+  ) {}
 
   ngOnInit() {
     this.importType = this.uiRouterGlobals.params.importType
       ? this.uiRouterGlobals.params.importType
       : 'dataModels';
     this.title.setTitle('Import');
-
-    if (this.shared.features.useVersionedFolders) {
-      this.allowedFolderTreeDomainTypes.push(CatalogueItemDomainType.VersionedFolder);
-    }
 
     this.loadImporters();
   }
@@ -100,199 +111,200 @@ export class ImportModelsComponent implements OnInit {
   }
 
   loadImporters() {
-    if (this.importType === 'dataModels') {
-      this.resources.dataModel.importers().subscribe(
-        (result) => {
-          this.importers = result.body;
-        },
-        (error) => {
-          this.messageHandler.showError('Can not load importers!', error);
-        }
-      );
-    } else if (this.importType === 'terminologies') {
-      this.resources.terminology.importers().subscribe(
-        (result) => {
-          this.importers = result.body;
-        },
-        (error) => {
-          this.messageHandler.showError('Can not load importers!', error);
-        }
-      );
-    } else if (this.importType === 'codeSets') {
-      this.resources.codeSet.importers().subscribe(
-        (result) => {
-          this.importers = result.body;
-        },
-        (error) => {
-          this.messageHandler.showError('Can not load importers!', error);
-        }
-      );
-    } else if (this.importType === 'referenceDataModels') {
-      this.resources.referenceDataModel.importers().subscribe(
-        (result) => {
-          this.importers = result.body;
-        },
-        (error) => {
-          this.messageHandler.showError('Can not load importers!', error);
-        }
-      );
-    }
+    this.resources
+      .getImportableResource(this.importType)
+      .importers()
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'A problem occurred whilst finding available importers.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((importers: ImporterIndexResponse) => {
+        this.importers = importers.body;
+      });
   }
 
-  loadImporterParameters = (selectedItem) => {
-    if (!selectedItem) {
+  loadImporterParameters(importer: Importer) {
+    if (!importer) {
       this.selectedImporterGroups = [];
       this.step = 1;
       return;
     }
 
     this.importerHelp = this.helpDialogueHandler.getImporterHelpTopic(
-      selectedItem.name
+      importer.name
     );
 
-    this.resources.importer.get(selectedItem.namespace, selectedItem.name, selectedItem.version).subscribe((res) => {
-      const result = res.body;
-      this.selectedImporterGroups = result.parameterGroups;
+    this.resources.importer
+      .get(importer.namespace, importer.name, importer.version)
+      .subscribe((res: ImporterDetailResponse) => {
+        const result = res.body;
+        this.selectedImporterGroups = result.parameterGroups;
 
-      this.selectedImporterGroups.forEach((selectedImporterGroup) => {
-        const parameters = selectedImporterGroup.parameters;
-        parameters.forEach((option) => {
-          // add default value
-          option.value = '';
+        this.selectedImporterGroups.forEach((selectedImporterGroup) => {
+          const parameters = selectedImporterGroup.parameters;
+          parameters.forEach((option) => {
+            // add default value
+            option.value = '';
 
-          if (option.optional === undefined) {
-            option.optional = false;
-          }
+            if (option.optional === undefined) {
+              option.optional = false;
+            }
 
-          // When the input is just a checkbox we give it 'false' as the default value
-          // so don't mark it as optional, as the form will be invalid unless the user checks or unChecks the input
-          if (option.type === 'Boolean' || option.type === 'boolean') {
-            option.optional = true;
-            option.value = false;
-          }
+            // When the input is just a checkbox we give it 'false' as the default value
+            // so don't mark it as optional, as the form will be invalid unless the user checks or unChecks the input
+            if (option.type === 'Boolean' || option.type === 'boolean') {
+              option.optional = true;
+              option.value = false;
+            }
 
-          // If the model tree currently has a folder selected, default to that one initially
-          if (option.type === 'Folder' && this.modelTree.currentNode && this.modelTree.currentNode.domainType === 'Folder') {
-            option.value = [this.modelTree.currentNode];
-          }
+            // If the model tree currently has a folder selected, default to that one initially
+            if (
+              option.type === 'Folder' &&
+              this.modelTree.currentNode &&
+              this.modelTree.currentNode.domainType === 'Folder'
+            ) {
+              option.value = [this.modelTree.currentNode];
+            }
+          });
         });
       });
-    });
-  };
+  }
 
-  importerChanged = () => {
+  importerChanged() {
     this.step = 2;
-    if (this.selectedImporterStr.length === 0) {
-      this.selectedImporterObj = null;
-    }
-    this.selectedImporterObj = Object.assign({}, this.selectedImporterStr);
-    this.loadImporterParameters(this.selectedImporterObj);
-  };
+    this.loadImporterParameters(this.selectedImporter);
+  }
 
-  submitForm = (isValid) => {
-    // if the form is not valid, return
+  submitForm(isValid: boolean) {
     if (!isValid) {
       return;
     }
     this.startImport();
-  };
+  }
 
-  startImport = () => {
+  startImport() {
+    if (!this.selectedImporter) {
+      return;
+    }
+
     this.importingInProgress = true;
     this.importCompleted = false;
     this.importResult = null;
 
-    const namespace = this.selectedImporterObj.namespace;
-    const name = this.selectedImporterObj.name;
-    const version = this.selectedImporterObj.version;
-    this.formData = new FormData();
+    const formData = this.mapFormData();
+
+    this.resources
+      .getImportableResource(this.importType)
+      .importModels(
+        this.selectedImporter.namespace,
+        this.selectedImporter.name,
+        this.selectedImporter.version,
+        formData
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          this.handleImporterError(error);
+          return EMPTY;
+        }),
+        finalize(() => (this.importingInProgress = false))
+      )
+      .subscribe((response: ImportResultIndexResponse) => {
+        this.importCompleted = true;
+        this.handleImporterSuccess(response);
+      });
+  }
+
+  loadHelp() {
+    this.helpDialogueHandler.open('Importing_models');
+  }
+
+  loadImporterHelp() {
+    this.helpDialogueHandler.open(this.importerHelp);
+  }
+
+  private mapFormData() {
+    const formData = new FormData();
 
     this.selectedImporterGroups.forEach((selectedImporterGroup) => {
       const parameters = selectedImporterGroup.parameters;
       parameters.forEach((param) => {
         if (param.type === 'File') {
-          this.formData.append(param.name, this.getFile(param.name));
+          formData.append(param.name, this.getFile(param.name));
         } else if (param.type === 'DataModel') {
-          this.formData.append(param.name, param.value[0].id);
+          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
         } else if (param.type === 'Folder' && param.value && param.value[0]) {
-          this.formData.append(param.name, param.value[0].id);
+          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
         } else {
-          this.formData.append(param.name, param.value);
+          formData.append(param.name, param.value); // eslint-disable-line @typescript-eslint/no-unsafe-argument
         }
       });
     });
 
-    let method = this.resources.dataModel.importModels(
-      namespace,
-      name,
-      version,
-      this.formData
-    );
-    if (this.importType === 'terminologies') {
-      method = this.resources.terminology.importModels(
-        namespace,
-        name,
-        version,
-        this.formData
-      );
-    } else if (this.importType === 'referenceDataModels') {
-      method = this.resources.referenceDataModel.importModels(
-        namespace,
-        name,
-        version,
-        this.formData
-      );
+    return formData;
+  }
+
+  private getFile(paramName: string) {
+    const element = document.getElementById(paramName) as HTMLInputElement;
+    return element?.files?.[0];
+  }
+
+  private handleImporterError(error: HttpErrorResponse) {
+    if (error.status === 422) {
+      this.importHasError = true;
+      if (error.error.validationErrors) {
+        this.importErrors = error.error.validationErrors.errors;
+      } else if (error.error.errors) {
+        this.importErrors = error.error.errors;
+      }
     }
 
-    method.subscribe(
-      (result: any) => {
-        this.importingInProgress = false;
-        this.importCompleted = true;
-        this.importResult = result;
-        this.importHasError = false;
-        this.importErrors = [];
-        this.messageHandler.showSuccess('Models imported successfully!');
-        this.broadcast.reloadCatalogueTree();
-        if (result && result.body.count === 1) {
-          setTimeout(() => {
-            this.stateHandler.Go(
-              ModelDomainRequestType[this.importType],
-              { id: result.body.items[0].id },
-              { reload: true, location: true }
-            );
-          }, 500);
-        }
-      },
-      (error) => {
-        if (error.status === 422) {
-          this.importHasError = true;
-          if (error.error.validationErrors) {
-            this.importErrors = error.error.validationErrors.errors;
-          } else if (error.error.errors) {
-            this.importErrors = error.error.errors;
-          }
-        }
-        this.importingInProgress = false;
-        this.messageHandler.showError('Error in import process', '');
-      }
+    this.importingInProgress = false;
+    this.messageHandler.showError(
+      'There was a problem importing the models. Review any errors highlighted and try again.'
     );
-  };
+  }
 
-  getFile = (paramName) => {
-    const element: any = document.getElementById(paramName);
-    return element && element.files ? element.files[0] : '';
-  };
+  private handleImporterSuccess(response: ImportResultIndexResponse) {
+    if (isResponseAccepted(response)) {
+      this.handleAsyncImporterSuccess();
+      return;
+    }
 
-  loadHelp = () => {
-    this.helpDialogueHandler.open('Importing_models');
-  };
+    this.handleStandardImporterSuccess(response);
+  }
 
-  loadImporterHelp = () => {
-    this.helpDialogueHandler.open(this.importerHelp);
-  };
+  private handleStandardImporterSuccess(response: ImportResultIndexResponse) {
+    this.importResult = response.body;
+    this.importHasError = false;
+    this.importErrors = [];
+    this.messageHandler.showSuccess('Models were imported successfully!');
 
-  checkIf() {
-    // open the devtools and go to the view...code execution will stop here!
-    // ..code to be checked... `value` can be inspected now along with all of the other component attributes
+    this.broadcast.reloadCatalogueTree();
+
+    if (response && response.body.count === 1) {
+      // Delay the redirect to the one imported model
+      timer(500).subscribe(() => {
+        const state: string = ModelDomainRequestType[this.importType];
+        this.stateHandler.Go(
+          state,
+          { id: response.body.items[0].id },
+          { reload: true, location: true }
+        );
+      });
+    }
+  }
+
+  private handleAsyncImporterSuccess() {
+    this.importHasError = false;
+    this.importErrors = [];
+    this.messageHandler.showInfo(
+      'A new background task to import your model(s) has started. You can continue working while the import continue.'
+    );
+    this.stateHandler.Go('alldatamodel');
   }
 }

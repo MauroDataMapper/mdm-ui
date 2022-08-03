@@ -58,7 +58,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() rootChange = new EventEmitter<any>();
   @Input() defaultElements: any;
   @Input() defaultCheckedMap: any;
-  @Input() onSelect: any;
+  @Input() onSelect: (items: MdmTreeItem[]) => void;
   @Output() selectChange = new EventEmitter<any>();
   @Input() onCheck: any;
   @Input() isRequired: any;
@@ -84,7 +84,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() filterByDomainType: CatalogueItemDomainType[];
   @Input() showInputGroup = true;
   @Output() checkChange = new EventEmitter<any>();
-  @Output() ngModelChange = new EventEmitter<any>();
+  @Output() ngModelChange = new EventEmitter<MdmTreeItem[]>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
   selectedElementsVal: MdmTreeItem[];

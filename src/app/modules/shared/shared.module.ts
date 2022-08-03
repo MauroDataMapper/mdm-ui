@@ -59,6 +59,7 @@ import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-a
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
+import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component
     ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    MarkedPipe
   ],
   imports: [
     CommonModule,
@@ -149,7 +151,8 @@ import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component
     ContentEditorComponent,
     MoreDescriptionComponent,
     SortByComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    MarkedPipe
   ]
 })
 export class SharedModule {}

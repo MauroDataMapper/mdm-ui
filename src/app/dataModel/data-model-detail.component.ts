@@ -18,11 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { EMPTY } from 'rxjs';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { SharedService } from '../services/shared.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,6 +36,7 @@ import { catchError, finalize, switchMap } from 'rxjs/operators';
 import {
   DataModelDetail,
   DataModelDetailResponse,
+  Exporter,
   ModelUpdatePayload,
   MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
@@ -45,6 +45,7 @@ import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -59,10 +60,8 @@ export class DataModelDetailComponent implements OnInit {
   isAdministrator = false;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
-  exporting: boolean;
   processing = false;
   compareToList = [];
-  exportList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
 
@@ -71,7 +70,6 @@ export class DataModelDetailComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private exportHandler: ExportHandlerService,
@@ -91,7 +89,6 @@ export class DataModelDetailComponent implements OnInit {
     this.securityHandler
       .isAdministrator()
       .subscribe((state) => (this.isAdministrator = state));
-    this.loadExporterList();
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
     this.title.setTitle(`${this.dataModel?.type} - ${this.dataModel?.label}`);
@@ -402,62 +399,59 @@ export class DataModelDetailComponent implements OnInit {
     });
   }
 
-  export(exporter) {
-    this.processing = true;
-    this.exportHandler
-      .exportDataModel([this.dataModel], exporter, 'dataModels')
-      .subscribe(
-        (dataModel) => {
-          if (dataModel != null) {
-            const tempDownloadList = Object.assign([], this.downloadLinks);
-            const label =
-              [this.dataModel].length === 1
-                ? [this.dataModel][0].label
-                : 'data_models';
-            const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([dataModel.body], {
-              type: exporter.fileType
-            });
-            const link = this.exportHandler.createBlobLink(file, fileName);
-            tempDownloadList.push(link);
-            this.downloadLinks = tempDownloadList;
-            this.processing = false;
-          } else {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem exporting the Data Model.',
-              ''
-            );
-          }
-        },
-        (error) => {
-          this.processing = false;
+  exportModel() {
+    this.dialog
+      .openExportModel({ domain: 'dataModels' })
+      .pipe(
+        switchMap((response) => {
+          this.processing = true;
+          return forkJoin([
+            of(response.exporter),
+            this.exportHandler.exportDataModel(
+              [this.dataModel],
+              response.exporter,
+              'dataModels',
+              response.parameters
+            )
+          ]);
+        }),
+        catchError((error) => {
           this.messageHandler.showError(
-            'There was a problem exporting the Data Model.',
+            'There was a problem exporting the model.',
             error
           );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe(([exporter, response]) => {
+        if (response.status === 202) {
+          this.handleAsyncExporterResponse();
+          return;
         }
-      );
+
+        this.handleStandardExporterResponse(exporter, response);
+      });
   }
 
-  loadExporterList() {
-    this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((dataModel) => {
-      if (!dataModel.body.authenticatedSession) {
-        return;
-      }
-
-      this.resourcesService.dataModel.exporters().subscribe(
-        (res) => {
-          this.exportList = res.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
-        }
-      );
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.dataModel.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
     });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
   }
 }

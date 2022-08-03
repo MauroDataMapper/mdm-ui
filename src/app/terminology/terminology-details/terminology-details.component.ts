@@ -33,15 +33,17 @@ import {
 import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
+  Exporter,
   ModelUpdatePayload,
   TerminologyDetail,
   TerminologyDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Access } from '@mdm/model/access';
-import { catchError, switchMap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { catchError, switchMap, finalize } from 'rxjs/operators';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -54,13 +56,9 @@ export class TerminologyDetailsComponent implements OnInit {
   originalTerminology: TerminologyDetail;
   openEditFormVal: any;
   processing = false;
-  exportError = null;
-  exportList = [];
   isLoggedIn = this.sharedService.isLoggedIn();
-  exportedFileIsReady = false;
   deleteInProgress = false;
   errorMessage: string;
-  exporting: boolean;
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
   editMode = false;
@@ -94,7 +92,6 @@ export class TerminologyDetailsComponent implements OnInit {
   terminologyDetails() {
     this.originalTerminology = Object.assign({}, this.mcTerminology);
     this.access = this.securityHandler.elementAccess(this.mcTerminology);
-    this.loadExporterList();
   }
 
   save() {
@@ -129,48 +126,60 @@ export class TerminologyDetailsComponent implements OnInit {
     this.messageService.toggleSearch();
   }
 
-  export(exporter) {
-    this.exportError = null;
-    this.processing = true;
-    this.exportedFileIsReady = false;
-    this.exportHandler
-      .exportDataModel([this.mcTerminology], exporter, 'terminologies')
-      .subscribe(
-        (result) => {
-          if (result != null) {
-            this.exportedFileIsReady = true;
-            const tempDownloadList = Object.assign([], this.downloadLinks);
-            const label =
-              [this.mcTerminology].length === 1
-                ? [this.mcTerminology][0].label
-                : 'data_models';
-            const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([result.body], { type: exporter.fileType });
-            const link = this.exportHandler.createBlobLink(file, fileName);
-            tempDownloadList.push(link);
-            this.downloadLinks = tempDownloadList;
-
-            this.processing = false;
-          } else {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem exporting this Terminology.',
-              ''
-            );
-          }
-        },
-        (error) => {
-          this.processing = false;
+  exportModel() {
+    this.dialog
+      .openExportModel({ domain: 'terminologies' })
+      .pipe(
+        switchMap((response) => {
+          this.processing = true;
+          return forkJoin([
+            of(response.exporter),
+            this.exportHandler.exportDataModel(
+              [this.mcTerminology],
+              response.exporter,
+              'terminologies',
+              response.parameters
+            )
+          ]);
+        }),
+        catchError((error) => {
           this.messageHandler.showError(
-            'There was a problem exporting this Terminology.',
+            'There was a problem exporting the model.',
             error
           );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe(([exporter, response]) => {
+        if (response.status === 202) {
+          this.handleAsyncExporterResponse();
+          return;
         }
-      );
+
+        this.handleStandardExporterResponse(exporter, response);
+      });
   }
 
-  resetExportError() {
-    this.exportError = null;
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.mcTerminology.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
+    });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
   }
 
   delete(permanent: boolean) {
@@ -235,7 +244,7 @@ export class TerminologyDetailsComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
+              'Are you sure you want to <span class="warning">permanently</span> delete this Terminology?'
           }
         },
         {
@@ -244,7 +253,7 @@ export class TerminologyDetailsComponent implements OnInit {
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message:
-              '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
+              '<strong>Note: </strong>All its "Terms" will be deleted <span class="warning">permanently</span>.'
           }
         }
       )
@@ -318,26 +327,6 @@ export class TerminologyDetailsComponent implements OnInit {
     this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
       id: this.mcTerminology.id,
       domainType: this.mcTerminology.domainType
-    });
-  }
-
-  loadExporterList() {
-    this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (!result.body.authenticatedSession) {
-        return;
-      }
-      this.resources.terminology.exporters().subscribe(
-        (result2) => {
-          this.exportList = result2.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
-        }
-      );
     });
   }
 

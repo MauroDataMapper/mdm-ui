@@ -64,7 +64,10 @@ import {
   SearchableItemResource,
   ContainerDomain,
   MdmAsyncJobsResource,
-  ImportableResource
+  ImportableResource,
+  ForkableResource,
+  BranchableResource,
+  ExportableResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -269,5 +272,54 @@ export class MdmResourcesService {
     }
 
     return null;
+  }
+
+  getForkableResource(domain: ModelDomain): ForkableResource {
+    switch (domain) {
+      case 'dataModels':
+        return this.dataModel;
+      case 'terminologies':
+        return this.terminology;
+      case 'codeSets':
+        return this.codeSet;
+      case 'referenceDataModels':
+        return this.referenceDataModel;
+      case 'versionedFolders':
+        return this.versionedFolder;
+      default:
+        throw new Error(`Not a ForkableResource: ${domain}`);
+    }
+  }
+
+  getBranchableResource(domain: ModelDomain): BranchableResource {
+    switch (domain) {
+      case 'dataModels':
+        return this.dataModel;
+      case 'terminologies':
+        return this.terminology;
+      case 'codeSets':
+        return this.codeSet;
+      case 'referenceDataModels':
+        return this.referenceDataModel;
+      case 'versionedFolders':
+        return this.versionedFolder;
+      default:
+        throw new Error(`Not a BranchableResource: ${domain}`);
+    }
+  }
+
+  getExportableResource(domain: ModelDomain): ExportableResource {
+    switch (domain) {
+      case 'dataModels':
+        return this.dataModel;
+      case 'terminologies':
+        return this.terminology;
+      case 'codeSets':
+        return this.codeSet;
+      case 'referenceDataModels':
+        return this.referenceDataModel;
+      default:
+        throw new Error(`Not an ExportableResource: ${domain}`);
+    }
   }
 }

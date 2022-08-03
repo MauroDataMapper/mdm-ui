@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { RequestSettings } from '@maurodatamapper/mdm-resources';
+import { MdmResponse, RequestSettings } from '@maurodatamapper/mdm-resources';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
@@ -42,5 +42,11 @@ export type MdmRestHandlerOptions = RequestSettings & MdmHttpHandlerOptions;
  * Represents a generic error from an `mdm-resources` operation.
  */
 export class MdmResourcesError {
-  constructor(public response: HttpErrorResponse) { }
+  constructor(public response: HttpErrorResponse) {}
 }
+
+export const isResponseOk = (response: MdmResponse<unknown>) =>
+  (response as Response)?.status === 200;
+
+export const isResponseAccepted = (response: MdmResponse<unknown>) =>
+  (response as Response)?.status === 202;

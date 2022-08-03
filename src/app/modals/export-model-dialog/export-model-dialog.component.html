@@ -1,0 +1,83 @@
+<!--
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm-export-model-dialog">
+  <h4 mat-dialog-title>Export with...</h4>
+  <hr />
+  <mat-dialog-content>
+    <form role="form" [formGroup]="formGroup">
+      <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select an exporter</mat-label>
+          <mat-select
+            formControlName="exporter"
+            aria-label="Exporter"
+            name="exporter"
+            placeholder="Select..."
+            required
+          >
+            <mat-option *ngFor="let item of exporters" [value]="item">{{
+              item.displayName
+            }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="exporter?.errors?.required">
+            Please select an exporter
+          </mat-error>
+        </mat-form-field>
+        <div>
+          <mat-checkbox formControlName="asynchronous"
+            >Export in the background</mat-checkbox
+          >
+          <mdm-alert alertStyle="info" [showIcon]="true">
+            <p>
+              When checked, the selected model will be exported by Mauro in the
+              background, allowing you to continue to work in Mauro Data Mapper.
+              The export will eventually be created for you to use.
+            </p>
+            <p>
+              This option is recommended if the model is large, as it may take
+              some time for Mauro to export it.
+            </p>
+          </mdm-alert>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="modal-footer pxy-2">
+      <button
+        mat-button
+        color="warn"
+        class="mr-1"
+        type="button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="formGroup.invalid"
+        (click)="continue()"
+      >
+        Export
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

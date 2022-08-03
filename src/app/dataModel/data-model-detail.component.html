@@ -209,23 +209,14 @@ SPDX-License-Identifier: Apache-2.0
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
-            class="paddingless dropdown-toggle"
+            class="paddingless"
             [disabled]="processing || deleteInProgress"
-            [matMenuTriggerFor]="exporterList"
             matTooltip="Export as JSON, XML,..."
             aria-label="Export as JSON, XML,..."
+            (click)="exportModel()"
           >
             <span class="fas fa-download"></span>
           </button>
-          <mat-menu #exporterList="matMenu">
-            <div *ngIf="exportList && exportList.length > 0">
-              <div *ngFor="let exporter of exportList">
-                <button type="button" mat-menu-item (click)="export(exporter)">
-                  {{ exporter.displayName }}
-                </button>
-              </div>
-            </div>
-          </mat-menu>
         </div>
       </div>
 

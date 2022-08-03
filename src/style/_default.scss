@@ -16,12 +16,32 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+/* SCSS HEX */
+$oxford-blue: #002147ff;
+$old-lace: #fff4e5ff;
+$steel-teal: #6c969dff;
+$cultured: #f5f5f5ff;
+$dark-liver: #5b4850ff;
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-right: linear-gradient(90deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-bottom: linear-gradient(180deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-left: linear-gradient(270deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-top-right: linear-gradient(45deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-bottom-right: linear-gradient(135deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-top-left: linear-gradient(225deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-bottom-left: linear-gradient(315deg, #002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+$gradient-radial: radial-gradient(#002147ff, #fff4e5ff, #6c969dff, #f5f5f5ff, #5b4850ff);
+
 html,
 body,
 .mdm-root,
 #mdm-ui,
 .mdm-ui-view {
   height: 100%;
+  color: #001e0b;
 }
 body,
 .mdm-root {
@@ -31,6 +51,37 @@ body,
 main {
   flex: 1 0 auto;
 }
+
+body {
+  background-color: $cultured;
+}
+
+.mat-tab-group {
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid $dark-liver;
+}
+
+.mat-tab-header {
+  padding-top: 5px;
+  border-bottom: 1px solid $dark-liver;
+}
+
+.mat-tab-body-wrapper {
+  padding-left: 10px;
+  padding-right: 10px;
+  .mat-tab-body {
+    margin-top: 10px;
+    .mat-tree {
+      margin-top: 10px;
+    }
+  }
+}
+
+.default-theme .mat-tab-label, .default-theme .mat-tab-link {
+  font-size: 100% !important;
+}
+
 
 strong {
   font-weight: 600;

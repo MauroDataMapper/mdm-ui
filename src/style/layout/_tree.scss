@@ -158,14 +158,13 @@ span.tree-top-actions button,
   height: 44px;
 }
 
-div.mat-tab-label {
-  min-width: 25px;
+.mat-tab-label {
+  min-width: 8em;
   padding: 0 16px;
+  height: 38px;
   font-size: $defaultFontSize;
 }
-div.mat-tab-label {
-  height: 38px;
-}
+
 .table td,
 .table th,
 tr td.mat-cell,

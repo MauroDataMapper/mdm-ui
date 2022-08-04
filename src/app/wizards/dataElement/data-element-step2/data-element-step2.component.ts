@@ -240,6 +240,12 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.dataTypeErrors = '';
   }
 
+  clearDataTypeSet(): void {
+    this.model.dataType = null;
+    this.dataTypeErrors = '';
+  }
+
+
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
     for (const id in this.model.selectedDataClassesMap) {

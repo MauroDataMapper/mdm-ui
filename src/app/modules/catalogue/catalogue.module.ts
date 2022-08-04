@@ -168,10 +168,10 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
-import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
+import { VersionedFolderDetailComponent } from '@mdm/versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
-import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
+import { OpenIdConnectAuthorizeComponent } from '@mdm/security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { TermRelationshipTypeListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
 import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
@@ -180,7 +180,7 @@ import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
-import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
+import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';

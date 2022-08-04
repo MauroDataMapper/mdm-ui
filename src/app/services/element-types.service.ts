@@ -384,8 +384,7 @@ export class ElementTypesService {
   }
 
   getAllDataTypesArray() {
-    const dataTypes = this.allTypes.filter((f) => f.baseTitle === 'DataType');
-    return dataTypes;
+    return this.allTypes.filter(f => f.baseTitle === 'DataType' && f.title !== 'DataType');
   }
 
   getAllDataTypesMap() {

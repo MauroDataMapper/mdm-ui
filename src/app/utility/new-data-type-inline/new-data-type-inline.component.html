@@ -137,14 +137,14 @@ SPDX-License-Identifier: Apache-2.0
 			</tr>
       <tr *ngIf="!showLabelAndDescription && model.domainType != 'PrimitiveType' && model.domainType != 'EnumerationType'">
         <td colspan="2" style="text-align: right;">
-          <mat-slide-toggle (change)="toggleAdvanced()">Advanced Options</mat-slide-toggle>
+          <mat-slide-toggle [(ngModel)]="advanced" name="advanced">Advanced Options</mat-slide-toggle>
         </td>
       </tr>
       <tr *ngIf="showLabelAndDescription || model.domainType === 'PrimitiveType' || model.domainType === 'EnumerationType' || this.advanced">
         <td class="detailsRowHeader">Data Type Label *</td>
         <td>
           <mat-form-field appearance="outline" class="full-width">
-            <input matInput name="label" [(ngModel)]="model.label" required>
+            <input matInput name="label" [(ngModel)]="model.label">
           </mat-form-field>
         </td>
       </tr>

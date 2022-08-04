@@ -62,7 +62,7 @@ export class TermListComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
 
-  displayedColumns: string[] = ['code', 'definition', 'actions'];
+  displayedColumns: string[] = ['code', 'definition', 'description', 'actions'];
   terms: Term[] = [];
   isLoadingResults = false;
   totalItemCount = 0;
@@ -72,6 +72,7 @@ export class TermListComponent implements AfterViewInit {
   filter: {};
   codeFilter?: string;
   definitionFilter?: string;
+  descriptionFilter?: string;
 
   constructor(
     private resources: MdmResourcesService,
@@ -119,10 +120,9 @@ export class TermListComponent implements AfterViewInit {
 
   applyFilter() {
     this.filter = {
-      ...(this.codeFilter &&
-        this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter &&
-        this.definitionFilter !== '' && { definition: this.definitionFilter })
+      ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter && this.descriptionFilter !== '' && { description: this.descriptionFilter })
     };
 
     this.filterEvent.emit();

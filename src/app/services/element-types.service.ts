@@ -17,7 +17,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { CatalogueItemDomainType, MdmResponse, Modelable, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  MdmResponse,
+  Modelable,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -25,8 +30,6 @@ import { StateHandlerService } from './handlers/state-handler.service';
 
 @Injectable({ providedIn: 'root' })
 export class ElementTypesService {
-
-
   private semanticLinkTypes: any = {
     Refines: { title: 'Refines', editable: true },
     'Does Not Refine': { title: 'Does Not Refine', editable: true },
@@ -43,6 +46,7 @@ export class ElementTypesService {
       title: 'Folder',
       markdown: 'fd',
       baseTitle: 'Folder',
+      domainName: 'folders',
       isBase: true
     },
     {
@@ -51,6 +55,7 @@ export class ElementTypesService {
       title: 'VersionedFolder',
       markdown: 'vfd',
       baseTitle: 'VersionedFolder',
+      domainName: 'versionedFolders',
       isBase: true
     },
     {
@@ -59,6 +64,7 @@ export class ElementTypesService {
       title: 'DataModel',
       markdown: 'dm',
       baseTitle: 'DataModel',
+      domainName: 'dataModels',
       isBase: true,
       classifiable: true
     },
@@ -68,6 +74,7 @@ export class ElementTypesService {
       title: 'ReferenceDataModel',
       resourceName: 'ReferenceDataModel',
       baseTitle: 'ReferenceDataModel',
+      domainName: 'referenceDataModels',
       markdown: 'rdm',
       classifiable: true
     },
@@ -77,6 +84,7 @@ export class ElementTypesService {
       title: 'DataClass',
       markdown: 'dc',
       baseTitle: 'DataClass',
+      domainName: 'dataClasses',
       isBase: true,
       classifiable: true
     },
@@ -86,6 +94,7 @@ export class ElementTypesService {
       title: 'DataElement',
       markdown: 'de',
       baseTitle: 'DataElement',
+      domainName: 'dataElements',
       isBase: true,
       classifiable: true
     },
@@ -94,10 +103,20 @@ export class ElementTypesService {
       link: 'dataElement',
       title: 'DataElement (ReferenceDataElement)',
       baseTitle: 'DataElement',
+      domainName: 'referenceDataElements',
       markdown: 'rde',
       classifiable: true
     },
-    { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true, baseTitle: 'DataType' },
+    {
+      id: 'DataType',
+      link: 'dataType',
+      title: 'DataType',
+      markdown: 'dt',
+      isBase: true,
+      classifiable: true,
+      baseTitle: 'DataType',
+      domainName: 'dataTypes'
+    },
     {
       id: 'EnumerationType',
       link: 'dataType',
@@ -105,7 +124,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Enumeration',
-      classifiable: true
+      classifiable: true,
+      domainName: 'enumerationTypes'
     },
     {
       id: 'PrimitiveType',
@@ -114,7 +134,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Primitive',
-      classifiable: true
+      classifiable: true,
+      domainName: 'primitiveTypes'
     },
     {
       id: 'ReferencePrimitiveType',
@@ -123,7 +144,8 @@ export class ElementTypesService {
       baseTitle: 'Reference Data Type',
       markdown: 'rdt',
       displayLabel: 'Reference Data Type',
-      classifiable: true
+      classifiable: true,
+      domainName: 'referencePrimitiveTypes'
     },
     {
       id: 'ReferenceType',
@@ -132,7 +154,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Reference',
-      classifiable: true
+      classifiable: true,
+      domainName: 'referenceTypes'
     },
     {
       id: 'ModelDataType',
@@ -141,7 +164,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'mdt',
       displayLabel: 'ModelDataType',
-      classifiable: true
+      classifiable: true,
+      domainName: 'modelDataTypes'
     },
     {
       id: 'TerminologyType',
@@ -150,7 +174,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Terminology',
-      classifiable: true
+      classifiable: true,
+      domainName: 'dataTypes'
     },
     {
       id: 'CodeSetType',
@@ -159,7 +184,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'cst',
       displayLabel: 'Code Set',
-      classifiable: true
+      classifiable: true,
+      domainName: 'dataTypes'
     },
     {
       id: 'ReferenceDataModelType',
@@ -168,7 +194,8 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'rdmt',
       displayLabel: 'Reference Data Model',
-      classifiable: true
+      classifiable: true,
+      domainName: 'referenceDataTypes'
     },
     {
       id: 'EnumerationValue',
@@ -176,7 +203,8 @@ export class ElementTypesService {
       title: 'EnumerationValue',
       baseTitle: 'CatalogueItem',
       markdown: 'ev',
-      isBase: true
+      isBase: true,
+      domainName: 'enumerationValues'
     },
     {
       id: 'Terminology',
@@ -184,10 +212,27 @@ export class ElementTypesService {
       title: 'Terminology',
       baseTitle: 'Terminology',
       markdown: 'te',
-      isBase: true
+      isBase: true,
+      domainName: 'terminologies'
     },
-    { id: 'Term', link: 'term', title: 'Term', baseTitle: 'Term', markdown: 'tm', isBase: true },
-    { id: 'CodeSet', link: 'codeSet', title: 'CodeSet', baseTitle: 'CodeSet', markdown: 'cs', isBase: true },
+    {
+      id: 'Term',
+      link: 'term',
+      title: 'Term',
+      baseTitle: 'Term',
+      markdown: 'tm',
+      isBase: true,
+      domainName: 'terms'
+    },
+    {
+      id: 'CodeSet',
+      link: 'codeSet',
+      title: 'CodeSet',
+      baseTitle: 'CodeSet',
+      markdown: 'cs',
+      isBase: true,
+      domainName: 'codeSets'
+    },
     {
       id: 'Classifier',
       link: 'classification',
@@ -195,8 +240,9 @@ export class ElementTypesService {
       resourceName: 'classifier',
       baseTitle: 'Classifier',
       markdown: 'cs',
-      isBase: true
-    },
+      isBase: true,
+      domainName: 'classifiers'
+    }
   ];
 
   private baseTypes: { [key: string]: CatalogueElementType } = {
@@ -205,6 +251,7 @@ export class ElementTypesService {
       link: 'dataModel',
       title: 'DataModel',
       resourceName: 'dataModel',
+      domainName: 'dataModels',
       markdown: 'dm',
       classifiable: true
     },
@@ -213,6 +260,7 @@ export class ElementTypesService {
       link: 'ReferenceDataModel',
       title: 'ReferenceDataModel',
       resourceName: 'referenceDataModel',
+      domainName: 'referenceDataModels',
       markdown: 'rdm',
       classifiable: true
     },
@@ -221,6 +269,7 @@ export class ElementTypesService {
       link: 'dataClass',
       title: 'DataClass',
       resourceName: 'dataClass',
+      domainName: 'dataClasses',
       markdown: 'dc',
       classifiable: true
     },
@@ -229,6 +278,7 @@ export class ElementTypesService {
       link: 'dataElement',
       title: 'DataElement',
       resourceName: 'dataElement',
+      domainName: 'dataElements',
       markdown: 'de',
       classifiable: true
     },
@@ -237,6 +287,7 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'DataType',
       resourceName: 'dataType',
+      domainName: 'dataTypes',
       markdown: 'dt',
       classifiable: true
     },
@@ -246,6 +297,7 @@ export class ElementTypesService {
       link: 'classifier',
       title: 'Classifier',
       resourceName: 'classifier',
+      domainName: 'classifiers',
       markdown: 'cs'
     },
 
@@ -254,15 +306,25 @@ export class ElementTypesService {
       link: 'terminology',
       title: 'Terminology',
       resourceName: 'terminology',
+      domainName: 'terminologies',
       markdown: 'te',
       classifiable: true
     },
-    Term: { id: 'Term', link: 'term', title: 'Term', resourceName: 'term', markdown: 'tm', classifiable: true },
+    Term: {
+      id: 'Term',
+      link: 'term',
+      title: 'Term',
+      resourceName: 'term',
+      domainName: 'terms',
+      markdown: 'tm',
+      classifiable: true
+    },
     CodeSet: {
       id: 'CodeSet',
       link: 'codeSet',
       title: 'CodeSet',
       resourceName: 'codeSet',
+      domainName: 'codeSets',
       markdown: 'cs',
       classifiable: true
     },
@@ -272,6 +334,7 @@ export class ElementTypesService {
       link: 'folder',
       title: 'Folder',
       resourceName: 'folder',
+      domainName: 'folders',
       markdown: 'fd',
       classifiable: true
     },
@@ -281,6 +344,7 @@ export class ElementTypesService {
       link: 'versionedFolder',
       title: 'VersionedFolder',
       resourceName: 'versionedFolder',
+      domainName: 'versionedFolders',
       markdown: 'vfd',
       classifiable: true
     },
@@ -290,36 +354,37 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'EnumerationValue',
       baseTitle: 'CatalogueItem',
+      domainName: 'enumerationValues',
       markdown: 'ev',
       isBase: true
-    },
-
+    }
   };
 
   private userTypes: {} = {
-    UserGroup: { id: 'UserGroup', link: 'userGroup', title: 'UserGroup', resourceName: 'userGroup' },
-    User: { id: 'User', link: 'user', title: 'User', resourceName: 'user' },
+    UserGroup: {
+      id: 'UserGroup',
+      link: 'userGroup',
+      title: 'UserGroup',
+      resourceName: 'userGroup'
+    },
+    User: { id: 'User', link: 'user', title: 'User', resourceName: 'user' }
   };
 
   constructor(
     private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService) { }
+    private resources: MdmResourcesService
+  ) {}
 
   getSemanticLinkTypes() {
     return this.semanticLinkTypes;
   }
 
-  getType(type: string) {
-    return this.allTypes[type];
-  }
-
-  getTypes() {
+  getTypes(): CatalogueElementType[] {
     return this.allTypes;
   }
 
   getAllDataTypesArray() {
-    const dataTypes = this.allTypes.filter(f => f.baseTitle === 'DataType');
-    return dataTypes;
+    return this.allTypes.filter(f => f.baseTitle === 'DataType' && f.title !== 'DataType');
   }
 
   getAllDataTypesMap() {
@@ -335,7 +400,11 @@ export class ElementTypesService {
     const array = [];
     for (const property in this.allTypes) {
       if (this.allTypes.hasOwnProperty(property)) {
-        if (!this.allTypes[property].isBase && this.allTypes[property].baseTitle.toLowerCase() === baseType.toLowerCase()) {
+        if (
+          !this.allTypes[property].isBase &&
+          this.allTypes[property].baseTitle.toLowerCase() ===
+            baseType.toLowerCase()
+        ) {
           array.push(this.allTypes[property]);
         }
       }
@@ -355,8 +424,8 @@ export class ElementTypesService {
 
   getBaseWithUserTypes() {
     const array = [
-      ...Object.keys(this.baseTypes).map(p => this.baseTypes[p]),
-      ...Object.keys(this.userTypes).map(p => this.userTypes[p])
+      ...Object.keys(this.baseTypes).map((p) => this.baseTypes[p]),
+      ...Object.keys(this.userTypes).map((p) => this.userTypes[p])
     ];
     return array;
   }
@@ -365,7 +434,17 @@ export class ElementTypesService {
     return this.baseTypes;
   }
 
-  getBaseTypeForDomainType(domainType: CatalogueItemDomainType): CatalogueElementType {
+  getBaseTypeByName(name: string) {
+    const type = this.baseTypes[name];
+    if (!type) {
+      throw new Error(`Cannot find base type called "${name}"`);
+    }
+    return type;
+  }
+
+  getBaseTypeForDomainType(
+    domainType: CatalogueItemDomainType
+  ): CatalogueElementType {
     return this.baseTypes[domainType];
   }
 
@@ -388,18 +467,19 @@ export class ElementTypesService {
       if (element.parentDataClass) {
         parentDataClass = element.parentDataClass;
       } else if (element.breadcrumbs && element.breadcrumbs.length >= 2) {
-        parentDataClass = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+        parentDataClass =
+          element.breadcrumbs[element.breadcrumbs.length - 1].id;
       } else if (element.modelId) {
         parentDataModel = element.modelId;
       }
     }
 
-
     if (element.domainType === 'DataElement') {
       if (element.dataClass) {
         parentDataClass = element.dataClass;
       } else if (element.breadcrumbs) {
-        parentDataClass = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+        parentDataClass =
+          element.breadcrumbs[element.breadcrumbs.length - 1].id;
       }
     }
 
@@ -411,19 +491,23 @@ export class ElementTypesService {
       }
     }
 
-
     if (element.domainType === 'EnumerationValue') {
       let dataTypeId = element.dataType;
       if (!dataTypeId) {
         dataTypeId = element.breadcrumbs[1].id;
       }
-      return this.stateHandler.getURL('appContainer.mainApp.twoSidePanel.catalogue.' + types.find(x => x.id === element.domainType).link,
+      return this.stateHandler.getURL(
+        'appContainer.mainApp.twoSidePanel.catalogue.' +
+          types.find((x) => x.id === element.domainType).link,
         {
           id: dataTypeId,
-          dataModelId: parentDataModel,
-        });
+          dataModelId: parentDataModel
+        }
+      );
     }
-    return this.stateHandler.getURL('appContainer.mainApp.twoSidePanel.catalogue.' + types.find(x => x.id === element.domainType).link,
+    return this.stateHandler.getURL(
+      'appContainer.mainApp.twoSidePanel.catalogue.' +
+        types.find((x) => x.id === element.domainType).link,
       {
         id: element.id,
         dataModelId: parentDataModel,
@@ -431,7 +515,8 @@ export class ElementTypesService {
         terminologyId,
         domainType: element.domainType,
         mode
-      });
+      }
+    );
   }
 
   /**
@@ -444,9 +529,11 @@ export class ElementTypesService {
   getNamedLinkIdentifier(element): Observable<string> {
     const baseTypes = this.getTypes();
 
-    const dataTypeNames = this.getTypesForBaseTypeArray('DataType').map((dt) => {
-      return dt.id;
-    });
+    const dataTypeNames = this.getTypesForBaseTypeArray('DataType').map(
+      (dt) => {
+        return dt.id;
+      }
+    );
 
     let parentId = null;
     if (element.domainType === 'DataClass') {
@@ -459,26 +546,36 @@ export class ElementTypesService {
     let parentDataClassId = null;
     if (element.parentDataClass) {
       parentDataClassId = element.parentDataClass;
-    }
-    else if (element.dataClass) {
+    } else if (element.dataClass) {
       parentDataClassId = element.dataClass;
-    }
-    else if (element.breadcrumbs) {
-      parentDataClassId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+    } else if (element.breadcrumbs) {
+      parentDataClassId =
+        element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
     if (element.domainType === 'DataClass') {
-      return this.getDataModelName(parentId)
-        .pipe(
-          map(dataModelName => `dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`)
-        );
+      return this.getDataModelName(parentId).pipe(
+        map(
+          (dataModelName) =>
+            `dm:${dataModelName}|${
+              baseTypes.find((x) => x.id === element.domainType).markdown
+            }:${element.label}`
+        )
+      );
     }
 
     if (element.domainType === 'DataModel') {
-      return of(`${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`);
+      return of(
+        `${baseTypes.find((x) => x.id === element.domainType).markdown}:${
+          element.label
+        }`
+      );
     }
 
-    if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
+    if (
+      element.domainType === 'DataType' ||
+      dataTypeNames.includes(element.element?.domainType)
+    ) {
       let isHierarchical = false;
 
       if (!parentId) {
@@ -486,20 +583,26 @@ export class ElementTypesService {
         isHierarchical = true;
       }
 
-      return this.getDataModelName(parentId)
-        .pipe(
-          map(dataModelName => {
-            if (isHierarchical) {
-              return `dm:${dataModelName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
-            }
-            else {
-              return `dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-            }
-          })
-        );
+      return this.getDataModelName(parentId).pipe(
+        map((dataModelName) => {
+          if (isHierarchical) {
+            return `dm:${dataModelName}|${
+              baseTypes.find((x) => x.id === element.element.domainType)
+                .markdown
+            }:${element.element.label}`;
+          } else {
+            return `dm:${dataModelName}|${
+              baseTypes.find((x) => x.id === element.domainType).markdown
+            }:${element.label}`;
+          }
+        })
+      );
     }
 
-    if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
+    if (
+      element.domainType === 'DataElement' ||
+      element.element?.domainType === 'DataElement'
+    ) {
       let isHierarchical = false;
 
       if (!parentId) {
@@ -511,61 +614,72 @@ export class ElementTypesService {
       const dataModelName$ = this.getDataModelName(parentId);
       const dataClassName$ = this.getDataClassName(parentId, parentDataClassId);
 
-      return forkJoin([dataModelName$, dataClassName$])
-        .pipe(
-          map(([dataModelName, dataClassName]) => {
-            if (isHierarchical) {
-              return `dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
-            }
-            else {
-              return `dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-            }
-          })
-        );
+      return forkJoin([dataModelName$, dataClassName$]).pipe(
+        map(([dataModelName, dataClassName]) => {
+          if (isHierarchical) {
+            return `dm:${dataModelName}|dc:${dataClassName}|${
+              baseTypes.find((x) => x.id === element.element.domainType)
+                .markdown
+            }:${element.element.label}`;
+          } else {
+            return `dm:${dataModelName}|dc:${dataClassName}|${
+              baseTypes.find((x) => x.id === element.domainType).markdown
+            }:${element.label}`;
+          }
+        })
+      );
     }
 
     if (element.domainType === 'Term') {
-      return this.getTerminologyName(parentId)
-        .pipe(
-          map(terminologyName => `te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`));
+      return this.getTerminologyName(parentId).pipe(
+        map(
+          (terminologyName) =>
+            `te:${terminologyName}|${
+              baseTypes.find((x) => x.id === element.domainType).markdown
+            }:${element.label}`
+        )
+      );
     }
 
     if (element.domainType === 'CodeSet') {
-      return of(`${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`);
+      return of(
+        `${baseTypes.find((x) => x.id === element.domainType).markdown}:${
+          element.label
+        }`
+      );
     }
 
     return of(null);
   }
 
   isModelDataType(domainType: CatalogueItemDomainType) {
-    return domainType === CatalogueItemDomainType.CodeSetType
-      || domainType === CatalogueItemDomainType.TerminologyType
-      || domainType === CatalogueItemDomainType.ReferenceDataModelType;
+    return (
+      domainType === CatalogueItemDomainType.CodeSetType ||
+      domainType === CatalogueItemDomainType.TerminologyType ||
+      domainType === CatalogueItemDomainType.ReferenceDataModelType
+    );
   }
 
   private getDataModelName(id: Uuid): Observable<string> {
     return this.resources.dataModel
       .get(id)
-      .pipe(
-        map((res: MdmResponse<Modelable>) => res.body.label));
+      .pipe(map((res: MdmResponse<Modelable>) => res.body.label));
   }
 
   private getTerminologyName(id: Uuid): Observable<string> {
     return this.resources.terminology
       .get(id)
-      .pipe(
-        map((res: MdmResponse<Modelable>) => res.body.label));
+      .pipe(map((res: MdmResponse<Modelable>) => res.body.label));
   }
 
   private getDataClassName(dataModelId: Uuid, id: Uuid): Observable<string> {
     return this.resources.dataClass
       .get(dataModelId, id)
-      .pipe(
-        map((res: MdmResponse<Modelable>) => res.body.label));
+      .pipe(map((res: MdmResponse<Modelable>) => res.body.label));
   }
 }
 
-export class CatalogueElementType {
+export interface CatalogueElementType {
   id: string;
   link: string;
   title: string;
@@ -575,5 +689,5 @@ export class CatalogueElementType {
   classifiable?: boolean;
   displayLabel?: string;
   resourceName?: string;
-  constructor() { }
+  domainName: string;
 }

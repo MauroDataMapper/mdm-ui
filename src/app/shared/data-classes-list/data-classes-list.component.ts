@@ -37,9 +37,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DataClass, DataClassDetail, DataClassIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
+import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  DataClass,
+  DataClassDetail,
+  DataClassIndexResponse,
+  DataModelDetail
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-classes-list',
@@ -78,6 +84,7 @@ export class DataClassesListComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
     private dialog: MatDialog,
+    private editing: EditingService,
     private gridService: GridService,
     private messageHandler: MessageHandlerService
   ) {}
@@ -113,7 +120,9 @@ export class DataClassesListComponent implements AfterViewInit {
         }),
         map((data: DataClassIndexResponse) => {
           if (this.parentDataClass.extendsDataClasses) {
-            this.totalDataClassCount = data.body.count + (this.parentDataClass.extendsDataClasses.length as number);
+            this.totalDataClassCount =
+              data.body.count +
+              (this.parentDataClass.extendsDataClasses.length as number);
           } else {
             this.totalDataClassCount = data.body.count;
           }
@@ -127,10 +136,12 @@ export class DataClassesListComponent implements AfterViewInit {
       )
       .subscribe((data) => {
         if (this.parentDataClass.extendsDataClasses) {
-          const extendedDC = this.parentDataClass.extendsDataClasses.map(dc => {
-            dc['extended'] = true;
-            return dc;
-          });
+          const extendedDC = this.parentDataClass.extendsDataClasses.map(
+            (dc) => {
+              dc['extended'] = true;
+              return dc;
+            }
+          );
           this.dataClassRecords = [...data, ...extendedDC];
         } else {
           this.dataClassRecords = data;
@@ -185,11 +196,11 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   dataClassesFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: {}
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -222,7 +233,7 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   // Drag and drop
-  dropItem(event: CdkDragDrop<any[]>) {
+  dropItem(event: CdkDragDrop<any, any, DataClassDetail>) {
     moveItemInArray(
       this.dataClassRecords,
       event.previousIndex,
@@ -236,7 +247,7 @@ export class DataClassesListComponent implements AfterViewInit {
     this.table.renderRows();
   }
 
-  updateOrder(item, newPosition) {
+  updateOrder(item: CdkDrag<DataClassDetail>, newPosition: number) {
     const resource: DataClass = {
       label: item.data.label,
       domainType: item.data.domainType,
@@ -292,8 +303,8 @@ export class DataClassesListComponent implements AfterViewInit {
         };
       });
 
-    this.dialog
-      .open(BulkEditModalComponent, {
+    this.editing
+      .openDialog(BulkEditModalComponent, {
         data: {
           dataElementIdLst: dataClassIds,
           parentDataModel: this.parentDataModel,
@@ -313,7 +324,9 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   bulkDelete() {
-    const dataElementIdLst = this.dataClassRecords.filter(record => record.checked);
+    const dataElementIdLst = this.dataClassRecords.filter(
+      (record) => record.checked
+    );
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {

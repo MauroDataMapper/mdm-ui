@@ -17,16 +17,31 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Term, TermDetail, TermIndexResponse, TerminologyDetail } from '@maurodatamapper/mdm-resources';
+import {
+  Term,
+  TermDetail,
+  TermIndexResponse,
+  TerminologyDetail
+} from '@maurodatamapper/mdm-resources';
 import { merge, Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateTermDialogComponent, CreateTermForm } from './create-term-dialog/create-term-dialog.component';
+import {
+  CreateTermDialogComponent,
+  CreateTermForm
+} from './create-term-dialog/create-term-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GridService, MessageHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-term-list',
@@ -34,7 +49,6 @@ import { GridService, MessageHandlerService } from '@mdm/services';
   styleUrls: ['./term-list.component.scss']
 })
 export class TermListComponent implements AfterViewInit {
-
   @Input() terminology: TerminologyDetail;
   @Input() pageSize = 10;
   @Input() canEdit = false;
@@ -45,9 +59,10 @@ export class TermListComponent implements AfterViewInit {
   @Output() deletedTerm = new EventEmitter();
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
-  displayedColumns: string[] = ['code', 'definition', 'actions'];
+  displayedColumns: string[] = ['code', 'definition', 'description', 'actions'];
   terms: Term[] = [];
   isLoadingResults = false;
   totalItemCount = 0;
@@ -57,55 +72,57 @@ export class TermListComponent implements AfterViewInit {
   filter: {};
   codeFilter?: string;
   definitionFilter?: string;
+  descriptionFilter?: string;
 
   constructor(
     private resources: MdmResourcesService,
-    private dialog: MatDialog,
     private gridService: GridService,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService,
+    private editing: EditingService
+  ) {}
 
   ngAfterViewInit() {
-    this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
-    this.sort?.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
+    this.sort?.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(
-      this.sort.sortChange,
-      this.paginator.page,
-      this.filterEvent
-    ).pipe(
-      startWith({}),
-      switchMap(() => {
-        this.isLoadingResults = true;
-        return this.fetchTerms(
-          this.paginator.pageSize,
-          this.paginator.pageOffset,
-          this.sort.active,
-          this.sort.direction,
-          this.filter);
-      }),
-      map((data) => {
-        this.totalItemCount = data.body.count;
-        this.totalCount.emit(data.body.count);
-        this.isLoadingResults = false;
-        return data.body.items;
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        return [];
-      })
-    ).subscribe((data) => {
-      this.terms = data;
-    });
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.fetchTerms(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction,
+            this.filter
+          );
+        }),
+        map((data) => {
+          this.totalItemCount = data.body.count;
+          this.totalCount.emit(data.body.count);
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe((data) => {
+        this.terms = data;
+      });
   }
 
-  filterClick () {
+  filterClick() {
     this.hideFilters = !this.hideFilters;
   }
 
   applyFilter() {
     this.filter = {
       ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter })
+      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter && this.descriptionFilter !== '' && { description: this.descriptionFilter })
     };
 
     this.filterEvent.emit();
@@ -113,7 +130,7 @@ export class TermListComponent implements AfterViewInit {
 
   reload() {
     this.hideFilters = true;
-    this.filter = { };
+    this.filter = {};
     this.filterEvent.emit();
   }
 
@@ -122,37 +139,44 @@ export class TermListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: string,
-    filters?: {}): Observable<TermIndexResponse> {
+    filters?: {}
+  ): Observable<TermIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
       sortBy,
       sortType,
-      filters);
+      filters
+    );
     return this.resources.terms.list(this.terminology.id, options);
   }
 
   openCreateTermDialog(): void {
-    const dialogRef = this.dialog.open<CreateTermDialogComponent, CreateTermForm, TermDetail>(
-      CreateTermDialogComponent,
-      {
-        data: new CreateTermForm(this.terminology),
-        minWidth: 800
+    this.editing
+      .openDialog<CreateTermDialogComponent, CreateTermForm, TermDetail>(
+        CreateTermDialogComponent,
+        {
+          data: new CreateTermForm(this.terminology),
+          minWidth: 800
+        }
+      )
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.reload();
+          this.addedTerm.emit(data);
+        }
       });
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this.reload();
-        this.addedTerm.emit(data);
-      }
-    });
   }
 
   deleteTerm(term: Term) {
     if (this.canDelete) {
-      this.resources.terms.remove(this.terminology.id, term.id)
+      this.resources.terms
+        .remove(this.terminology.id, term.id)
         .subscribe(() => {
-          this.messageHandler.showSuccess(`Term "${term.definition}" was successfully removed.`);
+          this.messageHandler.showSuccess(
+            `Term "${term.definition}" was successfully removed.`
+          );
           this.reload();
         });
     }

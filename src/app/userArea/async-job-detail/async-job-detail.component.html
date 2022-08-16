@@ -1,0 +1,84 @@
+<!--
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<ng-container *ngIf="job">
+  <div class="heading-container mb-2 forms-heading-container">
+    <h4>
+      <span>Job</span>
+    </h4>
+    <p>{{ job.jobName }}</p>
+  </div>
+  <table class="table table-bordered mdm--table-fixed">
+    <caption>
+      Job details
+    </caption>
+    <tbody>
+      <tr>
+        <th class="detailsRowHeader" scope="row">Started by user</th>
+        <td>
+          {{ job.startedByUser }}
+        </td>
+      </tr>
+      <tr>
+        <th class="detailsRowHeader" scope="row">Time started</th>
+        <td>
+          {{ job.dateTimeStarted | date: 'dd/MM/yyyy h:mm a' }}
+        </td>
+      </tr>
+      <tr>
+        <th class="detailsRowHeader" scope="row">Status</th>
+        <td>
+          <span class="{{ getStatusIconStyle(job.status) }}"></span>
+          {{ job.status | titlecase }}
+        </td>
+      </tr>
+      <tr>
+        <th class="detailsRowHeader" scope="row">Location</th>
+        <td>
+          {{ job.location }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="job.message">
+    <h4>Message</h4>
+    <p [innerHTML]="job.message | marked | safe: 'html'"></p>
+  </div>
+  <div>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      class="mr-1"
+      (click)="close()"
+    >
+      Back
+    </button>
+    <button
+      mat-stroked-button
+      *ngIf="job.status === 'CREATED' || job.status === 'RUNNING'"
+      color="warn"
+      type="button"
+      class="mr-1"
+      (click)="cancelJob()"
+    >
+      <span class="fas fa-ban warning"></span>
+      Cancel job
+    </button>
+  </div>
+</ng-container>

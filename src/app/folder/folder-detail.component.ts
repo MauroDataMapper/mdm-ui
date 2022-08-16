@@ -16,16 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  Input,
-  OnInit
-} from '@angular/core';
-import { MessageService } from '../services/message.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { FolderHandlerService } from '../services/handlers/folder-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { SharedService } from '../services/shared.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
@@ -33,7 +27,11 @@ import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { ContainerUpdatePayload, FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ContainerUpdatePayload,
+  FolderDetail,
+  FolderDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 
@@ -55,18 +53,17 @@ export class FolderDetailComponent implements OnInit {
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
     private messageHandlerService: MessageHandlerService,
     private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcast: BroadcastService,
     private validatorService: ValidatorService,
     private title: Title,
     private editingService: EditingService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog
+  ) {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
   }
 
@@ -89,20 +86,14 @@ export class FolderDetailComponent implements OnInit {
     this.dialog.openSecurityAccess(this.folder, 'folder');
   }
 
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
-  }
-
   askForSoftDelete() {
     if (!this.access.showDelete) {
       return;
     }
 
-    this.folderHandler
-      .askForSoftDelete(this.folder.id)
-      .subscribe(() => {
-        this.stateHandler.reload();
-      });
+    this.folderHandler.askForSoftDelete(this.folder.id).subscribe(() => {
+      this.stateHandler.reload();
+    });
   }
 
   askForPermanentDelete(): any {
@@ -110,12 +101,12 @@ export class FolderDetailComponent implements OnInit {
       return;
     }
 
-    this.folderHandler
-      .askForPermanentDelete(this.folder.id)
-      .subscribe(() => {
-        this.broadcast.reloadCatalogueTree();
-        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-      });
+    this.folderHandler.askForPermanentDelete(this.folder.id).subscribe(() => {
+      this.broadcast.reloadCatalogueTree();
+      this.stateHandler.Go(
+        'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+      );
+    });
   }
 
   save() {
@@ -125,18 +116,28 @@ export class FolderDetailComponent implements OnInit {
     };
 
     if (this.validatorService.validateLabel(this.folder.label)) {
-      this.resourcesService.folder.update(resource.id, resource).subscribe((result: FolderDetailResponse) => {
-        this.messageHandlerService.showSuccess('Folder updated successfully.');
-        this.editingService.stop();
-        this.folder = result.body;
-        this.editMode = false;
-        this.broadcast.reloadCatalogueTree();
-        this.stateHandler.reload();
-      }, error => {
-        this.messageHandlerService.showError('There was a problem updating the Folder.', error);
-      });
+      this.resourcesService.folder.update(resource.id, resource).subscribe(
+        (result: FolderDetailResponse) => {
+          this.messageHandlerService.showSuccess(
+            'Folder updated successfully.'
+          );
+          this.editingService.stop();
+          this.folder = result.body;
+          this.editMode = false;
+          this.broadcast.reloadCatalogueTree();
+          this.stateHandler.reload();
+        },
+        (error) => {
+          this.messageHandlerService.showError(
+            'There was a problem updating the Folder.',
+            error
+          );
+        }
+      );
     } else {
-      this.messageHandlerService.showError('There is an error with the label please correct and try again');
+      this.messageHandlerService.showError(
+        'There is an error with the label please correct and try again'
+      );
     }
   }
 

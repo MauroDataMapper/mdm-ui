@@ -21,66 +21,64 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <mat-dialog-content>
   <div class="modal-body pxy-2">
-    <div *ngIf="useMergeDiffModule">
-      <p>The following changes will be committed:</p>
-      <h5 class="inline-block marginless">
-        <span class="dataModelTypeIcon">
-          <mdm-model-icon
-            [domainType]="domainType"
-            [isDataAsset]="isDataAsset"
-          ></mdm-model-icon>
-        </span>
-        <span class="dataModelDetailsLabel">{{ label }}</span>
-      </h5>
-      <h5 *ngIf="source" class="text-muted">
-        <small>
+    <p>The following changes will be committed:</p>
+    <h5 class="inline-block marginless">
+      <span class="dataModelTypeIcon">
+        <mdm-model-icon
+          [domainType]="domainType"
+          [isDataAsset]="isDataAsset"
+        ></mdm-model-icon>
+      </span>
+      <span class="dataModelDetailsLabel">{{ label }}</span>
+    </h5>
+    <h5 *ngIf="source" class="text-muted">
+      <small>
+        <span
+          class="fas fa-file-export"
+          matTooltip="{{ source.branchName }}"
+        ></span>
+        <span
+          ><strong>Source Branch : {{ source.branchName }} </strong></span
+        >
+      </small>
+    </h5>
+    <h5 *ngIf="target" class="text-muted">
+      <small>
+        <span
+          class="fas fa-file-import"
+          matTooltip="{{ target.branchName }}"
+        ></span>
+        <span
+          ><strong>Target Branch : {{ target.branchName }} </strong></span
+        >
+      </small>
+    </h5>
+    <div class="mdm--form-input" class="mergeItemsList">
+      <mat-list>
+        <mat-list-item
+          [ngClass]="{
+            creation: item.type === mergeType.Creation,
+            deletion: item.type === mergeType.Deletion
+          }"
+          *ngFor="let item of items"
+        >
           <span
-            class="fas fa-file-export"
-            matTooltip="{{ source.branchName }}"
-          ></span>
-          <span
-            ><strong>Source Branch : {{ source.branchName }} </strong></span
-          >
-        </small>
-      </h5>
-      <h5 *ngIf="target" class="text-muted">
-        <small>
-          <span
-            class="fas fa-file-import"
-            matTooltip="{{ target.branchName }}"
-          ></span>
-          <span
-            ><strong>Target Branch : {{ target.branchName }} </strong></span
-          >
-        </small>
-      </h5>
-      <div class="mdm--form-input" class="mergeItemsList">
-        <mat-list>
-          <mat-list-item
+            mat-list-icon
+            class="fas"
             [ngClass]="{
-              creation: item.type === mergeType.Creation,
-              deletion: item.type === mergeType.Deletion
+              'fa-plus-square': item.type === mergeType.Creation,
+              'fa-minus-square': item.type === mergeType.Deletion,
+              'fa-pen-square': item.type === mergeType.Modification
             }"
-            *ngFor="let item of items"
-          >
-            <span
-              mat-list-icon
-              class="fas"
-              [ngClass]="{
-                'fa-plus-square': item.type === mergeType.Creation,
-                'fa-minus-square': item.type === mergeType.Deletion,
-                'fa-pen-square': item.type === mergeType.Modification
-              }"
-            ></span>
-            <mdm-path-name
-              [path]="item.path"
-              [suffixLabel]="item.branchNameSelected | uppercase"
-              [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
-              [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
-            ></mdm-path-name>
-          </mat-list-item>
-        </mat-list>
-      </div>
+          ></span>
+          <mdm-path-name
+            [path]="item.path"
+            [suffixLabel]="item.branchNameSelected | uppercase"
+            [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
+            [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
+          ></mdm-path-name>
+        </mat-list-item>
+      </mat-list>
     </div>
     <p class="mt-2">Are you sure you wish to commit these changes?</p>
     <div class="mdm--form-input">

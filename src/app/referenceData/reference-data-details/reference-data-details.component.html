@@ -190,23 +190,14 @@ SPDX-License-Identifier: Apache-2.0
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
-            class="paddingless dropdown-toggle"
+            class="paddingless"
             [disabled]="processing || deleteInProgress"
-            [matMenuTriggerFor]="exporterList"
+            (click)="exportModel()"
             matTooltip="Export as JSON, XML,..."
             aria-label="Export as JSON, XML,..."
           >
             <span class="fas fa-download"></span>
           </button>
-          <mat-menu #exporterList="matMenu">
-            <div *ngIf="exportList && exportList.length > 0">
-              <div *ngFor="let exporter of exportList">
-                <button type="button" mat-menu-item (click)="export(exporter)">
-                  {{ exporter.displayName }}
-                </button>
-              </div>
-            </div>
-          </mat-menu>
         </div>
       </div>
 
@@ -233,7 +224,10 @@ SPDX-License-Identifier: Apache-2.0
             [ngClass]="{ deletedDataModelTitle: refDataModel.deleted }"
           >
             <span class="dataModelTypeIcon">
-              <span matTooltip="Reference Data" class="fas fa-file-contract"></span>
+              <span
+                matTooltip="Reference Data"
+                class="fas fa-file-contract"
+              ></span>
             </span>
             <mdm-inline-text-edit
               [readOnly]="false"
@@ -290,13 +284,6 @@ SPDX-License-Identifier: Apache-2.0
 
 <mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
 
-<div style="text-align: left" *ngIf="exportError">
-  <div style="padding-top: 25px">
-    <div class="alert alert-danger">
-      <strong>Error!</strong> {{ exportError }}
-    </div>
-  </div>
-</div>
 <div style="clear: both" *ngIf="processing">
   <mat-progress-bar
     value="50"

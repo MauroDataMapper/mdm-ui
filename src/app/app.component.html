@@ -17,13 +17,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-root" [class]="themeCssSelector">
-    <div class="mat-typography mdm-app-component">
-        <mdm-navbar></mdm-navbar>
+  <div class="mat-typography mdm-app-component">
+    <mdm-navbar></mdm-navbar>
 
-        <main ui-view></main>
+    <main ui-view></main>
 
-        <mdm-footer class="mdm-footer"></mdm-footer>
+    <mdm-footer
+      class="app-footer"
+      [version]="appVersion"
+      [copyright]="copyright"
+      [links]="footerLinks"
+    ></mdm-footer>
 
-        <mdm-loading-indicator></mdm-loading-indicator>
-    </div>
+    <mdm-loading-indicator></mdm-loading-indicator>
+  </div>
 </div>

@@ -29,7 +29,6 @@ import { DataClassMainComponent } from './wizards/dataClass/data-class-main/data
 import { DataTypeMainComponent } from './wizards/dataType/data-type-main/data-type-main.component';
 import { HomeComponent } from './home/home.component';
 import { ImportModelsComponent } from './import-models/import-models.component';
-import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
@@ -52,10 +51,15 @@ import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.compo
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-main.component';
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
-import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { HookResult, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import {
+  HookResult,
+  StateObject,
+  Transition,
+  TransitionService,
+  UIRouter
+} from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
@@ -68,6 +72,9 @@ import { DoiRedirectComponent } from './doi-redirect/doi-redirect.component';
 import { SecurityHandlerService, SharedService } from './services';
 import { BulkEditContainerComponent } from './bulk-edit/bulk-edit-container/bulk-edit-container.component';
 import { TerminologyMainComponent } from './wizards/terminology/terminology-main/terminology-main.component';
+import { CatalogueSearchComponent } from './catalogue-search/catalogue-search/catalogue-search.component';
+import { FeaturesService } from './services/features.service';
+import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
 
 /**
  * Collection of all page state routes.
@@ -190,9 +197,17 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: NewVersionComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.bulkEdit',
+      name: 'appContainer.mainApp.bulkEdit',
       url: '/:domainType/bulkEdit/:id',
       component: BulkEditContainerComponent
+    },
+    {
+      name: 'appContainer.mainApp.bulkEditDataClass',
+      url: '/:domainType/bulkEdit/:dataModelId/:dataClassId/:id',
+      component: BulkEditContainerComponent,
+      params: {
+        dataClassId: null
+      }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -267,14 +282,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       }
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.search',
-      url: '/search',
-      component: SearchComponent,
-      data: {
-        allowAnonymous: true
-      }
-    },
-    {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewTerminology',
       url: '/terminology/new?parentFolderId&parentDomainType',
       component: TerminologyMainComponent
@@ -328,7 +335,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
-      url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
+      url:
+        '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
       component: DataElementMainComponent
     },
     {
@@ -376,11 +384,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ModelComparisonComponent
     },
     {
-      name: 'appContainer.mainApp.modelsMerging',
-      url: '/modelsMerging/:catalogueDomainType/:sourceId/:targetId',
-      component: ModelMergingComponent
-    },
-    {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
       url: '/modelsMergingGraph/:modelType/:modelId',
       component: ModelsMergingGraphComponent
@@ -415,7 +418,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
-      url: '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
+      url:
+        '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
       component: FederatedDataModelMainComponent,
       params: {
         tabView: { dynamic: true, value: null, squash: true },
@@ -430,6 +434,48 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       data: {
         allowAnonymous: true
       }
+    },
+    {
+      name: 'appContainer.mainApp.catalogueSearch',
+      url: '/search',
+      component: CatalogueSearchComponent,
+      data: {
+        allowAnonymous: true,
+        featureSwitch: 'useCatalogueSearch'
+      }
+    },
+    {
+      name: 'appContainer.mainApp.catalogueSearchListing',
+      url:
+        '/search/listing?{contextDomainType:string}&{contextId:string}&{contextLabel:string}&{contextParentId:string}&{contextDataModelId:string}&{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}&{classifiers:string}',
+      component: CatalogueSearchListingComponent,
+      data: {
+        allowAnonymous: true
+      },
+      params: {
+        contextDomainType: null,
+        contextId: null,
+        contextLabel: null,
+        contextParentId: null,
+        contextDataModelId: null,
+        search: null,
+        page: null,
+        sort: null,
+        order: null,
+        pageSize: null,
+        labelOnly: 'false',
+        exactMatch: 'false',
+        domainTypes: {
+          array: 'auto'
+        },
+        classifiers: {
+          array: 'auto'
+        },
+        lastUpdatedAfter: null,
+        lastUpdatedBefore: null,
+        createdAfter: null,
+        createdBefore: null
+      }
     }
   ]
 };
@@ -437,13 +483,16 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-const editingViewTransitionHooks = (transitions: TransitionService, editing: EditingService) => {
-
+const editingViewTransitionHooks = (
+  transitions: TransitionService,
+  editing: EditingService
+) => {
   /**
    * Check each state transition where the "from" view state is marked as editable.
    */
   const canLeaveStateCriteria = {
-    from: (state: StateObject) => state.name && editing.isRouteEditable(state.name)
+    from: (state: StateObject) =>
+      state.name && editing.isRouteEditable(state.name)
   };
 
   /**
@@ -466,12 +515,13 @@ const editingViewTransitionHooks = (transitions: TransitionService, editing: Edi
  * @see {@link StateRoleAccessService}
  */
 const roleTransitionHooks = (transitions: TransitionService) => {
-
   /**
    * Before starting a transition, check if the user/role has access to this route.
    */
   const canAccessRoute = (transition: Transition): HookResult => {
-    const securityHandler = transition.injector().get<SecurityHandlerService>(SecurityHandlerService);
+    const securityHandler = transition
+      .injector()
+      .get<SecurityHandlerService>(SecurityHandlerService);
     const shared = transition.injector().get<SharedService>(SharedService);
     const state = transition.$to();
     shared.current = state.name;
@@ -483,7 +533,27 @@ const roleTransitionHooks = (transitions: TransitionService) => {
     return securityHandler.isLoggedIn();
   };
 
+  /**
+   * Before starting a transition, check if the route is locked behind a feature switch.
+   */
+  const isRouteFeatureSwitchEnabled = (transition: Transition): HookResult => {
+    const features = transition
+      .injector()
+      .get<FeaturesService>(FeaturesService);
+    const state = transition.$to();
+    const featureSwitchName = state.data?.featureSwitch;
+
+    if (!featureSwitchName) {
+      // Not blocked by feature switch, continue as normal
+      return true;
+    }
+
+    const enabled: boolean = features[featureSwitchName];
+    return enabled;
+  };
+
   transitions.onStart({}, canAccessRoute);
+  transitions.onStart({}, isRouteFeatureSwitchEnabled);
 };
 
 /**
@@ -499,10 +569,12 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
 };
 
 @NgModule({
-  imports: [UIRouterModule.forChild({
-    states: pageRoutes.states,
-    config: routerConfigFn
-  })],
+  imports: [
+    UIRouterModule.forChild({
+      states: pageRoutes.states,
+      config: routerConfigFn
+    })
+  ],
   providers: [
     {
       provide: LocationStrategy,
@@ -511,5 +583,5 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
   ]
 })
 export class AppRoutingModule {
-  constructor() { }
+  constructor() {}
 }

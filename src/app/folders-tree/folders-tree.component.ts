@@ -30,6 +30,7 @@ import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateH
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { CatalogueItemDomainType, isContainerDomainType, isModelDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -66,6 +67,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Output() loadModelsToCompareEvent = new EventEmitter<any>();
 
   @Input() doNotShowDataClasses: any;
+  @Input() doNotShowChildDataClasses: any;
   @Input() doNotShowTerms: any;
   @Input() justShowFolders: any;
   @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
@@ -139,7 +141,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     private broadcast: BroadcastService,
     public dialog: MatDialog,
     private modelTree: ModelTreeService,
-    private shared: SharedService) {
+    private shared: SharedService,
+    private userSettingsHandler: UserSettingsHandlerService) {
+
     this.loadFavourites();
     this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
@@ -206,6 +210,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   /** Get whether the node has children or not. Tree branch control. */
   hasChild(_: number, node: FlatNode) {
     if (node?.domainType === CatalogueItemDomainType.DataModel && this.doNotShowDataClasses) {
+      return false;
+    }
+
+    if (node?.domainType === CatalogueItemDomainType.DataClass && this.doNotShowChildDataClasses) {
       return false;
     }
 
@@ -280,11 +288,20 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   async expand(node: MdmTreeItem) {
+  let options: any = {};
+    if (this.shared.isLoggedIn()) {
+      options = {
+          queryStringParams: {
+          includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
+        }
+      };
+    }
+
     try {
       switch (node.domainType) {
         case CatalogueItemDomainType.Folder:
         case CatalogueItemDomainType.VersionedFolder: { // VersionedFolders are treated the same as Folders
-          const folderResponse = await this.resources.tree.getFolder(node.id).toPromise();
+          const folderResponse = await this.resources.tree.getFolder(node.id, options.queryStringParams).toPromise();
           return folderResponse.body;
         }
         case CatalogueItemDomainType.DataModel: {

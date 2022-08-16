@@ -17,9 +17,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { AvailableDataModel, AvailableDataModelIndexResponse, SubscribedDataModel, SubscribedDataModelIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  PublishedDataModel,
+  PublishedDataModelIndexResponse,
+  SubscribedDataModel,
+  SubscribedDataModelIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
-import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
+import {
+  MdmResourcesService,
+  MdmRestHandlerOptions
+} from '@mdm/modules/resources';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -27,8 +35,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SubscribedCataloguesService {
-
-  constructor(private resources: MdmResourcesService) { }
+  constructor(private resources: MdmResourcesService) {}
 
   /**
    * Combines the endpoint responses from `listPublishedModels()` and `listSubscribedModels()` to produce a collection of
@@ -36,22 +43,29 @@ export class SubscribedCataloguesService {
    *
    * @param catalogueId The UUID of the subscribed catalogue to search under.
    */
-  getFederatedDataModels(catalogueId: string): Observable<FederatedDataModel[]> {
+  getFederatedDataModels(
+    catalogueId: string
+  ): Observable<FederatedDataModel[]> {
     return combineLatest([
       this.listPublishedModels(catalogueId),
       this.listSubscribedModels(catalogueId)
-    ])
-    .pipe(
+    ]).pipe(
       map(([publishedModels, subscribedModels]) => {
-        return publishedModels.map(publishedModel => {
-          const subscribed = subscribedModels.find(item => item.subscribedModelId === (publishedModel.modelId ?? ''));
-          return new FederatedDataModel(catalogueId, publishedModel, subscribed);
+        return publishedModels.map((publishedModel) => {
+          const subscribed = subscribedModels.find(
+            (item) => item.subscribedModelId === (publishedModel.modelId ?? '')
+          );
+          return new FederatedDataModel(
+            catalogueId,
+            publishedModel,
+            subscribed
+          );
         });
       })
     );
   }
 
-  listPublishedModels(catalogueId: string): Observable<AvailableDataModel[]> {
+  listPublishedModels(catalogueId: string): Observable<PublishedDataModel[]> {
     // Handle any HTTP errors manually. This covers the scenario where this is unable to
     // get available models from the subscribed catalogue e.g. the subscribed catalogue instance is not
     // available/offline
@@ -62,7 +76,10 @@ export class SubscribedCataloguesService {
     return this.resources.subscribedCatalogues
       .listPublishedModels(catalogueId, {}, restOptions)
       .pipe(
-        map((response: AvailableDataModelIndexResponse) => response.body.items ?? [])
+        map(
+          (response: PublishedDataModelIndexResponse) =>
+            response.body.items ?? []
+        )
       );
   }
 
@@ -70,7 +87,10 @@ export class SubscribedCataloguesService {
     return this.resources.subscribedCatalogues
       .listSubscribedModels(catalogId)
       .pipe(
-        map((response: SubscribedDataModelIndexResponse) => response.body.items ?? [])
+        map(
+          (response: SubscribedDataModelIndexResponse) =>
+            response.body.items ?? []
+        )
       );
   }
 }

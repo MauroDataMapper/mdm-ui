@@ -17,10 +17,24 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CatalogueItemDomainType, TermDetail, TerminologyDetail, TermRelationship, TermRelationshipType } from '@maurodatamapper/mdm-resources';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
+  CatalogueItemDomainType,
+  TermDetail,
+  TerminologyDetail,
+  TermRelationship,
+  TermRelationshipType,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { EditingService } from '@mdm/services/editing.service';
 import { BehaviorSubject } from 'rxjs';
 import { CreateTermRelationshipDialogComponent } from '../create-term-relationship-dialog/create-term-relationship-dialog.component';
 
@@ -28,7 +42,10 @@ class CreateTermRelationshipForm {
   targetTerm: TermDetail;
   relationshipType: TermRelationshipType;
 
-  constructor(readonly terminology: TerminologyDetail, readonly sourceTerm: TermDetail) {}
+  constructor(
+    readonly terminology: TerminologyDetail,
+    readonly sourceTerm: TermDetail
+  ) {}
 }
 
 @Component({
@@ -41,44 +58,15 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   @Input() canEdit = false;
   @Input() canDelete = false;
   @Output() selectedTerm = new EventEmitter<TermDetail>();
-  @Output() totalCount =  new EventEmitter<number>();
+  @Output() totalCount = new EventEmitter<number>();
   totalItemCount = 0;
   private _relationships = new BehaviorSubject<TermRelationship[]>([]);
   private _relationshipTypes = new BehaviorSubject<TermRelationshipType[]>([]);
 
-  constructor(private resources: MdmResourcesService, private dialog: MatDialog) {}
-
-  ngOnInit() {
-  }
-
-  ngOnChanges(changes) {
-    if (changes.term) {
-      this.fetchRelationships();
-    }
-  }
-
-  fetchRelationships() {
-    if (this.term) {
-      this.resources.term.termRelationships(this.term.terminology.id, this.term.id, {
-        sort: 'label',
-        order: 'asc'
-      }).subscribe(
-        data => {
-          this.relationships = data.body.items.filter(i => (i.sourceTerm.id === this.term.id) && i.targetTerm.domainType !== CatalogueItemDomainType.Terminology);
-          const relationshipTypes = [];
-          this.relationships.forEach(r => {
-            if (!relationshipTypes.map(rt => rt.id).includes(r.relationshipType.id)) {
-              relationshipTypes.push(r.relationshipType);
-            }
-          });
-          this.relationshipTypes = relationshipTypes;
-          this.totalItemCount = this.relationships.length;
-          this.totalCount.emit(this.totalItemCount);
-        },
-        error => console.error(error)
-      );
-    }
-  }
+  constructor(
+    private resources: MdmResourcesService,
+    private editing: EditingService
+  ) {}
 
   get relationships() {
     return this._relationships.value;
@@ -88,6 +76,7 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     this._relationships.next(relationships);
   }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   get relationshipTypes() {
     return this._relationshipTypes.value;
   }
@@ -96,9 +85,50 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     this._relationshipTypes.next(relationshipTypes);
   }
 
+  ngOnInit() {}
+
+  ngOnChanges(changes) {
+    if (changes.term) {
+      this.fetchRelationships();
+    }
+  }
+
+  fetchRelationships() {
+    if (this.term) {
+      this.resources.term
+        .termRelationships(this.term.terminology.id as Uuid, this.term.id, {
+          sort: 'label',
+          order: 'asc'
+        })
+        .subscribe(
+          (data) => {
+            this.relationships = data.body.items.filter(
+              (i) =>
+                i.sourceTerm.id === this.term.id &&
+                i.targetTerm.domainType !== CatalogueItemDomainType.Terminology
+            );
+            const relationshipTypes = [];
+            this.relationships.forEach((r) => {
+              if (
+                !relationshipTypes
+                  .map((rt) => rt.id)
+                  .includes(r.relationshipType.id)
+              ) {
+                relationshipTypes.push(r.relationshipType);
+              }
+            });
+            this.relationshipTypes = relationshipTypes;
+            this.totalItemCount = this.relationships.length;
+            this.totalCount.emit(this.totalItemCount);
+          },
+          (error) => console.error(error)
+        );
+    }
+  }
+
   filterByRelationshipType(relationshipType: TermRelationshipType) {
     return this.relationships
-      .filter(r => r.relationshipType.id === relationshipType.id)
+      .filter((r) => r.relationshipType.id === relationshipType.id)
       .sort((first, second) => {
         if (first.targetTerm.code < second.targetTerm.code) {
           return -1;
@@ -113,20 +143,30 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
   }
 
   deleteRelationship(termRelationship: TermRelationship) {
-    this.resources.terms.removeTermRelationship(this.term.terminology.id, termRelationship.sourceTerm.id, termRelationship.id).subscribe(() => {
-      this.fetchRelationships();
-    });
+    this.resources.terms
+      .removeTermRelationship(
+        this.term.terminology.id as Uuid,
+        termRelationship.sourceTerm.id,
+        termRelationship.id
+      )
+      .subscribe(() => {
+        this.fetchRelationships();
+      });
   }
 
   openAddRelationshipDialog(): void {
-    const dialogRef = this.dialog.open(CreateTermRelationshipDialogComponent, {
-      data: new CreateTermRelationshipForm(this.term.terminology, this.term)
-    });
-
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        this.fetchRelationships();
-      }
-    });
+    this.editing
+      .openDialog(CreateTermRelationshipDialogComponent, {
+        data: new CreateTermRelationshipForm(
+          this.term.terminology as TerminologyDetail,
+          this.term
+        )
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.fetchRelationships();
+        }
+      });
   }
 }

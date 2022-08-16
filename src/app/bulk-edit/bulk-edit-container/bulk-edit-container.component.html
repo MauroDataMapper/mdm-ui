@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="heading-container">
   <h4 class="marginless">Bulk Edit</h4>
 </div>
-<div class="mdm-bulk-edit-container__parent">
+<div *ngIf="parent" class="mdm-bulk-edit-container__parent">
   <span class="dataModelTypeIcon">
     <mdm-element-icon [element]="parent"></mdm-element-icon>
   </span>
@@ -36,6 +36,4 @@ SPDX-License-Identifier: Apache-2.0
   [(context)]="context"
   (onCancel)="cancel()"
   (onPrevious)="previous()"
-  (onValidate)="validate()"
-  (onSave)="save($event)"
 ></mdm-bulk-edit-editor-group>

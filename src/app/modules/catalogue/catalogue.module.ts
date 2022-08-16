@@ -28,16 +28,11 @@ import { SharedModule } from '../shared/shared.module';
 import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
-import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
-import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { NotFoundComponent } from '@mdm/errors/not-found/not-found.component';
 import { DataModelDefaultComponent } from '@mdm/utility/data-model-default.component';
 import { ServerErrorComponent } from '@mdm/errors/server-error/server-error.component';
@@ -59,7 +54,6 @@ import { ElementDataTypeComponent } from '@mdm/shared/element-data-type/element-
 import { MultiplicityComponent } from '@mdm/shared/multiplicity/multiplicity.component';
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
-import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
@@ -78,7 +72,6 @@ import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/da
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
 import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
 import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
-import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -103,7 +96,6 @@ import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
 import { HomeComponent } from '@mdm/home/home.component';
 import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
-import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
 import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
@@ -150,24 +142,17 @@ import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
 import { SummaryMetadataPopupComponent } from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
-
-import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
-import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
-import { NgxTextDiffModule } from 'ngx-text-diff';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
 import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
 import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
 import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
 import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { JoditAngularModule } from 'jodit-angular';
-import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
 import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
@@ -183,10 +168,10 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
-import { VersionedFolderDetailComponent } from '../../versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
+import { VersionedFolderDetailComponent } from '@mdm/versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
-import { OpenIdConnectAuthorizeComponent } from '../../security/open-id-connect-authorize/open-id-connect-authorize.component';
+import { OpenIdConnectAuthorizeComponent } from '@mdm/security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { TermRelationshipTypeListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
 import { TermCodeSetListComponent } from '@mdm/term/codeset-list/term-codeset-list.component';
@@ -195,28 +180,24 @@ import { TermRelationshipListComponent } from '@mdm/term/relationship-list/term-
 import { CreateTermRelationshipDialogComponent } from '@mdm/term/create-term-relationship-dialog/create-term-relationship-dialog.component';
 import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-versions/newer-versions.component';
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
-import { TerminologyMainComponent } from '../../wizards/terminology/terminology-main/terminology-main.component';
+import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 
 @NgModule({
   declarations: [
-    MarkedPipe,
     FolderComponent,
     FolderDetailComponent,
-    AdvancedSearchBarComponent,
     ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
     DiagramToolbarComponent,
     HistoryComponent,
-    MarkdownTextAreaComponent,
-    DateFromToComponent,
-    MarkdownDirective,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
@@ -243,7 +224,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
-    FileSizePipe,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -259,7 +239,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     DataTypeStep2Component,
     DataElementsListComponent,
     DataClassesListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -284,7 +263,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     DataElementStep2Component,
     HomeComponent,
     ImportModelsComponent,
-    SearchComponent,
     TerminologyComponent,
     TermListComponent,
     TermRelationshipTypeListComponent,
@@ -328,7 +306,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
@@ -340,8 +317,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ReferenceDataValuesComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
     ApiPropertyTableComponent,
@@ -381,7 +356,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     HttpClientModule,
     ImageCropperModule,
     ReactiveFormsModule,
-    NgxTextDiffModule,
     SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,
@@ -391,24 +365,18 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    JoditAngularModule,
-    PipesModule
+    PipesModule,
+    CatalogueSearchModule
   ],
   exports: [
-    MarkedPipe,
     FolderComponent,
     FolderDetailComponent,
-    AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ExportModelsComponent,
     HistoryComponent,
-    MarkdownTextAreaComponent,
-    DateFromToComponent,
-    MarkdownDirective,
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
@@ -434,7 +402,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
-    FileSizePipe,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -450,7 +417,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     DataTypeStep2Component,
     DataClassesListComponent,
     DataElementsListComponent,
-    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -475,7 +441,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     DataElementStep2Component,
     HomeComponent,
     ImportModelsComponent,
-    SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
     TermListComponent,
@@ -518,7 +483,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
-    ModelMergingComponent,
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
@@ -527,8 +491,6 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ReferenceDataDetailsComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
-    HtmlEditorComponent,
-    ContentEditorComponent,
     ConstraintsRulesComponent,
     SubscribedCatalogueMainComponent,
     SubscribedCatalogueDetailComponent,
@@ -547,7 +509,8 @@ import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-bad
     ProfileDataViewComponent,
     NewerVersionsComponent,
     TerminologyMainComponent,
-    SkeletonBadgeComponent
+    SkeletonBadgeComponent,
+    MoreDescriptionComponent
   ]
 })
-export class CatalogueModule { }
+export class CatalogueModule {}

@@ -18,12 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { EMPTY } from 'rxjs';
-import { MessageService } from '../services/message.service';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { SharedService } from '../services/shared.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,11 +33,10 @@ import {
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import {
   DataModelDetail,
   DataModelDetailResponse,
-  ModelDomainType,
+  Exporter,
   ModelUpdatePayload,
   MultiFacetAwareDomainType
 } from '@maurodatamapper/mdm-resources';
@@ -48,6 +45,7 @@ import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -62,35 +60,35 @@ export class DataModelDetailComponent implements OnInit {
   isAdministrator = false;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
-  exporting: boolean;
   processing = false;
   compareToList = [];
-  exportList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
 
   constructor(
     private resourcesService: MdmResourcesService,
-    private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
-    private sharedService: SharedService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private exportHandler: ExportHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private validatorService: ValidatorService) { }
+    private validatorService: ValidatorService
+  ) {}
 
   get canChangeBranchName() {
-    return this.access.showEdit && this.dataModel.branchName !== defaultBranchName;
+    return (
+      this.access.showEdit && this.dataModel.branchName !== defaultBranchName
+    );
   }
 
   ngOnInit() {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
-    this.loadExporterList();
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
     this.dataModelDetails();
     this.access = this.securityHandler.elementAccess(this.dataModel);
     this.title.setTitle(`${this.dataModel?.type} - ${this.dataModel?.label}`);
@@ -118,10 +116,6 @@ export class DataModelDetailComponent implements OnInit {
 
   toggleSecuritySection() {
     this.dialog.openSecurityAccess(this.dataModel, 'dataModel');
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   delete(permanent) {
@@ -189,7 +183,7 @@ export class DataModelDetailComponent implements OnInit {
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
             message:
-              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
+              'Are you sure you want to <span class="warning">permanently</span> delete this Data Model?'
           }
         },
         {
@@ -261,7 +255,9 @@ export class DataModelDetailComponent implements OnInit {
           }
         );
     } else {
-      this.messageHandler.showError('There is an error with the label please correct and try again');
+      this.messageHandler.showError(
+        'There is an error with the label please correct and try again'
+      );
     }
   }
 
@@ -277,13 +273,17 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   openBulkEdit() {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.bulkEdit', { id: this.dataModel.id, domainType: this.dataModel.domainType });
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
+    });
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.dataModel)
+    this.dialog
+      .openChangeBranchName(this.dataModel)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ModelUpdatePayload = {
             id: this.dataModel.id,
             domainType: this.dataModel.domainType,
@@ -292,7 +292,7 @@ export class DataModelDetailComponent implements OnInit {
 
           return this.resourcesService.dataModel.update(payload.id, payload);
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -301,7 +301,9 @@ export class DataModelDetailComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Data Model branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Data Model branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'datamodel',
           { id: this.dataModel.id },
@@ -361,13 +363,10 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newVersionModel',
-      {
-        id: this.dataModel.id,
-        domainType: this.dataModel.domainType
-      }
-    );
+    this.stateHandler.Go('newVersionModel', {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType
+    });
   }
 
   compare(dataModel = null) {
@@ -382,93 +381,77 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   merge() {
-    if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go(
-        'mergediff',
-        {
-          sourceId: this.dataModel.id,
-          catalogueDomainType: MultiFacetAwareDomainType.DataModels
-        });
-    }
-
-    return this.stateHandler.Go(
-      'modelsmerging',
-      new ModelMergingModel(
-        this.dataModel.id,
-        null,
-        ModelDomainType.DataModels
-      ),
-      null
-    );
+    return this.stateHandler.Go('mergediff', {
+      sourceId: this.dataModel.id,
+      catalogueDomainType: MultiFacetAwareDomainType.DataModels
+    });
   }
 
   showMergeGraph() {
-    this.dialog.open<VersioningGraphModalComponent, VersioningGraphModalConfiguration>(
+    this.dialog.open<
       VersioningGraphModalComponent,
-      {
-        data: {
-          catalogueItem: this.dataModel
-        },
-        panelClass: 'versioning-graph-modal'
+      VersioningGraphModalConfiguration
+    >(VersioningGraphModalComponent, {
+      data: {
+        catalogueItem: this.dataModel
+      },
+      panelClass: 'versioning-graph-modal'
+    });
+  }
+
+  exportModel() {
+    this.dialog
+      .openExportModel({ domain: 'dataModels' })
+      .pipe(
+        switchMap((response) => {
+          this.processing = true;
+          return forkJoin([
+            of(response.exporter),
+            this.exportHandler.exportDataModel(
+              [this.dataModel],
+              response.exporter,
+              'dataModels',
+              response.parameters
+            )
+          ]);
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem exporting the model.',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe(([exporter, response]) => {
+        if (response.status === 202) {
+          this.handleAsyncExporterResponse();
+          return;
+        }
+
+        this.handleStandardExporterResponse(exporter, response);
       });
   }
 
-  export(exporter) {
-    this.processing = true;
-    this.exportHandler
-      .exportDataModel([this.dataModel], exporter, 'dataModels')
-      .subscribe(
-        (dataModel) => {
-          if (dataModel != null) {
-            const tempDownloadList = Object.assign([], this.downloadLinks);
-            const label =
-              [this.dataModel].length === 1
-                ? [this.dataModel][0].label
-                : 'data_models';
-            const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([dataModel.body], {
-              type: exporter.fileType
-            });
-            const link = this.exportHandler.createBlobLink(file, fileName);
-            tempDownloadList.push(link);
-            this.downloadLinks = tempDownloadList;
-            this.processing = false;
-          } else {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem exporting the Data Model.',
-              ''
-            );
-          }
-        },
-        (error) => {
-          this.processing = false;
-          this.messageHandler.showError(
-            'There was a problem exporting the Data Model.',
-            error
-          );
-        }
-      );
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.dataModel.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
+    });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
   }
 
-  loadExporterList() {
-    this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((dataModel) => {
-      if (!dataModel.body.authenticatedSession) {
-        return;
-      }
-
-      this.resourcesService.dataModel.exporters().subscribe(
-        (res) => {
-          this.exportList = res.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
-        }
-      );
-    });
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
   }
 }

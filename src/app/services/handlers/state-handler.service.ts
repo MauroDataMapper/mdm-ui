@@ -73,7 +73,6 @@ export class StateHandlerService {
         dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
-        modelsmerging: 'appContainer.mainApp.modelsMerging',
         mergediff: 'appContainer.mainApp.mergeDiff',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
         export: 'appContainer.mainApp.twoSidePanel.catalogue.export',

@@ -73,6 +73,15 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span class="fas fa-code-branch"></span> Edit Branch Name
           </button>
+          <button
+            mat-menu-item
+            data-cy="edit-label"
+            type="button"
+            *ngIf="access.showEdit"
+            (click)="openBulkEdit()"
+          >
+            <span class="fas fa-clone"></span> Bulk Edit
+          </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <span class="fas fa-balance-scale-right" aria-hidden="true"></span> Compare
                    </button> -->
@@ -168,23 +177,14 @@ SPDX-License-Identifier: Apache-2.0
             color="primary"
             type="button"
             *ngIf="isLoggedIn"
-            class="paddingless dropdown-toggle"
+            class="paddingless"
             [disabled]="processing || deleteInProgress"
-            [matMenuTriggerFor]="exporterList"
+            (click)="exportModel()"
             matTooltip="Export as JSON, XML,..."
             aria-label="Export as JSON, XML,..."
           >
             <span class="fas fa-download"></span>
           </button>
-          <mat-menu #exporterList="matMenu">
-            <div *ngIf="exportList && exportList.length > 0">
-              <div *ngFor="let exporter of exportList">
-                <button type="button" mat-menu-item (click)="export(exporter)">
-                  {{ exporter.displayName }}
-                </button>
-              </div>
-            </div>
-          </mat-menu>
         </div>
         <div
           style="
@@ -276,13 +276,6 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
 
-<div style="text-align: left" *ngIf="exportError">
-  <div style="padding-top: 25px">
-    <div class="alert alert-danger">
-      <strong>Error!</strong> {{ exportError }}
-    </div>
-  </div>
-</div>
 <div style="clear: both" *ngIf="processing">
   <mat-progress-bar
     value="50"

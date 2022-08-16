@@ -48,7 +48,9 @@ import {
   isContainerDomainType,
   MdmTreeItem,
   MdmTreeItemListResponse,
-  ModelDomainType
+  ModelDomainType,
+  ApiProperty,
+  ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import {
   mapCatalogueDomainTypeToContainer,
@@ -71,6 +73,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
   searchboxFocused = false;
   debounceInputEvent: Subject<KeyboardEvent | InputEvent>;
   subscriptions: Subscription;
+  canCreateFolder = true;
+  isRootFolderRestricted = false;
+  isClassifierCreateRestricted = false;
 
   // Hard
   includeModelSuperseded = false;
@@ -227,6 +232,18 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.currentClassification = null;
     this.allClassifications = [];
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadApiContentProperties(response.body.items);
+      });
   }
 
   ngOnDestroy() {
@@ -564,7 +581,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
-            'Classification name can not be empty',
+            'There was a problem creating the classification',
             error
           );
           return EMPTY;
@@ -581,5 +598,14 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.stateHandler.Go(node.domainType, {
       id: node.id
     });
+  }
+
+  private loadApiContentProperties(properties: ApiProperty[]) {
+     this.isRootFolderRestricted = JSON.parse(this.getContentProperty(properties, 'security.restrict.root.folder'));
+     this.isClassifierCreateRestricted = JSON.parse(this.getContentProperty(properties, 'security.restrict.classifier.create'));
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
   }
 }

@@ -18,7 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '@env/environment';
-import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ApiProperty,
+  ApiPropertyIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -31,7 +34,6 @@ import { MessageHandlerService } from './utility/message-handler.service';
 export class FeaturesService implements OnDestroy {
   useSubscribedCatalogues: boolean;
   useVersionedFolders: boolean;
-  useMergeUiV2: boolean;
   useOpenIdConnect: boolean;
   useDigitalObjectIdentifiers: boolean;
   useIssueReporting: boolean;
@@ -41,7 +43,8 @@ export class FeaturesService implements OnDestroy {
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService) {
+    private broadcast: BroadcastService
+  ) {
     this.setFeatures([]);
     this.loadFromServer();
 
@@ -60,13 +63,18 @@ export class FeaturesService implements OnDestroy {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties for features.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties for features.',
+            errors
+          );
           return EMPTY;
         })
       )
       .subscribe((response: ApiPropertyIndexResponse) => {
-        const featureFlags = response.body.items.filter(prop => prop.category === 'Features');
+        const featureFlags = response.body.items.filter(
+          (prop) => prop.category === 'Features'
+        );
         this.setFeatures(featureFlags);
       });
   }
@@ -75,36 +83,40 @@ export class FeaturesService implements OnDestroy {
     this.useSubscribedCatalogues = this.getBooleanValue(
       properties,
       'feature.use_subscribed_catalogues',
-      environment.features.useSubscribedCatalogues);
+      environment.features.useSubscribedCatalogues
+    );
 
     this.useVersionedFolders = this.getBooleanValue(
       properties,
       'feature.use_versioned_folders',
-      environment.features.useVersionedFolders);
-
-    this.useMergeUiV2 = this.getBooleanValue(
-      properties,
-      'feature.use_merge_diff_ui',
-      environment.features.useMergeUiV2);
+      environment.features.useVersionedFolders
+    );
 
     this.useOpenIdConnect = this.getBooleanValue(
       properties,
       'feature.use_open_id_connect',
-      environment.features.useOpenIdConnect);
+      environment.features.useOpenIdConnect
+    );
 
     this.useDigitalObjectIdentifiers = this.getBooleanValue(
       properties,
       'feature.use_digital_object_identifiers',
-      environment.features.useDigitalObjectIdentifiers);
+      environment.features.useDigitalObjectIdentifiers
+    );
 
     this.useIssueReporting = this.getBooleanValue(
       properties,
       'feature.use_issue_reporting',
-      environment.features.useIssueReporting);
+      environment.features.useIssueReporting
+    );
   }
 
-  private getBooleanValue(properties: ApiProperty[], key: string, defaultValue: boolean): boolean {
-    const feature = properties.find(prop => prop.key === key);
+  private getBooleanValue(
+    properties: ApiProperty[],
+    key: string,
+    defaultValue: boolean
+  ): boolean {
+    const feature = properties.find((prop) => prop.key === key);
     return feature ? feature.value === 'true' : defaultValue;
   }
 }

@@ -17,28 +17,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, DataModelDetail, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
+import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 import { StateParams, UIRouterGlobals } from '@uirouter/core';
-import { of } from 'rxjs';
-import { BulkEditStep } from '../types/bulk-edit-types';
+import { Observable, of } from 'rxjs';
+import { BulkEditStep } from '../bulk-edit.types';
 import { BulkEditContainerComponent } from './bulk-edit-container.component';
-
-interface MdmDataModelResourceStub {
-  get: jest.Mock;
-}
-
-interface MdmProfileResourcesStub {
-  saveMany: jest.Mock;
-}
-
-interface MdmResourcesStub {
-  dataModel: MdmDataModelResourceStub;
-  profile: MdmProfileResourcesStub;
-}
 
 interface UIRouterGlobalsStub {
   params: StateParams;
@@ -59,13 +50,10 @@ interface MessageHandlerStub {
 describe('BulkEditBaseComponent', () => {
   let harness: ComponentHarness<BulkEditContainerComponent>;
 
-  const resourcesStub: MdmResourcesStub = {
-    dataModel: {
-      get: jest.fn()
-    },
-    profile: {
-      saveMany: jest.fn()
-    }
+  const itemProviderStub = {
+    get: jest.fn() as jest.MockedFunction<
+      (identifier: MauroIdentifier) => Observable<MauroItem>
+    >
   };
 
   const uiRouterGlobalsStub: UIRouterGlobalsStub = {
@@ -85,7 +73,7 @@ describe('BulkEditBaseComponent', () => {
   };
 
   const id = '123';
-  const dataModel: DataModelDetail = {
+  const dataModel: MauroItem = {
     id,
     label: 'test',
     domainType: CatalogueItemDomainType.DataModel,
@@ -94,41 +82,36 @@ describe('BulkEditBaseComponent', () => {
   };
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(
-      BulkEditContainerComponent,
-      {
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: resourcesStub
-          },
-          {
-            provide: UIRouterGlobals,
-            useValue: uiRouterGlobalsStub
-          },
-          {
-            provide: Title,
-            useValue: titleStub
-          },
-          {
-            provide: EditingService,
-            useValue: editingStub
-          },
-          {
-            provide: MessageHandlerService,
-            useValue: messageHandlerStub
-          }
-        ]
-      });
+    harness = await setupTestModuleForComponent(BulkEditContainerComponent, {
+      providers: [
+        {
+          provide: MauroItemProviderService,
+          useValue: itemProviderStub
+        },
+        {
+          provide: UIRouterGlobals,
+          useValue: uiRouterGlobalsStub
+        },
+        {
+          provide: Title,
+          useValue: titleStub
+        },
+        {
+          provide: EditingService,
+          useValue: editingStub
+        },
+        {
+          provide: MessageHandlerService,
+          useValue: messageHandlerStub
+        }
+      ]
+    });
 
     uiRouterGlobalsStub.params.id = id;
   });
 
   beforeEach(() => {
-    resourcesStub.dataModel.get
-      .mockImplementationOnce(() => of<DataModelDetailResponse>({
-        body: dataModel
-      }));
+    itemProviderStub.get.mockImplementationOnce(() => of(dataModel));
   });
 
   it('should create', () => {
@@ -140,7 +123,9 @@ describe('BulkEditBaseComponent', () => {
 
     expect(harness.component.parent).toBe(dataModel);
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
-    expect(titleStub.setTitle).toHaveBeenCalledWith(`Bulk Edit - ${dataModel.label}`);
+    expect(titleStub.setTitle).toHaveBeenCalledWith(
+      `Bulk Edit - ${dataModel.label}`
+    );
     expect(editingStub.start).toHaveBeenCalled();
   });
 
@@ -153,15 +138,5 @@ describe('BulkEditBaseComponent', () => {
     harness.component.currentStep = BulkEditStep.Editor;
     harness.component.previous();
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
-  });
-
-  it('should save profiles', () => {
-    resourcesStub.profile.saveMany.mockImplementationOnce(() => of({}));
-
-    harness.component.ngOnInit();
-    harness.component.save([]);
-
-    expect(resourcesStub.profile.saveMany).toHaveBeenCalled();
-    expect(messageHandlerStub.showSuccess).toHaveBeenCalled();
   });
 });

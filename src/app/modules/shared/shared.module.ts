@@ -52,11 +52,19 @@ import { PathNameComponent } from '../../shared/path-name/path-name.component';
 import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { JoditAngularModule } from 'jodit-angular';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
+import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
+import { MarkedPipe } from '@mdm/pipes/marked.pipe';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 
 @NgModule({
   declarations: [
     EditableFormButtonsComponent,
-    MoreDescriptionComponent,
     McSelectComponent,
     InlineTextEditComponent,
     FooterComponent,
@@ -79,7 +87,16 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     PathNameComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent,
+    SortByComponent,
+    BreadcrumbComponent,
+    MarkedPipe,
+    FileSizePipe
   ],
   imports: [
     CommonModule,
@@ -91,12 +108,13 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     FlexLayoutModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
-    CodemirrorModule
+    CodemirrorModule,
+    JoditAngularModule,
+    UIRouterModule
   ],
   exports: [
     EditableFormButtonsComponent,
     FormsModule,
-    MoreDescriptionComponent,
     UIRouterModule,
     MaterialModule,
     McSelectComponent,
@@ -128,7 +146,16 @@ import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.comp
     ModelIconComponent,
     FavoriteButtonComponent,
     CatalogueItemPropertiesComponent,
-    ElementIconComponent
+    ElementIconComponent,
+    MarkdownTextAreaComponent,
+    MarkdownDirective,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    MoreDescriptionComponent,
+    SortByComponent,
+    BreadcrumbComponent,
+    MarkedPipe,
+    FileSizePipe
   ]
 })
 export class SharedModule {}

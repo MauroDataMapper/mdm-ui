@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { NgForm } from '@angular/forms';
@@ -28,12 +28,13 @@ import { CodeSet, CodeSetIndexResponse, ReferenceDataModel, ReferenceDataModelIn
   templateUrl: './new-data-type-inline.component.html',
   styleUrls: ['./new-data-type-inline.component.sass']
 })
-export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
+export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
   @Input() parentDataModel;
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
+  @Input() showLabelAndDescription = false;
 
   @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: any = {
@@ -52,6 +53,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   terminologies: Terminology[];
   codesets: CodeSet[];
   referenceDataModels: ReferenceDataModel[];
+  @Input() advanced = false;
 
   constructor(
     private resourceService: MdmResourcesService,
@@ -87,10 +89,10 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   }
 
   onTypeSelect() {
-    if (this.model.domainType !== 'TerminologyType') {
+    if (this.model.domainType !== 'TerminologyType' && this.model.referencedTerminology) {
       this.model.referencedTerminology.id = '';
     }
-
+    this.advanced = false;
     this.validate();
   }
   validate(newValue?) {
@@ -99,7 +101,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
       this.model.label = newValue.label;
       this.model.domainType = newValue.dataModelType;
     }
-    if (!this.model.label || this.model.label.trim().length === 0) {
+    if ((!this.model.label || this.model.label.trim().length === 0) &&
+      (this.model.domainType === 'PrimitiveType' || this.model.domainType === 'EnumerationType')) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
@@ -109,9 +112,6 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     // Check if for ReferenceType, the dataClass is selected
     if (this.model.domainType === 'ReferenceType' && (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')) {
       isValid = false;
-    }
-    if (this.model.domainType === 'Primitive') {
-      isValid = true;
     }
     // Check if for TerminologyType, the terminology is selected
     if (this.model.domainType === 'TerminologyType' && (!this.model.referencedModel || this.model.referencedModel.id === '')) {
@@ -188,4 +188,9 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     this.validate();
     this.sendValidationStatus();
   };
+
+  ngOnDestroy(): void {
+    this.formDataTypeChangesSubscription.unsubscribe();
+  }
+
 }

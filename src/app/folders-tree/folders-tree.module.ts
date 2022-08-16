@@ -32,6 +32,7 @@ import { FolderService } from './folder.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 
 @NgModule({
   imports: [
@@ -50,20 +51,17 @@ import { PipesModule } from '@mdm/modules/pipes/pipes.module';
   ],
   declarations: [
     FoldersTreeComponent,
-    StringifyPipe
+    StringifyPipe,
+    ModelSelectorTreeComponent
   ],
-  entryComponents: [
-    FoldersTreeComponent
-  ],
+  entryComponents: [FoldersTreeComponent],
   exports: [
     FoldersTreeComponent,
     StringifyPipe,
     MatFormFieldModule,
     MatInputModule,
+    ModelSelectorTreeComponent
   ],
-  providers: [
-    FolderService
-  ]
+  providers: [FolderService]
 })
-export class FoldersTreeModule {
-}
+export class FoldersTreeModule {}

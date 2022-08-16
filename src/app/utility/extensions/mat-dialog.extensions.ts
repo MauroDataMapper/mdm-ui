@@ -16,13 +16,38 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { Branchable, CatalogueItem, Modelable, SecurableModel } from '@maurodatamapper/mdm-resources';
+import {
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef
+} from '@angular/material/dialog';
+import {
+  Branchable,
+  CatalogueItem,
+  Modelable,
+  SecurableModel
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { ChangeBranchNameModalComponent, ChangeBranchNameModalData, ChangeBranchNameModalResult } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
-import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import {
+  ChangeBranchNameModalComponent,
+  ChangeBranchNameModalData,
+  ChangeBranchNameModalResult
+} from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalConfig,
+  ConfirmationModalResult
+} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import {
+  ExportModelDialogComponent,
+  ExportModelDialogOptions,
+  ExportModelDialogResponse
+} from '@mdm/modals/export-model-dialog/export-model-dialog.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
-import { SecurityAccessResource, SecurityModalConfiguration } from '@mdm/modals/security-modal/security-modal.model';
+import {
+  SecurityAccessResource,
+  SecurityModalConfiguration
+} from '@mdm/modals/security-modal/security-modal.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
@@ -41,7 +66,9 @@ declare module '@angular/material/dialog/dialog' {
      * @see `ConfirmationModalConfig`
      * @see `ConfirmationModalResult`
      */
-    openConfirmation(config: MatDialogConfig<ConfirmationModalConfig>): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>;
+    openConfirmation(
+      config: MatDialogConfig<ConfirmationModalConfig>
+    ): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>;
 
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent` and asynchronously
@@ -65,7 +92,9 @@ declare module '@angular/material/dialog/dialog' {
      * @see `openConfirmation()`
      * @see `openDoubleConfirmationAsync()`
      */
-    openConfirmationAsync(config: MatDialogConfig<ConfirmationModalConfig>): Observable<void>;
+    openConfirmationAsync(
+      config: MatDialogConfig<ConfirmationModalConfig>
+    ): Observable<void>;
 
     /**
      * Extension method to open two modal dialogs in succession containing the `ConfirmationModalComponent` and asynchronously
@@ -91,7 +120,10 @@ declare module '@angular/material/dialog/dialog' {
      * @see `openConfirmation()`
      * @see `openConfirmationAsync()`
      */
-    openDoubleConfirmationAsync(firstConfig: MatDialogConfig<ConfirmationModalConfig>, finalConfig: MatDialogConfig<ConfirmationModalConfig>): Observable<void>;
+    openDoubleConfirmationAsync(
+      firstConfig: MatDialogConfig<ConfirmationModalConfig>,
+      finalConfig: MatDialogConfig<ConfirmationModalConfig>
+    ): Observable<void>;
 
     /**
      * Extension method to open the user/group access security dialog and control read access for a catalogue item.
@@ -101,7 +133,10 @@ declare module '@angular/material/dialog/dialog' {
      * @param resource The resource name that applies to this element.
      * @returns The dialog reference to observe.
      */
-    openSecurityAccess(element: CatalogueItem & SecurableModel, resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
+    openSecurityAccess(
+      element: CatalogueItem & SecurableModel,
+      resource: SecurityAccessResource
+    ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
 
     /**
      * Extension method to open a modal dialog containing the `ChangeBranchNameModalComponent`.
@@ -113,46 +148,60 @@ declare module '@angular/material/dialog/dialog' {
      * @see `ChangeBranchNameModalData`
      * @see `ChangeBranchNameModalResult`
      */
-    openChangeBranchName(model: Modelable & Branchable): Observable<ChangeBranchNameModalResult>;
+    openChangeBranchName(
+      model: Modelable & Branchable
+    ): Observable<ChangeBranchNameModalResult>;
+
+    openExportModel(
+      data: ExportModelDialogOptions
+    ): Observable<ExportModelDialogResponse>;
   }
 }
 
 MatDialog.prototype.openConfirmation = function (
   this: MatDialog,
-  config: MatDialogConfig<ConfirmationModalConfig>): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult> {
-  return this.open<ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult>(
+  config: MatDialogConfig<ConfirmationModalConfig>
+): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult> {
+  return this.open<
     ConfirmationModalComponent,
-    config);
+    ConfirmationModalConfig,
+    ConfirmationModalResult
+  >(ConfirmationModalComponent, config);
 };
 
 MatDialog.prototype.openConfirmationAsync = function (
   this: MatDialog,
-  config: MatDialogConfig<ConfirmationModalConfig>): Observable<void> {
-  return this
-    .openConfirmation(config)
+  config: MatDialogConfig<ConfirmationModalConfig>
+): Observable<void> {
+  return this.openConfirmation(config)
     .afterClosed()
     .pipe(
-      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
-      map(() => { })
+      filter(
+        (result) =>
+          (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
+      ),
+      map(() => {})
     );
 };
 
 MatDialog.prototype.openDoubleConfirmationAsync = function (
   this: MatDialog,
   firstConfig: MatDialogConfig<ConfirmationModalConfig>,
-  finalConfig: MatDialogConfig<ConfirmationModalConfig>): Observable<void> {
-  return this
-    .openConfirmation(firstConfig)
+  finalConfig: MatDialogConfig<ConfirmationModalConfig>
+): Observable<void> {
+  return this.openConfirmation(firstConfig)
     .afterClosed()
     .pipe(
-      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
+      filter(
+        (result) =>
+          (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
+      ),
       mergeMap(() => {
-        return this
-          .openConfirmation(finalConfig)
+        return this.openConfirmation(finalConfig)
           .afterClosed()
           .pipe(
-            filter(result2 => result2.status === ModalDialogStatus.Ok),
-            map(() => { })
+            filter((result2) => result2.status === ModalDialogStatus.Ok),
+            map(() => {})
           );
       })
     );
@@ -161,31 +210,55 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
 MatDialog.prototype.openSecurityAccess = function (
   this: MatDialog,
   element: CatalogueItem & SecurableModel,
-  resource: SecurityAccessResource): MatDialogRef<SecurityModalComponent, ModalDialogStatus> {
-  return this.open<SecurityModalComponent, SecurityModalConfiguration, ModalDialogStatus>(
+  resource: SecurityAccessResource
+): MatDialogRef<SecurityModalComponent, ModalDialogStatus> {
+  return this.open<
     SecurityModalComponent,
-    {
-      data: {
-        element,
-        resource
-      },
-      panelClass: 'security-modal'
-    }
-  );
+    SecurityModalConfiguration,
+    ModalDialogStatus
+  >(SecurityModalComponent, {
+    data: {
+      element,
+      resource
+    },
+    panelClass: 'security-modal'
+  });
 };
 
 MatDialog.prototype.openChangeBranchName = function (
   this: MatDialog,
-  model: Modelable & Branchable): Observable<ChangeBranchNameModalResult> {
-  return this.open<ChangeBranchNameModalComponent, ChangeBranchNameModalData, ChangeBranchNameModalResult>(
+  model: Modelable & Branchable
+): Observable<ChangeBranchNameModalResult> {
+  return this.open<
     ChangeBranchNameModalComponent,
-    {
-      data: {
-        model
-      }
-    })
+    ChangeBranchNameModalData,
+    ChangeBranchNameModalResult
+  >(ChangeBranchNameModalComponent, {
+    data: {
+      model
+    }
+  })
     .afterClosed()
     .pipe(
-      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
+      filter(
+        (result) =>
+          (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
+      )
     );
+};
+
+MatDialog.prototype.openExportModel = function (
+  this: MatDialog,
+  data: ExportModelDialogOptions
+): Observable<ExportModelDialogResponse> {
+  return this.open<
+    ExportModelDialogComponent,
+    ExportModelDialogOptions,
+    ExportModelDialogResponse
+  >(ExportModelDialogComponent, {
+    data,
+    maxWidth: 600
+  })
+    .afterClosed()
+    .pipe(filter((response) => response.status === ModalDialogStatus.Ok));
 };

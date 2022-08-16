@@ -35,7 +35,6 @@ import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
   MessageHandlerService,
-  SharedService,
   StateHandlerService
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -69,7 +68,6 @@ export class MergeDiffContainerComponent implements OnInit {
   activeTab: number;
 
   constructor(
-    private shared: SharedService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private mergeDiff: MergeDiffAdapterService,
@@ -78,12 +76,6 @@ export class MergeDiffContainerComponent implements OnInit {
     private title: Title) { }
 
   ngOnInit(): void {
-    if (!this.shared.features.useMergeUiV2) {
-      // Feature toggle guard
-      this.stateHandler.Go('alldatamodel');
-      return;
-    }
-
     this.title.setTitle('Merge Changes');
 
     const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;

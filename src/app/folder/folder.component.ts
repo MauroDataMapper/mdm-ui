@@ -29,13 +29,13 @@ import {
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   FolderDetail,
   FolderDetailResponse,
   PermissionsResponse,
-  SecurableDomainType
+  SecurableDomainType,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -50,14 +50,11 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class FolderComponent
   extends BaseComponent
   implements OnInit, OnDestroy {
-
-
   readonly domainType = 'folders';
 
   folder: FolderDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
-  showSearch = false;
   parentId: string;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
@@ -72,7 +69,13 @@ export class FolderComponent
   isLoadingRules = true;
   access: Access;
   annotationsView = 'default';
-  tabs = new TabCollection(['description', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'search',
+    'description',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -83,8 +86,7 @@ export class FolderComponent
     private securityHandler: SecurityHandlerService,
     private broadcast: BroadcastService,
     private title: Title,
-    private dialog: MatDialog,
-    private  editingService: EditingService,
+    private editingService: EditingService,
     private messageHandler: MessageHandlerService
   ) {
     super();
@@ -105,23 +107,17 @@ export class FolderComponent
     this.title.setTitle('Folder');
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
-    this.folderDetails(this.uiRouterGlobals.params.id);
+    this.folderDetails(this.uiRouterGlobals.params.id as Uuid);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
         this.showSecuritySection = message;
       }
     );
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
-    this.afterSave = (result: { body: { id: any } }) =>
+    this.afterSave = (result: { body: { id: Uuid } }) =>
       this.folderDetails(result.body.id);
 
-    this.activeTab = this.tabs
-      .getByName(this.uiRouterGlobals.params.tabView)
-      .index;
+    const tabView: string = this.uiRouterGlobals.params.tabView;
+    this.activeTab = this.tabs.getByName(tabView ?? 'description').index;
 
     this.tabSelected(this.activeTab);
   }
@@ -144,7 +140,7 @@ export class FolderComponent
     });
   }
 
-  folderPermissions(id: any) {
+  folderPermissions(id: Uuid) {
     this.resources.security
       .permissions(SecurableDomainType.Folders, id)
       .subscribe((permissions: PermissionsResponse) => {
@@ -152,10 +148,6 @@ export class FolderComponent
           this.folder[attrname] = permissions.body[attrname];
         });
       });
-  }
-
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
   }
 
   ngOnDestroy() {
@@ -167,19 +159,14 @@ export class FolderComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go(
-      'folder',
-      { tabView: tab.name },
-      { notify: false }
-    );
+    this.stateHandler.Go('folder', { tabView: tab.name }, { notify: false });
   }
 
   save(folderUpdates: Array<DefaultProfileItem>) {
-
     const resource = {
-        id: this.folder.id,
-        label: this.folder.label,
-        domainType: this.folder.domainType
+      id: this.folder.id,
+      label: this.folder.label,
+      domainType: this.folder.domainType
     };
 
     folderUpdates.forEach((item) => {

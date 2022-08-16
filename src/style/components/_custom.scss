@@ -18,13 +18,19 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 /* Import all custom components SASS files to access their mixins */
-@import "../../app/navbar/navbar.component.scss";
-@import "../../app//shared/models/models.component.scss";
-@import "../../app/shared/alert/alert.component.scss";
+@import '../../app/navbar/navbar.component.scss';
+@import '../../app//shared/footer/footer.component.scss';
+@import '../../app//shared/models/models.component.scss';
+@import '../../app/shared/alert/alert.component.scss';
+@import '../../app/catalogue-search/catalogue-item-search-result/catalogue-item-search-result.component.scss';
+@import '../../app/catalogue-search/search-filters/search-filters.component.scss';
 
 /* Combine all custom component theme mixins into one */
 @mixin mdm-custom-components-theme($theme) {
   @include mdm-navbar-theme($theme);
+  @include mdm-footer-theme($theme);
   @include mdm-models-tree-theme($theme);
   @include mdm-alert-theme($theme);
+  @include mdm-catalogue-item-search-result-theme($theme);
+  @include mdm-search-filters-theme($theme);
 }

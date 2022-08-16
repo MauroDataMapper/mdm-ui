@@ -189,6 +189,27 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     publiclyVisible: true
   },
   {
+    key: 'content.about.application.name',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.about.content',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.about.contact.details',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
     key: 'content.footer.copyright',
     category: 'Content',
     editType: ApiPropertyEditType.Value,
@@ -255,6 +276,38 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
   {
     key: 'feature.use_issue_reporting',
     category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'ui.default.profile.namespace',
+    category: 'UI',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'ui.default.profile.simplified_entry',
+    category: 'UI',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'security.restrict.root.folder',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'security.restrict.classifier.create',
+    category: 'security',
     editType: ApiPropertyEditType.Boolean,
     isSystem: true,
     publiclyVisible: true,

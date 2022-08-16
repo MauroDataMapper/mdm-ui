@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
                                       </button>
                                     </mat-menu>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn() && ((isAdministrator && isRootFolderRestricted) || !isRootFolderRestricted)" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
                                         <span class="fas fa-folder-plus"></span>
                                     </button>
                                 </span>
@@ -187,7 +187,7 @@ SPDX-License-Identifier: Apache-2.0
                                     <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
                                         <span class="fas fa-search"></span>
                                     </button>
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="onAddClassifier()" aria-label="Create a new classification">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn() && ((isAdministrator && isClassifierCreateRestricted) || !isClassifierCreateRestricted)" matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="onAddClassifier()" aria-label="Create a new classification">
                                         <span class="fas fa-folder-plus"></span>
                                     </button>
                                 </span>

@@ -27,8 +27,8 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
           <div class="mb-2 mt-2">
             <p>
-              A new version of <strong>{{ catalogueItem.label }}</strong> keeps all of the
-              following:
+              A new version of <strong>{{ catalogueItem.label }}</strong> keeps
+              all of the following:
             </p>
             <ul>
               <li *ngIf="domainType === 'VersionedFolder'">Models</li>
@@ -55,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
                       (selectionChange)="actionChanged()"
                     >
                       <mat-select-trigger>
-                        {{actionSelectedName}}
+                        {{ actionSelectedName }}
                       </mat-select-trigger>
                       <mat-option
                         *ngFor="let availableAction of availableActions"
@@ -69,7 +69,10 @@ SPDX-License-Identifier: Apache-2.0
                         <p>
                           <small
                             [innerHTML]="
-                              availableAction.getDescription(domainType, catalogueItem)
+                              availableAction.getDescription(
+                                domainType,
+                                catalogueItem
+                              )
                             "
                           >
                           </small>
@@ -124,6 +127,25 @@ SPDX-License-Identifier: Apache-2.0
                       Please enter a branch name
                     </mat-error>
                   </mat-form-field>
+                </div>
+
+                <div class="mdm-new-version__checkbox-option">
+                  <mat-checkbox formControlName="asynchronous"
+                    >Create in the background</mat-checkbox
+                  >
+                  <mdm-alert alertStyle="info" [showIcon]="true">
+                    <p>
+                      When checked, the new version will be created by Mauro in
+                      the background, allowing you to continue to work in Mauro
+                      Data Mapper. The new version will eventually be created
+                      for you to use.
+                    </p>
+                    <p>
+                      This option is recommended when your previous model is
+                      large, as it may take some time for Mauro to create the
+                      new version.
+                    </p>
+                  </mdm-alert>
                 </div>
 
                 <div *ngIf="actionValue" class="mt-4">

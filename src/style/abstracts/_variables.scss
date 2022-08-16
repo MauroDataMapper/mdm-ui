@@ -19,9 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 $defaultFontSize: 17px;
 
 $defaultFontColour: #333;
-$defaultLinkColour: #337AB7;
-$defaultInfoColor: #005EB8;
+$defaultLinkColour: #337ab7;
+$defaultInfoColor: #005eb8;
 $defaultWarningColor: #f19e3f;
+$defaultSuccessColor: #388e3c;
 $defaultFavoritesColor: #ff9933;
 
 $mobile-xs: 460px;
@@ -29,6 +30,6 @@ $mobile: 768px;
 $tablet: 992px;
 $desktop: 1600px;
 
-$fa-font-path: "assets/webfonts";
+$fa-font-path: 'assets/webfonts';
 
 $forms-max-width: 800px;

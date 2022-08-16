@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 @use '~@angular/material' as mat;
-@import "~ngx-toastr/toastr.css";
+@import '~ngx-toastr/toastr.css';
 
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
@@ -32,14 +32,14 @@ SPDX-License-Identifier: Apache-2.0
 Themes
 Import more theme SASS files here to make them available to the app
 */
-@import "style/themes/default.scss";
-@import "style/themes/nhs-digital.scss";
+@import 'style/themes/default.scss';
+@import 'style/themes/nhs-digital.scss';
 
 /* import custom styling */
 /* Abstracts */
-@import "style/abstracts/variables";
-@import "style/abstracts/mixins";
-@import "style/abstracts/helpers";
+@import 'style/abstracts/variables';
+@import 'style/abstracts/mixins';
+@import 'style/abstracts/helpers';
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
@@ -48,19 +48,18 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/brands';
 @import '@fortawesome/fontawesome-free/scss/v4-shims';
 
-@import "style/main";
-@import "style/default";
+@import 'style/main';
+@import 'style/default';
 /* Components */
-@import "style/components/header";
-@import "style/components/footer";
-@import "style/components/forms";
-@import "style/components/table";
-@import "style/components/modal";
+@import 'style/components/header';
+@import 'style/components/forms';
+@import 'style/components/table';
+@import 'style/components/modal';
 /* Layouts */
-@import "style/layout/home";
-@import "style/layout/admin";
-@import "style/layout/browse";
-@import "style/layout/tree";
+@import 'style/layout/home';
+@import 'style/layout/admin';
+@import 'style/layout/browse';
+@import 'style/layout/tree';
 
-@import "ag-grid-community/dist/styles/ag-grid.css";
-@import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import 'ag-grid-community/dist/styles/ag-grid.css';
+@import 'ag-grid-community/dist/styles/ag-theme-alpine.css';

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Component, OnInit, Input } from '@angular/core';
-import { EMPTY } from 'rxjs';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -37,6 +37,7 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
   CatalogueItemDomainType,
+  Exporter,
   ModelUpdatePayload,
   ReferenceDataModelDetail,
   ReferenceDataModelDetailResponse
@@ -44,6 +45,7 @@ import {
 import { ValidatorService } from '@mdm/services';
 import { Access } from '@mdm/model/access';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -57,11 +59,8 @@ export class ReferenceDataDetailsComponent implements OnInit {
   isLoggedIn: boolean;
   isAdministrator = false;
   deleteInProgress: boolean;
-  exporting: boolean;
   errorMessage = '';
   processing = false;
-  exportError = null;
-  exportList = [];
   compareToList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
   access: Access;
@@ -81,13 +80,16 @@ export class ReferenceDataDetailsComponent implements OnInit {
   ) {}
 
   get canChangeBranchName() {
-    return this.access.showEdit && this.refDataModel.branchName !== defaultBranchName;
+    return (
+      this.access.showEdit && this.refDataModel.branchName !== defaultBranchName
+    );
   }
 
   ngOnInit() {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
-    this.loadExporterList();
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
     this.ReferenceModelDetails();
     this.originalRefDataModel = Object.assign({}, this.refDataModel);
   }
@@ -326,75 +328,67 @@ export class ReferenceDataDetailsComponent implements OnInit {
     this.showEdit = false;
   }
 
-  export(exporter) {
-    this.exportError = null;
-    this.processing = true;
-
-    this.exportHandler
-      .exportDataModel([this.refDataModel], exporter, 'referenceDataModels')
-      .subscribe(
-        (refDataModel) => {
-          if (refDataModel != null) {
-            const tempDownloadList = Object.assign([], this.downloadLinks);
-            const label =
-              [this.refDataModel].length === 1
-                ? [this.refDataModel][0].label
-                : 'reference_models';
-            const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([refDataModel.body], {
-              type: exporter.fileType
-            });
-            const link = this.exportHandler.createBlobLink(file, fileName);
-            tempDownloadList.push(link);
-            this.downloadLinks = tempDownloadList;
-            this.processing = false;
-          } else {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem exporting the Reference Data Model.',
-              ''
-            );
-          }
-        },
-        (error) => {
-          this.processing = false;
+  exportModel() {
+    this.dialog
+      .openExportModel({ domain: 'referenceDataModels' })
+      .pipe(
+        switchMap((response) => {
+          this.processing = true;
+          return forkJoin([
+            of(response.exporter),
+            this.exportHandler.exportDataModel(
+              [this.refDataModel],
+              response.exporter,
+              'referenceDataModels',
+              response.parameters
+            )
+          ]);
+        }),
+        catchError((error) => {
           this.messageHandler.showError(
-            'There was a problem exporting the Reference Data Model.',
+            'There was a problem exporting the model.',
             error
           );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe(([exporter, response]) => {
+        if (response.status === 202) {
+          this.handleAsyncExporterResponse();
+          return;
         }
-      );
+
+        this.handleStandardExporterResponse(exporter, response);
+      });
   }
 
-  loadExporterList() {
-    this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((refDataModel) => {
-      if (!refDataModel.body.authenticatedSession) {
-        return;
-      }
-
-      this.resourcesService.referenceDataModel.exporters().subscribe(
-        (res) => {
-          this.exportList = res.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
-        }
-      );
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.refDataModel.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
     });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newversionmodel',
-      {
-        id: this.refDataModel.id,
-        domainType: this.refDataModel.domainType
-      }
-    );
+    this.stateHandler.Go('newversionmodel', {
+      id: this.refDataModel.id,
+      domainType: this.refDataModel.domainType
+    });
   }
 
   compare(referenceDataModel = null) {
@@ -409,23 +403,10 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   merge() {
-    if (this.sharedService.features.useMergeUiV2) {
-      return this.stateHandler.Go(
-        'mergediff',
-        {
-          sourceId: this.refDataModel.id,
-          catalogueDomainType: this.refDataModel.domainType
-        });
-    }
-
-    return this.stateHandler.Go(
-      'modelsmerging',
-      {
-        sourceId: this.refDataModel.id,
-        targetId: null
-      },
-      null
-    );
+    return this.stateHandler.Go('mergediff', {
+      sourceId: this.refDataModel.id,
+      catalogueDomainType: this.refDataModel.domainType
+    });
   }
 
   showMergeGraph() {
@@ -441,18 +422,22 @@ export class ReferenceDataDetailsComponent implements OnInit {
   }
 
   editBranchName() {
-    this.dialog.openChangeBranchName(this.refDataModel)
+    this.dialog
+      .openChangeBranchName(this.refDataModel)
       .pipe(
-        switchMap(dialogResult => {
+        switchMap((dialogResult) => {
           const payload: ModelUpdatePayload = {
             id: this.refDataModel.id,
             domainType: this.refDataModel.domainType,
             branchName: dialogResult.branchName
           };
 
-          return this.resourcesService.referenceDataModel.update(payload.id, payload);
+          return this.resourcesService.referenceDataModel.update(
+            payload.id,
+            payload
+          );
         }),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(
             'There was a problem updating the branch name.',
             error
@@ -461,7 +446,9 @@ export class ReferenceDataDetailsComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Reference Data Model branch name updated successfully.');
+        this.messageHandler.showSuccess(
+          'Reference Data Model branch name updated successfully.'
+        );
         this.stateHandler.Go(
           'referencedatamodel',
           { id: this.refDataModel.id },

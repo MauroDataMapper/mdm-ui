@@ -44,14 +44,16 @@ import { SecurityModalComponent } from './security-modal/security-modal.componen
 import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
-import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 import { ChangeBranchNameModalComponent } from './change-branch-name-modal/change-branch-name-modal.component';
+import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 
-const defaultAceConfig: AceConfigInterface = {
-};
+const defaultAceConfig: AceConfigInterface = {};
 
 @NgModule({
   imports: [
@@ -67,7 +69,8 @@ const defaultAceConfig: AceConfigInterface = {
     SharedModule,
     AceModule,
     CatalogueModule,
-    PipesModule
+    PipesModule,
+    FoldersTreeModule
   ],
   declarations: [
     RegisterModalComponent,
@@ -91,7 +94,9 @@ const defaultAceConfig: AceConfigInterface = {
     ApiKeysModalComponent,
     MarkupDisplayModalComponent,
     DefaultProfileEditorModalComponent,
-    ChangeBranchNameModalComponent
+    ChangeBranchNameModalComponent,
+    CatalogueItemSelectModalComponent,
+    ExportModelDialogComponent
   ],
   providers: [
     ModalService,
@@ -105,7 +110,8 @@ const defaultAceConfig: AceConfigInterface = {
     LoginModalComponent,
     ForgotPasswordModalComponent,
     ConfirmationModalComponent,
-    ChangeBranchNameModalComponent
+    ChangeBranchNameModalComponent,
+    ExportModelDialogComponent
   ]
 })
 export class ModalModule {

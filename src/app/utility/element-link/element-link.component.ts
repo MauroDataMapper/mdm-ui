@@ -18,11 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
-import { ElementTypesService } from '@mdm/services/element-types.service';
+import {
+  CatalogueElementType,
+  ElementTypesService
+} from '@mdm/services/element-types.service';
 
 @Component({
   selector: 'mdm-element-link',
-  templateUrl: './element-link.component.html',
+  templateUrl: './element-link.component.html'
 })
 export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
@@ -55,7 +58,7 @@ export class ElementLinkComponent implements OnInit {
   versionNumber: string;
   openLinkLocation: string;
   elementTypeTitle: string;
-  types: any[];
+  types: CatalogueElementType[];
 
   replaceLabelBy: any;
   disableLink: any;
@@ -69,7 +72,9 @@ export class ElementLinkComponent implements OnInit {
     this.linkUrl = this.elementTypes.getLinkUrl(this.element);
 
     if (!this.hideVersionNumber) {
-      this.versionNumber = this.element?.documentationVersion ? `Documentation Version: ${this.element.documentationVersion}` : '';
+      this.versionNumber = this.element?.documentationVersion
+        ? `Documentation Version: ${this.element.documentationVersion}`
+        : '';
     }
 
     this.label = this.element?.label || this.element?.definition;
@@ -84,9 +89,19 @@ export class ElementLinkComponent implements OnInit {
       this.label = this.replaceLabelBy;
     }
 
-    if (this.showParentDataModelName && this.element?.domainType !== 'DataModel' && this.element?.domainType !== 'Term' && this.element?.domainType !== 'Terminology') {
-      const parentDM = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0 ? this.element?.breadcrumbs[0] : null;
-      this.label = parentDM?.label ? (`${parentDM?.label} : ${this.label}`) : this.label;
+    if (
+      this.showParentDataModelName &&
+      this.element?.domainType !== 'DataModel' &&
+      this.element?.domainType !== 'Term' &&
+      this.element?.domainType !== 'Terminology'
+    ) {
+      const parentDM =
+        this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
+          ? this.element?.breadcrumbs[0]
+          : null;
+      this.label = parentDM?.label
+        ? `${parentDM?.label} : ${this.label}`
+        : this.label;
       if (this.label === 'undefined : undefined') {
         this.label = '';
       }
@@ -102,10 +117,10 @@ export class ElementLinkComponent implements OnInit {
     if (
       this.element &&
       this.element.domainType &&
-      this.types.filter(x => x.id === this.element.domainType)
+      this.types.filter((x) => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        x => x.id === this.element.domainType
+        (x) => x.id === this.element.domainType
       )[0].title;
     }
   }

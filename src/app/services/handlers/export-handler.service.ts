@@ -16,62 +16,89 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {
+  CatalogueItem,
+  Exporter,
+  ExportQueryParameters,
+  ModelDomain
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { Observable } from 'rxjs';
+import { DomainExport } from '@maurodatamapper/mdm-resources';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { MessageHandlerService } from '../utility/message-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExportHandlerService {
+  constructor(
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService
+  ) {}
 
-  constructor(private resources: MdmResourcesService) { }
-
-  createFileName(label, exporter) {
+  createFileName(label: string, exporter: Exporter) {
     const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
     const rightNow = new Date();
-    const res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
+    const res = rightNow
+      .toISOString()
+      .slice(0, 19)
+      .replace(/-/g, '')
+      .replace(/:/g, '');
     // remove space from dataModelLabel and replace all spaces with _ and also add date/time and extension
-    // return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
-    return `${label.trim().toLowerCase().split(' ').join('_')}_${res}.${extension}`;
+    return `${label
+      .trim()
+      .toLowerCase()
+      .split(' ')
+      .join('_')}_${res}.${extension}`;
   }
 
-  exportDataModel(dataModels, exporter, type) {
+  /**
+   * Exports one or more models from Mauro.
+   *
+   * @param models One or more model identifiers to export.
+   * @param exporter The exporter to use.
+   * @param type The domain type to use.
+   * @param options Additional options, if any, to control the export process.
+   * @returns A {@link HttpResponse<ArrayBuffer>} object. The body of the response will hold the raw exported data for you to
+   * write to an output source.
+   */
+  exportDataModel(
+    models: CatalogueItem[],
+    exporter: Exporter,
+    type: ModelDomain,
+    options?: ExportQueryParameters
+  ): Observable<HttpResponse<ArrayBuffer>> {
+    const ids = models.map((model) => model.id);
+    const resource = this.resources.getExportableResource(type);
+    const requestSettings = { responseType: 'arraybuffer' };
 
-    const modelIds = [];
-    dataModels.forEach(dm => {
-      modelIds.push(dm.id);
-    });
-
-    if (type === 'dataModels') {
-      if (modelIds.length > 1) {
-        return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
-      }
-      return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
+    if (ids.length > 1) {
+      return resource.exportModels(
+        exporter.namespace,
+        exporter.name,
+        exporter.version,
+        ids,
+        options,
+        requestSettings
+      );
     }
 
-    if (type === 'terminologies') {
-      if (modelIds.length > 1) {
-        return this.resources.terminology.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
-      }
-      return this.resources.terminology.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
-    }
-
-    if (type === 'codeSets') {
-      if (modelIds.length > 1) {
-        return this.resources.codeSet.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
-      }
-      return this.resources.codeSet.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
-    }
-
-    if (type === 'referenceDataModels') {
-      if (modelIds.length > 1) {
-        return this.resources.referenceDataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
-      }
-      return this.resources.referenceDataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
-    }
+    const id = ids[0];
+    return resource.exportModel(
+      id,
+      exporter.namespace,
+      exporter.name,
+      exporter.version,
+      options,
+      requestSettings
+    );
   }
 
-  createBlobLink(blob, fileName) {
+  createBlobLink(blob: Blob, fileName: string) {
     // http://jsbin.com/kelijatigo/edit?html,js,output
     // https://github.com/keeweb/keeweb/issues/130
     const url = (window.URL || window.webkitURL).createObjectURL(blob);
@@ -84,5 +111,32 @@ export class ExportHandlerService {
     // DO NOT set target!!!!!
     // link.setAttribute('target', '_blank');
     return link;
+  }
+
+  downloadDomainExport(item: DomainExport) {
+    this.resources.domainExports
+      .download(item.id, {}, { responseType: 'arraybuffer' })
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem downloading this export.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((response: HttpResponse<ArrayBuffer>) => {
+        const blob = new Blob([response.body], {
+          type: item.export.contentType
+        });
+        // Create a temporary anchor to click and trigger the browser to save the downloaded file
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', item.export.fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
   }
 }

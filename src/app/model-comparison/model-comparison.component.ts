@@ -16,12 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { Observable } from 'rxjs';
+import {
+  DataModelDetailResponse,
+  MdmTreeItemListResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-comparison',
@@ -53,16 +58,13 @@ export class ModelComparisonComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
     private resources: MdmResourcesService,
-    private stateService: StateService,
-    private changeDetector: ChangeDetectorRef
-  ) { }
+    private routerGlobals: UIRouterGlobals
+  ) {}
 
   /* eslint-disable no-shadow */
   async ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    const sourceId = this.stateService.params.sourceId;
-    // tslint:disable-next-line: deprecation
-    const targetId = this.stateService.params.targetId;
+    const sourceId: Uuid = this.routerGlobals.params.sourceId;
+    const targetId: Uuid = this.routerGlobals.params.targetId;
 
     if (sourceId) {
       this.sourceModel = await this.loadDataModelDetail(sourceId);
@@ -115,14 +117,18 @@ export class ModelComparisonComponent implements OnInit {
     return swapNeeded;
   };
 
-  async loadDataModelDetail(modelId) {
+  async loadDataModelDetail(modelId: Uuid) {
     if (!modelId) {
       return null;
     }
 
-    const response = await this.resources.dataModel.get(modelId).toPromise();
+    const response: DataModelDetailResponse = await this.resources.dataModel
+      .get(modelId)
+      .toPromise();
     const model = response.body;
-    const children = await this.resources.tree.get('dataModels', model.domainType, model.id).toPromise();
+    const children: MdmTreeItemListResponse = await this.resources.tree
+      .get('folders', 'dataModels', model.id)
+      .toPromise();
     model.children = children.body;
     if (model.children?.length > 0) {
       model.hasChildren = true;
@@ -237,8 +243,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[rightId].modified = true;
 
     if (metadataDiff.created) {
-      metadataDiff.created.forEach(item => {
-
+      metadataDiff.created.forEach((item) => {
         const created = item.value ?? item;
         created.created = true;
         diffMap[leftId].diffs.metadata.push(created);
@@ -246,8 +251,7 @@ export class ModelComparisonComponent implements OnInit {
       });
     }
     if (metadataDiff.deleted) {
-       metadataDiff.deleted.forEach(item => {
-
+      metadataDiff.deleted.forEach((item) => {
         const deleted = item.value ?? item;
         deleted.deleted = true;
         diffMap[leftId].diffs.metadata.push(deleted);
@@ -255,7 +259,7 @@ export class ModelComparisonComponent implements OnInit {
       });
     }
     if (metadataDiff.modified) {
-      metadataDiff.modified.forEach(modified => {
+      metadataDiff.modified.forEach((modified) => {
         const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
@@ -284,8 +288,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[rightId].modified = true;
 
     if (enumerationValuesDiff.created) {
-      enumerationValuesDiff.created.forEach(item => {
-
+      enumerationValuesDiff.created.forEach((item) => {
         const created = item.value ?? item;
         created.created = true;
         diffMap[leftId].diffs.enumerationValues.push(created);
@@ -293,8 +296,7 @@ export class ModelComparisonComponent implements OnInit {
       });
     }
     if (enumerationValuesDiff.deleted) {
-      enumerationValuesDiff.deleted.forEach(item => {
-
+      enumerationValuesDiff.deleted.forEach((item) => {
         const deleted = item.value ?? item;
         deleted.deleted = true;
         diffMap[leftId].diffs.enumerationValues.push(deleted);
@@ -303,7 +305,7 @@ export class ModelComparisonComponent implements OnInit {
     }
 
     if (enumerationValuesDiff.modified) {
-      enumerationValuesDiff.modified.forEach(modified => {
+      enumerationValuesDiff.modified.forEach((modified) => {
         const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
@@ -328,16 +330,17 @@ export class ModelComparisonComponent implements OnInit {
     this.diffs = [];
     this.processing = true;
 
-    this.resources.dataModel.diff(this.sourceModel.id, this.targetModel.id)
+    this.resources.dataModel
+      .diff(this.sourceModel.id, this.targetModel.id)
       .subscribe(
-        res => {
+        (res) => {
           this.processing = false;
           const result = res.body;
 
           const diffMap = {};
 
           // Run for DataModel
-          result.diffs.forEach(diff => {
+          result.diffs.forEach((diff) => {
             if (diff.label) {
               this.findDiffProps(
                 'label',
@@ -385,13 +388,13 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
 
-          result.diffs.forEach(diff => {
-            this.diffElements.forEach(diffElement => {
+          result.diffs.forEach((diff) => {
+            this.diffElements.forEach((diffElement) => {
               if (!diff[diffElement]) {
                 return;
               }
 
-            diff[diffElement].created?.forEach(item => {
+              diff[diffElement].created?.forEach((item) => {
                 const el = item.value ?? item;
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
@@ -432,7 +435,7 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-              diff[diffElement].deleted?.forEach(item => {
+              diff[diffElement].deleted?.forEach((item) => {
                 const el = item.value ?? item;
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
@@ -475,9 +478,8 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-               diff[diffElement].modified?.forEach(item => {
-
-                  const el = item.value ?? item;
+              diff[diffElement].modified?.forEach((item) => {
+                const el = item.value ?? item;
                 this.initDiff(el.leftId, diffMap);
                 diffMap[el.leftId].modified = true;
                 diffMap[el.leftId].id = el.leftId;
@@ -559,7 +561,7 @@ export class ModelComparisonComponent implements OnInit {
 
                 // Run for Element
                 // tslint:disable-next-line: no-shadowed-variable
-                el.diffs.forEach(elemDiff => {
+                el.diffs.forEach((elemDiff) => {
                   if (elemDiff.label) {
                     this.findDiffProps(
                       'label',
@@ -624,7 +626,10 @@ export class ModelComparisonComponent implements OnInit {
                     );
                   }
 
-                  if (diffElement === 'dataTypes' && elemDiff.enumerationValues) {
+                  if (
+                    diffElement === 'dataTypes' &&
+                    elemDiff.enumerationValues
+                  ) {
                     this.findDiffEnumerationValues(
                       el.leftId,
                       el.rightId,
@@ -661,7 +666,7 @@ export class ModelComparisonComponent implements OnInit {
             ].modified;
           }
 
-          this.sourceModel.children.forEach(dc => {
+          this.sourceModel.children.forEach((dc) => {
             if (this.diffMap[dc.id]) {
               dc.deleted = this.diffMap[dc.id].deleted;
               dc.created = this.diffMap[dc.id].created;
@@ -669,7 +674,7 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
 
-          this.targetModel.children.forEach(dc => {
+          this.targetModel.children.forEach((dc) => {
             if (this.diffMap[dc.id]) {
               dc.deleted = this.diffMap[dc.id].deleted;
               dc.created = this.diffMap[dc.id].created;
@@ -679,7 +684,7 @@ export class ModelComparisonComponent implements OnInit {
 
           this.onNodeClick(this.sourceModel);
         },
-        error => {
+        (error) => {
           this.messageHandler.showError(
             'There was a problem comparing the Data Models.',
             error
@@ -689,11 +694,13 @@ export class ModelComparisonComponent implements OnInit {
       );
   };
 
-  onNodeExpand = node => {
-    const obs = new Observable(sub => {
-      this.resources.tree.get('dataModels', node.domainType, node.id).subscribe(res => {
+  onNodeExpand = (node) => {
+    const obs = new Observable((sub) => {
+      this.resources.tree
+        .get('dataModels', node.domainType, node.id)
+        .subscribe((res) => {
           const result = res.body;
-          result.forEach(dc => {
+          result.forEach((dc) => {
             if (this.diffMap[dc.id]) {
               dc.deleted = this.diffMap[dc.id].deleted;
               dc.created = this.diffMap[dc.id].created;
@@ -706,7 +713,7 @@ export class ModelComparisonComponent implements OnInit {
     return obs;
   };
 
-  onNodeClick = node => {
+  onNodeClick = (node) => {
     this.diffs = [];
     if (!this.diffMap[node.id]) {
       return;
@@ -719,7 +726,7 @@ export class ModelComparisonComponent implements OnInit {
       created: 0,
       modified: 0
     };
-    this.diffs.dataTypes.forEach(value => {
+    this.diffs.dataTypes.forEach((value) => {
       if (value.deleted) {
         this.diffs.dataTypesStatus.deleted++;
       }
@@ -740,7 +747,7 @@ export class ModelComparisonComponent implements OnInit {
       created: 0,
       modified: 0
     };
-    this.diffs.dataElements.forEach(value => {
+    this.diffs.dataElements.forEach((value) => {
       if (value.deleted) {
         this.diffs.dataElementsStatus.deleted++;
       }
@@ -780,11 +787,15 @@ export class ModelComparisonComponent implements OnInit {
         return;
       }
 
-      this.diffs.filteredDataElements = this.diffs.dataElements.filter(dataType => {
-        return (this.form.dataElementFilter === 'deleted' && dataType.deleted) ||
-          (this.form.dataElementFilter === 'created' && dataType.created) ||
-          (this.form.dataElementFilter === 'modified' && dataType.modified);
-      });
+      this.diffs.filteredDataElements = this.diffs.dataElements.filter(
+        (dataType) => {
+          return (
+            (this.form.dataElementFilter === 'deleted' && dataType.deleted) ||
+            (this.form.dataElementFilter === 'created' && dataType.created) ||
+            (this.form.dataElementFilter === 'modified' && dataType.modified)
+          );
+        }
+      );
     }
   };
 
@@ -795,12 +806,13 @@ export class ModelComparisonComponent implements OnInit {
         return;
       }
 
-      this.diffs.filteredDataTypes = this.diffs.dataTypes.filter(dataType => {
-        return (this.form.dataTypeFilter === 'deleted' && dataType.deleted) ||
+      this.diffs.filteredDataTypes = this.diffs.dataTypes.filter((dataType) => {
+        return (
+          (this.form.dataTypeFilter === 'deleted' && dataType.deleted) ||
           (this.form.dataTypeFilter === 'created' && dataType.created) ||
-          (this.form.dataTypeFilter === 'modified' && dataType.modified);
-      }
-      );
+          (this.form.dataTypeFilter === 'modified' && dataType.modified)
+        );
+      });
     }
   };
 }

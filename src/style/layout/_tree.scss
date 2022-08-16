@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 mat-tree-node.mat-tree-node {
-
   min-height: 0px;
   overflow: unset;
   align-items: baseline;
@@ -67,8 +66,7 @@ mat-tree-node.mat-tree-node {
     padding: 1px;
   }
 
-  div.mat-tree-node-active
-  {
+  div.mat-tree-node-active {
     background: #e5eeff;
     padding-right: 6px;
     border-radius: 5px;
@@ -82,11 +80,10 @@ mat-tree-node.mat-tree-node {
       line-height: 20px;
     }
   }
-
 }
 .branch-name {
   padding: 0px 6px;
-  color: #4F575F !important;
+  color: #4f575f !important;
   border: 1px solid #b7d4ef;
   background-color: #eaf5ff;
   border-radius: 6px;
@@ -96,7 +93,7 @@ mat-tree-node.mat-tree-node {
   margin-left: 8px;
   display: inline-flex;
   padding: 0px 4px;
-  color: #4F575F !important;
+  color: #4f575f !important;
   border: 1px solid #b7d4ef;
   background-color: #eaf5ff;
   border-radius: 6px;
@@ -109,7 +106,6 @@ mat-tree-node.mat-tree-node {
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
   vertical-align: 0.09em;
-  line-height: 1;
   min-width: 20px;
   width: 20px;
   color: #f19e3f;
@@ -120,7 +116,10 @@ mat-tree-node.mat-tree-node {
 .mat-tree {
   padding: 0 10px 10px 10px;
 }
-.fa-folder, .mat-icon.fa-folder-open, .fa-folder-plus, .dataModelTypeIcon {
+.fa-folder,
+.mat-icon.fa-folder-open,
+.fa-folder-plus,
+.dataModelTypeIcon {
   color: #f19e3f;
 }
 i.favouritesIcon.addedToFavourite {
@@ -129,7 +128,9 @@ i.favouritesIcon.addedToFavourite {
 i.subscribedIcon {
   color: #028821;
 }
-.mat-tree-node-content .deleted, .node-title.deleted, .deleted-folder {
+.mat-tree-node-content .deleted,
+.node-title.deleted,
+.deleted-folder {
   opacity: 0.5;
   text-decoration: line-through;
 }
@@ -145,10 +146,11 @@ div.mat-menu-panel.filterMenu {
   max-width: 100%;
 }
 
-span.tree-top-actions button, .import-folder-actions button {
-    padding: 0;
-    min-width: 44px;
-    height: 44px;
+span.tree-top-actions button,
+.import-folder-actions button {
+  padding: 0;
+  min-width: 44px;
+  height: 44px;
 }
 .date-from-actions .input-group-btn button {
   padding: 0;
@@ -164,11 +166,15 @@ div.mat-tab-label {
 div.mat-tab-label {
   height: 38px;
 }
-.table td, .table th, tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-  padding: .45rem .75rem;
+.table td,
+.table th,
+tr td.mat-cell,
+tr td.mat-footer-cell,
+tr th.mat-header-cell {
+  padding: 0.45rem 0.75rem;
 }
 tr th.mat-header-cell {
-   padding: .3rem .75rem;
+  padding: 0.3rem 0.75rem;
 }
 
 /* Styles for the active tab label */
@@ -186,12 +192,11 @@ tr th.mat-header-cell {
   padding-top: 8px;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
-  background-color:#FFF;
-  width:100%;
+  background-color: #fff;
+  width: 100%;
   z-index: 900;
   min-height: 200px;
 }
-
 
 #importFile {
   display: block;
@@ -203,7 +208,7 @@ tr th.mat-header-cell {
 }
 
 #inlineEditWrapper {
-  display: inline-block
+  display: inline-block;
 }
 
 .detailsRowHeader {
@@ -212,10 +217,8 @@ tr th.mat-header-cell {
   @include respond-to($mobile-xs) {
     max-width: 140px;
     width: 140px;
-  };
+  }
 }
-
-
 
 /* Favourites */
 div.noFilterResult {
@@ -287,8 +290,8 @@ ul.favourites li:focus {
   margin-top: 6px;
 
   small {
-  margin-right: 16px;
-  font-size: 90%;
+    margin-right: 16px;
+    font-size: 90%;
     i,
     span.fas,
     span.fab,
@@ -313,7 +316,8 @@ ul.favourites li:focus {
 .detail-icons--cta {
   float: right;
   font-size: 24px;
-  margin-top: 10px;
+  margin-top: 8px;
+  margin-right: 8px;
   i.helpIcon {
     margin-right: 10px;
   }
@@ -322,7 +326,6 @@ ul.favourites li:focus {
 .dataModelDetailsLabel {
   word-break: break-word;
 }
-
 
 div.mcSelectHolder {
   border: 1px solid #ddd;

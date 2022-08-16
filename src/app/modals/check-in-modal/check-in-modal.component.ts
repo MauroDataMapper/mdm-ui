@@ -21,7 +21,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MergeDiffType, MergeConflictResolution, Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
-import { SharedService } from '@mdm/services';
 import { CheckinModelConfiguration, CheckinModelResult } from './check-in-modal-payload';
 
 @Component({
@@ -33,7 +32,6 @@ export class CheckInModalComponent implements OnInit {
 
   commitComment: string;
   deleteSourceBranch: boolean;
-  useMergeDiffModule: boolean;
   items: MergeDiffItemModel[];
   label: string;
   domainType: MergableMultiFacetAwareDomainType;
@@ -44,14 +42,12 @@ export class CheckInModalComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelResult>,
-    @Inject(MAT_DIALOG_DATA) public data: CheckinModelConfiguration,
-    private sharedService: SharedService) { }
+    @Inject(MAT_DIALOG_DATA) public data: CheckinModelConfiguration) { }
 
   ngOnInit(): void {
     this.commitComment = this.data.commitComment ?? '';
     this.deleteSourceBranch = this.data.deleteSourceBranch ?? false;
     this.items = this.data.items ?? [];
-    this.useMergeDiffModule = this.sharedService.features.useMergeUiV2;
     this.label = this.data.label;
     this.domainType = this.data.domainType;
     this.isDataAsset = this.data.isDataAsset;

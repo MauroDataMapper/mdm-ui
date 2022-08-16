@@ -17,9 +17,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.mdm-new-version__type__option {
-  white-space: normal !important;
-  line-height: normal !important;
-  height: auto !important;
-  padding: 16px;
+.mdm-new-version {
+  &__type__option {
+    white-space: normal !important;
+    line-height: normal !important;
+    height: auto !important;
+    padding: 16px;
+  }
+
+  &__checkbox-option {
+    margin: 1em 0.5em;
+  }
 }

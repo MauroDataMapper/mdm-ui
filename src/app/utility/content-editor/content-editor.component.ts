@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
 import { HtmlButtonMode } from '../html-editor/html-editor.component';

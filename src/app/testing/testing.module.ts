@@ -26,7 +26,7 @@ import { MdmResourcesModule } from '@mdm/modules/resources/mdm-resources.module'
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 
 @NgModule({
   declarations: [],
@@ -38,7 +38,7 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
     ReactiveFormsModule,
     UIRouterModule.forRoot({ useHash: true }),
     ToastrModule.forRoot(),
-    MdmResourcesModule.forRoot({ }),
+    MdmResourcesModule.forRoot({}),
     HttpClientTestingModule,
     NgxSkeletonLoaderModule,
     SharedModule
@@ -51,5 +51,4 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
     SharedModule
   ]
 })
-export class TestingModule { }
-
+export class TestingModule {}

@@ -17,7 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-
 /* Large Devices, Wide Screens */
 @media only screen and (max-width: 2400px) {
   .resizableLeft {
@@ -122,7 +121,6 @@ SPDX-License-Identifier: Apache-2.0
   background-color: #f9f9f9;
 }
 
-
 // .breadcrumb > li + li:before {
 //   padding: 0px 0px 0px 5px !important;
 //   content: "/" !important;
@@ -161,7 +159,6 @@ SPDX-License-Identifier: Apache-2.0
 .panel-table {
   padding: 5px 10px !important;
 }
-
 
 .elementDetailMCType {
   font-size: 12px;
@@ -300,7 +297,6 @@ ul.myTree li:focus {
   opacity: 0;
 }
 
-
 /*** Style the buttons ***/
 .searchResults {
   .ng-table-header {
@@ -320,11 +316,9 @@ ul.myTree li:focus {
   }
 }
 
-
 .onlineUser {
   color: #268c21;
 }
-
 
 .MCElementType {
   font-size: 11px;
@@ -360,7 +354,6 @@ th.metadataNamespaceHeader {
   font-weight: bold !important;
 }
 
-
 #paper-html-elements {
   position: relative;
   border: 1px solid gray;
@@ -374,8 +367,6 @@ th.metadataNamespaceHeader {
 #paper-html-elements svg .link {
   z-index: 2;
 }
-
-
 
 div.diagram-tool-box {
   color: #000;
@@ -418,7 +409,6 @@ div.mcSelectItem.current {
   cursor: pointer;
 }
 
-
 div.noClassification {
   color: #686868;
   padding: 5px;
@@ -438,10 +428,6 @@ div.noFavourites {
   .title {
     font-size: 16px;
     font-weight: bold;
-  }
-  .content {
-    font-style: italic;
-    padding-left: 3px;
   }
 }
 
@@ -477,7 +463,6 @@ img.profilePicture {
   cursor: pointer;
 }
 
-
 .deletedDataModelTitle {
   text-decoration: line-through;
 }
@@ -485,7 +470,6 @@ img.profilePicture {
 .supersededByItem {
   opacity: 0.6;
 }
-
 
 .not-allowed-cursor {
   cursor: not-allowed;
@@ -569,7 +553,7 @@ img.profilePicture {
 .alias > li + li:before {
   padding: 0px 0px 0px 3px;
   color: #000;
-  content: "/";
+  content: '/';
 }
 
 ul.aliasSearchResult {
@@ -589,11 +573,9 @@ li.aliasSearchResult {
   border-bottom: 1px solid #ddd;
 }
 
-
-
 .copyElementSuccess {
   color: #5cb85c;
-//   font-size: 26px;
+  //   font-size: 26px;
 }
 
 .copyElementError {
@@ -616,7 +598,7 @@ small.simpleView.elementType {
 ///.....................................................................................................................
 
 .mat-dialog-container {
-//   padding: 3px !important;
+  //   padding: 3px !important;
   // overflow: hidden !important;
 }
 .mat-table-row-select {
@@ -626,20 +608,19 @@ small.simpleView.elementType {
 mat-tab-label {
   min-width: 50px !important;
 }
-.mat-tab-label, .mat-tab-link {
-  color: rgba(0,0,0,.97);
+.mat-tab-label,
+.mat-tab-link {
+  color: rgba(0, 0, 0, 0.97);
 }
 
 .mat-menu-panel {
   min-height: 32px !important;
 }
 
-
-
 .leftTab .nav > li > a {
-	padding: 5px 7px;
-	font-size: 12px;
-	font-weight: bold;
+  padding: 5px 7px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .full-width-dialog .mat-dialog-container {
@@ -647,7 +628,8 @@ mat-tab-label {
   width: 100vw;
 }
 
-.badge.item-type-imported, .badge.item-type-extended {
+.badge.item-type-imported,
+.badge.item-type-extended {
   font-style: italic;
   font-size: 0.8rem;
 }

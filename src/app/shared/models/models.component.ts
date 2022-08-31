@@ -56,6 +56,7 @@ import {
   mapCatalogueDomainTypeToContainer,
   MdmTreeLevelManager
 } from './models.model';
+import { MauroItemTreeFlatNode } from '../mauro-item-tree/mauro-item-tree.types';
 
 @Component({
   selector: 'mdm-models',
@@ -149,36 +150,34 @@ export class ModelsComponent implements OnInit, OnDestroy {
               this.filteredModels = Object.assign({}, curModel);
               this.levels.current = 1;
             });
-      }else{
-        this.resources.tree
-        .getFolder(
-          this.levels.currentFocusedElement.id
-        )
-        .pipe(
-          catchError((error) => {
-            this.messageHandler.showError(
-              'There was a problem focusing the tree element.',
-              error
-            );
-            return EMPTY;
-          }),
-          finalize(() => (this.reloading = false))
-        )
-        .subscribe((response: MdmTreeItemListResponse) => {
-          const children = response.body;
-          this.levels.currentFocusedElement.children = children;
-          this.levels.currentFocusedElement.open = true;
-          this.levels.currentFocusedElement.selected = true;
-          const curModel = {
-            children: [this.levels.currentFocusedElement],
-            isRoot: true
-          };
-          this.filteredModels = Object.assign({}, curModel);
-          this.levels.current = 1;
-        });
+        } else {
+          this.resources.tree
+            .getFolder(this.levels.currentFocusedElement.id)
+            .pipe(
+              catchError((error) => {
+                this.messageHandler.showError(
+                  'There was a problem focusing the tree element.',
+                  error
+                );
+                return EMPTY;
+              }),
+              finalize(() => (this.reloading = false))
+            )
+            .subscribe((response: MdmTreeItemListResponse) => {
+              const children = response.body;
+              this.levels.currentFocusedElement.children = children;
+              this.levels.currentFocusedElement.open = true;
+              this.levels.currentFocusedElement.selected = true;
+              const curModel = {
+                children: [this.levels.currentFocusedElement],
+                isRoot: true
+              };
+              this.filteredModels = Object.assign({}, curModel);
+              this.levels.current = 1;
+            });
+        }
       }
     }
-  }
   };
 
   private unsubscribe$ = new Subject();
@@ -208,7 +207,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.includeDeleted =
         this.userSettingsHandler.get('includeDeleted') || false;
 
-      this.securityHandler.isAdministrator().subscribe(state => this.isAdministrator = state);
+      this.securityHandler
+        .isAdministrator()
+        .subscribe((state) => (this.isAdministrator = state));
     }
 
     if (
@@ -236,8 +237,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties.',
+            errors
+          );
           return [];
         })
       )
@@ -563,14 +567,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFavouriteDbClick(node: MdmTreeItem) {
-    this._onFavouriteClick(node);
-  }
-
-  onFavouriteClick(node: MdmTreeItem) {
-    this._onFavouriteClick(node);
-  }
-
   reloadTree() {
     this.loadModelsTree(true);
   }
@@ -594,18 +590,27 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _onFavouriteClick(node: MdmTreeItem) {
-    this.stateHandler.Go(node.domainType, {
-      id: node.id
+  favouriteSelected(item: MauroItemTreeFlatNode) {
+    this.stateHandler.Go(item.domainType, {
+      id: item.id,
+      edit: false,
+      dataModelId: item.modelId,
+      dataClassId: item.parentId || '',
+      terminologyId: item.modelId,
+      parentId: item.parentId
     });
   }
 
   private loadApiContentProperties(properties: ApiProperty[]) {
-     this.isRootFolderRestricted = JSON.parse(this.getContentProperty(properties, 'security.restrict.root.folder'));
-     this.isClassifierCreateRestricted = JSON.parse(this.getContentProperty(properties, 'security.restrict.classifier.create'));
+    this.isRootFolderRestricted = JSON.parse(
+      this.getContentProperty(properties, 'security.restrict.root.folder')
+    );
+    this.isClassifierCreateRestricted = JSON.parse(
+      this.getContentProperty(properties, 'security.restrict.classifier.create')
+    );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find(p => p.key === key)?.value;
+    return properties?.find((p) => p.key === key)?.value;
   }
 }

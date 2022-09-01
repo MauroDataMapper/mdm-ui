@@ -19,8 +19,21 @@ SPDX-License-Identifier: Apache-2.0
 /* eslint-disable id-blacklist */
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProfileSummaryIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  ProfileSummary,
+  ProfileSummaryIndexResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { map } from 'rxjs/operators';
+
+export interface AddProfileModalConfiguration {
+  domainId: Uuid;
+  domainType: CatalogueItemDomainType;
+  finalised?: boolean;
+  selectedProfile?: ProfileSummary;
+}
 
 @Component({
   selector: 'mdm-add-profile-modal',
@@ -28,32 +41,45 @@ import { MdmResourcesService } from '@mdm/modules/resources';
   styleUrls: ['./add-profile-modal.component.scss']
 })
 export class AddProfileModalComponent implements OnInit {
-  allUnusedProfiles: Array<any> = [];
-  showProfileSelector = false;
+  profiles: ProfileSummary[];
 
   constructor(
     public dialogRef: MatDialogRef<AddProfileModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: AddProfileModalConfiguration,
     protected resourcesSvc: MdmResourcesService
   ) {}
 
   ngOnInit(): void {
     this.resourcesSvc.profile
       .unusedProfiles(this.data.domainType, this.data.domainId)
-      .subscribe((profiles: ProfileSummaryIndexResponse) => {
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = `${profile.displayName} (${profile.version})`;
-          prof['value'] = `${profile.namespace}/${profile.name}/${profile.version}`;
-          this.allUnusedProfiles.push(prof);
-          this.showProfileSelector = true;
-        });
+      .pipe(
+        map((response: ProfileSummaryIndexResponse) => {
+          if (this.data.finalised) {
+            // If the catalogue item is finalised, only allow profiles that are allowed
+            // to be edited
+            return response.body.filter(
+              (profile) => profile.editableAfterFinalisation
+            );
+          }
+
+          return response.body;
+        }),
+        map((profiles: ProfileSummary) =>
+          profiles.map((profile) => {
+            return {
+              ...profile,
+              display: `${profile.displayName} (${profile.version})`,
+              value: `${profile.namespace}/${profile.name}/${profile.version}`
+            };
+          })
+        )
+      )
+      .subscribe((profiles: ProfileSummary[]) => {
+        this.profiles = profiles;
       });
   }
 
   save() {
-    // Save Changes
-    console.log(this.data.selectedProfile);
     this.dialogRef.close(this.data.selectedProfile);
   }
 

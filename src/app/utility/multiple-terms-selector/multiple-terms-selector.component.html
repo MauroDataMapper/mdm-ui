@@ -30,7 +30,23 @@ SPDX-License-Identifier: Apache-2.0
       (selectEvent)="onTerminologySelect($event[0])"
     >
       <ng-template #lineContent let-item>
-        <div>{{ item.label }}</div>
+        <div>
+          {{ item.label }}
+          <small
+            *ngIf="item.branchName && !item.modelVersion"
+            class="ml-1 text-muted"
+          >
+            <span> | </span>
+            <span class="fas fa-code-branch"></span>
+            {{ item.branchName }}
+          </small>
+          <small *ngIf="item.modelVersion" class="ml-1 text-muted">
+            <span> | </span>
+            <span class="fas fa-file-alt"></span>
+            <span *ngIf="item.modelVersion">{{ item.modelVersion }}</span>
+            <span *ngIf="item.version">{{ item.version }}</span>
+          </small>
+        </div>
       </ng-template>
     </mdm-select>
   </div>

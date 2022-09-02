@@ -56,6 +56,7 @@ export class EditProfileModalComponent implements OnInit {
     fieldTotal: 0,
     errors: []
   };
+  isValidated = false;
 
   formOptionsMap = {
     integer: 'number',
@@ -104,8 +105,6 @@ export class EditProfileModalComponent implements OnInit {
     this.profileData = data.profile;
     this.description = data.description;
     this.okBtnText = data.okBtn ?? 'Save';
-
-    this.validate();
   }
 
   ngOnInit(): void {}
@@ -141,6 +140,8 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   validate() {
+    this.isValidated = true;
+
     this.resources.profile
       .validateProfile(
         this.data.profile.namespace,

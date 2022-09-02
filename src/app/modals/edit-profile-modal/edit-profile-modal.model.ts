@@ -27,6 +27,7 @@ export interface EditProfileModalConfiguration {
   isNew: boolean;
   description?: string;
   okBtn?: string;
+  finalised?: boolean;
 }
 
 export interface EditProfileModalResult {

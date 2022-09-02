@@ -29,7 +29,15 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <table *ngIf="this.profileData" class="table table-bordered" role="presentation">
+    <mdm-alert *ngIf="data.finalised" alertStyle="info" showIcon="true">
+      Only certain fields can be edited on this profile as the catalogue item is
+      finalised.
+    </mdm-alert>
+    <table
+      *ngIf="this.profileData"
+      class="table table-bordered"
+      role="presentation"
+    >
       <tbody *ngFor="let section of this.profileData?.sections">
         <tr>
           <td [attr.colspan]="2" class="detailsRowHeader">
@@ -52,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-content-editor
               [(content)]="field.currentValue"
               id="{{ field.fieldName }}"
-              [inEditMode]="!field.uneditable"
+              [inEditMode]="!field.readOnly"
               *ngIf="field.dataType === 'text'"
             ></mdm-content-editor>
 
@@ -69,7 +77,7 @@ SPDX-License-Identifier: Apache-2.0
               (change)="field.currentValue = $event.target.checked"
               name="{{ field.fieldName }} + {{ section.name }}"
               [required]="field.minMultiplicity > 0"
-              [disabled]="field.uneditable"
+              [disabled]="field.readOnly"
             />
             <div
               *ngIf="
@@ -84,9 +92,9 @@ SPDX-License-Identifier: Apache-2.0
                 field.dataType != 'enumeration'
               "
             >
-              <span *ngIf="field.uneditable">{{field.currentValue}}</span>
+              <span *ngIf="field.readOnly">{{ field.currentValue }}</span>
               <input
-                *ngIf="!field.uneditable"
+                *ngIf="!field.readOnly"
                 matInput
                 type="{{ formOptionsMap[field.dataType] }}"
                 name="{{ field.fieldName }} + {{ section.name }}"
@@ -111,7 +119,7 @@ SPDX-License-Identifier: Apache-2.0
                   formOptionsMap[field.dataType] != 'checkbox'
               }"
               [required]="field.minMultiplicity > 0"
-              [disabled]="field.uneditable"
+              [disabled]="field.readOnly"
             />
             <input
               *ngIf="field.dataType === 'datetime'"
@@ -125,7 +133,7 @@ SPDX-License-Identifier: Apache-2.0
                   formOptionsMap[field.dataType] != 'checkbox'
               }"
               [required]="field.minMultiplicity > 0"
-              [disabled]="field.uneditable"
+              [disabled]="field.readOnly"
             />
             <div *ngIf="field.dataType === 'model'">
               <input
@@ -140,10 +148,10 @@ SPDX-License-Identifier: Apache-2.0
                     formOptionsMap[field.dataType] != 'checkbox'
                 }"
                 [required]="field.minMultiplicity > 0"
-                [disabled]="field.uneditable"
+                [disabled]="field.readOnly"
               />
               <button
-                *ngIf="!field.uneditable"
+                *ngIf="!field.readOnly"
                 mat-stroked-button
                 type="button"
                 color="primary"
@@ -159,7 +167,7 @@ SPDX-License-Identifier: Apache-2.0
                 <mat-select
                   [(ngModel)]="field.currentValue"
                   name="{{ field.fieldName }} + {{ section.name }}"
-                  [disabled]="field.uneditable"
+                  [disabled]="field.readOnly"
                 >
                   <mat-option
                     *ngFor="let value of sortBy(field.allowedValues)"
@@ -202,8 +210,11 @@ SPDX-License-Identifier: Apache-2.0
       Profile is valid
     </span>
     <span *ngIf="validationErrors.total > 0" class="mr-2">
-      <span class="fas fa-exclamation-triangle warning" style="color: #f19e3f"></span>
-      There are {{validationErrors.total}} field(s) with issues
+      <span
+        class="fas fa-exclamation-triangle warning"
+        style="color: #f19e3f"
+      ></span>
+      There are {{ validationErrors.total }} field(s) with issues
     </span>
     <button
       mat-button

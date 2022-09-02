@@ -56,8 +56,12 @@ SPDX-License-Identifier: Apache-2.0
             >
             <mat-divider></mat-divider>
             <mat-option value="other">Other properties</mat-option>
-            <mat-divider *ngIf="canAddMetadata"></mat-divider>
-            <mat-option *ngIf="canAddMetadata" value="addnew"
+            <mat-divider
+              *ngIf="canAddMetadata || canAddProfilesAfterFinalisation"
+            ></mat-divider>
+            <mat-option
+              *ngIf="canAddMetadata || canAddProfilesAfterFinalisation"
+              value="addnew"
               >Add new profile...</mat-option
             >
           </mat-select>
@@ -79,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
             currentView !== 'default' &&
             currentView !== 'other' &&
             currentView !== 'addnew' &&
-            canEdit
+            canEditCustomProfile
           "
           color="primary"
           type="button"
@@ -112,10 +116,18 @@ SPDX-License-Identifier: Apache-2.0
         </button>
 
         <mat-menu #editMenu="matMenu">
-          <button mat-menu-item data-cy="edit-description" (click)="editDefaultProfileDescription()">
+          <button
+            mat-menu-item
+            data-cy="edit-description"
+            (click)="editDefaultProfileDescription()"
+          >
             <span class="fas fa-pencil-alt"></span> Edit Description
           </button>
-          <button mat-menu-item data-cy="edit-all" (click)="editDefaultProfileFull()">
+          <button
+            mat-menu-item
+            data-cy="edit-all"
+            (click)="editDefaultProfileFull()"
+          >
             <span class="fas fa-pencil-alt"></span> Edit
           </button>
         </mat-menu>
@@ -129,10 +141,10 @@ SPDX-License-Identifier: Apache-2.0
             matTooltip="Submit this catalogue item to a Digital Object Identifier (DOI) system"
             [matMenuTriggerFor]="doiSubmitActions"
           >
-            <span class="fas fa-paper-plane has-text-green"></span> DOI submission
+            <span class="fas fa-paper-plane has-text-green"></span> DOI
+            submission
           </button>
-          <mat-divider *ngIf="canSubmitForDoi">
-          </mat-divider>
+          <mat-divider *ngIf="canSubmitForDoi"> </mat-divider>
           <button
             mat-menu-item
             *ngIf="isCurrentViewCustomProfile && canDeleteProfile"
@@ -177,6 +189,14 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
   </div>
+
+  <mdm-alert
+    *ngIf="catalogueItem.finalised && canEditCustomProfile"
+    alertStyle="info"
+    showIcon="true"
+  >
+    This profile can be edited even after finalisation
+  </mdm-alert>
 
   <mdm-profile-details
     *ngIf="currentProfile"

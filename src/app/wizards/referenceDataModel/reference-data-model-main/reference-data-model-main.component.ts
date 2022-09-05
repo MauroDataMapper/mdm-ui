@@ -22,11 +22,12 @@ import { Title } from '@angular/platform-browser';
 import {
   CatalogueItemDomainType,
   Container,
+  MdmResponse,
   ModelCreatePayload,
-  TerminologyDetailResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
@@ -34,11 +35,11 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'mdm-terminology-main',
-  templateUrl: './terminology-main.component.html',
-  styleUrls: ['./terminology-main.component.scss']
+  selector: 'mdm-reference-data-model-main',
+  templateUrl: './reference-data-model-main.component.html',
+  styleUrls: ['./reference-data-model-main.component.scss']
 })
-export class TerminologyMainComponent implements OnInit {
+export class ReferenceDataModelMainComponent implements OnInit {
   parentFolderId: Uuid;
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
@@ -79,7 +80,7 @@ export class TerminologyMainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.title.setTitle('New Terminology');
+    this.title.setTitle('New Reference Data Model');
 
     this.setupForm = new FormGroup({
       label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
@@ -122,21 +123,23 @@ export class TerminologyMainComponent implements OnInit {
       folder: this.parentFolderId
     };
 
-    this.resources.terminology
+    this.resources.referenceDataModel
       .create(this.parentFolderId, payload)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
-            'There was a problem creating the Terminology.',
+            'There was a problem creating the Reference Data Model.',
             error
           );
           return EMPTY;
         })
       )
-      .subscribe((response: TerminologyDetailResponse) => {
-        this.messageHandler.showSuccess('Terminology created successfully.');
+      .subscribe((response: MdmResponse<MauroItem>) => {
+        this.messageHandler.showSuccess(
+          'Reference Data Model created successfully.'
+        );
         this.stateHandler.Go(
-          'terminology',
+          'referencedatamodel',
           { id: response.body.id },
           { reload: true }
         );

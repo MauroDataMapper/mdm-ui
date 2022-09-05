@@ -598,6 +598,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     });
   }
 
+  handleAddReferenceDataModel(fnode: FlatNode) {
+    this.stateHandler.Go('NewReferenceDataModel', {
+      parentFolderId: fnode.id,
+      parentDomainType: fnode.domainType
+    });
+  }
+
   handleSoftDelete(fnode: FlatNode) {
     this.modelTree.deleteCatalogueItemSoft(fnode).subscribe(() => {
       fnode.deleted = true;

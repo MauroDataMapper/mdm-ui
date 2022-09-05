@@ -184,6 +184,7 @@ import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-m
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
+import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 
 @NgModule({
   declarations: [
@@ -340,7 +341,8 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     TermRelationshipListComponent,
     NewerVersionsComponent,
     TerminologyMainComponent,
-    SkeletonBadgeComponent
+    SkeletonBadgeComponent,
+    ReferenceDataModelMainComponent
   ],
   imports: [
     AdminModule,
@@ -510,7 +512,8 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent
+    MoreDescriptionComponent,
+    ReferenceDataModelMainComponent
   ]
 })
 export class CatalogueModule {}

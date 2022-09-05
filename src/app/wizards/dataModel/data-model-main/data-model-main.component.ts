@@ -26,7 +26,14 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { CatalogueItemDomainType, Container, DataModelCreatePayload, DataModelDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  Container,
+  DataModelCreatePayload,
+  DataModelCreateQueryParameters,
+  DataModelDetailResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 
@@ -49,7 +56,8 @@ export class DataModelMainComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private folders: FolderService,
-    private title: Title) { }
+    private title: Title
+  ) {}
 
   ngOnInit() {
     this.title.setTitle('New Data Model');
@@ -60,12 +68,15 @@ export class DataModelMainComponent implements OnInit {
     this.folders
       .getFolder(this.parentFolderId, this.parentDomainType)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the Folder.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.parentFolder = response.body;
 
         this.steps = [
@@ -100,10 +111,12 @@ export class DataModelMainComponent implements OnInit {
       author: details.author.value,
       organisation: details.organisation.value,
       type: details.dataModelType.value,
-      classifiers: details.classifiers.value.map(cls => { return { id: cls.id }; })
+      classifiers: details.classifiers.value.map((cls) => {
+        return { id: cls.id };
+      })
     };
 
-    let queryStringParams = {};
+    let queryStringParams: DataModelCreateQueryParameters = {};
     if (types.selectedDataTypeProvider) {
       queryStringParams = {
         defaultDataTypeProvider: types.selectedDataTypeProvider.name
@@ -111,15 +124,23 @@ export class DataModelMainComponent implements OnInit {
     }
 
     this.resources.dataModel
-      .addToFolder(this.parentFolderId, resource, queryStringParams)
+      .create(this.parentFolderId, resource, queryStringParams)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem saving the Data Model.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the Data Model.',
+            error
+          );
           return EMPTY;
-        }))
+        })
+      )
       .subscribe((response: DataModelDetailResponse) => {
         this.messageHandler.showSuccess('Data Model saved successfully.');
-        this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
+        this.stateHandler.Go(
+          'datamodel',
+          { id: response.body.id },
+          { reload: true, location: true }
+        );
       });
   }
 }

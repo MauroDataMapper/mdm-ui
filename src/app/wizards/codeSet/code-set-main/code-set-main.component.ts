@@ -22,7 +22,13 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, CodeSetCreatePayload, CodeSetDetailResponse, Container, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  CodeSetCreatePayload,
+  CodeSetDetailResponse,
+  Container,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -31,7 +37,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'mdm-code-set-main',
   templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss'],
+  styleUrls: ['./code-set-main.component.scss']
 })
 export class CodeSetMainComponent implements OnInit {
   parentFolderId: Uuid;
@@ -78,13 +84,14 @@ export class CodeSetMainComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private folders: FolderService,
-    private title: Title) { }
+    private title: Title
+  ) {}
 
   ngOnInit() {
     this.title.setTitle('New Code Set');
 
     this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
+      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
       author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
       organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
       description: new FormControl(''),
@@ -98,12 +105,15 @@ export class CodeSetMainComponent implements OnInit {
     this.folders
       .getFolder(this.parentFolderId, this.parentDomainType)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the Folder.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.parentFolder = response.body;
       });
   }
@@ -124,16 +134,23 @@ export class CodeSetMainComponent implements OnInit {
     };
 
     this.resources.codeSet
-      .addToFolder(this.parentFolderId, resource)
+      .create(this.parentFolderId, resource)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem creating the Code Set.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem creating the Code Set.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe((response: CodeSetDetailResponse) => {
         this.messageHandler.showSuccess('Code Set created successfully.');
-        this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+        this.stateHandler.Go(
+          'codeset',
+          { id: response.body.id },
+          { reload: true }
+        );
       });
   }
 }

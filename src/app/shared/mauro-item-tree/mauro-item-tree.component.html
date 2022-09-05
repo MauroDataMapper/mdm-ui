@@ -58,26 +58,13 @@ SPDX-License-Identifier: Apache-2.0
       [fontIcon]="getIcon(node)"
       [attr.aria-label]="node.type + ' icon'"
     ></mat-icon>
-    <span
-      [title]="node.label"
-      (click)="nodeClicked(node)"
+    <mdm-element-label
+      [item]="node"
       [ngClass]="{
         'mat-tree-node-active': node === selected,
         'node-title': node !== selected
       }"
-    >
-      {{ node.label }}
-    </span>
-    <small *ngIf="!node.finalised && node.branchName" class="ml-1 text-muted">
-      <span> | </span>
-      <span class="fas fa-code-branch"></span>
-      {{ node.branchName }}
-    </small>
-    <small *ngIf="node.finalised && node.modelVersion" class="ml-1 text-muted">
-      <span> | </span>
-      <span class="fas fa-file-alt"></span>
-      <span *ngIf="node.modelVersion">{{ node.modelVersion }}</span>
-      <span *ngIf="node.version">{{ node.version }}</span>
-    </small>
+      (click)="nodeClicked(node)"
+    ></mdm-element-label>
   </div>
 </ng-template>

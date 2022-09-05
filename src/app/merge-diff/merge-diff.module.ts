@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { MergeDiffContainerComponent } from '@mdm/merge-diff/merge-diff-container/merge-diff-container.component';
 import { MergeItemSelectorComponent } from './merge-item-selector/merge-item-selector.component';
@@ -40,14 +40,7 @@ import { NumberConflictEditorComponent } from './conflict-editor/number-conflict
     StringConflictEditorComponent,
     NumberConflictEditorComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    CatalogueModule
-  ],
-  exports: [
-    MergeDiffContainerComponent
-  ]
+  imports: [CommonModule, SharedModule, MaterialModule, CatalogueModule],
+  exports: [MergeDiffContainerComponent]
 })
-export class MergeDiffModule { }
+export class MergeDiffModule {}

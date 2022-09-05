@@ -38,7 +38,7 @@ import { ModalModule } from './modals/modal.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { CatalogueModule } from './modules/catalogue/catalogue.module';
 import { MdmResourcesModule } from './modules/resources/mdm-resources.module';
-import { SharedModule } from './modules/shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
 import { SharedService } from './services/shared.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';

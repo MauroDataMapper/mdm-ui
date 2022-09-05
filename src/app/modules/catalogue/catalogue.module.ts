@@ -24,7 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { AdminModule } from '../admin/admin.module';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';

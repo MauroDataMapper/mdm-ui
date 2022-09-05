@@ -18,7 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  MdmTreeItem
+} from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -28,7 +31,8 @@ export class FlatNode {
   constructor(
     public node: MdmTreeItem,
     public level: number,
-    public readonly access: Access) { }
+    public readonly access: Access
+  ) {}
 
   /**
    * Getter and Setter passthrough to source node.
@@ -118,12 +122,31 @@ export class FlatNode {
   }
 }
 
-type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
+export interface FlatNodeType {
+  [key: string]: any;
+}
+
+type FlatNodeIconCallback = (
+  fnode: FlatNodeType,
+  treeControl: FlatTreeControl<FlatNodeType>
+) => string;
 
 const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
-  [CatalogueItemDomainType.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
-  [CatalogueItemDomainType.VersionedFolder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'],
-  [CatalogueItemDomainType.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
+  [
+    CatalogueItemDomainType.Folder,
+    (fnode, treeControl) =>
+      treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'
+  ],
+  [
+    CatalogueItemDomainType.VersionedFolder,
+    (fnode, treeControl) =>
+      treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'
+  ],
+  [
+    CatalogueItemDomainType.DataModel,
+    (fnode, _) =>
+      fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'
+  ],
   [CatalogueItemDomainType.Terminology, () => 'fa-book'],
   [CatalogueItemDomainType.CodeSet, () => 'fa-list'],
   [CatalogueItemDomainType.Classifier, () => 'fa-tags'],
@@ -137,7 +160,11 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   [CatalogueItemDomainType.DataElement, () => 'fa-atom']
 ]);
 
-export const getCatalogueItemDomainTypeIcon = (domain: CatalogueItemDomainType, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
+export const getCatalogueItemDomainTypeIcon = (
+  domain: CatalogueItemDomainType,
+  fnode?: FlatNodeType,
+  treeControl?: FlatTreeControl<FlatNodeType>
+) => {
   if (!domainTypeIcons.has(domain)) {
     return null;
   }

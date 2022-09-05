@@ -381,15 +381,8 @@ export class ElementSelectorComponent implements OnInit {
       this.loading = true;
 
       this.catalogueSearch.search(parameters).subscribe((resultSet) => {
-        const rows = [];
+        const rows = resultSet.items;
         this.loading = false;
-        resultSet.items.forEach((element) => {
-          if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
-          } else {
-            rows.push(element);
-          }
-        });
 
         if (infiniteScrollCall === true) {
           this.isProcessing = true;
@@ -496,15 +489,7 @@ export class ElementSelectorComponent implements OnInit {
       this.loadAllTerms(currentContext, pageSize, offset).subscribe(
         (result) => {
           this.isProcessing = true;
-          const rows = [];
-          result.body.items.forEach((element) => {
-            if (element.hasOwnProperty('breadcrumbs')) {
-              rows.push(element, { detailRow: true, element });
-            } else {
-              rows.push(element);
-            }
-          });
-
+          const rows = result.body.items;
           this.termsList = rows;
           this.totalItemCount = result.body.count;
           if (this.dataSource.data) {

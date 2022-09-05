@@ -142,7 +142,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.list().subscribe((data: TerminologyIndexResponse) => {
+    this.resourceService.terminology.list({ all: true }).subscribe((data: TerminologyIndexResponse) => {
       this.terminologies = data.body.items;
       this.reloading = false;
     }, () => {
@@ -165,7 +165,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
   loadCodeSets() {
    this.reloading = true;
-   this.resourceService.codeSet.list().subscribe((data: CodeSetIndexResponse) => {
+   this.resourceService.codeSet.list({ all: true }).subscribe((data: CodeSetIndexResponse) => {
      this.codesets = data.body.items;
      this.reloading = false;
    }, () => {
@@ -175,7 +175,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
  loadReferenceModels() {
    this.reloading = true;
-   this.resourceService.referenceDataModel.list().subscribe((data: ReferenceDataModelIndexResponse) => {
+   this.resourceService.referenceDataModel.list({ all: true }).subscribe((data: ReferenceDataModelIndexResponse) => {
      this.referenceDataModels = data.body.items;
      this.reloading = false;
    }, () => {

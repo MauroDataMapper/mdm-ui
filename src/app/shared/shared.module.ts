@@ -62,6 +62,7 @@ import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
+import { ElementLabelComponent } from './element-label/element-label.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.compon
     BreadcrumbComponent,
     MarkedPipe,
     FileSizePipe,
-    MauroItemTreeComponent
+    MauroItemTreeComponent,
+    ElementLabelComponent
   ],
   imports: [
     CommonModule,
@@ -158,7 +160,8 @@ import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.compon
     BreadcrumbComponent,
     MarkedPipe,
     FileSizePipe,
-    MauroItemTreeComponent
+    MauroItemTreeComponent,
+    ElementLabelComponent
   ]
 })
 export class SharedModule {}

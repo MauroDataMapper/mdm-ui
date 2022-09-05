@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
       (selectEvent)="onTerminologySelect($event[0])"
     >
       <ng-template #lineContent let-item>
-        <div>{{ item.label }}</div>
+        <mdm-element-label [item]="item"></mdm-element-label>
       </ng-template>
     </mdm-select>
   </div>

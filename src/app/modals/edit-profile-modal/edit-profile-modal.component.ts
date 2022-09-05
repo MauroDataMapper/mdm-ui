@@ -25,15 +25,23 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { Profile, ProfileField, ProfileValidationError, ProfileValidationErrorList } from '@maurodatamapper/mdm-resources';
+import {
+  Profile,
+  ProfileField,
+  ProfileValidationError,
+  ProfileValidationErrorList
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
-import {EditingService} from '@mdm/services/editing.service';
+import {
+  EditProfileModalConfiguration,
+  EditProfileModalResult
+} from './edit-profile-modal.model';
+import { EditingService } from '@mdm/services/editing.service';
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
@@ -61,12 +69,16 @@ export class EditProfileModalComponent implements OnInit {
   };
 
   constructor(
-    public dialogRef: MatDialogRef<EditProfileModalComponent, EditProfileModalResult>,
+    public dialogRef: MatDialogRef<
+      EditProfileModalComponent,
+      EditProfileModalResult
+    >,
     @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
     private markdownParser: MarkdownParserService,
     protected resources: MdmResourcesService,
     private dialog: MatDialog,
-    protected editing: EditingService) {
+    protected editing: EditingService
+  ) {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (data.isNew && field.defaultValue) {
@@ -84,6 +96,8 @@ export class EditProfileModalComponent implements OnInit {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
+
+        this.attachReadOnlyPropertyToField(field);
       });
     });
 
@@ -94,7 +108,7 @@ export class EditProfileModalComponent implements OnInit {
     this.validate();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   save() {
     // Save Changes
@@ -150,16 +164,20 @@ export class EditProfileModalComponent implements OnInit {
       });
   }
 
-  getValidationError(metadataPropertyName: string): ProfileValidationError | undefined {
+  getValidationError(
+    metadataPropertyName: string
+  ): ProfileValidationError | undefined {
     if (this.validationErrors.fieldTotal === 0) {
       return undefined;
     }
 
-    return this.validationErrors.errors.find(e => e.metadataPropertyName === metadataPropertyName);
+    return this.validationErrors.errors.find(
+      (e) => e.metadataPropertyName === metadataPropertyName
+    );
   }
 
   sortBy(items: []) {
-    return items.sort((a, b) => a > b ? 1 : a === b ? 0 : -1);
+    return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
   }
 
   showAddElementToMarkdown(field: ProfileField) {
@@ -173,5 +191,11 @@ export class EditProfileModalComponent implements OnInit {
         field.currentValue = mkData;
       });
     });
-  };
+  }
+
+  private attachReadOnlyPropertyToField(field: ProfileField) {
+    field.readOnly =
+      field.uneditable ||
+      (this.data.finalised && !field.editableAfterFinalisation);
+  }
 }

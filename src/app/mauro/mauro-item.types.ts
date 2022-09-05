@@ -25,6 +25,13 @@ import {
   Uuid
 } from '@maurodatamapper/mdm-resources';
 
+export interface MauroIdentifierFetchOptions {
+  /**
+   * If true, will not throw a global error if unable to fetch this item.
+   */
+  failSilently?: boolean;
+}
+
 /**
  * Represents a generic identifier to locate any Mauro catalogue item.
  */
@@ -43,6 +50,8 @@ export interface MauroIdentifier extends Required<CatalogueItem> {
    * If locating a Data Element, provide the unique identifier of the parent Data Class.
    */
   dataClass?: Uuid;
+
+  fetchOptions?: MauroIdentifierFetchOptions;
 }
 
 /**

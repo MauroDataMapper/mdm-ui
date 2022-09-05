@@ -21,9 +21,12 @@ import {
   CatalogueItemDomainType,
   isDataType
 } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { forkJoin, Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  MdmHttpHandlerOptions,
+  MdmResourcesService
+} from '@mdm/modules/resources';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import {
   MauroIdentifier,
   MauroItem,
@@ -45,55 +48,76 @@ export class MauroItemProviderService {
    * @param identifier A {@link MauroIdentifier} containing identification information. At least an ID and
    * domain type is required, but some domain types based on hierarchy require further details.
    * @returns The requested catalogue item passed through an observable stream.
+   *
+   * In case of trying to get an item that does not exist, you can pass the {@link MauroIdentifierFetchOptions.failSilently}
+   * option. If an item cannot be retrieved then an object identifier with an `error` and `errorStatus` property
+   * will be returned instead.
    */
   get(identifier: MauroIdentifier): Observable<MauroItem> {
+    const options: MdmHttpHandlerOptions = {
+      handleGetErrors: !identifier.fetchOptions?.failSilently ?? true
+    };
     let response: Observable<MauroItemResponse>;
 
     if (identifier.domainType === CatalogueItemDomainType.DataModel) {
-      response = this.getDataModel(identifier);
+      response = this.getDataModel(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.DataClass) {
-      response = this.getDataClass(identifier);
+      response = this.getDataClass(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.DataElement) {
-      response = this.getDataElement(identifier);
+      response = this.getDataElement(identifier, options);
     }
 
     if (isDataType(identifier.domainType)) {
-      response = this.getDataType(identifier);
+      response = this.getDataType(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.Terminology) {
-      response = this.getTerminology(identifier);
+      response = this.getTerminology(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.Term) {
-      response = this.getTerm(identifier);
+      response = this.getTerm(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.CodeSet) {
-      response = this.getCodeSet(identifier);
+      response = this.getCodeSet(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.Folder) {
-      response = this.getFolder(identifier);
+      response = this.getFolder(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.VersionedFolder) {
-      response = this.getVersionedFolder(identifier);
+      response = this.getVersionedFolder(identifier, options);
     }
 
     if (identifier.domainType === CatalogueItemDomainType.Classifier) {
-      response = this.getClassifier(identifier);
+      response = this.getClassifier(identifier, options);
     }
 
     if (!response) {
       return throwError(`${identifier.domainType} is not supported`);
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(
+      map((res) => res.body),
+      catchError((error) => {
+        if (identifier.fetchOptions.failSilently) {
+          return of({
+            ...identifier,
+            label: '',
+            error: true,
+            errorStatus: error.status
+          });
+        }
+
+        return throwError(error);
+      })
+    );
   }
 
   /**
@@ -109,13 +133,15 @@ export class MauroItemProviderService {
   }
 
   private getDataModel(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.dataModel.get(identifier.id);
+    return this.resources.dataModel.get(identifier.id, {}, options);
   }
 
   private getDataClass(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
       return throwError(
@@ -128,15 +154,23 @@ export class MauroItemProviderService {
       return this.resources.dataClass.getChildDataClass(
         identifier.model,
         dataClassId,
-        identifier.id
+        identifier.id,
+        {},
+        options
       );
     }
 
-    return this.resources.dataClass.get(identifier.model, identifier.id);
+    return this.resources.dataClass.get(
+      identifier.model,
+      identifier.id,
+      {},
+      options
+    );
   }
 
   private getDataElement(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
       return throwError(
@@ -153,12 +187,15 @@ export class MauroItemProviderService {
     return this.resources.dataElement.get(
       identifier.model,
       identifier.dataClass,
-      identifier.id
+      identifier.id,
+      {},
+      options
     );
   }
 
   private getDataType(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
       return throwError(
@@ -166,46 +203,64 @@ export class MauroItemProviderService {
       );
     }
 
-    return this.resources.dataType.get(identifier.model, identifier.id);
+    return this.resources.dataType.get(
+      identifier.model,
+      identifier.id,
+      {},
+      options
+    );
   }
 
   private getTerminology(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.terminology.get(identifier.id);
+    return this.resources.terminology.get(identifier.id, {}, options);
   }
 
-  private getTerm(identifier: MauroIdentifier): Observable<MauroItemResponse> {
+  private getTerm(
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
+  ): Observable<MauroItemResponse> {
     if (!identifier.model) {
       return throwError(
         `${identifier.domainType} ${identifier.id} has not provided a model`
       );
     }
 
-    return this.resources.term.get(identifier.model, identifier.id);
+    return this.resources.term.get(
+      identifier.model,
+      identifier.id,
+      {},
+      options
+    );
   }
 
   private getCodeSet(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.codeSet.get(identifier.id);
+    return this.resources.codeSet.get(identifier.id, {}, options);
   }
 
   private getFolder(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.folder.get(identifier.id);
+    return this.resources.folder.get(identifier.id, {}, options);
   }
 
   private getVersionedFolder(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.versionedFolder.get(identifier.id);
+    return this.resources.versionedFolder.get(identifier.id, {}, options);
   }
 
   private getClassifier(
-    identifier: MauroIdentifier
+    identifier: MauroIdentifier,
+    options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
-    return this.resources.classifier.get(identifier.id);
+    return this.resources.classifier.get(identifier.id, {}, options);
   }
 }

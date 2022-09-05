@@ -29,7 +29,7 @@ import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-tex
 import { FooterComponent } from '@mdm/shared/footer/footer.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
 import { EnumerationCompareComponent } from '@mdm/shared/enumeration-compare/enumeration-compare.component';
-import { MaterialModule } from '../material/material.module';
+import { MaterialModule } from '@mdm/modules/material/material.module';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -48,9 +48,9 @@ import { BranchSelectorComponent } from '@mdm/shared/branch-selector/branch-sele
 import { ResizableDirective } from '@mdm/directives/resizable.directive';
 import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 import { ModelIconComponent } from '@mdm/shared/model-icon/model-icon.component';
-import { PathNameComponent } from '../../shared/path-name/path-name.component';
-import { FavoriteButtonComponent } from '../../shared/favorite-button/favorite-button.component';
-import { CatalogueItemPropertiesComponent } from '../../shared/catalogue-item-properties/catalogue-item-properties.component';
+import { PathNameComponent } from './path-name/path-name.component';
+import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
@@ -61,6 +61,7 @@ import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
     SortByComponent,
     BreadcrumbComponent,
     MarkedPipe,
-    FileSizePipe
+    FileSizePipe,
+    MauroItemTreeComponent
   ],
   imports: [
     CommonModule,
@@ -155,7 +157,8 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
     SortByComponent,
     BreadcrumbComponent,
     MarkedPipe,
-    FileSizePipe
+    FileSizePipe,
+    MauroItemTreeComponent
   ]
 })
 export class SharedModule {}

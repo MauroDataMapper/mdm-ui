@@ -17,12 +17,23 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import {Container, DataTypeReference, Modelable, ModelableDetail, Version} from '@maurodatamapper/mdm-resources';
-import { DefaultProfileControls, DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
+import {
+  Container,
+  DataTypeReference,
+  Modelable,
+  ModelableDetail,
+  Version
+} from '@maurodatamapper/mdm-resources';
+import {
+  DefaultProfileControls,
+  DefaultProfileItem,
+  ProfileControlTypes
+} from '@mdm/model/defaultProfileModel';
 
 export type ProfileDataViewType = 'default' | 'other' | 'addnew';
 
-export const doiProfileNamespace = 'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
+export const doiProfileNamespace =
+  'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
 
 export interface ProfileSummaryListItem {
   display: string;
@@ -30,9 +41,13 @@ export interface ProfileSummaryListItem {
   namespace: string;
   name: string;
   version: Version;
+  editableAfterFinalisation?: boolean;
 }
 
-export const showControl = (controls: string[], controlName: string): boolean => {
+export const showControl = (
+  controls: string[],
+  controlName: string
+): boolean => {
   return controls.findIndex((x) => x === controlName) !== -1;
 };
 
@@ -40,7 +55,8 @@ export const createDefaultProfileItem = (
   value: string | Container[] | string[] | DataTypeReference,
   displayName: string,
   controlType: ProfileControlTypes,
-  propertyName: string): DefaultProfileItem => {
+  propertyName: string
+): DefaultProfileItem => {
   return {
     controlType,
     displayName,
@@ -51,9 +67,12 @@ export const createDefaultProfileItem = (
 
 export const getDefaultProfileData = (
   catalogueItem: Modelable & ModelableDetail & { [key: string]: any },
-  descriptionOnly: boolean): DefaultProfileItem[] => {
+  descriptionOnly: boolean
+): DefaultProfileItem[] => {
   const items: DefaultProfileItem[] = [];
-  const controls = DefaultProfileControls.renderControls(catalogueItem.domainType);
+  const controls = DefaultProfileControls.renderControls(
+    catalogueItem.domainType
+  );
 
   if (showControl(controls, 'code')) {
     items.push(
@@ -100,7 +119,10 @@ export const getDefaultProfileData = (
     );
   }
 
-  if ('organisation' in catalogueItem && showControl(controls, 'organisation')) {
+  if (
+    'organisation' in catalogueItem &&
+    showControl(controls, 'organisation')
+  ) {
     items.push(
       createDefaultProfileItem(
         catalogueItem.organisation,

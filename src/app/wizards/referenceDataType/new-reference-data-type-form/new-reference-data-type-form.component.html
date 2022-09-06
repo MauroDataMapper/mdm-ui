@@ -1,0 +1,88 @@
+<!--
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mb-2">
+  <div class="table-responsive">
+    <form [formGroup]="formGroup" class="full-width">
+      <table class="table table-bordered mdm--table-fixed" role="presentation">
+        <tbody>
+          <tr *ngIf="parent" class="parent">
+            <td class="detailsRowHeader">Model *</td>
+            <td>
+              <mdm-model-path [path]="[parent]"></mdm-model-path>
+            </td>
+          </tr>
+          <tr class="type" style="border-top: 0px">
+            <td class="detailsRowHeader">Type *</td>
+            <td>
+              <div class="mdm--form-input">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-select formControlName="type" required>
+                    <mat-option [value]="'ReferencePrimitiveType'"
+                      >Primitive</mat-option
+                    >
+                    <mat-option [value]="'ReferenceEnumerationType'"
+                      >Enumeration</mat-option
+                    >
+                  </mat-select>
+                  <mat-error *ngIf="type?.errors?.required">
+                    Please select a type
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="detailsRowHeader">Label *</td>
+            <td>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="label" />
+                <mat-error *ngIf="label?.errors?.required">
+                  Please enter a label
+                </mat-error>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr *ngIf="type?.value === 'ReferenceEnumerationType'">
+            <td class="detailsRowHeader">Enumerations *</td>
+            <td>
+              <mdm-mc-enumeration-list-with-category
+                [clientSide]="true"
+                [onUpdate]="onEnumerationsListUpdate"
+              ></mdm-mc-enumeration-list-with-category>
+              <mat-error *ngIf="enumerationValues?.errors?.required">
+                Please enter at least one key and value
+              </mat-error>
+            </td>
+          </tr>
+          <tr>
+            <td class="detailsRowHeader">Description</td>
+            <td>
+              <mdm-content-editor
+                [content]="description.value"
+                (contentChange)="description.setValue($event)"
+                [inEditMode]="true"
+              >
+              </mdm-content-editor>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>

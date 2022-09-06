@@ -65,6 +65,8 @@ export class StateHandlerService {
         'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataModel',
       newclassification:
         'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
+      newrefdatatype:
+        'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
       newversiondatamodel:
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
       newversionreferencedatamodel:

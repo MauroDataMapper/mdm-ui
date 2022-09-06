@@ -67,6 +67,7 @@ SPDX-License-Identifier: Apache-2.0
       <mdm-reference-data-type
         *ngIf="referenceModel"
         [parent]="referenceModel"
+        [showEdit]="showEdit"
         (totalCount)="typesCountEmitter($event)"
       ></mdm-reference-data-type>
     </div>

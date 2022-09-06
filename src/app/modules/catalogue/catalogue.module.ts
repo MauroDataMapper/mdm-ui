@@ -149,9 +149,9 @@ import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-me
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
 import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
-import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
-import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
-import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
+import { ReferenceDataTypeComponent } from '@mdm/referenceData/reference-data-type/reference-data-type.component';
+import { ReferenceDataElementComponent } from '@mdm/referenceData/reference-data-element/reference-data-element.component';
+import { ReferenceDataValuesComponent } from '@mdm/referenceData/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
@@ -184,6 +184,11 @@ import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-m
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
+import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
+import { ReferenceDataTypeStep2Component } from '../../wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
+import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
+import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
 import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 
 @NgModule({
@@ -342,7 +347,12 @@ import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataMode
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    ReferenceDataModelMainComponent
+    ReferenceDataModelMainComponent,
+    ReferenceDataTypeMainComponent,
+    ReferenceDataTypeStep1Component,
+    ReferenceDataTypeStep2Component,
+    NewReferenceDataTypeFormComponent,
+    ReferenceDataTypeSelectComponent
   ],
   imports: [
     AdminModule,

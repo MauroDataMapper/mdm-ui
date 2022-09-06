@@ -22,7 +22,7 @@ import { ReferenceDataElementComponent } from './reference-data-element.componen
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { empty } from 'rxjs';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTableModule } from '@angular/material/table';
@@ -34,30 +34,26 @@ describe('ReferenceDataElementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-       imports: [
-         MatPaginatorModule,
-         MatDialogModule,
-         NgxSkeletonLoaderModule,
-         MatTableModule,
-         NoopAnimationsModule
-       ],
+      imports: [
+        MatPaginatorModule,
+        MatDialogModule,
+        NgxSkeletonLoaderModule,
+        MatTableModule,
+        NoopAnimationsModule
+      ],
       providers: [
-         {
-           provide: MdmResourcesService,
-           useValue: {
+        {
+          provide: MdmResourcesService,
+          useValue: {
             referenceDataElement: {
-               // tslint:disable-next-line: deprecation
-               list: () => empty()
-             }
-           }
-         }
-       ],
-      declarations: [
-         ReferenceDataElementComponent,
-         MdmPaginatorComponent
-      ]
-    })
-    .compileComponents();
+              // tslint:disable-next-line: deprecation
+              list: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [ReferenceDataElementComponent, MdmPaginatorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

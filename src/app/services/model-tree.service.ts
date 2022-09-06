@@ -92,8 +92,8 @@ export class ModelTreeService implements OnDestroy {
         queryStringParams: {
           includeDocumentSuperseded:
             this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          // includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
-          includeModelSuperseded: true,
+          includeModelSuperseded:
+            this.userSettingsHandler.get('includeModelSuperseded') || false,
           includeDeleted:
             this.userSettingsHandler.get('includeDeleted') || false
         }

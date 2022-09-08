@@ -603,10 +603,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private loadApiContentProperties(properties: ApiProperty[]) {
     this.isRootFolderRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.root.folder')
+      this.getContentProperty(properties, 'security.restrict.root.folder') ?? 'false'
     );
     this.isClassifierCreateRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.classifier.create')
+      this.getContentProperty(properties, 'security.restrict.classifier.create') ?? 'false'
     );
   }
 

@@ -154,7 +154,7 @@ export class ModelTreeService implements OnDestroy {
             'There was a problem getting the Subscribed Catalogues.',
             error
           );
-          return EMPTY;
+          return of([]);
         })
       );
   }

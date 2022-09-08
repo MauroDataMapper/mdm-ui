@@ -35,8 +35,8 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
   EditProfileModalConfiguration,
   EditProfileModalResult
@@ -110,25 +110,58 @@ export class EditProfileModalComponent implements OnInit {
   ngOnInit(): void {}
 
   save() {
-    // Save Changes
-    const returnData: Profile = JSON.parse(JSON.stringify(this.profileData));
+    this.validateData()
+      .pipe(
+        switchMap((errorList) => {
+          this.validationErrors = errorList;
 
-    returnData.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        if (
-          field.dataType === 'folder' &&
-          field.currentValue &&
-          field.currentValue.length > 0
-        ) {
-          field.currentValue = JSON.stringify(field.currentValue);
-        }
+          if (errorList.fieldTotal > 0) {
+            return this.dialog
+              .openConfirmation({
+                data: {
+                  title: 'Validation issues',
+                  message: `There were ${errorList.fieldTotal} validation issue(s) found. Are you sure you want to save your changes?`,
+                  okBtnTitle: 'Yes, continue',
+                  cancelBtnTitle: 'No'
+                }
+              })
+              .afterClosed();
+          }
+
+          // No validation issues, continue
+          return of({ status: ModalDialogStatus.Ok });
+        }),
+        switchMap((dialogResult) => {
+          if (dialogResult.status !== ModalDialogStatus.Ok) {
+            return EMPTY;
+          }
+
+          // Continue to next step
+          return of({});
+        })
+      )
+      .subscribe(() => {
+        const returnData: Profile = JSON.parse(
+          JSON.stringify(this.profileData)
+        );
+
+        returnData.sections.forEach((section) => {
+          section.fields.forEach((field) => {
+            if (
+              field.dataType === 'folder' &&
+              field.currentValue &&
+              field.currentValue.length > 0
+            ) {
+              field.currentValue = JSON.stringify(field.currentValue);
+            }
+          });
+        });
+
+        this.dialogRef.close({
+          status: ModalDialogStatus.Ok,
+          profile: returnData
+        });
       });
-    });
-
-    this.dialogRef.close({
-      status: ModalDialogStatus.Ok,
-      profile: returnData
-    });
   }
 
   onCancel() {
@@ -140,29 +173,9 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   validate() {
-    this.isValidated = true;
-
-    this.resources.profile
-      .validateProfile(
-        this.data.profile.namespace,
-        this.data.profile.name,
-        this.data.catalogueItem.domainType,
-        this.data.catalogueItem.id,
-        this.profileData,
-        this.data.profile.version
-      )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.validationErrors = error.error as ProfileValidationErrorList;
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.validationErrors = {
-          total: 0,
-          errors: []
-        };
-      });
+    this.validateData().subscribe(
+      (errorList) => (this.validationErrors = errorList)
+    );
   }
 
   getValidationError(
@@ -198,5 +211,30 @@ export class EditProfileModalComponent implements OnInit {
     field.readOnly =
       field.uneditable ||
       (this.data.finalised && !field.editableAfterFinalisation);
+  }
+
+  private validateData(): Observable<ProfileValidationErrorList> {
+    return this.resources.profile
+      .validateProfile(
+        this.data.profile.namespace,
+        this.data.profile.name,
+        this.data.catalogueItem.domainType,
+        this.data.catalogueItem.id,
+        this.profileData,
+        this.data.profile.version
+      )
+      .pipe(
+        map<unknown, ProfileValidationErrorList>(() => {
+          return {
+            total: 0,
+            fieldTotal: 0,
+            errors: []
+          };
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return of(error.error as ProfileValidationErrorList);
+        }),
+        finalize(() => (this.isValidated = true))
+      );
   }
 }

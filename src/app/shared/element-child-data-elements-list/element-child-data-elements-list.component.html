@@ -17,66 +17,158 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4 class="marginless">
-        Data Elements
-        <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-    </h4>
+  <h4 class="marginless">
+    Data Elements
+    <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
+  </h4>
 </div>
 
 <div class="table-responsive">
-    <table mat-table #table [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped" cdkDropList (cdkDropListDropped)="dropDataElements($event)">
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 35%;width: 35%;" columnName="name" scope="col">
-                Name
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 35%;width: 35%;text-align: left;word-wrap: break-word;">
-                <div>
-                    <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="max-width: 60%;width: 60%;" columnName="description" scope="col">
-                Description
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;">
-                <div *ngIf="record.description && record.description.length > 0" style="margin-bottom: 10px;">
-                    <mdm-more-description [description]="record.description"></mdm-more-description>
-                </div>
-                <div>
-                    <mdm-all-links-in-paged-list [parent]="record" ></mdm-all-links-in-paged-list>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="multiplicity">
-          <td mat-header-cell *matHeaderCellDef style="max-width: 5%;width: 5%;" columnName="multiplicity"></td>
-          <td mat-cell *matCellDef="let record" style="max-width: 5%;width: 5%;text-align: center;">
-              <mdm-multiplicity [min]="record.minMultiplicity" [max]="record.maxMultiplicity"></mdm-multiplicity>
-          </td>
-      </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row"></tr>
-    </table>
+  <table
+    mat-table
+    #table
+    [dataSource]="records"
+    class="mdm--mat-table mat-elevation-z3 table-striped"
+    cdkDropList
+    (cdkDropListDropped)="dropDataElements($event)"
+  >
+    <ng-container matColumnDef="name">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 35%; width: 35%"
+        columnName="name"
+        scope="col"
+      >
+        Name
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        style="
+          max-width: 35%;
+          width: 35%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+      >
+        <div>
+          <mdm-element-link
+            [element]="record"
+            [parentDataModel]="{ id: record.dataModel }"
+          ></mdm-element-link>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 60%; width: 60%"
+        columnName="description"
+        scope="col"
+      >
+        Description
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        style="
+          max-width: 60%;
+          width: 60%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+      >
+        <div
+          *ngIf="record.description && record.description.length > 0"
+          style="margin-bottom: 10px"
+        >
+          <mdm-more-description
+            [description]="record.description"
+          ></mdm-more-description>
+        </div>
+        <div>
+          <mdm-all-links-in-paged-list
+            [parent]="record"
+          ></mdm-all-links-in-paged-list>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="multiplicity">
+      <td
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 5%; width: 5%"
+        columnName="multiplicity"
+      ></td>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        style="max-width: 5%; width: 5%; text-align: center"
+      >
+        <mdm-multiplicity
+          [min]="record.minMultiplicity"
+          [max]="record.maxMultiplicity"
+        ></mdm-multiplicity>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      cdkDrag
+      [cdkDragData]="row"
+    ></tr>
+  </table>
 </div>
-<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
-  <p class="marginless">
-      There are no Data Elements in this repository.
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+>
+  <p class="marginless">There are no Data Elements in this model.</p>
+  <p *ngIf="!hideFilters" class="marginless">
+    This might be due to the current filter settings.
   </p>
 </div>
 <div *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 35%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 60%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '100%'}"></ngx-skeleton-loader></th>
-  </tr>
-  <tr>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <th style="width: 35%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 60%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 5%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '100%' }"
+        ></ngx-skeleton-loader>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
     </tr>
   </table>
 </div>
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
-    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+>
+  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

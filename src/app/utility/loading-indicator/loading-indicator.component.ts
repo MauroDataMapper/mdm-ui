@@ -16,21 +16,38 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoadingService } from '@mdm/services/loading.service';
+import { Subject } from 'rxjs';
+import { delay, map, startWith, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-loading-indicator',
   templateUrl: './loading-indicator.component.html',
   styleUrls: ['./loading-indicator.component.scss']
 })
-export class LoadingIndicatorComponent implements OnInit {
-
+export class LoadingIndicatorComponent implements OnInit, OnDestroy {
   visible = false;
 
-  constructor(private loading: LoadingService) { }
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(private loading: LoadingService) {}
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   ngOnInit(): void {
-    this.loading.isLoading.subscribe((value) => this.visible = value);
+    // Fix to avoid "ExpressionChangedAfterItHasBeenCheckedError" debugging error
+    // See https://blog.angular-university.io/angular-debugging/
+    this.loading.isLoading
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        startWith(false),
+        delay(0),
+        map((value) => (this.visible = value))
+      )
+      .subscribe();
   }
 }

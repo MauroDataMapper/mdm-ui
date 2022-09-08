@@ -17,51 +17,133 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-   <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-      <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-         <h4 class="marginless">
-            Data
-            <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
-            <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-            <span class="fas fa-filter" (click)="toggleSearch()" matTooltip="Toggle search"></span>
-         </h4>
-      </div>
-      <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center"> </div>
-   </div>
+  <div
+    fxFlex
+    fxLayout="row"
+    fxLayout.md="row"
+    fxLayout.sm="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="space-around"
+  >
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="40"
+      fxFlex.md="40"
+      fxFlex.sm="40"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-start center"
+    >
+      <h4 class="marginless">
+        Data
+        <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
+        <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{
+          totalItemCount
+        }}</span>
+        <span
+          class="fas fa-filter"
+          (click)="toggleSearch()"
+          matTooltip="Toggle search"
+        ></span>
+      </h4>
+    </div>
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="60"
+      fxFlex.md="60"
+      fxFlex.sm="60"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-end center"
+      fxLayoutAlign.xs="flex-start center"
+    ></div>
+  </div>
 </div>
 <div class="heading-container" [hidden]="hideFilters">
-   <div class="full-width mb-1 mdm--shadow-block">
-      <div class="panel">
-         <input #filters type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="searchTerm" placeholder="Search Data Values..." (keyup)="applyFilter()">
-      </div>
-   </div>
+  <div class="full-width mb-1 mdm--shadow-block">
+    <div class="panel">
+      <input
+        #filters
+        type="search"
+        id="search-models-input"
+        class="form-control outlined-input"
+        [(ngModel)]="searchTerm"
+        placeholder="Search Data Values..."
+        (keyup)="applyFilter()"
+      />
+    </div>
+  </div>
 </div>
 
 <div class="table-responsive" *ngIf="!isLoadingResults">
-   <table mat-table [dataSource]="dataSource" class="mdm--mat-table table-striped">
-      <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
-         <th mat-header-cell *matHeaderCellDef style="min-width: 150px;" scope="col">{{column}}</th>
-         <td mat-cell *matCellDef="let record" style="vertical-align: top; overflow-wrap: break-word; word-break: break-word;">{{record[column]}}</td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-   </table>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mdm--mat-table table-striped"
+  >
+    <ng-container
+      *ngFor="let column of displayedColumns"
+      [matColumnDef]="column"
+    >
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="min-width: 150px"
+        scope="col"
+      >
+        {{ column }}
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        style="
+          vertical-align: top;
+          overflow-wrap: break-word;
+          word-break: break-word;
+        "
+      >
+        {{ record[column] }}
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </div>
-<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
-   <p class="marginless">There are no Data Values in this repository.</p>
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+>
+  <p class="marginless">There are no Data Values in this model.</p>
+  <p *ngIf="!hideFilters" class="marginless">
+    This might be due to the current filter settings.
+  </p>
 </div>
 <div *ngIf="isLoadingResults">
-   <table class="mdm--mat-table mdm--skeleton-table">
-      <tr>
-         <th style="width: 50%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-         <th style="width: 50%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      </tr>
-      <tr>
-         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      </tr>
-   </table>
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th style="width: 50%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 50%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
+        ></ngx-skeleton-loader>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+    </tr>
+  </table>
 </div>
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':isLoadingResults}">
-   <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div class="mdm--mat-pagination" [ngClass]="{ 'is-hidden': isLoadingResults }">
+  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

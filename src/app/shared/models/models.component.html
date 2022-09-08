@@ -72,11 +72,17 @@ SPDX-License-Identifier: Apache-2.0
                     ></span>
                   </button>
                   <mat-menu #filterMenu="matMenu" class="filterMenu">
-                    <!-- <div mat-menu-item>
-                                            <mat-checkbox name="includeModelSuperseded" (ngModelChange)="toggleFilters('includeModelSuperseded')" [(ngModel)]="includeModelSuperseded">
-                                                Show Superseded Models
-                                            </mat-checkbox>
-                                        </div> -->
+                    <div mat-menu-item>
+                      <mat-checkbox
+                        name="includeModelSuperseded"
+                        (ngModelChange)="
+                          toggleFilters('includeModelSuperseded')
+                        "
+                        [(ngModel)]="includeModelSuperseded"
+                      >
+                        Show Superseded Models
+                      </mat-checkbox>
+                    </div>
                     <div *ngIf="isAdministrator" mat-menu-item>
                       <mat-checkbox
                         name="includeDeleted"

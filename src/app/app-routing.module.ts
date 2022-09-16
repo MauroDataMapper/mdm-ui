@@ -213,9 +213,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
-      url: '/dataModel/:id/{tabView:string}',
+      url: '/dataModel/:id/{tabView:string}?{finalised:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } },
+      params: { tabView: { dynamic: true, value: null, squash: true },
+                finalised: { dynamic: true, value: null, squash: true, inherit: false} },
       data: {
         allowAnonymous: true
       }

@@ -1,0 +1,37 @@
+/* SCSS HEX */
+
+/* These are the base colours we'll be using for the default palette */
+$oxford-blue: #002147ff;
+$old-lace: #fff4e5ff;
+$steel-teal: #6c969dff;
+$cultured: #f5f5f5ff;
+$dark-liver: #5b4850ff;
+$black: #212529;
+$white: #FFF;
+
+
+
+/* This maps the default colours to some standard usage */
+$primary-foreground-color: $black;
+$primary-background-color: $white;
+
+$secondary-background-color: $oxford-blue;
+$secondary-foreground-color: $white;
+
+$tertiary-background-color: $dark-liver;
+$tertiary-foreground-color: $white;
+
+$border-color: $black;
+
+/* This defines how particular components use the standardised colour set */
+
+$header-background-color: $secondary-background-color;
+$header-foreground-color: $secondary-foreground-color;
+
+$footer-background-color: $secondary-background-color;
+$footer-foreground-color: $secondary-foreground-color;
+$footer-border-color: $border-color;
+
+
+
+

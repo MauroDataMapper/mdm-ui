@@ -26,7 +26,7 @@ import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
-import { FooterComponent } from '@mdm/shared/footer/footer.component';
+import { FooterComponent } from '@mdm/footer/footer.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
 import { EnumerationCompareComponent } from '@mdm/shared/enumeration-compare/enumeration-compare.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';

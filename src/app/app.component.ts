@@ -18,28 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import {
-  ApiProperty,
-  ApiPropertyIndexResponse
-} from '@maurodatamapper/mdm-resources';
 import { UserIdleService } from 'angular-user-idle';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
-import { MdmResourcesService } from './modules/resources';
+import { forkJoin, of, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import {
   BroadcastService,
   StateHandlerService,
   UserSettingsHandlerService
 } from './services';
 import { EditingService } from './services/editing.service';
-import { FeaturesService } from './services/features.service';
 import { SharedService } from './services/shared.service';
 import { ThemingService } from './services/theming.service';
-import { FooterLink } from './shared/footer/footer.component';
-
-const defaultCopyright =
-  'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
   selector: 'mdm-root',
@@ -51,10 +41,6 @@ export class AppComponent implements OnInit, OnDestroy {
   isLoading = false;
   themeCssSelector: string;
   lastUserIdleCheck: Date = new Date();
-
-  footerLinks: FooterLink[] = [];
-  appVersion?: string;
-  copyright?: string;
 
   /**
    * Signal to attach to subscriptions to trigger when they should be unsubscribed.
@@ -70,9 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private broadcast: BroadcastService,
     private toastr: ToastrService,
     private stateHandler: StateHandlerService,
-    private userSettingsHandler: UserSettingsHandlerService,
-    private resources: MdmResourcesService,
-    private features: FeaturesService
+    private userSettingsHandler: UserSettingsHandlerService
   ) {}
 
   @HostListener('window:mousemove', ['$event'])
@@ -116,9 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
           );
         }
       });
-
-    this.setupFooter();
-
     this.setupIdleTimer();
   }
 
@@ -127,46 +108,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  private setupFooter() {
-    const request$: Observable<ApiPropertyIndexResponse> = this.resources.apiProperties.listPublic();
-
-    request$
-      .pipe(
-        catchError(() => []),
-        map((response: ApiPropertyIndexResponse) => response.body.items),
-        map((apiProperties: ApiProperty[]) => {
-          return {
-            copyright: apiProperties.find(
-              (p) => p.key === 'content.footer.copyright'
-            ),
-            documentationUrl: this.shared.documentation?.url,
-            issueReportingUrl:
-              this.features.useIssueReporting &&
-              this.shared.issueReporting?.defaultUrl
-          };
-        })
-      )
-      .subscribe((config) => {
-        if (config.documentationUrl) {
-          this.footerLinks.push({
-            label: 'Documentation',
-            href: config.documentationUrl,
-            target: '_blank'
-          });
-        }
-
-        if (config.issueReportingUrl) {
-          this.footerLinks.push({
-            label: 'Report issue',
-            href: config.issueReportingUrl,
-            target: '_blank'
-          });
-        }
-
-        this.appVersion = this.shared.appVersion;
-        this.copyright = config.copyright?.value ?? defaultCopyright;
-      });
-  }
 
   private setupIdleTimer() {
     this.userIdle.startWatching();

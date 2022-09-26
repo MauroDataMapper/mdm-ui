@@ -28,18 +28,25 @@ SPDX-License-Identifier: Apache-2.0
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat.core();
 
+@import 'style/theme/default/colors.scss';
+
+@import 'style/layout/twoColumn';
+
+
 /*
 Themes
 Import more theme SASS files here to make them available to the app
 */
+/*
 @import 'style/themes/default.scss';
 @import 'style/themes/nhs-digital.scss';
-
+*/
 /* import custom styling */
 /* Abstracts */
-@import 'style/abstracts/variables';
+/*@import 'style/abstracts/variables';
 @import 'style/abstracts/mixins';
 @import 'style/abstracts/helpers';
+*/
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
@@ -48,18 +55,31 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/brands';
 @import '@fortawesome/fontawesome-free/scss/v4-shims';
 
+
+@import 'style/layout/body';
+
+/*
 @import 'style/main';
 @import 'style/default';
+
+ */
 /* Components */
+
+/*
 @import 'style/components/header';
 @import 'style/components/forms';
 @import 'style/components/table';
 @import 'style/components/modal';
+ */
 /* Layouts */
+/*
 @import 'style/layout/home';
 @import 'style/layout/admin';
 @import 'style/layout/browse';
 @import 'style/layout/tree';
+ */
 
+/*
 @import 'ag-grid-community/dist/styles/ag-grid.css';
 @import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+*/

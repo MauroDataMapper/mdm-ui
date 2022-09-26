@@ -1,0 +1,71 @@
+/*
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+@import '../../style/abstracts/mixins';
+@import '../../style/abstracts/variables';
+
+@import '../../style/theme/default/colors';
+
+
+.bdi--hero-header {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1.0)), url('../../assets/images/pexels-cottonbro-5370916.jpg');
+  background-size: 100%;
+  margin-top:-24px;
+  padding-top: 24px;
+
+  h3:first-child {
+    margin-top: 72px;
+    @include respond-to($tablet) {
+      margin-top: 0px;
+    }
+  }
+  .bdi--hero-header__image {
+    img {
+      @include respond-to(960px) {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.feature-icon {
+  @include size(80px, 80px);
+  border-radius: 100%;
+  line-height: 5.6;
+  display: inline-block;
+
+  &.feature-icon--3 {
+    background-color: rgba(234, 172, 48, 0.1);
+    color: #eaac30;
+  }
+  &.feature-icon--2 {
+    background-color: rgba(51, 122, 183, 0.1);
+    color: #337ab7;
+  }
+  &.feature-icon--1 {
+    background-color: rgba(10, 133, 53, 0.1);
+    color: #0a8535;
+  }
+}
+
+.flex-block > div {
+  flex-basis: auto !important;
+}
+

@@ -1,0 +1,98 @@
+/* Large Devices, Wide Screens */
+@media only screen and (max-width: 2400px) {
+  .resizableLeft {
+    min-height: 800px;
+  }
+  .resizableRight {
+    min-height: 800px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width: 1200px) {
+  .resizableLeft {
+    min-height: 800px;
+  }
+  .resizableRight {
+    min-height: 800px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width: 992px) {
+  .resizableLeft {
+    min-height: 400px;
+  }
+  .resizableRight {
+    min-height: 400px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .leftMenu {
+    h4 {
+      font-size: 1.2em;
+    }
+    .list-group-item {
+      text-align: center;
+      div {
+        i {
+          font-size: 1.5em;
+          display: block;
+        }
+        span {
+          font-size: 0.9em;
+        }
+      }
+    }
+  }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width: 768px) {
+  .resizableLeft {
+    min-height: 400px;
+  }
+  .resizableRight {
+    min-height: 400px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  /* CSS goes here */
+  .resizableLeft {
+    min-height: 400px;
+  }
+  .resizableRight {
+    min-height: 400px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width: 320px) {
+  /* CSS goes here */
+  .resizableLeft {
+    min-height: 400px;
+  }
+  .resizableRight {
+    min-height: 400px;
+  }
+  div.scrollPanel {
+    max-height: 800px !important;
+  }
+}

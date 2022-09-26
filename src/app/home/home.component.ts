@@ -40,7 +40,7 @@ const defaultHtmlContent = [
   {
     key: 'content.home.intro.right',
     value: `<div class="text-center bdi--hero-header__image mt-3">
-    <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
+    <img src="assets/images/favpng_compass-royalty-free-stock-photography-illustration.png" alt="Mauro Data Mapper - Create, Share and Update life cycle">
 </div>`
   },
   {
@@ -89,7 +89,7 @@ const defaultHtmlContent = [
 @Component({
   selector: 'mdm-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;

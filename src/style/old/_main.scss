@@ -1,0 +1,537 @@
+/*
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+
+.detailsRowHeader {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+// .breadcrumb > li + li:before {
+//   padding: 0px 0px 0px 5px !important;
+//   content: "/" !important;
+//   color: #707070 !important;
+//   max-width: 2px;
+//   max-height: 2px;
+// }
+
+// .breadcrumb {
+//   padding: 5px 10px !important;
+//   margin-bottom: 2px !important;
+//   display: inline-block;
+// }
+
+// .breadcrumbItem {
+//   font-size: 12px !important;
+// }
+
+.deleteRowConfirmMessage {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.deleteRowConfirmButton {
+  font-size: 11px;
+  padding: 2px 3px !important;
+  font-weight: normal !important;
+}
+
+.modelPathSimple {
+  font-size: 11px;
+  text-decoration: none;
+  color: #333;
+}
+
+.panel-table {
+  padding: 5px 10px !important;
+}
+
+.elementDetailMCType {
+  font-size: 12px;
+  text-decoration: none;
+  font-style: italic;
+  color: #4cae4c !important;
+}
+
+.elementDetailDescription {
+  word-break: keep-all !important;
+  word-wrap: break-word;
+}
+
+.enumerationKeyValueTable {
+  margin-bottom: 0;
+  tr {
+    th {
+      text-align: left;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+
+    .enumerationKey {
+      font-weight: bold;
+      width: 1px;
+      white-space: nowrap;
+    }
+
+    .enumerationValue {
+      word-break: keep-all;
+      word-wrap: break-word;
+      font-style: italic;
+      // border-left: 1px solid #bbb;
+    }
+
+    .showMoreEnumerations {
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 2px;
+      transition: background-color 0.5s;
+
+      &:hover {
+        background-color: #eee;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+.dataTypeLabel {
+  font-style: italic;
+  font-size: 11px;
+  color: #028821;
+  padding-left: 5px;
+}
+.enumCaretShow {
+  color: #028821;
+}
+.hiddenMoreEnumerationKeyValue {
+  display: none;
+}
+
+ul.myTree,
+ul.myTree ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.myTree:focus {
+  outline-width: 0;
+}
+
+ul.myTree ul {
+  margin-left: 10px;
+}
+ul.myTree li {
+  margin: 0;
+  padding: 0 5px;
+  line-height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ul.myTree li:focus {
+  outline-width: 0;
+}
+
+.hideShowLeftPaneBtn {
+  text-align: center;
+  padding: 2px;
+  margin-bottom: 5px;
+}
+
+.hideShowLeftPaneBtn > i {
+  font-size: 18px;
+}
+
+.dataModelDetailTable {
+  margin-bottom: 0px;
+  border-bottom: none;
+
+  .detailsRowHeader {
+    background-color: #fff;
+    border-right: 1px solid #eeeeee;
+    padding-left: 10px;
+  }
+
+  td {
+    padding-left: 5px;
+  }
+
+  .dataModelDetailsDescription {
+    white-space: pre-line;
+    word-break: break-all;
+  }
+}
+
+.my-tree-fade.ng-hide-remove {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+
+.my-tree-fade.ng-hide {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+  opacity: 0;
+}
+
+/*** Style the buttons ***/
+.searchResults {
+  .ng-table-header {
+    text-align: left;
+    font-size: 1.1em;
+  }
+
+  .ng-table-sort-header {
+    [title] {
+      border: none;
+      pointer-events: none;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+.onlineUser {
+  color: #268c21;
+}
+
+.MCElementType {
+  font-size: 11px;
+  text-decoration: none;
+  font-style: italic;
+  margin-left: 5px;
+  color: #4cae4c !important;
+}
+
+span.metadataNamespace {
+  font-style: italic;
+}
+
+th.metadataNamespaceHeader {
+  font-style: italic !important;
+}
+
+//This will remove the focus line around elements in Safari
+*:focus {
+  outline: none;
+}
+
+.multiplicity {
+  font-style: italic;
+  font-size: 12px;
+  background-color: #e8e8e8;
+  border-radius: 20%;
+  padding: 2px;
+}
+
+.unboundMultiplicity {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
+#paper-html-elements {
+  position: relative;
+  border: 1px solid gray;
+  display: inline-block;
+  background: transparent;
+  overflow: hidden;
+}
+#paper-html-elements svg {
+  background: transparent;
+}
+#paper-html-elements svg .link {
+  z-index: 2;
+}
+
+div.diagram-tool-box {
+  color: #000;
+  background-color: #ddd;
+  border: 1px solid #c4c4c4;
+  float: left;
+  font-size: 16px;
+  text-align: center;
+}
+
+div.diagram-tool-box-icon {
+  cursor: pointer;
+}
+
+//Fix for UI problem in jointjs
+//https://stackoverflow.com/questions/34767763/jointjs-using-router-on-links-behaves-weird
+//Generally it should not happen!
+.connection-wrap {
+  fill: none;
+}
+.connection {
+  fill: none;
+}
+
+div.mcSelectItem {
+  padding: 3px;
+  margin: 2px;
+  cursor: pointer;
+  border: 1px solid #fff;
+  background-color: #fff;
+}
+
+div.mcSelectItem:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+div.mcSelectItem.current {
+  background-color: #d9e9f7;
+  color: #000;
+  cursor: pointer;
+}
+
+div.noClassification {
+  color: #686868;
+  padding: 5px;
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .content {
+    font-style: italic;
+    padding-left: 3px;
+  }
+}
+
+div.noFavourites {
+  color: #686868;
+  padding: 5px;
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+div.pageListBtn {
+  display: inline-block;
+  width: 20px;
+  height: 100%;
+  border: 1px solid #ddd;
+  text-align: center;
+  margin-top: 1px;
+  cursor: pointer;
+  color: #205081;
+}
+
+div.disabledPageListBtn {
+  cursor: not-allowed;
+  color: #a0a0a0;
+}
+
+i.pageListRightBtn {
+  margin-right: -2px;
+}
+tr.contentTable.dataClassRecord {
+  background-color: #f5f5f5;
+}
+
+.errorMessage {
+  color: #a94442;
+}
+
+img.profilePicture {
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.deletedDataModelTitle {
+  text-decoration: line-through;
+}
+
+.supersededByItem {
+  opacity: 0.6;
+}
+
+.not-allowed-cursor {
+  cursor: not-allowed;
+}
+
+.comparisonTree.hide {
+  display: none;
+}
+
+.comparisonTree.deleted {
+  text-decoration: line-through;
+  opacity: 0.6;
+  background-color: #ffbbba;
+}
+
+.comparisonTree.created {
+  background-color: #c2f9c2;
+  border: 1px dashed #ddd;
+}
+
+.comparisonTree.isGhost {
+  background-color: #ddd;
+  border: 1px dashed #ddd;
+}
+
+.comparisonTree.modified {
+  background-color: #f9f9c7;
+  border: 1px dashed #ddd;
+}
+
+.comparisonRow.modified {
+  background-color: #f9f9c7;
+}
+.comparisonRow.deleted {
+  background-color: #ffbbba;
+}
+.comparisonRow.created {
+  background-color: #c2f9c2;
+}
+
+.comparisonTree.nodeLabel {
+  padding: 2px;
+}
+
+.comparisonTree.nodeLabel.selected {
+  font-weight: bold;
+}
+
+.comparisonTree.node {
+  margin: 2px;
+}
+
+.diffStatusCount {
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.alias {
+  margin-right: 8px;
+  padding: 2px 8px;
+  margin-bottom: 2px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: inline-block;
+
+  > li {
+    display: inline-block;
+
+    .aliasButton {
+      &:before {
+        content: none;
+      }
+
+      padding-left: 3px;
+      color: #c62828;
+    }
+  }
+}
+.alias > li + li:before {
+  padding: 0px 0px 0px 3px;
+  color: #000;
+  content: '/';
+}
+
+ul.aliasSearchResult {
+  padding: 0px;
+  margin: 2px 0px !important;
+}
+li.aliasSearchResult {
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: #efefef;
+  display: inline-block;
+  margin-right: 3px;
+}
+
+.descBottomBorder {
+  border-bottom: 1px solid #ddd;
+}
+
+.copyElementSuccess {
+  color: #5cb85c;
+  //   font-size: 26px;
+}
+
+.copyElementError {
+  color: #d9534f;
+  font-size: 26px;
+}
+
+.linkSuggestion.fadeOut {
+  opacity: 0.1;
+  transition: opacity 300ms linear;
+}
+
+small.simpleView.elementType {
+  font-size: 16px;
+  text-decoration: none;
+  font-style: italic;
+  color: #4cae4c !important;
+}
+
+///.....................................................................................................................
+
+.mat-dialog-container {
+  //   padding: 3px !important;
+  // overflow: hidden !important;
+}
+.mat-table-row-select {
+  cursor: pointer;
+}
+
+mat-tab-label {
+  min-width: 50px !important;
+}
+.mat-tab-label,
+.mat-tab-link {
+  color: rgba(0, 0, 0, 0.97);
+}
+
+.mat-menu-panel {
+  min-height: 32px !important;
+}
+
+.leftTab .nav > li > a {
+  padding: 5px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.full-width-dialog .mat-dialog-container {
+  max-width: 100vw !important;
+  width: 100vw;
+}
+
+.badge.item-type-imported,
+.badge.item-type-extended {
+  font-style: italic;
+  font-size: 0.8rem;
+}

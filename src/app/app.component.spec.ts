@@ -23,7 +23,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ByteArrayToBase64Pipe } from './pipes/byte-array-to-base64.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavbarComponent } from './navbar/navbar.component';
-import { FooterComponent } from './shared/footer/footer.component';
+import { FooterComponent } from './footer/footer.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';

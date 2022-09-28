@@ -237,6 +237,14 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <ng-template [ngIf]="isOrderedDataSource">
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngClass]="{ 'mdm--active-row ': row.checked }"
+    ></tr>
+    </ng-template>
+    <ng-template [ngIf]="!isOrderedDataSource">
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
@@ -244,6 +252,7 @@ SPDX-License-Identifier: Apache-2.0
       [cdkDragData]="row"
       [ngClass]="{ 'mdm--active-row ': row.checked }"
     ></tr>
+    </ng-template>
   </table>
 </div>
 

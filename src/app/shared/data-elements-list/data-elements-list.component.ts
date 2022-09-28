@@ -79,6 +79,7 @@ export class DataElementsListComponent implements AfterViewInit {
   filter: {};
   deleteInProgress: boolean;
   bulkActionsVisible = 0;
+  isOrderedDataSource = false;
 
   constructor(
     private resources: MdmResourcesService,
@@ -104,6 +105,11 @@ export class DataElementsListComponent implements AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
+          this.isOrderedDataSource = true;
+          if (!this.sort?.direction) {
+             this.isOrderedDataSource = false;
+             [this.sort.active, this.sort.direction] = ['idx', 'asc'];
+          }
           return this.dataElementsFetch(
             this.paginator?.pageSize,
             this.paginator?.pageOffset,

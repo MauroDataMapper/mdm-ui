@@ -116,7 +116,7 @@ export class DataModelComponent
 
     this.title.setTitle('Data Model');
 
-    //this.dataModelDetails(this.parentId);
+    // this.dataModelDetails(this.parentId);
     this.dataModelDetails(this.parentId, this.showFinalised);
   }
 

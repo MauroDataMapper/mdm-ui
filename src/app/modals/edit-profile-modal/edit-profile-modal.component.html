@@ -205,16 +205,16 @@ SPDX-License-Identifier: Apache-2.0
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="pt-2 pb-2">
   <div>
-    <span *ngIf="validationErrors.total === 0" class="mr-2">
+    <span *ngIf="isValidated && validationErrors.total === 0" class="mr-2">
       <span class="fas fa-check-circle success"></span>
       Profile is valid
     </span>
-    <span *ngIf="validationErrors.total > 0" class="mr-2">
+    <span *ngIf="isValidated && validationErrors.fieldTotal > 0" class="mr-2">
       <span
         class="fas fa-exclamation-triangle warning"
         style="color: #f19e3f"
       ></span>
-      There are {{ validationErrors.total }} field(s) with issues
+      There are {{ validationErrors.fieldTotal }} field(s) with issues
     </span>
     <button
       mat-button

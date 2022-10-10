@@ -22,27 +22,33 @@ SPDX-License-Identifier: Apache-2.0
 
 @import '../../style/theme/default/colors';
 
+.home-left {
+  padding-top: 2em;
+}
 
-.bdi--hero-header {
+#mainContent {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1.0)), url('../../assets/images/pexels-cottonbro-5370916.jpg');
+    linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 1.0)), url('../../assets/images/pexels-cottonbro-5370916.jpg');
   background-size: 100%;
   margin-top:-24px;
   padding-top: 24px;
 
-  h3:first-child {
-    margin-top: 72px;
-    @include respond-to($tablet) {
-      margin-top: 0px;
-    }
+}
+
+.bdi--hero-header {
+  padding-left: 3rem;
+  padding-right: 3rem;
+
+  .side-img {
+    max-width: 50%;
   }
-  .bdi--hero-header__image {
-    img {
-      @include respond-to(960px) {
-        width: 50%;
-      }
-    }
-  }
+
+
+}
+
+.bdi--features {
+  padding-right: 3rem;
+  padding-left: 3rem;
 }
 
 .feature-icon {
@@ -55,10 +61,12 @@ SPDX-License-Identifier: Apache-2.0
     background-color: rgba(234, 172, 48, 0.1);
     color: #eaac30;
   }
+
   &.feature-icon--2 {
     background-color: rgba(51, 122, 183, 0.1);
     color: #337ab7;
   }
+
   &.feature-icon--1 {
     background-color: rgba(10, 133, 53, 0.1);
     color: #0a8535;
@@ -69,3 +77,9 @@ SPDX-License-Identifier: Apache-2.0
   flex-basis: auto !important;
 }
 
+.feature-box {
+  // background-color: white;
+  // border: 1px solid $border-color;
+  // border-radius: 5px;
+  padding: 1rem;
+}

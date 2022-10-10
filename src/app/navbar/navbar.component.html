@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
         fxLayout="row"
         fxLayoutAlign="space-between"
       >
-        <div class="mdm--navbar-brand">
+        <div fxFlex="15" class="mdm--navbar-brand">
           <a
             id="mdm-logo"
             class="mdm-navbar__brand--logo"
@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
             <img [src]="logoUrl" [style.width]="logoWidth" alt="logo" />
           </a>
         </div>
-        <div class="mdm--navbar-items">
+        <div fxFlex="65" class="mdm--navbar-items">
           <a
             class="nav-item nav-link"
             uiSref="appContainer.mainApp.home"
@@ -448,7 +448,7 @@ SPDX-License-Identifier: Apache-2.0
       <!-- <button (click)="register()" mat-button class="custom" color="primary">Register an account</button> TODO -->
     </div>
 
-    <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
+    <button *ngIf="isLoggedIn" (click)="logout()" id="sidebar-logout">
       <span class="fas fa-sign-out-alt"></span>
       <span>Log out</span>
     </button>

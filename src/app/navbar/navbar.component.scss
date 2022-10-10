@@ -51,6 +51,7 @@ header#mdm--header {
   }
   .mdm--navbar-brand {
     z-index: 100;
+    max-width: 15%
   }
   .nav-link {
     display: inline-block;
@@ -79,6 +80,7 @@ header#mdm--header {
   display: flex;
   cursor: pointer;
   font-size: 18px;
+
   .profile-name {
     line-height: 1;
     margin-bottom: 8px;

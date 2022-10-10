@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
@@ -40,7 +40,8 @@ const defaultHtmlContent = [
   {
     key: 'content.home.intro.right',
     value: `<div class="text-center bdi--hero-header__image mt-3">
-    <img src="assets/images/favpng_compass-royalty-free-stock-photography-illustration.png" alt="Mauro Data Mapper - Create, Share and Update life cycle">
+    <img class="side-img" src="assets/images/favpng_compass-royalty-free-stock-photography-illustration.png"
+    alt="Compass">
 </div>`
   },
   {
@@ -89,7 +90,8 @@ const defaultHtmlContent = [
 @Component({
   selector: 'mdm-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;

@@ -17,48 +17,48 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReferenceDataTypeComponent } from './reference-data-type.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { empty } from 'rxjs';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { ReferenceDataValuesComponent } from './reference-data-values.component';
+import { FormsModule } from '@angular/forms';
 
-describe('ReferenceDataTypeComponent', () => {
-  let component: ReferenceDataTypeComponent;
-  let fixture: ComponentFixture<ReferenceDataTypeComponent>;
+describe('ReferenceDataValuesComponent', () => {
+  let component: ReferenceDataValuesComponent;
+  let fixture: ComponentFixture<ReferenceDataValuesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        NgxSkeletonLoaderModule,
         MatPaginatorModule,
+        NgxSkeletonLoaderModule,
         MatTableModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        FormsModule
       ],
       providers: [
         {
           provide: MdmResourcesService,
           useValue: {
-            referenceDataType: {
+            referenceDataValue: {
               // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => empty(),
+              // tslint:disable-next-line: deprecation
+              search: () => empty()
             }
           }
         }
       ],
-      declarations: [
-         ReferenceDataTypeComponent,
-         MdmPaginatorComponent
-      ]
-    })
-    .compileComponents();
+      declarations: [ReferenceDataValuesComponent, MdmPaginatorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReferenceDataTypeComponent);
+    fixture = TestBed.createComponent(ReferenceDataValuesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

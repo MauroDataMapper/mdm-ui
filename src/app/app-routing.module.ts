@@ -75,6 +75,7 @@ import { TerminologyMainComponent } from './wizards/terminology/terminology-main
 import { CatalogueSearchComponent } from './catalogue-search/catalogue-search/catalogue-search.component';
 import { FeaturesService } from './services/features.service';
 import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
+import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 
 /**
@@ -482,6 +483,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataModel',
       url: '/referenceDataModel/new?parentFolderId&parentDomainType',
       component: ReferenceDataModelMainComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
+      url: '/referenceDataType/new?parentModelId',
+      component: ReferenceDataTypeMainComponent
     }
   ]
 };

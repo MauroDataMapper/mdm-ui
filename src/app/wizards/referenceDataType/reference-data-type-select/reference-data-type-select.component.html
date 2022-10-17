@@ -1,0 +1,186 @@
+<!--
+Copyright 2020-2022 University of Oxford
+and Health and Social Care Information Centre, also known as NHS Digital
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container">
+  <h4 class="marginless">
+    Types
+    <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
+  </h4>
+  <span
+    class="fas fa-filter"
+    matTooltip="Toggle search"
+    (click)="toggleFilter()"
+  ></span>
+  <span *ngIf="selection.selected.length > 0" class="ml-1">
+    {{ selection.selected.length }} selected
+  </span>
+</div>
+<div>
+  <div *ngIf="loading">
+    <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  </div>
+  <div class="table-responsive">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="mdm--mat-table table table-striped marginless"
+    >
+      <ng-container matColumnDef="select">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          columnName="select"
+          style="cursor: pointer; max-width: 5%; width: 5%; text-align: center"
+          scope="col"
+        >
+          <mat-checkbox
+            (change)="$event ? selectAllItems() : null"
+            [checked]="selection.hasValue() && allSelected"
+            [indeterminate]="selection.hasValue() && !allSelected"
+            aria-label="Select all data types"
+          ></mat-checkbox>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="max-width: 5%; width: 5%; text-align: center"
+        >
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(record) : null"
+            [checked]="selection.isSelected(record)"
+            aria-label="Select this data type"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="label">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 25%; width: 25%"
+          columnName="label"
+          scope="col"
+          [disabled]="showFilters"
+        >
+          <span [hidden]="showFilters">Name</span>
+          <div [hidden]="!showFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                name="label"
+                (keyup)="inputFilterChanged($event)"
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left">
+          {{ record.label }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 35%; width: 35%"
+          columnName="description"
+          scope="col"
+          [disabled]="showFilters"
+        >
+          <span [hidden]="showFilters">Description</span>
+          <div [hidden]="!showFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Description</mat-label>
+              <input
+                matInput
+                name="description"
+                (keyup)="inputFilterChanged($event)"
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left">
+          {{ record.description }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 35%; width: 35%"
+          columnName="type"
+          scope="col"
+          [disabled]="showFilters"
+        >
+          <span [hidden]="showFilters">Type</span>
+          <div [hidden]="!showFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Type</mat-label>
+              <mat-select
+                id="domainType"
+                (selectionChange)="selectionFilterChanged($event)"
+              >
+                <mat-option></mat-option>
+                <mat-option value="ReferencePrimitiveType"
+                  >Primitive</mat-option
+                >
+                <mat-option value="ReferenceEnumerationType"
+                  >Enumeration</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left">
+          <div [ngSwitch]="record.domainType">
+            <ng-container *ngSwitchCase="'ReferencePrimitiveType'"
+              >Primitive</ng-container
+            >
+            <ng-container *ngSwitchCase="'ReferenceEnumerationType'"
+              >Enumeration</ng-container
+            >
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <div
+    class="bordered is-hidden pxy-2"
+    [ngClass]="{ block: !totalItemCount && !loading }"
+  >
+    <p class="marginless">No data types were found.</p>
+  </div>
+  <div
+    class="mdm--mat-pagination"
+    [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+  >
+    <mdm-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      [length]="totalItemCount"
+      showFirstLastButtons
+    ></mdm-paginator>
+  </div>
+</div>

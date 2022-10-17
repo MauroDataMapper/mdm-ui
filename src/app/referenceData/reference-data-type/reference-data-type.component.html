@@ -36,8 +36,8 @@ SPDX-License-Identifier: Apache-2.0
     >
       <h4 class="marginless">
         Types
-        <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
-        <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{
+        <mdm-skeleton-badge *ngIf="loading"></mdm-skeleton-badge>
+        <span *ngIf="!loading" class="mdm--badge mdm--element-count">{{
           totalItemCount
         }}</span>
       </h4>
@@ -51,10 +51,23 @@ SPDX-License-Identifier: Apache-2.0
       fxFlex.xs="100"
       fxLayoutAlign="flex-end center"
       fxLayoutAlign.xs="flex-start center"
-    ></div>
+    >
+      <div *ngIf="showEdit && !parent.finalised" class="mt-1">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          class="ml-1"
+          (click)="addDataType()"
+        >
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          Add Data Type
+        </button>
+      </div>
+    </div>
   </div>
 </div>
-<div class="table-responsive" *ngIf="!isLoadingResults">
+<div class="table-responsive" *ngIf="!loading">
   <table mat-table [dataSource]="records" class="mdm--mat-table table-striped">
     <ng-container matColumnDef="name">
       <th
@@ -78,7 +91,6 @@ SPDX-License-Identifier: Apache-2.0
         "
       >
         {{ record.label }}
-        <!-- <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link> -->
       </td>
     </ng-container>
     <ng-container matColumnDef="description">
@@ -113,8 +125,13 @@ SPDX-License-Identifier: Apache-2.0
         Type
       </th>
       <td mat-cell *matCellDef="let record">
-        <div>
-          {{ [record.domainType] }}
+        <div [ngSwitch]="record.domainType">
+          <ng-container *ngSwitchCase="'ReferencePrimitiveType'"
+            >Primitive</ng-container
+          >
+          <ng-container *ngSwitchCase="'ReferenceEnumerationType'"
+            >Enumeration</ng-container
+          >
         </div>
         <div class="full-width">
           <mdm-element-data-type
@@ -132,11 +149,11 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div
   class="bordered is-hidden pxy-2"
-  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+  [ngClass]="{ block: !totalItemCount && !loading }"
 >
-  <p class="marginless">There are no Data Types in this model.</p>
+  <p class="marginless">There are no data types in this model.</p>
 </div>
-<div *ngIf="isLoadingResults">
+<div *ngIf="loading">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
       <th style="width: 25%" scope="col">

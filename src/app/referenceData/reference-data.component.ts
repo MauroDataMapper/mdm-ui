@@ -51,13 +51,11 @@ import { TabCollection } from '@mdm/model/ui.model';
 })
 export class ReferenceDataComponent
   implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   referenceModel: ReferenceDataModelDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   parentId: string;
-  isEditable: boolean;
   showExtraTabs = false;
   activeTab: any;
   semanticLinks: any[] = [];
@@ -69,7 +67,15 @@ export class ReferenceDataComponent
   showEdit = false;
   showDelete = false;
   access: Access;
-  tabs = new TabCollection(['description', 'elements', 'types', 'data', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'elements',
+    'types',
+    'data',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   typesItemCount = 0;
   isLoadingTypes = true;
@@ -90,8 +96,7 @@ export class ReferenceDataComponent
     private editingService: EditingService,
     private messageHandler: MessageHandlerService,
     private title: Title
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.parentId = this.uiRouterGlobals.params.id;
@@ -103,7 +108,9 @@ export class ReferenceDataComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Reference Data Model');
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.referenceModelDetails(this.parentId);
@@ -143,23 +150,22 @@ export class ReferenceDataComponent
       resource[item.propertyName] = item.value;
     });
 
-
     this.resourcesService.referenceDataModel
-    .update(this.referenceModel.id, resource)
-    .subscribe(
-      (res) => {
-        this.referenceModel = res.body;
-        this.messageHandler.showSuccess(
-          'Reference Data Model updated successfully.'
-        );
-       },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Reference Data Model.',
-          error
-        );
-      }
-    );
+      .update(this.referenceModel.id, resource)
+      .subscribe(
+        (res) => {
+          this.referenceModel = res.body;
+          this.messageHandler.showSuccess(
+            'Reference Data Model updated successfully.'
+          );
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Reference Data Model.',
+            error
+          );
+        }
+      );
   }
 
   referenceModelDetails(id: string) {
@@ -167,9 +173,6 @@ export class ReferenceDataComponent
       .get(id)
       .subscribe((result: ReferenceDataModelDetailResponse) => {
         this.referenceModel = result.body;
-        this.isEditable = this.referenceModel.availableActions.includes(
-          'update'
-        );
         this.parentId = this.referenceModel.id;
         this.watchRefDataModelObject();
 

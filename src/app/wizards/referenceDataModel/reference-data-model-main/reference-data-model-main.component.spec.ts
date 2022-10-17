@@ -35,10 +35,10 @@ import {
 import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
 import { MockComponent } from 'ng-mocks';
 import { Observable, of } from 'rxjs';
-import { TerminologyMainComponent } from './terminology-main.component';
+import { ReferenceDataModelMainComponent } from './reference-data-model-main.component';
 
-describe('TerminologyMainComponent', () => {
-  let harness: ComponentHarness<TerminologyMainComponent>;
+describe('ReferenceDataModelMainComponent', () => {
+  let harness: ComponentHarness<ReferenceDataModelMainComponent>;
 
   const foldersStub = {
     getFolder: jest.fn() as jest.MockedFunction<
@@ -50,7 +50,7 @@ describe('TerminologyMainComponent', () => {
   };
 
   const resourcesStub = {
-    terminology: {
+    referenceDataModel: {
       create: jest.fn() as jest.MockedFunction<
         (
           folderId: Uuid,
@@ -81,27 +81,30 @@ describe('TerminologyMainComponent', () => {
       })
     );
 
-    harness = await setupTestModuleForComponent(TerminologyMainComponent, {
-      declarations: [MockComponent(ElementClassificationsComponent)],
-      providers: [
-        {
-          provide: FolderService,
-          useValue: foldersStub
-        },
-        {
-          provide: MdmResourcesService,
-          useValue: resourcesStub
-        },
-        {
-          provide: MessageHandlerService,
-          useValue: messageHandlerStub
-        },
-        {
-          provide: StateHandlerService,
-          useValue: stateHandlerStub
-        }
-      ]
-    });
+    harness = await setupTestModuleForComponent(
+      ReferenceDataModelMainComponent,
+      {
+        declarations: [MockComponent(ElementClassificationsComponent)],
+        providers: [
+          {
+            provide: FolderService,
+            useValue: foldersStub
+          },
+          {
+            provide: MdmResourcesService,
+            useValue: resourcesStub
+          },
+          {
+            provide: MessageHandlerService,
+            useValue: messageHandlerStub
+          },
+          {
+            provide: StateHandlerService,
+            useValue: stateHandlerStub
+          }
+        ]
+      }
+    );
   });
 
   it('should create', () => {
@@ -118,32 +121,32 @@ describe('TerminologyMainComponent', () => {
     expect(harness.component.classifiers.value).toStrictEqual([]);
   });
 
-  it('should not create a Terminology when the form is invalid', () => {
+  it('should not create a Reference Data Model when the form is invalid', () => {
     harness.component.ngOnInit();
     harness.component.save();
-    expect(resourcesStub.terminology.create.mock.calls.length).toBe(0);
+    expect(resourcesStub.referenceDataModel.create.mock.calls.length).toBe(0);
   });
 
-  it('should create a Terminology when the form is valid', () => {
-    // Return "created" terminology
-    resourcesStub.terminology.create.mockImplementationOnce(() =>
+  it('should create a Reference Data Model when the form is valid', () => {
+    // Return "created" reference data model
+    resourcesStub.referenceDataModel.create.mockImplementationOnce(() =>
       of({
         body: {
           id: '1234',
-          domainType: CatalogueItemDomainType.Terminology,
-          label: 'Terminology'
+          domainType: CatalogueItemDomainType.ReferenceDataModel,
+          label: 'Reference Data Model'
         }
       })
     );
 
     harness.component.ngOnInit();
-    harness.component.label.setValue('Terminology');
+    harness.component.label.setValue('Reference Data Model');
     harness.component.author.setValue('Tester');
     harness.component.organisation.setValue('Mauro');
 
     harness.component.save();
 
-    expect(resourcesStub.terminology.create.mock.calls.length).toBe(1);
+    expect(resourcesStub.referenceDataModel.create.mock.calls.length).toBe(1);
     expect(messageHandlerStub.showSuccess.mock.calls.length).toBe(1);
     expect(stateHandlerStub.Go.mock.calls.length).toBe(1);
   });

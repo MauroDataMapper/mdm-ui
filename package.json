@@ -39,7 +39,7 @@
     "@angular/router": "12.2.13",
     "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "5.15.4",
     "@maurodatamapper/mdm-resources": "5.2.1",
     "@uirouter/angular": "^9.0.1",
     "@uirouter/core": "6.0.8",

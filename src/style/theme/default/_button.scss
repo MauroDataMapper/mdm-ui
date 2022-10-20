@@ -1,0 +1,15 @@
+@import "colors";
+
+
+button.primary, a.primary-button {
+  padding: 7px 16px;
+  @include respond-to($mobile-xs) {
+    padding: 5px 16px;
+  }
+  color: $button-primary-background;
+  background-color: $button-primary-background ;
+  &[mat-stroked-button] {
+    border: 1px solid #fff;
+  }
+
+}

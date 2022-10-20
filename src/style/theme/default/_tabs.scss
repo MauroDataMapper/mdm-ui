@@ -1,0 +1,45 @@
+@import "colors";
+@import "../../abstracts/variables";
+
+
+button.primary, a.primary-button {
+  padding: 7px 16px;
+  @include respond-to($mobile-xs) {
+    padding: 5px 16px;
+  }
+  &:hover {
+    background-color: lighten($button-secondary-color, 10%);
+  }
+  font-size: 100%;
+  font-weight: 600 ;
+  color: $button-secondary-background;
+  background-color: $button-secondary-color;
+  &[mat-stroked-button] {
+    border: 1px solid $button-secondary-color;
+  }
+  @at-root .login-button {
+    border: 1px solid $button-secondary-background !important;
+  }
+  @at-root .margin-left {
+    margin-left: 1em;
+  }
+}
+
+button.secondary, a.secondary-button {
+  padding: 7px 16px;
+  @include respond-to($mobile-xs) {
+    padding: 5px 16px;
+  }
+  &:hover {
+    background-color: darken($button-primary-color, 10%);
+  }
+  color: $button-primary-background;
+  background-color: $button-primary-color;
+  &[mat-stroked-button] {
+    border: 1px solid $button-primary-background;
+  }
+  @at-root .margin-left {
+    margin-left: 1em;
+  }
+}
+

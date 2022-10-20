@@ -51,7 +51,7 @@ mat-tree-node.mat-tree-node {
   button.mat-icon-button {
     @include size(25px, 22px);
     color: #a06829;
-    line-height: 22px;
+    line-height: 2rem;
     bottom: 1px;
     font-size: 16px;
   }

@@ -1,0 +1,25 @@
+.mat-menu-panel {
+  background-color: white;
+  opacity: 1 !important;
+}
+
+.mat-menu-content:not(:empty) {
+  padding: 0 !important;
+  background-color: white;
+
+}
+
+button.mat-menu-item {
+  color: #575757;
+}
+
+button.mat-menu-item i,
+button.mat-menu-item span.fas,
+button.mat-menu-item span.fab,
+button.mat-menu-item span.far {
+  width: 24px;
+}
+button:focus {
+  outline: none;
+  outline: unset;
+}

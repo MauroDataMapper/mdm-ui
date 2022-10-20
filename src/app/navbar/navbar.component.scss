@@ -21,13 +21,15 @@ SPDX-License-Identifier: Apache-2.0
 @import '../../style/abstracts/variables';
 
 @import '../../style/theme/default/colors';
+@import '../../style/theme/default/button';
+@import '../../style/theme/default/menu';
 
 header#mdm--header {
 
   background-color: $header-background-color;
   color: $header-foreground-color;
   position: relative;
-  padding: 0 3rem;
+  padding: 0 $page-left-right-margin;
   width: 100%;
   margin-bottom: 24px;
   z-index: 1000;
@@ -36,7 +38,7 @@ header#mdm--header {
   }
 
   #mdm--navbar {
-    height: 7rem;
+    height: $navbar-height;
     padding: 0;
     @include respond-to($mobile-xs) {
       height: 70px;
@@ -79,7 +81,8 @@ header#mdm--header {
 .mdm--navbar-user {
   display: flex;
   cursor: pointer;
-  font-size: 18px;
+  font-size: medium;
+  font-weight: bold;
 
   .profile-name {
     line-height: 1;
@@ -89,7 +92,7 @@ header#mdm--header {
     text-overflow: ellipsis;
   }
   .profile-role {
-    font-size: 14px;
+    font-size: smaller;
     line-height: 1;
   }
   .profile-img {
@@ -187,7 +190,7 @@ a.mat-menu-item {
 }
 
 .aside-container {
-  position: absolute;
+  position: relative;
   top: 60px;
   bottom: 60px;
   left: 0;

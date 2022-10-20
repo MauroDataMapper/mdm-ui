@@ -46,7 +46,7 @@
     "@uirouter/rx": "1.0.0",
     "ag-grid-angular": "^26.2.0",
     "ag-grid-community": "^26.2.0",
-    "angular-split": "4.0.0",
+    "angular-split": "^4.0.0",
     "angular-user-idle": "^2.2.7",
     "backbone": "1.4.0",
     "bootstrap": "4.6.0",

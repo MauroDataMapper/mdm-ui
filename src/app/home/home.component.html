@@ -17,55 +17,56 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
+<div id="home" class="fullpage">
+  <div class="bdi--hero-header mb-3 ">
+      <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
 
-<div class="bdi--hero-header mb-3">
-    <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+      <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
+        <div class="home-left" fxFlex="66" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
 
-    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
-      <div class="home-left" fxFlex="66" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+          <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
 
-        <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
-
-        <div *ngIf="!isLoggedIn && !isLoadingContent">
-          <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
-            Log in
-          </button>
-<!--           <span> or </span>
-                    <button mat-stroked-button color="primary" (click)="register()" class="custom mb-1">
-                        Register an account
-                    </button> -->
-          <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+          <div *ngIf="!isLoggedIn && !isLoadingContent">
+            <button mat-stroked-button (click)="login()" class="primary">
+              Log in
+            </button>
+  <!--           <span> or </span>
+                      <button mat-stroked-button color="primary" (click)="register()" class="custom mb-1">
+                          Register an account
+                      </button> -->
+            <a mat-stroked-button class="secondary-button margin-left" target="_blank" [href]="documentationUrl">Learn more</a>
+          </div>
+          <div *ngIf="isLoggedIn && !isLoadingContent">
+            <a mat-flat-button color="primary" class="custom"
+              uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
+            <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+          </div>
         </div>
-        <div *ngIf="isLoggedIn && !isLoadingContent">
-          <a mat-flat-button color="primary" class="custom"
-            uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
-          <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+        <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
+          <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
         </div>
       </div>
-      <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
-        <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
-      </div>
-    </div>
-</div>
+  </div>
 
-<div class="bdi--features highlight">
-    <ngx-skeleton-loader *ngIf="isLoadingContent" count="2"></ngx-skeleton-loader>
+  <div class="bdi--features highlight">
+      <ngx-skeleton-loader *ngIf="isLoadingContent" count="2"></ngx-skeleton-loader>
 
-    <div *ngIf="!isLoadingContent" [innerHTML]="detailHeading | safe:'html'"></div>
+      <div *ngIf="!isLoadingContent" [innerHTML]="detailHeading | safe:'html'"></div>
 
-    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px"
-      class="flex-block">
-      <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn1 | safe:'html'"></div>
+      <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px"
+        class="flex-block">
+        <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+          <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+          <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn1 | safe:'html'"></div>
+        </div>
+        <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+          <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+          <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn2 | safe:'html'"></div>
+        </div>
+        <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+          <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+          <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn3 | safe:'html'"></div>
+        </div>
       </div>
-      <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn2 | safe:'html'"></div>
-      </div>
-      <div class="feature-box" fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn3 | safe:'html'"></div>
-      </div>
-    </div>
+  </div>
 </div>

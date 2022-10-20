@@ -1,45 +1,42 @@
-@import "colors";
-@import "../../abstracts/variables";
+@import "../style/abstracts/variables";
+@import "../style/theme/default/colors";
 
 
-button.primary, a.primary-button {
-  padding: 7px 16px;
-  @include respond-to($mobile-xs) {
-    padding: 5px 16px;
-  }
-  &:hover {
-    background-color: lighten($button-secondary-color, 10%);
-  }
+.mat-tab-label {
+  background-color: $primary-background-color;
+  min-width: 8em;
+  //padding: 0 16px;
+  height: 3rem !important;
+  opacity: 0.5;
   font-size: 100%;
-  font-weight: 600 ;
-  color: $button-secondary-background;
-  background-color: $button-secondary-color;
-  &[mat-stroked-button] {
-    border: 1px solid $button-secondary-color;
-  }
-  @at-root .login-button {
-    border: 1px solid $button-secondary-background !important;
-  }
-  @at-root .margin-left {
-    margin-left: 1em;
+  color: $primary-foreground-color;
+  @at-root.mat-tab-label-active {
+    opacity: 1 !important;
   }
 }
 
-button.secondary, a.secondary-button {
-  padding: 7px 16px;
-  @include respond-to($mobile-xs) {
-    padding: 5px 16px;
-  }
-  &:hover {
-    background-color: darken($button-primary-color, 10%);
-  }
-  color: $button-primary-background;
-  background-color: $button-primary-color;
-  &[mat-stroked-button] {
-    border: 1px solid $button-primary-background;
-  }
-  @at-root .margin-left {
-    margin-left: 1em;
-  }
+
+.mat-tab-group {
+  background-color: white;
 }
 
+.mat-ink-bar {
+  background-color: $steel-teal;
+  height: 4px !important;
+  bottom: 1px !important;
+}
+
+.mat-tab-header {
+  border-bottom: 1px solid $primary-foreground-color;
+  margin-left: -0.8rem;
+  margin-right: -0.8rem;
+  margin-top: -0.8rem;
+
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+
+}
+
+.default-theme .mat-tab-label, .default-theme .mat-tab-link {
+  font-size: 100% !important;
+}

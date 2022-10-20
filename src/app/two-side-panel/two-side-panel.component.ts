@@ -18,11 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ViewChild, Renderer2 } from '@angular/core';
 import { trigger, state, transition, animate, style } from '@angular/animations';
+import { AngularSplitModule } from 'angular-split';
+
 
 @Component({
   selector: 'mdm-two-side-panel',
   templateUrl: './two-side-panel.component.html',
-  styleUrls: ['./two-side-panel.component.sass'],
+  styleUrls: ['./two-side-panel.component.scss'],
   animations: [
     trigger('openClose', [
       state('closed', style({ height: '0', opacity: '0', display: 'none' })),

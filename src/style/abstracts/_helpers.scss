@@ -39,19 +39,7 @@ a.no-underline {
   text-decoration: none;
 }
 
-button.custom, a.custom {
-  padding: 7px 16px;
-  @include respond-to($mobile-xs) {
-    padding: 5px 16px;
-  }
 
-  &.inverted-button {
-    color: #fff;
-    &[mat-stroked-button] {
-      border: 1px solid #fff;
-    }
-  }
-}
 .highlight {
   background-color: #FCFCFC;
   padding: 24px 0;

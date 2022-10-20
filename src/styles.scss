@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat.core();
 
-@import 'style/theme/default/colors.scss';
+@import 'style/theme/default/colors';
 
 @import 'style/layout/twoColumn';
 
@@ -64,6 +64,9 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 
  */
 /* Components */
+
+
+@import 'style/theme/default/tabs';
 
 /*
 @import 'style/components/header';

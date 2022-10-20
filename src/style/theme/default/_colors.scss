@@ -8,6 +8,8 @@ $cultured: #f5f5f5ff;
 $dark-liver: #5b4850ff;
 $black: #212529;
 $white: #FFF;
+$ochre: #D17B0F;
+$gold-metallic: #DEB841;
 
 
 
@@ -15,8 +17,13 @@ $white: #FFF;
 $primary-foreground-color: $black;
 $primary-background-color: $white;
 
+$primary-selected-background-color: lighten($steel-teal, 40%);
+$primary-selected-background-border: lighten($steel-teal, 20%);
+
 $secondary-background-color: $oxford-blue;
 $secondary-foreground-color: $white;
+$secondary-background-color-highlight: lighten($oxford-blue, 10%);
+
 
 $tertiary-background-color: $dark-liver;
 $tertiary-foreground-color: $white;
@@ -32,6 +39,11 @@ $footer-background-color: $secondary-background-color;
 $footer-foreground-color: $secondary-foreground-color;
 $footer-border-color: $border-color;
 
+$button-primary-background: $secondary-background-color;
+$button-primary-color: $primary-background-color;
 
+$button-secondary-background: $primary-background-color;
+$button-secondary-background-hover: $steel-teal;
+$button-secondary-color: $secondary-background-color;
 
 

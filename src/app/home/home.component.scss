@@ -21,23 +21,20 @@ SPDX-License-Identifier: Apache-2.0
 @import '../../style/abstracts/variables';
 
 @import '../../style/theme/default/colors';
+@import '../../style/theme/default/button';
 
 .home-left {
   padding-top: 2em;
 }
 
-#mainContent {
+#home {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 1.0)), url('../../assets/images/pexels-cottonbro-5370916.jpg');
   background-size: 100%;
-  margin-top:-24px;
-  padding-top: 24px;
-
 }
 
+
 .bdi--hero-header {
-  padding-left: 3rem;
-  padding-right: 3rem;
 
   .side-img {
     max-width: 50%;
@@ -47,8 +44,6 @@ SPDX-License-Identifier: Apache-2.0
 }
 
 .bdi--features {
-  padding-right: 3rem;
-  padding-left: 3rem;
 }
 
 .feature-icon {

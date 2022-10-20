@@ -1,4 +1,4 @@
-//
+/*
   Copyright 2020-2022 University of Oxford
   and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,3 +15,31 @@
   limitations under the License.
 
   SPDX-License-Identifier: Apache-2.0
+
+*/
+
+@import '../style/abstracts/mixins';
+@import '../../style/abstracts/variables';
+
+@import '../../style/theme/default/colors';
+
+
+.twopanel {
+  display: grid;
+  gap: 12px;
+
+  //column-gap: 12px;
+}
+
+.panel {
+  background-color: $primary-background-color;
+  border: 1px solid $primary-foreground-color;
+  border-radius: 5px;
+  padding: 0.8rem;
+}
+
+/*
+.resizableLeft {
+  margin-right: 1rem;
+}
+*/

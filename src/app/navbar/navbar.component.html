@@ -61,12 +61,10 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div class="mdm--navbar-user">
           <div *ngIf="!isLoggedIn">
-            <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary-A700">Register</button> TODO -->
             <button
               (click)="login()"
               mat-stroked-button
-              class="custom inverted-button"
-              color="primary-A700"
+              class="primary login-button"
             >
               Log in
             </button>

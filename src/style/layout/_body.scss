@@ -1,3 +1,5 @@
+@import "../abstracts/variables";
+
 html, body {
   height: 100%;
 }
@@ -10,4 +12,20 @@ body {
 }
 footer {
   flex-shrink: 0;
+}
+
+.fullpage {
+  margin-top:-24px;
+  padding-top: 24px;
+
+  margin-bottom: -12px;
+  padding-bottom: 12px;
+
+  padding-left: $page-left-right-margin;
+  padding-right: $page-left-right-margin;
+
+}
+
+.background {
+  background-color: $cultured;
 }

@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
 <mat-tree #foldersTree [attr.name]="treeName" [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
-        <button type="button" mat-icon-button disabled aria-label="Disabled button">
+        <button type="button" disabled aria-label="Disabled button" class="tree-expand">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
         </button>
 
@@ -29,14 +29,14 @@ SPDX-License-Identifier: Apache-2.0
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
-            <button type="button" mat-icon-button disabled aria-label="Disabled button">
+            <button type="button" disabled aria-label="Disabled button" class="tree-expand">
                 <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
             </button>
         </ng-container>
 
         <!-- Default to show expansion icon -->
         <ng-container *ngIf="hasChild(-1,node)">
-            <button type="button" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)">
+            <button type="button" matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)" class="tree-expand">
                 <mat-icon class="mat-icon-rtl-mirror" fontSet="fas" fontIcon="{{treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus'}}"></mat-icon>
             </button>
         </ng-container>
@@ -137,8 +137,8 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mat-tree-node-content"  [ngClass]="{'mat-tree-node-active': node === selectedNode, 'mat-tree-node-inactive': node !== selectedNode}" [draggable]="enableDragAndDrop && draggableDomains.includes(node.domainType)" (dragstart)="dragStart(node, $event)" (drop)="drop(node, $event)" (dragenter)="dragEnter(node, $event)" (dragover)="dragOver(node, $event)" (dragleave)="dragLeave($event)" (dragend)="dragEnd()">
         <!-- <div> -->
           <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
-          <mat-icon *ngIf="hasIcon(node)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
-          <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
+          <mat-icon *ngIf="hasIcon(node)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'" class="model-icon"></mat-icon>
+          <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active-text': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
         <!-- </div> -->
         <small *ngIf="node.branchName" class="ml-1 text-muted">
           <span> | </span>

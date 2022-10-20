@@ -20,11 +20,13 @@ SPDX-License-Identifier: Apache-2.0
 @use '../../../node_modules/@angular/material/index' as mat;
 
 @import '../../style/theme/default/colors';
+@import '../../style/abstracts/variables';
 
-$footer-gap: 3rem;
+
+$footer-gap: 12px;
 
 .mdm-footer {
-  padding: 1rem 3rem;
+  padding: 1rem $page-left-right-margin;
   margin: $footer-gap 0 0;
   display: flex;
   flex-direction: row;

@@ -193,7 +193,7 @@ SPDX-License-Identifier: Apache-2.0
                   <span>Configuration</span>
                 </a>
               </div>
-              <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
+              <button *ngIf="isLoggedIn" (click)="logout()" mat-stroked-button class="primary">
                 <span class="fas fa-sign-out-alt"></span>
                 <span>Log out</span>
               </button>
@@ -446,7 +446,7 @@ SPDX-License-Identifier: Apache-2.0
       <!-- <button (click)="register()" mat-button class="custom" color="primary">Register an account</button> TODO -->
     </div>
 
-    <button *ngIf="isLoggedIn" (click)="logout()" id="sidebar-logout">
+    <button *ngIf="isLoggedIn" (click)="logout()" id="sidebar-logout" class="primary">
       <span class="fas fa-sign-out-alt"></span>
       <span>Log out</span>
     </button>

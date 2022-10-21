@@ -20,14 +20,16 @@ SPDX-License-Identifier: Apache-2.0
 @use '~@angular/material' as mat;
 
 @import "../../../style/abstracts/mixins";
+@import "../../../style/theme/default/colors";
 @import "../../../style/theme/default/button";
 
 
 .model-tree-menu {
   margin-top: 0.5rem;
   text-align: right;
+  min-height: 2.5rem;
+
   button.small {
-    font-size: 75%;
     border-radius: 50%;
   }
 }

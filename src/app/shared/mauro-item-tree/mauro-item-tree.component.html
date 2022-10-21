@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
+    <button mat-icon-button disabled
+            class="tree-expand"></button>
     <!-- Use #nodeTemplate ng-template and pass in node as default context. -->
     <ng-container
       *ngTemplateOutlet="nodeTemplate; context: { $implicit: node }"
@@ -29,6 +30,7 @@ SPDX-License-Identifier: Apache-2.0
       mat-icon-button
       [attr.aria-label]="'Toggle ' + node.label"
       matTreeNodeToggle
+      class="tree-expand"
     >
       <mat-icon
         class="mat-icon-rtl-mirror"

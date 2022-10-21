@@ -1,0 +1,85 @@
+@import "../style/abstracts/mixins";
+@import "tabs";
+@import "button";
+@import "favourites";
+
+
+.mdm-folders-tree {
+  &.dnd-top-placeholder {
+    border: 2px dotted #6a9eff;
+    min-height: 20px;
+    width: 100%;
+    text-align: center;
+    color: #6a9eff;
+    margin-bottom: 5px;
+  }
+
+  &.drag-over-top {
+    background-color: #e5eeff;
+    color: #6a9eff;
+  }
+}
+
+mat-tree {
+  mat-tree-node {
+
+    height: 2rem;
+    cursor: pointer ;
+
+    .drag-over {
+      border: 1px dotted #6a9eff;
+      background-color: #e5eeff;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .model-icon {
+      font-size: 120%;
+      color: $secondary-background-color;
+
+      @at-root .fa-folder-open,
+      .fa-folder,
+      .fa-box-open,
+      .fa-box {
+        color: $ochre !important;
+      }
+
+      @at-root .fa-desktop,
+      .fa-network-wired {
+        color: $steel-teal !important;
+      }
+
+
+    }
+
+    .mat-tree-node-active {
+      background-color: $primary-selected-background-color;
+      border: 1px solid $primary-selected-background-border;
+      border-radius: 3px;
+    }
+
+    button.tree-expand {
+      color: $primary-foreground-color;
+      background-color: $primary-background-color;
+      padding: 0;
+      border: none;
+      line-height: 2rem;
+    }
+
+    .mat-tree-node-content {
+      line-height: 2rem;
+      white-space: nowrap;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+
+    }
+
+  }
+
+}
+.treeHolder {
+  padding-top: 0.1rem;
+}
+
+

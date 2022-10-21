@@ -82,7 +82,6 @@ header#mdm--header {
   display: flex;
   cursor: pointer;
   font-size: medium;
-  font-weight: bold;
 
   .profile-name {
     line-height: 1;
@@ -90,10 +89,12 @@ header#mdm--header {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
   }
   .profile-role {
     font-size: smaller;
     line-height: 1;
+    font-weight: normal;
   }
   .profile-img {
     max-width: unset !important;

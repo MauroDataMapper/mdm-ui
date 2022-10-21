@@ -1,17 +1,31 @@
+@import "../style/theme/default/colors";
+
 .mat-menu-panel {
-  background-color: white;
+  background-color: $old-lace !important;
   opacity: 1 !important;
+  padding: 1rem;
+  border: 1px solid $primary-foreground-color;
+  border-radius: 5px;
 }
 
 .mat-menu-content:not(:empty) {
   padding: 0 !important;
-  background-color: white;
-
 }
 
-button.mat-menu-item {
-  color: #575757;
+button.mat-menu-item, a.mat-menu-item {
+  color: $primary-foreground-color !important;
+  padding: 0 1rem 0 0 !important;
+  line-height: 2 !important;
+  margin-right: 1rem;
+  border: 1px solid $old-lace !important;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: $primary-selected-background-color;
+    border-color: $primary-selected-background-border !important;
+  }
 }
+
 
 button.mat-menu-item i,
 button.mat-menu-item span.fas,
@@ -22,4 +36,15 @@ button.mat-menu-item span.far {
 button:focus {
   outline: none;
   outline: unset;
+}
+
+.menu-label {
+  margin-top: 1rem;
+  padding: 0 !important;
+}
+
+.mat-menu-content button.primary {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.2rem !important;
 }

@@ -37,9 +37,9 @@ SPDX-License-Identifier: Apache-2.0
             <a mat-stroked-button class="secondary-button margin-left" target="_blank" [href]="documentationUrl">Learn more</a>
           </div>
           <div *ngIf="isLoggedIn && !isLoadingContent">
-            <a mat-flat-button color="primary" class="custom"
+            <a mat-flat-button color="primary" class="primary-button"
               uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
-            <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+            <a mat-stroked-button color="primary" class="secondary-button margin-left" target="_blank" [href]="documentationUrl">Learn more</a>
           </div>
         </div>
         <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>

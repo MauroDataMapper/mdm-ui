@@ -16,101 +16,102 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="panel panel-default mdm--shadow-block">
+<div class="modelDetails">
   <form name="form" (ngSubmit)="save()" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="detail">
-        <button
-          type="button"
-          mat-icon-button
-          [matMenuTriggerFor]="userActions"
-          style="position: relative; float: right; margin-right: 4px"
-        >
-          <span class="fas fa-ellipsis-v"></span>
-          <span style="display: none">Menu</span>
-        </button>
-        <!--First level Menu-->
-        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+        <div class="details-menu">
           <button
-            mat-menu-item
             type="button"
-            *ngIf="access.showFinalise"
-            class="has-text-green"
-            (click)="finalise()"
+            mat-stroked-button
+            [matMenuTriggerFor]="userActions"
+            class="secondary small"
           >
-            <i
-              class="fas fa-check-circle has-text-green"
-              aria-hidden="true"
-            ></i>
-            Finalise
+            <span class="fas fa-ellipsis-v"></span>
+            <span style="display: none">Menu</span>
           </button>
-          <button
-            mat-menu-item
-            type="button"
-            *ngIf="access.showEdit && !isEditing"
-            (click)="showForm()"
-          >
-            <span class="fas fa-pencil-alt"></span> Edit Title
-          </button>
-          <button
-            mat-menu-item
-            data-cy="edit-branch-name"
-            type="button"
-            *ngIf="canChangeBranchName"
-            (click)="editBranchName()"
-          >
-            <span class="fas fa-code-branch"></span> Edit Branch Name
-          </button>
-          <button
-            mat-menu-item
-            type="button"
-            *ngIf="access.showNewVersion"
-            (click)="newVersion()"
-          >
-            <span class="fas fa-copy"></span> Create a New Version
-          </button>
-          <button
-            mat-menu-item
-            type="button"
-            *ngIf="access.canMergeInto"
-            (click)="merge()"
-          >
-            <span class="fas fa-window-restore"></span> Merge...
-          </button>
-          <button mat-menu-item type="button" (click)="showMergeGraph()">
-            <span class="fas fa-code-branch"></span> Merge graph
-          </button>
-          <mat-divider></mat-divider>
-          <button
-            mat-menu-item
-            type="button"
-            [matMenuTriggerFor]="userActionsDelete"
-            *ngIf="access.showSoftDelete || access.showPermanentDelete"
-            class="warning"
-          >
-            <span class="far fa-trash-alt warning"></span> Delete
-          </button>
-        </mat-menu>
-        <!-- End of first level menu -->
 
-        <!--Second level sub Menu-->
-        <mat-menu #userActionsDelete="matMenu">
-          <button
-            mat-menu-item
-            (click)="askForSoftDelete()"
-            *ngIf="access.showSoftDelete && !detail.deleted"
-          >
-            Mark as deleted
-          </button>
-          <button
-            mat-menu-item
-            (click)="askForPermanentDelete()"
-            *ngIf="access.showPermanentDelete"
-          >
-            Delete <span class="warning">permanently</span>
-          </button>
-        </mat-menu>
-        <!-- End of Second level sub Menu-->
+          <!--First level Menu-->
+          <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+            <a
+              mat-menu-item
+              *ngIf="access.showFinalise"
+              class="has-text-green"
+              (click)="finalise()"
+            >
+              <i
+                class="fas fa-check-circle has-text-green"
+                aria-hidden="true"
+              ></i>
+              Finalise
+            </a>
+            <a
+              mat-menu-item
+              *ngIf="access.showEdit && !isEditing"
+              (click)="showForm()"
+            >
+              <span class="fas fa-pencil-alt"></span> Edit Title
+            </a>
+            <a
+              mat-menu-item
+              data-cy="edit-branch-name"
+              *ngIf="canChangeBranchName"
+              (click)="editBranchName()"
+            >
+              <span class="fas fa-code-branch"></span> Edit Branch Name
+            </a>
+            <a
+              mat-menu-item
+              *ngIf="access.showNewVersion"
+              (click)="newVersion()"
+            >
+              <span class="fas fa-copy"></span> Create a New Version
+            </a>
+            <a
+              mat-menu-item
+              *ngIf="access.canMergeInto"
+              (click)="merge()"
+            >
+              <span class="fas fa-window-restore"></span> Merge...
+            </a>
+            <a mat-menu-item (click)="showMergeGraph()">
+              <span class="fas fa-code-branch"></span> Merge graph
+            </a>
+            <mat-divider></mat-divider>
+            <a
+              mat-menu-item
+              [matMenuTriggerFor]="userActionsDelete"
+              *ngIf="access.showSoftDelete || access.showPermanentDelete"
+              class="warning"
+            >
+              <span class="fas fa-trash-alt warning"></span> Delete
+            </a>
+          </mat-menu>
+          <!-- End of first level menu -->
+
+          <!--Second level sub Menu-->
+          <mat-menu #userActionsDelete="matMenu">
+            <a
+              mat-menu-item
+              (click)="askForSoftDelete()"
+              *ngIf="access.showSoftDelete && !detail.deleted"
+            >
+              <span class="fas fa-ban warning"></span>
+              Mark as deleted
+            </a>
+            <a
+              mat-menu-item
+              (click)="askForPermanentDelete()"
+              *ngIf="access.showPermanentDelete"
+            >
+              <span class="fas fa-trash-alt warning"></span>
+              Delete <span class="warning">permanently</span>
+            </a>
+          </mat-menu>
+          <!-- End of Second level sub Menu-->
+
+        </div>
+
 
         <div
           *ngIf="access.showPermission"
@@ -118,10 +119,9 @@ SPDX-License-Identifier: Apache-2.0
           [hidden]="isEditing"
         >
           <button
-            mat-icon-button
-            color="primary"
+            mat-stroked-button
             type="button"
-            class="paddingless"
+            class="secondary small"
             (click)="showSecurityDialog()"
             matTooltip="User & Group Access"
             aria-label="User & Group Access"
@@ -133,131 +133,121 @@ SPDX-License-Identifier: Apache-2.0
 
       <div *ngIf="detail">
         <div class="data-model-header">
-          <div class="detail-icons--cta">
-            <mdm-favorite-button [catalogueItem]="detail">
-            </mdm-favorite-button>
-          </div>
+
           <h4
             class="inline-block marginless"
-            [ngClass]="{ deletedDataModelTitle: detail?.deleted }"
+            [ngClass]="[ detail?.deleted? 'deletedDataModelTitle':'']"
           >
-            <span class="dataModelTypeIcon">
-              <span matTooltip="Versioned Folder" class="fas fa-box"></span>
+            <span [ngClass]="[detail?.finalised?'finalised': 'draft']">
+              <span class="dataModelTypeIcon">
+                <span matTooltip="Versioned Folder" class="fas fa-box"></span>
+              </span>
+              <mdm-inline-text-edit
+                [readOnly]="false"
+                [inEditMode]="isEditing"
+                [(ngModel)]="detail.label"
+                [isRequired]="true"
+                [showButtons]="true"
+                (saveClicked)="save()"
+                (cancelClicked)="cancel()"
+                [name]="'moduleName'"
+                size="20"
+                [styleCss]="'dataModelDetailsLabel'"
+              >
+              </mdm-inline-text-edit>
+              <sup
+                *ngIf="detail?.readableByEveryone"
+                class="text-muted"
+                style="margin-left: 4px"
+                ><i
+                  class="fas fa-globe-europe globe fa-xs"
+                  aria-hidden="true"
+                  matTooltip="Publicly Available"
+                ></i
+              ></sup>
+              <sup
+                *ngIf="detail?.readableByAuthenticatedUsers"
+                class="text-muted"
+                style="margin-left: 4px"
+                ><i
+                  class="fas fa-users globe fa-xs"
+                  aria-hidden="true"
+                  matTooltip="Authenticated users only"
+                ></i
+              ></sup>
             </span>
-            <mdm-inline-text-edit
-              [readOnly]="false"
-              [inEditMode]="isEditing"
-              [(ngModel)]="detail.label"
-              [isRequired]="true"
-              [showButtons]="true"
-              (saveClicked)="save()"
-              (cancelClicked)="cancel()"
-              [name]="'moduleName'"
-              size="20"
-              [styleCss]="'dataModelDetailsLabel'"
-            >
-            </mdm-inline-text-edit>
-            <sup
-              *ngIf="detail?.readableByEveryone"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-globe-europe globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Publicly Available"
-              ></i
-            ></sup>
-            <sup
-              *ngIf="detail?.readableByAuthenticatedUsers"
-              class="text-muted"
-              style="margin-left: 4px"
-              ><i
-                class="fas fa-users globe fa-xs"
-                aria-hidden="true"
-                matTooltip="Authenticated users only"
-              ></i
-            ></sup>
+            <mdm-favorite-button [catalogueItem]="detail">
+            </mdm-favorite-button>
           </h4>
           <span class="inline-block" *ngIf="detail?.deleted">
             <small class="warning"> | Deleted</small>
           </span>
 
-          <mdm-element-status [result]="detail"></mdm-element-status>
+          <!--<mdm-element-status [result]="detail"></mdm-element-status> -->
         </div>
       </div>
-
-      <div class="detail-icons">
-        <div class="text-muted">
-          <small>
-            <span class="fas fa-cube" matTooltip="Item type"></span>
-            <span>
-              <strong>Item type: </strong>
-              <span class="item-type">Versioned Folder</span>
+      <div #modelVersion id="modelVersion">
+        <dl *ngIf="detail?.modelVersion && detail?.finalised">
+          <dt><span matTooltip="Model Version" class="fas fa-file-alt"></span>Version: </dt>
+          <dd>
+            <span *ngIf="detail.modelVersionTag" class="tag-name">
+              <span>{{ detail.modelVersionTag }}</span>
+              <span class="text-muted small">&nbsp;({{ detail.modelVersion }})</span>
             </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="detail?.readableByEveryone">
-          <small>
-            <i
+            <span *ngIf="!detail.modelVersionTag">{{ detail.modelVersion }}</span>
+          </dd>
+        </dl>
+        <dl *ngIf="detail">
+          <dt><span class="fas fa-code-branch" matTooltip="Branch name"></span>Branch: </dt>
+          <dd>
+            <mdm-branch-selector [catalogueItem]="detail"></mdm-branch-selector>
+          </dd>
+        </dl>
+
+        <mat-expansion-panel #detailsPanel hideToggle="true" togglePosition="before">
+          <mat-expansion-panel-header>
+            <mat-panel-title ngClass="expandingPanelTitle">
+              <span *ngIf="detailsPanel.expanded" class="fas fa-caret-down"
+              aria-hidden="true"
+              matTooltip="Hide additional details"></span>
+              <span *ngIf="!detailsPanel.expanded" class="fas fa-caret-right"
+                 aria-hidden="true"
+                 matTooltip="Show additional details"></span>
+              <span *ngIf="detailsPanel.expanded">Hide details</span>
+              <span *ngIf="!detailsPanel.expanded">More details...</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+          <dl>
+            <dt><span class="fas fa-cube" matTooltip="Item type"></span>Item Type: </dt>
+            <dd>Versioned Folder</dd>
+          </dl>
+          <dl *ngIf="detail?.readableByEveryone">
+            <dt><span
               class="fas fa-globe-europe globe"
               aria-hidden="true"
               matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="detail?.readableByAuthenticatedUsers">
-          <small>
-            <i
+            ></span>Availability: </dt>
+            <dd>Publicly Readable</dd>
+          </dl>
+          <dl *ngIf="detail?.readableByAuthenticatedUsers">
+            <dt><span
               class="fas fa-users globe"
               aria-hidden="true"
               matTooltip="Availability"
-            ></i>
-            <span><strong>Availability: </strong>Authenticated users only</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="detail?.documentationVersion">
-          <small>
-            <span matTooltip="Documentation Version" class="fas fa-copy"></span>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ detail.documentationVersion }}</span
-            >
-          </small>
-        </div>
-        <div
-          class="text-muted"
-          *ngIf="detail?.modelVersion && detail?.finalised"
-        >
-          <small>
-            <span matTooltip="Model Version" class="fas fa-file-alt"></span>
-            <span> <strong>Version: </strong>{{ detail.modelVersion }} </span>
-            <span *ngIf="detail.modelVersionTag" class="tag-name">
-              <span matTooltip="Model Version Tag" class="fas fa-tag"></span>
-              <span>{{ detail.modelVersionTag }}</span>
-            </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="detail">
-          <small>
-            <span class="fas fa-code-branch" matTooltip="Branch name"></span>
-            <span><strong>Branch: </strong></span>
-            <span>
-              <mdm-branch-selector
-                [catalogueItem]="detail"
-              ></mdm-branch-selector>
-            </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="detail">
-          <small>
-            <span class="far fa-calendar-alt" matTooltip="Last update"></span>
-            <span>
-              <strong>Last update: </strong>
-              {{ detail.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}
-            </span>
-          </small>
-        </div>
+            ></span>Availability: </dt>
+            <dd>Authenticated users only</dd>
+          </dl>
+          <dl *ngIf="detail?.documentationVersion">
+            <dt><span matTooltip="Documentation Version" class="fas fa-copy"></span>Documentation Version: </dt>
+            <dd>{{ detail.documentationVersion }}</dd>
+          </dl>
+          <dl *ngIf="detail">
+            <dt><span class="far fa-calendar-alt" matTooltip="Last update"></span>Last update: </dt>
+            <dd>{{ detail.lastUpdated | date: 'yyyy-MM-dd HH:mm:ss' }}</dd>
+          </dl>
+          </div>
+        </mat-expansion-panel>
       </div>
     </div>
   </form>

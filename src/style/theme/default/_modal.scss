@@ -16,8 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* Modal window specific style */
-.modal-footer {
+
+@import "../../abstracts/mixins";
+@import "colors";
+
+.cdk-overlay-pane {
+
+  min-width: 40%;
+  min-height: 60%;
+
+  .mat-dialog-container {
+    background-color: $menu-background;
+    min-width: 50%;
+    min-height: 50%;
+
+    .modal-title {
+      color: $primary-foreground-color-alternate;
+    }
+  }
+}
+
+
+
+/*.modal-footer {
   text-align: left;
   padding: 0;
 }
@@ -69,3 +90,4 @@ SPDX-License-Identifier: Apache-2.0
     margin-left: 0;
   }
 }
+*/

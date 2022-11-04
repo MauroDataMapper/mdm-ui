@@ -57,7 +57,6 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 
 
 @import 'style/layout/body';
-@import "style/theme/default/menu";
 
 /*
 @import 'style/main';
@@ -67,8 +66,10 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 /* Components */
 
 
+@import "style/theme/default/menu";
 @import 'style/theme/default/tabs';
 @import 'style/theme/default/favourites';
+@import 'style/theme/default/modal';
 
 /*
 @import 'style/components/header';

@@ -1,7 +1,7 @@
 @import "../style/theme/default/colors";
 
 .mat-menu-panel {
-  background-color: $old-lace !important;
+  background-color: $menu-background !important;
   opacity: 1 !important;
   padding: 1rem;
   border: 1px solid $primary-foreground-color;
@@ -16,14 +16,29 @@ button.mat-menu-item, a.mat-menu-item {
   color: $primary-foreground-color !important;
   padding: 0 1rem 0 0 !important;
   line-height: 2 !important;
-  margin-right: 1rem;
-  border: 1px solid $old-lace !important;
+  border: 1px solid $menu-background !important;
   border-radius: 3px;
+  height: 2rem !important;
 
   &:hover {
     background-color: $primary-selected-background-color;
     border-color: $primary-selected-background-border !important;
+    text-decoration: none !important;
   }
+
+  span.fas {
+    width: 2rem;
+    text-align: center;
+  }
+
+  .mat-menu-submenu-icon {
+    right: 0.5rem !important;
+  }
+}
+
+.mat-divider {
+  margin: 1rem 0 1rem 0 !important;
+  border-color: silver !important;
 }
 
 

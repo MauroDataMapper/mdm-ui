@@ -11,14 +11,20 @@ $white: #FFF;
 $ochre: #D17B0F;
 $gold-metallic: #DEB841;
 
+$blanched-almond: #ffeeca;
+$khaki-web: #ceb992;
+$y-in-mn-blue: #394d78;
+
+
 
 
 /* This maps the default colours to some standard usage */
 $primary-foreground-color: $black;
+$primary-foreground-color-alternate: $oxford-blue;
 $primary-background-color: $white;
 
-$primary-selected-background-color: lighten($steel-teal, 40%);
-$primary-selected-background-border: lighten($steel-teal, 20%);
+$primary-selected-background-color: lighten($y-in-mn-blue, 40%);
+$primary-selected-background-border: lighten($y-in-mn-blue, 20%);
 
 $secondary-background-color: $oxford-blue;
 $secondary-foreground-color: $white;
@@ -43,7 +49,21 @@ $button-primary-background: $secondary-background-color;
 $button-primary-color: $primary-background-color;
 
 $button-secondary-background: $primary-background-color;
-$button-secondary-background-hover: $steel-teal;
+$button-secondary-background-hover: lighten($y-in-mn-blue, 40%);
 $button-secondary-color: $secondary-background-color;
 
+
+$menu-background: $blanched-almond;
+$tab-ink-bar: $khaki-web;
+
+
 $favourites-star-color: #ffcc11;
+
+$finalised-foreground: darkgreen;
+$finalised-background: #eeffee;
+
+$draft-foreground: darkred;
+$draft-background: #ffeeee;
+
+$tooltip-background-color: $blanched-almond;
+$tooltip-foreground-color: $primary-foreground-color-alternate;

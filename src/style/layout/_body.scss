@@ -1,4 +1,5 @@
 @import "../abstracts/variables";
+@import "../theme/default/colors";
 
 html, body {
   height: 100%;
@@ -12,20 +13,28 @@ body {
 }
 footer {
   flex-shrink: 0;
+  height: 8rem;
 }
 
 .fullpage {
   margin-top:-24px;
-  padding-top: 24px;
-
   margin-bottom: -12px;
-  padding-bottom: 12px;
 
-  padding-left: $page-left-right-margin;
-  padding-right: $page-left-right-margin;
+  padding: 24px $page-left-right-margin 12px;
 
+  min-height: calc(100vh - 13rem) !important;
 }
 
 .background {
   background-color: $cultured;
+}
+
+.mat-tooltip {
+  /* your own custom styles here */
+  /* e.g. */
+  background-color: $tooltip-background-color !important;
+  color: $tooltip-foreground-color !important;
+  border: 1px solid $tooltip-foreground-color !important;
+  border-radius: 5px !important;
+  font-size: 100% !important;
 }

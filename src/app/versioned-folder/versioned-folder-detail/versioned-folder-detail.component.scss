@@ -16,3 +16,103 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+@import "../../../style/abstracts/mixins";
+@import "../../../style/theme/default/button";
+
+.modelDetails {
+  padding-bottom: 1rem;
+
+  .details-menu {
+    position: relative;
+    text-align: right;
+    float: right;
+    right: 0;
+  }
+}
+
+h4 {
+  color: $primary-foreground-color-alternate;
+
+  span {
+    margin-right: 0.4rem;
+  }
+
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important;
+  font-size: 100%;
+}
+
+.mat-expansion-panel-header {
+
+  padding: 0 !important;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: $primary-foreground-color-alternate;
+
+  span.fas {
+    vertical-align: middle;
+    font-size: 1.3rem;
+    width: 1.5rem;
+    text-align: left;
+  }
+
+}
+
+#modelVersion {
+  dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    color: $primary-foreground-color;
+    min-height: 1.5rem;
+  }
+  dt {
+    float: left;
+    width: 12rem;
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0;
+    color: $primary-foreground-color-alternate;
+    span {
+      width: 1.5rem;
+      text-align: left;
+    }
+
+  }
+  dd {
+    float: left;
+    width: calc(100% - 12rem);
+    /* adjust the width; make sure the total of both is 100% */
+    padding: 0;
+    margin: 0;
+  }
+}
+
+
+.finalised::after {
+  content: 'Finalised';
+  color: $finalised-foreground;
+  background-color: $finalised-background;
+  border: 1px solid $finalised-foreground;
+  border-radius: 5px;
+  margin-left: 0.75rem;
+  font-size: 60%;
+  padding: 0.3rem;
+  vertical-align: middle;
+}
+
+.draft::after {
+  content: 'Draft';
+  color: $draft-foreground;
+  background-color: $draft-background;
+  border: 1px solid $draft-foreground;
+  border-radius: 5px;
+  margin-left: 0.75rem;
+  font-size: 60%;
+  padding: 0.3rem;
+  vertical-align: middle;
+}

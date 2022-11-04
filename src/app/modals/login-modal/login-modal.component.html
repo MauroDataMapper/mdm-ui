@@ -17,14 +17,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-login-modal">
-  <h3 class="modal-title text-center">Login</h3>
-  <p class="mb-2 text-center">Please login to continue using Mauro</p>
+  <h3 class="modal-title">Login</h3>
+  <p class="mb-2">Please login to continue using Mauro</p>
   <button
-    mat-icon-button
+    mat-stroked-button
     color="warn"
     type="button"
     (click)="close()"
-    class="mdm-login-modal__close paddingless"
+    class="secondary small"
   >
     <span class="fas fa-times"></span>
   </button>
@@ -38,66 +38,57 @@ SPDX-License-Identifier: Apache-2.0
         autocomplete="on"
         name="loginForm"
       >
-        <p class="mb-2 text-center">Use your email and password</p>
-        <div class="mdm--form-input">
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input
-              matInput
-              type="email"
-              name="email"
-              formControlName="userName"
-              autocomplete="on"
-              placeholder="Enter your email"
-              required
-            />
-            <mat-error *ngIf="userName?.errors?.required">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="userName?.errors?.pattern">
-              Invalid email address
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="mdm--form-input">
-          <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              type="password"
-              name="password"
-              formControlName="password"
-              autocomplete="on"
-              placeholder="Enter your password"
-              required
-            />
-            <mat-error *ngIf="password?.errors?.required">
-              Password is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="mb-2 text-center">
-          <button
+        <p>Use your email and password</p>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            formControlName="userName"
+            autocomplete="on"
+            placeholder="Enter your email"
+            required
+          />
+          <mat-error *ngIf="userName?.errors?.required">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="userName?.errors?.pattern">
+            Invalid email address
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            name="password"
+            formControlName="password"
+            autocomplete="on"
+            placeholder="Enter your password"
+            required
+          />
+          <mat-error *ngIf="password?.errors?.required">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+        <button
             type="submit"
             (click)="login()"
-            mat-flat-button
-            class="custom mdm--form-button"
-            color="primary"
+            mat-stroked-button
+            class="primary-button"
             [disabled]="authenticating"
           >
             Log in
           </button>
-        </div>
-        <div class="text-center marginless">
           <button
             (click)="forgotPassword()"
-            mat-button
-            color="primary"
+            mat-stroked-button
             [disabled]="authenticating"
+            class="primary-button"
           >
             Forgot Password
           </button>
-        </div>
         <!-- <div class="text-center marginless">
         <span>Don't have an account?</span>
         <button mat-button color="primary" (click)="signUp()">Sign up</button>
@@ -112,6 +103,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="message" class="alert alert-danger">
           {{ message }}
         </div>
+
       </form>
     </div>
     <div

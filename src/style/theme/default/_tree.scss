@@ -21,6 +21,9 @@
 }
 
 mat-tree {
+  // stops the presence of a horizontal scroll bar creating a vertical one
+  margin-bottom: 1em !important;
+
   mat-tree-node {
 
     height: 2rem;
@@ -36,6 +39,7 @@ mat-tree {
     .model-icon {
       font-size: 120%;
       color: $secondary-background-color;
+      width: 2em;
 
       @at-root .fa-folder-open,
       .fa-folder,
@@ -46,7 +50,7 @@ mat-tree {
 
       @at-root .fa-desktop,
       .fa-network-wired {
-        color: $steel-teal !important;
+        color: $primary-foreground-color !important;
       }
 
 

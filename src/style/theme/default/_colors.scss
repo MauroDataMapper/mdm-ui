@@ -45,13 +45,22 @@ $footer-background-color: $secondary-background-color;
 $footer-foreground-color: $secondary-foreground-color;
 $footer-border-color: $border-color;
 
-$button-primary-background: $secondary-background-color;
 $button-primary-color: $primary-background-color;
+$button-primary-background: $secondary-background-color;
+$button-primary-background-hover: lighten($y-in-mn-blue, 10%);
 
+$button-secondary-color: $secondary-background-color;
+$button-secondary-background: lighten($y-in-mn-blue, 40%);
+$button-secondary-background-hover: lighten($y-in-mn-blue, 50%);
+
+/*
 $button-secondary-background: $primary-background-color;
 $button-secondary-background-hover: lighten($y-in-mn-blue, 40%);
 $button-secondary-color: $secondary-background-color;
+*/
 
+$button-delete-foreground: darkred;
+$button-delete-background: $blanched-almond;
 
 $menu-background: $blanched-almond;
 $tab-ink-bar: $khaki-web;

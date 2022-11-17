@@ -22,8 +22,18 @@ SPDX-License-Identifier: Apache-2.0
 
 .cdk-overlay-pane {
 
+  /*
   min-width: 40%;
   min-height: 60%;
+  position: relative;
+*/
+  .modal {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
 
   .mat-dialog-container {
     background-color: $menu-background;
@@ -35,6 +45,7 @@ SPDX-License-Identifier: Apache-2.0
     }
   }
 }
+
 
 
 

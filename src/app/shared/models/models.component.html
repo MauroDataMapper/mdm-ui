@@ -118,7 +118,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
 
           <mat-menu #exportMenu="matMenu" class="filterMenu">
-            <button
+            <a
               mat-menu-item
               (click)="changeState('export', 'dataModels')"
             >
@@ -126,8 +126,8 @@ SPDX-License-Identifier: Apache-2.0
                         class="fas fa-file-alt dataModelTypeIcon marginless"
                       ></span>
               Export Data Models
-            </button>
-            <button
+            </a>
+            <a
               mat-menu-item
               (click)="changeState('export', 'terminologies')"
             >
@@ -135,7 +135,7 @@ SPDX-License-Identifier: Apache-2.0
                         class="fas fa-book dataModelTypeIcon marginless"
                       ></span>
               Export Terminologies
-            </button>
+            </a>
             <!-- <button mat-menu-item (click)="changeState('export','codeSets')">
                                 <span class="fas fa-list dataModelTypeIcon marginless"></span> Export Code Sets
                               </button> -->
@@ -156,7 +156,7 @@ SPDX-License-Identifier: Apache-2.0
           </button>
 
           <mat-menu #importMenu="matMenu" class="filterMenu">
-            <button
+            <a
               mat-menu-item
               (click)="changeState('import', 'dataModels')"
             >
@@ -164,8 +164,8 @@ SPDX-License-Identifier: Apache-2.0
                         class="fas fa-file-alt dataModelTypeIcon marginless"
                       ></span>
               Import Data Models
-            </button>
-            <button
+            </a>
+            <a
               mat-menu-item
               (click)="changeState('import', 'terminologies')"
             >
@@ -173,8 +173,8 @@ SPDX-License-Identifier: Apache-2.0
                         class="fas fa-book dataModelTypeIcon marginless"
                       ></span>
               Import Terminologies
-            </button>
-            <button
+            </a>
+            <a
               mat-menu-item
               (click)="changeState('import', 'referenceDataModels')"
             >
@@ -182,7 +182,7 @@ SPDX-License-Identifier: Apache-2.0
                         class="fas fa-file-contract dataModelTypeIcon marginless"
                       ></span>
               Import Reference Data
-            </button>
+            </a>
           </mat-menu>
           <button
             type="button"

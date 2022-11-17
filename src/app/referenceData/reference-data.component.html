@@ -22,10 +22,10 @@ SPDX-License-Identifier: Apache-2.0
   [attr.data-catalogue-item-id]="referenceModel.id"
   [attr.data-catalogue-item-domain]="referenceModel.domainType"
 >
-  <mdm-reference-data-details
+  <mdm-model-detail
     *ngIf="referenceModel"
-    [refDataModel]="referenceModel"
-  ></mdm-reference-data-details>
+    [detail]="referenceModel"
+  ></mdm-model-detail>
 </div>
 
 <mat-tab-group

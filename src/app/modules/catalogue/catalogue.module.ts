@@ -39,7 +39,6 @@ import { ServerErrorComponent } from '@mdm/errors/server-error/server-error.comp
 import { NotImplementedComponent } from '@mdm/errors/not-implemented/not-implemented.component';
 import { NotAuthorizedComponent } from '@mdm/errors/not-authorized/not-authorized.component';
 import { DataModelComponent } from '@mdm/dataModel/data-model.component';
-import { DataModelDetailComponent } from '@mdm/dataModel/data-model-detail.component';
 import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';
 import { TableButtonsComponent } from '@mdm/shared/table-buttons/table-buttons.component';
 import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
@@ -56,7 +55,6 @@ import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
 import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
-
 import { DataClassComponent } from '@mdm/dataClass/data-class/data-class.component';
 import { DataClassDetailsComponent } from '@mdm/dataClass/data-class-details/data-class-details.component';
 import { ShowIfRolesWritableDirective } from '@mdm/directives/show-if-roles-writable.directive';
@@ -99,7 +97,6 @@ import { ImportModelsComponent } from '@mdm/import-models/import-models.componen
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
 import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
-import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
@@ -168,7 +165,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
-import { VersionedFolderDetailComponent } from '@mdm/versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
+import { ModelDetailComponent } from '@mdm/model/model-detail/model-detail.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '@mdm/security/open-id-connect-authorize/open-id-connect-authorize.component';
@@ -205,7 +202,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
-    DataModelDetailComponent,
     McDataSetMetadataComponent,
     TableButtonsComponent,
     AnnotationListComponent,
@@ -270,7 +266,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CreateTermDialogComponent,
     CreateTermRelationshipTypeDialogComponent,
     CreateTermRelationshipDialogComponent,
-    TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -333,7 +328,7 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     FederatedDataModelDetailComponent,
     ProfileDetailsComponent,
     VersionedFolderComponent,
-    VersionedFolderDetailComponent,
+    ModelDetailComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
@@ -384,7 +379,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
-    DataModelDetailComponent,
     McDataSetMetadataComponent,
     TableButtonsComponent,
     AnnotationListComponent,
@@ -442,7 +436,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     HomeComponent,
     ImportModelsComponent,
     TerminologyComponent,
-    TerminologyDetailsComponent,
     TermListComponent,
     TermCodeSetListComponent,
     CreateTermDialogComponent,

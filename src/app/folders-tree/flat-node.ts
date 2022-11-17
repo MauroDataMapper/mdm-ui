@@ -17,12 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
-import {
-  CatalogueItemDomainType,
-  MdmTreeItem
-} from '@maurodatamapper/mdm-resources';
-import { Access } from '@mdm/model/access';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {CatalogueItemDomainType, MdmTreeItem} from '@maurodatamapper/mdm-resources';
+import {Access} from '@mdm/model/access';
 
 /** Wrapper for source node to support Material Flat Tree */
 export class FlatNode {
@@ -160,6 +157,35 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   [CatalogueItemDomainType.DataElement, () => 'fa-atom']
 ]);
 
+const domainTypeTexts = new Map<CatalogueItemDomainType, string>([
+  [CatalogueItemDomainType.Folder, 'Folder'],
+  [CatalogueItemDomainType.DataModel, 'Data Model'],
+  [CatalogueItemDomainType.DataClass, 'Data Class'],
+  [CatalogueItemDomainType.DataElement, 'Data Element'],
+  [CatalogueItemDomainType.Terminology, 'Terminology'],
+  [CatalogueItemDomainType.Term, 'Term'],
+  [CatalogueItemDomainType.CodeSet, 'Code Set'],
+  [CatalogueItemDomainType.Classifier, 'Classifier'],
+  [CatalogueItemDomainType.ReferenceDataModel, 'Reference Data Model'],
+  [CatalogueItemDomainType.EnumerationType, 'Enumeration Type'],
+  [CatalogueItemDomainType.PrimitiveType, 'Primitive Type'],
+  [CatalogueItemDomainType.ReferenceType, 'Reference Type'],
+  [CatalogueItemDomainType.TerminologyType, 'Terminology Type'],
+  [CatalogueItemDomainType.ReferenceDataModelType, 'Reference Data Model Type'],
+  [CatalogueItemDomainType.CodeSetType, 'Code Set Type'],
+  [CatalogueItemDomainType.ModelDataType, 'Model Data Type'],
+  [CatalogueItemDomainType.ReferenceFile, 'Reference File'],
+  [CatalogueItemDomainType.VersionedFolder, 'Versioned Folder'],
+  [CatalogueItemDomainType.Root, 'Root'],
+  [CatalogueItemDomainType.LocalCatalogue, 'Local Catalogue'],
+  [CatalogueItemDomainType.ExternalCatalogues, 'External Catalogues'],
+  [CatalogueItemDomainType.SubscribedCatalogue, 'Subscribed Catalogue'],
+  [CatalogueItemDomainType.FederatedDataModel, 'Federated Data Model'],
+  [CatalogueItemDomainType.TermRelationshipType, 'Term Relationship Type'],
+  [CatalogueItemDomainType.ReferencePrimitiveType, 'Reference Primitive Type'],
+  [CatalogueItemDomainType.ReferenceEnumerationType, 'Reference Enumeration Type']
+]);
+
 export const getCatalogueItemDomainTypeIcon = (
   domain: CatalogueItemDomainType,
   fnode?: FlatNodeType,
@@ -170,4 +196,13 @@ export const getCatalogueItemDomainTypeIcon = (
   }
 
   return domainTypeIcons.get(domain)(fnode, treeControl);
+};
+
+export const getCatalogueItemDomainTypeText = (
+  domain: CatalogueItemDomainType, type: any) => {
+  if(type) {
+    return domainTypeTexts.get(domain) + ' (' + (type as string) + ')';
+  } else {
+    return domainTypeTexts.get(domain);
+  }
 };

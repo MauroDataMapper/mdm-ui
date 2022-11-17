@@ -16,30 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="mdm-login-modal">
-  <h3 class="modal-title">Login</h3>
-  <p class="mb-2">Please login to continue using Mauro</p>
+<div class="modal login-form">
   <button
     mat-stroked-button
     color="warn"
     type="button"
     (click)="close()"
-    class="secondary small"
+    class="secondary small modal-close"
   >
     <span class="fas fa-times"></span>
   </button>
-  <mat-dialog-content class="mdm-login-modal__container ">
-    <div class="mdm-login-modal__form">
-      <form
-        class="mdm--form mdm--form-modal"
-        [formGroup]="signInForm"
-        (keyup)="($event.keyCode != 13)"
-        role="form"
-        autocomplete="on"
-        name="loginForm"
-      >
-        <p>Use your email and password</p>
-        <mat-form-field appearance="fill">
+  <mat-dialog-content>
+    <h3 class="modal-title">Login</h3>
+    <p class="modal-subtitle">Please log in to continue using Mauro</p>
+    <form
+      class="modal-form"
+      [formGroup]="signInForm"
+      (keyup)="($event.code != 13)"
+      role="form"
+      autocomplete="on"
+      name="loginForm"
+    >
+      <p class="form-instructions">Use your email and password</p>
+        <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input
             matInput
@@ -72,40 +71,41 @@ SPDX-License-Identifier: Apache-2.0
             Password is required
           </mat-error>
         </mat-form-field>
-        <button
-            type="submit"
-            (click)="login()"
-            mat-stroked-button
-            class="primary-button"
-            [disabled]="authenticating"
-          >
-            Log in
-          </button>
+        <div class="buttons">
           <button
-            (click)="forgotPassword()"
-            mat-stroked-button
-            [disabled]="authenticating"
-            class="primary-button"
-          >
-            Forgot Password
-          </button>
+              type="submit"
+              (click)="login()"
+              mat-stroked-button
+              class="primary"
+              [disabled]="authenticating"
+            >
+              Log in
+            </button>
+            <button
+              (click)="forgotPassword()"
+              mat-stroked-button
+              [disabled]="authenticating"
+              class="secondary margin-top"
+            >
+              Forgot Password
+            </button>
+            <mat-progress-bar
+              *ngIf="authenticating"
+              color="accent"
+              mode="indeterminate"
+            ></mat-progress-bar>
+
+            <div *ngIf="message" class="alert alert-danger">
+              {{ message }}
+            </div>
+        </div>
         <!-- <div class="text-center marginless">
         <span>Don't have an account?</span>
         <button mat-button color="primary" (click)="signUp()">Sign up</button>
     </div> -->
 
-        <mat-progress-bar
-          *ngIf="authenticating"
-          color="accent"
-          mode="indeterminate"
-        ></mat-progress-bar>
-
-        <div *ngIf="message" class="alert alert-danger">
-          {{ message }}
-        </div>
 
       </form>
-    </div>
     <div
       class="mdm-login-modal__openid-providers mdm-login-modal--column"
       *ngIf="openIdConnectProviders?.length > 0"
@@ -118,8 +118,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngFor="let provider of openIdConnectProviders"
           type="button"
           mat-stroked-button
-          color="primary"
-          class="custom mdm--form-button"
+          class="primary"
           (click)="authenticateWithOpenIdConnect(provider)"
         >
           <img

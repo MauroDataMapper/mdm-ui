@@ -1,0 +1,81 @@
+@import "colors";
+@import "../../abstracts/variables";
+
+
+.modal-form {
+
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-gap,
+  .mat-form-field-outline-end
+  {
+    background-color: $primary-background-color !important;
+    opacity: 1 !important;
+  }
+
+  button, a.button {
+    width: 100%;
+  }
+
+  div.buttons {
+    margin-top: 1em;
+  }
+
+}
+
+.modal {
+  position: relative;
+  text-align: center;
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white;
+    border-width: 1px;
+  }
+
+  ::ng-deep .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick{
+    color: $button-delete-foreground;
+  }
+
+  // mat-label error style
+  ::ng-deep .mat-form-field.mat-form-field-invalid .mat-form-field-label {
+    color: $button-delete-foreground !important;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  @media (max-width: $mobile) {
+    &__container {
+      flex-direction: column;
+    }
+  }
+
+  &--column {
+    width: 600px;
+    padding: 24px 80px;
+
+    @media (max-width: $mobile) {
+      width: 100%;
+      padding: 12px 16px;
+    }
+  }
+
+  &__openid-providers {
+
+    &--container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      button {
+        margin: 8px;
+      }
+    }
+  }
+}

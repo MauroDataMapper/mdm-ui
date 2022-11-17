@@ -22,10 +22,10 @@ SPDX-License-Identifier: Apache-2.0
   [attr.data-catalogue-item-id]="codeSetModel.id"
   [attr.data-catalogue-item-domain]="codeSetModel.domainType"
 >
-  <mdm-code-set-details
+  <mdm-model-detail
     *ngIf="codeSetModel"
-    [codeSetDetail]="codeSetModel"
-  ></mdm-code-set-details>
+    [detail]="codeSetModel"
+  ></mdm-model-detail>
 </div>
 
 <div>

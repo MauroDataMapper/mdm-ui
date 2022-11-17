@@ -38,20 +38,6 @@ SPDX-License-Identifier: Apache-2.0
         >
           <button
             mat-menu-item
-            data-cy="finalise"
-            type="button"
-            *ngIf="access.showFinalise"
-            class="has-text-green"
-            (click)="finalise()"
-          >
-            <i
-              class="fas fa-check-circle has-text-green"
-              aria-hidden="true"
-            ></i>
-            Finalise
-          </button>
-          <button
-            mat-menu-item
             data-cy="edit-label"
             type="button"
             *ngIf="access.showEdit"
@@ -67,25 +53,6 @@ SPDX-License-Identifier: Apache-2.0
             (click)="editBranchName()"
           >
             <span class="fas fa-code-branch"></span> Edit Branch Name
-          </button>
-          <button
-            mat-menu-item
-            data-cy="edit-label"
-            type="button"
-            *ngIf="access.showEdit"
-            (click)="openBulkEdit()"
-          >
-            <span class="fas fa-clone"></span> Bulk Edit
-          </button>
-          <button
-            mat-menu-item
-            data-cy="compare"
-            type="button"
-            [matMenuTriggerFor]="compareMenu"
-            *ngIf="isAdministrator"
-          >
-            <span class="fas fa-balance-scale-right" aria-hidden="true"></span>
-            Compare
           </button>
           <button
             mat-menu-item
@@ -199,25 +166,6 @@ SPDX-License-Identifier: Apache-2.0
           </button>
         </div>
 
-        <div
-          style="position: relative; float: right; margin-right: 8px"
-          *ngIf="!editMode && !deleteInProgress"
-        >
-          <button
-            mat-icon-button
-            data-cy="export-menu"
-            color="primary"
-            type="button"
-            *ngIf="isLoggedIn"
-            class="paddingless"
-            [disabled]="processing || deleteInProgress"
-            matTooltip="Export as JSON, XML,..."
-            aria-label="Export as JSON, XML,..."
-            (click)="exportModel()"
-          >
-            <span class="fas fa-download"></span>
-          </button>
-        </div>
       </div>
 
       <div *ngIf="dataModel">

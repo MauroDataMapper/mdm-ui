@@ -37,7 +37,7 @@ import {
   CodeSetDetail,
   CodeSetDetailResponse,
   ModelUpdatePayload,
-  SecurableDomainType
+  SecurableDomainType, VersionedFolderDetail
 } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -53,7 +53,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 export class CodeSetComponent
   extends BaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  @ViewChild('tab', {static: false}) tabGroup: MatTabGroup;
   codeSetModel: CodeSetDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -103,7 +103,7 @@ export class CodeSetComponent
 
   ngOnInit() {
     if (!this.uiRouterGlobals.params.id) {
-      this.stateHandler.NotFound({ location: false });
+      this.stateHandler.NotFound({location: false});
       return;
     }
 
@@ -193,7 +193,7 @@ export class CodeSetComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
-    this.stateHandler.Go('codeSet', { tabView: tab.name }, { notify: false });
+    this.stateHandler.Go('codeSet', {tabView: tab.name}, {notify: false});
   }
 
   rulesCountEmitter($event) {

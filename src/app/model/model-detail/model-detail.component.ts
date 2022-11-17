@@ -21,7 +21,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
-  ContainerUpdatePayload,
+  ContainerUpdatePayload, DataModelDetail,
   MultiFacetAwareDomainType,
   VersionedFolderDetail,
   VersionedFolderDetailResponse
@@ -46,19 +46,20 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
+import {getCatalogueItemDomainTypeText} from "@mdm/folders-tree/flat-node";
 
 @Component({
-  selector: 'mdm-versioned-folder-detail',
-  templateUrl: './versioned-folder-detail.component.html',
-  styleUrls: ['./versioned-folder-detail.component.scss']
+  selector: 'mdm-model-detail',
+  templateUrl: './model-detail.component.html',
+  styleUrls: ['./model-detail.component.scss']
 })
-export class VersionedFolderDetailComponent implements OnInit {
-  @Input() detail: VersionedFolderDetail;
+export class ModelDetailComponent implements OnInit {
+  @Input() detail: VersionedFolderDetail | DataModelDetail;
 
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 
   isEditing = false;
-  original: VersionedFolderDetail;
+  original: VersionedFolderDetail | DataModelDetail;
   processing = false;
   access: Access;
 
@@ -319,4 +320,9 @@ export class VersionedFolderDetailComponent implements OnInit {
         );
       });
   }
+
+  getItemType(): string {
+    return getCatalogueItemDomainTypeText(this.detail.domainType, this.detail.type);
+  }
+
 }

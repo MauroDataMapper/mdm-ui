@@ -26,6 +26,8 @@ import {
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 import {
+  ApiProperty,
+  ApiPropertyIndexResponse,
   Profile,
   ProfileField,
   ProfileValidationError,
@@ -35,6 +37,7 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
+import { MessageHandlerService } from '@mdm/services';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
@@ -51,12 +54,14 @@ export class EditProfileModalComponent implements OnInit {
   profileData: Profile;
   description?: string;
   okBtnText: string;
+  showCanEditPropertyAlert = true;
   validationErrors: ProfileValidationErrorList = {
     total: 0,
     fieldTotal: 0,
     errors: []
   };
   isValidated = false;
+  private readonly showCanEditPropertyAlertKey = 'ui.show_can_edit_property_alert';
 
   formOptionsMap = {
     integer: 'number',
@@ -78,6 +83,7 @@ export class EditProfileModalComponent implements OnInit {
     private markdownParser: MarkdownParserService,
     protected resources: MdmResourcesService,
     private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
     protected editing: EditingService
   ) {
     data.profile.sections.forEach((section) => {
@@ -107,7 +113,19 @@ export class EditProfileModalComponent implements OnInit {
     this.okBtnText = data.okBtn ?? 'Save';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadDefaultCustomProfile(response.body.items);
+      });
+  }
 
   save() {
     this.validateData()
@@ -236,5 +254,13 @@ export class EditProfileModalComponent implements OnInit {
         }),
         finalize(() => (this.isValidated = true))
       );
+  }
+
+  private loadDefaultCustomProfile(properties: ApiProperty[]) {
+    this.showCanEditPropertyAlert = JSON.parse(this.getContentProperty(properties, this.showCanEditPropertyAlertKey));
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
   }
 }

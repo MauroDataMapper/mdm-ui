@@ -121,11 +121,15 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   defaultProfileView: string;
   otherDefaultProfileView: string;
   useDefaultProfileSimplifiedEntry = false;
+  showCanEditPropertyAlert = true;
 
   private readonly defaultProfileNamespacePropertyKey =
     'ui.default.profile.namespace';
   private readonly useDefaultProfileSimplifiedEntryPropertyKey =
     'ui.default.profile.simplified_entry';
+  private readonly showCanEditPropertyAlertKey =
+    'ui.show_can_edit_property_alert';
+
 
   get canEditCustomProfile() {
     if (
@@ -856,6 +860,11 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         properties,
         this.useDefaultProfileSimplifiedEntryPropertyKey
       ) === 'true';
+
+    this.showCanEditPropertyAlert =
+      JSON.parse(this.getContentProperty(properties,
+        this.showCanEditPropertyAlertKey));
+
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

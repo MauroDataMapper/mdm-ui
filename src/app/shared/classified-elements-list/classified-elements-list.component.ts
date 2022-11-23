@@ -62,8 +62,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
   domainType;
 
@@ -136,14 +136,11 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
       const value = x.nativeElement.value;
 
       if (value !== '') {
-        filter += `${name}=${value}&`;
+        filter[name] = value;
       }
     });
 
-    if (this.filterValue !== null && this.filterValue !== undefined && this.filterName !== null && this.filterName !== undefined) {
-      filter += `${this.filterName}=${this.filterValue}&`;
-    }
-    this.filter = filter.substring(0, filter.length - 1);
+    this.filter = filter;;
     this.filterEvent.emit(filter);
   };
 

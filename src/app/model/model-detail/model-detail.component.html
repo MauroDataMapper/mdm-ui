@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
               data-cy="restore"
               type="button"
               class="has-text-green"
-              *ngIf="dataModel.deleted && isAdministrator"
+              *ngIf="detail.deleted && isAdministrator"
               (click)="restore()"
             >
               <span class="fas fa-trash-restore has-text-green"></span> Restore
@@ -139,7 +139,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <mat-menu #compareMenu="matMenu">
-          <a mat-menu-item (click)="compare()" *ngIf="!dataModel?.deleted">
+          <a mat-menu-item (click)="compare()" *ngIf="!detail?.deleted">
             Compare to another Data Model
           </a>
           <div
@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div
           style="position: relative; float: right; margin-right: 8px"
-          *ngIf="!editMode && !deleteInProgress"
+          *ngIf="!isEditing && !processing"
         >
           <button
             mat-icon-button
@@ -189,7 +189,7 @@ SPDX-License-Identifier: Apache-2.0
             type="button"
             *ngIf="isLoggedIn"
             class="paddingless"
-            [disabled]="processing || deleteInProgress"
+            [disabled]="processing"
             matTooltip="Export as JSON, XML,..."
             aria-label="Export as JSON, XML,..."
             (click)="exportModel()"

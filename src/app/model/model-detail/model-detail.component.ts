@@ -21,7 +21,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
-  ContainerUpdatePayload, DataModelDetail,
+  ContainerUpdatePayload, DataModelDetail, Exporter,
   MultiFacetAwareDomainType,
   VersionedFolderDetail,
   VersionedFolderDetailResponse
@@ -37,16 +37,17 @@ import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
-  BroadcastService,
+  BroadcastService, ExportHandlerService,
   MessageHandlerService,
   SecurityHandlerService,
   StateHandlerService,
   ValidatorService
 } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { EMPTY } from 'rxjs';
+import {EMPTY, forkJoin, of} from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import {getCatalogueItemDomainTypeText} from "@mdm/folders-tree/flat-node";
+import { getCatalogueItemDomainTypeText } from '@mdm/folders-tree/flat-node';
+import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'mdm-model-detail',
@@ -59,15 +60,20 @@ export class ModelDetailComponent implements OnInit {
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 
   isEditing = false;
+  isAdministrator = false;
+  isLoggedIn: boolean;
   original: VersionedFolderDetail | DataModelDetail;
   processing = false;
+  compareToList = [];
   access: Access;
+  downloadLinks = new Array<HTMLAnchorElement>();
 
   constructor(
     private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
+    private exportHandler: ExportHandlerService,
     private broadcast: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
@@ -80,9 +86,13 @@ export class ModelDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.securityHandler
+      .isAdministrator()
+      .subscribe((state) => (this.isAdministrator = state));
     this.access = this.securityHandler.elementAccess(this.detail);
-    this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
-    this.original = Object.assign({}, this.detail);
+    this.title.setTitle(`${this.getItemType()} - ${this.detail?.label}`);
+    this.modelDetails();
   }
 
   showSecurityDialog() {
@@ -134,6 +144,37 @@ export class ModelDetailComponent implements OnInit {
       });
   }
 
+  restore() {
+    if (!this.isAdministrator || !this.detail.deleted) {
+      return;
+    }
+
+    this.processing = true;
+
+    this.resourcesService.codeSet
+      .undoSoftDelete(this.detail.id)
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem restoring the ${this.getItemType()}.`,
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(
+          `The ${this.getItemType()} "${this.detail.label}" has been restored.`
+        );
+        this.stateHandler.reload();
+        this.broadcast.reloadCatalogueTree();
+      });
+  }
+
+
   askForSoftDelete() {
     if (!this.access.showSoftDelete) {
       return;
@@ -181,6 +222,16 @@ export class ModelDetailComponent implements OnInit {
       .subscribe(() => this.delete(true));
   }
 
+  compare(dataModel = null) {
+    this.stateHandler.NewWindow(
+      'modelscomparison',
+      {
+        sourceId: this.detail.id,
+        targetId: dataModel ? dataModel.id : null
+      },
+      null
+    );
+  }
   finalise() {
     const dialog = this.dialog.open<
       FinaliseModalComponent,
@@ -321,8 +372,93 @@ export class ModelDetailComponent implements OnInit {
       });
   }
 
+  modelDetails(): any {
+    if (this.detail.semanticLinks) {
+      this.detail.semanticLinks.forEach((link) => {
+        if (link.linkType === 'New Version Of') {
+          this.compareToList.push(link.target);
+        }
+      });
+    }
+
+    if (this.detail.semanticLinks) {
+      this.detail.semanticLinks.forEach((link) => {
+        if (link.linkType === 'Superseded By') {
+          this.compareToList.push(link.target);
+        }
+      });
+    }
+
+    this.original = Object.assign({}, this.detail);
+  }
+
+
   getItemType(): string {
     return getCatalogueItemDomainTypeText(this.detail.domainType, this.detail.type);
   }
+
+  openBulkEdit() {
+    this.stateHandler.Go('appContainer.mainApp.bulkEdit', {
+      id: this.detail.id,
+      domainType: this.detail.domainType
+    });
+  }
+
+  exportModel() {
+    this.dialog
+      .openExportModel({ domain: 'dataModels' })
+      .pipe(
+        switchMap((response) => {
+          this.processing = true;
+          return forkJoin([
+            of(response.exporter),
+            this.exportHandler.exportDataModel(
+              [this.detail],
+              response.exporter,
+              'dataModels',
+              response.parameters
+            )
+          ]);
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem exporting the model.',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.processing = false))
+      )
+      .subscribe(([exporter, response]) => {
+        if (response.status === 202) {
+          this.handleAsyncExporterResponse();
+          return;
+        }
+
+        this.handleStandardExporterResponse(exporter, response);
+      });
+  }
+
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.detail.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
+    });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
+  }
+
 
 }

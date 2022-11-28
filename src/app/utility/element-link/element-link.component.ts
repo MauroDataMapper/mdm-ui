@@ -120,11 +120,11 @@ export class ElementLinkComponent implements OnInit {
       this.element.domainType &&
       this.types.filter((x) => x.id === this.element.domainType)
     ) {
-      let allElementTypes = this.types.filter(
+      const allElementTypes = this.types.filter(
                               x => x.id === this.element.domainType
                             );
       this.elementTypeTitle = allElementTypes[0].title;
-      if (allElementTypes[0].baseTitle == 'DataType' && this.showTypeId) {
+      if (allElementTypes[0].baseTitle === 'DataType' && this.showTypeId) {
         this.elementTypeTitle = allElementTypes[0].id;
       }
     }

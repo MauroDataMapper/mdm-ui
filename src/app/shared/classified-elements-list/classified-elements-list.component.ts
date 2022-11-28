@@ -130,7 +130,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter: any = '';
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
@@ -140,7 +140,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.filter = filter;;
+    this.filter = filter;
     this.filterEvent.emit(filter);
   };
 

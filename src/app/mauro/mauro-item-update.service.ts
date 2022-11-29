@@ -92,6 +92,10 @@ export class MauroItemUpdateService {
       response = this.saveClassifier(identifier, item);
     }
 
+    if (identifier.domainType === CatalogueItemDomainType.ReferenceDataModel) {
+      response = this.saveReferenceDataModel(identifier, item);
+    }
+
     if (!response) {
       return throwError(`${identifier.domainType} is not supported`);
     }
@@ -238,5 +242,12 @@ export class MauroItemUpdateService {
     item: MauroItem
   ): Observable<MauroItemResponse> {
     return this.resources.classifier.update(identifier.id, item);
+  }
+
+  private saveReferenceDataModel(
+    identifier: MauroIdentifier,
+    item: MauroItem
+  ): Observable<MauroItemResponse> {
+    return this.resources.referenceDataModel.update(identifier.id, item);
   }
 }

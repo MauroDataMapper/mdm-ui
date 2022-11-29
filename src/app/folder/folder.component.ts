@@ -53,6 +53,7 @@ export class FolderComponent
   readonly domainType = 'folders';
 
   folder: FolderDetail;
+  processing = false;
   showSecuritySection: boolean;
   subscription: Subscription;
   parentId: string;

@@ -16,8 +16,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input } from '@angular/core';
-import { CatalogueItem, CatalogueItemDomainType, DataModelDetail } from '@maurodatamapper/mdm-resources';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  CatalogueItem,
+  CatalogueItemDomainType,
+  DataModelDetail
+} from '@maurodatamapper/mdm-resources';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
@@ -25,21 +29,68 @@ import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
   templateUrl: './element-icon.component.html',
   styleUrls: ['./element-icon.component.sass']
 })
-export class ElementIconComponent {
+export class ElementIconComponent implements OnChanges {
   @Input() element: CatalogueItem;
 
-  constructor() { }
+  icon: string;
+  name: string;
 
-  getIcon() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.element) {
+      this.icon = this.getIcon();
+      this.name = this.getName();
+    }
+  }
+
+  private getIcon() {
     if (this.element.domainType === CatalogueItemDomainType.DataModel) {
       const dataModel = this.element as DataModelDetail;
-      return dataModel?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database';
+      return dataModel?.type === 'Data Standard'
+        ? 'fa-file-alt'
+        : 'fa-database';
     }
 
     return getCatalogueItemDomainTypeIcon(this.element.domainType);
   }
 
-  hasIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
+  private getName() {
+    switch (this.element.domainType) {
+      case CatalogueItemDomainType.Classifier:
+        return 'Classifier';
+      case CatalogueItemDomainType.CodeSet:
+        return 'Code Set';
+      case CatalogueItemDomainType.DataClass:
+        return 'Data Class';
+      case CatalogueItemDomainType.DataElement:
+        return 'Data Element';
+      case CatalogueItemDomainType.DataModel: {
+        const dataModel = this.element as DataModelDetail;
+        return dataModel?.type === 'Data Standard'
+          ? 'Data Standard'
+          : 'Data Asset';
+      }
+      case CatalogueItemDomainType.EnumerationType:
+      case CatalogueItemDomainType.ModelDataType:
+      case CatalogueItemDomainType.PrimitiveType:
+        return 'Data Type';
+      case CatalogueItemDomainType.FederatedDataModel:
+        return 'Federated Data Model';
+      case CatalogueItemDomainType.Folder:
+        return 'Folder';
+      case CatalogueItemDomainType.ReferenceDataModel:
+        return 'Reference Data Model';
+      case CatalogueItemDomainType.ReferenceDataModelType:
+      case CatalogueItemDomainType.ReferenceEnumerationType:
+      case CatalogueItemDomainType.ReferencePrimitiveType:
+        return 'Reference Data Type';
+      case CatalogueItemDomainType.SubscribedCatalogue:
+        return 'Subscribed Catalogue';
+      case CatalogueItemDomainType.Term:
+        return 'Term';
+      case CatalogueItemDomainType.Terminology:
+        return 'Terminology';
+      case CatalogueItemDomainType.VersionedFolder:
+        return 'Versioned Folder';
+    }
   }
 }

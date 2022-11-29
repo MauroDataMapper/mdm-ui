@@ -177,10 +177,16 @@ tr th.mat-header-cell {
   padding: 0.3rem 0.75rem;
 }
 
+/* Styles for tabs */
+.mat-tab-label {
+  font-weight: normal !important;
+}
+
 /* Styles for the active tab label */
 .mat-tab-label.mat-tab-label-active {
   min-width: 25px !important;
-  font-weight: 700;
+  font-weight: 700 !important;
+  opacity: 1;
 }
 
 /* Styles for the ink bar */

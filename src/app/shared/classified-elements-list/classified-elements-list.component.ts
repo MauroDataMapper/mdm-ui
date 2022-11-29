@@ -126,6 +126,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     filters?
   ): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    options['includeDocumentSuperseded'] = false
+    options['includeModelSuperseded'] = false
     return this.resources.classifier.listCatalogueItemsFor(this.parent.id, options);
   }
 

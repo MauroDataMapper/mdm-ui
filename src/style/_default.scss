@@ -16,20 +16,42 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-html,
-body,
 .mdm-root,
 #mdm-ui,
 .mdm-ui-view {
   height: 100%;
 }
-body,
+
+/* use viewport-relative units to cover page fully */
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* include border and padding in element width and height */
+* {
+  box-sizing: border-box;
+}
+
+/* full-sized container that fills up the page */
+.page-content,
+.mdm-root {
+  height: 100%;
+  width: 100%;
+}
+
 .mdm-root {
   display: flex;
   flex-direction: column;
 }
-main {
+
+main,
+.mdm-app-component {
   flex: 1 0 auto;
+}
+
+.app-footer {
+  flex-shrink: 0;
 }
 
 strong {

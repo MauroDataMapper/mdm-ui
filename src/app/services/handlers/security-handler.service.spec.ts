@@ -27,7 +27,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoginPayload } from '@maurodatamapper/mdm-resources';
+import { LoginPayload, Securable } from '@maurodatamapper/mdm-resources';
 
 interface MdmSecurityResourceStub {
   login: jest.Mock;
@@ -118,5 +118,15 @@ describe('SecurityHandlerService', () => {
     const expected$ = cold('--#');
     const actual$ = service.signIn({ username: 'fail', password: 'fail' });
     expect(actual$).toBeObservable(expected$);
+  });
+
+  it('should return showPermission when element is editable after finalization', () => {
+    const dataModel: Securable = {
+      availableActions: ['finalisedEditActions']
+    };
+    const actual$ = service.elementAccess(
+      dataModel
+    );
+   expect(actual$.showPermission).toBeTruthy();
   });
 });

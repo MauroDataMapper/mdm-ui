@@ -130,7 +130,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    const filter: any = '';
+    const filter = {}
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;

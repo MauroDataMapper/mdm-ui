@@ -154,6 +154,7 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'dt',
       classifiable: true,
+      displayLabel: 'Reference',
       domainName: 'referenceTypes'
     },
     {
@@ -163,6 +164,7 @@ export class ElementTypesService {
       baseTitle: 'DataType',
       markdown: 'mdt',
       classifiable: true,
+      displayLabel: 'ModelDataType',
       domainName: 'modelDataTypes'
     },
     {

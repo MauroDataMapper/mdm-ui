@@ -38,7 +38,6 @@ export class ElementLinkComponent implements OnInit {
   @Input() showHref = true;
   @Input() showParentDataModelName: boolean;
   @Input() showLink = true;
-  @Input() showTypeId = false;
   @Output() selectedElementsChange = new EventEmitter<any[]>();
   elementVal: any;
 
@@ -120,13 +119,9 @@ export class ElementLinkComponent implements OnInit {
       this.element.domainType &&
       this.types.filter((x) => x.id === this.element.domainType)
     ) {
-      const allElementTypes = this.types.filter(
-                              x => x.id === this.element.domainType
-                            );
-      this.elementTypeTitle = allElementTypes[0].title;
-      if (allElementTypes[0].baseTitle === 'DataType' && this.showTypeId) {
-        this.elementTypeTitle = allElementTypes[0].id;
-      }
+      this.elementTypeTitle = this.types.filter(
+        (x) => x.id === this.element.domainType
+      )[0].title;
     }
   }
 

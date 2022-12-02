@@ -153,7 +153,6 @@ export class ElementTypesService {
       title: 'DataType (Reference)',
       baseTitle: 'DataType',
       markdown: 'dt',
-      displayLabel: 'Reference',
       classifiable: true,
       domainName: 'referenceTypes'
     },
@@ -163,7 +162,6 @@ export class ElementTypesService {
       title: 'DataType (ModelDataType)',
       baseTitle: 'DataType',
       markdown: 'mdt',
-      displayLabel: 'ModelDataType',
       classifiable: true,
       domainName: 'modelDataTypes'
     },
@@ -291,7 +289,24 @@ export class ElementTypesService {
       markdown: 'dt',
       classifiable: true
     },
-
+    PrimitiveType: {
+      id: 'PrimitiveType',
+      link: 'dataType',
+      title: 'PrimitiveType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    EnumerationType: {
+      id: 'EnumerationType',
+      link: 'dataType',
+      title: 'EnumerationType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
     Classifier: {
       id: 'Classifier',
       link: 'classifier',

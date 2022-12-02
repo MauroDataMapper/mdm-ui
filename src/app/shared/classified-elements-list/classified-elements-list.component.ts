@@ -52,6 +52,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
+  allDataTypes: any;
+  allDataTypesMap: any;
   checkAllCheckbox = false;
   processing: boolean;
   failCount: number;
@@ -79,7 +81,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     private gridService: GridService
   ) { }
   ngOnInit(): void {
-    this.displayedColumns = ['label', 'description', 'type'];
+    this.displayedColumns = ['label', 'description', 'domainType'];
     this.isLoadingResults = false;
   }
 
@@ -91,6 +93,9 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
 
     this.classifiableBaseTypes = this.baseTypes.filter(f => f.classifiable === true);
     this.classifiableBaseTypes = [{ id: '', title: '' }].concat(this.classifiableBaseTypes);
+
+    this.allDataTypes = this.classifiableBaseTypes;
+    this.allDataTypesMap = this.getClassifiableBaseTypesMap();
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
@@ -130,27 +135,40 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    const filter = {}
+    debugger;
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
         filter[name] = value;
       }
     });
 
+    if (this.domainType) {
+      if (this.domainType.id !== 'DataType') {
+        filter['domainType'] = this.domainType.id;
+      }
+    }
+
     this.filter = filter;
     this.filterEvent.emit(filter);
   };
 
-  applyMatSelectFilter(filterValue: any, filterName) {
-    this.filterValue = filterValue;
-    if (this.filterValue !== '') { this.filterName = filterName; } else { this.filterName = ''; }
+  applyMatSelectFilter() {
     this.applyFilter();
   }
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
   };
+
+  getClassifiableBaseTypesMap() {
+    const dataTypes = this.allDataTypes;
+    const dtMap = {};
+    dataTypes.forEach((dt) => {
+      dtMap[dt.id] = dt;
+    });
+    return dtMap;
+  }
 }

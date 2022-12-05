@@ -291,7 +291,24 @@ export class ElementTypesService {
       markdown: 'dt',
       classifiable: true
     },
-
+    PrimitiveType: {
+      id: 'PrimitiveType',
+      link: 'dataType',
+      title: 'PrimitiveType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    EnumerationType: {
+      id: 'EnumerationType',
+      link: 'dataType',
+      title: 'EnumerationType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
     Classifier: {
       id: 'Classifier',
       link: 'classifier',

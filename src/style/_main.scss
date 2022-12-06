@@ -20,10 +20,10 @@ SPDX-License-Identifier: Apache-2.0
 /* Large Devices, Wide Screens */
 @media only screen and (max-width: 2400px) {
   .resizableLeft {
-    min-height: 800px;
+    //min-height: 800px;
   }
   .resizableRight {
-    min-height: 800px;
+    //min-height: 800px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -33,10 +33,10 @@ SPDX-License-Identifier: Apache-2.0
 /* Large Devices, Wide Screens */
 @media only screen and (max-width: 1200px) {
   .resizableLeft {
-    min-height: 800px;
+    //min-height: 800px;
   }
   .resizableRight {
-    min-height: 800px;
+    //min-height: 800px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -46,10 +46,10 @@ SPDX-License-Identifier: Apache-2.0
 /* Medium Devices, Desktops */
 @media only screen and (max-width: 992px) {
   .resizableLeft {
-    min-height: 400px;
+    //min-height: 400px;
   }
   .resizableRight {
-    min-height: 400px;
+    //min-height: 400px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -79,10 +79,10 @@ SPDX-License-Identifier: Apache-2.0
 /* Small Devices, Tablets */
 @media only screen and (max-width: 768px) {
   .resizableLeft {
-    min-height: 400px;
+    //min-height: 400px;
   }
   .resizableRight {
-    min-height: 400px;
+    //min-height: 400px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -92,10 +92,10 @@ SPDX-License-Identifier: Apache-2.0
 @media only screen and (max-width: 480px) {
   /* CSS goes here */
   .resizableLeft {
-    min-height: 400px;
+    //min-height: 400px;
   }
   .resizableRight {
-    min-height: 400px;
+    //min-height: 400px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -106,10 +106,10 @@ SPDX-License-Identifier: Apache-2.0
 @media only screen and (max-width: 320px) {
   /* CSS goes here */
   .resizableLeft {
-    min-height: 400px;
+    //min-height: 400px;
   }
   .resizableRight {
-    min-height: 400px;
+    //min-height: 400px;
   }
   div.scrollPanel {
     max-height: 800px !important;
@@ -632,4 +632,8 @@ mat-tab-label {
 .badge.item-type-extended {
   font-style: italic;
   font-size: 0.8rem;
+}
+
+.mat-tooltip {
+  font-size: 12px !important;
 }

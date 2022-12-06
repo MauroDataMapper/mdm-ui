@@ -312,5 +312,13 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true
+  },
+  {
+    key: 'ui.show_can_edit_property_alert',
+    category: 'UI',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

@@ -16,16 +16,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-.c-inline-editor.inline-editor-button-group {
-    visibility: hidden !important;
-}
-
-#inlineEditWrapper {
-    display: inline-block;
-    width: auto!important;
-    margin-right: 5px
-}
-
-.inline-editor-button-group {
-	display: none;
+.mdm-model-header {
+  &__title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

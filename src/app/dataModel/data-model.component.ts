@@ -47,6 +47,8 @@ export class DataModelComponent
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
   showFinalised: string;
+  downloadLinks: HTMLAnchorElement[] = [];
+  compareToList: any[] = []; // TODO: define better type
 
   dataModel: DataModelDetail;
   editMode = false;
@@ -173,6 +175,16 @@ export class DataModelComponent
         .subscribe(async (result: DataModelDetailResponse) => {
           this.dataModel = result.body;
           this.catalogueItem = result.body;
+
+          if (this.dataModel.semanticLinks) {
+            this.compareToList = this.dataModel.semanticLinks
+              .filter(
+                (link) =>
+                  link.linkType === 'New Version Of' ||
+                  link.linkType === 'Superseded By'
+              )
+              .map((link) => link.target);
+          }
 
           this.watchDataModelObject();
           this.parentId = this.catalogueItem.id;

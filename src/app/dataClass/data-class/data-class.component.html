@@ -25,10 +25,7 @@ SPDX-License-Identifier: Apache-2.0
       mode="indeterminate"
     ></mat-progress-bar>
   </div>
-  <mdm-data-class-details
-    *ngIf="dataClass"
-    [dataClass]="dataClass"
-  ></mdm-data-class-details>
+  <mdm-model-header *ngIf="dataClass" [item]="dataClass"></mdm-model-header>
 </div>
 
 <mat-tab-group

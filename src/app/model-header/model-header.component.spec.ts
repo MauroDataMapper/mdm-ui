@@ -16,3 +16,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
+import { ModelHeaderComponent } from './model-header.component';
+
+describe('ModelHeaderComponent', () => {
+  let harness: ComponentHarness<ModelHeaderComponent>;
+
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(ModelHeaderComponent);
+  });
+
+  it('should create', () => {
+    expect(harness.isComponentCreated).toBeTruthy();
+  });
+});

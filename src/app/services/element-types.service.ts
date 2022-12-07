@@ -309,7 +309,7 @@ export class ElementTypesService {
       markdown: 'dt',
       classifiable: true
     },
-    Classifier: {
+    classifier: {
       id: 'Classifier',
       link: 'classifier',
       title: 'Classifier',
@@ -401,7 +401,9 @@ export class ElementTypesService {
   }
 
   getAllDataTypesArray() {
-    return this.allTypes.filter(f => f.baseTitle === 'DataType' && f.title !== 'DataType');
+    return this.allTypes.filter(
+      (f) => f.baseTitle === 'DataType' && f.title !== 'DataType'
+    );
   }
 
   getAllDataTypesMap() {

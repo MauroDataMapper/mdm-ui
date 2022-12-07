@@ -17,8 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <mat-icon
-  *ngIf="hasIcon()"
+  *ngIf="icon"
   fontSet="fas"
-  [fontIcon]="getIcon()"
+  [matTooltip]="name"
+  [fontIcon]="icon"
   [ngClass]="'foldersTree folderTreeIcon'"
 ></mat-icon>

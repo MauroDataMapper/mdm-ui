@@ -16,16 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="codeSetModel"
+<div
+  *ngIf="codeSetModel"
   class="full-width"
   data-cy="catalogue-item-container"
   [attr.data-catalogue-item-id]="codeSetModel.id"
   [attr.data-catalogue-item-domain]="codeSetModel.domainType"
 >
-  <mdm-code-set-details
+  <mdm-model-header
     *ngIf="codeSetModel"
-    [codeSetDetail]="codeSetModel"
-  ></mdm-code-set-details>
+    [item]="codeSetModel"
+  ></mdm-model-header>
 </div>
 
 <div>

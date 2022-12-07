@@ -18,7 +18,26 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+
+export interface AddRuleModalConfig {
+  name: string;
+  description?: string;
+  title?: string;
+  message?: string;
+  okBtnTitle?: string;
+  cancelBtnTitle?: string;
+  cancelShown?: boolean;
+  btnType?: string;
+}
+
+export interface AddRuleModalResult {
+  status: ModalDialogStatus;
+  name?: string;
+  description?: string;
+}
 
 @Component({
   selector: 'mdm-add-rule-modal',
@@ -26,32 +45,56 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./add-rule-modal.component.scss']
 })
 export class AddRuleModalComponent implements OnInit {
-
   okBtn: string;
   cancelBtn: string;
   btnType: string;
-  inputValue: { label: string; groups: any[]};
   modalTitle: string;
   message: string;
-  inputLabel: string;
-  allGroups = [];
-  selectedGroups = [];
 
-  constructor( private dialogRef: MatDialogRef<AddRuleModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any)
- { }
+  formGroup = new FormGroup({
+    name: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl('')
+  });
 
-  ngOnInit(): void {
-    this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
-    this.btnType = this.data.btnType ? this.data.btnType : 'primary';
-    this.cancelBtn = this.data.cancelBtn ? this.data.cancelBtn : 'Cancel';
-    this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
-    this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
-    this.message = this.data.message;
-    this.inputValue = {
-      label: '',
-      groups: []
-    };
+  get name() {
+    return this.formGroup.get('name');
   }
 
+  get description() {
+    return this.formGroup.get('description');
+  }
+
+  constructor(
+    private dialogRef: MatDialogRef<AddRuleModalComponent, AddRuleModalResult>,
+    @Inject(MAT_DIALOG_DATA) public data: AddRuleModalConfig
+  ) {}
+
+  ngOnInit(): void {
+    this.okBtn = this.data.okBtnTitle ? this.data.okBtnTitle : 'Save';
+    this.btnType = this.data.btnType ? this.data.btnType : 'primary';
+    this.cancelBtn = this.data.cancelBtnTitle
+      ? this.data.cancelBtnTitle
+      : 'Cancel';
+    this.modalTitle = this.data.title ? this.data.title : '';
+    this.message = this.data.message;
+
+    this.name.setValue(this.data.name);
+    this.description.setValue(this.data.description);
+  }
+
+  cancel() {
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  confirm() {
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      name: this.name.value,
+      description: this.description.value
+    });
+  }
 }

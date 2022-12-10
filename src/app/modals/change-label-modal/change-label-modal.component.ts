@@ -60,6 +60,8 @@ export class ChangeLabelModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.item = this.data.item;
+
+    this.label.setValue(this.item.label);
   }
 
   cancel() {

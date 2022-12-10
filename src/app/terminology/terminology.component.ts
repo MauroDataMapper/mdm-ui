@@ -67,7 +67,6 @@ export class TerminologyComponent
   editForm = null;
   descriptionView = 'default';
   annotationsView = 'default';
-  showSearch = false;
   subscription: Subscription;
   rulesItemCount = 0;
   isLoadingRules = true;
@@ -77,7 +76,14 @@ export class TerminologyComponent
   showDelete = false;
   showEditDescription = false;
   access: Access;
-  tabs = new TabCollection(['description', 'terms', 'relationship-types', 'rules', 'annotations', 'history']);
+  tabs = new TabCollection([
+    'description',
+    'terms',
+    'relationship-types',
+    'rules',
+    'annotations',
+    'history'
+  ]);
   isLoadingTerms = true;
   termsItemCount = 0;
   isLoadingRelationshipTypes = true;
@@ -93,8 +99,7 @@ export class TerminologyComponent
     private broadcastService: BroadcastService,
     private messageHandler: MessageHandlerService,
     private editingService: EditingService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     const id = this.uiRouterGlobals.params.id;
@@ -120,20 +125,17 @@ export class TerminologyComponent
         this.showEdit = this.access.showEdit;
         this.showDelete =
           this.access.showPermanentDelete || this.access.showSoftDelete;
-          this.terminology = data;
-            this.editingService.setTabGroupClickEvent(this.tabGroup);
+        this.terminology = data;
+        this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
       });
-
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
   }
 
   ngAfterViewChecked(): void {
-    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+    if (
+      this.tabGroup &&
+      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+    ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
@@ -148,20 +150,18 @@ export class TerminologyComponent
       resource[item.propertyName] = item.value;
     });
 
-    this.resources.terminology
-      .update(this.terminology.id, resource)
-      .subscribe(
-        (res: TerminologyDetailResponse) => {
-          this.messageHandler.showSuccess('Terminology updated successfully.');
-          this.terminology = res.body;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Terminology.',
-            error
-          );
-        }
-      );
+    this.resources.terminology.update(this.terminology.id, resource).subscribe(
+      (res: TerminologyDetailResponse) => {
+        this.messageHandler.showSuccess('Terminology updated successfully.');
+        this.terminology = res.body;
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Terminology.',
+          error
+        );
+      }
+    );
   }
 
   tabSelected(index: number) {

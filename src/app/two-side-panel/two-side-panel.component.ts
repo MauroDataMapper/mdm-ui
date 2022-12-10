@@ -16,67 +16,38 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ViewChild, Renderer2 } from '@angular/core';
-import { trigger, state, transition, animate, style } from '@angular/animations';
+import { Component, HostListener, OnInit } from '@angular/core';
+
+const mobileWidth = 768;
 
 @Component({
   selector: 'mdm-two-side-panel',
   templateUrl: './two-side-panel.component.html',
-  styleUrls: ['./two-side-panel.component.sass'],
-  animations: [
-    trigger('openClose', [
-      state('closed', style({ height: '0', opacity: '0', display: 'none' })),
-      state('open', style({ height: '*', opacity: '1', display: 'block' })),
-      transition('closed => open', animate('30ms ease-in')),
-      transition('open => closed', animate('30ms ease-out'))
-    ])
-  ]
+  styleUrls: ['./two-side-panel.component.scss']
 })
-export class TwoSidePanelComponent {
-  @ViewChild('showHideLeftPane', { static: false }) showHideLeftPane;
-  @ViewChild('resizableLeft', { static: false }) resizableLeft;
-  @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
-
-  showLeftPane: boolean;
-  state = 'inactive';
+export class TwoSidePanelComponent implements OnInit {
   isOpen = true;
+  splitDirection: 'horizontal' | 'vertical';
 
-  constructor(private renderer: Renderer2) { }
-
+  ngOnInit(): void {
+    this.checkSidePanelVisibility();
+  }
 
   toggle() {
     this.isOpen = !this.isOpen;
   }
 
-  hideShowLeftPane() {
-    this.state = this.state === 'inactive' ? 'active' : 'inactive';
-    if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
-      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
-      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-      this.resizableLeft.nativeElement.hidden = true;
-    } else {
-      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
-      this.resizableLeft.nativeElement.hidden = false;
-    }
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkSidePanelVisibility();
   }
 
-  // @HostListener('window:resize', ['$event'])
-  // onResize() {
-  //   const width = window.innerWidth;
-  //   this.windowSetup(width);
-  //   console.log(width);
-  // }
-
-  // windowSetup = width => {
-  //   if (width > 800) {
-  //     this.resizableLeft.nativeElement.hidden = false;
-  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up' );
-  //   } else {
-  //     this.resizableLeft.nativeElement.hidden = true;
-  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
-  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-  //   }
-  // }
+  private checkSidePanelVisibility() {
+    const width = window.innerWidth;
+    this.splitDirection = width > mobileWidth ? 'horizontal' : 'vertical';
+    if (width > mobileWidth) {
+      // Always open the model tree in tablet/desktop width
+      this.isOpen = true;
+    }
+  }
 }

@@ -16,3 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { MauroModelVersioningService } from './mauro-model-versioning.service';
+
+describe('MauroModelVersioningService', () => {
+  let service: MauroModelVersioningService;
+
+  beforeEach(() => {
+    service = setupTestModuleForService(MauroModelVersioningService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

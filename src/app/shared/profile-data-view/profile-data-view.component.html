@@ -191,7 +191,7 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 
   <mdm-alert
-    *ngIf="catalogueItem.finalised && canEditCustomProfile"
+    *ngIf="catalogueItem.finalised && canEditCustomProfile && showCanEditPropertyAlert"
     alertStyle="info"
     showIcon="true"
   >

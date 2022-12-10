@@ -320,7 +320,7 @@ export class SecurityHandlerService {
       showEdit: element.availableActions?.includes('update'),
       canEditDescription: element.availableActions?.includes('editDescription'),
       showFinalise: element.availableActions?.includes('finalise'),
-      showPermission: element.availableActions?.includes('update'),
+      showPermission: element.availableActions?.includes('update') || element.availableActions?.includes('finalisedEditActions'),
       showSoftDelete: element.availableActions?.includes('softDelete'),
       showPermanentDelete: element.availableActions?.includes('delete'),
       canAddAnnotation: element.availableActions?.includes('comment'),

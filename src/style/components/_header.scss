@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 /* header & navbar specific styling */
 header#mdm--header {
   position: relative;
+  padding: 0 2rem;
   width: 100%;
   margin-bottom: 24px;
   z-index: 1000;
@@ -27,7 +28,7 @@ header#mdm--header {
   }
 
   #mdm--navbar {
-    height: 100px;
+    height: 5rem;
     padding: 0;
     @include respond-to($mobile-xs) {
       height: 70px;

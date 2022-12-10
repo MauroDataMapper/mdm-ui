@@ -52,6 +52,7 @@ import { ChangeBranchNameModalComponent } from './change-branch-name-modal/chang
 import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
+import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -96,7 +97,8 @@ const defaultAceConfig: AceConfigInterface = {};
     DefaultProfileEditorModalComponent,
     ChangeBranchNameModalComponent,
     CatalogueItemSelectModalComponent,
-    ExportModelDialogComponent
+    ExportModelDialogComponent,
+    ChangeLabelModalComponent
   ],
   providers: [
     ModalService,

@@ -16,3 +16,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { MauroItemRemoveService } from './mauro-item-remove.service';
+
+describe('MauroItemDeleteService', () => {
+  let service: MauroItemRemoveService;
+
+  beforeEach(() => {
+    service = setupTestModuleForService(MauroItemRemoveService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

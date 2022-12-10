@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <mdm-alert *ngIf="data.finalised" alertStyle="info" showIcon="true">
+    <mdm-alert *ngIf="data.finalised && showCanEditPropertyAlert" alertStyle="info" showIcon="true">
       Only certain fields can be edited on this profile as the catalogue item is
       finalised.
     </mdm-alert>

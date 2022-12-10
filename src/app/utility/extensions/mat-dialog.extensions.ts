@@ -24,6 +24,7 @@ import {
 import {
   Branchable,
   CatalogueItem,
+  CatalogueItemDetail,
   Modelable,
   SecurableModel
 } from '@maurodatamapper/mdm-resources';
@@ -33,6 +34,11 @@ import {
   ChangeBranchNameModalData,
   ChangeBranchNameModalResult
 } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import {
+  ChangeLabelModalComponent,
+  ChangeLabelModalData,
+  ChangeLabelModalResult
+} from '@mdm/modals/change-label-modal/change-label-modal.component';
 import {
   ConfirmationModalComponent,
   ConfirmationModalConfig,
@@ -139,6 +145,20 @@ declare module '@angular/material/dialog/dialog' {
     ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
 
     /**
+     * Extension method to open a modal dialog containing the `ChangeLabelModalComponent`.
+     *
+     * @param item The item containing the details and the label to change.
+     * @returns An observable for when a new label is chosen.
+     *
+     * @see `ChangeLabelModalComponent`
+     * @see `ChangeLabelModalData`
+     * @see `ChangeLabelModalResult`
+     */
+    openChangeLabel(
+      item: CatalogueItemDetail
+    ): Observable<ChangeLabelModalResult>;
+
+    /**
      * Extension method to open a modal dialog containing the `ChangeBranchNameModalComponent`.
      *
      * @param model The model containing the details and the branch name to change.
@@ -223,6 +243,28 @@ MatDialog.prototype.openSecurityAccess = function (
     },
     panelClass: 'security-modal'
   });
+};
+
+MatDialog.prototype.openChangeLabel = function (
+  this: MatDialog,
+  item: CatalogueItemDetail
+): Observable<ChangeLabelModalResult> {
+  return this.open<
+    ChangeLabelModalComponent,
+    ChangeLabelModalData,
+    ChangeLabelModalResult
+  >(ChangeLabelModalComponent, {
+    data: {
+      item
+    }
+  })
+    .afterClosed()
+    .pipe(
+      filter(
+        (result) =>
+          (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
+      )
+    );
 };
 
 MatDialog.prototype.openChangeBranchName = function (

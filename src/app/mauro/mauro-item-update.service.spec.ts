@@ -106,6 +106,11 @@ describe('MauroItemUpdateService', () => {
       update: jest.fn() as jest.MockedFunction<
         (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
       >
+    },
+    referenceDataModel: {
+      update: jest.fn() as jest.MockedFunction<
+        (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
+      >
     }
   };
 
@@ -129,6 +134,7 @@ describe('MauroItemUpdateService', () => {
       | 'folder'
       | 'versionedFolder'
       | 'classifier'
+      | 'referenceDataModel'
   ) => {
     resourcesStub[resource].update.mockImplementationOnce((id, data) => {
       expect(id).toBe(identifier.id);
@@ -226,7 +232,7 @@ describe('MauroItemUpdateService', () => {
 
   describe('unsupported domain types', () => {
     const unsupported = [
-      CatalogueItemDomainType.ReferenceDataModel,
+      // CatalogueItemDomainType.ReferenceDataModel,
       CatalogueItemDomainType.ReferenceDataModelType
     ];
 
@@ -508,6 +514,25 @@ describe('MauroItemUpdateService', () => {
       testMultipleItemsAreSaved(
         CatalogueItemDomainType.Classifier,
         (id, item) => mockModelRequest(id, item, 'classifier')
+      );
+    });
+  });
+
+  describe('save reference data models', () => {
+    it('should save a single item', () => {
+      testSingleItemIsSaved(
+        {
+          id: '123',
+          domainType: CatalogueItemDomainType.ReferenceDataModel
+        },
+        (id, item) => mockModelRequest(id, item, 'referenceDataModel')
+      );
+    });
+
+    it('should save many items', () => {
+      testMultipleItemsAreSaved(
+        CatalogueItemDomainType.ReferenceDataModel,
+        (id, item) => mockModelRequest(id, item, 'referenceDataModel')
       );
     });
   });

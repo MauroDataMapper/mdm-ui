@@ -291,8 +291,25 @@ export class ElementTypesService {
       markdown: 'dt',
       classifiable: true
     },
-
-    Classifier: {
+    PrimitiveType: {
+      id: 'PrimitiveType',
+      link: 'dataType',
+      title: 'PrimitiveType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    EnumerationType: {
+      id: 'EnumerationType',
+      link: 'dataType',
+      title: 'EnumerationType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    classifier: {
       id: 'Classifier',
       link: 'classifier',
       title: 'Classifier',
@@ -384,7 +401,9 @@ export class ElementTypesService {
   }
 
   getAllDataTypesArray() {
-    return this.allTypes.filter(f => f.baseTitle === 'DataType' && f.title !== 'DataType');
+    return this.allTypes.filter(
+      (f) => f.baseTitle === 'DataType' && f.title !== 'DataType'
+    );
   }
 
   getAllDataTypesMap() {

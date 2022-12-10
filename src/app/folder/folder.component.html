@@ -23,7 +23,11 @@ SPDX-License-Identifier: Apache-2.0
   [attr.data-catalogue-item-domain]="folder.domainType"
 >
   <div class="panel">
-    <mdm-folder-detail *ngIf="folder" [folder]="folder"></mdm-folder-detail>
+    <mdm-model-header
+      *ngIf="folder"
+      [item]="folder"
+      [busy]="processing"
+    ></mdm-model-header>
   </div>
   <div>
     <mat-tab-group

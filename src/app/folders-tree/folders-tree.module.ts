@@ -35,33 +35,32 @@ import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatTreeModule,
-    MatDividerModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatCheckboxModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    PipesModule
-  ],
-  declarations: [
-    FoldersTreeComponent,
-    StringifyPipe,
-    ModelSelectorTreeComponent
-  ],
-  entryComponents: [FoldersTreeComponent],
-  exports: [
-    FoldersTreeComponent,
-    StringifyPipe,
-    MatFormFieldModule,
-    MatInputModule,
-    ModelSelectorTreeComponent
-  ],
-  providers: [FolderService]
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatTreeModule,
+        MatDividerModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        PipesModule
+    ],
+    declarations: [
+        FoldersTreeComponent,
+        StringifyPipe,
+        ModelSelectorTreeComponent
+    ],
+    exports: [
+        FoldersTreeComponent,
+        StringifyPipe,
+        MatFormFieldModule,
+        MatInputModule,
+        ModelSelectorTreeComponent
+    ],
+    providers: [FolderService]
 })
 export class FoldersTreeModule {}

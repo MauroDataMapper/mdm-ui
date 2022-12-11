@@ -34,6 +34,6 @@ import 'core-js/es/map';
 import 'core-js/es/weak-map';
 import 'core-js/es/set';
 import 'core-js/es/reflect';
-import 'classlist.js';  // Run `npm install --save classlist.js`.
-import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+  // Run `npm install --save classlist.js`.
+  // Run `npm install --save web-animations-js`.
 import 'zone.js';  // Included with Angular CLI.

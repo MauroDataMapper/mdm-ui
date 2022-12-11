@@ -23,7 +23,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -38,7 +38,7 @@ describe('FinaliseModalComponent', () => {
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         FormsModule,
         MatButtonModule
       ],

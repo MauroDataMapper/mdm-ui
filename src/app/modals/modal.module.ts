@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
@@ -61,7 +61,7 @@ const defaultAceConfig: AceConfigInterface = {};
     CommonModule,
     FormsModule,
     MatDialogModule,
-    BrowserAnimationsModule,
+    NoopAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

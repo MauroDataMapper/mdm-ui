@@ -22,7 +22,7 @@ import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
-import { MockComponent } from 'ng-mocks';
+import {MockComponent, MockDirective} from 'ng-mocks';
 import { SortByComponent } from './sort-by.component';
 
 describe('SortByComponent', () => {
@@ -32,7 +32,7 @@ describe('SortByComponent', () => {
     harness = await setupTestModuleForComponent(SortByComponent, {
       declarations: [
         MockComponent(MatFormField),
-        MockComponent(MatLabel),
+        MockDirective(MatLabel),
         MockComponent(MatSelect),
       ],
       providers: [],

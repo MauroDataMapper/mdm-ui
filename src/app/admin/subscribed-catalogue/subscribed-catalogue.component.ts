@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   SubscribedCatalogue,
@@ -46,7 +46,7 @@ export class SubscribedCatalogueComponent implements OnInit {
   connectionTypes: string[] = [];
   isCreating: boolean;
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   constructor(
     private resources: MdmResourcesService,
@@ -187,15 +187,15 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   private createFormGroup(catalogue?: SubscribedCatalogue) {
-    this.formGroup = new FormGroup({
-      label: new FormControl(catalogue?.label, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new FormControl(catalogue?.description),
-      url: new FormControl(catalogue?.url, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      type: new FormControl(catalogue?.subscribedCatalogueType, [
+    this.formGroup = new UntypedFormGroup({
+      label: new UntypedFormControl(catalogue?.label, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+      description: new UntypedFormControl(catalogue?.description),
+      url: new UntypedFormControl(catalogue?.url, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+      type: new UntypedFormControl(catalogue?.subscribedCatalogueType, [
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ]),
-      apiKey: new FormControl(catalogue?.apiKey),
-      refreshPeriod: new FormControl(catalogue?.refreshPeriod)
+      apiKey: new UntypedFormControl(catalogue?.apiKey),
+      refreshPeriod: new UntypedFormControl(catalogue?.refreshPeriod)
     });
   }
 

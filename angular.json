@@ -128,7 +128,6 @@
       }
     }
   },
-  "defaultProject": "mdm-ui",
   "cli": {
     "analytics": false
   }

@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentRef } from '@angular/core/core';
+import { ComponentRef } from '@angular/core';
 
 export class Step {
   title: any;

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
@@ -43,13 +43,13 @@ import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 export class CreateTermRelationshipDialogComponent
   implements OnInit, OnDestroy {
   // Form instance holder
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   // Form instance for creating relationship with existing term
-  formWithExistingTerm: FormGroup;
+  formWithExistingTerm: UntypedFormGroup;
 
   // Form instance for creating relationship with new term
-  formWithNewTerm: FormGroup;
+  formWithNewTerm: UntypedFormGroup;
 
   // Terminology the terms and relationship belong to
   terminology: TerminologyDetail;
@@ -70,7 +70,7 @@ export class CreateTermRelationshipDialogComponent
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogRef: MatDialogRef<CreateTermRelationshipDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}

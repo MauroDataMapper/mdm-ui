@@ -26,8 +26,8 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -77,11 +77,11 @@ export class NewReferenceDataTypeFormComponent implements OnInit, OnDestroy {
 
   @Output() formChange = new EventEmitter<NewReferenceDataTypeState>();
 
-  formGroup = new FormGroup({
-    type: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    label: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    description: new FormControl(null),
-    enumerationValues: new FormControl(
+  formGroup = new UntypedFormGroup({
+    type: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new UntypedFormControl(null),
+    enumerationValues: new UntypedFormControl(
       null,
       referenceDataEnumerationValuesListValidator()
     )

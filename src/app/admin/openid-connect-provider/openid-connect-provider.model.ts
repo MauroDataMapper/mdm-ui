@@ -17,70 +17,70 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { OpenIdAuthorizationEndpointParametersPayload, OpenIdConnectProviderDetail, OpenIdConnectProviderUpdatePayload } from '@maurodatamapper/mdm-resources';
 import { MdmValidators } from '@mdm/utility/mdm-validators';
 
 export class OpenIdConnectProviderForm {
-  group: FormGroup;
+  group: UntypedFormGroup;
 
   /* eslint-disable @typescript-eslint/unbound-method */
   constructor(provider?: OpenIdConnectProviderDetail) {
-    this.group = new FormGroup({
-      label: new FormControl(provider?.label, [
+    this.group = new UntypedFormGroup({
+      label: new UntypedFormControl(provider?.label, [
         Validators.required
       ]),
-      imageUrl: new FormControl(provider?.imageUrl, [
+      imageUrl: new UntypedFormControl(provider?.imageUrl, [
         MdmValidators.url
       ]),
-      security: new FormGroup({
-        clientId: new FormControl(provider?.clientId, [
+      security: new UntypedFormGroup({
+        clientId: new UntypedFormControl(provider?.clientId, [
           Validators.required
         ]),
-        clientSecret: new FormControl(provider?.clientSecret, [
+        clientSecret: new UntypedFormControl(provider?.clientSecret, [
           Validators.required
         ])
       }),
-      discovery: new FormGroup({
-        standardProvider: new FormControl(provider?.standardProvider ?? true),
-        discoveryDocumentUrl: new FormControl(provider?.discoveryDocumentUrl, [
+      discovery: new UntypedFormGroup({
+        standardProvider: new UntypedFormControl(provider?.standardProvider ?? true),
+        discoveryDocumentUrl: new UntypedFormControl(provider?.discoveryDocumentUrl, [
           MdmValidators.requiredConditional(() => this.useStandardProvider),
           MdmValidators.url
         ]),
-        issuer: new FormControl(provider?.discoveryDocument?.issuer, [
+        issuer: new UntypedFormControl(provider?.discoveryDocument?.issuer, [
           MdmValidators.requiredConditional(() => !this.useStandardProvider),
           MdmValidators.url
         ]),
-        authorizationEndpoint: new FormControl(provider?.discoveryDocument?.authorizationEndpoint, [
+        authorizationEndpoint: new UntypedFormControl(provider?.discoveryDocument?.authorizationEndpoint, [
           MdmValidators.requiredConditional(() => !this.useStandardProvider),
           MdmValidators.url
         ]),
-        tokenEndpoint: new FormControl(provider?.discoveryDocument?.tokenEndpoint, [
+        tokenEndpoint: new UntypedFormControl(provider?.discoveryDocument?.tokenEndpoint, [
           MdmValidators.requiredConditional(() => !this.useStandardProvider),
           MdmValidators.url
         ]),
-        userinfoEndpoint: new FormControl(provider?.discoveryDocument?.userinfoEndpoint, [
+        userinfoEndpoint: new UntypedFormControl(provider?.discoveryDocument?.userinfoEndpoint, [
           MdmValidators.url
         ]),
-        endSessionEndpoint: new FormControl(provider?.discoveryDocument?.endSessionEndpoint, [
+        endSessionEndpoint: new UntypedFormControl(provider?.discoveryDocument?.endSessionEndpoint, [
           MdmValidators.url
         ]),
-        jwksUri: new FormControl(provider?.discoveryDocument?.jwksUri, [
+        jwksUri: new UntypedFormControl(provider?.discoveryDocument?.jwksUri, [
           MdmValidators.requiredConditional(() => !this.useStandardProvider),
           MdmValidators.url
         ]),
       }),
-      authorizationEndpointParams: new FormGroup({
-        scope: new FormControl(provider?.authorizationEndpointParameters?.scope ?? 'openid email profile'),
-        responseType: new FormControl(provider?.authorizationEndpointParameters?.responseType ?? 'code'),
-        responseMode: new FormControl(provider?.authorizationEndpointParameters?.responseMode),
-        display: new FormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.display)),
-        prompt: new FormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.prompt)),
-        maxAge: new FormControl(provider?.authorizationEndpointParameters?.maxAge),
-        uiLocales: new FormControl(provider?.authorizationEndpointParameters?.uiLocales),
-        idTokenHint: new FormControl(provider?.authorizationEndpointParameters?.idTokenHint),
-        loginHint: new FormControl(provider?.authorizationEndpointParameters?.loginHint),
-        acrValues: new FormControl(provider?.authorizationEndpointParameters?.acrValues)
+      authorizationEndpointParams: new UntypedFormGroup({
+        scope: new UntypedFormControl(provider?.authorizationEndpointParameters?.scope ?? 'openid email profile'),
+        responseType: new UntypedFormControl(provider?.authorizationEndpointParameters?.responseType ?? 'code'),
+        responseMode: new UntypedFormControl(provider?.authorizationEndpointParameters?.responseMode),
+        display: new UntypedFormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.display)),
+        prompt: new UntypedFormControl(this.handleDropdownValue(provider?.authorizationEndpointParameters?.prompt)),
+        maxAge: new UntypedFormControl(provider?.authorizationEndpointParameters?.maxAge),
+        uiLocales: new UntypedFormControl(provider?.authorizationEndpointParameters?.uiLocales),
+        idTokenHint: new UntypedFormControl(provider?.authorizationEndpointParameters?.idTokenHint),
+        loginHint: new UntypedFormControl(provider?.authorizationEndpointParameters?.loginHint),
+        acrValues: new UntypedFormControl(provider?.authorizationEndpointParameters?.acrValues)
       })
     });
 

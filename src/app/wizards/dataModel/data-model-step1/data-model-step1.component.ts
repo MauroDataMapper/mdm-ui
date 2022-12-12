@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ControlContainer, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ControlContainer, UntypedFormControl, UntypedFormGroup, NgForm, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
@@ -35,7 +35,7 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
 
   allDataModelTypes: any;
   step: WizardStep<DataModelMainComponent>;
-  setupForm: FormGroup;
+  setupForm: UntypedFormGroup;
 
   private unsubscribe$ = new Subject();
 
@@ -73,13 +73,13 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      author: new FormControl(''),
-      organisation: new FormControl(''),
-      description: new FormControl(''),
-      dataModelType: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      classifiers: new FormControl([])
+    this.setupForm = new UntypedFormGroup({
+      label: new UntypedFormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      author: new UntypedFormControl(''),
+      organisation: new UntypedFormControl(''),
+      description: new UntypedFormControl(''),
+      dataModelType: new UntypedFormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      classifiers: new UntypedFormControl([])
     });
 
     this.setupForm.valueChanges

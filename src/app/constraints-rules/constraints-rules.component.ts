@@ -434,7 +434,9 @@ export class ConstraintsRulesComponent implements OnInit {
           okBtnTitle: mode === 'edit' ? 'Apply' : 'Create',
           btnType: 'primary'
         },
-        width: '1000px'
+        width: '65%',
+        maxHeight: '98vh',
+        maxWidth: '98vw'
       })
       .afterClosed()
       .pipe(

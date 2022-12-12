@@ -16,12 +16,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
+<!-- <div> -->
 <div class="modal-header pxy-2">
   <h4 class="modal-title marginless">{{ modalTitle }}</h4>
 </div>
-<form [formGroup]="formGroup">
-  <div class="modal-body pxy-2">
-    <p [innerHtml]="message"></p>
+<div class="modal-body pxy-2">
+  <p [innerHtml]="message"></p>
+  <form [formGroup]="formGroup">
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width paddingless">
         <mat-label>Language</mat-label>
@@ -83,25 +84,20 @@ SPDX-License-Identifier: Apache-2.0
       <label class="manual-material-label">Representation</label>
       <div id="dmn" #dmn class="dmn-container"></div>
     </div>
-    <div class="modal-footer pxy-2">
-      <button
-        mat-button
-        color="warn"
-        class="mr-1"
-        type="button"
-        (click)="cancel()"
-      >
-        {{ cancelBtn }}
-      </button>
-      <button
-        mat-flat-button
-        color="{{ btnType }}"
-        type="button"
-        [disabled]="!formGroup.valid"
-        (click)="confirm()"
-      >
-        {{ okBtn }}
-      </button>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
+<div class="modal-footer pxy-2">
+  <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">
+    {{ cancelBtn }}
+  </button>
+  <button
+    mat-flat-button
+    color="{{ btnType }}"
+    type="button"
+    [disabled]="!formGroup.valid"
+    (click)="confirm()"
+  >
+    {{ okBtn }}
+  </button>
+</div>
+<!-- </div> -->

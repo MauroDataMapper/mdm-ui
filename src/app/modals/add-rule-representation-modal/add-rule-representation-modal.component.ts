@@ -59,7 +59,18 @@ export const supportedLanguages: RuleLanguage[] = [
   },
 
   { displayName: 'Java', value: 'java', aceValue: 'java', fileExt: 'java' },
-  { displayName: 'JSON', value: 'json', aceValue: 'json', fileExt: 'json' },
+  {
+    displayName: 'JSON',
+    value: 'json',
+    aceValue: 'json',
+    fileExt: 'json'
+  },
+  {
+    displayName: 'JSON (MEQL)',
+    value: 'json-meql',
+    aceValue: 'json',
+    fileExt: 'json'
+  },
   {
     displayName: 'Typescript',
     value: 'typescript',
@@ -190,7 +201,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
         this.modeler = new DmnModeler({
           container: '#dmn',
           width: '100%',
-          height: '500px'
+          height: '30vh'
         });
       }
 

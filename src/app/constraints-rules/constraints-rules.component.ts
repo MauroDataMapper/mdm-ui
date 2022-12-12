@@ -51,14 +51,11 @@ import {
   RuleIndexResponse,
   RulePayload,
   RuleRepresentation,
-  RuleRepresentationIndexResponse,
-  RuleRepresentationPayload,
-  RuleResponse
+  RuleRepresentationPayload
 } from '@maurodatamapper/mdm-resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import ts from 'typescript';
 
 @Component({
   selector: 'mdm-constraints-rules',

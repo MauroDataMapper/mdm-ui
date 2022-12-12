@@ -356,7 +356,7 @@ export class ConstraintsRulesComponent implements OnInit {
   }
 
   private getFileExtension(language: string) {
-    const lang = supportedLanguages.find((lang) => lang.value === language);
+    const lang = supportedLanguages.find((l) => l.value === language);
     return lang?.fileExt;
   }
 

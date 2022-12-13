@@ -170,12 +170,12 @@ SPDX-License-Identifier: Apache-2.0
               <span
                 *ngIf="(record.ruleRepresentations?.length ?? 0) > 0"
                 [ngClass]="
-                  this.expandedElement === record
+                  this.expandedRuleId === record.id
                     ? 'fas fa-angle-double-up'
                     : 'fas fa-angle-double-down'
                 "
                 [matTooltip]="
-                  this.expandedElement === record ? 'Collapse' : 'Expand'
+                  this.expandedRuleId === record.id ? 'Collapse' : 'Expand'
                 "
               ></span>
             </button>
@@ -266,7 +266,7 @@ SPDX-License-Identifier: Apache-2.0
             <div
               class="example-element-detail"
               [@detailExpand]="
-                row == expandedElement ? 'expanded' : 'collapsed'
+                row.id == expandedRuleId ? 'expanded' : 'collapsed'
               "
             >
               <table

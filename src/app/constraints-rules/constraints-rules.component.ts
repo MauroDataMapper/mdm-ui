@@ -51,7 +51,8 @@ import {
   RuleIndexResponse,
   RulePayload,
   RuleRepresentation,
-  RuleRepresentationPayload
+  RuleRepresentationPayload,
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
@@ -85,7 +86,7 @@ export class ConstraintsRulesComponent implements OnInit {
   totalItemCount: number;
 
   isLoadingResults: boolean;
-  expandedElement: Rule;
+  expandedRuleId: Uuid;
   languages: RuleLanguage[];
   selectedLanguage: RuleLanguage;
 
@@ -119,7 +120,7 @@ export class ConstraintsRulesComponent implements OnInit {
       return;
     }
 
-    this.expandedElement = this.expandedElement === record ? null : record;
+    this.expandedRuleId = this.expandedRuleId === record.id ? null : record.id;
   }
 
   add() {
@@ -479,6 +480,7 @@ export class ConstraintsRulesComponent implements OnInit {
             mode === 'edit' ? 'updated' : 'created'
           }.`
         );
+        this.expandedRuleId = rule.id;
         this.loadRules();
       });
   }

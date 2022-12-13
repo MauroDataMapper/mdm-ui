@@ -16,16 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  ElementRef,
+  ViewChild,
+  AfterViewChecked,
+  ChangeDetectorRef
+} from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 
 @Component({
   selector: 'mdm-more-description',
   templateUrl: './more-description.component.html',
-  styleUrls: ['./more-description.component.sass']
+  styleUrls: ['./more-description.component.scss']
 })
-export class MoreDescriptionComponent implements AfterViewInit {
+export class MoreDescriptionComponent implements AfterViewChecked {
   @Input() description: string;
+  @Input() type: 'editable' | 'preformatted' = 'editable';
 
   showMore = true;
   isOverflowing = false;
@@ -33,21 +41,25 @@ export class MoreDescriptionComponent implements AfterViewInit {
   descriptionContent: ElementRef;
 
   constructor(
-    userSettingsHandler: UserSettingsHandlerService
+    private userSettingsHandler: UserSettingsHandlerService,
+    private changeDetector: ChangeDetectorRef
   ) {
-    this.showMore = userSettingsHandler.get('expandMoreDescription');
+    this.showMore = this.userSettingsHandler.get('expandMoreDescription');
   }
 
-  ngAfterViewInit() {
-    this.isOverflowing = this.checkOverflow(this.descriptionContent.nativeElement);
+  ngAfterViewChecked(): void {
+    this.isOverflowing = this.checkOverflow(
+      this.descriptionContent.nativeElement
+    );
+    // Avoid "ExpressionHasChangedAfterItWasChecked" error because isOverflowing could potentially change
+    this.changeDetector.detectChanges();
   }
 
   toggle() {
     this.showMore = !this.showMore;
   }
 
-  private checkOverflow (element): boolean {
+  private checkOverflow(element): boolean {
     return element.offsetHeight < element.scrollHeight;
   }
-
 }

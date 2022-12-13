@@ -280,7 +280,7 @@ SPDX-License-Identifier: Apache-2.0
                   <th
                     mat-header-cell
                     *matHeaderCellDef
-                    style="max-width: 35%; width: 35%"
+                    style="max-width: 20%; width: 20%"
                     columnName="language"
                     scope="col"
                   >
@@ -308,7 +308,10 @@ SPDX-License-Identifier: Apache-2.0
                   </th>
                   <td mat-cell class="truncate" *matCellDef="let record">
                     <div style="margin-bottom: 10px">
-                      {{ record.representation }}
+                      <mdm-more-description
+                        [description]="record.representation"
+                        type="preformatted"
+                      ></mdm-more-description>
                     </div>
                   </td>
                 </ng-container>

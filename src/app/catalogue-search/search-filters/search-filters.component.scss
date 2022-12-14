@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin mdm-search-filters-theme($theme) {
   $primary: map-get($theme, primary);
@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
       border-radius: 2px;
       background-color: $search-filters-heading-background-color;
       color: $search-filters-heading-color;
-  
+
       h3 {
         font-weight: 500;
         padding-left: 4px;
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
         vertical-align: middle;
       }
     }
-  
+
     &__section {
       margin-top: 1em;
     }
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
     .mat-datepicker-input {
       width: 85%;
     }
-    
+
     mat-icon {
       position: relative;
       float: right;

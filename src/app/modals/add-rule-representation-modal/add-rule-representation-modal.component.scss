@@ -18,30 +18,46 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 .myform-wrapper {
-    margin: 10px;
-    width: 350px;
+  margin: 10px;
+  width: 350px;
 
-    .mat-form-field {
-        width: 100%;
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-toolbar-single-row {
+    height: auto !important;
+    background: transparent;
+
+    button {
+      width: 30%;
     }
+  }
+}
 
-    .mat-toolbar-single-row {
-        height: auto !important;
-        background: transparent;
+.ace-editor {
+  height: 30vh;
+  width: 100%;
+}
 
-        button {
-            width: 30%;
-        }
-    }
+.myfilebrowser {
+  .import-file-name {
+    font-size: large;
+  }
 }
 
 #fileUpload {
-    position: absolute;
-    z-index: 9;
-    opacity: 0;
-    height: 100%;
-    width: 100%;
-    left: 0px;
-    top: 0px;
-    cursor: pointer;
+  position: absolute;
+  z-index: 9;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  cursor: pointer;
+}
+
+.dmn-container {
+  border-radius: 5px;
+  border: 1px solid #dddddd;
 }

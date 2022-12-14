@@ -16,38 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-
-export class BaseDataGrid {
-  displayedColumns: string[];
-  records: Array<RuleModel>;
-  totalItemCount: number;
-}
-
-export class RuleRepresentation {
-  id: string;
-  rule: RuleModel;
-  language: string;
-  representation: string;
-}
-
-export class RuleModel {
-  ruleRepresentations: Array<RuleRepresentation>;
-  name: string;
-  description: string;
-  id: string;
-
-  constructor(rule: Array<RuleRepresentation>, name: any, description: any) {
-    this.ruleRepresentations = rule;
-    this.name = name;
-    this.description = description;
-  }
-}
-
-export class RuleLanguage {
-  displayName: any;
-  value: any;
-}
-
 import {
   trigger,
   state,
@@ -57,19 +25,38 @@ import {
 } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddRuleModalComponent } from '@mdm/modals/add-rule-modal/add-rule-modal.component';
+import {
+  AddRuleModalComponent,
+  AddRuleModalConfig,
+  AddRuleModalResult
+} from '@mdm/modals/add-rule-modal/add-rule-modal.component';
 import {
   AddRuleRepresentationModalComponent,
-  RuleLanguages
+  AddRuleRepresentationModalConfig,
+  AddRuleRepresentationModalResult,
+  RuleLanguage,
+  supportedLanguages
 } from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import { Finalisable, Modelable } from '@maurodatamapper/mdm-resources';
+import {
+  FilterQueryParameters,
+  Finalisable,
+  Modelable,
+  Rule,
+  RuleDomainType,
+  RuleIndexResponse,
+  RulePayload,
+  RuleRepresentation,
+  RuleRepresentationPayload,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-constraints-rules',
@@ -89,14 +76,18 @@ import { EMPTY } from 'rxjs';
     ])
   ]
 })
-export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
+export class ConstraintsRulesComponent implements OnInit {
   @Input() parent: Modelable & Finalisable;
-  @Input() domainType: string;
+  @Input() domainType: RuleDomainType;
   @Output() totalCount = new EventEmitter<string>();
 
+  displayedColumns = ['name', 'description', 'representations', 'actions'];
+  records: Rule[];
+  totalItemCount: number;
+
   isLoadingResults: boolean;
-  expandedElement: any;
-  languages: Array<RuleLanguage>;
+  expandedRuleId: Uuid;
+  languages: RuleLanguage[];
   selectedLanguage: RuleLanguage;
 
   clickButton = false;
@@ -105,32 +96,16 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
   canAddRules: boolean;
   canDeleteRules: boolean;
 
-  fileExtensions = {
-    'c#': 'cs',
-    dmn: 'dmn',
-    java: 'java',
-    javascript: 'js',
-    typescript: 'ts',
-    text: 'txt',
-    drools: 'drools',
-    sql: 'sql'
-  };
-
   constructor(
     public dialog: MatDialog,
     private editing: EditingService,
     protected resourcesService: MdmResourcesService,
     protected messageHandler: MessageHandlerService
   ) {
-    super();
-
-    this.languages = Object.assign([], RuleLanguages.supportedLanguages);
-    this.languages.sort((a: any, b: any) => {
-      return a - b;
-    });
+    this.languages = Object.assign([], supportedLanguages);
+    this.languages.sort((a, b) => a.displayName.localeCompare(b.displayName));
     this.languages.push({ displayName: 'All', value: 'all' });
     this.isLoadingResults = true;
-    this.displayedColumns = ['name', 'description', 'rule', 'actions'];
     this.selectedLanguage = this.languages.find((x) => x.value === 'all');
   }
 
@@ -140,181 +115,59 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     this.canDeleteRules = !this.parent.finalised;
   }
 
-  expandRow = (record: RuleModel) => {
-    if (this.expandedElement === record) {
-      this.expandedElement = null;
-    } else {
-      this.expandedElement = record;
-      this.resourcesService.catalogueItem
-        .listRuleRepresentations(this.domainType, this.parent.id, record.id)
-        .subscribe((result) => {
-          const tempList: Array<RuleRepresentation> = [];
-
-          result.body.items.forEach((element: RuleRepresentation) => {
-            element['rule'] = record;
-            if (
-              this.selectedLanguage.value === 'all' ||
-              this.selectedLanguage.value === element.language
-            ) {
-              tempList.push(element);
-            }
-          });
-
-          record.ruleRepresentations = tempList;
-        });
+  expandRow(record: Rule) {
+    if ((record.ruleRepresentations?.length ?? 0) === 0) {
+      return;
     }
-  };
+
+    this.expandedRuleId = this.expandedRuleId === record.id ? null : record.id;
+  }
 
   add() {
-    this.clickButton = true;
-
-    this.editing
-      .openDialog(AddRuleModalComponent, {
-        data: {
-          name: '',
-          description: '',
-          modalTitle: 'Add New Rule',
-          okBtn: 'Add',
-          btnType: 'primary'
-        },
-        height: '1000px',
-        width: '1000px'
-      })
-      .afterClosed()
-      .subscribe((dialogResult) => {
-        this.clickButton = false;
-        if (dialogResult) {
-          const data = {
-            name: dialogResult.name,
-            description: dialogResult.description
-          };
-          this.resourcesService.catalogueItem
-            .saveRule(this.domainType, this.parent.id, data)
-            .subscribe(
-              (result) => {
-                const temp = Object.assign([], this.records);
-                temp.push(result.body);
-                this.records = temp;
-                this.totalItemCount = this.records.length;
-                this.totalCount.emit(String(this.totalItemCount));
-              },
-              (error) => {
-                this.messageHandler.showError(error);
-              }
-            );
-        } else {
-          return;
-        }
-      });
+    this.showRuleDialog('add');
   }
 
   loadRules() {
     this.resourcesService.catalogueItem
       .listRules(this.domainType, this.parent.id)
-      .subscribe(
-        (result) => {
-          this.records = result.body.items;
-          this.totalItemCount = result.body.count;
-          this.totalCount.emit(String(result.body.count));
-          this.isLoadingResults = false;
-        },
-        (error) => {
+      .pipe(
+        catchError((error) => {
           this.messageHandler.showError(error);
-          this.isLoadingResults = false;
-        }
-      );
-  }
-
-  openEdit(record: RuleModel): void {
-    if (record) {
-      this.editing
-        .openDialog(AddRuleModalComponent, {
-          data: {
-            name: record.name,
-            description: record.description,
-            modalTitle: 'Edit Rule',
-            okBtn: 'Apply',
-            btnType: 'primary'
-          },
-          height: '1000px',
-          width: '1000px'
-        })
-        .afterClosed()
-        .subscribe((dialogResult) => {
-          if (dialogResult) {
-            const data = {
-              name: dialogResult.name,
-              description: dialogResult.description
-            };
-            this.resourcesService.catalogueItem
-              .updateRule(this.domainType, this.parent.id, record.id, data)
-              .subscribe(
-                () => {
-                  this.messageHandler.showSuccess('Successfully Updated');
-                  this.loadRules();
-                },
-                (error) => {
-                  this.messageHandler.showError(error);
-                }
-              );
-          } else {
-            return;
-          }
-        });
-    }
-  }
-
-  openEditRepresentation(rep: RuleRepresentation) {
-    this.editing
-      .openDialog(AddRuleRepresentationModalComponent, {
-        data: {
-          language: rep.language,
-          representation: rep.representation,
-          modalTitle: 'Edit Rule Representation',
-          okBtn: 'Apply',
-          btnType: 'primary'
-        },
-        height: '1000px',
-        width: '1000px'
-      })
-      .afterClosed()
-      .subscribe((dialogResult) => {
-        if (dialogResult) {
-          const data = {
-            language: dialogResult.language,
-            representation: dialogResult.representation
-          };
-          this.resourcesService.catalogueItem
-            .updateRulesRepresentation(
-              this.domainType,
-              this.parent.id,
-              data,
-              rep.rule.id,
-              rep.id
-            )
-            .subscribe(
-              () => {
-                this.messageHandler.showSuccess('Successfully Updated');
-                this.expandRow(rep.rule);
-              },
-              (error) => {
-                this.messageHandler.showError(error);
-              }
-            );
-        } else {
-          return;
-        }
+          return EMPTY;
+        }),
+        finalize(() => (this.isLoadingResults = false))
+      )
+      .subscribe((response: RuleIndexResponse) => {
+        this.records = response.body.items;
+        this.totalItemCount = response.body.count;
+        this.totalCount.emit(String(response.body.count));
       });
   }
 
-  deleteRule(record: RuleModel) {
+  openEdit(rule: Rule) {
+    if (!rule) {
+      return;
+    }
+
+    this.showRuleDialog('edit', rule);
+  }
+
+  openEditRepresentation(rule: Rule, rep: RuleRepresentation) {
+    if (!rep) {
+      return;
+    }
+
+    this.showRepresentationDialog('edit', rule, rep);
+  }
+
+  deleteRule(rule: Rule) {
     this.dialog
       .openConfirmationAsync({
         data: {
-          title: 'Delete permanently',
+          title: 'Delete rule',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: 'Are you sure you wish delete?'
+          message: `Are you sure you wish to delete the rule '${rule.name}'?`
         }
       })
       .pipe(
@@ -322,7 +175,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
           this.resourcesService.catalogueItem.removeRule(
             this.domainType,
             this.parent.id,
-            record.id
+            rule.id
           )
         ),
         catchError((error) => {
@@ -331,69 +184,31 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Successfully Deleted');
+        this.messageHandler.showSuccess('Rule was successfully deleted.');
         this.loadRules();
       });
   }
 
-  addRepresentation(rule: RuleModel): void {
-    this.editing
-      .openDialog(AddRuleRepresentationModalComponent, {
-        data: {
-          language: '',
-          representation: '',
-          modalTitle: 'Add Representation',
-          okBtn: 'Add',
-          btnType: 'primary'
-        },
-        height: '1000px',
-        width: '1000px'
-      })
-      .afterClosed()
-      .subscribe((dialogResult) => {
-        if (dialogResult) {
-          const data = {
-            language: dialogResult.language,
-            representation: dialogResult.representation
-          };
-          this.resourcesService.catalogueItem
-            .saveRulesRepresentation(
-              this.domainType,
-              this.parent.id,
-              data,
-              rule.id
-            )
-            .subscribe(
-              () => {
-                this.messageHandler.showSuccess('Rule Added Successfully');
-                this.expandRow(rule);
-              },
-              (error) => {
-                this.messageHandler.showError(error);
-              }
-            );
-        } else {
-          return;
-        }
-      });
+  addRepresentation(rule: Rule) {
+    this.showRepresentationDialog('add', rule);
   }
 
-  deleteRepresentation(record: RuleRepresentation) {
+  deleteRepresentation(rule: Rule, record: RuleRepresentation) {
     this.dialog
       .openConfirmationAsync({
         data: {
-          title: 'Delete permanently',
+          title: 'Delete rule representation',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: 'Are you sure you wish delete?'
+          message: `Are you sure you wish to delete the rule representation '${record.language}' for the rule '${rule.name}'?`
         }
       })
       .pipe(
         switchMap(() =>
-          this.resourcesService.catalogueItem.removeRulesRepresentation(
+          this.resourcesService.catalogueItem.removeRuleRepresentation(
             this.domainType,
             this.parent.id,
-            record.rule.id,
+            rule.id,
             record.id
           )
         ),
@@ -403,28 +218,28 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Successfully Deleted');
-        this.expandRow(record.rule);
+        this.messageHandler.showSuccess(
+          'Rule representation was successfully deleted.'
+        );
+        this.loadRules();
       });
   }
 
-  filterClick = () => {
+  filterClick() {
     this.filteredOpen = !this.filteredOpen;
-  };
+  }
 
-  exportRuleRepresentation = (ruleRep: RuleRepresentation) => {
+  exportRuleRepresentation(rule: Rule, rep: RuleRepresentation) {
     try {
-      const myFilename = `${ruleRep.rule.name}.${
-        this.fileExtensions[ruleRep.language]
-      }`;
-      const content = new Blob([ruleRep.representation as BlobPart]);
+      const myFilename = `${rule.name}.${this.getFileExtension(rep.language)}`;
+      const content = new Blob([rep.representation as BlobPart]);
       FileSaver.saveAs(content, myFilename);
     } catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
-  };
+  }
 
-  exportRule = (rule: any) => {
+  exportRule(rule: Rule) {
     const zip = new JSZip();
     let count = 0;
     const zipFilename = `${rule.name}.zip`;
@@ -439,14 +254,16 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
 
           let fileCount = 1;
           while (
-            zip.files[`${myFilename}.${this.fileExtensions[ruleRep.language]}`]
+            zip.files[
+              `${myFilename}.${this.getFileExtension(ruleRep.language)}`
+            ]
           ) {
             myFilename = `${myFilename}(${fileCount})`;
             fileCount++;
           }
 
           zip.file(
-            `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+            `${myFilename}.${this.getFileExtension(ruleRep.language)}`,
             ruleRep.representation
           );
           count++;
@@ -461,9 +278,9 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     } catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
-  };
+  }
 
-  exportAllRules = () => {
+  exportAllRules() {
     this.clickButton = true;
     const zip = new JSZip();
     let count = 0;
@@ -481,9 +298,9 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
               let fileCount = 1;
               while (
                 zip.files[
-                  `${rule.name}/${myFilename}.${
-                    this.fileExtensions[ruleRep.language]
-                  }`
+                  `${rule.name}/${myFilename}.${this.getFileExtension(
+                    ruleRep.language
+                  )}`
                 ]
               ) {
                 myFilename = `${myFilename}(${fileCount})`;
@@ -493,7 +310,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
               zip
                 .folder(`${rule.name}`)
                 .file(
-                  `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+                  `${myFilename}.${this.getFileExtension(ruleRep.language)}`,
                   ruleRep.representation
                 );
             }
@@ -512,30 +329,159 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     } catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
-  };
+  }
 
-  selectedLanguageChange = () => {
+  selectedLanguageChange() {
     if (this.selectedLanguage.value === 'all') {
       this.loadRules();
       return;
     }
 
-    const data = {
+    const query: FilterQueryParameters = {
       language: this.selectedLanguage.value
     };
 
     this.resourcesService.catalogueItem
-      .listRules(this.domainType, this.parent.id, data)
-      .subscribe(
-        (result) => {
-          this.records = result.body.items;
-          this.totalItemCount = result.body.count;
-          this.isLoadingResults = false;
-        },
-        (error) => {
+      .listRules(this.domainType, this.parent.id, query)
+      .pipe(
+        catchError((error) => {
           this.messageHandler.showError(error);
-          this.isLoadingResults = false;
-        }
-      );
-  };
+          return EMPTY;
+        }),
+        finalize(() => (this.isLoadingResults = false))
+      )
+      .subscribe((response: RuleIndexResponse) => {
+        this.records = response.body.items;
+        this.totalItemCount = response.body.count;
+      });
+  }
+
+  private getFileExtension(language: string) {
+    const lang = supportedLanguages.find((l) => l.value === language);
+    return lang?.fileExt;
+  }
+
+  private showRuleDialog(mode: 'add' | 'edit', current?: Rule) {
+    this.clickButton = true;
+
+    this.editing
+      .openDialog<
+        AddRuleModalComponent,
+        AddRuleModalConfig,
+        AddRuleModalResult
+      >(AddRuleModalComponent, {
+        data: {
+          ...(current as RulePayload),
+          title: mode === 'edit' ? 'Edit Rule' : 'Add Rule',
+          okBtnTitle: mode === 'edit' ? 'Apply' : 'Create',
+          btnType: 'primary'
+        },
+        width: '1000px'
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => result.status === ModalDialogStatus.Ok),
+        switchMap((result) => {
+          if (mode === 'edit' && current) {
+            return this.resourcesService.catalogueItem.updateRule(
+              this.domainType,
+              this.parent.id,
+              current.id,
+              { name: result.name, description: result.description }
+            );
+          }
+
+          return this.resourcesService.catalogueItem.saveRule(
+            this.domainType,
+            this.parent.id,
+            { name: result.name, description: result.description }
+          );
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem ${
+              mode === 'edit' ? 'updating' : 'creating'
+            } the rule.`,
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.clickButton = false))
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(
+          `Rule was successfully ${mode === 'edit' ? 'updated' : 'created'}.`
+        );
+        this.loadRules();
+      });
+  }
+
+  private showRepresentationDialog(
+    mode: 'add' | 'edit',
+    rule: Rule,
+    current?: RuleRepresentation
+  ) {
+    this.clickButton = true;
+
+    this.editing
+      .openDialog<
+        AddRuleRepresentationModalComponent,
+        AddRuleRepresentationModalConfig,
+        AddRuleRepresentationModalResult
+      >(AddRuleRepresentationModalComponent, {
+        data: {
+          ...(current as RuleRepresentationPayload),
+          title: mode === 'edit' ? 'Edit Representation' : 'Add Representation',
+          okBtnTitle: mode === 'edit' ? 'Apply' : 'Create',
+          btnType: 'primary'
+        },
+        width: '65%',
+        maxHeight: '98vh',
+        maxWidth: '98vw'
+      })
+      .afterClosed()
+      .pipe(
+        filter((result) => result.status === ModalDialogStatus.Ok),
+        switchMap((result) => {
+          if (mode === 'edit' && current) {
+            return this.resourcesService.catalogueItem.updateRuleRepresentation(
+              this.domainType,
+              this.parent.id,
+              rule.id,
+              current.id,
+              {
+                language: result.language,
+                representation: result.representation
+              }
+            );
+          }
+
+          return this.resourcesService.catalogueItem.saveRuleRepresentation(
+            this.domainType,
+            this.parent.id,
+            rule.id,
+            { language: result.language, representation: result.representation }
+          );
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            `There was a problem ${
+              mode === 'edit' ? 'updating' : 'creating'
+            } the rule representation.`,
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.clickButton = false))
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(
+          `Rule representation was successfully ${
+            mode === 'edit' ? 'updated' : 'created'
+          }.`
+        );
+        this.expandedRuleId = rule.id;
+        this.loadRules();
+      });
+  }
 }

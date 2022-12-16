@@ -23,7 +23,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { SharedService } from '@mdm/services';
 import { NewFolderModalConfiguration, NewFolderModalResponse } from './new-folder-modal.model';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 
 
@@ -43,9 +43,9 @@ export class NewFolderModalComponent implements OnInit {
   createRootFolder = false;
   useVersionedFolders = false;
 
-  folderForm = new UntypedFormGroup({
-    label: new UntypedFormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
-    isVersioned: new UntypedFormControl(false)
+  folderForm = new FormGroup({
+    label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
+    isVersioned: new FormControl(false)
   });
 
   constructor(

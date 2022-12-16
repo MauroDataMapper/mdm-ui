@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItemDomainType,
@@ -43,7 +43,7 @@ export class TerminologyMainComponent implements OnInit {
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
   savingInProgress = false;
-  setupForm: UntypedFormGroup;
+  setupForm: FormGroup;
 
   get label() {
     return this.setupForm.get('label');
@@ -81,12 +81,12 @@ export class TerminologyMainComponent implements OnInit {
   ngOnInit(): void {
     this.title.setTitle('New Terminology');
 
-    this.setupForm = new UntypedFormGroup({
-      label: new UntypedFormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      author: new UntypedFormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      organisation: new UntypedFormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new UntypedFormControl(''),
-      classifiers: new UntypedFormControl([])
+    this.setupForm = new FormGroup({
+      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+      organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+      description: new FormControl(''),
+      classifiers: new FormControl([])
     });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;

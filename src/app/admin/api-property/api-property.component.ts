@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {FormControl, FormGroup, UntypedFormGroup, Validators} from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
 import { ApiProperty, ApiPropertyIndexResponse, ApiPropertyResponse } from '@maurodatamapper/mdm-resources';
@@ -42,7 +42,7 @@ export class ApiPropertyComponent implements OnInit {
   systemProperties: ApiPropertyMetadata[];
   selectedSystemProperty: ApiPropertyMetadata;
 
-  formGroup: UntypedFormGroup;
+  formGroup: FormGroup;
 
   get key() {
     return this.formGroup.get('key');
@@ -174,11 +174,11 @@ export class ApiPropertyComponent implements OnInit {
   }
 
   private createFormGroup() {
-    this.formGroup = new UntypedFormGroup({
-      key: new UntypedFormControl(this.property.metadata.key, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
-      category: new UntypedFormControl(this.property.metadata.category, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
-      publiclyVisible: new UntypedFormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
-      value: new UntypedFormControl(this.property.original?.value, [Validators.required])  // eslint-disable-line @typescript-eslint/unbound-method
+    this.formGroup = new FormGroup({
+      key: new FormControl(this.property.metadata.key, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
+      category: new FormControl(this.property.metadata.category, [Validators.required]),  // eslint-disable-line @typescript-eslint/unbound-method
+      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
+      value: new FormControl(this.property.original?.value, [Validators.required])  // eslint-disable-line @typescript-eslint/unbound-method
     });
   }
 

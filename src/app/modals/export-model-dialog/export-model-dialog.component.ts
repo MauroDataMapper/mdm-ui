@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   Exporter,
@@ -48,7 +48,7 @@ export interface ExportModelDialogResponse {
 })
 export class ExportModelDialogComponent implements OnInit {
   exporters: Exporter[];
-  formGroup: UntypedFormGroup;
+  formGroup: FormGroup;
 
   constructor(
     private dialogRef: MatDialogRef<
@@ -69,9 +69,9 @@ export class ExportModelDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.formGroup = new UntypedFormGroup({
-      exporter: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      asynchronous: new UntypedFormControl(false)
+    this.formGroup = new FormGroup({
+      exporter: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      asynchronous: new FormControl(false)
     });
 
     this.resources

@@ -26,8 +26,8 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -42,10 +42,10 @@ import { takeUntil } from 'rxjs/operators';
 
 export interface NewReferenceDataTypeState {
   valid: boolean;
-  type:
+  type?:
     | CatalogueItemDomainType.ReferencePrimitiveType
     | CatalogueItemDomainType.ReferenceEnumerationType;
-  label: string;
+  label?: string;
   description?: string;
   enumerationValues?: ReferenceDataEnumerationValueCreatePayload[];
 }
@@ -77,11 +77,11 @@ export class NewReferenceDataTypeFormComponent implements OnInit, OnDestroy {
 
   @Output() formChange = new EventEmitter<NewReferenceDataTypeState>();
 
-  formGroup = new UntypedFormGroup({
-    type: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    label: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    description: new UntypedFormControl(null),
-    enumerationValues: new UntypedFormControl(
+  formGroup = new FormGroup({
+    type: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl(null),
+    enumerationValues: new FormControl(
       null,
       referenceDataEnumerationValuesListValidator()
     )

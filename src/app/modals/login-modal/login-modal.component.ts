@@ -22,7 +22,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MessageService } from '@mdm/services/message.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
@@ -39,7 +39,7 @@ export class LoginModalComponent implements OnInit {
   message = '';
   authenticating = false;
 
-  signInForm!: UntypedFormGroup;
+  signInForm!: FormGroup;
 
   openIdConnectProviders?: PublicOpenIdConnectProvider[];
 
@@ -63,12 +63,12 @@ export class LoginModalComponent implements OnInit {
 
 
   ngOnInit() {
-    this.signInForm = new UntypedFormGroup({
-      userName: new UntypedFormControl('', [
+    this.signInForm = new FormGroup({
+      userName: new FormControl('', [
         Validators.required,  // eslint-disable-line @typescript-eslint/unbound-method
         Validators.pattern(this.validator.emailPattern)
       ]),
-      password: new UntypedFormControl('', [
+      password: new FormControl('', [
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ])
     });

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   FolderDetail,
@@ -47,10 +47,10 @@ export class NewFederatedSubscriptionModalComponent implements OnInit {
   contentLinks: PublishedDataModelLink[];
   importers: Importer[];
 
-  formGroup: UntypedFormGroup = new UntypedFormGroup({
-    folder: new UntypedFormControl(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-    format: new UntypedFormControl(null),
-    importer: new UntypedFormControl(null)
+  formGroup: FormGroup = new FormGroup({
+    folder: new FormControl(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    format: new FormControl(null),
+    importer: new FormControl(null)
   });
 
   get format() {

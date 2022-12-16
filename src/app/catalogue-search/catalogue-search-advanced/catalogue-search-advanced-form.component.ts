@@ -21,7 +21,7 @@ import {
   EventEmitter,
   OnInit,
   Output} from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,
@@ -36,7 +36,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 })
 export class CatalogueSearchAdvancedFormComponent implements OnInit {
   advancedSearch: boolean;
-  formGroup: UntypedFormGroup;
+  formGroup: FormGroup;
   classifications: Classifier[];
   @Output() searchEvent = new EventEmitter<string>();
 
@@ -93,16 +93,16 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.formGroup = new UntypedFormGroup({
-      context: new UntypedFormControl(null),
-      domainTypes: new UntypedFormControl(''),
-      labelOnly: new UntypedFormControl(true),
-      exactMatch: new UntypedFormControl(false),
-      classifiers: new UntypedFormControl(''),
-      createdAfter: new UntypedFormControl(null),
-      createdBefore: new UntypedFormControl(null),
-      lastUpdatedAfter: new UntypedFormControl(null),
-      lastUpdatedBefore: new UntypedFormControl(null)
+    this.formGroup = new FormGroup({
+      context: new FormControl(null),
+      domainTypes: new FormControl(''),
+      labelOnly: new FormControl(true),
+      exactMatch: new FormControl(false),
+      classifiers: new FormControl(''),
+      createdAfter: new FormControl(null),
+      createdBefore: new FormControl(null),
+      lastUpdatedAfter: new FormControl(null),
+      lastUpdatedBefore: new FormControl(null)
     });
 
     this.resources.classifier

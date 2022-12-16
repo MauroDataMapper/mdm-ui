@@ -25,7 +25,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { MatSelectionListChange } from '@angular/material/list';
 import {
   CatalogueItemDomainType,
@@ -78,11 +78,11 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   // keep track of child items selected
   childItemSelections = new SelectionModel<MauroItem>(true);
 
-  setupForm = new UntypedFormGroup({
-    childDomainType: new UntypedFormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    childItems: new UntypedFormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    profiles: new UntypedFormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    filter: new UntypedFormControl(null)
+  setupForm = new FormGroup({
+    childDomainType: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    childItems: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    profiles: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    filter: new FormControl(null)
   });
 
   private unsubscribe$ = new Subject();

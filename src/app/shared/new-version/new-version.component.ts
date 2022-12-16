@@ -19,8 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -76,7 +76,7 @@ export class NewVersionComponent implements OnInit {
   domainElementType: CatalogueElementType;
   domainName: ModelDomain;
   processing: boolean;
-  setupForm: UntypedFormGroup;
+  setupForm: FormGroup;
 
   availableActions: NewVersionAction[] = [
     {
@@ -176,9 +176,9 @@ export class NewVersionComponent implements OnInit {
     }
 
     // Setup first key field in form first, remaining form fields depend on the type selected
-    this.setupForm = new UntypedFormGroup({
-      action: new UntypedFormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      asynchronous: new UntypedFormControl(false)
+    this.setupForm = new FormGroup({
+      action: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      asynchronous: new FormControl(false)
     });
 
     this.resources[this.domainElementType.resourceName]
@@ -200,7 +200,7 @@ export class NewVersionComponent implements OnInit {
     if (this.actionValue === 'Fork') {
       this.setupForm.addControl(
         'label',
-        new UntypedFormControl('', [
+        new FormControl('', [
           Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
           this.forbiddenName(this.catalogueItem.label)
         ])
@@ -210,7 +210,7 @@ export class NewVersionComponent implements OnInit {
     if (this.actionValue === 'Branch') {
       this.setupForm.addControl(
         'branchName',
-        new UntypedFormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+        new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
       );
     }
   }

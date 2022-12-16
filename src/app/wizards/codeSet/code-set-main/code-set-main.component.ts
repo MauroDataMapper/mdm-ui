@@ -32,7 +32,7 @@ import {
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'mdm-code-set-main',
@@ -44,7 +44,7 @@ export class CodeSetMainComponent implements OnInit {
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
   savingInProgress = false;
-  setupForm: UntypedFormGroup;
+  setupForm: FormGroup;
 
   get label() {
     return this.setupForm.get('label');
@@ -90,13 +90,13 @@ export class CodeSetMainComponent implements OnInit {
   ngOnInit() {
     this.title.setTitle('New Code Set');
 
-    this.setupForm = new UntypedFormGroup({
-      label: new UntypedFormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      author: new UntypedFormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      organisation: new UntypedFormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new UntypedFormControl(''),
-      classifiers: new UntypedFormControl([]),
-      terms: new UntypedFormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
+    this.setupForm = new FormGroup({
+      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+      organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+      description: new FormControl(''),
+      classifiers: new FormControl([]),
+      terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
     });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;

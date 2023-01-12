@@ -1,6 +1,6 @@
 import { StateHandlerService } from './../../services/handlers/state-handler.service';
 /*
-Copyright 2020-2022 University of Oxford
+Copyright 2020-2023 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
 Licensed under the Apache License, Version 2.0 (the "License");

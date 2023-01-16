@@ -22,7 +22,7 @@ import {
   ApiProperty,
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
-import { UserIdleService } from 'angular-user-idle';
+import { UserIdleService } from './external/user-idle.sevice';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
@@ -123,7 +123,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
+    this.unsubscribe$.next(null);
     this.unsubscribe$.complete();
   }
 

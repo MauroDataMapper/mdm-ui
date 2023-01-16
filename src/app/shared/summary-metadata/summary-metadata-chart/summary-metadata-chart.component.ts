@@ -17,8 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Chart, ChartDataset, ChartOptions, ChartType } from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'mdm-summary-metadata-chart',
@@ -56,9 +56,7 @@ export class SummaryMetadataChartComponent implements OnInit {
   public barChartOptions: ChartOptions = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
-    scales: { xAxes: [{}], yAxes: [{ ticks: {
-          beginAtZero: true
-        }}] },
+    scales: { xAxis: {}, yAxis: { min: 0 } },
 
     plugins: {
       datalabels: {
@@ -68,14 +66,14 @@ export class SummaryMetadataChartComponent implements OnInit {
     },
     maintainAspectRatio: false
   };
-  public barChartLabels: Label[] = [];
+  public barChartLabels: String [] = [];
   public barChartType: ChartType;
   public barChartLegend = false;
   //  public barChartPlugins = [pluginDataLabels];
 
   public summaryMetadataReports: any[];
 
-  public barChartData: ChartDataSets[] = [];
+  public barChartData: ChartDataset[] = [];
 
   public reportIndex: number;
   public reportDate: string;

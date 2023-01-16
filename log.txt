@@ -1,0 +1,582 @@
+- Generating browser application bundles (phase: setup)...
+[33mWarning:[0m Entry point 'ngx-ace-wrapper' contains deep imports into '/Users/james/git/mauro/mdm-ui/node_modules/brace/mode/text', '/Users/james/git/mauro/mdm-ui/node_modules/brace/theme/github'. This is probably not a problem, but may cause the compilation of entry points to be out of order.
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.
+
+./src/styles.scss.webpack[javascript/auto]!=!./node_modules/@angular-devkit/build-angular/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[6].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[6].rules[0].oneOf[0].use[2]!./node_modules/resolve-url-loader/index.js??ruleSet[1].rules[6].rules[1].use[0]!./node_modules/@angular-devkit/build-angular/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[6].rules[1].use[1]!./src/styles.scss - Warning: Module Warning (from ./node_modules/postcss-loader/dist/cjs.js):
+Warning
+
+(3924:3) autoprefixer: Replace color-adjust to print-color-adjust. The color-adjust shorthand is currently deprecated.
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/ag-grid-angular/fesm2015/ag-grid-angular.js depends on 'ag-grid-community'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/dmn-js-decision-table/lib/features/cell-selection/CellSelectionUtil.js depends on 'css.escape'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/dmn-js-drd/lib/Modeler.js depends on 'inherits'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/dmn-js-shared/lib/base/EditingManager.js depends on 'ids'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/dmn-js-shared/lib/components/ContentEditable.js depends on 'escape-html'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/dmn-js-shared/lib/components/ContentEditable.js depends on 'selection-update'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/jointjs/src/dia/CellView.mjs depends on 'jquery'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/jointjs/src/dia/Graph.mjs depends on 'backbone'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/ngx-ace-wrapper/fesm2015/ngx-ace-wrapper.js depends on 'brace'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/node_modules/ngx-jodit/esm2020/lib/ngx-jodit/ngx-jodit.component.mjs depends on 'jodit'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/constraints-rules/constraints-rules.component.ts depends on '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/constraints-rules/constraints-rules.component.ts depends on 'file-saver'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/constraints-rules/constraints-rules.component.ts depends on 'jszip'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/diagram/diagram/diagram.component.ts depends on 'svg-pan-zoom'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/diagram/services/basic-diagram.service.ts depends on 'dagre'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/diagram/services/basic-diagram.service.ts depends on 'graphlib'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/merge-diff/services/string-conflict.service.ts depends on 'diff-match-patch'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/app/services/highlight.service.ts depends on 'prismjs'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/main.ts depends on 'codemirror/mode/javascript/javascript'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/main.ts depends on 'codemirror/mode/markdown/markdown'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+Warning: /Users/james/git/mauro/mdm-ui/src/main.ts depends on 'codemirror/mode/sql/sql.js'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.io/guide/build#configuring-commonjs-dependencies
+
+
+
+Error: node_modules/jodit/src/types/jodit.d.ts:12:29 - error TS2307: Cannot find module 'jodit/config' or its corresponding type declarations.
+
+12 import type { Config } from 'jodit/config';
+                               ~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/src/types/types.d.ts:11:33 - error TS2307: Cannot find module 'jodit/types/view' or its corresponding type declarations.
+
+11 import type { IViewBased } from 'jodit/types/view';
+                                   ~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/src/types/types.d.ts:12:29 - error TS2307: Cannot find module 'jodit/types/async' or its corresponding type declarations.
+
+12 import type { IAsync } from 'jodit/types/async';
+                               ~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/src/types/types.d.ts:280:3 - error TS2717: Subsequent property declarations must have the same type.  Property 'font' must be of type 'HTMLFontElement', but here has type 'HTMLElement'.
+
+280   font: HTMLElement;
+      ~~~~
+
+  node_modules/typescript/lib/lib.dom.d.ts:17141:5
+    17141     "font": HTMLFontElement;
+              ~~~~~~
+    'font' was also declared here.
+
+
+Error: node_modules/jodit/src/types/uploader.d.ts:12:33 - error TS2307: Cannot find module 'jodit/types/view' or its corresponding type declarations.
+
+12 import type { IViewBased } from 'jodit/types/view';
+                                   ~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/src/types/view.d.ts:27:32 - error TS2307: Cannot find module 'jodit/types/messages' or its corresponding type declarations.
+
+27 import type { IMessages } from 'jodit/types/messages';
+                                  ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/core/selection/interface.d.ts:9:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+9 declare module '../../types/events' {
+                 ~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/plugins/bold/interface.d.ts:6:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+6 declare module '../../types/jodit' {
+                 ~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/plugins/enter/interface.d.ts:6:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+6 declare module '../../types/events' {
+                 ~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/plugins/fullsize/config.d.ts:10:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+10 declare module '../../config' {
+                  ~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/plugins/search/interface.d.ts:6:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+6 declare module '../../types/events' {
+                 ~~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/plugins/search/interface.d.ts:28:16 - error TS2436: Ambient module declaration cannot specify relative module name.
+
+28 declare module '../../types/jodit' {
+                  ~~~~~~~~~~~~~~~~~~~
+
+
+Error: node_modules/jodit/types/types/types.d.ts:280:3 - error TS2717: Subsequent property declarations must have the same type.  Property 'font' must be of type 'HTMLFontElement', but here has type 'HTMLElement'.
+
+280   font: HTMLElement;
+      ~~~~
+
+  node_modules/typescript/lib/lib.dom.d.ts:17141:5
+    17141     "font": HTMLFontElement;
+              ~~~~~~
+    'font' was also declared here.
+
+
+Error: src/app/access/group-access-new/group-access-new.component.ts:118:18 - error TS2769: No overload matches this call.
+  Overload 1 of 2, '(observerOrNext?: Partial<Observer<[any]>> | ((value: [any]) => void)): Subscription', gave the following error.
+    Argument of type '([groupRoles, resourceGroupRole]: [any, any]) => void' is not assignable to parameter of type 'Partial<Observer<[any]>> | ((value: [any]) => void)'.
+      Type '([groupRoles, resourceGroupRole]: [any, any]) => void' is not assignable to type '(value: [any]) => void'.
+        Types of parameters '__0' and 'value' are incompatible.
+          Type '[any]' is not assignable to type '[any, any]'.
+            Source has 1 element(s) but target requires 2.
+  Overload 2 of 2, '(next?: (value: [any]) => void, error?: (error: any) => void, complete?: () => void): Subscription', gave the following error.
+    Argument of type '([groupRoles, resourceGroupRole]: [any, any]) => void' is not assignable to parameter of type '(value: [any]) => void'.
+      Types of parameters '__0' and 'value' are incompatible.
+        Type '[any]' is not assignable to type '[any, any]'.
+
+118       .subscribe(([groupRoles, resourceGroupRole]: [any, any]) => {
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+Error: src/app/admin/app-container/app-container.component.ts:62:23 - error TS2554: Expected 1 arguments, but got 0.
+
+62     this.unsubscribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/bulk-edit/bulk-edit-select/bulk-edit-select.component.ts:182:23 - error TS2554: Expected 1 arguments, but got 0.
+
+182     this.unsubscribe$.next();
+                          ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:49:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'Rule'.
+
+49   Rule,
+     ~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:50:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'RuleDomainType'.
+
+50   RuleDomainType,
+     ~~~~~~~~~~~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:51:3 - error TS2724: '"@maurodatamapper/mdm-resources"' has no exported member named 'RuleIndexResponse'. Did you mean 'FolderIndexResponse'?
+
+51   RuleIndexResponse,
+     ~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:52:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'RulePayload'.
+
+52   RulePayload,
+     ~~~~~~~~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:53:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'RuleRepresentation'.
+
+53   RuleRepresentation,
+     ~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:54:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'RuleRepresentationPayload'.
+
+54   RuleRepresentationPayload,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:208:47 - error TS2551: Property 'removeRuleRepresentation' does not exist on type 'MdmCatalogueItemResource'. Did you mean 'removeRulesRepresentation'?
+
+208           this.resourcesService.catalogueItem.removeRuleRepresentation(
+                                                  ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  node_modules/@maurodatamapper/mdm-resources/lib/es2015/core/mdm-catalogue-item.resource.d.ts:257:5
+    257     removeRulesRepresentation(catalogueItemDomainType: string | ModelDomainType, catalogueItemId: string, ruleId: string, representationId: string, queryStringParams?: QueryParameters, restHandlerOptions?: RequestSettings): any;
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+    'removeRulesRepresentation' is declared here.
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:447:56 - error TS2551: Property 'updateRuleRepresentation' does not exist on type 'MdmCatalogueItemResource'. Did you mean 'updateRulesRepresentation'?
+
+447             return this.resourcesService.catalogueItem.updateRuleRepresentation(
+                                                           ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  node_modules/@maurodatamapper/mdm-resources/lib/es2015/core/mdm-catalogue-item.resource.d.ts:255:5
+    255     updateRulesRepresentation(catalogueItemDomainType: string | ModelDomainType, catalogueItemId: string, data: any, ruleId: string, representationId: string, restHandlerOptions?: RequestSettings): any;
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+    'updateRulesRepresentation' is declared here.
+
+
+Error: src/app/constraints-rules/constraints-rules.component.ts:459:54 - error TS2551: Property 'saveRuleRepresentation' does not exist on type 'MdmCatalogueItemResource'. Did you mean 'saveRulesRepresentation'?
+
+459           return this.resourcesService.catalogueItem.saveRuleRepresentation(
+                                                         ~~~~~~~~~~~~~~~~~~~~~~
+
+  node_modules/@maurodatamapper/mdm-resources/lib/es2015/core/mdm-catalogue-item.resource.d.ts:254:5
+    254     saveRulesRepresentation(catalogueItemDomainType: string | ModelDomainType, catalogueItemId: string, data: any, ruleId: string, restHandlerOptions?: RequestSettings): any;
+            ~~~~~~~~~~~~~~~~~~~~~~~
+    'saveRulesRepresentation' is declared here.
+
+
+Error: src/app/folders-tree/folders-tree.component.ts:742:23 - error TS2554: Expected 1 arguments, but got 0.
+
+742     this.unsubscribe$.next();
+                          ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/home/home.component.ts:152:22 - error TS2554: Expected 1 arguments, but got 0.
+
+152     this.unsubcribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/mauro/mauro-model-versioning.service.ts:23:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ModelVersion'.
+
+23   ModelVersion,
+     ~~~~~~~~~~~~
+
+
+Error: src/app/mauro/mauro-model-versioning.service.ts:24:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ModelVersionResponse'.
+
+24   ModelVersionResponse
+     ~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/mauro/mauro-model-versioning.service.ts:131:43 - error TS2339: Property 'latestModelVersion' does not exist on type 'MdmVersionedFolderResource'.
+
+131     return this.resources.versionedFolder.latestModelVersion(identifier.id);
+                                              ~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/modals/modal.service.ts:76:23 - error TS2554: Expected 1 arguments, but got 0.
+
+76     this.unsubscribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/navbar/navbar.component.ts:122:23 - error TS2554: Expected 1 arguments, but got 0.
+
+122     this.unsubscribe$.next();
+                          ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/referenceData/reference-data-type/reference-data-type.component.ts:40:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataType'.
+
+40   ReferenceDataType,
+     ~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/referenceData/reference-data-type/reference-data-type.component.ts:41:3 - error TS2724: '"@maurodatamapper/mdm-resources"' has no exported member named 'ReferenceDataTypeIndexResponse'. Did you mean 'ReferenceDataModelIndexResponse'?
+
+41   ReferenceDataTypeIndexResponse
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/services/features.service.ts:58:23 - error TS2554: Expected 1 arguments, but got 0.
+
+58     this.unsubscribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/services/message.service.ts:137:24 - error TS2554: Expected 1 arguments, but got 0.
+
+137     this.FolderSubject.next();
+                           ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/services/model-tree.service.ts:84:23 - error TS2554: Expected 1 arguments, but got 0.
+
+84     this.unsubscribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/shared/element-icon/element-icon.component.ts:83:36 - error TS2339: Property 'ReferenceEnumerationType' does not exist on type 'typeof CatalogueItemDomainType'.
+
+83       case CatalogueItemDomainType.ReferenceEnumerationType:
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/shared/element-icon/element-icon.component.ts:84:36 - error TS2339: Property 'ReferencePrimitiveType' does not exist on type 'typeof CatalogueItemDomainType'.
+
+84       case CatalogueItemDomainType.ReferencePrimitiveType:
+                                      ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/shared/favorite-button/favorite-button.component.ts:67:23 - error TS2554: Expected 1 arguments, but got 0.
+
+67     this.$unsubscribe.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/shared/models/models.component.ts:258:23 - error TS2554: Expected 1 arguments, but got 0.
+
+258     this.unsubscribe$.next();
+                          ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component.html:48:25 - error NG8002: Can't bind to 'colors' since it isn't a known property of 'canvas'.
+
+48                         [colors]="chartColors"
+                           ~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component.ts:25:16
+    25   templateUrl: './summary-metadata-popup.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SummaryMetadataPopupComponent.
+
+
+Error: src/app/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component.html:50:25 - error NG8002: Can't bind to 'chartType' since it isn't a known property of 'canvas'.
+
+50                         [chartType]="barChartType">
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component.ts:25:16
+    25   templateUrl: './summary-metadata-popup.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SummaryMetadataPopupComponent.
+
+
+Error: src/app/utility/html-editor/html-editor.component.html:24:19 - error NG8002: Can't bind to 'config' since it isn't a known property of 'jodit-editor'.
+1. If 'jodit-editor' is an Angular component and it has 'config' input, then verify that it is part of this module.
+2. If 'jodit-editor' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.
+
+24                   [config]="editorConfig"
+                     ~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/utility/html-editor/html-editor.component.ts:52:16
+    52   templateUrl: './html-editor.component.html'
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component HtmlEditorComponent.
+
+
+Error: src/app/utility/html-editor/html-editor.component.html:36:19 - error NG8002: Can't bind to 'config' since it isn't a known property of 'jodit-editor'.
+1. If 'jodit-editor' is an Angular component and it has 'config' input, then verify that it is part of this module.
+2. If 'jodit-editor' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@NgModule.schemas' of this component.
+
+36                   [config]="editorConfig">
+                     ~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/utility/html-editor/html-editor.component.ts:52:16
+    52   templateUrl: './html-editor.component.html'
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component HtmlEditorComponent.
+
+
+Error: src/app/utility/html-editor/html-editor.component.ts:23:26 - error TS2307: Cannot find module 'jodit-angular/lib/Events' or its corresponding type declarations.
+
+23 import { EventObj } from 'jodit-angular/lib/Events';
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/codeSet/code-set-main/code-set-main.component.ts:137:8 - error TS2339: Property 'create' does not exist on type 'MdmCodeSetResource'.
+
+137       .create(this.parentFolderId, resource)
+           ~~~~~~
+
+
+Error: src/app/wizards/dataModel/data-model-main/data-model-main.component.ts:127:8 - error TS2339: Property 'create' does not exist on type 'MdmDataModelResource'.
+
+127       .create(this.parentFolderId, resource, queryStringParams)
+           ~~~~~~
+
+
+Error: src/app/wizards/dataModel/data-model-step1/data-model-step1.component.ts:97:23 - error TS2554: Expected 1 arguments, but got 0.
+
+97     this.unsubscribe$.next();
+                         ~~~~~~
+
+  node_modules/rxjs/dist/types/internal/Subject.d.ts:32:10
+    32     next(value: T): void;
+                ~~~~~~~~
+    An argument for 'value' was not provided.
+
+
+Error: src/app/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component.ts:127:8 - error TS2339: Property 'create' does not exist on type 'MdmReferenceDataModelResource'.
+
+127       .create(this.parentFolderId, payload)
+           ~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component.ts:37:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataEnumerationValueCreatePayload'.
+
+37   ReferenceDataEnumerationValueCreatePayload,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component.ts:46:31 - error TS2694: Namespace '"/Users/james/git/mauro/mdm-ui/node_modules/@maurodatamapper/mdm-resources/lib/es2015/mdm-common.model".CatalogueItemDomainType' has no exported member 'ReferencePrimitiveType'.
+
+46     | CatalogueItemDomainType.ReferencePrimitiveType
+                                 ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component.ts:47:31 - error TS2694: Namespace '"/Users/james/git/mauro/mdm-ui/node_modules/@maurodatamapper/mdm-resources/lib/es2015/mdm-common.model".CatalogueItemDomainType' has no exported member 'ReferenceEnumerationType'.
+
+47     | CatalogueItemDomainType.ReferenceEnumerationType;
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component.ts:56:49 - error TS2339: Property 'ReferenceEnumerationType' does not exist on type 'typeof CatalogueItemDomainType'.
+
+56     if (type?.value !== CatalogueItemDomainType.ReferenceEnumerationType) {
+                                                   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:26:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataType'.
+
+26   ReferenceDataType,
+     ~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:27:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataTypeCreatePayload'.
+
+27   ReferenceDataTypeCreatePayload,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:28:3 - error TS2724: '"@maurodatamapper/mdm-resources"' has no exported member named 'ReferenceDataTypeDetailResponse'. Did you mean 'ReferenceDataModelDetailResponse'?
+
+28   ReferenceDataTypeDetailResponse,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:125:52 - error TS2339: Property 'ReferenceEnumerationType' does not exist on type 'typeof CatalogueItemDomainType'.
+
+125       ...(details.type === CatalogueItemDomainType.ReferenceEnumerationType && {
+                                                       ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:133:8 - error TS2339: Property 'create' does not exist on type 'MdmReferenceDataTypeResource'.
+
+133       .create(this.parentModelId, payload)
+           ~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component.ts:162:12 - error TS2339: Property 'copy' does not exist on type 'MdmReferenceDataTypeResource'.
+
+162           .copy(this.parentModelId, sourceType.model, sourceType.id)
+               ~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component.ts:36:3 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataType'.
+
+36   ReferenceDataType,
+     ~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component.ts:37:3 - error TS2724: '"@maurodatamapper/mdm-resources"' has no exported member named 'ReferenceDataTypeIndexResponse'. Did you mean 'ReferenceDataModelIndexResponse'?
+
+37   ReferenceDataTypeIndexResponse
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component.ts:20:10 - error TS2305: Module '"@maurodatamapper/mdm-resources"' has no exported member 'ReferenceDataType'.
+
+20 import { ReferenceDataType } from '@maurodatamapper/mdm-resources';
+            ~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/wizards/terminology/terminology-main/terminology-main.component.ts:126:8 - error TS2339: Property 'create' does not exist on type 'MdmTerminologyResource'.
+
+126       .create(this.parentFolderId, payload)
+           ~~~~~~
+
+
+

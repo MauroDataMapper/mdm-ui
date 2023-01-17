@@ -54,7 +54,6 @@ import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/ca
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { NgxJoditModule } from 'ngx-jodit';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
@@ -113,7 +112,6 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    NgxJoditModule,
     UIRouterModule
   ],
   exports: [

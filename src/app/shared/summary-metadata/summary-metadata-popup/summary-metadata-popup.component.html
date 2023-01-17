@@ -57,7 +57,10 @@ SPDX-License-Identifier: Apache-2.0
                             <th mat-header-cell *matHeaderCellDef scope="col"> Category </th>
                             <td mat-cell *matCellDef="let element">
                                 <span>
-                                    <strong *ngIf="element.keyColor" style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle;" [style.background-color]="element.keyColor">&nbsp;</strong>
+                                    <strong *ngIf="element.keyColor"
+                                            style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle; border-width: 1px; border-style: solid;"
+                                            [style.background-color]="element.keyColor"
+                                            [style.border-color]="element.keyBorderColor">&nbsp;</strong>
                                     {{element.category}}
                                 </span>
                             </td>

@@ -57,7 +57,11 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     if (this.summary.summaryMetadataType.toLowerCase() === 'map') {
       this.tableDataForTable = [];
       Object.keys(this.selectedReport.reportValue).forEach((x, idx) => {
-        this.tableDataForTable.push({ keyColor: this.chartColors[0].backgroundColor[idx], category: x, value: this.selectedReport.reportValue[x] });
+        this.tableDataForTable.push({
+          keyColor: this.chartBackgroundColors[idx],
+          keyBorderColor: this.chartBorderColors[idx],
+          category: x,
+          value: this.selectedReport.reportValue[x] });
       });
     }
   }

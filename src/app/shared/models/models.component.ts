@@ -180,7 +180,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private sharedService: SharedService,

@@ -133,10 +133,10 @@ export class MessageService implements OnDestroy {
     this.FolderSubject.next(message);
   }
 
+/* Not used
   FolderSendClearMessages() {
     this.FolderSubject.next();
   }
-
   FolderGetMessage(): Observable<any> {
     return this.FolderSubject.asObservable();
   }
@@ -156,6 +156,7 @@ export class MessageService implements OnDestroy {
     this.folderPermissions = message;
     this.FolderSubject.next(message);
   }
+*/
 
   /**
    * Broadcast to all subscribers of a given subject.

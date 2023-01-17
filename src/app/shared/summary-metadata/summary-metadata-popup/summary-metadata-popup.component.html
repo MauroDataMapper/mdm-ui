@@ -45,13 +45,13 @@ SPDX-License-Identifier: Apache-2.0
                         [datasets]="barChartData"
                         [labels]="barChartLabels"
                         [options]="barChartOptions"
-                        [colors]="chartColors"
+
                         [legend]="barChartLegend"
-                        [chartType]="barChartType">
+                        [type]="barChartType"> <!--[colors]="chartColors" -->
                 </canvas>
             </div>
             <div style="display: flex; flex-direction: column; max-width: 600px;" class="pt-2 mt-1">
-                <div style="align-items: top; display: flex;">
+                <div style="align-items: start; display: flex;">
                     <table mat-table [dataSource]="tableDataForTable" class="mdm--table table table-striped">
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef scope="col"> Category </th>

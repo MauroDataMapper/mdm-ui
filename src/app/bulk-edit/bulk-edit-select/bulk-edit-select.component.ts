@@ -85,7 +85,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     filter: new FormControl(null)
   });
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   get childDomainType() {
     return this.setupForm.get('childDomainType');

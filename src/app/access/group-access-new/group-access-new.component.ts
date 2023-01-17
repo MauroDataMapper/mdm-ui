@@ -115,7 +115,7 @@ export class GroupAccessNewComponent implements OnInit {
         }),
         finalize(() => this.loading = false)
       )
-      .subscribe(([groupRoles, resourceGroupRole]: [any, any]) => {
+      .subscribe(([[groupRoles, resourceGroupRole]]: [any]) => {
         this.accessLevels = groupRoles.body.items;
         this.groups = resourceGroupRole.body.items;
         this.totalItemCount = resourceGroupRole.body.count;

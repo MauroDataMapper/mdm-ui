@@ -55,7 +55,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isAdministrator = false;
   features = this.sharedService.features;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private sharedService: SharedService,

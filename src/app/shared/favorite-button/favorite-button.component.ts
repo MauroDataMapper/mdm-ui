@@ -33,7 +33,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isFavorite = false;
 
-  private $unsubscribe = new Subject();
+  private $unsubscribe = new Subject<void>();
 
   constructor(
     private securityHandler: SecurityHandlerService,

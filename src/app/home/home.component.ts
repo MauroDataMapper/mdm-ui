@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   documentationUrl = this.shared.documentation.url;
 
-  private unsubcribe$ = new Subject();
+  private unsubcribe$ = new Subject<void>();
 
   constructor(
     public dialog: MatDialog,

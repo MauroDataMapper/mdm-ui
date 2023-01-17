@@ -28,7 +28,7 @@ https://github.com/rednez/angular-user-idle
 
 The source code has been included as-is (apart from minor changes to build) into this
 repo because the angular-user-idle npm package only targets up to Angular 12, whereas this
-repo targets Angular 13 and above. Also, the GitHub repo no longer looks maintained.
+repo targets Angular 14 and above. Also, the GitHub repo no longer looks maintained.
 
 Because of conflicting peer dependencies and lack of updates, the source is therefore built
 directly into this application to support user idle inactivity in the app.

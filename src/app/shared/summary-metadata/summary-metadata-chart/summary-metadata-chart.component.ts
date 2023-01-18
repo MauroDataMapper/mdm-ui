@@ -17,8 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { Chart, ChartDataset, ChartOptions, ChartType } from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'mdm-summary-metadata-chart',

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
 import { ApiProperty, ApiPropertyIndexResponse, ApiPropertyResponse } from '@maurodatamapper/mdm-resources';

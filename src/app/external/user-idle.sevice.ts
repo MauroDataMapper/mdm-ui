@@ -90,7 +90,6 @@ export class UserIdleService {
    */
   protected activityEvents$?: Observable<any>;
 
-  private timerStart$ = new Subject<boolean>();
   protected idleDetected$ = new Subject<boolean>();
   protected timeout$ = new Subject<boolean>();
   protected idle$?: Observable<any>;
@@ -131,6 +130,8 @@ export class UserIdleService {
   protected isInactivityTimer = false;
   protected isIdleDetected = false;
   protected idleSubscription?: Subscription;
+
+  private timerStart$ = new Subject<boolean>();
 
   constructor(
     @Optional() @Inject(USER_IDLE_CONFIGURATION) config: UserIdleConfiguration,
@@ -173,7 +174,7 @@ export class UserIdleService {
             interval(1000).pipe(
               takeUntil(
                 merge(
-                  this.activityEvents$!,
+                  this.activityEvents$,
                   timer(this.idleMillisec).pipe(
                     tap(() => {
                       this.isInactivityTimer = true;
@@ -264,25 +265,12 @@ export class UserIdleService {
     this.setConfig(config);
   }
 
-  private setConfig(config: UserIdleConfiguration) {
-    if (config.idle) {
-      this.idleMillisec = config.idle * 1000;
-    }
-    if (config.ping) {
-      this.pingMillisec = config.ping * 1000;
-    }
-    if (config.idleSensitivity) {
-      this.idleSensitivityMillisec = config.idleSensitivity * 1000;
-    }
-    if (config.timeout) {
-      this.timeout = config.timeout;
-    }
-  }
 
   /**
    * Set custom activity events
    *
-   * @param customEvents Example: merge(
+   * @param customEvents
+   * @example merge(
    *   fromEvent(window, 'mousemove'),
    *   fromEvent(window, 'resize'),
    *   fromEvent(document, 'keydown'),
@@ -334,4 +322,20 @@ export class UserIdleService {
   protected setupPing(pingMillisec: number) {
     this.ping$ = interval(pingMillisec).pipe(filter(() => !this.isTimeout));
   }
+
+  private setConfig(config: UserIdleConfiguration) {
+    if (config.idle) {
+      this.idleMillisec = config.idle * 1000;
+    }
+    if (config.ping) {
+      this.pingMillisec = config.ping * 1000;
+    }
+    if (config.idleSensitivity) {
+      this.idleSensitivityMillisec = config.idleSensitivity * 1000;
+    }
+    if (config.timeout) {
+      this.timeout = config.timeout;
+    }
+  }
+
 }

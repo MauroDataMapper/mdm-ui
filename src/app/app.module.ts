@@ -47,7 +47,7 @@ import { HttpRequestProgressInterceptor } from './services/http-request-progress
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
 import { BulkEditModule } from './bulk-edit/bulk-edit.module';
 import { CatalogueSearchModule } from './catalogue-search/catalogue-search.module';
-import { NgxJoditModule } from "ngx-jodit";
+import { NgxJoditModule } from 'ngx-jodit';
 
 @NgModule({
   declarations: [AppComponent],

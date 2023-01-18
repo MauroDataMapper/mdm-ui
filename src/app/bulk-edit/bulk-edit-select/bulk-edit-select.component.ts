@@ -61,8 +61,8 @@ interface CatalogueItemDomainTypeOption {
   styleUrls: ['./bulk-edit-select.component.scss']
 })
 export class BulkEditSelectComponent implements OnInit, OnDestroy {
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onNext = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+  @Output() next = new EventEmitter<void>();
 
   /** Two way binding */
   @Input() context: BulkEditContext;
@@ -187,12 +187,12 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     return option.name === value.name && option.namespace === value.namespace;
   }
 
-  cancel() {
-    this.onCancel.emit();
+  onCancel() {
+    this.cancel.emit();
   }
 
-  next() {
-    this.onNext.emit();
+  onNext() {
+    this.next.emit();
   }
 
   childItemSelected(selection: MatSelectionListChange) {

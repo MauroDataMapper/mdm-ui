@@ -179,7 +179,7 @@ import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataTy
 import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
 import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { ModelHeaderComponent } from '../../model-header/model-header.component';
-import { USER_IDLE_CONFIGURATION } from "@mdm/external/user-idle.sevice";
+import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle.sevice';
 
 @NgModule({
   providers: [

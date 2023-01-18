@@ -28,9 +28,9 @@ import { MauroItem } from '@mdm/mauro/mauro-item.types';
 export class ElementLabelComponent {
   @Input() item: MauroItem & Branchable & Versionable;
 
-  @Output() click = new EventEmitter<void>();
+  @Output() labelClick = new EventEmitter<void>();
 
   labelClicked() {
-    this.click.emit();
+    this.labelClick.emit();
   }
 }

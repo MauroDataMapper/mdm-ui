@@ -9,7 +9,7 @@
     "dist-archive": "tar zcvf dist/mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \".$MDM_UI_THEME_NAME\").tgz -C dist mdm-ui-$npm_package_version$([ -z \"$MDM_UI_THEME_NAME\" ] && echo \"\" || echo \"-$MDM_UI_THEME_NAME\")",
     "test": "ng test",
     "test:watch": "ng test --watch",
-    "test-clearCache": "ng test --clearCache",
+    "test-clearCache": "ng test --clear-cache",
     "test-with-coverage": "ng test --coverage",
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --fix",

@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * Signal to attach to subscriptions to trigger when they should be unsubscribed.
    */
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private userIdle: UserIdleService,

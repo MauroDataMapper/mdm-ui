@@ -38,7 +38,7 @@ export class FeaturesService implements OnDestroy {
   useDigitalObjectIdentifiers: boolean;
   useIssueReporting: boolean;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private resources: MdmResourcesService,

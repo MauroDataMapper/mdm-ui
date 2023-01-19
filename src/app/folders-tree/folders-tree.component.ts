@@ -146,7 +146,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
   protected treeFlattener: MatTreeFlattener<MdmTreeItem, FlatNode>;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   /**
    * Get the children for the given node from source data.

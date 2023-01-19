@@ -33,7 +33,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isFavorite = false;
 
-  private $unsubscribe = new Subject<void>();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private securityHandler: SecurityHandlerService,
@@ -55,7 +55,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     this.broadcast
       .onFavouritesChanged()
       .pipe(
-        takeUntil(this.$unsubscribe),
+        takeUntil(this.unsubscribe$),
         filter(data => data.element.id === this.catalogueItem.id)
       )
       .subscribe(data => {
@@ -64,8 +64,8 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.$unsubscribe.next();
-    this.$unsubscribe.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   toggle() {

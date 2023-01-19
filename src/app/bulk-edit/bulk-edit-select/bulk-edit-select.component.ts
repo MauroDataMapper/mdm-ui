@@ -25,7 +25,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectionListChange } from '@angular/material/list';
 import {
   CatalogueItemDomainType,

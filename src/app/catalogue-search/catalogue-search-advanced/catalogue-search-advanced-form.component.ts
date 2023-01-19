@@ -21,7 +21,7 @@ import {
   EventEmitter,
   OnInit,
   Output} from '@angular/core';
-import {FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,

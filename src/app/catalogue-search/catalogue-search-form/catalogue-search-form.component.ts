@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
 /**

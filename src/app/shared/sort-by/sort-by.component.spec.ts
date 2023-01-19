@@ -22,7 +22,7 @@ import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
-import {MockComponent, MockDirective} from 'ng-mocks';
+import { MockComponent, MockDirective } from 'ng-mocks';
 import { SortByComponent } from './sort-by.component';
 
 describe('SortByComponent', () => {

@@ -36,7 +36,7 @@ export enum ModalType {
   providedIn: 'root'
 })
 export class ModalService implements OnDestroy {
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private dialog: MatDialog,

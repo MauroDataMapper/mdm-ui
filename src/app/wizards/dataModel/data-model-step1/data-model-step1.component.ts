@@ -37,7 +37,7 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
   step: WizardStep<DataModelMainComponent>;
   setupForm: FormGroup;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private helpDialogueHandler: HelpDialogueHandlerService,

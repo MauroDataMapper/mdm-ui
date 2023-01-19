@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   documentationUrl = this.shared.documentation.url;
 
-  private unsubcribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     public dialog: MatDialog,
@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {
     this.broadcast
       .onUserLoggedOut()
-      .pipe(takeUntil(this.unsubcribe$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.isLoggedIn = false);
   }
 
@@ -149,8 +149,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubcribe$.next();
-    this.unsubcribe$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   login = () => {

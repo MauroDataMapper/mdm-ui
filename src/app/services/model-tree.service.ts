@@ -60,7 +60,7 @@ import { UserSettingsHandlerService } from './utility/user-settings-handler.serv
 export class ModelTreeService implements OnDestroy {
   currentNode?: FlatNode;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private resources: MdmResourcesService,

@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select/select';
+import { MatSelectChange } from '@angular/material/select';
 
 export interface SortByOption {
   value: string;

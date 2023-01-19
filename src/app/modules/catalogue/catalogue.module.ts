@@ -125,7 +125,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule } from 'ng2-charts';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
-import { UserIdleModule } from 'angular-user-idle';
 import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
 import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
 import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.component';
@@ -180,8 +179,20 @@ import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataTy
 import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
 import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
 
 @NgModule({
+  providers: [
+    {
+      provide: USER_IDLE_CONFIGURATION,
+      // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
+      useValue: {
+        idle: 600,
+        timeout: 300,
+      },
+    },
+  ],
+
   declarations: [
     FolderComponent,
     ExportModelsComponent,
@@ -354,7 +365,6 @@ import { ModelHeaderComponent } from '../../model-header/model-header.component'
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
     PipesModule,

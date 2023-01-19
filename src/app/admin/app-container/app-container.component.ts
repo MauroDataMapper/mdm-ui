@@ -33,7 +33,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
   pendingUsersCount = 0;
   features = this.sharedService.features;
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private sharedService: SharedService,

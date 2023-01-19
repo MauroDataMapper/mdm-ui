@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin mdm-catalogue-item-search-result-theme($theme) {
   $primary: map-get($theme, primary);

@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { AdminModule } from '../admin/admin.module';
 import { SharedModule } from '@mdm/shared/shared.module';
@@ -349,7 +349,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle.sevice';
     AngularSplitModule.forRoot(),
     BulkEditModule,
     BrowserModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     NgChartsModule,
     CommonModule,
     DragDropModule,

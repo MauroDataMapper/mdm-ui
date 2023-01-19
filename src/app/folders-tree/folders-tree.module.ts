@@ -27,7 +27,7 @@ import { FoldersTreeComponent } from './folders-tree.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StringifyPipe } from '../pipes/stringify.pipe';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './folder.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -44,7 +44,7 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         MatFormFieldModule,
         MatInputModule,
         PipesModule

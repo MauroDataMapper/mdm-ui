@@ -28,7 +28,7 @@
     "**/*.woff",
     "**/*.woff2",
     "sonar-project.properties",
-    "src/app/external/*"
+    "src/app/external/**"
   ],
   "license": "NOTICE",
 

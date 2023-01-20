@@ -28,7 +28,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
@@ -51,7 +51,7 @@ describe('ClassifiedElementsListComponent', () => {
         MatTableModule,
         MaterialModule.forRoot(),
         FormsModule,
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         PortalModule,
         OverlayModule,
         NgxSkeletonLoaderModule

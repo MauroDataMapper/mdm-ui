@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import { TestBed, inject } from '@angular/core/testing';
-import { UserIdleService } from '@mdm/external/user-idle.sevice';
+import { UserIdleService } from '@mdm/external/user-idle/user-idle.service';
 
 describe('UserIdleService', () => {
   beforeEach(() => {

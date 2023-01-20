@@ -62,6 +62,7 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { NgxJoditModule } from 'ngx-jodit';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    UIRouterModule
+    UIRouterModule,
+    NgxJoditModule
   ],
   exports: [
     EditableFormButtonsComponent,

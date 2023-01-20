@@ -24,7 +24,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -39,7 +39,7 @@ describe('ApiKeysModalComponent', () => {
          MatDialogModule,
          MatFormFieldModule,
          MatInputModule,
-         NoopAnimationsModule,
+         BrowserAnimationsModule,
          FormsModule,
          MatButtonModule
        ],

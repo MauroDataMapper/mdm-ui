@@ -28,12 +28,12 @@ SPDX-License-Identifier: Apache-2.0
 <mdm-bulk-edit-select
   *ngIf="currentStep === Steps.Selection"
   [(context)]="context"
-  (onNext)="next()"
-  (onCancel)="cancel()"
+  (next)="next()"
+  (cancel)="cancel()"
 ></mdm-bulk-edit-select>
 <mdm-bulk-edit-editor-group
   *ngIf="currentStep === Steps.Editor"
   [(context)]="context"
-  (onCancel)="cancel()"
-  (onPrevious)="previous()"
+  (cancel)="cancel()"
+  (previous)="previous()"
 ></mdm-bulk-edit-editor-group>

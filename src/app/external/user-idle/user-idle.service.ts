@@ -52,7 +52,7 @@ import {
   switchMap,
   takeUntil,
   tap,
-  timer,
+  timer
 } from 'rxjs';
 
 export class UserIdleConfiguration {

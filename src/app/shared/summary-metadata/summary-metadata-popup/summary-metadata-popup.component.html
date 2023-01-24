@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
                         [options]="barChartOptions"
 
                         [legend]="barChartLegend"
-                        [type]="barChartType"> <!--[colors]="chartColors" -->
+                        [type]="barChartType"> <!--  [colors]="chartColors" -->
                 </canvas>
             </div>
             <div style="display: flex; flex-direction: column; max-width: 600px;" class="pt-2 mt-1">
@@ -57,11 +57,11 @@ SPDX-License-Identifier: Apache-2.0
                             <th mat-header-cell *matHeaderCellDef scope="col"> Category </th>
                             <td mat-cell *matCellDef="let element">
                                 <span>
-                                    <strong *ngIf="element.keyColor"
-                                            style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle; border-width: 1px; border-style: solid;"
-                                            [style.background-color]="element.keyColor"
-                                            [style.border-color]="element.keyBorderColor">&nbsp;</strong>
-                                    {{element.category}}
+                                  <strong *ngIf="element.keyColor"
+                                          style="width: 32px; margin-right: 1em; height: 2em; display: inline-block; vertical-align: middle; border-width: 1px; border-style: solid;"
+                                          [style.background-color]="element.keyColor"
+                                          [style.border-color]="element.keyBorderColor">&nbsp;</strong>
+                                  {{element.category}}
                                 </span>
                             </td>
                         </ng-container>

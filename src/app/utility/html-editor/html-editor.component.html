@@ -19,8 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <div *ngIf="!element">
    <ngx-jodit *ngIf="inEditMode"
-                  [(ngModel)]="description"
-                  name="{{property}}"
+                  [(value)]="description"
                   [options]="editorConfig"
                   (joditChange)="onHtmlEditorChanged($event)">
    </ngx-jodit>
@@ -31,8 +30,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <div *ngIf="element">
    <ngx-jodit *ngIf="inEditMode"
-                  [(ngModel)]="element[property]"
-                  name="{{property}}"
+                  [(value)]="element[property]"
                   [options]="editorConfig">
    </ngx-jodit>
    <div style="clear: both;">

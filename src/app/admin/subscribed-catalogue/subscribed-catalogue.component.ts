@@ -16,25 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Title} from '@angular/platform-browser';
 import {
   SubscribedCatalogue,
   SubscribedCatalogueTypeResponse,
   SubscribedCatalogueResponse,
-  Uuid
+  Uuid, SubscribedCatalogueAuthenticationTypeResponse
 } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import {MdmResourcesService} from '@mdm/modules/resources';
 import {
   MessageHandlerService,
   SharedService,
   StateHandlerService
 } from '@mdm/services';
-import { EditingService } from '@mdm/services/editing.service';
-import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import {EditingService} from '@mdm/services/editing.service';
+import {UIRouterGlobals} from '@uirouter/core';
+import {EMPTY, forkJoin, Observable, of} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -42,8 +42,15 @@ import { catchError, map, switchMap } from 'rxjs/operators';
   styleUrls: ['./subscribed-catalogue.component.scss']
 })
 export class SubscribedCatalogueComponent implements OnInit {
+  readonly noAuthAuthenticationType: string = 'No Authentication';
+  readonly apiKeyAuthenticationType: string = 'API Key';
+  readonly oAuthClientCredentialsAuthenticationType: string = 'OAuth (Client Credentials)';
+  readonly supportedAuthenticationTypes: string[] = [this.noAuthAuthenticationType, this.apiKeyAuthenticationType, this.oAuthClientCredentialsAuthenticationType];
+
   catalogueId?: Uuid;
   connectionTypes: string[] = [];
+  authenticationTypes: string[] = [];
+
   isCreating: boolean;
 
   formGroup: FormGroup;
@@ -76,12 +83,53 @@ export class SubscribedCatalogueComponent implements OnInit {
     return this.formGroup.get('type');
   }
 
+  get authenticationType() {
+    return this.formGroup.get('authenticationType');
+  }
+
   get apiKey() {
     return this.formGroup.get('apiKey');
   }
 
+  get tokenUrl() {
+    return this.formGroup.get('tokenUrl');
+  }
+
+  get clientId() {
+    return this.formGroup.get('clientId');
+  }
+
+  get clientSecret() {
+    return this.formGroup.get('clientSecret');
+  }
+
   get refreshPeriod() {
     return this.formGroup.get('refreshPeriod');
+  }
+
+  get catalogueRequest(): SubscribedCatalogue {
+    const baseRequest = {
+      id: this.catalogueId,
+      label: this.label.value,
+      description: this.description.value,
+      url: this.url.value,
+      subscribedCatalogueType: this.type.value,
+      subscribedCatalogueAuthenticationType: this.authenticationType.value,
+      refreshPeriod: this.refreshPeriod.value
+    }
+    if (this.authenticationType.value === this.noAuthAuthenticationType) {
+      return baseRequest
+    } else if (this.authenticationType.value === this.apiKeyAuthenticationType) {
+      return {...baseRequest, ...{apiKey: this.apiKey.value}}
+    } else if (this.authenticationType.value === this.oAuthClientCredentialsAuthenticationType) {
+      return {
+        ...baseRequest, ...{
+          tokenUrl: this.tokenUrl.value,
+          clientId: this.clientId.value,
+          clientSecret: this.clientSecret.value,
+        }
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -93,11 +141,14 @@ export class SubscribedCatalogueComponent implements OnInit {
     this.editingService.start();
     this.catalogueId = this.routerGobals.params.id;
 
-    this.resources.subscribedCatalogues
-      .types()
+    forkJoin([
+      this.resources.subscribedCatalogues.types(),
+      this.resources.subscribedCatalogues.authenticationTypes()
+    ])
       .pipe(
-        switchMap((typesResponse: SubscribedCatalogueTypeResponse) => {
+        switchMap(([typesResponse, authenticationTypesResponse]: [SubscribedCatalogueTypeResponse, SubscribedCatalogueAuthenticationTypeResponse]) => {
           this.connectionTypes = typesResponse.body;
+          this.authenticationTypes = this.supportedAuthenticationTypes.filter(authType => authenticationTypesResponse.body.includes(authType));
 
           if (this.catalogueId) {
             this.isCreating = false;
@@ -139,23 +190,12 @@ export class SubscribedCatalogueComponent implements OnInit {
       return;
     }
 
-    const catalogue: SubscribedCatalogue = {
-      id: this.catalogueId,
-      label: this.label.value,
-      description: this.description.value,
-      url: this.url.value,
-      subscribedCatalogueType: this.type.value,
-      apiKey: this.apiKey.value,
-      refreshPeriod: this.refreshPeriod.value,
-      subscribedCatalogueAuthenticationType: ''
-    };
-
     const request$: Observable<SubscribedCatalogueResponse> = this.isCreating
-      ? this.resources.admin.saveSubscribedCatalogues(catalogue)
+      ? this.resources.admin.saveSubscribedCatalogues(this.catalogueRequest)
       : this.resources.admin.updateSubscribedCatalogue(
-          this.catalogueId,
-          catalogue
-        );
+        this.catalogueId,
+        this.catalogueRequest
+      );
 
     request$
       .pipe(
@@ -195,7 +235,13 @@ export class SubscribedCatalogueComponent implements OnInit {
       type: new FormControl(catalogue?.subscribedCatalogueType, [
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ]),
+      authenticationType: new FormControl(catalogue?.subscribedCatalogueAuthenticationType, [
+        Validators.required
+      ]),
       apiKey: new FormControl(catalogue?.apiKey),
+      tokenUrl: new FormControl(catalogue?.tokenUrl),
+      clientId: new FormControl(catalogue?.clientId),
+      clientSecret: new FormControl(catalogue?.clientSecret),
       refreshPeriod: new FormControl(catalogue?.refreshPeriod)
     });
   }

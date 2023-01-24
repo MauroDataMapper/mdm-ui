@@ -284,7 +284,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   };
 
   ngOnDestroy() {
-    this.formChangesSubscription.unsubscribe();
+    if(this.formChangesSubscription) {
+      this.formChangesSubscription.unsubscribe();
+    }
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {

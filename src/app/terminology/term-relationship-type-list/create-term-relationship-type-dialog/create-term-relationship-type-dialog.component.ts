@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { TermRelationshipTypeDetail } from '@maurodatamapper/mdm-resources';
@@ -33,14 +33,14 @@ import { EMPTY } from 'rxjs';
 })
 export class CreateTermRelationshipTypeDialogComponent implements OnInit {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   submitting = false;
 
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogRef: MatDialogRef<CreateTermRelationshipTypeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 

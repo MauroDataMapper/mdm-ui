@@ -42,10 +42,10 @@ import { takeUntil } from 'rxjs/operators';
 
 export interface NewReferenceDataTypeState {
   valid: boolean;
-  type:
+  type?:
     | CatalogueItemDomainType.ReferencePrimitiveType
     | CatalogueItemDomainType.ReferenceEnumerationType;
-  label: string;
+  label?: string;
   description?: string;
   enumerationValues?: ReferenceDataEnumerationValueCreatePayload[];
 }

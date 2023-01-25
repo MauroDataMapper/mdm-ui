@@ -54,7 +54,6 @@ import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/ca
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { JoditAngularModule } from 'jodit-angular';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
@@ -63,6 +62,7 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { NgxJoditModule } from 'ngx-jodit';
 
 @NgModule({
   declarations: [
@@ -113,8 +113,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    JoditAngularModule,
-    UIRouterModule
+    UIRouterModule,
+    NgxJoditModule
   ],
   exports: [
     EditableFormButtonsComponent,

@@ -20,7 +20,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
-import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { LinkCreatorService } from '../markdown/markdown-parser/link-creator.service';
 
@@ -101,7 +100,7 @@ export class HtmlEditorComponent implements OnInit {
         name: 'linktoelement',
         text: 'Link to Catalogue Item',
         tooltip: 'Add link to catalogue item',
-        icon: 'attachment',
+        iconURL: 'assets/images/link-svgrepo-com.svg',
         exec: (editor: any) => this.onAddElementLink(this, editor)
       },
       '|',
@@ -125,8 +124,8 @@ export class HtmlEditorComponent implements OnInit {
     };
   }
 
-  onHtmlEditorChanged(event: EventObj) {
-    this.description = event.editor.value;
+  onHtmlEditorChanged(event: string) {
+    this.description = event;
     this.descriptionChange.emit(this.description);
   }
 

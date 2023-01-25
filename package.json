@@ -129,7 +129,7 @@
     "sass": "^1.45.1",
     "sass-loader": "^12.4.0",
     "save-svg-as-png": "1.4.17",
-    "sonarqube-scanner": "^2.8.1",
+    "sonarqube-scanner": "^2.9.1",
     "ts-jest": "^27.0.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.0.0",

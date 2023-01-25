@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'mdm-summary-metadata-chart',
@@ -83,7 +84,7 @@ export class SummaryMetadataChartComponent implements OnInit {
   public barChartLabels: String[] = [];
   public barChartType: ChartType;
   public barChartLegend = false;
-  //  public barChartPlugins = [pluginDataLabels];
+  public barChartPlugins = [ChartDataLabels];
 
   public summaryMetadataReports: any[];
 

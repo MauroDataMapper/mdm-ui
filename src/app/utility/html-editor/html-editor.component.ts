@@ -101,7 +101,7 @@ export class HtmlEditorComponent implements OnInit {
         name: 'linktoelement',
         text: 'Link to Catalogue Item',
         tooltip: 'Add link to catalogue item',
-        icon: 'attachment',
+        iconURL: 'assets/images/link-svgrepo-com.svg',
         exec: (editor: any) => this.onAddElementLink(this, editor)
       },
       '|',

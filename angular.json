@@ -41,8 +41,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/jodit/build/jodit.min.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {

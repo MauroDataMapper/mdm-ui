@@ -17,6 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 @use '@angular/material' as mat;
+@import '../../../style/abstracts/mixins';
+@import '../../../style/abstracts/variables';
 
 @mixin mdm-footer-theme($theme) {
   $primary: map-get($theme, primary);
@@ -41,12 +43,14 @@ $link-fontsize: small;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    @include respond-to($mobile) {
+      display: block;
+    }
   }
 
   &__links {
     & > ul {
-      display: flex;
-      flex-wrap: wrap;
       list-style: none;
       list-style-image: none;
       padding-inline-start: 0;
@@ -56,11 +60,6 @@ $link-fontsize: small;
         white-space: nowrap;
 
         & > a {
-          display: flex;
-          flex-direction: column;
-          align-items: initial;
-          justify-content: left;
-          text-align: left;
           padding: 0 2.2rem 0 0;
           color: $link-color;
           font-size: $link-fontsize;
@@ -72,6 +71,11 @@ $link-fontsize: small;
 
   &__copyright {
     text-align: right;
+
+    @include respond-to($mobile) {
+      margin-top: 2em;
+      text-align: left;
+    }
 
     p {
       color: $link-color;

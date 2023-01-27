@@ -34,43 +34,46 @@ import { MdmResourcesService } from './modules/resources';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FeaturesService } from './services/features.service';
-import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
+import { MockComponent } from 'ng-mocks';
+import { LoadingIndicatorComponent } from './utility/loading-indicator/loading-indicator.component';
 
 describe('AppComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatDialogModule,
-        MatBadgeModule,
-        MatToolbarModule,
-        NoopAnimationsModule,
-        MatSidenavModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {},
-        },
-        {
-          provide: FeaturesService,
-          useValue: jest.fn()
-        }
-      ],
-      declarations: [
-        ProfilePictureComponent,
-        ByteArrayToBase64Pipe,
-        NavbarComponent,
-        FooterComponent,
-        AppComponent,
-        LoadingIndicatorComponent,
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgxSkeletonLoaderModule,
+          MatTooltipModule,
+          MatMenuModule,
+          MatDialogModule,
+          MatBadgeModule,
+          MatToolbarModule,
+          NoopAnimationsModule,
+          MatSidenavModule,
+          UIRouterModule.forRoot({ useHash: true }),
+          ToastrModule.forRoot()
+        ],
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: {}
+          },
+          {
+            provide: FeaturesService,
+            useValue: jest.fn()
+          }
+        ],
+        declarations: [
+          ProfilePictureComponent,
+          ByteArrayToBase64Pipe,
+          NavbarComponent,
+          FooterComponent,
+          AppComponent,
+          MockComponent(LoadingIndicatorComponent)
+        ]
+      }).compileComponents();
+    })
+  );
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
@@ -78,10 +81,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should have as title \'mdm-ui\'', () => {
+  it("should have as title 'mdm-ui'", () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('mdm-ui');
   });
-
 });

@@ -16,11 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FormControl, FormGroup } from '@angular/forms';
 import {
   CatalogueItemDomainType,
   Classifier,
-  MdmTreeItem
+  MdmTreeItem,
+  ModelDomainType
 } from '@maurodatamapper/mdm-resources';
 import {
   ComponentHarness,
@@ -45,17 +45,24 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
   it('it should reset', () => {
     const value: MdmTreeItem[] = [];
 
-    harness.component.formGroup = new FormGroup({
-      context: new FormControl(value),
-      domainTypes: new FormControl(['DomainTypes']),
-      labelOnly: new FormControl(true),
-      exactMatch: new FormControl(true),
-      classifiers: new FormControl(['classifiers']),
-      createdAfter: new FormControl(new Date('July 21, 1983 01:15:00')),
-      createdBefore: new FormControl(new Date('July 22, 1983 01:15:00')),
-      lastUpdatedAfter: new FormControl(new Date('July 23, 1983 01:15:00')),
-      lastUpdatedBefore: new FormControl(new Date('July 24, 1983 01:15:00'))
-    });
+    harness.component.context.setValue(value);
+    harness.component.domainTypes.setValue([
+      ModelDomainType.DataModels,
+      ModelDomainType.Classifiers
+    ]);
+    harness.component.labelOnly.setValue(true);
+    harness.component.exactMatch.setValue(true);
+    harness.component.classifiers.setValue(['classifiers']);
+    harness.component.createdAfter.setValue(new Date('July 21, 1983 01:15:00'));
+    harness.component.createdBefore.setValue(
+      new Date('July 22, 1983 01:15:00')
+    );
+    harness.component.lastUpdatedAfter.setValue(
+      new Date('July 23, 1983 01:15:00')
+    );
+    harness.component.lastUpdatedBefore.setValue(
+      new Date('July 24, 1983 01:15:00')
+    );
 
     harness.component.reset();
     expect(harness.component.context.value).toBe(null);
@@ -70,9 +77,6 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
   });
 
   it('it should format dates correctly', () => {
-    harness.component.formGroup = new FormGroup({
-      createdAfter: new FormControl(null)
-    });
     harness.component.createdAfter.setValue(new Date('July 21, 1983 01:15:00'));
     expect(
       harness.component.formatDate(harness.component.createdAfter.value)
@@ -80,9 +84,6 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
   });
 
   it('it should return classifer lables in an array', () => {
-    harness.component.formGroup = new FormGroup({
-      classifiers: new FormControl('')
-    });
     const testClassifier: Classifier = {
       domainType: CatalogueItemDomainType.Classifier,
       label: 'testLabel1'

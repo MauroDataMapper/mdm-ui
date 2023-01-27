@@ -38,7 +38,11 @@ export interface ChangeLabelModalResult {
 })
 export class ChangeLabelModalComponent implements OnInit {
   item: CatalogueItemDetail;
-  formGroup: FormGroup;
+  formGroup = new FormGroup({
+    label: new FormControl('', [
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ])
+  });
 
   constructor(
     private dialogRef: MatDialogRef<
@@ -46,16 +50,10 @@ export class ChangeLabelModalComponent implements OnInit {
       ChangeLabelModalResult
     >,
     @Inject(MAT_DIALOG_DATA) public data: ChangeLabelModalData
-  ) {
-    this.formGroup = new FormGroup({
-      label: new FormControl('', [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ])
-    });
-  }
+  ) {}
 
   get label() {
-    return this.formGroup.get('label');
+    return this.formGroup.controls.label;
   }
 
   ngOnInit(): void {

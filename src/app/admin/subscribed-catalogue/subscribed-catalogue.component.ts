@@ -16,25 +16,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Title} from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import {
   SubscribedCatalogue,
   SubscribedCatalogueResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
-import {MdmResourcesService} from '@mdm/modules/resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   MessageHandlerService,
   SharedService,
   StateHandlerService
 } from '@mdm/services';
-import {EditingService} from '@mdm/services/editing.service';
-import {UIRouterGlobals} from '@uirouter/core';
-import {EMPTY, forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {MdmResponse} from '../../../../../mdm-resources/src';
+import { EditingService } from '@mdm/services/editing.service';
+import { UIRouterGlobals } from '@uirouter/core';
+import { EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { MdmResponse } from '../../../../../mdm-resources/src';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -44,8 +44,13 @@ import {MdmResponse} from '../../../../../mdm-resources/src';
 export class SubscribedCatalogueComponent implements OnInit {
   readonly noAuthAuthenticationType: string = 'No Authentication';
   readonly apiKeyAuthenticationType: string = 'API Key';
-  readonly oAuthClientCredentialsAuthenticationType: string = 'OAuth (Client Credentials)';
-  readonly supportedAuthenticationTypes: string[] = [this.noAuthAuthenticationType, this.apiKeyAuthenticationType, this.oAuthClientCredentialsAuthenticationType];
+  readonly oAuthClientCredentialsAuthenticationType: string =
+    'OAuth (Client Credentials)';
+  readonly supportedAuthenticationTypes: string[] = [
+    this.noAuthAuthenticationType,
+    this.apiKeyAuthenticationType,
+    this.oAuthClientCredentialsAuthenticationType
+  ];
 
   catalogueId?: Uuid;
   connectionTypes: string[] = [];
@@ -53,7 +58,16 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   isCreating: boolean;
 
-  formGroup: FormGroup;
+  formGroup = new FormGroup({
+    label: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl(''),
+    url: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    type: new FormControl('', [
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ]),
+    apiKey: new FormControl(''),
+    refreshPeriod: new FormControl(0)
+  });
 
   constructor(
     private resources: MdmResourcesService,
@@ -63,24 +77,22 @@ export class SubscribedCatalogueComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private title: Title,
     private editingService: EditingService
-  ) {
-    this.createFormGroup();
-  }
+  ) {}
 
   get label() {
-    return this.formGroup.get('label');
+    return this.formGroup.controls.label;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.controls.description;
   }
 
   get url() {
-    return this.formGroup.get('url');
+    return this.formGroup.controls.url;
   }
 
   get type() {
-    return this.formGroup.get('type');
+    return this.formGroup.controls.type;
   }
 
   get authenticationType() {
@@ -88,7 +100,7 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   get apiKey() {
-    return this.formGroup.get('apiKey');
+    return this.formGroup.controls.apiKey;
   }
 
   get tokenUrl() {
@@ -104,7 +116,7 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   get refreshPeriod() {
-    return this.formGroup.get('refreshPeriod');
+    return this.formGroup.controls.refreshPeriod;
   }
 
   get catalogueRequest(): SubscribedCatalogue {
@@ -119,14 +131,20 @@ export class SubscribedCatalogueComponent implements OnInit {
     };
     if (this.authenticationType.value === this.noAuthAuthenticationType) {
       return baseRequest;
-    } else if (this.authenticationType.value === this.apiKeyAuthenticationType) {
-      return {...baseRequest, ...{apiKey: this.apiKey.value}};
-    } else if (this.authenticationType.value === this.oAuthClientCredentialsAuthenticationType) {
+    } else if (
+      this.authenticationType.value === this.apiKeyAuthenticationType
+    ) {
+      return { ...baseRequest, ...{ apiKey: this.apiKey.value } };
+    } else if (
+      this.authenticationType.value ===
+      this.oAuthClientCredentialsAuthenticationType
+    ) {
       return {
-        ...baseRequest, ...{
+        ...baseRequest,
+        ...{
           tokenUrl: this.tokenUrl.value,
           clientId: this.clientId.value,
-          clientSecret: this.clientSecret.value,
+          clientSecret: this.clientSecret.value
         }
       };
     }
@@ -146,31 +164,37 @@ export class SubscribedCatalogueComponent implements OnInit {
       this.resources.subscribedCatalogues.authenticationTypes()
     ])
       .pipe(
-        switchMap(([typesResponse, authenticationTypesResponse]: MdmResponse<string[]>[]) => {
-          this.connectionTypes = typesResponse.body;
-          this.authenticationTypes = this.supportedAuthenticationTypes.filter(authType => authenticationTypesResponse.body.includes(authType));
+        switchMap(
+          ([typesResponse, authenticationTypesResponse]: MdmResponse<
+            string[]
+          >[]) => {
+            this.connectionTypes = typesResponse.body;
+            this.authenticationTypes = this.supportedAuthenticationTypes.filter(
+              (authType) => authenticationTypesResponse.body.includes(authType)
+            );
 
-          if (this.catalogueId) {
-            this.isCreating = false;
-            this.title.setTitle('Subscribed Catalogue - Edit Subscription');
+            if (this.catalogueId) {
+              this.isCreating = false;
+              this.title.setTitle('Subscribed Catalogue - Edit Subscription');
 
-            return this.resources.admin
-              .getSubscribedCatalogue(this.catalogueId)
-              .pipe(
-                map(
-                  (cataloguesResponse: SubscribedCatalogueResponse) =>
-                    cataloguesResponse.body
-                )
-              );
+              return this.resources.admin
+                .getSubscribedCatalogue(this.catalogueId)
+                .pipe(
+                  map(
+                    (cataloguesResponse: SubscribedCatalogueResponse) =>
+                      cataloguesResponse.body
+                  )
+                );
+            }
+
+            this.isCreating = true;
+            this.title.setTitle('Subscribed Catalogue - Add Subscription');
+            return of({
+              label: '',
+              url: ''
+            });
           }
-
-          this.isCreating = true;
-          this.title.setTitle('Subscribed Catalogue - Add Subscription');
-          return of({
-            label: '',
-            url: ''
-          });
-        }),
+        ),
         catchError((error) => {
           this.messageHandler.showError(
             'Unable to get the subscribed catalogue.',
@@ -193,9 +217,9 @@ export class SubscribedCatalogueComponent implements OnInit {
     const request$: Observable<SubscribedCatalogueResponse> = this.isCreating
       ? this.resources.admin.saveSubscribedCatalogues(this.catalogueRequest)
       : this.resources.admin.updateSubscribedCatalogue(
-        this.catalogueId,
-        this.catalogueRequest
-      );
+          this.catalogueId,
+          this.catalogueRequest
+        );
 
     request$
       .pipe(
@@ -228,22 +252,12 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   private createFormGroup(catalogue?: SubscribedCatalogue) {
-    this.formGroup = new FormGroup({
-      label: new FormControl(catalogue?.label, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new FormControl(catalogue?.description),
-      url: new FormControl(catalogue?.url, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      type: new FormControl(catalogue?.subscribedCatalogueType, [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ]),
-      authenticationType: new FormControl(catalogue?.subscribedCatalogueAuthenticationType, [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ]),
-      apiKey: new FormControl(catalogue?.apiKey),
-      tokenUrl: new FormControl(catalogue?.tokenUrl),
-      clientId: new FormControl(catalogue?.clientId),
-      clientSecret: new FormControl(catalogue?.clientSecret),
-      refreshPeriod: new FormControl(catalogue?.refreshPeriod)
-    });
+    this.label.setValue(catalogue?.label);
+    this.description.setValue(catalogue?.description);
+    this.url.setValue(catalogue?.url);
+    this.type.setValue(catalogue?.subscribedCatalogueType);
+    this.apiKey.setValue(catalogue?.apiKey);
+    this.refreshPeriod.setValue(catalogue?.refreshPeriod);
   }
 
   private navigateToParent() {

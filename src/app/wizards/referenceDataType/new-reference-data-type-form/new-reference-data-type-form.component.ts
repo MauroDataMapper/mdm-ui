@@ -78,31 +78,33 @@ export class NewReferenceDataTypeFormComponent implements OnInit, OnDestroy {
   @Output() formChange = new EventEmitter<NewReferenceDataTypeState>();
 
   formGroup = new FormGroup({
-    type: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    label: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    description: new FormControl(null),
-    enumerationValues: new FormControl(
-      null,
-      referenceDataEnumerationValuesListValidator()
-    )
+    type: new FormControl<
+      | CatalogueItemDomainType.ReferencePrimitiveType
+      | CatalogueItemDomainType.ReferenceEnumerationType
+    >(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl(''),
+    enumerationValues: new FormControl<
+      ReferenceDataEnumerationValueCreatePayload[]
+    >(null, referenceDataEnumerationValuesListValidator())
   });
 
   private unsubscribe$ = new Subject<void>();
 
   get type() {
-    return this.formGroup.get('type');
+    return this.formGroup.controls.type;
   }
 
   get label() {
-    return this.formGroup.get('label');
+    return this.formGroup.controls.label;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.controls.description;
   }
 
   get enumerationValues() {
-    return this.formGroup.get('enumerationValues');
+    return this.formGroup.controls.enumerationValues;
   }
 
   ngOnInit(): void {

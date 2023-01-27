@@ -79,28 +79,31 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   childItemSelections = new SelectionModel<MauroItem>(true);
 
   setupForm = new FormGroup({
-    childDomainType: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    childItems: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    profiles: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    filter: new FormControl(null)
+    childDomainType: new FormControl<CatalogueItemDomainType>(
+      null,
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ),
+    childItems: new FormControl<MauroItem[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    profiles: new FormControl<ProfileSummary[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    filter: new FormControl('')
   });
 
   private unsubscribe$ = new Subject<void>();
 
   get childDomainType() {
-    return this.setupForm.get('childDomainType');
+    return this.setupForm.controls.childDomainType;
   }
 
   get childItems() {
-    return this.setupForm.get('childItems');
+    return this.setupForm.controls.childItems;
   }
 
   get profiles() {
-    return this.setupForm.get('profiles');
+    return this.setupForm.controls.profiles;
   }
 
   get filter() {
-    return this.setupForm.get('filter');
+    return this.setupForm.controls.filter;
   }
 
   get showBreadcrumbs() {
@@ -122,7 +125,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     this.childDomainType.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),
-        switchMap((value: CatalogueItemDomainType) => {
+        switchMap((value) => {
           this.context.childDomainType = value;
           this.contextChanged.emit(this.context);
 
@@ -161,7 +164,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         debounceTime(500),
         distinctUntilChanged(),
-        map((value: string) =>
+        map((value) =>
           this.availableChildItems.filter((item) =>
             item.label.toLowerCase().includes(value.toLowerCase())
           )

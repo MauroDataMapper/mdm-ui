@@ -54,7 +54,6 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
     StringifyPipe,
     ModelSelectorTreeComponent
   ],
-  entryComponents: [FoldersTreeComponent],
   exports: [
     FoldersTreeComponent,
     StringifyPipe,

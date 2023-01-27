@@ -36,26 +36,25 @@ directly into this application to support user idle inactivity in the app.
 
 import { Inject, Injectable, InjectionToken, NgZone, Optional } from '@angular/core';
 import {
+  bufferTime,
+  distinctUntilChanged,
+  filter,
+  finalize,
   from,
   fromEvent,
   interval,
+  map,
   merge,
   Observable,
   of,
   Subject,
   Subscription,
-  timer,
-} from 'rxjs';
-import {
-  bufferTime,
-  distinctUntilChanged,
-  filter,
-  finalize,
-  map,
   switchMap,
   takeUntil,
-  tap
-} from 'rxjs/operators';
+  tap,
+  timer
+} from 'rxjs';
+
 export class UserIdleConfiguration {
   /**
    * Idle value in seconds.
@@ -340,5 +339,3 @@ export class UserIdleService {
   }
 
 }
-
-

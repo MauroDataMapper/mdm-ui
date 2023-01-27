@@ -57,7 +57,7 @@ import {
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-declare module '@angular/material/dialog/dialog' {
+declare module '@angular/material/dialog' {
   interface MatDialog {
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent`.

@@ -36,7 +36,7 @@ export class NewerVersionsComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: false }) paginator: MdmPaginatorComponent;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  @Input('catalogueItem') catalogueItem: FederatedDataModel;
+  @Input() catalogueItem: FederatedDataModel;
   @Input() catalogueId: Uuid;
 
   @Output() hasErrored = new EventEmitter<void>();

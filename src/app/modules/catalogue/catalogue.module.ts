@@ -122,7 +122,7 @@ import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-se
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
 import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
@@ -192,7 +192,6 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
       },
     },
   ],
-
   declarations: [
     FolderComponent,
     ExportModelsComponent,
@@ -351,7 +350,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,
-    ChartsModule,
+    NgChartsModule,
     CommonModule,
     DragDropModule,
     FoldersTreeModule,

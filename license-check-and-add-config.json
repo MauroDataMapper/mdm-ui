@@ -1,5 +1,6 @@
 {
   "ignore": [
+    ".angular",
     ".git",
     ".github",
     "coverage",

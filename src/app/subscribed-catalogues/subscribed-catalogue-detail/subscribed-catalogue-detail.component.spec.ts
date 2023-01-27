@@ -36,7 +36,8 @@ describe('SubscribedCatalogueDetailComponent', () => {
     component.subscribedCatalogue = {
       url: '',
       label: '',
-      subscribedCatalogueType: 'test'
+      subscribedCatalogueType: 'test',
+      subscribedCatalogueAuthenticationType: ''
     };
     fixture.detectChanges();
   });

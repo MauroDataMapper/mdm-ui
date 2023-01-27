@@ -86,7 +86,9 @@ import { ContentModule } from '@mdm/content/content.module';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    FileSizePipe
+    FileSizePipe,
+    MauroItemTreeComponent,
+    ElementLabelComponent
   ],
   imports: [
     CommonModule,
@@ -139,7 +141,9 @@ import { ContentModule } from '@mdm/content/content.module';
     MoreDescriptionComponent,
     SortByComponent,
     BreadcrumbComponent,
-    FileSizePipe
+    FileSizePipe,
+    MauroItemTreeComponent,
+    ElementLabelComponent
   ]
 })
 export class SharedModule {}

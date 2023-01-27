@@ -72,7 +72,8 @@ const defaultAceConfig: AceConfigInterface = {};
     AceModule,
     PipesModule,
     FoldersTreeModule,
-    ContentModule
+    ContentModule,
+    CatalogueModule
   ],
   declarations: [
     RegisterModalComponent,

@@ -180,7 +180,6 @@ import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataMode
 import { ModelHeaderComponent } from '../../model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
 import { ContentModule } from '@mdm/content/content.module';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 
 @NgModule({
   providers: [

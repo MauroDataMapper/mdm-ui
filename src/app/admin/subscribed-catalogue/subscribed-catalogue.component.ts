@@ -21,9 +21,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
 import {
   SubscribedCatalogue,
-  SubscribedCatalogueTypeResponse,
   SubscribedCatalogueResponse,
-  Uuid, SubscribedCatalogueAuthenticationTypeResponse
+  Uuid
 } from '@maurodatamapper/mdm-resources';
 import {MdmResourcesService} from '@mdm/modules/resources';
 import {
@@ -35,6 +34,7 @@ import {EditingService} from '@mdm/services/editing.service';
 import {UIRouterGlobals} from '@uirouter/core';
 import {EMPTY, forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
+import {MdmResponse} from '../../../../../mdm-resources/src';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -116,11 +116,11 @@ export class SubscribedCatalogueComponent implements OnInit {
       subscribedCatalogueType: this.type.value,
       subscribedCatalogueAuthenticationType: this.authenticationType.value,
       refreshPeriod: this.refreshPeriod.value
-    }
+    };
     if (this.authenticationType.value === this.noAuthAuthenticationType) {
-      return baseRequest
+      return baseRequest;
     } else if (this.authenticationType.value === this.apiKeyAuthenticationType) {
-      return {...baseRequest, ...{apiKey: this.apiKey.value}}
+      return {...baseRequest, ...{apiKey: this.apiKey.value}};
     } else if (this.authenticationType.value === this.oAuthClientCredentialsAuthenticationType) {
       return {
         ...baseRequest, ...{
@@ -128,7 +128,7 @@ export class SubscribedCatalogueComponent implements OnInit {
           clientId: this.clientId.value,
           clientSecret: this.clientSecret.value,
         }
-      }
+      };
     }
   }
 
@@ -146,7 +146,7 @@ export class SubscribedCatalogueComponent implements OnInit {
       this.resources.subscribedCatalogues.authenticationTypes()
     ])
       .pipe(
-        switchMap(([typesResponse, authenticationTypesResponse]: [SubscribedCatalogueTypeResponse, SubscribedCatalogueAuthenticationTypeResponse]) => {
+        switchMap(([typesResponse, authenticationTypesResponse]: MdmResponse<string[]>[]) => {
           this.connectionTypes = typesResponse.body;
           this.authenticationTypes = this.supportedAuthenticationTypes.filter(authType => authenticationTypesResponse.body.includes(authType));
 
@@ -236,7 +236,7 @@ export class SubscribedCatalogueComponent implements OnInit {
         Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ]),
       authenticationType: new FormControl(catalogue?.subscribedCatalogueAuthenticationType, [
-        Validators.required
+        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
       ]),
       apiKey: new FormControl(catalogue?.apiKey),
       tokenUrl: new FormControl(catalogue?.tokenUrl),

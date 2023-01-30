@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
     [dataSource]="records"
     class="mdm--mat-table mat-elevation-z3 table-striped"
   >
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="label">
       <th
         mat-header-cell
         *matHeaderCellDef
@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
         <div [hidden]="hideFilters">
           <mat-form-field class="filter" floatLabel="never">
             <mat-label>Name</mat-label>
-            <input #filters matInput name="name" (keyup)="applyFilter()" />
+            <input #filters matInput name="label" (keyup)="applyFilter()" />
           </mat-form-field>
         </div>
       </th>

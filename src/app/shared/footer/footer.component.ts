@@ -56,7 +56,7 @@ export class FooterComponent {
   /**
    * Provide a list of ordered links to other pages/websites to display in the footer.
    */
-  @Input() links?: FooterLink[];
+  @Input() links?: FooterLink[] = [];
 
   /**
    * Provide the version number to display in the footer. If not required, leave this blank.

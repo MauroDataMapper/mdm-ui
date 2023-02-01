@@ -24,7 +24,7 @@ import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 
 @Component({
@@ -79,8 +79,13 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    // The state handler is also tied to the EditingService, so will automatically confirm to leave first
-    this.stateHandler.GoPrevious();
+    this.editing
+      .confirmCancelAsync()
+      .pipe(filter((confirm) => !!confirm))
+      .subscribe(() => {
+        this.editing.stop();
+        this.stateHandler.GoPrevious();
+      });
   }
 
   next() {

@@ -70,6 +70,9 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
+    this.sort.active = 'label';
+    this.sort.direction = 'asc';
+
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
       .pipe(
         startWith({}),

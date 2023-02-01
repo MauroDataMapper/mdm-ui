@@ -41,6 +41,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-sort-header
         style="cursor: pointer; max-width: 40%; width: 40%"
         scope="col"
+        [disabled]="!hideFilters"
       >
         <span [hidden]="!hideFilters">Name</span>
         <div [hidden]="hideFilters">

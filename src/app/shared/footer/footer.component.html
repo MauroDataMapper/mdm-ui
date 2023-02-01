@@ -18,31 +18,42 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <footer class="mdm-footer">
   <div class="mdm-footer__container">
-    <div class="mdm-footer__main">
-      <div *ngIf="links" class="mdm-footer__main--links">
-        <ul>
-          <li *ngFor="let link of links">
-            <a
-              *ngIf="link.href"
-              [href]="link.href"
-              [target]="link.target ?? '_blank'"
-              >{{ link.label }}</a
-            >
-            <a
-              [id]="link.routerLink"
-              *ngIf="link.routerLink"
-              [uiSref]="link.routerLink"
-              [target]="link.target ?? '_blank'"
-              >{{ link.label }}</a
-            >
-          </li>
-        </ul>
-      </div>
-      <div class="mdm-footer__main--text">
-        <small>Mauro Data Mapper </small>
-        <small *ngIf="version">(Version {{ version }}) </small>
-        <small>Copyright &copy; {{ year }} {{ copyright }}</small>
-      </div>
+    <div class="mdm-footer__links">
+      <ul>
+        <li *ngFor="let link of links">
+          <a
+            *ngIf="link.href"
+            [href]="link.href"
+            [target]="link.target ?? '_blank'"
+            >{{ link.label }}</a
+          >
+          <a
+            [id]="link.routerLink"
+            *ngIf="link.routerLink"
+            [uiSref]="link.routerLink"
+            [target]="link.target ?? '_blank'"
+            >{{ link.label }}</a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="mdm-footer__copyright">
+      <p>
+        Powered by
+        <img src="../../assets/images/mdm-logo.png" alt="Mauro Data Mapper" />
+      </p>
+      <p>
+        View more information about the
+        <a
+          href="https://maurodatamapper.github.io/community/support/"
+          target="_blank"
+          >Mauro Foundation</a
+        >
+      </p>
+      <p>
+        Mauro Data Mapper
+        <span *ngIf="version"> (Version {{ version }})</span> &copy; {{ year }}
+      </p>
     </div>
   </div>
 </footer>

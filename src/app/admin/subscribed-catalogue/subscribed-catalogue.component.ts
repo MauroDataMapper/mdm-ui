@@ -146,7 +146,8 @@ export class SubscribedCatalogueComponent implements OnInit {
       url: this.url.value,
       subscribedCatalogueType: this.type.value,
       apiKey: this.apiKey.value,
-      refreshPeriod: this.refreshPeriod.value
+      refreshPeriod: this.refreshPeriod.value,
+      subscribedCatalogueAuthenticationType: ''
     };
 
     const request$: Observable<SubscribedCatalogueResponse> = this.isCreating

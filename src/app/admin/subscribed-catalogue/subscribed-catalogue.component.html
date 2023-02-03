@@ -35,6 +35,7 @@ SPDX-License-Identifier: Apache-2.0
   <mat-form-field
     appearance="outline"
     hintLabel="The Syndication feed URL to connect to"
+    style="padding-bottom: 20px"
   >
     <mat-label>URL</mat-label>
     <input matInput name="url" formControlName="url" required />
@@ -65,34 +66,38 @@ SPDX-License-Identifier: Apache-2.0
   <mat-form-field
     appearance="outline"
     hintLabel="An API key is required to view non-public models in the subscribed catalogue"
-    *ngIf="authenticationType.value === apiKeyAuthenticationType"
+    [hidden]="authenticationType.value !== apiKeyAuthenticationType"
+    style="padding-bottom: 20px"
   >
     <mat-label>API Key</mat-label>
-    <input matInput name="apiKey" formControlName="apiKey" required />
+    <input matInput name="apiKey" formControlName="apiKey" [required]="authenticationType.value === apiKeyAuthenticationType" />
   </mat-form-field>
   <mat-form-field
     appearance="outline"
     hintLabel="OAuth Access Token Endpoint URL"
-    *ngIf="authenticationType.value === oAuthClientCredentialsAuthenticationType"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
   >
     <mat-label>Token Endpoint URL</mat-label>
-    <input matInput name="tokenUrl" formControlName="tokenUrl" required />
+    <input matInput name="tokenUrl" formControlName="tokenUrl" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
   </mat-form-field>
   <mat-form-field
     appearance="outline"
     hintLabel="OAuth Client ID"
-    *ngIf="authenticationType.value === oAuthClientCredentialsAuthenticationType"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
   >
     <mat-label>Client ID</mat-label>
-    <input matInput name="clientId" formControlName="clientId" required />
+    <input matInput name="clientId" formControlName="clientId" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
   </mat-form-field>
   <mat-form-field
     appearance="outline"
     hintLabel="OAuth Client Secret"
-    *ngIf="authenticationType.value === oAuthClientCredentialsAuthenticationType"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
   >
     <mat-label>Client Secret</mat-label>
-    <input matInput name="clientSecret" formControlName="clientSecret" required />
+    <input matInput name="clientSecret" formControlName="clientSecret" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
   </mat-form-field>
   <mat-form-field appearance="outline" style="max-width: 200px">
     <mat-label>Refresh period (days)</mat-label>

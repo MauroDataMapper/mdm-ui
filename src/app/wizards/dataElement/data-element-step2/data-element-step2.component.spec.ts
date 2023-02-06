@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataElementStep2Component } from './data-element-step2.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -54,7 +54,7 @@ describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;
   let fixture: ComponentFixture<DataElementStep2Component>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,

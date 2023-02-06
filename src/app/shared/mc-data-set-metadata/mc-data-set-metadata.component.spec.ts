@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { McDataSetMetadataComponent } from './mc-data-set-metadata.component';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -37,12 +37,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('McDataSetMetadataComponent', () => {
   let component: McDataSetMetadataComponent;
   let fixture: ComponentFixture<McDataSetMetadataComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NgxSkeletonLoaderModule,
@@ -70,7 +71,8 @@ describe('McDataSetMetadataComponent', () => {
         MarkdownTextAreaComponent,
         MarkdownDirective,
         MoreDescriptionComponent,
-        McDataSetMetadataComponent
+        McDataSetMetadataComponent,
+        SkeletonBadgeComponent
       ]
     })
     .compileComponents();

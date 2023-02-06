@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ApiKeysModalComponent } from './api-keys-modal.component';
 import { MatRadioModule } from '@angular/material/radio';
@@ -32,7 +32,7 @@ describe('ApiKeysModalComponent', () => {
   let component: ApiKeysModalComponent;
   let fixture: ComponentFixture<ApiKeysModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
          MatRadioModule,

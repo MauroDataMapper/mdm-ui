@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataElementsListComponent } from './data-elements-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -45,12 +45,13 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('DataElementsListComponent', () => {
    let component: DataElementsListComponent;
    let fixture: ComponentFixture<DataElementsListComponent>;
 
-   beforeEach(async(() => {
+   beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
          imports: [
             NgxSkeletonLoaderModule,
@@ -85,7 +86,8 @@ describe('DataElementsListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataElementsListComponent
+            DataElementsListComponent,
+            SkeletonBadgeComponent
          ]
       }).compileComponents();
    }));

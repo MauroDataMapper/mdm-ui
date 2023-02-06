@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HistoryComponent } from './history.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -36,7 +36,7 @@ describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
    TestBed.configureTestingModule({
      imports: [
        NgxSkeletonLoaderModule,

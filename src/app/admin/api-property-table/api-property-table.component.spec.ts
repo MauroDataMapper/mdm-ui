@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '@mdm/modules/material/material.module';
@@ -25,12 +25,13 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
 import { ApiPropertyTableComponent } from './api-property-table.component';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 
 describe('ApiPropertyTableComponent', () => {
   let component: ApiPropertyTableComponent;
   let fixture: ComponentFixture<ApiPropertyTableComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MaterialModule,
@@ -48,7 +49,9 @@ describe('ApiPropertyTableComponent', () => {
           }
         }
       ],
-      declarations: [ ApiPropertyTableComponent ]
+      declarations: [
+        ApiPropertyTableComponent,
+        DataTypeListButtonsComponent]
     })
     .compileComponents();
   }));

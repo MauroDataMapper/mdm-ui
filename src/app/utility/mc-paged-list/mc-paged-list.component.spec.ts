@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { McPagedListComponent } from './mc-paged-list.component';
 
@@ -24,7 +24,7 @@ describe('McPagedListComponent', () => {
   let component: McPagedListComponent;
   let fixture: ComponentFixture<McPagedListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ McPagedListComponent ]
     })

@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MultipleTermsSelectorComponent } from './multiple-terms-selector.component';
 import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
@@ -29,13 +29,13 @@ import { FormsModule } from '@angular/forms';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 
 describe('MultipleTermsSelectorComponent', () => {
   let component: MultipleTermsSelectorComponent;
   let fixture: ComponentFixture<MultipleTermsSelectorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatTableModule,
@@ -51,7 +51,7 @@ describe('MultipleTermsSelectorComponent', () => {
           useValue: {
             terminology: {
               // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => EMPTY
             }
           }
         }

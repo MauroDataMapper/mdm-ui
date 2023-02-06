@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ProfilePictureComponent } from './shared/profile-picture/profile-picture.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -37,7 +37,7 @@ import { FeaturesService } from './services/features.service';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NgxSkeletonLoaderModule,

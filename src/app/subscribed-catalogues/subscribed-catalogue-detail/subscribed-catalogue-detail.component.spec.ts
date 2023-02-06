@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SubscribedCatalogueDetailComponent } from './subscribed-catalogue-detail.component';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
@@ -28,13 +28,13 @@ import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-a
 import { MatDialogModule } from '@angular/material/dialog';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
-import { FormsModule } from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 
 describe('SubscribedCatalogueDetailComponent', () => {
   let component: SubscribedCatalogueDetailComponent;
   let fixture: ComponentFixture<SubscribedCatalogueDetailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,

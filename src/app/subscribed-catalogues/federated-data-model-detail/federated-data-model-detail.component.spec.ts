@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ToastrModule } from 'ngx-toastr';
@@ -33,7 +33,7 @@ describe('FederatedDataModelDetailComponent', () => {
   let component: FederatedDataModelDetailComponent;
   let fixture: ComponentFixture<FederatedDataModelDetailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,

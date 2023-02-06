@@ -16,11 +16,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReferenceDataElementComponent } from './reference-data-element.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -33,7 +33,7 @@ describe('ReferenceDataElementComponent', () => {
   let component: ReferenceDataElementComponent;
   let fixture: ComponentFixture<ReferenceDataElementComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatPaginatorModule,
@@ -48,7 +48,7 @@ describe('ReferenceDataElementComponent', () => {
           useValue: {
             referenceDataElement: {
               // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => EMPTY
             }
           }
         }

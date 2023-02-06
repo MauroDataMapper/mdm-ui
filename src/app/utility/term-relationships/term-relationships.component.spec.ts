@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TermRelationshipsComponent } from './term-relationships.component';
 import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
 import { ElementLinkComponent } from '../element-link/element-link.component';
@@ -28,7 +28,7 @@ describe('TermRelationshipsComponent', () => {
   let component: TermRelationshipsComponent;
   let fixture: ComponentFixture<TermRelationshipsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,

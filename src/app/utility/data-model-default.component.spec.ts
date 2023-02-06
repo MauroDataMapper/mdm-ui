@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataModelDefaultComponent } from './data-model-default.component';
 
@@ -24,7 +24,7 @@ describe('DataModelDefaultComponent', () => {
   let component: DataModelDefaultComponent;
   let fixture: ComponentFixture<DataModelDefaultComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DataModelDefaultComponent ]
     })

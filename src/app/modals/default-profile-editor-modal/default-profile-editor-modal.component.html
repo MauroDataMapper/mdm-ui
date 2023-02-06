@@ -27,15 +27,16 @@ SPDX-License-Identifier: Apache-2.0
         </td>
         <td [attr.data-cy]="item.propertyName">
           <mdm-element-alias
-          *ngIf="item.controlType === profileControlType.aliases"
-          [aliases]="item.value"
-          [readOnly]="false"
-        >
-        </mdm-element-alias>
+            *ngIf="item.controlType === profileControlType.aliases"
+            [aliases]="item.value"
+            [readOnly]="false"
+          >
+          </mdm-element-alias>
           <mdm-content-editor
             *ngIf="item.controlType === profileControlType.html"
             [(content)]="item.value"
             id="{{ item.value }}"
+            [rootElement]="data.parentCatalogueItem"
             [inEditMode]="true"
           ></mdm-content-editor>
           <input
@@ -93,90 +94,89 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </div>
 
-            <div  *ngIf="item.controlType === profileControlType.dataType">
-              <div *ngIf="!showNewInlineDataType">
-                Please select a Data Type below or
-                <button
-                  mat-stroked-button
-                  color="primary"
-                  (click)="toggleShowNewInlineDataType(item)"
-                >
-                  Add a new Data Type
-                </button>
-              </div>
-              <div *ngIf="showNewInlineDataType">
-                Please
-                <button
-                  mat-stroked-button
-                  color="primary"
-                  (click)="toggleShowNewInlineDataType(item)"
-                >
-                  select a Data Type
-                </button>
-                or Add a new Data Type by completing the form below:
-              </div>
-
-              <div *ngIf="showNewInlineDataType">
-                <mdm-data-type-inline
-                  [model]="item.value"
-                  [parentDataModel]="data.parentCatalogueItem"
-                  [showClassification]="false"
-                  [showParentDataModel]="false"
-                >
-                </mdm-data-type-inline>
-              </div>
-              <div *ngIf="!showNewInlineDataType">
-                <mdm-select
-                  [width]="'100%'"
-                  [acceptTypedInput]="true"
-                  [valueType]="'dynamic'"
-                  [defaultValue]="item.value"
-                  [hasError]="dataTypeErrors"
-                  [loadDynamicValues]="fetchDataTypes"
-                  [loadAllOnClick]="true"
-                  [minInputLength]="1"
-                  [idProperty]="'id'"
-                  [pagination]="pagination"
-                  [displayProperty]="'label'"
-                  [searchProperty]="'label'"
-                  (selectEvent)="onDataTypeSelect($event[0], item)"
-                >
-                  <ng-template
-                    #lineContent
-                    let-item="item"
-                    let-searchTerm="inputText"
-                  >
-                    <div
-                      [innerHTML]="item.label | mchighlighter: searchTerm"
-                    ></div>
-                    <div>
-                      <mdm-element-link
-                        [element]="item"
-                        [showTypeTitle]="true"
-                        [showLink]="false"
-                      ></mdm-element-link>
-                      <mdm-element-link
-                        [element]="item"
-                        [showTypeTitle]="true"
-                        [showLink]="false"
-                      >
-                      </mdm-element-link>
-                    </div>
-                  </ng-template>
-                </mdm-select>
-              </div>
-              <span class="help-block errorMessage" *ngIf="dataTypeErrors"
-                ><small>{{ dataTypeErrors }}</small></span
+          <div *ngIf="item.controlType === profileControlType.dataType">
+            <div *ngIf="!showNewInlineDataType">
+              Please select a Data Type below or
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="toggleShowNewInlineDataType(item)"
               >
-
+                Add a new Data Type
+              </button>
             </div>
-            <mdm-element-classifications
+            <div *ngIf="showNewInlineDataType">
+              Please
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="toggleShowNewInlineDataType(item)"
+              >
+                select a Data Type
+              </button>
+              or Add a new Data Type by completing the form below:
+            </div>
+
+            <div *ngIf="showNewInlineDataType">
+              <mdm-data-type-inline
+                [model]="item.value"
+                [parentDataModel]="data.parentCatalogueItem"
+                [showClassification]="false"
+                [showParentDataModel]="false"
+              >
+              </mdm-data-type-inline>
+            </div>
+            <div *ngIf="!showNewInlineDataType">
+              <mdm-select
+                [width]="'100%'"
+                [acceptTypedInput]="true"
+                [valueType]="'dynamic'"
+                [defaultValue]="item.value"
+                [hasError]="dataTypeErrors"
+                [loadDynamicValues]="fetchDataTypes"
+                [loadAllOnClick]="true"
+                [minInputLength]="1"
+                [idProperty]="'id'"
+                [pagination]="pagination"
+                [displayProperty]="'label'"
+                [searchProperty]="'label'"
+                (selectEvent)="onDataTypeSelect($event[0], item)"
+              >
+                <ng-template
+                  #lineContent
+                  let-item="item"
+                  let-searchTerm="inputText"
+                >
+                  <div
+                    [innerHTML]="item.label | mchighlighter: searchTerm"
+                  ></div>
+                  <div>
+                    <mdm-element-link
+                      [element]="item"
+                      [showTypeTitle]="true"
+                      [showLink]="false"
+                    ></mdm-element-link>
+                    <mdm-element-link
+                      [element]="item"
+                      [showTypeTitle]="true"
+                      [showLink]="false"
+                    >
+                    </mdm-element-link>
+                  </div>
+                </ng-template>
+              </mdm-select>
+            </div>
+            <span class="help-block errorMessage" *ngIf="dataTypeErrors"
+              ><small>{{ dataTypeErrors }}</small></span
+            >
+          </div>
+          <mdm-element-classifications
             *ngIf="item.controlType === profileControlType.classifications"
             [readOnly]="false"
             [(classifications)]="item.value"
             name="classifiers"
             [property]="'classifiers'"
-            (classificationsChanged)="classificationChanged($event,item)"
+            (classificationsChanged)="classificationChanged($event, item)"
           >
           </mdm-element-classifications>
         </td>

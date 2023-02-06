@@ -170,7 +170,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
@@ -180,6 +179,7 @@ import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataTyp
 import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { ModelHeaderComponent } from '../../model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
+import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
   providers: [
@@ -188,9 +188,9 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
       // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
       useValue: {
         idle: 600,
-        timeout: 300,
-      },
-    },
+        timeout: 300
+      }
+    }
   ],
   declarations: [
     FolderComponent,
@@ -352,6 +352,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     BrowserAnimationsModule,
     NgChartsModule,
     CommonModule,
+    ContentModule,
     DragDropModule,
     FoldersTreeModule,
     FormsModule,
@@ -501,7 +502,6 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent
   ]

@@ -17,9 +17,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-/**
- * Prefixes used in Mauro to represent Fully Qualified Paths (FQPs).
- */
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 
 /**

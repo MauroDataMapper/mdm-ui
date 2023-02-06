@@ -18,11 +18,21 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-markdown-text-area">
   <mat-toolbar *ngIf="inEditMode">
-    <mat-slide-toggle [(ngModel)]="formData.showMarkDownPreview"
-      >Preview</mat-slide-toggle
+    <mat-slide-toggle [(ngModel)]="showPreview">Preview</mat-slide-toggle>
+    <button
+      mat-icon-button
+      matTooltip="Add link to element"
+      (click)="showAddElementToMarkdown()"
     >
-    <button mat-icon-button matTooltip="Add link to element" (click)="showAddElementToMarkdown()">
       <span class="fas fa-link"></span>
+    </button>
+    <button
+      *ngIf="allowAutocompleteSearch"
+      mat-icon-button
+      matTooltip="Search for element (Ctrl+Space)"
+      (click)="onElementSearch()"
+    >
+      <span class="fas fa-search"></span>
     </button>
     <span class="spacer"></span>
     <a
@@ -38,25 +48,22 @@ SPDX-License-Identifier: Apache-2.0
   <textarea
     class="markdownTextArea form-control outlined-block mb-1"
     *ngIf="inEditMode"
-    [(ngModel)]="formData.description"
-    style="width: 100%"
-    (keyup)="descriptionKeyUp($event)"
-    (ngModelChange)="onDescriptionChange()"
+    [(ngModel)]="description"
+    (ngModelChange)="onEditorChanged()"
+    (keydown)="onEditorKeydown($event)"
     #editableTextArea
     rows="{{ rows ? rows : '6' }}"
   >
   </textarea>
   <div
     [ngClass]="{
-      'mdm-markdown-text-area__preview':
-        formData.showMarkDownPreview && inEditMode
+      'mdm-markdown-text-area__preview': showPreview && inEditMode
     }"
-    style="clear: both"
   >
     <span
       mdmMarkdown
-      [markdown]="formData.description"
-      *ngIf="(formData.showMarkDownPreview && inEditMode) || !inEditMode"
+      [markdown]="description"
+      *ngIf="(showPreview && inEditMode) || !inEditMode"
     ></span>
   </div>
 </div>

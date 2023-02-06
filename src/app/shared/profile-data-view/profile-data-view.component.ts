@@ -130,7 +130,6 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private readonly showCanEditPropertyAlertKey =
     'ui.show_can_edit_property_alert';
 
-
   get canEditCustomProfile() {
     if (
       this.currentView === 'default' ||
@@ -561,7 +560,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           items,
           parentCatalogueItem: this.catalogueItem.breadcrumbs
             ? this.catalogueItem.breadcrumbs[0]
-            : null
+            : this.catalogueItem
         },
         panelClass: 'full-width-dialog'
       })
@@ -861,10 +860,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         this.useDefaultProfileSimplifiedEntryPropertyKey
       ) === 'true';
 
-    this.showCanEditPropertyAlert =
-      JSON.parse(this.getContentProperty(properties,
-        this.showCanEditPropertyAlertKey));
-
+    this.showCanEditPropertyAlert = JSON.parse(
+      this.getContentProperty(properties, this.showCanEditPropertyAlertKey)
+    );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

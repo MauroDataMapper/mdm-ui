@@ -29,6 +29,7 @@ import { MergeFilterPipe } from './pipes/merge-filter.pipe';
 import { ConflictEditorModalComponent } from './conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
 import { StringConflictEditorComponent } from './conflict-editor/string-conflict-editor/string-conflict-editor.component';
 import { NumberConflictEditorComponent } from './conflict-editor/number-conflict-editor/number-conflict-editor.component';
+import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,13 @@ import { NumberConflictEditorComponent } from './conflict-editor/number-conflict
     StringConflictEditorComponent,
     NumberConflictEditorComponent
   ],
-  imports: [CommonModule, SharedModule, MaterialModule, CatalogueModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MaterialModule,
+    CatalogueModule,
+    ContentModule
+  ],
   exports: [MergeDiffContainerComponent]
 })
 export class MergeDiffModule {}

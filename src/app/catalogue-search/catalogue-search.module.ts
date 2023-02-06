@@ -28,6 +28,7 @@ import { CatalogueSearchAdvancedFormComponent } from './catalogue-search-advance
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-item-search.component';
+import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
   declarations: [
@@ -41,10 +42,10 @@ import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-
   ],
   imports: [
     CommonModule,
-    FoldersTreeModule,
     SharedModule,
     MaterialModule,
-    FoldersTreeModule
+    FoldersTreeModule,
+    ContentModule
   ],
   exports: [CatalogueItemSearchComponent]
 })

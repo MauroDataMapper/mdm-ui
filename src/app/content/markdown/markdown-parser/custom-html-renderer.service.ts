@@ -16,16 +16,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-// import marked from 'marked/lib/marked';
-import {LinkCreatorService} from '@mdm/utility/markdown/markdown-parser/link-creator.service';
+import { Injectable } from '@angular/core';
+import { LinkCreatorService } from './link-creator.service';
 import * as marked from 'marked';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomHtmlRendererService extends marked.Renderer {
-
   constructor(private linkCreatorService: LinkCreatorService) {
     super();
   }
@@ -41,7 +39,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
     }
 
     // Create internal link
-    const createdLink = this.linkCreatorService.createLink(href, title, text);
+    const createdLink = this.linkCreatorService.createLink(href);
     return `<a href='${createdLink}'>${text}</a>`;
   }
 

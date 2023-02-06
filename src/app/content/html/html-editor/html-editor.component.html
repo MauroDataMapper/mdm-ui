@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020-2023 University of Oxford
 and Health and Social Care Information Centre, also known as NHS Digital
 
@@ -15,18 +15,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
+-->
 
-.mdm-markdown-text-area {
-
-  .spacer {
-    flex: 1 1 auto;
-  }
-
-  &__preview {
-    background-color: #f9f9f9;
-    border: 1px solid #cecece;
-    padding: 10px;
-  }
-
-}
+<jodit-editor
+  *ngIf="inEditMode"
+  [(ngModel)]="description"
+  [config]="editorConfig"
+  (onChange)="onHtmlEditorChanged($event)"
+  (onKeydown)="onHtmlEditorKeydown($event)"
+>
+</jodit-editor>
+<div style="clear: both">
+  <span
+    [innerHTML]="description ?? '' | safe:'html'"
+    *ngIf="!inEditMode"
+  ></span>
+</div>

@@ -32,10 +32,12 @@ describe('LinkCreatorService', () => {
   });
 
   it('render urls as HTML', () => {
-    expect(service.createLink('http://localhost', '', 'link')).toEqual('http://localhost');
+    expect(service.createLink('http://localhost')).toEqual('http://localhost');
   });
 
   it('render emails as HTML', () => {
-    expect(service.createLink('mailto:user@test.com', '', 'email')).toEqual('mailto:user@test.com');
+    expect(service.createLink('mailto:user@test.com')).toEqual(
+      'mailto:user@test.com'
+    );
   });
 });

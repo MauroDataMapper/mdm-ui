@@ -45,6 +45,7 @@ import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-li
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('DataClassesListComponent', () => {
    let component: DataClassesListComponent;
@@ -85,7 +86,8 @@ describe('DataClassesListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataClassesListComponent
+            DataClassesListComponent,
+            SkeletonBadgeComponent
          ]
       })
          .compileComponents();

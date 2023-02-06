@@ -22,6 +22,12 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ToastrModule } from 'ngx-toastr';
 
 import { FederatedDataModelDetailComponent } from './federated-data-model-detail.component';
+import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { FormsModule } from '@angular/forms';
 
 describe('FederatedDataModelDetailComponent', () => {
   let component: FederatedDataModelDetailComponent;
@@ -31,7 +37,11 @@ describe('FederatedDataModelDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        ToastrModule.forRoot()
+        FormsModule,
+        ToastrModule.forRoot(),
+
+        // Transitive Dependency
+        UIRouterModule.forRoot({ useHash: true }),
       ],
       providers: [
         {
@@ -43,7 +53,13 @@ describe('FederatedDataModelDetailComponent', () => {
           useValue: {}
         },
       ],
-      declarations: [ FederatedDataModelDetailComponent ]
+      declarations: [
+        FederatedDataModelDetailComponent,
+        InlineTextEditComponent,
+        ContentEditorComponent,
+        MarkdownTextAreaComponent,
+        MarkdownDirective
+      ]
     })
     .compileComponents();
   }));

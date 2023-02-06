@@ -34,6 +34,7 @@ import { MdmResourcesService } from './modules/resources';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FeaturesService } from './services/features.service';
+import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -65,7 +66,8 @@ describe('AppComponent', () => {
         ByteArrayToBase64Pipe,
         NavbarComponent,
         FooterComponent,
-        AppComponent
+        AppComponent,
+        LoadingIndicatorComponent,
       ],
     }).compileComponents();
   }));

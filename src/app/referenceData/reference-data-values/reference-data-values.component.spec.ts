@@ -26,6 +26,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { ReferenceDataValuesComponent } from './reference-data-values.component';
 import { FormsModule } from '@angular/forms';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('ReferenceDataValuesComponent', () => {
   let component: ReferenceDataValuesComponent;
@@ -53,7 +54,7 @@ describe('ReferenceDataValuesComponent', () => {
           }
         }
       ],
-      declarations: [ReferenceDataValuesComponent, MdmPaginatorComponent]
+      declarations: [ReferenceDataValuesComponent, MdmPaginatorComponent, SkeletonBadgeComponent]
     }).compileComponents();
   }));
 

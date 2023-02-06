@@ -19,6 +19,16 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubscribedCatalogueDetailComponent } from './subscribed-catalogue-detail.component';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
+import { FormsModule } from "@angular/forms";
 
 describe('SubscribedCatalogueDetailComponent', () => {
   let component: SubscribedCatalogueDetailComponent;
@@ -26,7 +36,25 @@ describe('SubscribedCatalogueDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SubscribedCatalogueDetailComponent]
+      imports: [
+        MatDialogModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        },
+      ],
+      declarations: [
+        SubscribedCatalogueDetailComponent,
+        NgxSkeletonLoaderComponent,
+        ContentEditorComponent,
+        MarkdownTextAreaComponent,
+        MarkdownDirective,
+        InlineTextEditComponent
+      ]
     }).compileComponents();
   }));
 

@@ -27,6 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('ReferenceDataElementComponent', () => {
   let component: ReferenceDataElementComponent;
@@ -39,7 +40,7 @@ describe('ReferenceDataElementComponent', () => {
         MatDialogModule,
         NgxSkeletonLoaderModule,
         MatTableModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
       ],
       providers: [
         {
@@ -52,7 +53,11 @@ describe('ReferenceDataElementComponent', () => {
           }
         }
       ],
-      declarations: [ReferenceDataElementComponent, MdmPaginatorComponent]
+      declarations: [
+        ReferenceDataElementComponent,
+        MdmPaginatorComponent,
+        SkeletonBadgeComponent
+      ]
     }).compileComponents();
   }));
 

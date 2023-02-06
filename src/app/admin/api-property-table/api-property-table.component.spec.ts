@@ -25,6 +25,7 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
 import { ApiPropertyTableComponent } from './api-property-table.component';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 
 describe('ApiPropertyTableComponent', () => {
   let component: ApiPropertyTableComponent;
@@ -48,7 +49,9 @@ describe('ApiPropertyTableComponent', () => {
           }
         }
       ],
-      declarations: [ ApiPropertyTableComponent ]
+      declarations: [
+        ApiPropertyTableComponent,
+        DataTypeListButtonsComponent]
     })
     .compileComponents();
   }));

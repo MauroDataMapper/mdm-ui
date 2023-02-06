@@ -45,6 +45,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('DataElementsListComponent', () => {
    let component: DataElementsListComponent;
@@ -85,7 +86,8 @@ describe('DataElementsListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataElementsListComponent
+            DataElementsListComponent,
+            SkeletonBadgeComponent
          ]
       }).compileComponents();
    }));

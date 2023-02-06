@@ -27,6 +27,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 describe('ApiKeysComponent', () => {
    let component: ApiKeysComponent;
@@ -61,7 +62,7 @@ describe('ApiKeysComponent', () => {
                }
             }
          ],
-         declarations: [ApiKeysComponent]
+         declarations: [ApiKeysComponent, NgxSkeletonLoaderComponent]
       }).compileComponents();
    }));
 

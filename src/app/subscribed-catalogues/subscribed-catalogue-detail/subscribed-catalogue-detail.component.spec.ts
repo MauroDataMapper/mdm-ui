@@ -65,7 +65,7 @@ describe('SubscribedCatalogueDetailComponent', () => {
       url: '',
       label: '',
       subscribedCatalogueType: 'test',
-      subscribedCatalogueAuthenticationType: ''
+      subscribedCatalogueAuthenticationType: 'test'
     };
     fixture.detectChanges();
   });

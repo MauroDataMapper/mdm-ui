@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ElementClassificationsComponent } from './element-classifications.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -25,7 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -33,7 +33,7 @@ describe('ElementClassificationsComponent', () => {
   let component: ElementClassificationsComponent;
   let fixture: ComponentFixture<ElementClassificationsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -50,7 +50,7 @@ describe('ElementClassificationsComponent', () => {
           useValue: {
             classifier: {
               // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => EMPTY
             }
           }
         }

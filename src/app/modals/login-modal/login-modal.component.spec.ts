@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginModalComponent } from './login-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatInputModule } from '@angular/material/input';
@@ -97,7 +97,8 @@ describe('LoginModalComponent', () => {
         }
       ],
       declarations: [
-        LoginModalComponent
+        LoginModalComponent,
+        MatDialogContent
       ]
     }).compileComponents();
   });

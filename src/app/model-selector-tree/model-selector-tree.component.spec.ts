@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ModelSelectorTreeComponent } from './model-selector-tree.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
@@ -29,7 +29,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SecurityHandlerService } from '@mdm/services';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 interface SecurityHandlerServiceStub {
@@ -46,7 +46,7 @@ describe('ModelSelectorTreeComponent', () => {
     isLoggedIn: jest.fn(() => false)
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NgxSkeletonLoaderModule,
@@ -62,9 +62,9 @@ describe('ModelSelectorTreeComponent', () => {
           useValue: {
             tree: {
               // tslint:disable-next-line: deprecation
-              list: () => empty(),
+              list: () => EMPTY,
               // tslint:disable-next-line: deprecation
-              get: () => empty()
+              get: () => EMPTY
             }
           }
         },

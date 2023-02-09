@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import { ChartDataset, ChartOptions, ChartType, Ticks } from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
@@ -71,7 +71,23 @@ export class SummaryMetadataChartComponent implements OnInit {
   public barChartOptions: ChartOptions = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
-    scales: { xAxis: {}, yAxis: { min: 0 } },
+    scales: {
+      xAxis: {
+        ticks: {
+          callback: (value, index, ticks): string => {
+            let shortLabel = this.barChartLabels[index].toString();
+            if(shortLabel == null){
+              return '';
+            }
+            if (shortLabel.length > 15) {
+              shortLabel = shortLabel.substring(0, 15);
+              shortLabel += '...';
+            }
+            return shortLabel;
+          }
+        }
+      }, yAxis: { min: 0 } },
+
 
     plugins: {
       datalabels: {

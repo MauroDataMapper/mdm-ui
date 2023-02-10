@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-header-cell
         *matHeaderCellDef
         mat-sort-header
-        style="cursor: pointer; max-width: 40%; width: 40%"
+        style="cursor: pointer; max-width: 30%; width: 20%"
         scope="col"
         [disabled]="!hideFilters"
       >
@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
           </mat-form-field>
         </div>
       </th>
-      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word; vertical-align: middle;">
         <h4 class="marginless">{{ record.label }}</h4>
         <p>{{ record.description }}</p>
         <button

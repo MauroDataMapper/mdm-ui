@@ -232,16 +232,24 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     ) {
       return [
         {
-          domainType: CatalogueItemDomainType.ModelDataType,
-          displayName: 'Data Types'
-        },
-        {
           domainType: CatalogueItemDomainType.DataClass,
           displayName: 'Data Classes'
         },
         {
           domainType: CatalogueItemDomainType.DataElement,
           displayName: 'Data Elements'
+        },
+        {
+          domainType: CatalogueItemDomainType.PrimitiveType,
+          displayName: 'Data Types - Primitives'
+        },
+        {
+          domainType: CatalogueItemDomainType.EnumerationType,
+          displayName: 'Data Types - Enumerations'
+        },
+        {
+          domainType: CatalogueItemDomainType.ModelDataType,
+          displayName: 'Data Types - Models'
         }
       ];
     }
@@ -297,11 +305,18 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         filters
       );
     } else if (
+      this.context.childDomainType === CatalogueItemDomainType.PrimitiveType ||
+      this.context.childDomainType ===
+        CatalogueItemDomainType.EnumerationType ||
       this.context.childDomainType === CatalogueItemDomainType.ModelDataType
     ) {
+      const dataTypeFilters: FilterQueryParameters = {
+        ...filters,
+        domainType: this.context.childDomainType
+      };
       request$ = this.resources.dataType.list(
         this.context.rootItem.id,
-        filters
+        dataTypeFilters
       );
     } else if (this.context.childDomainType === CatalogueItemDomainType.Term) {
       // This is a workaround for the fact that the `all` param doesn't work on Term lists

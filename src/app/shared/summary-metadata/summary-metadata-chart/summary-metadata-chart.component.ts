@@ -71,7 +71,23 @@ export class SummaryMetadataChartComponent implements OnInit {
   public barChartOptions: ChartOptions = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
-    scales: { xAxis: {}, yAxis: { min: 0 } },
+    scales: {
+      xAxis: {
+        ticks: {
+          callback: (value, index): string => {
+            let shortLabel = this.barChartLabels[index].toString();
+            if(shortLabel == null){
+              return '';
+            }
+            if (shortLabel.length > 15) {
+              shortLabel = shortLabel.substring(0, 15);
+              shortLabel += '...';
+            }
+            return shortLabel;
+          }
+        }
+      }, yAxis: { min: 0 } },
+
 
     plugins: {
       datalabels: {

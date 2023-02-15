@@ -314,6 +314,12 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     requiresReload: true
   },
   {
+    key: 'security.hide.exception',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true
+  },
+  {
     key: 'ui.show_can_edit_property_alert',
     category: 'UI',
     editType: ApiPropertyEditType.Boolean,

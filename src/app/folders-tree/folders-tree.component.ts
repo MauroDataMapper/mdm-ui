@@ -606,12 +606,20 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   handleSoftDelete(fnode: FlatNode) {
+    if (!fnode.access.showSoftDelete) {
+      return;
+    }
+
     this.modelTree.deleteCatalogueItemSoft(fnode).subscribe(() => {
       fnode.deleted = true;
     });
   }
 
   handlePermanentDelete(fnode: FlatNode) {
+    if (!fnode.access.showPermanentDelete) {
+      return;
+    }
+
     this.modelTree.deleteCatalogueItemPermanent(fnode).subscribe(() => {
       this.broadcast.reloadCatalogueTree();
       this.stateHandler.Go(

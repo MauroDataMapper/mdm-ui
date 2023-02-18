@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 @use '@angular/material' as mat;
-@import "../components/custom";
+@import '../components/custom';
 
 /* Primary values */
 $default-palette-primary: (
@@ -55,36 +55,36 @@ $default-palette-primary: (
 
 /* Accent values */
 $default-palette-accent: (
-    50 : #e7f1e8,
-    100 : #c3ddc5,
-    200 : #9cc79e,
-    300 : #74b077,
-    400 : #569f59,
-    500 : #388e3c,
-    600 : #328636,
-    700 : #2b7b2e,
-    800 : #247127,
-    900 : #175f1a,
-    A100 : #9aff9d,
-    A200 : #67ff6b,
-    A400 : #34ff3a,
-    A700 : #1aff21,
-    contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #000000,
-        500 : #ffffff,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #000000,
-        A700 : #000000,
-    )
+  50: #e7f1e8,
+  100: #c3ddc5,
+  200: #9cc79e,
+  300: #74b077,
+  400: #569f59,
+  500: #388e3c,
+  600: #328636,
+  700: #2b7b2e,
+  800: #247127,
+  900: #175f1a,
+  A100: #9aff9d,
+  A200: #67ff6b,
+  A400: #34ff3a,
+  A700: #1aff21,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000
+  )
 );
 
 /* Warn values */
@@ -132,7 +132,7 @@ $default-theme: mat.define-light-theme(
 );
 
 $default-typography: mat.define-typography-config(
-  $font-family: "Nunito Sans, sans-serif",
+  $font-family: 'Nunito Sans, sans-serif',
   $body-1: mat.define-typography-level(17px, 26px, 500),
   $body-2: mat.define-typography-level(18px, 26px, 500),
   $headline: mat.define-typography-level(36px, 42px, 600),
@@ -147,4 +147,8 @@ $default-typography: mat.define-typography-config(
   @include mat.all-component-themes($default-theme);
   @include mat.all-component-typographies($default-typography);
   @include mdm-custom-components-theme($default-theme);
+
+  .mat-option {
+    font-size: 16px;
+  }
 }

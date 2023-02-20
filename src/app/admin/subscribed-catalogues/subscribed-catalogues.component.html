@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
           Catalogues
           <span class="mdm--badge mdm--element-count">{{
             totalItemCount
-          }}</span>
+            }}</span>
         </h4>
       </div>
       <div
@@ -123,8 +123,20 @@ SPDX-License-Identifier: Apache-2.0
           style="text-align: left; word-wrap: break-word"
         >
           <p><strong>URL:</strong> {{ record.url }}</p>
-          <p><strong>Type:</strong> {{ record.subscribedCatalogueType }}</p>
-          <p *ngIf="record.apiKey"><strong>Key:</strong> {{ record.apiKey }}</p>
+          <div class="detail-icons">
+            <div class="text-muted">
+              <small>
+                <span class="fas fa-rss" matTooltip="Connection Type"></span>
+                <strong>Type: </strong><span class="item-type">{{ record.subscribedCatalogueType }}</span>
+              </small>
+            </div>
+            <div class="text-muted">
+              <small>
+                <span class="fas fa-lock" matTooltip="Authentication Type"></span>
+                <strong>Authentication: </strong><span class="item-type">{{ record.subscribedCatalogueAuthenticationType }}</span>
+              </small>
+            </div>
+          </div>
         </td>
       </ng-container>
       <ng-container matColumnDef="refreshPeriod">

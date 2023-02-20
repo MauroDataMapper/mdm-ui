@@ -17,22 +17,22 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ApiKeysComponent } from './api-keys.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 describe('ApiKeysComponent', () => {
    let component: ApiKeysComponent;
    let fixture: ComponentFixture<ApiKeysComponent>;
 
-   beforeEach(async(() => {
+   beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
          imports: [
             MatDialogModule,
@@ -46,22 +46,22 @@ describe('ApiKeysComponent', () => {
                useValue: {
                   catalogueUser: {
                      // tslint:disable-next-line: deprecation
-                     listApiKeys: () => empty(),
+                     listApiKeys: () => EMPTY,
                      // tslint:disable-next-line: deprecation
-                     enableApiKey: () => empty(),
+                     enableApiKey: () => EMPTY,
                      // tslint:disable-next-line: deprecation
-                     disableApiKey: () => empty(),
+                     disableApiKey: () => EMPTY,
                      // tslint:disable-next-line: deprecation
-                     refreshApiKey: () => empty(),
+                     refreshApiKey: () => EMPTY,
                      // tslint:disable-next-line: deprecation
-                     saveApiKey: () => empty(),
+                     saveApiKey: () => EMPTY,
                      // tslint:disable-next-line: deprecation
-                     removeApiKey: () => empty(),
+                     removeApiKey: () => EMPTY,
                   }
                }
             }
          ],
-         declarations: [ApiKeysComponent]
+         declarations: [ApiKeysComponent, NgxSkeletonLoaderComponent]
       }).compileComponents();
    }));
 

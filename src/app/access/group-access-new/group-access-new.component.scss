@@ -16,28 +16,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+.mdm-group-access {
+  &__add-form {
+    padding: 0 20px;
 
-import { TextDiffComponent } from './text-diff.component';
+    form {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
 
-describe('TextDiffComponent', () => {
-  let component: TextDiffComponent;
-  let fixture: ComponentFixture<TextDiffComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TextDiffComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TextDiffComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+      button {
+        margin: 0 8px;
+      }
+    }
+  }
+}

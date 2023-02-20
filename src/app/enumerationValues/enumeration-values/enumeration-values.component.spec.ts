@@ -17,11 +17,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EnumerationValuesComponent } from './enumeration-values.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -31,7 +31,7 @@ describe('EnumerationValuesComponent', () => {
   let component: EnumerationValuesComponent;
   let fixture: ComponentFixture<EnumerationValuesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
          MatTabsModule,
@@ -43,9 +43,9 @@ describe('EnumerationValuesComponent', () => {
          {
            provide: MdmResourcesService,
            // tslint:disable-next-line: deprecation
-           useValue: { dataType: { get: () => empty() },
+           useValue: { dataType: { get: () => EMPTY },
            // tslint:disable-next-line: deprecation
-           enumerationValues: { getFromDataType: () => empty() }
+           enumerationValues: { getFromDataType: () => EMPTY }
          },
         },
        ],

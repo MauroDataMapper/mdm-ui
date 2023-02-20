@@ -34,14 +34,15 @@ SPDX-License-Identifier: Apache-2.0
   </mat-form-field>
   <mat-form-field
     appearance="outline"
-    hintLabel="Provide the domain URL to the Mauro system to connect to"
+    hintLabel="The Syndication feed URL to connect to"
+    style="padding-bottom: 20px"
   >
     <mat-label>URL</mat-label>
     <input matInput name="url" formControlName="url" required />
     <mat-error *ngIf="url?.errors?.required">URL is required</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Type</mat-label>
+    <mat-label>Connection type</mat-label>
     <mat-select formControlName="type">
       <mat-option *ngFor="let type of connectionTypes" [value]="type">{{
         type
@@ -51,12 +52,52 @@ SPDX-License-Identifier: Apache-2.0
       >Connection type is required</mat-error
     >
   </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Authentication type</mat-label>
+    <mat-select formControlName="authenticationType">
+      <mat-option *ngFor="let authenticationType of authenticationTypes" [value]="authenticationType">{{
+        authenticationType
+        }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="authenticationType?.errors?.required"
+    >Authentication type is required</mat-error
+    >
+  </mat-form-field>
   <mat-form-field
     appearance="outline"
     hintLabel="An API key is required to view non-public models in the subscribed catalogue"
+    [hidden]="authenticationType.value !== apiKeyAuthenticationType"
+    style="padding-bottom: 20px"
   >
     <mat-label>API Key</mat-label>
-    <input matInput name="apiKey" formControlName="apiKey" />
+    <input matInput name="apiKey" formControlName="apiKey" [required]="authenticationType.value === apiKeyAuthenticationType" />
+  </mat-form-field>
+  <mat-form-field
+    appearance="outline"
+    hintLabel="OAuth Access Token Endpoint URL"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Token Endpoint URL</mat-label>
+    <input matInput name="tokenUrl" formControlName="tokenUrl" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
+  </mat-form-field>
+  <mat-form-field
+    appearance="outline"
+    hintLabel="OAuth Client ID"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Client ID</mat-label>
+    <input matInput name="clientId" formControlName="clientId" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
+  </mat-form-field>
+  <mat-form-field
+    appearance="outline"
+    hintLabel="OAuth Client Secret"
+    [hidden]="authenticationType.value !== oAuthClientCredentialsAuthenticationType"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Client Secret</mat-label>
+    <input matInput name="clientSecret" formControlName="clientSecret" [required]="authenticationType.value === oAuthClientCredentialsAuthenticationType" />
   </mat-form-field>
   <mat-form-field appearance="outline" style="max-width: 200px">
     <mat-label>Refresh period (days)</mat-label>

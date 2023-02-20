@@ -20,6 +20,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
 import {
+  MdmResponse,
   SubscribedCatalogue,
   SubscribedCatalogueResponse,
   Uuid
@@ -34,7 +35,6 @@ import {EditingService} from '@mdm/services/editing.service';
 import {UIRouterGlobals} from '@uirouter/core';
 import {EMPTY, forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {MdmResponse} from '../../../../../mdm-resources/src';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',

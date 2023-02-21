@@ -127,9 +127,17 @@ SPDX-License-Identifier: Apache-2.0
     <input
       type="number"
       matInput
+      min="1"
+      max="365"
       name="refreshPeriod"
       formControlName="refreshPeriod"
     />
+    <mat-error *ngIf="refreshPeriod?.errors?.min">
+      The minimum value is {{ refreshPeriod.errors.min.min }}
+    </mat-error>
+    <mat-error *ngIf="refreshPeriod?.errors?.max">
+      The maximum value is {{ refreshPeriod.errors.max.max }}
+    </mat-error>
   </mat-form-field>
   <div>
     <button

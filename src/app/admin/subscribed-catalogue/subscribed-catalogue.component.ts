@@ -22,7 +22,9 @@ import { Title } from '@angular/platform-browser';
 import {
   MdmResponse,
   SubscribedCatalogue,
+  SubscribedCatalogueAuthenticationTypeResponse,
   SubscribedCatalogueResponse,
+  SubscribedCatalogueTypeResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -33,6 +35,7 @@ import {
 } from '@mdm/services';
 
 import { EditingService } from '@mdm/services/editing.service';
+import { MdmValidators } from '@mdm/utility/mdm-validators';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -59,16 +62,32 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   isCreating: boolean;
 
+  /* eslint-disable @typescript-eslint/unbound-method */
   formGroup = new FormGroup({
-    label: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', [Validators.required]),
     description: new FormControl(''),
-    url: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-    type: new FormControl('', [
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    url: new FormControl('', [Validators.required]),
+    connectionType: new FormControl('', [Validators.required]),
+    authenticationType: new FormControl('', [Validators.required]),
+    apiKey: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useApiKeyAuthentication)
+    ),
+    refreshPeriod: new FormControl(0),
+    tokenUrl: new FormControl('', [
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication),
+      MdmValidators.url
     ]),
-    apiKey: new FormControl(''),
-    refreshPeriod: new FormControl(0)
+    clientId: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication)
+    ),
+    clientSecret: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication)
+    )
   });
+  /* eslint-enable @typescript-eslint/unbound-method */
 
   constructor(
     private resources: MdmResourcesService,
@@ -92,12 +111,12 @@ export class SubscribedCatalogueComponent implements OnInit {
     return this.formGroup.controls.url;
   }
 
-  get type() {
-    return this.formGroup.controls.type;
+  get connectionType() {
+    return this.formGroup.controls.connectionType;
   }
 
   get authenticationType() {
-    return this.formGroup.get('authenticationType');
+    return this.formGroup.controls.authenticationType;
   }
 
   get apiKey() {
@@ -105,50 +124,35 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   get tokenUrl() {
-    return this.formGroup.get('tokenUrl');
+    return this.formGroup.controls.tokenUrl;
   }
 
   get clientId() {
-    return this.formGroup.get('clientId');
+    return this.formGroup.controls.clientId;
   }
 
   get clientSecret() {
-    return this.formGroup.get('clientSecret');
+    return this.formGroup.controls.clientSecret;
   }
 
   get refreshPeriod() {
     return this.formGroup.controls.refreshPeriod;
   }
 
-  get catalogueRequest(): SubscribedCatalogue {
-    const baseRequest = {
-      id: this.catalogueId,
-      label: this.label.value,
-      description: this.description.value,
-      url: this.url.value,
-      subscribedCatalogueType: this.type.value,
-      subscribedCatalogueAuthenticationType: this.authenticationType.value,
-      refreshPeriod: this.refreshPeriod.value
-    };
-    if (this.authenticationType.value === this.noAuthAuthenticationType) {
-      return baseRequest;
-    } else if (
-      this.authenticationType.value === this.apiKeyAuthenticationType
-    ) {
-      return { ...baseRequest, ...{ apiKey: this.apiKey.value } };
-    } else if (
-      this.authenticationType.value ===
+  get useApiKeyAuthentication() {
+    // formGroup may not exist yet so use null conditionals
+    return (
+      this.formGroup?.controls?.authenticationType?.value ===
+      this.apiKeyAuthenticationType
+    );
+  }
+
+  get useOauthAuthentication() {
+    // formGroup may not exist yet so use null conditionals
+    return (
+      this.formGroup?.controls?.authenticationType?.value ===
       this.oAuthClientCredentialsAuthenticationType
-    ) {
-      return {
-        ...baseRequest,
-        ...{
-          tokenUrl: this.tokenUrl.value,
-          clientId: this.clientId.value,
-          clientSecret: this.clientSecret.value
-        }
-      };
-    }
+    );
   }
 
   ngOnInit(): void {
@@ -160,10 +164,10 @@ export class SubscribedCatalogueComponent implements OnInit {
     this.editingService.start();
     this.catalogueId = this.routerGobals.params.id;
 
-    forkJoin([
-      this.resources.subscribedCatalogues.types(),
-      this.resources.subscribedCatalogues.authenticationTypes()
-    ])
+    const types$: SubscribedCatalogueTypeResponse = this.resources.subscribedCatalogues.types();
+    const authenticationTypes$: SubscribedCatalogueAuthenticationTypeResponse = this.resources.subscribedCatalogues.authenticationTypes();
+
+    forkJoin([types$, authenticationTypes$])
       .pipe(
         switchMap(
           ([typesResponse, authenticationTypesResponse]: MdmResponse<
@@ -206,7 +210,7 @@ export class SubscribedCatalogueComponent implements OnInit {
         })
       )
       .subscribe((catalogue: SubscribedCatalogue) => {
-        this.createFormGroup(catalogue);
+        this.setFormValues(catalogue);
       });
   }
 
@@ -215,11 +219,29 @@ export class SubscribedCatalogueComponent implements OnInit {
       return;
     }
 
+    const request: SubscribedCatalogue = {
+      id: this.catalogueId,
+      label: this.label.value,
+      description: this.description.value,
+      url: this.url.value,
+      subscribedCatalogueType: this.connectionType.value,
+      subscribedCatalogueAuthenticationType: this.authenticationType.value,
+      refreshPeriod: this.refreshPeriod.value,
+      ...(this.useApiKeyAuthentication && {
+        apiKey: this.apiKey.value
+      }),
+      ...(this.useOauthAuthentication && {
+        tokenUrl: this.tokenUrl.value,
+        clientId: this.clientId.value,
+        clientSecret: this.clientSecret.value
+      })
+    };
+
     const request$: Observable<SubscribedCatalogueResponse> = this.isCreating
-      ? this.resources.admin.saveSubscribedCatalogues(this.catalogueRequest)
+      ? this.resources.admin.saveSubscribedCatalogues(request)
       : this.resources.admin.updateSubscribedCatalogue(
           this.catalogueId,
-          this.catalogueRequest
+          request
         );
 
     request$
@@ -252,13 +274,19 @@ export class SubscribedCatalogueComponent implements OnInit {
     });
   }
 
-  private createFormGroup(catalogue?: SubscribedCatalogue) {
-    this.label.setValue(catalogue?.label);
-    this.description.setValue(catalogue?.description);
-    this.url.setValue(catalogue?.url);
-    this.type.setValue(catalogue?.subscribedCatalogueType);
-    this.apiKey.setValue(catalogue?.apiKey);
-    this.refreshPeriod.setValue(catalogue?.refreshPeriod);
+  private setFormValues(catalogue?: SubscribedCatalogue) {
+    this.formGroup.patchValue({
+      label: catalogue?.label,
+      description: catalogue?.description,
+      url: catalogue?.url,
+      connectionType: catalogue?.subscribedCatalogueType,
+      authenticationType: catalogue?.subscribedCatalogueAuthenticationType,
+      refreshPeriod: catalogue?.refreshPeriod,
+      apiKey: catalogue?.apiKey,
+      tokenUrl: catalogue?.tokenUrl,
+      clientId: catalogue?.clientId,
+      clientSecret: catalogue?.clientSecret
+    });
   }
 
   private navigateToParent() {

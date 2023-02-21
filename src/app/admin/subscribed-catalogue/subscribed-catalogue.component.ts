@@ -16,25 +16,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Title} from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import {
   MdmResponse,
   SubscribedCatalogue,
+  SubscribedCatalogueAuthenticationTypeResponse,
   SubscribedCatalogueResponse,
+  SubscribedCatalogueTypeResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
-import {MdmResourcesService} from '@mdm/modules/resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   MessageHandlerService,
   SharedService,
   StateHandlerService
 } from '@mdm/services';
-import {EditingService} from '@mdm/services/editing.service';
-import {UIRouterGlobals} from '@uirouter/core';
-import {EMPTY, forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+
+import { EditingService } from '@mdm/services/editing.service';
+import { MdmValidators } from '@mdm/utility/mdm-validators';
+import { UIRouterGlobals } from '@uirouter/core';
+import { EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -44,8 +48,13 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 export class SubscribedCatalogueComponent implements OnInit {
   readonly noAuthAuthenticationType: string = 'No Authentication';
   readonly apiKeyAuthenticationType: string = 'API Key';
-  readonly oAuthClientCredentialsAuthenticationType: string = 'OAuth (Client Credentials)';
-  readonly supportedAuthenticationTypes: string[] = [this.noAuthAuthenticationType, this.apiKeyAuthenticationType, this.oAuthClientCredentialsAuthenticationType];
+  readonly oAuthClientCredentialsAuthenticationType: string =
+    'OAuth (Client Credentials)';
+  readonly supportedAuthenticationTypes: string[] = [
+    this.noAuthAuthenticationType,
+    this.apiKeyAuthenticationType,
+    this.oAuthClientCredentialsAuthenticationType
+  ];
 
   catalogueId?: Uuid;
   connectionTypes: string[] = [];
@@ -53,7 +62,32 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   isCreating: boolean;
 
-  formGroup: FormGroup;
+  /* eslint-disable @typescript-eslint/unbound-method */
+  formGroup = new FormGroup({
+    label: new FormControl('', [Validators.required]),
+    description: new FormControl(''),
+    url: new FormControl('', [Validators.required]),
+    connectionType: new FormControl('', [Validators.required]),
+    authenticationType: new FormControl('', [Validators.required]),
+    apiKey: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useApiKeyAuthentication)
+    ),
+    refreshPeriod: new FormControl(0),
+    tokenUrl: new FormControl('', [
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication),
+      MdmValidators.url
+    ]),
+    clientId: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication)
+    ),
+    clientSecret: new FormControl(
+      '',
+      MdmValidators.requiredConditional(() => this.useOauthAuthentication)
+    )
+  });
+  /* eslint-enable @typescript-eslint/unbound-method */
 
   constructor(
     private resources: MdmResourcesService,
@@ -63,73 +97,62 @@ export class SubscribedCatalogueComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private title: Title,
     private editingService: EditingService
-  ) {
-    this.createFormGroup();
-  }
+  ) {}
 
   get label() {
-    return this.formGroup.get('label');
+    return this.formGroup.controls.label;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.controls.description;
   }
 
   get url() {
-    return this.formGroup.get('url');
+    return this.formGroup.controls.url;
   }
 
-  get type() {
-    return this.formGroup.get('type');
+  get connectionType() {
+    return this.formGroup.controls.connectionType;
   }
 
   get authenticationType() {
-    return this.formGroup.get('authenticationType');
+    return this.formGroup.controls.authenticationType;
   }
 
   get apiKey() {
-    return this.formGroup.get('apiKey');
+    return this.formGroup.controls.apiKey;
   }
 
   get tokenUrl() {
-    return this.formGroup.get('tokenUrl');
+    return this.formGroup.controls.tokenUrl;
   }
 
   get clientId() {
-    return this.formGroup.get('clientId');
+    return this.formGroup.controls.clientId;
   }
 
   get clientSecret() {
-    return this.formGroup.get('clientSecret');
+    return this.formGroup.controls.clientSecret;
   }
 
   get refreshPeriod() {
-    return this.formGroup.get('refreshPeriod');
+    return this.formGroup.controls.refreshPeriod;
   }
 
-  get catalogueRequest(): SubscribedCatalogue {
-    const baseRequest = {
-      id: this.catalogueId,
-      label: this.label.value,
-      description: this.description.value,
-      url: this.url.value,
-      subscribedCatalogueType: this.type.value,
-      subscribedCatalogueAuthenticationType: this.authenticationType.value,
-      refreshPeriod: this.refreshPeriod.value
-    };
-    if (this.authenticationType.value === this.noAuthAuthenticationType) {
-      return baseRequest;
-    } else if (this.authenticationType.value === this.apiKeyAuthenticationType) {
-      return {...baseRequest, ...{apiKey: this.apiKey.value}};
-    } else if (this.authenticationType.value === this.oAuthClientCredentialsAuthenticationType) {
-      return {
-        ...baseRequest, ...{
-          tokenUrl: this.tokenUrl.value,
-          clientId: this.clientId.value,
-          clientSecret: this.clientSecret.value,
-        }
-      };
-    }
+  get useApiKeyAuthentication() {
+    // formGroup may not exist yet so use null conditionals
+    return (
+      this.formGroup?.controls?.authenticationType?.value ===
+      this.apiKeyAuthenticationType
+    );
+  }
+
+  get useOauthAuthentication() {
+    // formGroup may not exist yet so use null conditionals
+    return (
+      this.formGroup?.controls?.authenticationType?.value ===
+      this.oAuthClientCredentialsAuthenticationType
+    );
   }
 
   ngOnInit(): void {
@@ -141,36 +164,42 @@ export class SubscribedCatalogueComponent implements OnInit {
     this.editingService.start();
     this.catalogueId = this.routerGobals.params.id;
 
-    forkJoin([
-      this.resources.subscribedCatalogues.types(),
-      this.resources.subscribedCatalogues.authenticationTypes()
-    ])
+    const types$: SubscribedCatalogueTypeResponse = this.resources.subscribedCatalogues.types();
+    const authenticationTypes$: SubscribedCatalogueAuthenticationTypeResponse = this.resources.subscribedCatalogues.authenticationTypes();
+
+    forkJoin([types$, authenticationTypes$])
       .pipe(
-        switchMap(([typesResponse, authenticationTypesResponse]: MdmResponse<string[]>[]) => {
-          this.connectionTypes = typesResponse.body;
-          this.authenticationTypes = this.supportedAuthenticationTypes.filter(authType => authenticationTypesResponse.body.includes(authType));
+        switchMap(
+          ([typesResponse, authenticationTypesResponse]: MdmResponse<
+            string[]
+          >[]) => {
+            this.connectionTypes = typesResponse.body;
+            this.authenticationTypes = this.supportedAuthenticationTypes.filter(
+              (authType) => authenticationTypesResponse.body.includes(authType)
+            );
 
-          if (this.catalogueId) {
-            this.isCreating = false;
-            this.title.setTitle('Subscribed Catalogue - Edit Subscription');
+            if (this.catalogueId) {
+              this.isCreating = false;
+              this.title.setTitle('Subscribed Catalogue - Edit Subscription');
 
-            return this.resources.admin
-              .getSubscribedCatalogue(this.catalogueId)
-              .pipe(
-                map(
-                  (cataloguesResponse: SubscribedCatalogueResponse) =>
-                    cataloguesResponse.body
-                )
-              );
+              return this.resources.admin
+                .getSubscribedCatalogue(this.catalogueId)
+                .pipe(
+                  map(
+                    (cataloguesResponse: SubscribedCatalogueResponse) =>
+                      cataloguesResponse.body
+                  )
+                );
+            }
+
+            this.isCreating = true;
+            this.title.setTitle('Subscribed Catalogue - Add Subscription');
+            return of({
+              label: '',
+              url: ''
+            });
           }
-
-          this.isCreating = true;
-          this.title.setTitle('Subscribed Catalogue - Add Subscription');
-          return of({
-            label: '',
-            url: ''
-          });
-        }),
+        ),
         catchError((error) => {
           this.messageHandler.showError(
             'Unable to get the subscribed catalogue.',
@@ -181,7 +210,7 @@ export class SubscribedCatalogueComponent implements OnInit {
         })
       )
       .subscribe((catalogue: SubscribedCatalogue) => {
-        this.createFormGroup(catalogue);
+        this.setFormValues(catalogue);
       });
   }
 
@@ -190,12 +219,30 @@ export class SubscribedCatalogueComponent implements OnInit {
       return;
     }
 
+    const request: SubscribedCatalogue = {
+      id: this.catalogueId,
+      label: this.label.value,
+      description: this.description.value,
+      url: this.url.value,
+      subscribedCatalogueType: this.connectionType.value,
+      subscribedCatalogueAuthenticationType: this.authenticationType.value,
+      refreshPeriod: this.refreshPeriod.value,
+      ...(this.useApiKeyAuthentication && {
+        apiKey: this.apiKey.value
+      }),
+      ...(this.useOauthAuthentication && {
+        tokenUrl: this.tokenUrl.value,
+        clientId: this.clientId.value,
+        clientSecret: this.clientSecret.value
+      })
+    };
+
     const request$: Observable<SubscribedCatalogueResponse> = this.isCreating
-      ? this.resources.admin.saveSubscribedCatalogues(this.catalogueRequest)
+      ? this.resources.admin.saveSubscribedCatalogues(request)
       : this.resources.admin.updateSubscribedCatalogue(
-        this.catalogueId,
-        this.catalogueRequest
-      );
+          this.catalogueId,
+          request
+        );
 
     request$
       .pipe(
@@ -227,22 +274,18 @@ export class SubscribedCatalogueComponent implements OnInit {
     });
   }
 
-  private createFormGroup(catalogue?: SubscribedCatalogue) {
-    this.formGroup = new FormGroup({
-      label: new FormControl(catalogue?.label, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new FormControl(catalogue?.description),
-      url: new FormControl(catalogue?.url, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-      type: new FormControl(catalogue?.subscribedCatalogueType, [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ]),
-      authenticationType: new FormControl(catalogue?.subscribedCatalogueAuthenticationType, [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ]),
-      apiKey: new FormControl(catalogue?.apiKey),
-      tokenUrl: new FormControl(catalogue?.tokenUrl),
-      clientId: new FormControl(catalogue?.clientId),
-      clientSecret: new FormControl(catalogue?.clientSecret),
-      refreshPeriod: new FormControl(catalogue?.refreshPeriod)
+  private setFormValues(catalogue?: SubscribedCatalogue) {
+    this.formGroup.patchValue({
+      label: catalogue?.label,
+      description: catalogue?.description,
+      url: catalogue?.url,
+      connectionType: catalogue?.subscribedCatalogueType,
+      authenticationType: catalogue?.subscribedCatalogueAuthenticationType,
+      refreshPeriod: catalogue?.refreshPeriod,
+      apiKey: catalogue?.apiKey,
+      tokenUrl: catalogue?.tokenUrl,
+      clientId: catalogue?.clientId,
+      clientSecret: catalogue?.clientSecret
     });
   }
 

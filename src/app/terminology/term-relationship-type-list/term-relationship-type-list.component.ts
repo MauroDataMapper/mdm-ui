@@ -33,37 +33,17 @@ import {
   FilterQueryParameters,
   TerminologyDetail,
   TermRelationshipType,
-  TermRelationshipTypeDetailResponse,
-  Uuid
+  TermRelationshipTypeDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
-import { CreateTermRelationshipTypeDialogComponent } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
+import {
+  CreateTermRelationshipTypeDialogComponent,
+  CreateTermRelationshipTypeForm
+} from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
-
-class CreateTermRelationshipTypeForm {
-  id?: Uuid;
-  label: string;
-  displayLabel: string;
-  parentalRelationship = false;
-  childRelationship = false;
-
-  constructor(
-    readonly terminology: TerminologyDetail,
-    relationshipType?: TermRelationshipType
-  ) {
-    if (relationshipType) {
-      this.id = relationshipType.id || null;
-      this.label = relationshipType.label;
-      this.displayLabel = relationshipType.displayLabel;
-      this.parentalRelationship =
-        relationshipType.parentalRelationship || false;
-      this.childRelationship = relationshipType.childRelationship || false;
-    }
-  }
-}
 
 @Component({
   selector: 'mdm-term-relationship-type-list',

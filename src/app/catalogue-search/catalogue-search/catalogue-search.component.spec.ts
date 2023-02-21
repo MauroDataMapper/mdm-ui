@@ -113,21 +113,32 @@ describe('CatalogueSearchComponent', () => {
     };
     const classifiers: Classifier[] = [testClassifier, testClassifier2];
 
-    harness.component.catalogueSearchAdvancedFormComponent.formGroup = new FormGroup(
-      {
-        context: new FormControl(contextTest),
-        domainTypes: new FormControl([
-          ModelDomainType.DataModels,
-          ModelDomainType.Classifiers
-        ]),
-        labelOnly: new FormControl(true),
-        exactMatch: new FormControl(true),
-        classifiers: new FormControl(classifiers),
-        createdAfter: new FormControl(new Date('July 21, 1983 01:15:00')),
-        createdBefore: new FormControl(new Date('July 22, 1983 01:15:00')),
-        lastUpdatedAfter: new FormControl(new Date('July 23, 1983 01:15:00')),
-        lastUpdatedBefore: new FormControl(new Date('July 24, 1983 01:15:00'))
-      }
+    harness.component.catalogueSearchAdvancedFormComponent.context.setValue(
+      contextTest
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.domainTypes.setValue(
+      [ModelDomainType.DataModels, ModelDomainType.Classifiers]
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.labelOnly.setValue(
+      true
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.exactMatch.setValue(
+      true
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.classifiers.setValue(
+      classifiers
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.createdAfter.setValue(
+      new Date('July 21, 1983 01:15:00')
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.createdBefore.setValue(
+      new Date('July 22, 1983 01:15:00')
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.lastUpdatedAfter.setValue(
+      new Date('July 23, 1983 01:15:00')
+    );
+    harness.component.catalogueSearchAdvancedFormComponent.lastUpdatedBefore.setValue(
+      new Date('July 24, 1983 01:15:00')
     );
 
     harness.component.search();

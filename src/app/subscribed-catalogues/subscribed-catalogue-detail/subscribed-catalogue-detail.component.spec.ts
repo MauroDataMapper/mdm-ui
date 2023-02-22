@@ -34,29 +34,32 @@ describe('SubscribedCatalogueDetailComponent', () => {
   let component: SubscribedCatalogueDetailComponent;
   let fixture: ComponentFixture<SubscribedCatalogueDetailComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService, useValue: {}
-        },
-      ],
-      declarations: [
-        SubscribedCatalogueDetailComponent,
-        NgxSkeletonLoaderComponent,
-        ContentEditorComponent,
-        MarkdownTextAreaComponent,
-        MarkdownDirective,
-        InlineTextEditComponent
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          MatDialogModule,
+          FormsModule,
+          UIRouterModule.forRoot({ useHash: true }),
+          ToastrModule.forRoot()
+        ],
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: {}
+          }
+        ],
+        declarations: [
+          SubscribedCatalogueDetailComponent,
+          NgxSkeletonLoaderComponent,
+          ContentEditorComponent,
+          MarkdownTextAreaComponent,
+          MarkdownDirective,
+          InlineTextEditComponent
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubscribedCatalogueDetailComponent);

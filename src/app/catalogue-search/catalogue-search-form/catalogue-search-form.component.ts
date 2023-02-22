@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
 /**
@@ -34,17 +34,19 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 export class CatalogueSearchFormComponent implements OnInit {
   @Input() appearance: MatFormFieldAppearance = 'outline';
   @Input() routeSearchTerm?: string = '';
-  formGroup: UntypedFormGroup = new UntypedFormGroup({});
+
   @Output() searchEvent = new EventEmitter<string>();
+
+  formGroup = new FormGroup({
+    searchTerms: new FormControl(this.routeSearchTerm)
+  });
 
   get searchTerms() {
     return this.formGroup.controls.searchTerms;
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      searchTerms: new FormControl(this.routeSearchTerm)
-    });
+    this.searchTerms.setValue(this.routeSearchTerm);
   }
 
   reset() {

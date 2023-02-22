@@ -44,26 +44,33 @@ export class CodeSetMainComponent implements OnInit {
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
   savingInProgress = false;
-  setupForm: FormGroup;
+  setupForm = new FormGroup({
+    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl(''),
+    classifiers: new FormControl([]),
+    terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
+  });
 
   get label() {
-    return this.setupForm.get('label');
+    return this.setupForm.controls.label;
   }
 
   get author() {
-    return this.setupForm.get('author');
+    return this.setupForm.controls.author;
   }
 
   get organisation() {
-    return this.setupForm.get('organisation');
+    return this.setupForm.controls.organisation;
   }
 
   get description() {
-    return this.setupForm.get('description');
+    return this.setupForm.controls.description;
   }
 
   get classifiers() {
-    return this.setupForm.get('classifiers');
+    return this.setupForm.controls.classifiers;
   }
 
   set classifiersValue(value: any[]) {
@@ -71,7 +78,7 @@ export class CodeSetMainComponent implements OnInit {
   }
 
   get terms() {
-    return this.setupForm.get('terms');
+    return this.setupForm.controls.terms;
   }
 
   set termsValue(value: any[]) {
@@ -89,15 +96,6 @@ export class CodeSetMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('New Code Set');
-
-    this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new FormControl(''),
-      classifiers: new FormControl([]),
-      terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
-    });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
     this.parentDomainType = this.uiRouterGlobals.params.parentDomainType;

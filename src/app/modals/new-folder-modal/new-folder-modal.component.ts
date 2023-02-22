@@ -21,11 +21,13 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
 import { SharedService } from '@mdm/services';
-import { NewFolderModalConfiguration, NewFolderModalResponse } from './new-folder-modal.model';
+import {
+  NewFolderModalConfiguration,
+  NewFolderModalResponse
+} from './new-folder-modal.model';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-
 
 @Component({
   selector: 'mdm-new-folder-modal',
@@ -33,7 +35,6 @@ import { ThemePalette } from '@angular/material/core';
   styleUrls: ['./new-folder-modal.component.scss']
 })
 export class NewFolderModalComponent implements OnInit {
-
   okBtn: string;
   cancelBtn: string;
   btnType: ThemePalette;
@@ -44,22 +45,26 @@ export class NewFolderModalComponent implements OnInit {
   useVersionedFolders = false;
 
   folderForm = new FormGroup({
-    label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
     isVersioned: new FormControl(false)
   });
 
   constructor(
-    private dialogRef: MatDialogRef<NewFolderModalComponent, NewFolderModalResponse>,
+    private dialogRef: MatDialogRef<
+      NewFolderModalComponent,
+      NewFolderModalResponse
+    >,
     @Inject(MAT_DIALOG_DATA) public data: NewFolderModalConfiguration,
     private editing: EditingService,
-    private shared: SharedService) { }
+    private shared: SharedService
+  ) {}
 
   get label() {
-    return this.folderForm.get('label');
+    return this.folderForm.controls.label;
   }
 
   get isVersioned() {
-    return this.folderForm.get('isVersioned');
+    return this.folderForm.controls.isVersioned;
   }
 
   ngOnInit(): void {
@@ -70,17 +75,16 @@ export class NewFolderModalComponent implements OnInit {
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
     this.createRootFolder = this.data.createRootFolder;
-    this.useVersionedFolders = this.data.canVersion && this.shared.features.useVersionedFolders;
+    this.useVersionedFolders =
+      this.data.canVersion && this.shared.features.useVersionedFolders;
   }
 
   cancel() {
-    this.editing
-      .confirmCancelAsync()
-      .subscribe(confirm => {
-        if (confirm) {
-          this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-        }
-      });
+    this.editing.confirmCancelAsync().subscribe((confirm) => {
+      if (confirm) {
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+      }
+    });
   }
 
   confirm() {

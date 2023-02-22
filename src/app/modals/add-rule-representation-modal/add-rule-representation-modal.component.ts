@@ -136,19 +136,19 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   formGroup = new FormGroup({
     language: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
     representation: new FormControl(''),
-    importFileName: new FormControl()
+    importFileName: new FormControl('')
   });
 
   get language() {
-    return this.formGroup.get('language');
+    return this.formGroup.controls.language;
   }
 
   get representation() {
-    return this.formGroup.get('representation');
+    return this.formGroup.controls.representation;
   }
 
   get importFileName() {
-    return this.formGroup.get('importFileName');
+    return this.formGroup.controls.importFileName;
   }
 
   constructor(

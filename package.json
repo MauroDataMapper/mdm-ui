@@ -24,7 +24,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-eslint/template-parser": "0.5.0-beta.3",
+    "@angular-eslint/template-parser": "0.5.0-beta.5",
     "@angular-material-extensions/password-strength": "11.0.1",
     "@angular/animations": "14.2.12",
     "@angular/cdk": "14.2.7",
@@ -43,7 +43,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@maurodatamapper/mdm-resources": "5.2.1",
     "@uirouter/angular": "10.0.0",
-    "@uirouter/core": "6.0.8",
+    "@uirouter/core": "6.0.9",
     "@uirouter/rx": "1.0.0",
     "ag-grid-angular": "26.2.0",
     "ag-grid-community": "26.2.0",
@@ -81,7 +81,7 @@
     "svg-pan-zoom": "3.6.1",
     "tslib": "2.5.0",
     "uuid": "8.3.2",
-    "zone.js": "0.11.4"
+    "zone.js": "0.12.0"
   },
   "resolutions": {
     "webpack": "^5.0.0"

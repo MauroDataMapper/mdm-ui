@@ -57,11 +57,11 @@ export class AddRuleModalComponent implements OnInit {
   });
 
   get name() {
-    return this.formGroup.get('name');
+    return this.formGroup.controls.name;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.controls.description;
   }
 
   constructor(

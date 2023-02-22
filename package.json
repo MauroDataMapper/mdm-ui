@@ -122,7 +122,7 @@
     "jest-html-reporter": "3.10.2",
     "jest-junit": "15.0.0",
     "jest-marbles": "^3.0.3",
-    "jest-preset-angular": "12.2.3",
+    "jest-preset-angular": "12.2.6",
     "jest-sonar": "^0.2.12",
     "license-check-and-add": "3.0.4",
     "mini-css-extract-plugin": "^2.4.5",

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -320,7 +319,7 @@ export class SecurityHandlerService {
       showEdit: element.availableActions?.includes('update'),
       canEditDescription: element.availableActions?.includes('editDescription'),
       showFinalise: element.availableActions?.includes('finalise'),
-      showPermission: element.availableActions?.includes('update'),
+      showPermission: element.availableActions?.includes('update') || element.availableActions?.includes('finalisedEditActions'),
       showSoftDelete: element.availableActions?.includes('softDelete'),
       showPermanentDelete: element.availableActions?.includes('delete'),
       canAddAnnotation: element.availableActions?.includes('comment'),

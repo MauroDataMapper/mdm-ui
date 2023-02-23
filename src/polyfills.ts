@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,6 +33,6 @@ import 'core-js/es/map';
 import 'core-js/es/weak-map';
 import 'core-js/es/set';
 import 'core-js/es/reflect';
-import 'classlist.js';  // Run `npm install --save classlist.js`.
-import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+  // Run `npm install --save classlist.js`.
+  // Run `npm install --save web-animations-js`.
 import 'zone.js';  // Included with Angular CLI.

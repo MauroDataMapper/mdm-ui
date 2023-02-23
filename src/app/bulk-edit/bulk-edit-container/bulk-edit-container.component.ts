@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +23,7 @@ import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 
 @Component({
@@ -79,8 +78,13 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    // The state handler is also tied to the EditingService, so will automatically confirm to leave first
-    this.stateHandler.GoPrevious();
+    this.editing
+      .confirmCancelAsync()
+      .pipe(filter((confirm) => !!confirm))
+      .subscribe(() => {
+        this.editing.stop();
+        this.stateHandler.GoPrevious();
+      });
   }
 
   next() {

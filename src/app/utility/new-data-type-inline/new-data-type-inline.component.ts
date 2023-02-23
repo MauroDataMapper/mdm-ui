@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -142,8 +141,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.list().subscribe((data: TerminologyIndexResponse) => {
-      this.terminologies = data.body.items;
+    this.resourceService.terminology.list({ all: true }).subscribe((data: TerminologyIndexResponse) => {
+      this.terminologies = data.body.items.sort((a, b) => a.label.localeCompare(b.label));
       this.reloading = false;
     }, () => {
       this.reloading = false;
@@ -165,8 +164,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
   loadCodeSets() {
    this.reloading = true;
-   this.resourceService.codeSet.list().subscribe((data: CodeSetIndexResponse) => {
-     this.codesets = data.body.items;
+   this.resourceService.codeSet.list({ all: true }).subscribe((data: CodeSetIndexResponse) => {
+     this.codesets = data.body.items.sort((a, b) => a.label.localeCompare(b.label));
      this.reloading = false;
    }, () => {
      this.reloading = false;
@@ -175,8 +174,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit, OnDest
 
  loadReferenceModels() {
    this.reloading = true;
-   this.resourceService.referenceDataModel.list().subscribe((data: ReferenceDataModelIndexResponse) => {
-     this.referenceDataModels = data.body.items;
+   this.resourceService.referenceDataModel.list({ all: true }).subscribe((data: ReferenceDataModelIndexResponse) => {
+     this.referenceDataModels = data.body.items.sort((a, b) => a.label.localeCompare(b.label));
      this.reloading = false;
    }, () => {
      this.reloading = false;

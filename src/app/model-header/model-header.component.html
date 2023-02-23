@@ -1,0 +1,271 @@
+<!--
+Copyright 2020-2023 University of Oxford and NHS England
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div *ngIf="item" class="panel panel-default mdm--shadow-block">
+  <div class="panel-body">
+    <div class="mdm-model-header__title-bar">
+      <div class="mdm-model-header__title">
+        <h4
+          class="inline-block marginless"
+          data-cy="catalogue-item-label"
+          [ngClass]="{ deletedDataModelTitle: item?.deleted }"
+        >
+          <mdm-element-icon [element]="item"></mdm-element-icon>
+          <span class="dataModelDetailsLabel">{{ item.label }}</span>
+        </h4>
+        <span *ngIf="item?.deleted" class="inline-block">
+          <small class="warning"> | Deleted</small>
+        </span>
+        <mdm-element-status
+          *ngIf="isFinalisable"
+          [result]="item"
+        ></mdm-element-status>
+        <span *ngIf="!isChildItem" class="detail-icons--cta ml-2">
+          <mdm-favorite-button [catalogueItem]="item"> </mdm-favorite-button>
+        </span>
+      </div>
+      <div class="mdm-model-header__toolbar">
+        <button
+          *ngIf="access.showEdit"
+          mat-icon-button
+          color="primary"
+          type="button"
+          class="paddingless"
+          data-cy="edit-label"
+          matTooltip="Edit Title"
+          aria-label="Edit Title"
+          [disabled]="busy"
+          (click)="editLabel()"
+        >
+          <span class="fas fa-pencil-alt"></span>
+        </button>
+        <button
+          mat-icon-button
+          data-cy="finalise"
+          type="button"
+          *ngIf="access.showFinalise"
+          [disabled]="busy"
+          matTooltip="Finalise"
+          aria-label="Finalise"
+          (click)="finalise()"
+        >
+          <span
+            class="fas fa-check-circle"
+            [ngClass]="{ 'has-text-green': !busy }"
+            aria-hidden="true"
+          ></span>
+        </button>
+        <button
+          mat-icon-button
+          data-cy="create-new-version"
+          type="button"
+          *ngIf="access.showNewVersion"
+          matTooltip="Create a New Version"
+          aria-label="Create a New Version"
+          [disabled]="busy"
+          (click)="newVersion()"
+        >
+          <span class="fas fa-copy"></span>
+        </button>
+        <button
+          mat-icon-button
+          data-cy="export-menu"
+          color="primary"
+          type="button"
+          *ngIf="isLoggedIn && canExport"
+          class="paddingless"
+          matTooltip="Export"
+          aria-label="Export"
+          [disabled]="busy"
+          (click)="exportModel()"
+        >
+          <span class="fas fa-download"></span>
+        </button>
+        <button
+          *ngIf="access.showPermission && !isChildItem"
+          mat-icon-button
+          data-cy="user-group-access"
+          color="primary"
+          type="button"
+          class="paddingless"
+          matTooltip="User & Group Access"
+          aria-label="User & Group Access"
+          [disabled]="busy"
+          (click)="openUserGroupAccessDialog()"
+        >
+          <span class="fas fa-user-lock"></span>
+        </button>
+        <button
+          *ngIf="hasMenuOptions"
+          type="button"
+          data-cy="user-actions-menu"
+          mat-icon-button
+          [matMenuTriggerFor]="userActions"
+        >
+          <span class="fas fa-ellipsis-v"></span>
+        </button>
+      </div>
+    </div>
+
+    <mdm-model-path
+      *ngIf="isChildItem"
+      [path]="item.breadcrumbs"
+    ></mdm-model-path>
+
+    <mdm-catalogue-item-properties [item]="item">
+    </mdm-catalogue-item-properties>
+  </div>
+  <mat-progress-bar
+    *ngIf="busy"
+    value="50"
+    bufferValue="75"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+  <mdm-download-link [links]="downloadLinks"></mdm-download-link>
+</div>
+
+<mat-menu
+  #userActions="matMenu"
+  class="mdm--mat-menu--actions"
+  data-cy="top-level-user-actions"
+>
+  <button
+    mat-menu-item
+    data-cy="edit-branch-name"
+    type="button"
+    *ngIf="canChangeBranchName"
+    [disabled]="busy"
+    (click)="editBranchName()"
+  >
+    <span class="fas fa-code-branch"></span> Edit Branch Name
+  </button>
+  <button
+    mat-menu-item
+    type="button"
+    *ngIf="access.showEdit && canBulkEdit"
+    [disabled]="busy"
+    (click)="bulkEdit()"
+  >
+    <span class="fas fa-clone"></span> Bulk Edit
+  </button>
+  <button
+    mat-menu-item
+    data-cy="compare"
+    type="button"
+    [matMenuTriggerFor]="compareMenu"
+    *ngIf="isAdministrator && canCompareModels"
+    [disabled]="busy"
+  >
+    <span class="fas fa-balance-scale-right" aria-hidden="true"></span>
+    Compare
+  </button>
+  <button
+    mat-menu-item
+    data-cy="merge"
+    type="button"
+    *ngIf="access.canMergeInto && !isChildItem"
+    [disabled]="busy"
+    (click)="merge()"
+  >
+    <span class="fas fa-window-restore"></span> Merge...
+  </button>
+  <button
+    mat-menu-item
+    data-cy="merge-graph"
+    type="button"
+    *ngIf="canShowMergeGraph"
+    [disabled]="busy"
+    (click)="showMergeGraph()"
+  >
+    <span class="fas fa-code-branch"></span> Merge graph
+  </button>
+  <mat-divider></mat-divider>
+  <button
+    mat-menu-item
+    data-cy="restore"
+    type="button"
+    class="has-text-green"
+    *ngIf="canRestore"
+    [disabled]="busy"
+    (click)="restore()"
+  >
+    <span class="fas fa-trash-restore has-text-green"></span> Restore
+  </button>
+  <button
+    mat-menu-item
+    data-cy="delete-options-menu"
+    type="button"
+    [matMenuTriggerFor]="userActionsDelete"
+    *ngIf="access.showDelete && canSoftDelete"
+    class="warning"
+    [disabled]="busy"
+  >
+    <span class="far fa-trash-alt warning"></span> Delete
+  </button>
+  <button
+    mat-menu-item
+    type="button"
+    *ngIf="access.showDelete && !canSoftDelete"
+    class="warning"
+    [disabled]="busy"
+    (click)="askForPermanentDelete()"
+  >
+    <span class="far fa-trash-alt warning"></span> Delete
+  </button>
+</mat-menu>
+
+<mat-menu #userActionsDelete="matMenu" data-cy="delete-actions">
+  <button
+    mat-menu-item
+    data-cy="soft-delete"
+    *ngIf="access.showSoftDelete && !item.deleted"
+    (click)="askForSoftDelete()"
+  >
+    Mark as deleted
+  </button>
+  <button
+    mat-menu-item
+    data-cy="permanent-delete"
+    *ngIf="access.showPermanentDelete"
+    (click)="askForPermanentDelete()"
+  >
+    Delete <span class="warning">permanently</span>
+  </button>
+</mat-menu>
+
+<mat-menu #compareMenu="matMenu">
+  <button mat-menu-item *ngIf="!item?.deleted" (click)="compare()">
+    Compare to another Data Model
+  </button>
+  <div
+    *ngIf="compareModelsList && compareModelsList.length > 0"
+    class="divider"
+  ></div>
+  <div *ngIf="compareModelsList && compareModelsList.length > 0">
+    <div *ngFor="let el of compareModelsList">
+      <button mat-menu-item (click)="compare(el)">
+        <a
+          >{{ el.label }}
+          <span style="font-style: italic; font-size: 12px">{{
+            el.documentationVersion
+          }}</span></a
+        >
+      </button>
+    </div>
+  </div>
+</mat-menu>

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +35,7 @@ import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FinaliseModalComponent } from './finalise-modal/finalise-modal.component';
 import { CheckInModalComponent } from './check-in-modal/check-in-modal.component';
 import { ResolveMergeConflictModalComponent } from './resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
-import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { AddRuleRepresentationModalComponent } from './add-rule-representation-modal/add-rule-representation-modal.component';
 import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
 import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
@@ -52,6 +51,7 @@ import { ChangeBranchNameModalComponent } from './change-branch-name-modal/chang
 import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
+import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -96,7 +96,8 @@ const defaultAceConfig: AceConfigInterface = {};
     DefaultProfileEditorModalComponent,
     ChangeBranchNameModalComponent,
     CatalogueItemSelectModalComponent,
-    ExportModelDialogComponent
+    ExportModelDialogComponent,
+    ChangeLabelModalComponent
   ],
   providers: [
     ModalService,

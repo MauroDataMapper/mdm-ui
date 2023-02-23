@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,15 +24,26 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { Profile, ProfileField, ProfileValidationError, ProfileValidationErrorList } from '@maurodatamapper/mdm-resources';
+import {
+  ApiProperty,
+  ApiPropertyIndexResponse,
+  Profile,
+  ProfileField,
+  ProfileValidationError,
+  ProfileValidationErrorList
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { EditProfileModalConfiguration, EditProfileModalResult } from './edit-profile-modal.model';
-import {EditingService} from '@mdm/services/editing.service';
+import { MessageHandlerService } from '@mdm/services';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import {
+  EditProfileModalConfiguration,
+  EditProfileModalResult
+} from './edit-profile-modal.model';
+import { EditingService } from '@mdm/services/editing.service';
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
@@ -43,11 +53,14 @@ export class EditProfileModalComponent implements OnInit {
   profileData: Profile;
   description?: string;
   okBtnText: string;
+  showCanEditPropertyAlert = true;
   validationErrors: ProfileValidationErrorList = {
     total: 0,
     fieldTotal: 0,
     errors: []
   };
+  isValidated = false;
+  private readonly showCanEditPropertyAlertKey = 'ui.show_can_edit_property_alert';
 
   formOptionsMap = {
     integer: 'number',
@@ -61,12 +74,17 @@ export class EditProfileModalComponent implements OnInit {
   };
 
   constructor(
-    public dialogRef: MatDialogRef<EditProfileModalComponent, EditProfileModalResult>,
+    public dialogRef: MatDialogRef<
+      EditProfileModalComponent,
+      EditProfileModalResult
+    >,
     @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
     private markdownParser: MarkdownParserService,
     protected resources: MdmResourcesService,
     private dialog: MatDialog,
-    protected editing: EditingService) {
+    private messageHandler: MessageHandlerService,
+    protected editing: EditingService
+  ) {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (data.isNew && field.defaultValue) {
@@ -84,38 +102,83 @@ export class EditProfileModalComponent implements OnInit {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
+
+        this.attachReadOnlyPropertyToField(field);
       });
     });
 
     this.profileData = data.profile;
     this.description = data.description;
     this.okBtnText = data.okBtn ?? 'Save';
-
-    this.validate();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadDefaultCustomProfile(response.body.items);
+      });
+  }
 
   save() {
-    // Save Changes
-    const returnData: Profile = JSON.parse(JSON.stringify(this.profileData));
+    this.validateData()
+      .pipe(
+        switchMap((errorList) => {
+          this.validationErrors = errorList;
 
-    returnData.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        if (
-          field.dataType === 'folder' &&
-          field.currentValue &&
-          field.currentValue.length > 0
-        ) {
-          field.currentValue = JSON.stringify(field.currentValue);
-        }
+          if (errorList.fieldTotal > 0) {
+            return this.dialog
+              .openConfirmation({
+                data: {
+                  title: 'Validation issues',
+                  message: `There were ${errorList.fieldTotal} validation issue(s) found. Are you sure you want to save your changes?`,
+                  okBtnTitle: 'Yes, continue',
+                  cancelBtnTitle: 'No'
+                }
+              })
+              .afterClosed();
+          }
+
+          // No validation issues, continue
+          return of({ status: ModalDialogStatus.Ok });
+        }),
+        switchMap((dialogResult) => {
+          if (dialogResult.status !== ModalDialogStatus.Ok) {
+            return EMPTY;
+          }
+
+          // Continue to next step
+          return of({});
+        })
+      )
+      .subscribe(() => {
+        const returnData: Profile = JSON.parse(
+          JSON.stringify(this.profileData)
+        );
+
+        returnData.sections.forEach((section) => {
+          section.fields.forEach((field) => {
+            if (
+              field.dataType === 'folder' &&
+              field.currentValue &&
+              field.currentValue.length > 0
+            ) {
+              field.currentValue = JSON.stringify(field.currentValue);
+            }
+          });
+        });
+
+        this.dialogRef.close({
+          status: ModalDialogStatus.Ok,
+          profile: returnData
+        });
       });
-    });
-
-    this.dialogRef.close({
-      status: ModalDialogStatus.Ok,
-      profile: returnData
-    });
   }
 
   onCancel() {
@@ -127,39 +190,25 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   validate() {
-    this.resources.profile
-      .validateProfile(
-        this.data.profile.namespace,
-        this.data.profile.name,
-        this.data.catalogueItem.domainType,
-        this.data.catalogueItem.id,
-        this.profileData,
-        this.data.profile.version
-      )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.validationErrors = error.error as ProfileValidationErrorList;
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.validationErrors = {
-          total: 0,
-          errors: []
-        };
-      });
+    this.validateData().subscribe(
+      (errorList) => (this.validationErrors = errorList)
+    );
   }
 
-  getValidationError(metadataPropertyName: string): ProfileValidationError | undefined {
+  getValidationError(
+    metadataPropertyName: string
+  ): ProfileValidationError | undefined {
     if (this.validationErrors.fieldTotal === 0) {
       return undefined;
     }
 
-    return this.validationErrors.errors.find(e => e.metadataPropertyName === metadataPropertyName);
+    return this.validationErrors.errors.find(
+      (e) => e.metadataPropertyName === metadataPropertyName
+    );
   }
 
   sortBy(items: []) {
-    return items.sort((a, b) => a > b ? 1 : a === b ? 0 : -1);
+    return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
   }
 
   showAddElementToMarkdown(field: ProfileField) {
@@ -173,5 +222,44 @@ export class EditProfileModalComponent implements OnInit {
         field.currentValue = mkData;
       });
     });
-  };
+  }
+
+  private attachReadOnlyPropertyToField(field: ProfileField) {
+    field.readOnly =
+      field.uneditable ||
+      (this.data.finalised && !field.editableAfterFinalisation);
+  }
+
+  private validateData(): Observable<ProfileValidationErrorList> {
+    return this.resources.profile
+      .validateProfile(
+        this.data.profile.namespace,
+        this.data.profile.name,
+        this.data.catalogueItem.domainType,
+        this.data.catalogueItem.id,
+        this.profileData,
+        this.data.profile.version
+      )
+      .pipe(
+        map<unknown, ProfileValidationErrorList>(() => {
+          return {
+            total: 0,
+            fieldTotal: 0,
+            errors: []
+          };
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return of(error.error as ProfileValidationErrorList);
+        }),
+        finalize(() => (this.isValidated = true))
+      );
+  }
+
+  private loadDefaultCustomProfile(properties: ApiProperty[]) {
+    this.showCanEditPropertyAlert = JSON.parse(this.getContentProperty(properties, this.showCanEditPropertyAlertKey));
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
+  }
 }

@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
         Version
       </th>
       <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
-        {{ record.version }}
+        {{ record.version ?? record.modelVersionTag }}
       </td>
     </ng-container>
     <ng-container matColumnDef="navigate">
@@ -99,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
   class="bordered is-hidden pxy-2"
   [ngClass]="{ block: !totalNewVersionCount && !isLoadingResults }"
 >
-  <p class="marginless">There are no Newer Versions in this repository.</p>
+  <p class="marginless">There are no Newer Versions in this model.</p>
 </div>
 <div
   class="mdm--mat-pagination"

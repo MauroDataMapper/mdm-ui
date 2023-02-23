@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="terminology"
+<div
+  *ngIf="terminology"
   class="full-width mb-1 mdm--shadow-block"
   data-cy="catalogue-item-container"
   [attr.data-catalogue-item-id]="terminology?.id"
@@ -31,50 +31,7 @@ SPDX-License-Identifier: Apache-2.0
       mode="indeterminate"
     ></mat-progress-bar>
   </div>
-  <div class="panel">
-    <mdm-terminology-details
-      *ngIf="terminology"
-      [mcTerminology]="terminology"
-    ></mdm-terminology-details>
-
-    <div class="panel-body" *ngIf="showSearch">
-      <h4 class="marginless">Find Terms</h4>
-      <mdm-select
-        [width]="'100%'"
-        [acceptTypedInput]="false"
-        [valueType]="'dynamic'"
-        [minInputLength]="1"
-        [defaultPlaceholder]="'Search for Term...'"
-        [loadDynamicValues]="fetch"
-        [doNotCloseOnSelect]="true"
-        [idProperty]="'id'"
-        [displayProperty]="'definition'"
-        [searchProperty]="'definition'"
-        [pagination]="pagination"
-        (selectEvent)="onTermSelect($event[0])"
-      >
-        <ng-template #lineContent let-item let-inputText="inputText">
-          <a
-            ><span
-              [innerHTML]="
-                item.code + ': ' + item.definition | mchighlighter: inputText
-              "
-            ></span
-          ></a>
-          <div *ngIf="item.aliases && item.aliases.length > 0">
-            <span
-              *ngFor="let alias of item.aliases"
-              style="margin: 5px 0px; font-size: 12px"
-            >
-              <a
-                [innerHTML]="'(' + (alias | mchighlighter: inputText) + ')'"
-              ></a>
-            </span>
-          </div>
-        </ng-template>
-      </mdm-select>
-    </div>
-  </div>
+  <mdm-model-header *ngIf="terminology" [item]="terminology"></mdm-model-header>
 </div>
 
 <div *ngIf="!showEditForm">
@@ -109,13 +66,16 @@ SPDX-License-Identifier: Apache-2.0
           (totalCount)="termsCountEmitter($event)"
           (selectedTerm)="onTermSelect($event)"
           (addedTerm)="onTermAdd($event)"
-          (deletedTerm)="onTermDelete()"></mdm-term-list>
+          (deletedTerm)="onTermDelete()"
+        ></mdm-term-list>
       </div>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
         Relationship Types
-        <mdm-skeleton-badge *ngIf="isLoadingRelationshipTypes"></mdm-skeleton-badge>
+        <mdm-skeleton-badge
+          *ngIf="isLoadingRelationshipTypes"
+        ></mdm-skeleton-badge>
         ({{ relationshipTypesItemCount }})
       </ng-template>
 
@@ -125,7 +85,8 @@ SPDX-License-Identifier: Apache-2.0
           [terminology]="terminology"
           [canEdit]="showEdit"
           [canDelete]="showDelete"
-          (totalCount)="relationshipTypesCountEmitter($event)"></mdm-term-relationship-type-list>
+          (totalCount)="relationshipTypesCountEmitter($event)"
+        ></mdm-term-relationship-type-list>
       </div>
     </mat-tab>
     <mat-tab>

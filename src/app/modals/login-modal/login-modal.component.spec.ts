@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +19,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginModalComponent } from './login-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +29,7 @@ import { of } from 'rxjs';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FeaturesService } from '@mdm/services/features.service';
+import { MockDirective } from 'ng-mocks';
 
 interface SecurityHandlerServiceStub {
   signIn: jest.Mock;
@@ -96,9 +96,7 @@ describe('LoginModalComponent', () => {
           useValue: features
         }
       ],
-      declarations: [
-        LoginModalComponent
-      ]
+      declarations: [LoginModalComponent, MockDirective(MatDialogContent)]
     }).compileComponents();
   });
 
@@ -119,30 +117,37 @@ describe('LoginModalComponent', () => {
   });
 
   describe('Test: Login form', () => {
-
     it.each([
       ['', ''],
       ['test', ''],
       ['test@test.com', ''],
       ['', 'password'],
       ['test', 'password']
-    ])('should not submit invalid data - username: "%s", password: "%s"', (userName, password) => {
-      const spy = jest.spyOn(securityHandler, 'signIn');
-      component.signInForm.setValue({ userName, password });
-      component.login();
-      expect(spy).not.toHaveBeenCalled();
-    });
+    ])(
+      'should not submit invalid data - username: "%s", password: "%s"',
+      (userName, password) => {
+        const spy = jest.spyOn(securityHandler, 'signIn');
+        component.signInForm.setValue({ userName, password });
+        component.login();
+        expect(spy).not.toHaveBeenCalled();
+      }
+    );
 
     it('should submit valid data', () => {
-      securityHandler.signIn.mockImplementationOnce(() => of<UserDetails>({
-        id: '123',
-        firstName: 'test',
-        lastName: 'test',
-        userName: 'test@test.com',
-        email: 'test@test.com'
-      }));
+      securityHandler.signIn.mockImplementationOnce(() =>
+        of<UserDetails>({
+          id: '123',
+          firstName: 'test',
+          lastName: 'test',
+          userName: 'test@test.com',
+          email: 'test@test.com'
+        })
+      );
       const spy = jest.spyOn(securityHandler, 'signIn');
-      component.signInForm.setValue({ userName: 'test@test.com', password: 'password' });
+      component.signInForm.setValue({
+        userName: 'test@test.com',
+        password: 'password'
+      });
       component.login();
       expect(spy).toHaveBeenCalled();
     });

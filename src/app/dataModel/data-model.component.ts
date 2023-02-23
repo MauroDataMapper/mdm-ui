@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,6 +45,9 @@ export class DataModelComponent
   implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
+  showFinalised: string;
+  downloadLinks: HTMLAnchorElement[] = [];
+  compareToList: any[] = []; // TODO: define better type
 
   dataModel: DataModelDetail;
   editMode = false;
@@ -106,6 +108,7 @@ export class DataModelComponent
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
+    this.showFinalised = this.uiRouterGlobals.params.finalised;
 
     this.activeTab = this.tabs.getByName(
       this.uiRouterGlobals.params.tabView ?? 'description'
@@ -114,7 +117,7 @@ export class DataModelComponent
 
     this.title.setTitle('Data Model');
 
-    this.dataModelDetails(this.parentId);
+    this.dataModelDetails(this.parentId, this.showFinalised);
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
@@ -162,35 +165,77 @@ export class DataModelComponent
     }
   }
 
-  dataModelDetails(id: string) {
+  dataModelDetails(id: string, showFinalised: string) {
     let arr = [];
 
-    this.resourcesService.dataModel
-      .get(id)
-      .subscribe(async (result: DataModelDetailResponse) => {
-        this.dataModel = result.body;
-        this.catalogueItem = result.body;
+    if (!showFinalised) {
+      this.resourcesService.dataModel
+        .get(id)
+        .subscribe(async (result: DataModelDetailResponse) => {
+          this.dataModel = result.body;
+          this.catalogueItem = result.body;
 
-        this.watchDataModelObject();
-        this.parentId = this.catalogueItem.id;
+          if (this.dataModel.semanticLinks) {
+            this.compareToList = this.dataModel.semanticLinks
+              .filter(
+                (link) =>
+                  link.linkType === 'New Version Of' ||
+                  link.linkType === 'Superseded By'
+              )
+              .map((link) => link.target);
+          }
 
-        await this.resourcesService.versionLink
-          .list('dataModels', this.catalogueItem.id)
-          .subscribe((response) => {
-            if (response.body.count > 0) {
-              arr = response.body.items;
-              for (const val in arr) {
-                if (this.catalogueItem.id !== arr[val].targetModel.id) {
-                  this.semanticLinks.push(arr[val]);
+          this.watchDataModelObject();
+          this.parentId = this.catalogueItem.id;
+
+          await this.resourcesService.versionLink
+            .list('dataModels', this.catalogueItem.id)
+            .subscribe((response) => {
+              if (response.body.count > 0) {
+                arr = response.body.items;
+                for (const val in arr) {
+                  if (this.catalogueItem.id !== arr[val].targetModel.id) {
+                    this.semanticLinks.push(arr[val]);
+                  }
                 }
               }
-            }
-          });
+            });
 
-        if (this.sharedService.isLoggedIn(true)) {
-          this.DataModelPermissions(this.catalogueItem.id);
-        }
-      });
+          if (this.sharedService.isLoggedIn(true)) {
+            this.DataModelPermissions(this.catalogueItem.id);
+          }
+        });
+    } else {
+      const data = {
+        finalised: this.showFinalised
+      };
+      this.resourcesService.catalogueItem
+        .getPath('dataModels', id, data)
+        .subscribe(async (result: DataModelDetailResponse) => {
+          this.dataModel = result.body;
+          this.catalogueItem = result.body;
+
+          this.watchDataModelObject();
+          this.parentId = this.catalogueItem.id;
+
+          await this.resourcesService.versionLink
+            .list('dataModels', this.catalogueItem.id)
+            .subscribe((response) => {
+              if (response.body.count > 0) {
+                arr = response.body.items;
+                for (const val in arr) {
+                  if (this.catalogueItem.id !== arr[val].targetModel.id) {
+                    this.semanticLinks.push(arr[val]);
+                  }
+                }
+              }
+            });
+
+          if (this.sharedService.isLoggedIn(true)) {
+            this.DataModelPermissions(this.catalogueItem.id);
+          }
+        });
+    }
   }
 
   async DataModelPermissions(id: any) {

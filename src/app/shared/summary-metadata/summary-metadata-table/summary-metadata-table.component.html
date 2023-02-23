@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,61 +16,121 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4 class="marginless">
-        Data
-        <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
-        <span class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></span>
-    </h4>
+  <h4 class="marginless">
+    Data
+    <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
+    <span
+      class="fas fa-filter"
+      (click)="filterClick()"
+      matTooltip="Toggle search"
+    ></span>
+  </h4>
 </div>
 <div class="table-responsive">
-    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%; width: 40%;" scope="col">
-                <span [hidden]="!hideFilters">Name</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Name</mat-label>
-                        <input #filters matInput name="name" (keyup)="applyFilter()" />
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let record" style="word-wrap: break-word;">
-                <h4 class="marginless">{{ record.label }}</h4>
-                <p>{{ record.description }}</p>
-                <button mat-stroked-button color="primary" type="button" *ngIf="record.summaryMetadataReports.length > 0" (click)="this.popup(record)">
-                    More details
-                    <span class="fas fa-chevron-right"></span>
-                </button>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 60%; width: 60%;" columnName="description" scope="col">
-                Description
-            </th>
-            <td *matCellDef="let record" style="word-wrap: break-word;">
-                <mdm-summary-metadata-chart [summary]="record"></mdm-summary-metadata-chart>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+  <table
+    mat-table
+    matSort
+    [dataSource]="records"
+    class="mdm--mat-table mat-elevation-z3 table-striped"
+  >
+    <ng-container matColumnDef="label">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="cursor: pointer; max-width: 30%; width: 20%"
+        scope="col"
+        [disabled]="!hideFilters"
+      >
+        <span [hidden]="!hideFilters">Name</span>
+        <div [hidden]="hideFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Name</mat-label>
+            <input #filters matInput name="label" (keyup)="applyFilter()" />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word; vertical-align: middle;">
+        <h4 class="marginless">{{ record.label }}</h4>
+        <p>{{ record.description }}</p>
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          *ngIf="record.summaryMetadataReports.length > 0"
+          (click)="this.popup(record)"
+        >
+          More details
+          <span class="fas fa-chevron-right"></span>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="cursor: pointer; max-width: 60%; width: 60%"
+        columnName="description"
+        scope="col"
+      >
+        Description
+      </th>
+      <td *matCellDef="let record" style="word-wrap: break-word">
+        <mdm-summary-metadata-chart
+          [summary]="record"
+        ></mdm-summary-metadata-chart>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 </div>
-<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
-    <p class="marginless">There are no records in this table.</p>
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+>
+  <p class="marginless">There are no records in this table.</p>
+  <p *ngIf="!hideFilters" class="marginless">
+    This might be due to the current filter settings.
+  </p>
 </div>
 <div *ngIf="isLoadingResults">
-    <table class="mdm--mat-table mdm--skeleton-table">
-      <tr>
-        <th style="width: 30%;" scope="col" *ngIf="parent.editable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
-        <th style="width: 60%" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th
+        style="width: 30%"
+        scope="col"
+        *ngIf="parent.editable && !parent.finalised"
+      >
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '24px' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 60%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
     </tr>
     <tr>
-        <td><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'100%'}"></ngx-skeleton-loader></td>
-        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      </tr>
-    </table>
+      <td>
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '100%' }"
+        ></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+    </tr>
+  </table>
 </div>
 
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
-    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+>
+  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

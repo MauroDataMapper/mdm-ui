@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,22 +21,22 @@ import { MessageHandlerService } from '../utility/message-handler.service';
 import { BroadcastService } from '../broadcast.service';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
+export type Favourite = Required<CatalogueItem>;
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavouriteHandlerService {
-
   constructor(
     private userSettingsHandler: UserSettingsHandlerService,
     private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService) {
-  }
+    private broadcast: BroadcastService
+  ) {}
 
   add(element: CatalogueItem) {
-    const favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.get();
     let fvt = false;
-    favorites.forEach(favorite => {
+    favorites.forEach((favorite) => {
       if (favorite.id === element.id) {
         fvt = true;
         return;
@@ -48,23 +47,31 @@ export class FavouriteHandlerService {
     }
 
     this.userSettingsHandler.update('favourites', favorites);
-    this.userSettingsHandler.saveOnServer().subscribe(() => {
-      this.messageHandler.showSuccess(`${element.domainType} added to Favorites successfully.`);
-      this.broadcast.favouritesChanged({ name: 'add', element });
-    }, error => {
-      this.messageHandler.showError('There was a problem updating the Favorites.', error);
-    });
+    this.userSettingsHandler.saveOnServer().subscribe(
+      () => {
+        this.messageHandler.showSuccess(
+          `${element.domainType} added to Favorites successfully.`
+        );
+        this.broadcast.favouritesChanged({ name: 'add', element });
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Favorites.',
+          error
+        );
+      }
+    );
     return favorites;
   }
 
-  get() {
-    return this.userSettingsHandler.get('favourites');
+  get(): Favourite[] {
+    return this.userSettingsHandler.get<Favourite[]>('favourites');
   }
 
   isAdded(element: CatalogueItem) {
-    const favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.get();
     let fvt = false;
-    favorites.forEach(favorite => {
+    favorites.forEach((favorite) => {
       if (favorite.id === element.id) {
         fvt = true;
         return;
@@ -74,29 +81,33 @@ export class FavouriteHandlerService {
   }
 
   remove(element: CatalogueItem) {
-    const favorites = this.userSettingsHandler.get('favourites');
-    const index = favorites.findIndex(favorite =>
-      favorite.id === element.id
-    );
+    const favorites = this.get();
+    const index = favorites.findIndex((favorite) => favorite.id === element.id);
     if (index === -1) {
       return;
     }
 
     favorites.splice(index, 1);
     this.userSettingsHandler.update('favourites', favorites);
-    this.userSettingsHandler.saveOnServer().subscribe(() => {
-      this.messageHandler.showSuccess('Removed from Favorites successfully.');
-      this.broadcast.favouritesChanged({ name: 'remove', element });
-    }, (error) => {
-      this.messageHandler.showError('There was a problem updating the Favorites.', error);
-    });
+    this.userSettingsHandler.saveOnServer().subscribe(
+      () => {
+        this.messageHandler.showSuccess('Removed from Favorites successfully.');
+        this.broadcast.favouritesChanged({ name: 'remove', element });
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Favorites.',
+          error
+        );
+      }
+    );
   }
 
   toggle(element: CatalogueItem) {
-    const favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.get();
     let processFinish = false;
     let fvt = false;
-    favorites.forEach(favorite => {
+    favorites.forEach((favorite) => {
       if (favorite.id === element.id) {
         fvt = true;
         return;

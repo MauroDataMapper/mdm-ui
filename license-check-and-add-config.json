@@ -1,5 +1,6 @@
 {
   "ignore": [
+    ".angular",
     ".git",
     ".github",
     "coverage",
@@ -27,7 +28,8 @@
     "**/*.ttf",
     "**/*.woff",
     "**/*.woff2",
-    "sonar-project.properties"
+    "sonar-project.properties",
+    "src/app/external/**"
   ],
   "license": "NOTICE",
 

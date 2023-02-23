@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width" *ngIf="result">
-  <mdm-classification-details
-    [classification]="result"
-  ></mdm-classification-details>
+  <mdm-model-header [item]="result"></mdm-model-header>
 </div>
 
 <mat-tab-group

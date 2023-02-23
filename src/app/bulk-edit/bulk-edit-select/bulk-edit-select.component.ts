@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,8 +60,8 @@ interface CatalogueItemDomainTypeOption {
   styleUrls: ['./bulk-edit-select.component.scss']
 })
 export class BulkEditSelectComponent implements OnInit, OnDestroy {
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onNext = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+  @Output() next = new EventEmitter<void>();
 
   /** Two way binding */
   @Input() context: BulkEditContext;
@@ -79,28 +78,31 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   childItemSelections = new SelectionModel<MauroItem>(true);
 
   setupForm = new FormGroup({
-    childDomainType: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    childItems: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    profiles: new FormControl([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    filter: new FormControl(null)
+    childDomainType: new FormControl<CatalogueItemDomainType>(
+      null,
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ),
+    childItems: new FormControl<MauroItem[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    profiles: new FormControl<ProfileSummary[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    filter: new FormControl('')
   });
 
-  private unsubscribe$ = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   get childDomainType() {
-    return this.setupForm.get('childDomainType');
+    return this.setupForm.controls.childDomainType;
   }
 
   get childItems() {
-    return this.setupForm.get('childItems');
+    return this.setupForm.controls.childItems;
   }
 
   get profiles() {
-    return this.setupForm.get('profiles');
+    return this.setupForm.controls.profiles;
   }
 
   get filter() {
-    return this.setupForm.get('filter');
+    return this.setupForm.controls.filter;
   }
 
   get showBreadcrumbs() {
@@ -122,7 +124,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     this.childDomainType.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),
-        switchMap((value: CatalogueItemDomainType) => {
+        switchMap((value) => {
           this.context.childDomainType = value;
           this.contextChanged.emit(this.context);
 
@@ -161,7 +163,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         debounceTime(500),
         distinctUntilChanged(),
-        map((value: string) =>
+        map((value) =>
           this.availableChildItems.filter((item) =>
             item.label.toLowerCase().includes(value.toLowerCase())
           )
@@ -187,12 +189,12 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     return option.name === value.name && option.namespace === value.namespace;
   }
 
-  cancel() {
-    this.onCancel.emit();
+  onCancel() {
+    this.cancel.emit();
   }
 
-  next() {
-    this.onNext.emit();
+  onNext() {
+    this.next.emit();
   }
 
   childItemSelected(selection: MatSelectionListChange) {
@@ -232,16 +234,24 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     ) {
       return [
         {
-          domainType: CatalogueItemDomainType.ModelDataType,
-          displayName: 'Data Types'
-        },
-        {
           domainType: CatalogueItemDomainType.DataClass,
           displayName: 'Data Classes'
         },
         {
           domainType: CatalogueItemDomainType.DataElement,
           displayName: 'Data Elements'
+        },
+        {
+          domainType: CatalogueItemDomainType.PrimitiveType,
+          displayName: 'Data Types - Primitives'
+        },
+        {
+          domainType: CatalogueItemDomainType.EnumerationType,
+          displayName: 'Data Types - Enumerations'
+        },
+        {
+          domainType: CatalogueItemDomainType.ModelDataType,
+          displayName: 'Data Types - Models'
         }
       ];
     }
@@ -297,11 +307,18 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         filters
       );
     } else if (
+      this.context.childDomainType === CatalogueItemDomainType.PrimitiveType ||
+      this.context.childDomainType ===
+        CatalogueItemDomainType.EnumerationType ||
       this.context.childDomainType === CatalogueItemDomainType.ModelDataType
     ) {
+      const dataTypeFilters: FilterQueryParameters = {
+        ...filters,
+        domainType: this.context.childDomainType
+      };
       request$ = this.resources.dataType.list(
         this.context.rootItem.id,
-        filters
+        dataTypeFilters
       );
     } else if (this.context.childDomainType === CatalogueItemDomainType.Term) {
       // This is a workaround for the fact that the `all` param doesn't work on Term lists

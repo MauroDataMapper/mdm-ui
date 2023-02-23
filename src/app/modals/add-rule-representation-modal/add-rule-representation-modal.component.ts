@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,36 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-
-export class RuleLanguages {
-  static supportedLanguages = [
-    { displayName: 'SQL', value: 'sql', aceValue: 'sql', fileExt: 'sql' },
-    { displayName: 'C#', value: 'c#', aceValue: 'csharp', fileExt: 'cs' },
-    {
-      displayName: 'JavaScript',
-      value: 'javascript',
-      aceValue: 'javascript',
-      fileExt: 'js'
-    },
-
-    { displayName: 'Java', value: 'java', aceValue: 'java', fileExt: 'java' },
-    {
-      displayName: 'Typescript',
-      value: 'typescript',
-      aceValue: 'typescript',
-      fileExt: 'ts'
-    },
-    {
-      displayName: 'Drools',
-      value: 'drools',
-      aceValue: 'drools',
-      fileExt: 'drools'
-    },
-    { displayName: 'Text', value: 'text', aceValue: 'text', fileExt: 'txt' },
-    { displayName: 'DMN', value: 'dmn', aceValue: '', fileExt: 'dmn' }
-  ];
-}
-
 import {
   Component,
   ElementRef,
@@ -61,11 +30,78 @@ import 'brace/mode/drools';
 import 'brace/mode/sql';
 import 'brace/mode/java';
 import 'brace/mode/javascript';
+import 'brace/mode/json';
 import 'brace/mode/typescript';
 import 'brace/mode/csharp';
 import 'brace/mode/text';
 import 'brace/theme/github';
 import { MessageHandlerService } from '@mdm/services';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { AceConfigInterface } from 'ngx-ace-wrapper';
+
+export class RuleLanguage {
+  displayName: string;
+  value: string;
+  aceValue?: string;
+  fileExt?: string;
+}
+
+export const supportedLanguages: RuleLanguage[] = [
+  { displayName: 'SQL', value: 'sql', aceValue: 'sql', fileExt: 'sql' },
+  { displayName: 'C#', value: 'c#', aceValue: 'csharp', fileExt: 'cs' },
+  {
+    displayName: 'JavaScript',
+    value: 'javascript',
+    aceValue: 'javascript',
+    fileExt: 'js'
+  },
+
+  { displayName: 'Java', value: 'java', aceValue: 'java', fileExt: 'java' },
+  {
+    displayName: 'JSON',
+    value: 'json',
+    aceValue: 'json',
+    fileExt: 'json'
+  },
+  {
+    displayName: 'JSON (MEQL)',
+    value: 'json-meql',
+    aceValue: 'json',
+    fileExt: 'json'
+  },
+  {
+    displayName: 'Typescript',
+    value: 'typescript',
+    aceValue: 'typescript',
+    fileExt: 'ts'
+  },
+  {
+    displayName: 'Drools',
+    value: 'drools',
+    aceValue: 'drools',
+    fileExt: 'drools'
+  },
+  { displayName: 'Text', value: 'text', aceValue: 'text', fileExt: 'txt' },
+  { displayName: 'DMN', value: 'dmn', fileExt: 'dmn' }
+];
+
+export interface AddRuleRepresentationModalConfig {
+  language: string;
+  representation: string;
+  title?: string;
+  message?: string;
+  okBtnTitle?: string;
+  cancelBtnTitle?: string;
+  cancelShown?: boolean;
+  btnType?: string;
+}
+
+export interface AddRuleRepresentationModalResult {
+  status: ModalDialogStatus;
+  language?: string;
+  representation?: string;
+}
 
 @Component({
   selector: 'mdm-add-rule-representation-modal',
@@ -88,50 +124,74 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   okBtn: string;
   cancelBtn: string;
   btnType: string;
-  inputValue: { label: string; groups: any[] };
   modalTitle: string;
   message: string;
-  inputLabel: string;
   allGroups = [];
   selectedGroups = [];
   modeler: DmnModeler;
-  supportedLanguage = RuleLanguages.supportedLanguages;
-  selectedLanguage = this.supportedLanguage[0];
-  myFilename = 'Import File';
-  options:any = { showPrintMargin  : false};
+  supportedLanguages = supportedLanguages;
+  aceEditorConfig: AceConfigInterface = { showPrintMargin: false };
+
+  formGroup = new FormGroup({
+    language: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    representation: new FormControl(''),
+    importFileName: new FormControl('')
+  });
+
+  get language() {
+    return this.formGroup.controls.language;
+  }
+
+  get representation() {
+    return this.formGroup.controls.representation;
+  }
+
+  get importFileName() {
+    return this.formGroup.controls.importFileName;
+  }
 
   constructor(
-    private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<
+      AddRuleRepresentationModalComponent,
+      AddRuleRepresentationModalResult
+    >,
+    @Inject(MAT_DIALOG_DATA) public data: AddRuleRepresentationModalConfig,
     private messageHandler: MessageHandlerService
   ) {}
 
   ngOnInit(): void {
-    this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
+    this.okBtn = this.data.okBtnTitle ? this.data.okBtnTitle : 'Save';
     this.btnType = this.data.btnType ? this.data.btnType : 'primary';
-    this.cancelBtn = this.data.cancelBtn ? this.data.cancelBtn : 'Cancel';
-    this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
-    this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
+    this.cancelBtn = this.data.cancelBtnTitle
+      ? this.data.cancelBtnTitle
+      : 'Cancel';
+    this.modalTitle = this.data.title ? this.data.title : '';
     this.message = this.data.message;
 
-    this.inputValue = {
-      label: '',
-      groups: []
-    };
+    this.supportedLanguages = this.supportedLanguages.sort((a, b) =>
+      a.displayName.localeCompare(b.displayName)
+    );
 
-    this.supportedLanguage.forEach((x) => {
-      if (x.value === this.data.language) {
-        this.selectedLanguage = x;
-      }
-    });
+    this.language.setValue(this.data.language);
+    this.representation.setValue(this.data.representation);
 
     if (this.data.language === 'dmn') {
       this.createDMNWindow();
     }
   }
 
-  showAceEditor() {
-    return this.selectedLanguage.aceValue.length > 0;
+  get selectedLanguage() {
+    if (!this.language.value) {
+      return undefined;
+    }
+
+    return this.supportedLanguages.find(
+      (lang) => lang.value === this.language.value
+    );
+  }
+
+  get showAceEditor() {
+    return !!this.selectedLanguage?.aceValue;
   }
 
   createDMNWindow(content?: any) {
@@ -139,8 +199,8 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       if (!this.modeler) {
         this.modeler = new DmnModeler({
           container: '#dmn',
-          width: '600px',
-          height: '600px'
+          width: '100%',
+          height: '30vh'
         });
       }
 
@@ -168,44 +228,65 @@ export class AddRuleRepresentationModalComponent implements OnInit {
     }, 1000);
   }
 
-  otherFileAdded(fileInput: any) {
-    if (fileInput.target.files && fileInput.target.files[0]) {
-      this.myFilename = fileInput.target.files[0].name;
-      const lang = this.supportedLanguage.find(
-        (x) => x.fileExt === this.myFilename.split('.')[1]
+  otherFileAdded(fileInput: Event) {
+    const target = fileInput.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      const file = target.files[0];
+
+      this.importFileName.setValue(file.name);
+
+      const lang = this.supportedLanguages.find(
+        (x) => x.fileExt === file.name.split('.')[1]
       );
 
-      if (lang) {
-        this.selectedLanguage = lang;
-        const reader = new FileReader();
-        reader.onload = () => {
-          if(lang.value === 'dmn')
-          {
-            this.createDMNWindow(reader.result);
-          }
-          else{
-          this.data.representation = reader.result;
-          }
-        };
-        reader.readAsText(fileInput.target.files[0]);
+      if (!lang) {
+        this.importFileName.setValue(null);
+        this.messageHandler.showError(
+          'Unable to import file. Please copy and paste instead.'
+        );
+        return;
       }
-      else{
-        this.myFilename = 'Import File';
-        this.messageHandler.showError('Unable in import file please copy and paste');
-      }
+
+      this.language.setValue(lang.value);
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (lang.value === 'dmn') {
+          this.createDMNWindow(reader.result);
+        } else {
+          this.representation.setValue(reader.result.toString());
+        }
+      };
+      reader.readAsText(file);
     }
   }
 
-  save() {
-    this.data.language = this.selectedLanguage.value;
-    if (this.data.language === 'dmn') {
+  cancel() {
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+  }
+
+  confirm() {
+    if (!this.formGroup.valid) {
+      return;
+    }
+
+    let representation: string = this.representation.value;
+
+    if (this.selectedLanguage.value === 'dmn') {
       this.modeler.saveXML({ format: true }, (err, xml) => {
         if (err) {
           return;
         }
-        this.data.representation = xml;
+
+        representation = xml;
       });
     }
-    this.dialogRef.close(this.data);
+
+    this.dialogRef.close({
+      status: ModalDialogStatus.Ok,
+      language: this.language.value,
+      representation: representation ?? ''
+    });
   }
 }

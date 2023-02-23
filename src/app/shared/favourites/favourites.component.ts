@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,17 +20,22 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ViewChild,
   OnDestroy
 } from '@angular/core';
-import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { forkJoin, of, Subject } from 'rxjs';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { catchError, map, takeUntil } from 'rxjs/operators';
+import {
+  Favourite,
+  FavouriteHandlerService
+} from '@mdm/services/handlers/favourite-handler.service';
+import { Subject } from 'rxjs';
+import { finalize, map, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from '@mdm/services';
-import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
+import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
+import {
+  FLAT_TREE_LEVEL_START,
+  isDomainExpandable,
+  MauroItemTreeFlatNode
+} from '../mauro-item-tree/mauro-item-tree.types';
 
 @Component({
   selector: 'mdm-favourites',
@@ -39,28 +43,16 @@ import { CatalogueItem } from '@maurodatamapper/mdm-resources';
   styleUrls: ['./favourites.component.sass']
 })
 export class FavouritesComponent implements OnInit, OnDestroy {
-  @Output() favouriteClick = new EventEmitter<any>();
-  @Output() favouriteDbClick = new EventEmitter<any>();
-  @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
+  @Output() selectionChange = new EventEmitter<MauroItemTreeFlatNode>();
 
   reloading = false;
-  allFavourites: Array<Favorite>;
-  storedFavourites :  Array<Favorite>;
-  selectedFavourite:  any;
-  menuOptions = [];
+  treeNodes: MauroItemTreeFlatNode[] = [];
+  favourites: Favourite[] = [];
 
-  favourites = [];
-  formData = {
-    filterCriteria: ''
-  };
-
-  contextMenuPosition = { x: '0px', y: '0px' };
-
-  private $unsubscribe = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private resources: MdmResourcesService,
-    private elementTypes: ElementTypesService,
+    private itemProvider: MauroItemProviderService,
     private favouriteHandler: FavouriteHandlerService,
     private broadcast: BroadcastService
   ) {}
@@ -70,138 +62,60 @@ export class FavouritesComponent implements OnInit, OnDestroy {
 
     this.broadcast
       .onFavouritesChanged()
-      .pipe(takeUntil(this.$unsubscribe))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => this.loadFavourites());
   }
 
   ngOnDestroy(): void {
-    this.$unsubscribe.next();
-    this.$unsubscribe.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadFavourites = () => {
     this.reloading = true;
-    const queries = [];
-    this.allFavourites = [];
     this.favourites = [];
-    this.storedFavourites = this.favouriteHandler.get();
 
-    const domainTypes = this.elementTypes.getBaseTypes();
-
-    this.storedFavourites.forEach((favourite) => {
-      const resourceName = domainTypes[favourite.domainType].resourceName;
-      // make sure we have a resource name for it
-      if (!this.resources[resourceName]) {
-        return;
-      }
-
-      queries.push(
-        this.resources[resourceName]
-          .get(favourite.id, {}, { handleGetErrors: false })
-          .pipe(
-            map((res) => res),
-            catchError(() => of('Not Found'))
-          )
-      );
-    });
-
-    if (queries.length === 0) {
-      this.reloading = false;
-    }
-
-    forkJoin(queries).subscribe((results) => {
-      let index = 0;
-      results.forEach((res: any) => {
-        if (res !== 'Not Found') {
-          const result = res.body;
-          this.allFavourites[index] = result;
-          index++;
-        }
+    const identifiers: MauroIdentifier[] = this.favouriteHandler
+      .get()
+      .map((favourite) => {
+        return {
+          ...favourite,
+          fetchOptions: {
+            failSilently: true
+          }
+        };
       });
-      this.reloading = false;
-      this.favourites = this.filter(
-        Object.assign([], this.allFavourites),
-        this.formData.filterCriteria
-      );
-    });
+
+    this.itemProvider
+      .getMany(identifiers)
+      .pipe(
+        map((items) => this.cleanUnusedFavourites(items)),
+        map((items) => items.sort((a, b) => a.label.localeCompare(b.label))),
+        finalize(() => (this.reloading = false))
+      )
+      .subscribe((items) => {
+        this.favourites = items;
+        this.treeNodes = items.map((item) => {
+          return {
+            ...item,
+            level: FLAT_TREE_LEVEL_START,
+            expandable: isDomainExpandable(item.domainType)
+          };
+        });
+      });
   };
 
-  filter = (allFavourites, text) => {
-    let i = allFavourites.length - 1;
-    while (i >= 0) {
-      if (
-        allFavourites[i].label
-          .trim()
-          .toLowerCase()
-          .indexOf(text.trim().toLowerCase()) === -1
-      ) {
-        allFavourites.splice(i, 1);
-      }
-      i--;
-    }
-    return allFavourites;
-  };
-
-  nodeClick = ($event, favourite) => {
-    this.click($event, favourite);
-  };
-
-  nodeDbClick = ($event, favourite) => {
-    this.click($event, favourite);
-  };
-
-  click = ($event, favourite) => {
-    favourite.selected = !favourite.selected;
-
-    if (this.selectedFavourite) {
-      this.selectedFavourite.selected = false;
-    }
-    this.selectedFavourite = favourite;
-
-    if (this.favouriteDbClick) {
-      this.favouriteDbClick.emit(favourite);
-    }
-  };
-
-  dataModelContextMenu(favourite : CatalogueItem) {
-    const subMenu = [
-      {
-        name: 'Remove from Favourites',
-        action: () => {
-          this.favouriteHandler.remove(favourite);
-        }
-      }
-    ];
-    return subMenu;
+  selected(node: MauroItemTreeFlatNode) {
+    this.selectionChange.emit(node);
   }
 
-  rightClick = (event, favourite) => {
-    if (favourite.domainType === 'DataModel') {
-      this.menuOptions = this.dataModelContextMenu(favourite);
-    }
-    event.preventDefault();
-    this.contextMenuPosition.x = `${event.clientX}px`;
-    this.contextMenuPosition.y = `${event.clientY}px`;
-    this.contextMenu.menuData = { favourite };
-    this.contextMenu.menu.focusFirstItem('mouse');
+  private cleanUnusedFavourites(items: MauroItem[]) {
+    // Identify catalogue items that were favourites but have been removed from the catalogue
+    // Then clear them from the user favourites to not be issues anymore
+    items
+      .filter((item) => item.error)
+      .forEach((item) => this.favouriteHandler.remove(item));
 
-    this.contextMenu.openMenu();
-  };
-
-  onSearchInputKeyDown() {
-    this.search();
-  };
-
-  search = () => {
-    this.favourites = this.filter(
-      Object.assign([], this.allFavourites),
-      this.formData.filterCriteria
-    );
-  };
-}
-
-export interface Favorite
-{
-  id:string;
-  domainType:string;
+    return items.filter((item) => !item.error);
+  }
 }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,
-  MdmTreeItem
+  MdmTreeItem,
+  ModelDomainType
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
@@ -36,12 +32,23 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 })
 export class CatalogueSearchAdvancedFormComponent implements OnInit {
   advancedSearch: boolean;
-  formGroup: FormGroup;
   classifications: Classifier[];
   @Output() searchEvent = new EventEmitter<string>();
 
+  formGroup = new FormGroup({
+    context: new FormControl<MdmTreeItem[]>(null),
+    domainTypes: new FormControl<ModelDomainType[]>([]),
+    labelOnly: new FormControl(true),
+    exactMatch: new FormControl(false),
+    classifiers: new FormControl<any[]>([]),
+    createdAfter: new FormControl<Date>(null),
+    createdBefore: new FormControl<Date>(null),
+    lastUpdatedAfter: new FormControl<Date>(null),
+    lastUpdatedBefore: new FormControl<Date>(null)
+  });
+
   get context() {
-    return this.formGroup.get('context');
+    return this.formGroup.controls.context;
   }
 
   set contextValue(value: MdmTreeItem[]) {
@@ -49,7 +56,7 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   get classifiers() {
-    return this.formGroup.get('classifiers');
+    return this.formGroup.controls.classifiers;
   }
 
   get classifierNames() {
@@ -65,46 +72,34 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   get domainTypes() {
-    return this.formGroup.get('domainTypes');
+    return this.formGroup.controls.domainTypes;
   }
 
   get labelOnly() {
-    return this.formGroup.get('labelOnly');
+    return this.formGroup.controls.labelOnly;
   }
 
   get exactMatch() {
-    return this.formGroup.get('exactMatch');
+    return this.formGroup.controls.exactMatch;
   }
 
   get lastUpdatedAfter() {
-    return this.formGroup.get('lastUpdatedAfter');
+    return this.formGroup.controls.lastUpdatedAfter;
   }
 
   get lastUpdatedBefore() {
-    return this.formGroup.get('lastUpdatedBefore');
+    return this.formGroup.controls.lastUpdatedBefore;
   }
 
   get createdAfter() {
-    return this.formGroup.get('createdAfter');
+    return this.formGroup.controls.createdAfter;
   }
 
   get createdBefore() {
-    return this.formGroup.get('createdBefore');
+    return this.formGroup.controls.createdBefore;
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      context: new FormControl(null),
-      domainTypes: new FormControl(''),
-      labelOnly: new FormControl(true),
-      exactMatch: new FormControl(false),
-      classifiers: new FormControl(''),
-      createdAfter: new FormControl(null),
-      createdBefore: new FormControl(null),
-      lastUpdatedAfter: new FormControl(null),
-      lastUpdatedBefore: new FormControl(null)
-    });
-
     this.resources.classifier
       .list({ all: true })
       .subscribe((result: ClassifierIndexResponse) => {

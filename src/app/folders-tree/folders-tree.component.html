@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,60 +15,141 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
-<mat-tree #foldersTree [attr.name]="treeName" [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
-   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
-        <button type="button" mat-icon-button disabled aria-label="Disabled button">
-            <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
-        </button>
+<div
+  *ngIf="showDropTopPlaceHolder"
+  class="mdm-folders-tree dnd-top-placeholder"
+  (dragenter)="dragEnterTop($event)"
+  (dragover)="dragOverTop($event)"
+  (dragleave)="dragLeave($event)"
+  (drop)="dropTop($event)"
+  (dragend)="dragEnd()"
+>
+  Top Level Dropzone
+</div>
+<mat-tree
+  #foldersTree
+  [attr.name]="treeName"
+  [dataSource]="dataSource"
+  [treeControl]="treeControl"
+  (contextmenu)="noop($event)"
+  aria-label="Folders tree"
+>
+  <mat-tree-node
+    *matTreeNodeDef="let node"
+    matTreeNodePadding
+    matTreeNodePaddingIndent="25"
+  >
+    <button type="button" mat-icon-button disabled aria-label="Disabled button">
+      <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
+    </button>
 
-        <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
-        <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
-    </mat-tree-node>
-      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25">
-        <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
-        <ng-container *ngIf="!hasChild(-1,node)">
-            <button type="button" mat-icon-button disabled aria-label="Disabled button">
-                <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
-            </button>
-        </ng-container>
+    <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
+    <ng-container
+      *ngTemplateOutlet="nodeContentTemplate; context: { $implicit: node }"
+    ></ng-container>
+  </mat-tree-node>
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: hasChild"
+    matTreeNodePadding
+    matTreeNodePaddingIndent="25"
+  >
+    <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
+    <ng-container *ngIf="!hasChild(-1, node)">
+      <button
+        type="button"
+        mat-icon-button
+        disabled
+        aria-label="Disabled button"
+      >
+        <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
+      </button>
+    </ng-container>
 
-        <!-- Default to show expansion icon -->
-        <ng-container *ngIf="hasChild(-1,node)">
-            <button type="button" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)">
-                <mat-icon class="mat-icon-rtl-mirror" fontSet="fas" fontIcon="{{treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus'}}"></mat-icon>
-            </button>
-        </ng-container>
+    <!-- Default to show expansion icon -->
+    <ng-container *ngIf="hasChild(-1, node)">
+      <button
+        type="button"
+        mat-icon-button
+        matTreeNodeToggle
+        [attr.aria-label]="'Toggle ' + node.name"
+        (click)="toggleChildren(node)"
+      >
+        <mat-icon
+          class="mat-icon-rtl-mirror"
+          fontSet="fas"
+          fontIcon="{{ treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus' }}"
+        ></mat-icon>
+      </button>
+    </ng-container>
 
-        <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
-        <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
-    </mat-tree-node>
+    <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
+    <ng-container
+      *ngTemplateOutlet="nodeContentTemplate; context: { $implicit: node }"
+    ></ng-container>
+  </mat-tree-node>
 </mat-tree>
 
 <!-- This is a stub to avoid menu trigger by left-click -->
-<div style="visibility: hidden; position: fixed"
-    [style.left]="contextMenuPosition.x"
-    [style.top]="contextMenuPosition.y"
-    [matMenuTriggerFor]="treeMenu">
-</div>
+<div
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="treeMenu"
+></div>
 
 <mat-menu #treeMenu="matMenu">
   <ng-template matMenuContent let-node="node">
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCreateElements(node)" [matMenuTriggerFor]="createMenu" [matMenuTriggerData]="{node: node}">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canCreateElements(node)"
+      [matMenuTriggerFor]="createMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
       <span class="fas fa-plus"></span> Add
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canAddToFavorites(node)" (click)="handleFavourites(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canAddToFavorites(node)"
+      (click)="handleFavourites(node)"
+    >
       <span *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></span>
-      <span *ngIf="isFavourited(node)" class="fas fa-star is-not-favourite"></span>
-      {{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites
+      <span
+        *ngIf="isFavourited(node)"
+        class="fas fa-star is-not-favourite"
+      ></span>
+      {{ isFavourited(node) ? 'Remove from' : 'Add to' }} Favourites
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="viewMenu" [matMenuTriggerData]="{node: node}">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      [matMenuTriggerFor]="viewMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
       <span class="fas fa-binoculars"></span> View
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canCompare(node)" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canCompare(node)"
+      [matMenuTriggerFor]="compareMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
       <span class="fas fa-eye"></span> Compare
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canDeleteElements(node)" [matMenuTriggerFor]="deleteMenu" [matMenuTriggerData]="{node: node}">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canDeleteElements(node)"
+      [matMenuTriggerFor]="deleteMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
       <span class="far fa-trash-alt warning"></span> Delete
     </button>
   </ng-template>
@@ -78,10 +158,21 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "View" -->
 <mat-menu #viewMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="canSetTreeFocus(node)" (click)="focusNode(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canSetTreeFocus(node)"
+      (click)="focusNode(node)"
+    >
       <span class="fas fa-eye"></span> Focus on this element
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="openWindow(node)"
+    >
       <span class="fas fa-external-link-alt"></span> Open in new window
     </button>
   </ng-template>
@@ -90,25 +181,80 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Create" -->
 <mat-menu #createMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateFolderContainer" (click)="handleAddFolder(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateFolderContainer"
+      (click)="handleAddFolder(node)"
+    >
       <span class="fas fa-folder dataModelTypeIcon"></span> Folder
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddDataModel(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddDataModel(node)"
+    >
       <span class="fas fa-file-alt dataModelTypeIcon"></span> Data Model
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddTerminology(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddTerminology(node)"
+    >
       <span class="fas fa-book dataModelTypeIcon"></span> Terminology
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModel" (click)="handleAddCodeSet(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddCodeSet(node)"
+    >
       <span class="fas fa-list dataModelTypeIcon"></span> Code Set
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && (node.domainType === 'DataModel' || node.domainType === 'DataClass')" (click)="handleAddDataClass(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddReferenceDataModel(node)"
+    >
+      <span class="fas fa-file-contract dataModelTypeIcon"></span> Reference
+      Data Model
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="
+        node.access.canCreateModelItem &&
+        (node.domainType === 'DataModel' || node.domainType === 'DataClass')
+      "
+      (click)="handleAddDataClass(node)"
+    >
       <span class="fas fa-puzzle-piece dataModelTypeIcon"></span> Data Class
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'" (click)="handleAddDataType(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'"
+      (click)="handleAddDataType(node)"
+    >
       <span class="fas fa-code dataModelTypeIcon"></span> Data Type
     </button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'" (click)="handleAddDataElement(node)">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'"
+      (click)="handleAddDataElement(node)"
+    >
       <span class="fas fa-atom dataModelTypeIcon"></span> Data Element
     </button>
   </ng-template>
@@ -117,47 +263,132 @@ SPDX-License-Identifier: Apache-2.0
 <!-- Sub-menu for "Delete" -->
 <mat-menu #deleteMenu="matMenu" class="tree-context-menu">
   <ng-template matMenuContent let-node="node">
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showSoftDelete && !node.deleted" (click)="handleSoftDelete(node)">Mark as deleted</button>
-    <button type="button" mat-menu-item class="tree-context-menu-item" *ngIf="node.access.showPermanentDelete" (click)="handlePermanentDelete(node)">Delete <span class="warning">permanently</span></button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.showSoftDelete && !node.deleted"
+      (click)="handleSoftDelete(node)"
+    >
+      Mark as deleted
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.showPermanentDelete"
+      (click)="handlePermanentDelete(node)"
+    >
+      Delete <span class="warning">permanently</span>
+    </button>
   </ng-template>
 </mat-menu>
 
 <!-- Sub-menu for "Compare..." -->
 <mat-menu #compareMenu="matMenu" class="tree-context-menu">
-    <ng-template matMenuContent let-node="node">
-        <button type="button" mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node)">Another Data Model</button>
-        <button type="button" *ngFor="let targetVersion of targetVersions" mat-menu-item class="tree-context-menu-item" (click)="handleDataModelCompare(node, targetVersion)">
-            {{targetVersion.label}} <span style="padding-left: 5px;font-style:italic;font-size: 11px;">{{targetVersion.documentationVersion}}</span>
-        </button>
-    </ng-template>
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="handleDataModelCompare(node)"
+    >
+      Another Data Model
+    </button>
+    <button
+      type="button"
+      *ngFor="let targetVersion of targetVersions"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="handleDataModelCompare(node, targetVersion)"
+    >
+      {{ targetVersion.label }}
+      <span style="padding-left: 5px; font-style: italic; font-size: 11px">{{
+        targetVersion.documentationVersion
+      }}</span>
+    </button>
+  </ng-template>
 </mat-menu>
 
 <!-- Template for tree node content. Assumed an $implicit node is provided in context. -->
 <ng-template #nodeContentTemplate let-node>
-    <div class="mat-tree-node-content"  [ngClass]="{'mat-tree-node-active': node === selectedNode, 'mat-tree-node-inactive': node !== selectedNode}" [draggable]="enableDragAndDrop && draggableDomains.includes(node.domainType)" (dragstart)="dragStart(node, $event)" (drop)="drop(node, $event)" (dragenter)="dragEnter(node, $event)" (dragover)="dragOver(node, $event)" (dragleave)="dragLeave($event)" (dragend)="dragEnd()">
-        <!-- <div> -->
-          <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
-          <mat-icon *ngIf="hasIcon(node)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
-          <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
-        <!-- </div> -->
-        <small *ngIf="node.branchName" class="ml-1 text-muted">
-          <span> | </span>
-          <span class="fas fa-code-branch"></span>
-          {{node.branchName}}
-        </small>
-        <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
-          <span> | </span>
-          <span  class="fas fa-file-alt"></span>
-           <span *ngIf="node.modelVersion">{{node.modelVersion}}</span>
-           <span *ngIf="node.version">{{node.version}}</span>
-        </small>
-        <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
-          <span> | </span>
-          <span class="fas fa-star favouritesIcon addedToFavourite"></span>
-        </small>
-        <small *ngIf="node.domainType === 'FederatedDataModel' && node.dataModel && node.dataModel.isSubscribed" class="ml-1 text-muted">
-          <span> | </span>
-          <span class="fas fa-check-circle subscribedIcon" matTooltip="Subscribed"></span>
-        </small>
-    </div>
+  <div
+    class="mat-tree-node-content"
+    [ngClass]="{
+      'mat-tree-node-active': node === selectedNode,
+      'mat-tree-node-inactive': node !== selectedNode
+    }"
+    [draggable]="
+      enableDragAndDrop && draggableDomains.includes(node.domainType)
+    "
+    (dragstart)="dragStart(node, $event)"
+    (drop)="drop(node, $event)"
+    (dragenter)="dragEnter(node, $event)"
+    (dragover)="dragOver(node, $event)"
+    (dragleave)="dragLeave($event)"
+    (dragend)="dragEnd()"
+  >
+    <!-- <div> -->
+    <mat-checkbox
+      *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1"
+      [(ngModel)]="node.checked"
+      (ngModelChange)="nodeChecked(node)"
+      [disabled]="node.disableChecked"
+    ></mat-checkbox>
+    <mat-icon
+      *ngIf="hasIcon(node)"
+      fontSet="fas"
+      [fontIcon]="getIcon(node)"
+      [ngClass]="getCssClass(node)"
+      [attr.aria-label]="node.type + ' icon'"
+    ></mat-icon>
+    <span
+      (contextmenu)="onContextMenu(node, $event)"
+      title="{{ node.label }} {{ favourites[node.id] ? '(favorited)' : '' }}"
+      (click)="handleClick(node)"
+      (dblclick)="handleDbClick(node)"
+      [ngClass]="{
+        'mat-tree-node-active': node === selectedNode,
+        'testcss node-title': node !== selectedNode,
+        'favouritesIcon addedToFavourite': favourites[node.id],
+        comparisonTree: isComparisonTree,
+        created: node.created,
+        deleted: node.deleted,
+        selected: node.selected,
+        isGhost: node.isGhost,
+        modified: node.modified
+      }"
+      [innerHTML]="node.label | mchighlighter: searchCriteria"
+    ></span>
+    <!-- </div> -->
+    <small *ngIf="node.branchName" class="ml-1 text-muted">
+      <span> | </span>
+      <span class="fas fa-code-branch"></span>
+      {{ node.branchName }}
+    </small>
+    <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
+      <span> | </span>
+      <span class="fas fa-file-alt"></span>
+      <span *ngIf="node.modelVersion">{{ node.modelVersion }}</span>
+      <span *ngIf="node.version">{{ node.version }}</span>
+    </small>
+    <small *ngIf="favourites[node.id]" class="ml-1 text-muted">
+      <span> | </span>
+      <span class="fas fa-star favouritesIcon addedToFavourite"></span>
+    </small>
+    <small
+      *ngIf="
+        node.domainType === 'FederatedDataModel' &&
+        node.dataModel &&
+        node.dataModel.isSubscribed
+      "
+      class="ml-1 text-muted"
+    >
+      <span> | </span>
+      <span
+        class="fas fa-check-circle subscribedIcon"
+        matTooltip="Subscribed"
+      ></span>
+    </small>
+  </div>
 </ng-template>

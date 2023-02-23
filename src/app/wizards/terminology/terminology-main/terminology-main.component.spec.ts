@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,59 +15,73 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import {
+  CatalogueItemDomainType,
+  FolderDetailResponse,
+  MdmResponse,
+  ModelCreatePayload,
+  Uuid,
+  VersionedFolderDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
-import { of } from 'rxjs';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { MockComponent } from 'ng-mocks';
+import { Observable, of } from 'rxjs';
 import { TerminologyMainComponent } from './terminology-main.component';
-
-interface FolderServiceStub {
-  getFolder: jest.Mock;
-}
-
-interface MdmTerminologyResourceStub {
-  addToFolder: jest.Mock;
-}
-
-interface MdmResourcesStub {
-  terminology: MdmTerminologyResourceStub;
-}
-
-interface MessageHandlerServiceStub {
-  showSuccess: jest.Mock;
-}
-
-interface StateHandlerServiceStub {
-  Go: jest.Mock;
-}
 
 describe('TerminologyMainComponent', () => {
   let harness: ComponentHarness<TerminologyMainComponent>;
 
-  const foldersStub: FolderServiceStub = {
-    getFolder: jest.fn()
+  const foldersStub = {
+    getFolder: jest.fn() as jest.MockedFunction<
+      (
+        id: Uuid,
+        domainType: CatalogueItemDomainType
+      ) => Observable<FolderDetailResponse | VersionedFolderDetailResponse>
+    >
   };
 
-  const resourcesStub: MdmResourcesStub = {
+  const resourcesStub = {
     terminology: {
-      addToFolder: jest.fn()
+      create: jest.fn() as jest.MockedFunction<
+        (
+          folderId: Uuid,
+          data: ModelCreatePayload
+        ) => Observable<MdmResponse<MauroItem>>
+      >
     }
   };
 
-  const messageHandlerStub: MessageHandlerServiceStub = {
+  const messageHandlerStub = {
     showSuccess: jest.fn()
   };
 
-  const stateHandlerStub: StateHandlerServiceStub = {
+  const stateHandlerStub = {
     Go: jest.fn()
   };
 
   beforeEach(async () => {
     // Default endpoint call
-    foldersStub.getFolder.mockImplementationOnce(() => of({}));
+    foldersStub.getFolder.mockImplementationOnce(() =>
+      of({
+        body: {
+          id: '123',
+          domainType: CatalogueItemDomainType.Folder,
+          label: 'Folder',
+          availableActions: []
+        }
+      })
+    );
 
     harness = await setupTestModuleForComponent(TerminologyMainComponent, {
+      declarations: [MockComponent(ElementClassificationsComponent)],
       providers: [
         {
           provide: FolderService,
@@ -107,16 +120,20 @@ describe('TerminologyMainComponent', () => {
   it('should not create a Terminology when the form is invalid', () => {
     harness.component.ngOnInit();
     harness.component.save();
-    expect(resourcesStub.terminology.addToFolder.mock.calls.length).toBe(0);
+    expect(resourcesStub.terminology.create.mock.calls.length).toBe(0);
   });
 
   it('should create a Terminology when the form is valid', () => {
     // Return "created" terminology
-    resourcesStub.terminology.addToFolder.mockImplementationOnce(() => of({
-      body: {
-        id: '1234'
-      }
-    }));
+    resourcesStub.terminology.create.mockImplementationOnce(() =>
+      of({
+        body: {
+          id: '1234',
+          domainType: CatalogueItemDomainType.Terminology,
+          label: 'Terminology'
+        }
+      })
+    );
 
     harness.component.ngOnInit();
     harness.component.label.setValue('Terminology');
@@ -125,7 +142,7 @@ describe('TerminologyMainComponent', () => {
 
     harness.component.save();
 
-    expect(resourcesStub.terminology.addToFolder.mock.calls.length).toBe(1);
+    expect(resourcesStub.terminology.create.mock.calls.length).toBe(1);
     expect(messageHandlerStub.showSuccess.mock.calls.length).toBe(1);
     expect(stateHandlerStub.Go.mock.calls.length).toBe(1);
   });

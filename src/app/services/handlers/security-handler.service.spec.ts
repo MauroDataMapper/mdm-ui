@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +26,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoginPayload } from '@maurodatamapper/mdm-resources';
+import { LoginPayload, Securable } from '@maurodatamapper/mdm-resources';
 
 interface MdmSecurityResourceStub {
   login: jest.Mock;
@@ -118,5 +117,15 @@ describe('SecurityHandlerService', () => {
     const expected$ = cold('--#');
     const actual$ = service.signIn({ username: 'fail', password: 'fail' });
     expect(actual$).toBeObservable(expected$);
+  });
+
+  it('should return showPermission when element is editable after finalization', () => {
+    const dataModel: Securable = {
+      availableActions: ['finalisedEditActions']
+    };
+    const actual$ = service.elementAccess(
+      dataModel
+    );
+   expect(actual$.showPermission).toBeTruthy();
   });
 });

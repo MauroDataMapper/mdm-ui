@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +32,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isFavorite = false;
 
-  private $unsubscribe = new Subject();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private securityHandler: SecurityHandlerService,
@@ -55,7 +54,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     this.broadcast
       .onFavouritesChanged()
       .pipe(
-        takeUntil(this.$unsubscribe),
+        takeUntil(this.unsubscribe$),
         filter(data => data.element.id === this.catalogueItem.id)
       )
       .subscribe(data => {
@@ -64,8 +63,8 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.$unsubscribe.next();
-    this.$unsubscribe.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   toggle() {

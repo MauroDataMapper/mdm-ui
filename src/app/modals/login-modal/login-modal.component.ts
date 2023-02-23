@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,22 +23,39 @@ import { MessageService } from '@mdm/services/message.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
-import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
+import {
+  SignInError,
+  SignInErrorType
+} from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
-import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
-import { PublicOpenIdConnectProvider, PublicOpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  MdmHttpHandlerOptions,
+  MdmResourcesService
+} from '@mdm/modules/resources';
+import {
+  PublicOpenIdConnectProvider,
+  PublicOpenIdConnectProvidersIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService, SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.scss'],
+  styleUrls: ['./login-modal.component.scss']
 })
 export class LoginModalComponent implements OnInit {
   message = '';
   authenticating = false;
 
-  signInForm!: FormGroup;
+  signInForm = new FormGroup({
+    userName: new FormControl('', [
+      Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.pattern(this.validator.emailPattern)
+    ]),
+    password: new FormControl('', [
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ])
+  });
 
   openIdConnectProviders?: PublicOpenIdConnectProvider[];
 
@@ -51,28 +67,18 @@ export class LoginModalComponent implements OnInit {
     private validator: ValidatorService,
     private resources: MdmResourcesService,
     private shared: SharedService,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService
+  ) {}
 
   get userName() {
-    return this.signInForm.get('userName');
+    return this.signInForm.controls.userName;
   }
 
   get password() {
-    return this.signInForm.get('password');
+    return this.signInForm.controls.password;
   }
 
-
   ngOnInit() {
-    this.signInForm = new FormGroup({
-      userName: new FormControl('', [
-        Validators.required,  // eslint-disable-line @typescript-eslint/unbound-method
-        Validators.pattern(this.validator.emailPattern)
-      ]),
-      password: new FormControl('', [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ])
-    });
-
     if (this.shared.features.useOpenIdConnect) {
       // If unable to get OpenID Connect providers, silently fail and ignore
       const requestOptions: MdmHttpHandlerOptions = {
@@ -81,9 +87,7 @@ export class LoginModalComponent implements OnInit {
 
       this.resources.pluginOpenIdConnect
         .listPublic({}, requestOptions)
-        .pipe(
-          catchError(() => EMPTY)
-        )
+        .pipe(catchError(() => EMPTY))
         .subscribe((response: PublicOpenIdConnectProvidersIndexResponse) => {
           this.openIdConnectProviders = response.body;
         });
@@ -112,7 +116,8 @@ export class LoginModalComponent implements OnInit {
               this.message = 'Invalid username or password!';
               break;
             case SignInErrorType.AlreadySignedIn:
-              this.message = 'A user is already signed in, please sign out first.';
+              this.message =
+                'A user is already signed in, please sign out first.';
               break;
             default:
               this.message = 'Unable to sign in. Please try again later.';
@@ -126,7 +131,7 @@ export class LoginModalComponent implements OnInit {
           this.signInForm.enable();
         })
       )
-      .subscribe(user => {
+      .subscribe((user) => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
         this.messageService.loggedInChanged(true);
@@ -150,7 +155,9 @@ export class LoginModalComponent implements OnInit {
 
   authenticateWithOpenIdConnect(provider: PublicOpenIdConnectProvider) {
     if (!provider.authorizationEndpoint) {
-      this.messageHandler.showError(`Unable to authenticate with ${provider.label} because of a missing endpoint. Please contact your administrator for further support.`);
+      this.messageHandler.showError(
+        `Unable to authenticate with ${provider.label} because of a missing endpoint. Please contact your administrator for further support.`
+      );
       return;
     }
 

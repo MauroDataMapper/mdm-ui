@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,6 +36,7 @@ export class FederatedDataModel {
   folderId?: string;
   folderLabel?: string;
   version?: string;
+  modelVersionTag?: string;
 
   constructor(
     catalogueId: string,
@@ -48,6 +48,7 @@ export class FederatedDataModel {
     this.label = published?.label;
     this.description = published?.description;
     this.version = published?.version;
+    this.modelVersionTag = published?.modelVersionTag;
     this.modelType = published?.modelType;
     this.dateCreated = published?.dateCreated;
     this.datePublished = published?.datePublished;

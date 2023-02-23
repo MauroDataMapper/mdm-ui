@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { CatalogueSearchComponent } from './catalogue-search/catalogue-search.component';
 import { CatalogueSearchFormComponent } from './catalogue-search-form/catalogue-search-form.component';

@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,47 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div style="margin-top: 2px;">
-    <div class="input-group ">
-        <input  type="text"
-                class="form-control outlined-input"
-                [(ngModel)]="formData.filterCriteria"
-                placeholder="Search favourite items..."
-                (keyup)="onSearchInputKeyDown()">
-        <span class="tree-top-actions">
-            <button mat-stroked-button type="button" matTooltipPosition="below" matTooltip="Search"  (click)="search()" aria-label="Search">
-                <span class="fas fa-search"></span>
-            </button>
-        </span>
+<div style="margin-top: 2px">
+  <mdm-mauro-item-tree
+    [nodes]="treeNodes"
+    (selectionChange)="selected($event)"
+  ></mdm-mauro-item-tree>
+  <div class="loading-spinner" *ngIf="reloading">
+    <div>
+      <span class="fas fa-sync-alt fa-spin"></span>
     </div>
-    <ul class="favourites" style="padding: 5px;">
-        <li class="favourites" *ngFor="let favourite of favourites">
-            <mdm-element-icon [element]="favourite" ></mdm-element-icon>
-            <span
-                (contextmenu)="rightClick($event,favourite)"
-                (click)='nodeClick($event, favourite)'
-                (dblclick)='nodeDbClick($event, favourite)'
-                [ngClass]="{'nodeLabel favourites':true, 'deleted':favourite.deleted, 'selected':favourite.selected, 'supersededByItem':favourite.superseded}"
-                [innerHTML]="favourite.label | mchighlighter:formData.filterCriteria">
-            </span>
-        </li>
-    </ul>
-    <div class="loading-spinner" *ngIf="reloading">
-        <div>
-            <span class="fas fa-sync-alt fa-spin"></span>
-        </div>
+  </div>
+  <div
+    *ngIf="favourites && favourites.length === 0 && !reloading"
+    class="noFavourites"
+  >
+    <div class="title">You currently have no favourite items.</div>
+    <div class="content">
+      To add a favourite, click on the star beside its name in the details
+      panel, or right-click on the item in Models tree view.
     </div>
-    <div *ngIf="favourites && favourites.length ===0 && !reloading" class="noFavourites">
-        <div class="title">You don't currently have any favourite Data Models.</div>
-        <div class="content">* To add a favourite, click on the star beside its name in the details panel, or right-click on the model in Models tree view.</div>
-    </div>
+  </div>
 </div>
-<div style="visibility: hidden; position: fixed"
-     [style.left]="contextMenuPosition.x"
-     [style.top]="contextMenuPosition.y"
-     [matMenuTriggerFor]="contextMenu">
-</div>
-
-<mat-menu #contextMenu="matMenu">
-    <button *ngFor="let item of menuOptions" (click)="item.action()" mat-menu-item>{{ item.name }}</button>
-</mat-menu>

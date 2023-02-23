@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +45,8 @@ import { GridService } from '@mdm/services/grid.service';
   templateUrl: './element-owned-data-type-list.component.html',
   styleUrls: ['./element-owned-data-type-list.component.sass']
 })
-export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
+export class ElementOwnedDataTypeListComponent
+  implements AfterViewInit, OnInit {
   @Input() parent: any;
   @Input() type: 'static' | 'dynamic';
   @Input() isEditable: any;
@@ -56,7 +56,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   @Output() totalCount = new EventEmitter<string>();
 
   allDataTypes: any;
@@ -78,7 +79,6 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   checkAllCheckbox = false;
   bulkActionsVisible = 0;
 
-
   constructor(
     private changeRef: ChangeDetectorRef,
     private elementTypes: ElementTypesService,
@@ -86,7 +86,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     private stateHandler: StateHandlerService,
     private dialog: MatDialog,
     private gridService: GridService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     if (this.type === 'static') {
@@ -109,34 +109,38 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-      merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-        this.isLoadingResults = true;
-        this.changeRef.detectChanges();
+      merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingResults = true;
+            this.changeRef.detectChanges();
 
-        return this.dataTypesFetch(
-          this.paginator.pageSize,
-          this.paginator.pageOffset,
-          this.sort.active,
-          this.sort.direction,
-          this.filter
-        );
-      }),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.totalCount.emit(String(data.body.count));
-          this.isLoadingResults = false;
-          return data.body.items;
-        }),
-        catchError(() => {
+            return this.dataTypesFetch(
+              this.paginator.pageSize,
+              this.paginator.pageOffset,
+              this.sort.active,
+              this.sort.direction,
+              this.filter
+            );
+          }),
+          map((data: any) => {
+            this.totalItemCount = data.body.count;
+            this.totalCount.emit(String(data.body.count));
+            this.isLoadingResults = false;
+            return data.body.items;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            this.changeRef.detectChanges();
+            return [];
+          })
+        )
+        .subscribe((data) => {
+          this.records = data;
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
-          return [];
-        })
-      ).subscribe(data => {
-        this.records = data;
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-      });
+        });
     }
 
     if (this.type === 'static') {
@@ -170,14 +174,13 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
     this.filter = filter;
     this.filterEvent.emit(filter);
-
   };
 
   applyMatSelectFilter() {
     this.applyFilter();
   }
 
-  openEdit = dataType => {
+  openEdit = (dataType) => {
     if (!dataType || (dataType && !dataType.id)) {
       return '';
     }
@@ -192,7 +195,11 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   addDataType = () => {
-    this.stateHandler.Go('newDataType', { parentDataModelId: this.parent.id }, null);
+    this.stateHandler.Go(
+      'newDataType',
+      { parentDataModelId: this.parent.id },
+      null
+    );
   };
 
   filterClick = () => {
@@ -200,12 +207,18 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
+    );
     return this.resources.dataType.list(this.parent.id, options);
   };
 
   onChecked = () => {
-    this.records.forEach(x => (x.checked = this.checkAllCheckbox));
+    this.records.forEach((x) => (x.checked = this.checkAllCheckbox));
     this.listChecked();
   };
   listChecked = () => {
@@ -218,14 +231,14 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     this.bulkActionsVisible = count;
   };
   toggleCheckbox = (record) => {
-    this.records.forEach(x => (x.checked = false));
+    this.records.forEach((x) => (x.checked = false));
     this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = this.records.filter(record => record.checked);
+    const dataElementIdLst = this.records.filter((record) => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },
@@ -240,13 +253,15 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         }
       });
     });
-    promise.then(() => {
-      this.records.forEach(x => (x.checked = false));
-      // this.records = this.records;
-      this.checkAllCheckbox = false;
-      this.bulkActionsVisible = 0;
-      this.filterEvent.emit();
-    }).catch(() => console.warn('error'));
+    promise
+      .then(() => {
+        this.records.forEach((x) => (x.checked = false));
+        // this.records = this.records;
+        this.checkAllCheckbox = false;
+        this.bulkActionsVisible = 0;
+        this.filterEvent.emit();
+      })
+      .catch(() => console.warn('error'));
   };
 
   refreshDataSource() {

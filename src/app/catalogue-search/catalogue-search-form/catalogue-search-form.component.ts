@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,17 +33,19 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 export class CatalogueSearchFormComponent implements OnInit {
   @Input() appearance: MatFormFieldAppearance = 'outline';
   @Input() routeSearchTerm?: string = '';
-  formGroup: FormGroup = new FormGroup({});
+
   @Output() searchEvent = new EventEmitter<string>();
+
+  formGroup = new FormGroup({
+    searchTerms: new FormControl(this.routeSearchTerm)
+  });
 
   get searchTerms() {
     return this.formGroup.controls.searchTerms;
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      searchTerms: new FormControl(this.routeSearchTerm)
-    });
+    this.searchTerms.setValue(this.routeSearchTerm);
   }
 
   reset() {

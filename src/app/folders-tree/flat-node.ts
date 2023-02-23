@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  MdmTreeItem
+} from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -28,7 +30,8 @@ export class FlatNode {
   constructor(
     public node: MdmTreeItem,
     public level: number,
-    public readonly access: Access) { }
+    public readonly access: Access
+  ) {}
 
   /**
    * Getter and Setter passthrough to source node.
@@ -118,12 +121,31 @@ export class FlatNode {
   }
 }
 
-type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
+export interface FlatNodeType {
+  [key: string]: any;
+}
+
+type FlatNodeIconCallback = (
+  fnode: FlatNodeType,
+  treeControl: FlatTreeControl<FlatNodeType>
+) => string;
 
 const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
-  [CatalogueItemDomainType.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
-  [CatalogueItemDomainType.VersionedFolder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'],
-  [CatalogueItemDomainType.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
+  [
+    CatalogueItemDomainType.Folder,
+    (fnode, treeControl) =>
+      treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'
+  ],
+  [
+    CatalogueItemDomainType.VersionedFolder,
+    (fnode, treeControl) =>
+      treeControl?.isExpanded(fnode) ? 'fa-box-open' : 'fa-box'
+  ],
+  [
+    CatalogueItemDomainType.DataModel,
+    (fnode, _) =>
+      fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'
+  ],
   [CatalogueItemDomainType.Terminology, () => 'fa-book'],
   [CatalogueItemDomainType.CodeSet, () => 'fa-list'],
   [CatalogueItemDomainType.Classifier, () => 'fa-tags'],
@@ -134,10 +156,17 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   [CatalogueItemDomainType.SubscribedCatalogue, () => 'fa-rss'],
   [CatalogueItemDomainType.FederatedDataModel, () => 'fa-external-link-alt'],
   [CatalogueItemDomainType.DataClass, () => 'fa-puzzle-piece'],
-  [CatalogueItemDomainType.DataElement, () => 'fa-atom']
+  [CatalogueItemDomainType.DataElement, () => 'fa-atom'],
+  [CatalogueItemDomainType.ModelDataType, () => 'fa-code'],
+  [CatalogueItemDomainType.PrimitiveType, () => 'fa-code'],
+  [CatalogueItemDomainType.EnumerationType, () => 'fa-code']
 ]);
 
-export const getCatalogueItemDomainTypeIcon = (domain: CatalogueItemDomainType, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
+export const getCatalogueItemDomainTypeIcon = (
+  domain: CatalogueItemDomainType,
+  fnode?: FlatNodeType,
+  treeControl?: FlatTreeControl<FlatNodeType>
+) => {
   if (!domainTypeIcons.has(domain)) {
     return null;
   }

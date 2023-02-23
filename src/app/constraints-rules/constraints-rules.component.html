@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,59 +23,66 @@ SPDX-License-Identifier: Apache-2.0
         [hideToggle]="true"
         [expanded]="filteredOpen"
         class="prevent-click mat-elevation-z0"
-        (click)="clickButton=false"
+        (click)="clickButton = false"
       >
         <mat-expansion-panel-header>
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
             <div
               fxFlex
               fxLayout="row"
-              fxLayout.md="row"
-              fxLayout.sm="row"
-              fxLayout.xs="column"
-              fxLayoutAlign="space-around"
+              fxFlex="55"
+              fxFlex.md="55"
+              fxFlex.sm="55"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
             >
-              <div
-                fxFlex
-                fxLayout="row"
-                fxFlex="55"
-                fxFlex.md="55"
-                fxFlex.sm="55"
-                fxFlex.xs="100"
-                fxLayoutAlign="flex-start center"
-              >
-                <h4 class="marginless">
-                  Rules
-                  <span class="mdm--badge mdm--element-count">{{
-                    totalItemCount
-                  }}</span>
+              <h4 class="marginless">
+                Rules
+                <span class="mdm--badge mdm--element-count">{{
+                  totalItemCount
+                }}</span>
 
                 <span
                   class="fas fa-filter authorize-click"
                   (click)="$event.stopPropagation(); filterClick()"
                   matTooltip="Toggle search"
                 ></span>
-                </h4>
-              </div>
+              </h4>
+            </div>
 
-              <div
-                fxFlex
-                fxLayout="row"
-                fxFlex="45"
-                fxFlex.md="45"
-                fxFlex.sm="45"
-                fxFlex.xs="100"
-                fxLayoutAlign="flex-end center"
-                fxLayoutAlign.xs="flex-start center"
-              >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="45"
+              fxFlex.md="45"
+              fxFlex.sm="45"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            >
               <div class="mt-1">
-               <button mat-flat-button color="primary" class="mr-1 mb-1 authorize-click" class="authorize-click" *ngIf="canAddRules" (click)=" $event.stopPropagation(); add()">
+                <button
+                  mat-flat-button
+                  color="primary"
+                  class="mr-1 mb-1 authorize-click"
+                  class="authorize-click"
+                  *ngIf="canAddRules"
+                  (click)="$event.stopPropagation(); add()"
+                >
                   <span class="fas fa-plus" aria-hidden="true"></span>
                   Add Rule
                 </button>
                 <button
                   mat-flat-button
                   color="primary"
-                  style="margin-left: 5px; z-index: 100;"
+                  style="margin-left: 5px; z-index: 100"
                   type="button"
                   (click)="exportAllRules()"
                   class="authorize-click"
@@ -84,8 +90,8 @@ SPDX-License-Identifier: Apache-2.0
                   <span class="fas fa-download"></span> Export
                 </button>
               </div>
-              </div>
             </div>
+          </div>
         </mat-expansion-panel-header>
         <mat-form-field appearance="outline" class="mb-2 full-width">
           <mat-label>Select Language</mat-label>
@@ -147,28 +153,31 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </td>
         </ng-container>
-        <ng-container matColumnDef="rule">
+        <ng-container matColumnDef="representations">
           <th
             mat-header-cell
             *matHeaderCellDef
-            style="max-width: 50%; width: 50%"
-            columnName="description"
+            style="max-width: 20%; width: 20%"
+            columnName="representations"
             scope="col"
           >
-            Rules
+            Representations
           </th>
           <td mat-cell *matCellDef="let record">
-            <div style="margin-bottom: 10px">
+            <button mat-button (click)="expandRow(record)">
+              {{ record.ruleRepresentations?.length ?? 0 }}
               <span
-                [ngClass]="(this.expandedElement === record) ? 'fas fa-angle-double-up' : 'fas fa-angle-double-down'"
-                (click)="expandRow(record)"
+                *ngIf="(record.ruleRepresentations?.length ?? 0) > 0"
+                [ngClass]="
+                  this.expandedRuleId === record.id
+                    ? 'fas fa-angle-double-up'
+                    : 'fas fa-angle-double-down'
+                "
+                [matTooltip]="
+                  this.expandedRuleId === record.id ? 'Collapse' : 'Expand'
+                "
               ></span>
-            </div>
-            <div>
-              <mdm-all-links-in-paged-list
-                [parent]="record"
-              ></mdm-all-links-in-paged-list>
-            </div>
+            </button>
           </td>
         </ng-container>
 
@@ -176,21 +185,42 @@ SPDX-License-Identifier: Apache-2.0
           <th
             mat-header-cell
             *matHeaderCellDef
-            style="cursor: pointer; max-width: 10%; width: 10%"
+            style="cursor: pointer; max-width: 20%; width: 20%"
             scope="col"
           ></th>
           <td
             mat-cell
             *matCellDef="let record"
-            style="max-width: 10%; width: 10%; text-align: center"
+            style="max-width: 20%; width: 20%; text-align: center"
           >
+            <button
+              mat-icon-button
+              color="primary"
+              type="button"
+              matTooltip="Edit"
+              *ngIf="canAddRules"
+              (click)="openEdit(record)"
+            >
+              <span class="fas fa-pencil-alt"></span>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              type="button"
+              matTooltip="Add representation"
+              *ngIf="canAddRules"
+              (click)="addRepresentation(record)"
+            >
+              <span class="fas fa-plus"></span>
+            </button>
             <button
               mat-icon-button
               color="primary"
               [matMenuTriggerFor]="dataTypeRowActions"
               aria-label="Mat menu actions"
             >
-            <span class="fas fa-ellipsis-v"></span> <span style="display: none;">Menu</span>
+              <span class="fas fa-ellipsis-v"></span>
+              <span style="display: none">Menu</span>
             </button>
             <mat-menu
               #dataTypeRowActions="matMenu"
@@ -199,25 +229,10 @@ SPDX-License-Identifier: Apache-2.0
               class="mdm--mat-menu--actions"
             >
               <button
-                mat-menu-item
-                color="accent"
-                type="button"
-                *ngIf="canAddRules"
-                (click)="openEdit(record)"
-              >
-                <span class="fas fa-pencil-alt"></span> Edit
-              </button>
-              <button
-                mat-menu-item
-                color="accent"
-                type="button"
-                *ngIf="canAddRules"
-                (click)="addRepresentation(record)"
-              >
-                <span class="fas fa-plus"></span> Add Representation
-              </button>
-              <mat-divider></mat-divider>
-              <button
+                *ngIf="
+                  record.ruleRepresentations &&
+                  record.ruleRepresentations.length > 0
+                "
                 mat-menu-item
                 color="accent"
                 type="button"
@@ -243,28 +258,28 @@ SPDX-License-Identifier: Apache-2.0
         <ng-container matColumnDef="expandedDetail">
           <td
             mat-cell
-            style="padding-top: 0px; padding-bottom: 0px;"
+            style="padding-top: 0px; padding-bottom: 0px"
             *matCellDef="let row"
             [attr.colspan]="displayedColumns.length"
           >
             <div
               class="example-element-detail"
               [@detailExpand]="
-                row == expandedElement ? 'expanded' : 'collapsed'
+                row.id == expandedRuleId ? 'expanded' : 'collapsed'
               "
             >
               <table
                 mat-table
                 #innerTable
                 [dataSource]="row.ruleRepresentations"
-                style="padding-top: 7px; padding-bottom: 7px;"
+                style="padding-top: 7px; padding-bottom: 7px"
                 class="mdm--mat-table mat-elevation-z3 table-striped"
               >
                 <ng-container matColumnDef="language">
                   <th
                     mat-header-cell
                     *matHeaderCellDef
-                    style="max-width: 35%; width: 35%"
+                    style="max-width: 20%; width: 20%"
                     columnName="language"
                     scope="col"
                   >
@@ -292,7 +307,10 @@ SPDX-License-Identifier: Apache-2.0
                   </th>
                   <td mat-cell class="truncate" *matCellDef="let record">
                     <div style="margin-bottom: 10px">
-                      {{ record.representation }}
+                      <mdm-more-description
+                        [description]="record.representation"
+                        type="preformatted"
+                      ></mdm-more-description>
                     </div>
                   </td>
                 </ng-container>
@@ -300,21 +318,32 @@ SPDX-License-Identifier: Apache-2.0
                   <th
                     mat-header-cell
                     *matHeaderCellDef
-                    style="cursor: pointer; max-width: 10%; width: 10%"
+                    style="cursor: pointer; max-width: 15%; width: 15%"
                     scope="col"
                   ></th>
                   <td
                     mat-cell
                     *matCellDef="let record"
-                    style="max-width: 10%; width: 10%; text-align: center"
+                    style="max-width: 15%; width: 15%; text-align: center"
                   >
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      type="button"
+                      matTooltip="Edit"
+                      *ngIf="canAddRules"
+                      (click)="openEditRepresentation(row, record)"
+                    >
+                      <span class="fas fa-pencil-alt"></span>
+                    </button>
                     <button
                       mat-icon-button
                       color="primary"
                       [matMenuTriggerFor]="dataTypeRowActions"
                       aria-label="Mat menu actions"
                     >
-                    <span class="fas fa-ellipsis-v"></span> <span style="display: none;">Menu</span>
+                      <span class="fas fa-ellipsis-v"></span>
+                      <span style="display: none">Menu</span>
                     </button>
                     <mat-menu
                       #dataTypeRowActions="matMenu"
@@ -326,17 +355,7 @@ SPDX-License-Identifier: Apache-2.0
                         mat-menu-item
                         color="accent"
                         type="button"
-                        *ngIf="canAddRules"
-                        (click)="openEditRepresentation(record)"
-                      >
-                        <span class="fas fa-pencil-alt"></span> Edit
-                      </button>
-                      <mat-divider></mat-divider>
-                      <button
-                        mat-menu-item
-                        color="accent"
-                        type="button"
-                        (click)="exportRuleRepresentation(record)"
+                        (click)="exportRuleRepresentation(row, record)"
                       >
                         <span class="fas fa-download"></span> Export
                       </button>
@@ -345,7 +364,7 @@ SPDX-License-Identifier: Apache-2.0
                         mat-menu-item
                         color="warn"
                         type="button"
-                        (click)="deleteRepresentation(record)"
+                        (click)="deleteRepresentation(row, record)"
                         class="warning"
                         *ngIf="canDeleteRules"
                       >

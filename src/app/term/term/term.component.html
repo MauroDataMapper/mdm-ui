@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
   ></mat-progress-bar>
 </div>
 <div class="full-width">
-  <mdm-term-details *ngIf="term"></mdm-term-details>
+  <mdm-model-header *ngIf="term" [item]="term"></mdm-model-header>
 </div>
 
 <mat-tab-group
@@ -45,7 +44,9 @@ SPDX-License-Identifier: Apache-2.0
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      Related Terms&nbsp;<span *ngIf="!isLoadingRelationships">({{ relationshipItemCount }})</span>
+      Related Terms&nbsp;<span *ngIf="!isLoadingRelationships"
+        >({{ relationshipItemCount }})</span
+      >
     </ng-template>
     <ng-template matTabContent>
       <div class="full-width">
@@ -54,7 +55,8 @@ SPDX-License-Identifier: Apache-2.0
           [canEdit]="showEdit"
           [canDelete]="showDelete"
           (selectedTerm)="onTermSelect($event)"
-          (totalCount)="relationshipCountEmitter($event)"></mdm-term-relationship-list>
+          (totalCount)="relationshipCountEmitter($event)"
+        ></mdm-term-relationship-list>
       </div>
     </ng-template>
   </mat-tab>
@@ -70,7 +72,8 @@ SPDX-License-Identifier: Apache-2.0
         [pageSize]="10"
         [term]="term"
         (totalCount)="codeSetCountEmitter($event)"
-        (selectedCodeSet)="onCodeSetSelect($event)"></mdm-term-codeset-list>
+        (selectedCodeSet)="onCodeSetSelect($event)"
+      ></mdm-term-codeset-list>
     </div>
   </mat-tab>
   <mat-tab label="Links">

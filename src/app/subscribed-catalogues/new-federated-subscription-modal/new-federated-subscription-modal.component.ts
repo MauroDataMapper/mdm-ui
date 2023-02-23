@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +21,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   FolderDetail,
   Importer,
+  MdmTreeItem,
   PublishedDataModelLink
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -47,22 +47,22 @@ export class NewFederatedSubscriptionModalComponent implements OnInit {
   contentLinks: PublishedDataModelLink[];
   importers: Importer[];
 
-  formGroup: FormGroup = new FormGroup({
-    folder: new FormControl(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-    format: new FormControl(null),
-    importer: new FormControl(null)
+  formGroup = new FormGroup({
+    folder: new FormControl<MdmTreeItem[]>(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    format: new FormControl<PublishedDataModelLink>(null),
+    importer: new FormControl<Importer>(null)
   });
 
   get format() {
-    return this.formGroup.get('format');
+    return this.formGroup.controls.format;
   }
 
   get folder() {
-    return this.formGroup.get('folder');
+    return this.formGroup.controls.folder;
   }
 
   get importer() {
-    return this.formGroup.get('importer');
+    return this.formGroup.controls.importer;
   }
 
   constructor(

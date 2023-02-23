@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NewDataTypeInlineComponent } from './new-data-type-inline.component';
 import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
@@ -38,14 +37,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { empty } from 'rxjs/internal/observable/empty';
+import { EMPTY } from 'rxjs';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('NewDataTypeInlineComponent', () => {
   let component: NewDataTypeInlineComponent;
   let fixture: ComponentFixture<NewDataTypeInlineComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatOptionModule,
@@ -66,16 +65,13 @@ describe('NewDataTypeInlineComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             terminology: {
-              // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => EMPTY
             },
             codeSet: {
-               // tslint:disable-next-line: deprecation
-               list: () => empty()
+               list: () => EMPTY
              },
              referenceDataModel: {
-               // tslint:disable-next-line: deprecation
-               list: () => empty()
+               list: () => EMPTY
              }
           }
         }

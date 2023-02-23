@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -308,6 +307,20 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
   {
     key: 'security.restrict.classifier.create',
     category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'security.hide.exception',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true
+  },
+  {
+    key: 'ui.show_can_edit_property_alert',
+    category: 'UI',
     editType: ApiPropertyEditType.Boolean,
     isSystem: true,
     publiclyVisible: true,

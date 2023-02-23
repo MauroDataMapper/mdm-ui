@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin mdm-search-filters-theme($theme) {
   $primary: map-get($theme, primary);
@@ -33,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
       border-radius: 2px;
       background-color: $search-filters-heading-background-color;
       color: $search-filters-heading-color;
-  
+
       h3 {
         font-weight: 500;
         padding-left: 4px;
@@ -42,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0
         vertical-align: middle;
       }
     }
-  
+
     &__section {
       margin-top: 1em;
     }
@@ -57,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
     .mat-datepicker-input {
       width: 85%;
     }
-    
+
     mat-icon {
       position: relative;
       float: right;

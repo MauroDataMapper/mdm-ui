@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,6 +23,7 @@ import {
 import {
   Branchable,
   CatalogueItem,
+  CatalogueItemDetail,
   Modelable,
   SecurableModel
 } from '@maurodatamapper/mdm-resources';
@@ -33,6 +33,11 @@ import {
   ChangeBranchNameModalData,
   ChangeBranchNameModalResult
 } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
+import {
+  ChangeLabelModalComponent,
+  ChangeLabelModalData,
+  ChangeLabelModalResult
+} from '@mdm/modals/change-label-modal/change-label-modal.component';
 import {
   ConfirmationModalComponent,
   ConfirmationModalConfig,
@@ -51,7 +56,7 @@ import {
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-declare module '@angular/material/dialog/dialog' {
+declare module '@angular/material/dialog' {
   interface MatDialog {
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent`.
@@ -139,6 +144,20 @@ declare module '@angular/material/dialog/dialog' {
     ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
 
     /**
+     * Extension method to open a modal dialog containing the `ChangeLabelModalComponent`.
+     *
+     * @param item The item containing the details and the label to change.
+     * @returns An observable for when a new label is chosen.
+     *
+     * @see `ChangeLabelModalComponent`
+     * @see `ChangeLabelModalData`
+     * @see `ChangeLabelModalResult`
+     */
+    openChangeLabel(
+      item: CatalogueItemDetail
+    ): Observable<ChangeLabelModalResult>;
+
+    /**
      * Extension method to open a modal dialog containing the `ChangeBranchNameModalComponent`.
      *
      * @param model The model containing the details and the branch name to change.
@@ -223,6 +242,28 @@ MatDialog.prototype.openSecurityAccess = function (
     },
     panelClass: 'security-modal'
   });
+};
+
+MatDialog.prototype.openChangeLabel = function (
+  this: MatDialog,
+  item: CatalogueItemDetail
+): Observable<ChangeLabelModalResult> {
+  return this.open<
+    ChangeLabelModalComponent,
+    ChangeLabelModalData,
+    ChangeLabelModalResult
+  >(ChangeLabelModalComponent, {
+    data: {
+      item
+    }
+  })
+    .afterClosed()
+    .pipe(
+      filter(
+        (result) =>
+          (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
+      )
+    );
 };
 
 MatDialog.prototype.openChangeBranchName = function (

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, Container, ModelCreatePayload, TerminologyDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  Container,
+  ModelCreatePayload,
+  TerminologyDetailResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
@@ -37,26 +42,32 @@ export class TerminologyMainComponent implements OnInit {
   parentDomainType: CatalogueItemDomainType;
   parentFolder: Container;
   savingInProgress = false;
-  setupForm: FormGroup;
+  setupForm = new FormGroup({
+    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    description: new FormControl(''),
+    classifiers: new FormControl([])
+  });
 
   get label() {
-    return this.setupForm.get('label');
+    return this.setupForm.controls.label;
   }
 
   get author() {
-    return this.setupForm.get('author');
+    return this.setupForm.controls.author;
   }
 
   get organisation() {
-    return this.setupForm.get('organisation');
+    return this.setupForm.controls.organisation;
   }
 
   get description() {
-    return this.setupForm.get('description');
+    return this.setupForm.controls.description;
   }
 
   get classifiers() {
-    return this.setupForm.get('classifiers');
+    return this.setupForm.controls.classifiers;
   }
 
   set classifiersValue(value: any[]) {
@@ -69,18 +80,11 @@ export class TerminologyMainComponent implements OnInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private folders: FolderService,
-    private title: Title) { }
+    private title: Title
+  ) {}
 
   ngOnInit(): void {
     this.title.setTitle('New Terminology');
-
-    this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required),  // eslint-disable-line @typescript-eslint/unbound-method
-      author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-      description: new FormControl(''),
-      classifiers: new FormControl([])
-    });
 
     this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
     this.parentDomainType = this.uiRouterGlobals.params.parentDomainType;
@@ -88,12 +92,15 @@ export class TerminologyMainComponent implements OnInit {
     this.folders
       .getFolder(this.parentFolderId, this.parentDomainType)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the Folder.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the Folder.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         this.parentFolder = response.body;
       });
   }
@@ -113,16 +120,23 @@ export class TerminologyMainComponent implements OnInit {
     };
 
     this.resources.terminology
-      .addToFolder(this.parentFolderId, payload)
+      .create(this.parentFolderId, payload)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem creating the Terminology.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem creating the Terminology.',
+            error
+          );
           return EMPTY;
         })
       )
       .subscribe((response: TerminologyDetailResponse) => {
         this.messageHandler.showSuccess('Terminology created successfully.');
-        this.stateHandler.Go('terminology', { id: response.body.id }, { reload: true });
+        this.stateHandler.Go(
+          'terminology',
+          { id: response.body.id },
+          { reload: true }
+        );
       });
   }
 }

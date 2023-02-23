@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,22 +63,43 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </td>
         </ng-container>
-        <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="type" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%; text-align: center;" columnName="type" scope="col">
+        <ng-container matColumnDef="domainType">
+            <th mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                [disabled]="!hideFilters"
+                style="cursor:pointer;max-width: 15%;width: 15%; text-align: center;"
+                columnName="domainType"
+                sortable="true"
+                filterable="true"
+                scope="col">
                 <span [hidden]="!hideFilters">Type</span>
-                <!-- <div [hidden]="hideFilters">
-                    <mat-label>Type</mat-label>
-                    <mat-select [(value)]="domainType"
-                                name="domainType"
-                                [(ngModel)]="domainType"
-                                (ngModelChange)="applyMatSelectFilter($event, 'domainType')">
-                        <mat-option></mat-option>
-                        <mat-option [value]="baseType.id" *ngFor="let baseType of classifiableBaseTypes">{{baseType.title}}</mat-option>
-                    </mat-select>
-                </div> -->
+                <div [hidden]="hideFilters">
+                  <mat-label>Type</mat-label>
+                  <mat-select
+                    [(value)]="domainType"
+                    name="domainType"
+                    [(ngModel)]="domainType"
+                    (ngModelChange)="applyMatSelectFilter()"
+                  >
+                    <mat-option [value]="dt" *ngFor="let dt of allDataTypes">{{
+                      dt.title
+                      }}</mat-option>
+                  </mat-select>
+                </div>
             </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                <mdm-element-link [element]="record" [showLink]="false" [showTypeTitle]="true"></mdm-element-link>
+            <td mat-cell *matCellDef="let record">
+              <div *ngIf="allDataTypesMap[record?.domainType]?.title">
+                {{ allDataTypesMap[record?.domainType]['title'] }}
+              </div>
+              <div class="full-width">
+                <mdm-element-data-type
+                  [elementDataType]="record"
+                  [hideName]="true"
+                  [onlyShowRefDataClass]="true"
+                  [hideEnumList]="false"
+                ></mdm-element-data-type>
+              </div>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

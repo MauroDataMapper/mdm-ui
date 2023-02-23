@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,220 +16,395 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="leftTab">
-    <div class="container-inner">
-        <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <span class="fas fa-sitemap"></span>&nbsp; Models
-                </ng-template>
-                <div style="margin-top: 2px;">
-                    <div style="position: relative;">
-                        <div style="float: left;" class="full-width">
-                            <div class="input-group">
-                                <label for="search-models-input" class="sr-only">Search models</label>
-                                <input #searchbox type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)" (search)="onSearchInputKeyDown($event)">
-                                <span class="tree-top-actions">
+  <div class="container-inner">
+    <mat-tab-group
+      [selectedIndex]="activeTab"
+      (selectedIndexChange)="tabSelected($event)"
+    >
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="fas fa-sitemap"></span>&nbsp; Models
+        </ng-template>
+        <div style="margin-top: 2px">
+          <div style="position: relative">
+            <div style="float: left" class="full-width">
+              <div class="input-group">
+                <label for="search-models-input" class="sr-only"
+                  >Search models</label
+                >
+                <input
+                  #searchbox
+                  type="search"
+                  id="search-models-input"
+                  class="form-control outlined-input"
+                  [(ngModel)]="formData.filterCriteria"
+                  placeholder="Search models..."
+                  (keyup)="onSearchInputKeyDown($event)"
+                  (search)="onSearchInputKeyDown($event)"
+                />
+                <span class="tree-top-actions">
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    [disabled]="levels.current === 1"
+                    matTooltipPosition="below"
+                    matTooltip="Search"
+                    (click)="search()"
+                    aria-label="Search"
+                  >
+                    <span class="fas fa-search"></span>
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    [matMenuTriggerFor]="filterMenu"
+                    *ngIf="isLoggedIn()"
+                    matTooltipPosition="below"
+                    matTooltip="Filters"
+                    [disabled]="levels.current === 1"
+                    (click)="toggleFilterMenu()"
+                    aria-label="Filter"
+                  >
+                    <span
+                      class="fas fa-filter"
+                      [ngClass]="{ '': !showFilters, filterIcon: showFilters }"
+                    ></span>
+                  </button>
+                  <mat-menu #filterMenu="matMenu" class="filterMenu">
+                    <div mat-menu-item>
+                      <mat-checkbox
+                        name="includeModelSuperseded"
+                        (ngModelChange)="
+                          toggleFilters('includeModelSuperseded')
+                        "
+                        [(ngModel)]="includeModelSuperseded"
+                      >
+                        Show Superseded Models
+                      </mat-checkbox>
+                    </div>
+                    <div *ngIf="isAdministrator" mat-menu-item>
+                      <mat-checkbox
+                        name="includeDeleted"
+                        (ngModelChange)="toggleFilters('includeDeleted')"
+                        [(ngModel)]="includeDeleted"
+                      >
+                        Show Deleted Models
+                      </mat-checkbox>
+                    </div>
+                  </mat-menu>
 
-                                    <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
-                                        <span class="fas fa-search"></span>
-                                    </button>
-                                    <button type="button" mat-stroked-button [matMenuTriggerFor]="filterMenu" *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Filters" [disabled]="levels.current === 1" (click)="toggleFilterMenu()" aria-label="Filter">
-                                        <span class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></span>
-                                    </button>
-                                    <mat-menu #filterMenu="matMenu" class="filterMenu">
-                                        <!-- <div mat-menu-item>
-                                            <mat-checkbox name="includeModelSuperseded" (ngModelChange)="toggleFilters('includeModelSuperseded')" [(ngModel)]="includeModelSuperseded">
-                                                Show Superseded Models
-                                            </mat-checkbox>
-                                        </div> -->
-                                        <div *ngIf="isAdministrator" mat-menu-item>
-                                            <mat-checkbox name="includeDeleted" (ngModelChange)="toggleFilters('includeDeleted')" [(ngModel)]="includeDeleted">
-                                                Show Deleted Models
-                                            </mat-checkbox>
-                                        </div>
-                                    </mat-menu>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    *ngIf="isLoggedIn()"
+                    matTooltip="Reload Data Models Tree"
+                    [disabled]="levels.current === 1"
+                    (click)="reloadTree()"
+                    aria-label="Reload data models tree"
+                  >
+                    <span class="fas fa-sync-alt"></span>
+                  </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Reload Data Models Tree" [disabled]="levels.current === 1" (click)="reloadTree()" aria-label="Reload data models tree">
-                                        <span class="fas fa-sync-alt"></span>
-                                    </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    *ngIf="isLoggedIn()"
+                    [matMenuTriggerFor]="exportMenu"
+                    matTooltip="Export Models"
+                    aria-label="Export Models"
+                  >
+                    <span class="fas fa-download"></span>
+                  </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="exportMenu" matTooltip="Export Models" aria-label="Export Models">
-                                        <span class="fas fa-download"></span>
-                                    </button>
-
-                                    <mat-menu #exportMenu="matMenu" class="filterMenu">
-                                      <button mat-menu-item (click)="changeState('export','dataModels')">
-                                        <span class="fas fa-file-alt dataModelTypeIcon marginless"></span> Export Data Models
-                                      </button>
-                                      <button mat-menu-item (click)="changeState('export','terminologies')">
-                                        <span class="fas fa-book dataModelTypeIcon marginless"></span>  Export Terminologies
-                                      </button>
-                                      <!-- <button mat-menu-item (click)="changeState('export','codeSets')">
+                  <mat-menu #exportMenu="matMenu" class="filterMenu">
+                    <button
+                      mat-menu-item
+                      (click)="changeState('export', 'dataModels')"
+                    >
+                      <span
+                        class="fas fa-file-alt dataModelTypeIcon marginless"
+                      ></span>
+                      Export Data Models
+                    </button>
+                    <button
+                      mat-menu-item
+                      (click)="changeState('export', 'terminologies')"
+                    >
+                      <span
+                        class="fas fa-book dataModelTypeIcon marginless"
+                      ></span>
+                      Export Terminologies
+                    </button>
+                    <!-- <button mat-menu-item (click)="changeState('export','codeSets')">
                                         <span class="fas fa-list dataModelTypeIcon marginless"></span> Export Code Sets
                                       </button> -->
-                                      <!-- <button mat-menu-item (click)="changeState('export','referenceDataModels')">
+                    <!-- <button mat-menu-item (click)="changeState('export','referenceDataModels')">
                                         <span class="fas fa-file-contract dataModelTypeIcon marginless"></span> Export Reference Data
                                       </button> -->
-                                    </mat-menu>
+                  </mat-menu>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="importMenu" matTooltip="Import Models" aria-label="Import Models">
-                                        <span class="fas fa-upload"></span>
-                                    </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    *ngIf="isLoggedIn()"
+                    [matMenuTriggerFor]="importMenu"
+                    matTooltip="Import Models"
+                    aria-label="Import Models"
+                  >
+                    <span class="fas fa-upload"></span>
+                  </button>
 
-                                    <mat-menu #importMenu="matMenu" class="filterMenu">
-                                      <button mat-menu-item (click)="changeState('import','dataModels')">
-                                        <span class="fas fa-file-alt dataModelTypeIcon marginless"></span> Import Data Models
-                                      </button>
-                                      <button mat-menu-item (click)="changeState('import','terminologies')">
-                                        <span class="fas fa-book dataModelTypeIcon marginless"></span> Import Terminologies
-                                      </button>
-                                      <!-- <button mat-menu-item (click)="changeState('import','codeSets')">
+                  <mat-menu #importMenu="matMenu" class="filterMenu">
+                    <button
+                      mat-menu-item
+                      (click)="changeState('import', 'dataModels')"
+                    >
+                      <span
+                        class="fas fa-file-alt dataModelTypeIcon marginless"
+                      ></span>
+                      Import Data Models
+                    </button>
+                    <button
+                      mat-menu-item
+                      (click)="changeState('import', 'terminologies')"
+                    >
+                      <span
+                        class="fas fa-book dataModelTypeIcon marginless"
+                      ></span>
+                      Import Terminologies
+                    </button>
+                    <!-- <button mat-menu-item (click)="changeState('import','codeSets')">
                                         <span class="fas fa-list dataModelTypeIcon marginless"></span> Import Code Sets
                                       </button> -->
-                                      <button mat-menu-item (click)="changeState('import','referenceDataModels')">
-                                        <span class="fas fa-file-contract dataModelTypeIcon marginless"></span> Import Reference Data
-                                      </button>
-                                    </mat-menu>
+                    <button
+                      mat-menu-item
+                      (click)="changeState('import', 'referenceDataModels')"
+                    >
+                      <span
+                        class="fas fa-file-contract dataModelTypeIcon marginless"
+                      ></span>
+                      Import Reference Data
+                    </button>
+                  </mat-menu>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn() && ((isAdministrator && isRootFolderRestricted) || !isRootFolderRestricted)" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
-                                        <span class="fas fa-folder-plus"></span>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    *ngIf="
+                      isLoggedIn() &&
+                      ((isAdministrator && isRootFolderRestricted) ||
+                        !isRootFolderRestricted)
+                    "
+                    matTooltip="Create a new Folder"
+                    [disabled]="levels.current === 1"
+                    (click)="onFolderAddModal()"
+                    aria-label="Create a new Folder"
+                  >
+                    <span class="fas fa-folder-plus"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%; clear: left; overflow-y: auto">
+          <div
+            style="margin: 3px 0px 0px 0px"
+            *ngIf="
+              levels.currentFocusedElement &&
+              filteredModels.children &&
+              filteredModels.children.length != 0
+            "
+          >
+            <button
+              mat-button
+              color="primary"
+              type="button"
+              class="paddingless"
+              matTooltip="Previous level"
+              aria-label="Previous level"
+              [disabled]="levels.current === 0"
+              (click)="levels.backToTree()"
+            >
+              <span class="fas fa-arrow-left"></span>
+            </button>
+
+            <button
+              mat-button
+              color="primary"
+              type="button"
+              class="paddingless"
+              matTooltip="Next level"
+              aria-label="Next level"
+              [disabled]="
+                (levels.current === 0 && !levels.currentFocusedElement) ||
+                levels.current === 1
+              "
+              (click)="levels.focusTreeItem(null)"
+            >
+              <span class="fas fa-arrow-right"></span>
+            </button>
+          </div>
+
+          <div *ngIf="filteredModels && !reloading">
+            <mdm-folders-tree
+              [treeName]="'Models'"
+              [inSearchMode]="inSearchMode"
+              [rememberExpandedStates]="true"
+              [node]="filteredModels"
+              [searchCriteria]="searchText"
+              (loadModelsToCompareEvent)="loadModelsToCompare($event)"
+              [enableDragAndDrop]="true"
+              [enableContextMenu]="true"
+              (nodeDbClickEvent)="onNodeDbClick($event)"
+              (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
+              (nodeAdded)="onNodeAdded()"
+            >
+            </mdm-folders-tree>
+          </div>
+          <div class="loading-spinner" *ngIf="reloading">
+            <div>
+              <span class="fas fa-sync-alt fa-spin"></span>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              filteredModels &&
+              filteredModels.children &&
+              filteredModels.children.length == 0
+            "
+          >
+            <div *ngIf="!isLoggedIn()">
+              <div class="noDataModel">
+                <div class="title">
+                  There are no Data Models to display publicly.
                 </div>
-                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: auto">
-
-                    <div style="margin:3px 0px 0px 0px" *ngIf="levels.currentFocusedElement && filteredModels.children && filteredModels.children.length!=0">
-                        <button mat-button
-                                color="primary"
-                                type="button"
-                                class="paddingless"
-                                matTooltip="Previous level"
-                                aria-label="Previous level"
-                                [disabled]="levels.current === 0"
-                                (click)="levels.backToTree()">
-                            <span class="fas fa-arrow-left"></span>
-                        </button>
-
-                        <button mat-button
-                                color="primary"
-                                type="button"
-                                class="paddingless"
-                                matTooltip="Next level"
-                                aria-label="Next level"
-                                [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
-                                (click)="levels.focusTreeItem(null)">
-                            <span class="fas fa-arrow-right"></span>
-                        </button>
-                    </div>
-
-
-
-                    <div *ngIf="filteredModels && !reloading">
-                        <mdm-folders-tree [treeName]="'Models'"
-                                        [inSearchMode]="inSearchMode"
-                                        [rememberExpandedStates]="true"
-                                        [node]="filteredModels"
-                                        [searchCriteria]="searchText"
-                                        (loadModelsToCompareEvent)="loadModelsToCompare($event)"
-                                        [enableDragAndDrop]="true"
-                                        [enableContextMenu]="true"
-                                        (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)"
-                                        (nodeAdded)="onNodeAdded()">
-                            </mdm-folders-tree>
-                    </div>
-                    <div class="loading-spinner" *ngIf="reloading">
-                        <div>
-                            <span class="fas fa-sync-alt fa-spin"></span>
-                        </div>
-                    </div>
-
-                    <div *ngIf="filteredModels && filteredModels.children && filteredModels.children.length==0">
-                        <div *ngIf="!isLoggedIn()">
-                            <div class="noDataModel">
-                                <div class="title">
-                                    There are no Data Models to display publicly.
-                                </div>
-                                <div class="content">
-                                    * Please login or register to view Data Models.
-                                </div>
-                            </div>
-
-                        </div>
-                        <div *ngIf="isLoggedIn()">
-                            <div class="noDataModel">
-                                <div class="title">
-                                    There are no Data Models to display.
-                                </div>
-                                <div class="content">
-                                    Please ask Administrator (or Data Model owner) to grant you access.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="content">
+                  * Please login or register to view Data Models.
                 </div>
-
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <span class="fas fa-tags"></span>&nbsp; Classifications
-                </ng-template>
-                <div style="margin-top: 2px;">
-                    <div>
-                        <div style="float: left;" class="full-width">
-                            <div class="input-group">
-                                <input type="text" class="form-control outlined-input" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search classifications..." (ngModelChange)="filterClassifications()">
-                                <span class="tree-top-actions">
-                                    <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
-                                        <span class="fas fa-search"></span>
-                                    </button>
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn() && ((isAdministrator && isClassifierCreateRestricted) || !isClassifierCreateRestricted)" matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="onAddClassifier()" aria-label="Create a new classification">
-                                        <span class="fas fa-folder-plus"></span>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+              </div>
+            </div>
+            <div *ngIf="isLoggedIn()">
+              <div class="noDataModel">
+                <div class="title">There are no Data Models to display.</div>
+                <div class="content">
+                  Please ask Administrator (or Data Model owner) to grant you
+                  access.
                 </div>
-                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 50px);overflow-y: auto">
-                    <mdm-folders-tree *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></mdm-folders-tree>
-                    <div *ngIf="allClassifiers && allClassifiers.length==0">
-                        <div *ngIf="!isLoggedIn()">
-                            <div class="noClassification">
-                                <div class="title">
-                                    There are no Classifications to display publicly.
-                                </div>
-                                <div class="content">
-                                    * Please login or register to view Classifications.
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="isLoggedIn()">
-                            <div class="noClassification">
-                                <div class="title">
-                                    There are no Classifications to display.
-                                </div>
-                                <div class="content">
-                                    Please ask Administrator (or Classification owner) to grant you access.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="fas fa-tags"></span>&nbsp; Classifications
+        </ng-template>
+        <div style="margin-top: 2px">
+          <div>
+            <div style="float: left" class="full-width">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control outlined-input"
+                  [(ngModel)]="formData.ClassificationFilterCriteria"
+                  placeholder="Search classifications..."
+                  (ngModelChange)="filterClassifications()"
+                />
+                <span class="tree-top-actions">
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    matTooltipPosition="below"
+                    matTooltip="Search"
+                    (click)="filterClassifications()"
+                    aria-label="Search"
+                  >
+                    <span class="fas fa-search"></span>
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    *ngIf="
+                      isLoggedIn() &&
+                      ((isAdministrator && isClassifierCreateRestricted) ||
+                        !isClassifierCreateRestricted)
+                    "
+                    matTooltipPosition="below"
+                    matTooltip="Create a new Classification"
+                    (click)="onAddClassifier()"
+                    aria-label="Create a new classification"
+                  >
+                    <span class="fas fa-folder-plus"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="treeHolder"
+          style="
+            width: 100%;
+            clear: left;
+            height: calc(80vh - 50px);
+            overflow-y: auto;
+          "
+        >
+          <mdm-folders-tree
+            *ngIf="classifiers"
+            [treeName]="'Classifiers'"
+            [searchCriteria]="formData.ClassificationFilterCriteria"
+            [rememberExpandedStates]="true"
+            [node]="classifiers"
+            (nodeClickEvent)="classifierTreeOnSelect($event)"
+          ></mdm-folders-tree>
+          <div *ngIf="allClassifiers && allClassifiers.length == 0">
+            <div *ngIf="!isLoggedIn()">
+              <div class="noClassification">
+                <div class="title">
+                  There are no Classifications to display publicly.
                 </div>
-            </mat-tab>
-
-            <mat-tab *ngIf="isLoggedIn()">
-                <ng-template mat-tab-label>
-                    <span class="fas fa-star"></span> &nbsp; Favourites
-                </ng-template>
-                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: auto" *ngIf="currentTab === 'favourites'">
-                    <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>
+                <div class="content">
+                  * Please login or register to view Classifications.
                 </div>
-            </mat-tab>
+              </div>
+            </div>
+            <div *ngIf="isLoggedIn()">
+              <div class="noClassification">
+                <div class="title">
+                  There are no Classifications to display.
+                </div>
+                <div class="content">
+                  Please ask Administrator (or Classification owner) to grant
+                  you access.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
 
-        </mat-tab-group>
-    </div>
+      <mat-tab *ngIf="isLoggedIn()">
+        <ng-template mat-tab-label>
+          <span class="fas fa-star"></span> &nbsp; Favourites
+        </ng-template>
+        <div
+          class="treeHolder"
+          style="
+            width: 100%;
+            clear: left;
+            height: calc(80vh - 0px);
+            overflow-y: auto;
+          "
+          *ngIf="currentTab === 'favourites'"
+        >
+          <mdm-favourites
+            (selectionChange)="favouriteSelected($event)"
+          ></mdm-favourites>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

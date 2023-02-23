@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,30 +16,39 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { CatalogueItemDomainType, ContainerDomainType, ModelDomainType, TermDetail, TerminologyDetail, TermRelationship, TermRelationshipType } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  CatalogueItemSearchResponse,
+  ContainerDomainType,
+  ModelDomainType,
+  TermDetail,
+  TerminologyDetail,
+  TermRelationship,
+  TermRelationshipType
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
-import { BehaviorSubject, EMPTY, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-create-term-relationship-dialog',
   templateUrl: 'create-term-relationship-dialog.component.html',
   styleUrls: ['create-term-relationship-dialog.component.scss']
 })
-export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy {
-
+export class CreateTermRelationshipDialogComponent
+  implements OnInit, OnDestroy {
   // Form instance holder
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   // Form instance for creating relationship with existing term
-  formWithExistingTerm: FormGroup;
+  formWithExistingTerm: UntypedFormGroup;
 
   // Form instance for creating relationship with new term
-  formWithNewTerm: FormGroup;
+  formWithNewTerm: UntypedFormGroup;
 
   // Terminology the terms and relationship belong to
   terminology: TerminologyDetail;
@@ -61,21 +69,30 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogRef: MatDialogRef<CreateTermRelationshipDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit() {
     this.terminology = this.data.terminology;
     this.terminology['hasChildren'] = true;
-    this.resources.tree.get(ContainerDomainType.Folders, ModelDomainType.Terminologies, this.terminology.id).subscribe(data => {
-      this.terminology['children'] = data.body || [];
-      if (data.body?.length === 0) {
-        this.terminology['hasChildren'] = false;
-      }
-    });
+    this.resources.tree
+      .get(
+        ContainerDomainType.Folders,
+        ModelDomainType.Terminologies,
+        this.terminology.id
+      )
+      .subscribe((data) => {
+        this.terminology['children'] = data.body || [];
+        if (data.body?.length === 0) {
+          this.terminology['hasChildren'] = false;
+        }
+      });
 
-    this.resources.termRelationshipTypes.list(this.terminology.id).subscribe(data => this.relationshipTypes = data.body.items);
+    this.resources.termRelationshipTypes
+      .list(this.terminology.id)
+      .subscribe((data) => (this.relationshipTypes = data.body.items));
 
     this.sourceTerm = this.data.sourceTerm;
     this.targetTerm = this.data.targetTerm;
@@ -104,18 +121,18 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
     });
 
     this.subscriptions.add(
-      this._relationshipType.subscribe(rt => {
+      this._relationshipType.subscribe((rt) => {
         if (rt?.id) {
-          this.formWithExistingTerm.patchValue({relationshipType: rt.id});
-          this.formWithNewTerm.patchValue({relationshipType: rt.id});
+          this.formWithExistingTerm.patchValue({ relationshipType: rt.id });
+          this.formWithNewTerm.patchValue({ relationshipType: rt.id });
         }
       })
     );
 
     this.subscriptions.add(
-      this._targetTerm.subscribe(term => {
+      this._targetTerm.subscribe((term) => {
         if (this.useExistingTerms && term?.id) {
-          this.form.patchValue({targetTerm: term.id});
+          this.form.patchValue({ targetTerm: term.id });
           if (this.form.controls.targetTerm.untouched) {
             this.form.controls.targetTerm.markAsTouched();
           }
@@ -124,7 +141,7 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
     );
 
     this.subscriptions.add(
-      this._useExistingTerms.subscribe(useExistingTerms => {
+      this._useExistingTerms.subscribe((useExistingTerms) => {
         if (useExistingTerms) {
           this.form = this.formWithExistingTerm;
         } else {
@@ -135,16 +152,22 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
 
     this.subscriptions.add(
       this.formWithNewTerm.valueChanges.subscribe(() => {
-        if (this.form.value.targetTerm?.code && this.form.value.targetTerm?.definition) {
-            this.targetTerm = this.form.value.targetTerm;
+        if (
+          this.form.value.targetTerm?.code &&
+          this.form.value.targetTerm?.definition
+        ) {
+          this.targetTerm = this.form.value.targetTerm;
         }
       })
     );
   }
 
   selectedTerm(term: TermDetail | TerminologyDetail) {
-    if (term.domainType === CatalogueItemDomainType.Term && this.sourceTerm.id !== term.id) {
-      this.targetTerm = (term as TermDetail);
+    if (
+      term.domainType === CatalogueItemDomainType.Term &&
+      this.sourceTerm.id !== term.id
+    ) {
+      this.targetTerm = term as TermDetail;
     }
   }
 
@@ -155,71 +178,106 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
     }
 
     this.submitting = true;
-
     if (!this.useExistingTerms) {
-      // Create the new term first
-      this.resources.terms.save(this.terminology.id, {
-        domainType: CatalogueItemDomainType.Term,
-        code: this.form.value.targetTerm.code,
-        definition: this.form.value.targetTerm.definition,
-        description: this.form.value.targetTerm.description
-      }).pipe(
-        catchError(error => {
-          this.messageHandler.showError('Unable to create new term');
-          console.error(error);
-          return EMPTY;
-        }),
-        finalize(() => this.submitting = false)
-      ).subscribe((response: HttpResponse<TermDetail>) => {
-        if (response.ok) {
-          this.targetTerm = response.body;
-
-          // New term created. Now add the new relationship.
-          this.resources.terms.addTermRelationships(this.terminology.id, this.sourceTerm.id, {
-            sourceTerm: this.sourceTerm.id,
-            relationshipType: this.relationshipType.id,
-            targetTerm: this.targetTerm.id
-          }).pipe(
-            catchError(error => {
-              this.messageHandler.showError('Unable to create new relationship');
-              console.error(error);
+      // first we check if the Code is duplicated and if so return an error
+      this.isCodeDuplicated()
+        .pipe(
+          switchMap((isDuplicate) => {
+            if (isDuplicate) {
+              this.messageHandler.showError(
+                'The Term Code provided is already in use, please use another Code.'
+              );
               return EMPTY;
-            }),
-            finalize(() => this.submitting = false)
-          ).subscribe((trResponse: HttpResponse<TermRelationship>) => {
-              if (trResponse.ok) {
-                this.dialogRef.close(trResponse.body);
-              } else {
-                this.messageHandler.showWarning(trResponse.body);
-              }
             }
-          );
-        } else {
-          this.messageHandler.showWarning(response.body);
-        }
-      });
+            // if not we create the term
+            return this.resources.terms.save(this.terminology.id, {
+              domainType: CatalogueItemDomainType.Term,
+              code: this.form.value.targetTerm.code,
+              definition: this.form.value.targetTerm.definition,
+              description: this.form.value.targetTerm.description
+            });
+          }),
+          catchError((error) => {
+            this.messageHandler.showError('Unable to create new term');
+            console.error(error);
+            return EMPTY;
+          }),
+          finalize(() => (this.submitting = false))
+        )
+
+        .subscribe((response: HttpResponse<TermDetail>) => {
+          if (response.ok) {
+            this.targetTerm = response.body;
+
+            // New term created. Now add the new relationship.
+            this.resources.terms
+              .addTermRelationships(this.terminology.id, this.sourceTerm.id, {
+                sourceTerm: this.sourceTerm.id,
+                relationshipType: this.relationshipType.id,
+                targetTerm: this.targetTerm.id
+              })
+              .pipe(
+                catchError((error) => {
+                  this.messageHandler.showError(
+                    'Unable to create new relationship'
+                  );
+                  console.error(error);
+                  return EMPTY;
+                }),
+                finalize(() => (this.submitting = false))
+              )
+              .subscribe((trResponse: HttpResponse<TermRelationship>) => {
+                if (trResponse.ok) {
+                  this.dialogRef.close(trResponse.body);
+                } else {
+                  this.messageHandler.showWarning(trResponse.body);
+                }
+              });
+          } else {
+            this.messageHandler.showWarning(response.body);
+          }
+        });
     } else {
-      this.resources.terms.addTermRelationships(this.terminology.id, this.sourceTerm.id, {
-        sourceTerm: this.sourceTerm.id,
-        relationshipType: this.relationshipType.id,
-        targetTerm: this.targetTerm.id
-      }).pipe(
-        catchError(error => {
-          this.messageHandler.showError('Unable to create new relationship');
-          console.error(error);
-          return EMPTY;
-        }),
-        finalize(() => this.submitting = false)
-      ).subscribe(
-        (response: HttpResponse<TermRelationship>) => {
+      this.resources.terms
+        .addTermRelationships(this.terminology.id, this.sourceTerm.id, {
+          sourceTerm: this.sourceTerm.id,
+          relationshipType: this.relationshipType.id,
+          targetTerm: this.targetTerm.id
+        })
+        .pipe(
+          catchError((error) => {
+            this.messageHandler.showError('Unable to create new relationship');
+            console.error(error);
+            return EMPTY;
+          }),
+          finalize(() => (this.submitting = false))
+        )
+        .subscribe((response: HttpResponse<TermRelationship>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
           } else {
             this.messageHandler.showWarning(response.body);
           }
-        }
-      );
+        });
     }
+  }
+
+  isCodeDuplicated(): Observable<boolean> {
+    // returns an observable with a boolean value, true for duplicate, false for clear
+    return this.resources.term.list(this.terminology.id).pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'Error searching terminology associated terms'
+        );
+        console.error(error);
+        return of(false);
+      }),
+      map((response: CatalogueItemSearchResponse) =>
+        response.body.items.some(
+          (e) => e.code === this.form.value.targetTerm.code
+        )
+      )
+    );
   }
 
   onCancel(): void {
@@ -269,5 +327,4 @@ export class CreateTermRelationshipDialogComponent implements OnInit, OnDestroy 
   set useExistingTerms(useExistingTerm: boolean) {
     this._useExistingTerms.next(useExistingTerm);
   }
-
 }

@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,32 +16,23 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm--container-fluid pxy-0">
-    <div class="row marginless">
-        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block">
-            <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
-                <span *ngIf="!isOpen">
-                    Show Model Tree
-                    <span #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></span>
-                </span>
-                <span *ngIf="isOpen">
-                    Hide Model Tree
-                    <span #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></span>
-                </span>
-            </button>
-        </div>
-
-        <!-- <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4" [@openClose]="isOpen ? 'isOpen' : 'closed'">
-            <div id="mdm--tree-container" ui-view="left"></div>
-        </div>
-        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
-            <div ui-view="" class="mb-2"></div>
-        </div> -->
-
-        <div #resizableLeft class="resizableLeft col-lg-4 col-md-12 col-sm-12 col-xs-12 mb-2" [@openClose]="isOpen ? 'isOpen' : 'closed'">
-            <div id="mdm--tree-container" ui-view="left"></div>
-        </div>
-        <div class="resizableRight col-lg-8 col-md-12 col-xs-12 col-sm-12">
-            <div ui-view="" class="mb-2"></div>
-        </div>
+  <div class="mdm-two-side-panel">
+    <div
+      class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block"
+    >
+      <button mat-flat-button color="primary" (click)="toggle()">
+        <span *ngIf="!isOpen"> Show Models </span>
+        <span *ngIf="isOpen"> Hide Models </span>
+      </button>
     </div>
+
+    <as-split [direction]="splitDirection" gutterSize="12">
+      <as-split-area [size]="33" class="panel" order="1" [visible]="isOpen">
+        <div id="mdm--tree-container" ui-view="left"></div>
+      </as-split-area>
+      <as-split-area [size]="67" class="panel" order="2">
+        <div ui-view="" class="mb-2"></div>
+      </as-split-area>
+    </as-split>
+  </div>
 </div>

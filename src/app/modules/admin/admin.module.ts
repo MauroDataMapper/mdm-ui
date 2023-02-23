@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +19,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminAppContainerComponent } from '@mdm/admin/app-container/app-container.component';
 import { AdminRoutesModule } from '../admin-routes/admin-routes.module';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { EmailsComponent } from '@mdm/admin/emails/emails.component';
 import { GroupMemberTableComponent } from '@mdm/admin/group-member-table/group-member-table.component';
 import { UserComponent } from '@mdm/admin/user/user.component';

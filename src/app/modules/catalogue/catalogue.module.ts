@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,10 +23,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { AdminModule } from '../admin/admin.module';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@mdm/shared/shared.module';
 import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
-import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
@@ -39,7 +37,6 @@ import { ServerErrorComponent } from '@mdm/errors/server-error/server-error.comp
 import { NotImplementedComponent } from '@mdm/errors/not-implemented/not-implemented.component';
 import { NotAuthorizedComponent } from '@mdm/errors/not-authorized/not-authorized.component';
 import { DataModelComponent } from '@mdm/dataModel/data-model.component';
-import { DataModelDetailComponent } from '@mdm/dataModel/data-model-detail.component';
 import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';
 import { TableButtonsComponent } from '@mdm/shared/table-buttons/table-buttons.component';
 import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
@@ -58,7 +55,6 @@ import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summ
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
 import { DataClassComponent } from '@mdm/dataClass/data-class/data-class.component';
-import { DataClassDetailsComponent } from '@mdm/dataClass/data-class-details/data-class-details.component';
 import { ShowIfRolesWritableDirective } from '@mdm/directives/show-if-roles-writable.directive';
 import { DataModelMainComponent } from '@mdm/wizards/dataModel/data-model-main/data-model-main.component';
 import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
@@ -89,7 +85,6 @@ import { PluginsComponent } from '@mdm/admin/home/plugins/plugins.component';
 import { ActiveSessionsComponent } from '@mdm/admin/home/active-sessions/active-sessions.component';
 import { ModelManagementComponent } from '@mdm/admin/model-management/model-management.component';
 import { DataElementComponent } from '@mdm/dataElement/data-element/data-element.component';
-import { DataElementDetailsComponent } from '@mdm/dataElement/data-element-details/data-element-details.component';
 import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/new-data-type-inline.component';
 import { DataElementMainComponent } from '@mdm/wizards/dataElement/data-element-main/data-element-main.component';
 import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element-step1/data-element-step1.component';
@@ -99,7 +94,6 @@ import { ImportModelsComponent } from '@mdm/import-models/import-models.componen
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TermListComponent } from '@mdm/terminology/term-list/term-list.component';
 import { CreateTermDialogComponent } from '@mdm/terminology/term-list/create-term-dialog/create-term-dialog.component';
-import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
@@ -107,7 +101,6 @@ import { FavouritesComponent } from '@mdm/shared/favourites/favourites.component
 import { ShowIfRoleIsWritableDirective } from '@mdm/directives/show-if-role-is-writable.directive';
 import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { ClassificationComponent } from '@mdm/classification/classification.component';
-import { ClassificationDetailsComponent } from '@mdm/classification/classification-details/classification-details.component';
 import { ClassifiedElementsListComponent } from '@mdm/shared/classified-elements-list/classified-elements-list.component';
 import { AppContainerComponent } from '@mdm/app-container/app-container.component';
 import { NavbarComponent } from '@mdm/navbar/navbar.component';
@@ -116,13 +109,11 @@ import { FilterPipe } from '@mdm/directives/filter-pipe.directive';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { GroupComponent } from '@mdm/admin/group/group.component';
 import { DataTypeComponent } from '@mdm/data-type/data-type.component';
-import { DataTypeDetailComponent } from '@mdm/data-type/data-type-detail/data-type-detail.component';
 import { ElementChildDataElementsListComponent } from '@mdm/shared/element-child-data-elements-list/element-child-data-elements-list.component';
 import { SettingsComponent } from '@mdm/userArea/settings/settings.component';
 import { AboutComponent } from '@mdm/about/about.component';
 import { ResetPasswordComponent } from '@mdm/reset-password/reset-password.component';
 import { TermComponent } from '@mdm/term/term/term.component';
-import { TermDetailsComponent } from '@mdm/term/term-details/term-details.component';
 import { TermRelationshipsComponent } from '@mdm/utility/term-relationships/term-relationships.component';
 import { LinkSuggestionComponent } from '@mdm/link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from '@mdm/model-comparison/model-comparison.component';
@@ -130,12 +121,10 @@ import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-se
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
-import { UserIdleModule } from 'angular-user-idle';
 import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
-import { CodeSetDetailsComponent } from '@mdm/code-set/code-set-details/code-set-details.component';
 import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
 import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.component';
 import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
@@ -148,10 +137,9 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
-import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
-import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
-import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
-import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
+import { ReferenceDataTypeComponent } from '@mdm/referenceData/reference-data-type/reference-data-type.component';
+import { ReferenceDataElementComponent } from '@mdm/referenceData/reference-data-element/reference-data-element.component';
+import { ReferenceDataValuesComponent } from '@mdm/referenceData/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
@@ -168,7 +156,6 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
-import { VersionedFolderDetailComponent } from '@mdm/versioned-folder/versioned-folder-detail/versioned-folder-detail.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { OpenIdConnectAuthorizeComponent } from '@mdm/security/open-id-connect-authorize/open-id-connect-authorize.component';
@@ -184,11 +171,28 @@ import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-m
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
+import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
+import { ReferenceDataTypeStep2Component } from '../../wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
+import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
+import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
+import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
 
 @NgModule({
+  providers: [
+    {
+      provide: USER_IDLE_CONFIGURATION,
+      // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
+      useValue: {
+        idle: 600,
+        timeout: 300,
+      },
+    },
+  ],
   declarations: [
     FolderComponent,
-    FolderDetailComponent,
     ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
@@ -205,7 +209,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
-    DataModelDetailComponent,
     McDataSetMetadataComponent,
     TableButtonsComponent,
     AnnotationListComponent,
@@ -225,7 +228,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ElementLinkListComponent,
     AttachmentListComponent,
     DataClassComponent,
-    DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
     DataModelMainComponent,
     DclWrapperComponent,
@@ -256,7 +258,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ActiveSessionsComponent,
     ModelManagementComponent,
     DataElementComponent,
-    DataElementDetailsComponent,
     NewDataTypeInlineComponent,
     DataElementMainComponent,
     DataElementStep1Component,
@@ -270,7 +271,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CreateTermDialogComponent,
     CreateTermRelationshipTypeDialogComponent,
     CreateTermRelationshipDialogComponent,
-    TerminologyDetailsComponent,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -278,7 +278,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,
-    ClassificationDetailsComponent,
     ClassifiedElementsListComponent,
     AppContainerComponent,
     NavbarComponent,
@@ -287,13 +286,11 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ByteArrayToBase64Pipe,
     GroupComponent,
     DataTypeComponent,
-    DataTypeDetailComponent,
     ElementChildDataElementsListComponent,
     SettingsComponent,
     AboutComponent,
     ResetPasswordComponent,
     TermComponent,
-    TermDetailsComponent,
     TermRelationshipsComponent,
     ByteArrayToBase64Pipe,
     SettingsComponent,
@@ -302,7 +299,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetMainComponent,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
-    CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
@@ -310,7 +306,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
     ReferenceDataComponent,
-    ReferenceDataDetailsComponent,
     BaseComponent,
     ReferenceDataTypeComponent,
     ReferenceDataElementComponent,
@@ -333,14 +328,20 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     FederatedDataModelDetailComponent,
     ProfileDetailsComponent,
     VersionedFolderComponent,
-    VersionedFolderDetailComponent,
     DefaultProfileComponent,
     OpenIdConnectAuthorizeComponent,
     ProfileDataViewComponent,
     TermRelationshipListComponent,
     NewerVersionsComponent,
     TerminologyMainComponent,
-    SkeletonBadgeComponent
+    SkeletonBadgeComponent,
+    ReferenceDataModelMainComponent,
+    ReferenceDataTypeMainComponent,
+    ReferenceDataTypeStep1Component,
+    ReferenceDataTypeStep2Component,
+    NewReferenceDataTypeFormComponent,
+    ReferenceDataTypeSelectComponent,
+    ModelHeaderComponent
   ],
   imports: [
     AdminModule,
@@ -348,7 +349,7 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,
-    ChartsModule,
+    NgChartsModule,
     CommonModule,
     DragDropModule,
     FoldersTreeModule,
@@ -362,7 +363,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
     PipesModule,
@@ -370,7 +370,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
   ],
   exports: [
     FolderComponent,
-    FolderDetailComponent,
     SummaryMetadataPopupComponent,
     ExportModelsComponent,
     HistoryComponent,
@@ -384,7 +383,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
-    DataModelDetailComponent,
     McDataSetMetadataComponent,
     TableButtonsComponent,
     AnnotationListComponent,
@@ -403,7 +401,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ElementLinkListComponent,
     AttachmentListComponent,
     DataClassComponent,
-    DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
     DataModelMainComponent,
     DclWrapperComponent,
@@ -434,7 +431,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ActiveSessionsComponent,
     ModelManagementComponent,
     DataElementComponent,
-    DataElementDetailsComponent,
     NewDataTypeInlineComponent,
     DataElementMainComponent,
     DataElementStep1Component,
@@ -442,7 +438,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     HomeComponent,
     ImportModelsComponent,
     TerminologyComponent,
-    TerminologyDetailsComponent,
     TermListComponent,
     TermCodeSetListComponent,
     CreateTermDialogComponent,
@@ -455,7 +450,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ShowIfRoleIsWritableDirective,
     McEnumerationListWithCategoryComponent,
     ClassificationComponent,
-    ClassificationDetailsComponent,
     ClassifiedElementsListComponent,
     AppContainerComponent,
     NavbarComponent,
@@ -464,13 +458,11 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     ByteArrayToBase64Pipe,
     GroupComponent,
     DataTypeComponent,
-    DataTypeDetailComponent,
     ElementChildDataElementsListComponent,
     SettingsComponent,
     AboutComponent,
     ResetPasswordComponent,
     TermComponent,
-    TermDetailsComponent,
     TermRelationshipsComponent,
     ByteArrayToBase64Pipe,
     SettingsComponent,
@@ -479,7 +471,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     CodeSetMainComponent,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
-    CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
@@ -488,7 +479,6 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     BulkDeleteModalComponent,
     BaseComponent,
     ReferenceDataComponent,
-    ReferenceDataDetailsComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
     ConstraintsRulesComponent,
@@ -510,7 +500,9 @@ import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.mo
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent
+    MoreDescriptionComponent,
+    ReferenceDataModelMainComponent,
+    ModelHeaderComponent
   ]
 })
 export class CatalogueModule {}

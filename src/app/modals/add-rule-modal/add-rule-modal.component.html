@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,24 +16,43 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="modal-header pxy-2">
-    <h4 class='modal-title marginless'>{{modalTitle}}</h4>
+  <h4 class="modal-title marginless">{{ modalTitle }}</h4>
 </div>
-<div class="modal-body pxy-2">
-    <p [innerHtml]="message"></p>
+<form [formGroup]="formGroup">
+  <div class="modal-body pxy-2">
+    <p *ngIf="message" [innerHtml]="message"></p>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline" required  class="full-width paddingless">
-            <mat-label>Name</mat-label>
-            <input matInput [(ngModel)]="data.name">
-        </mat-form-field>
+      <mat-form-field appearance="outline" required class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="name.errors?.required"> Name is required </mat-error>
+      </mat-form-field>
     </div>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline" class="full-width paddingless">
-            <mat-label>Description</mat-label>
-            <input matInput [(ngModel)]="data.description">
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
     </div>
-</div>
-<div class="modal-footer pxy-2">
-    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>{{cancelBtn}}</button>
-    <button mat-flat-button color="{{btnType}}" type="button" [disabled]="data.name.length === 0 ||  data.description.length === 0" [mat-dialog-close]="data">{{okBtn}}</button>
-</div>
+  </div>
+  <div class="modal-footer pxy-2">
+    <button
+      mat-button
+      color="warn"
+      class="mr-1"
+      type="button"
+      (click)="cancel()"
+    >
+      {{ cancelBtn }}
+    </button>
+    <button
+      mat-flat-button
+      color="{{ btnType }}"
+      type="button"
+      [disabled]="!formGroup.valid"
+      (click)="confirm()"
+    >
+      {{ okBtn }}
+    </button>
+  </div>
+</form>

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,13 +39,13 @@ export class ServerErrorComponent extends ErrorComponent implements OnInit {
     this.errorResolution = 'This may be a temporary issue, so you might like to try again later';
     this.errorReportMessage = 'Alternatively, if this is the first time you have encountered this error, please report the issue to us by using the link below:';
 
-    this.dataSource.push({ field: 'Reason', value: this.lastError.error?.reason, code: false });
-    this.dataSource.push({ field: 'Status', value: this.lastError.error?.status, code: false });
-    this.dataSource.push({ field: 'Error Code', value: this.lastError.error?.errorCode, code: false });
-    this.dataSource.push({ field: 'Path', value: this.lastError.error?.path, code: false });
-    this.dataSource.push({ field: 'Dev Mode', value: this.lastError.error?.devMode, code: false });
-    this.dataSource.push({ field: 'Message', value: this.lastError.error?.message, code: false });
-    this.dataSource.push({ field: 'Exception', value: this.lastError.error?.exception, code: true });
+    if (this.lastError.error?.reason) this.dataSource.push({ field: 'Reason', value: this.lastError.error?.reason, code: false });
+    if (this.lastError.error?.status) this.dataSource.push({ field: 'Status', value: this.lastError.error?.status, code: false });
+    if (this.lastError.error?.errorCode) this.dataSource.push({ field: 'Error Code', value: this.lastError.error?.errorCode, code: false });
+    if (this.lastError.error?.path) this.dataSource.push({ field: 'Path', value: this.lastError.error?.path, code: false });
+    if (this.lastError.error?.devMode) this.dataSource.push({ field: 'Dev Mode', value: this.lastError.error?.devMode, code: false });
+    if (this.lastError.error?.message) this.dataSource.push({ field: 'Message', value: this.lastError.error?.message, code: false });
+    if (this.lastError.error?.exception) this.dataSource.push({ field: 'Exception', value: this.lastError.error?.exception, code: true });
 
   }
 }

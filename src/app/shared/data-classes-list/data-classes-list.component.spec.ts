@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataClassesListComponent } from './data-classes-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -45,12 +44,13 @@ import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-li
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('DataClassesListComponent', () => {
    let component: DataClassesListComponent;
    let fixture: ComponentFixture<DataClassesListComponent>;
 
-   beforeEach(async(() => {
+   beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
          imports: [
             NgxSkeletonLoaderModule,
@@ -85,7 +85,8 @@ describe('DataClassesListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataClassesListComponent
+            DataClassesListComponent,
+            SkeletonBadgeComponent
          ]
       })
          .compileComponents();

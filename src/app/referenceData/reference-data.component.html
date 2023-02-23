@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,10 +21,10 @@ SPDX-License-Identifier: Apache-2.0
   [attr.data-catalogue-item-id]="referenceModel.id"
   [attr.data-catalogue-item-domain]="referenceModel.domainType"
 >
-  <mdm-reference-data-details
+  <mdm-model-header
     *ngIf="referenceModel"
-    [refDataModel]="referenceModel"
-  ></mdm-reference-data-details>
+    [item]="referenceModel"
+  ></mdm-model-header>
 </div>
 
 <mat-tab-group
@@ -67,6 +66,7 @@ SPDX-License-Identifier: Apache-2.0
       <mdm-reference-data-type
         *ngIf="referenceModel"
         [parent]="referenceModel"
+        [showEdit]="showEdit"
         (totalCount)="typesCountEmitter($event)"
       ></mdm-reference-data-type>
     </div>

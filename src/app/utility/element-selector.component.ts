@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -381,15 +380,8 @@ export class ElementSelectorComponent implements OnInit {
       this.loading = true;
 
       this.catalogueSearch.search(parameters).subscribe((resultSet) => {
-        const rows = [];
+        const rows = resultSet.items;
         this.loading = false;
-        resultSet.items.forEach((element) => {
-          if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
-          } else {
-            rows.push(element);
-          }
-        });
 
         if (infiniteScrollCall === true) {
           this.isProcessing = true;
@@ -496,15 +488,7 @@ export class ElementSelectorComponent implements OnInit {
       this.loadAllTerms(currentContext, pageSize, offset).subscribe(
         (result) => {
           this.isProcessing = true;
-          const rows = [];
-          result.body.items.forEach((element) => {
-            if (element.hasOwnProperty('breadcrumbs')) {
-              rows.push(element, { detailRow: true, element });
-            } else {
-              rows.push(element);
-            }
-          });
-
+          const rows = result.body.items;
           this.termsList = rows;
           this.totalItemCount = result.body.count;
           if (this.dataSource.data) {

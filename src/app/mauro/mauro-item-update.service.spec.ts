@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -106,6 +105,11 @@ describe('MauroItemUpdateService', () => {
       update: jest.fn() as jest.MockedFunction<
         (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
       >
+    },
+    referenceDataModel: {
+      update: jest.fn() as jest.MockedFunction<
+        (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
+      >
     }
   };
 
@@ -129,6 +133,7 @@ describe('MauroItemUpdateService', () => {
       | 'folder'
       | 'versionedFolder'
       | 'classifier'
+      | 'referenceDataModel'
   ) => {
     resourcesStub[resource].update.mockImplementationOnce((id, data) => {
       expect(id).toBe(identifier.id);
@@ -226,7 +231,7 @@ describe('MauroItemUpdateService', () => {
 
   describe('unsupported domain types', () => {
     const unsupported = [
-      CatalogueItemDomainType.ReferenceDataModel,
+      // CatalogueItemDomainType.ReferenceDataModel,
       CatalogueItemDomainType.ReferenceDataModelType
     ];
 
@@ -508,6 +513,25 @@ describe('MauroItemUpdateService', () => {
       testMultipleItemsAreSaved(
         CatalogueItemDomainType.Classifier,
         (id, item) => mockModelRequest(id, item, 'classifier')
+      );
+    });
+  });
+
+  describe('save reference data models', () => {
+    it('should save a single item', () => {
+      testSingleItemIsSaved(
+        {
+          id: '123',
+          domainType: CatalogueItemDomainType.ReferenceDataModel
+        },
+        (id, item) => mockModelRequest(id, item, 'referenceDataModel')
+      );
+    });
+
+    it('should save many items', () => {
+      testMultipleItemsAreSaved(
+        CatalogueItemDomainType.ReferenceDataModel,
+        (id, item) => mockModelRequest(id, item, 'referenceDataModel')
       );
     });
   });

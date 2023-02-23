@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,16 +16,25 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <span [hidden]="!this.description || this.description.length == 0">
-  <div #descriptionContent [class]="showMore?'content-full':'content-hidden'">
+  <div
+    #descriptionContent
+    [class]="showMore ? 'content-full' : 'content-hidden'"
+  >
     <mdm-content-editor
+      *ngIf="type === 'editable'"
       [(content)]="this.description"
       [inEditMode]="false"
       style="height: 100%"
     ></mdm-content-editor>
+    <pre *ngIf="type === 'preformatted'">{{ description }}</pre>
   </div>
   <div *ngIf="isOverflowing" class="show-more-less">
     <span *ngIf="!showMore">...</span>
-    <a color="primary" class="show-less" (click)="toggle()" [hidden]="!showMore">Show less</a>
-    <a color="primary" class="show-more" (click)="toggle()" [hidden]="showMore">Show more</a>
+    <a color="primary" class="show-less" (click)="toggle()" [hidden]="!showMore"
+      >Show less</a
+    >
+    <a color="primary" class="show-more" (click)="toggle()" [hidden]="showMore"
+      >Show more</a
+    >
   </div>
 </span>

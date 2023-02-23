@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,38 +15,45 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div  style="width: 700px">
-<div class="modal-header pxy-2">
-  <h4 mat-dialog-title>Add New Profile</h4>
-</div>
-<div class="modal-body pxy-2" >
-  <div *ngIf="showProfileSelector">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Select Profile : </mat-label>
-      <mat-select [(ngModel)]="data.selectedProfile">
-        <mat-option
-          *ngFor="let option of allUnusedProfiles"
-          [value]="option.value"
-          >{{ option.display }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
+<div style="width: 700px">
+  <div class="modal-header pxy-2">
+    <h4 mat-dialog-title>Add New Profile</h4>
   </div>
-  <div  *ngIf="!showProfileSelector">
-    <p>There are no available profiles</p>
+  <div class="modal-body pxy-2">
+    <mdm-alert *ngIf="data.finalised" alertStyle="info" showIcon="true">
+      Only the following profiles may be added after finalisation.
+    </mdm-alert>
+    <div *ngIf="profiles">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select Profile : </mat-label>
+        <mat-select [(ngModel)]="data.selectedProfile">
+          <mat-option *ngFor="let option of profiles" [value]="option.value">{{
+            option.display
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="!profiles">
+      <p>There are no available profiles</p>
+    </div>
+    <div class="modal-footer pxy-2">
+      <button
+        mat-button
+        color="warn"
+        style="margin-right: 8px"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="save()"
+        [disabled]="!data.selectedProfile"
+        class="custom"
+      >
+        Save Changes
+      </button>
+    </div>
   </div>
-  <div class="modal-footer pxy-2">
-    <button
-      mat-button
-      color="warn"
-      style="margin-right: 8px"
-      (click)="onCancel()"
-    >
-      Cancel
-    </button>
-    <button mat-flat-button color="primary" (click)="save()" [disabled]="!showProfileSelector" class="custom">
-      Save Changes
-    </button>
-  </div>
-</div>
 </div>

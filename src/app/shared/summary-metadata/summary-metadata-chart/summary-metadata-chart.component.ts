@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'mdm-summary-metadata-chart',
@@ -30,35 +29,64 @@ export class SummaryMetadataChartComponent implements OnInit {
 
   public displayChart: boolean;
 
-  public chartColors: any[] = [
-    {
-      backgroundColor: [
-        'rgba(30,84,37,0.5)',
-        'rgba(45,81,113,0.5)',
-        'rgba(242,148,65,0.5)',
-        'rgba(170,64,122,0.5)',
-        'rgba(68,166,156,0.5)',
-        'rgba(218,0,51,0.5)',
-        'rgba(51,123,187,0.5)',
-        'rgba(99,199,77,0.5)',
-        'rgba(106,52,83,0.5)',
-        'rgba(44,232,245,0.5)',
-        'rgba(178,77,42,0.5)',
-        'rgba(255,245,64,0.5)',
-        'rgba(244,161,176,0.5)',
-        'rgba(115,47,32,0.5)',
-        'rgba(112,112,112,0.5)',
-        'rgba(191,191,191,0.5)',
-      ],
-    },
+  public chartBackgroundColors: any[] = [
+    'rgba(30,84,37,0.4)',
+    'rgba(45,81,113,0.4)',
+    'rgba(242,148,65,0.4)',
+    'rgba(170,64,122,0.4)',
+    'rgba(68,166,156,0.4)',
+    'rgba(218,0,51,0.4)',
+    'rgba(51,123,187,0.4)',
+    'rgba(99,199,77,0.4)',
+    'rgba(106,52,83,0.4)',
+    'rgba(44,232,245,0.4)',
+    'rgba(178,77,42,0.4)',
+    'rgba(255,245,64,0.4)',
+    'rgba(244,161,176,0.4)',
+    'rgba(115,47,32,0.4)',
+    'rgba(112,112,112,0.4)',
+    'rgba(191,191,191,0.4)',
+  ];
+
+  public chartBorderColors: any[] = [
+    'rgba(30,84,37)',
+    'rgba(45,81,113)',
+    'rgba(242,148,65)',
+    'rgba(170,64,122)',
+    'rgba(68,166,156)',
+    'rgba(218,0,51)',
+    'rgba(51,123,187)',
+    'rgba(99,199,77)',
+    'rgba(106,52,83)',
+    'rgba(44,232,245)',
+    'rgba(178,77,42)',
+    'rgba(255,245,64)',
+    'rgba(244,161,176)',
+    'rgba(115,47,32)',
+    'rgba(112,112,112)',
+    'rgba(191,191,191)',
   ];
 
   public barChartOptions: ChartOptions = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
-    scales: { xAxes: [{}], yAxes: [{ ticks: {
-          beginAtZero: true
-        }}] },
+    scales: {
+      xAxis: {
+        ticks: {
+          callback: (value, index): string => {
+            let shortLabel = this.barChartLabels[index].toString();
+            if(shortLabel == null){
+              return '';
+            }
+            if (shortLabel.length > 15) {
+              shortLabel = shortLabel.substring(0, 15);
+              shortLabel += '...';
+            }
+            return shortLabel;
+          }
+        }
+      }, yAxis: { min: 0 } },
+
 
     plugins: {
       datalabels: {
@@ -68,14 +96,14 @@ export class SummaryMetadataChartComponent implements OnInit {
     },
     maintainAspectRatio: false
   };
-  public barChartLabels: Label[] = [];
+  public barChartLabels: String[] = [];
   public barChartType: ChartType;
   public barChartLegend = false;
-  //  public barChartPlugins = [pluginDataLabels];
+  public barChartPlugins = [ChartDataLabels];
 
   public summaryMetadataReports: any[];
 
-  public barChartData: ChartDataSets[] = [];
+  public barChartData: ChartDataset[] = [];
 
   public reportIndex: number;
   public reportDate: string;
@@ -84,9 +112,7 @@ export class SummaryMetadataChartComponent implements OnInit {
   ngOnInit() {
     if (this.summary.summaryMetadataReports && this.summary.summaryMetadataReports.length > 0) {
       this.displayChart = true;
-
       this.summaryMetadataReports = this.summary.summaryMetadataReports.sort((a, b) => this.sortReportsByDate(a, b));
-
       if (this.summary.summaryMetadataType === 'map') {
         this.barChartType = 'bar';
         this.reportIndex = this.summary.summaryMetadataReports.length - 1;
@@ -110,7 +136,7 @@ export class SummaryMetadataChartComponent implements OnInit {
   drawBarChart(): void {
     this.selectedReport = this.summary.summaryMetadataReports[this.reportIndex];
     this.barChartData = [];
-    this.barChartData.push({data: Object.values(this.selectedReport.reportValue) as number[]});
+    this.barChartData.push({data: Object.values(this.selectedReport.reportValue) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
     this.barChartLabels = Object.keys(this.selectedReport.reportValue);
     this.reportDate = this.selectedReport.reportDate;
   }

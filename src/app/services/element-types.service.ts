@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -291,8 +290,25 @@ export class ElementTypesService {
       markdown: 'dt',
       classifiable: true
     },
-
-    Classifier: {
+    PrimitiveType: {
+      id: 'PrimitiveType',
+      link: 'dataType',
+      title: 'PrimitiveType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    EnumerationType: {
+      id: 'EnumerationType',
+      link: 'dataType',
+      title: 'EnumerationType',
+      resourceName: 'dataType',
+      domainName: 'dataTypes',
+      markdown: 'dt',
+      classifiable: true
+    },
+    classifier: {
       id: 'Classifier',
       link: 'classifier',
       title: 'Classifier',
@@ -384,7 +400,9 @@ export class ElementTypesService {
   }
 
   getAllDataTypesArray() {
-    return this.allTypes.filter(f => f.baseTitle === 'DataType' && f.title !== 'DataType');
+    return this.allTypes.filter(
+      (f) => f.baseTitle === 'DataType' && f.title !== 'DataType'
+    );
   }
 
   getAllDataTypesMap() {

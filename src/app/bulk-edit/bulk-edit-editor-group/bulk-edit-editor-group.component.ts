@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,8 +25,8 @@ import { BulkEditContext, BulkEditProfileContext } from '../bulk-edit.types';
   styleUrls: ['./bulk-edit-editor-group.component.scss']
 })
 export class BulkEditEditorGroupComponent implements OnInit {
-  @Output() onCancel = new EventEmitter<void>();
-  @Output() onPrevious = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+  @Output() previous = new EventEmitter<void>();
 
   /** Two way binding */
   @Input() context: BulkEditContext;
@@ -46,11 +45,11 @@ export class BulkEditEditorGroupComponent implements OnInit {
     });
   }
 
-  cancel() {
-    this.onCancel.emit();
+  onCancel() {
+    this.cancel.emit();
   }
 
-  previous() {
-    this.onPrevious.emit();
+  onPrevious() {
+    this.previous.emit();
   }
 }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ClassifiedElementsListComponent } from './classified-elements-list.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -28,7 +27,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
@@ -42,7 +41,7 @@ describe('ClassifiedElementsListComponent', () => {
   let component: ClassifiedElementsListComponent;
   let fixture: ComponentFixture<ClassifiedElementsListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
@@ -51,7 +50,7 @@ describe('ClassifiedElementsListComponent', () => {
         MatTableModule,
         MaterialModule.forRoot(),
         FormsModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         PortalModule,
         OverlayModule,
         NgxSkeletonLoaderModule

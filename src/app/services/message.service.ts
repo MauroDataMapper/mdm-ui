@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -133,10 +132,10 @@ export class MessageService implements OnDestroy {
     this.FolderSubject.next(message);
   }
 
+/* Not used
   FolderSendClearMessages() {
     this.FolderSubject.next();
   }
-
   FolderGetMessage(): Observable<any> {
     return this.FolderSubject.asObservable();
   }
@@ -156,6 +155,7 @@ export class MessageService implements OnDestroy {
     this.folderPermissions = message;
     this.FolderSubject.next(message);
   }
+*/
 
   /**
    * Broadcast to all subscribers of a given subject.

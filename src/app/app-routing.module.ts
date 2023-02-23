@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -75,6 +74,8 @@ import { TerminologyMainComponent } from './wizards/terminology/terminology-main
 import { CatalogueSearchComponent } from './catalogue-search/catalogue-search/catalogue-search.component';
 import { FeaturesService } from './services/features.service';
 import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
+import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 
 /**
  * Collection of all page state routes.
@@ -211,9 +212,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
-      url: '/dataModel/:id/{tabView:string}',
+      url: '/dataModel/:id/{tabView:string}?{finalised:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } },
+      params: { tabView: { dynamic: true, value: null, squash: true },
+                finalised: { dynamic: true, value: null, squash: true, inherit: false} },
       data: {
         allowAnonymous: true
       }
@@ -476,6 +478,16 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         createdAfter: null,
         createdBefore: null
       }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataModel',
+      url: '/referenceDataModel/new?parentFolderId&parentDomainType',
+      component: ReferenceDataModelMainComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
+      url: '/referenceDataType/new?parentModelId',
+      component: ReferenceDataTypeMainComponent
     }
   ]
 };

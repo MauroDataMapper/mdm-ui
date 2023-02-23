@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2022 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { CatalogueItemDomainType, TermDetail, TerminologyDetail } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  TermDetail,
+  TerminologyDetail
+} from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
@@ -43,36 +46,42 @@ export class CreateTermForm {
   styleUrls: ['create-term-dialog.component.scss']
 })
 export class CreateTermDialogComponent implements OnInit {
-
-  form: FormGroup;
+  form = new FormGroup({
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    code: new FormControl('', Validators.required),
+    definition: new FormControl(''),
+    description: new FormControl('')
+  });
 
   submitting = false;
 
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<CreateTermDialogComponent, TermDetail | undefined>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    private dialogRef: MatDialogRef<
+      CreateTermDialogComponent,
+      TermDetail | undefined
+    >,
+    @Inject(MAT_DIALOG_DATA) public data: CreateTermForm
+  ) {}
 
   get code() {
-    return this.form.get('code');
+    return this.form.controls.code;
   }
 
   get definition() {
-    return this.form.get('definition');
+    return this.form.controls.definition;
   }
 
   get description() {
-    return this.form.get('description');
+    return this.form.controls.description;
   }
 
   ngOnInit() {
-    this.form = this.formBuilder.group({
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      code: [this.data.code, Validators.required],
-      definition: [this.data.definition],
-      description: [this.data.description]
+    this.form.setValue({
+      code: this.data.code,
+      definition: this.data.definition,
+      description: this.data.description
     });
   }
 
@@ -83,20 +92,18 @@ export class CreateTermDialogComponent implements OnInit {
 
     this.submitting = true;
     this.resources.terms
-      .save(
-        this.data.terminology.id,
-        {
-          domainType: CatalogueItemDomainType.Term,
-          code: this.code.value,
-          definition: this.definition.value ?? this.code.value,
-          description: this.description.value
-        })
+      .save(this.data.terminology.id, {
+        domainType: CatalogueItemDomainType.Term,
+        code: this.code.value,
+        definition: this.definition.value ?? this.code.value,
+        description: this.description.value
+      })
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('Unable to create new term', error);
           return EMPTY;
         }),
-        finalize(() => this.submitting = false)
+        finalize(() => (this.submitting = false))
       )
       .subscribe((response: HttpResponse<TermDetail>) => {
         if (response.ok) {

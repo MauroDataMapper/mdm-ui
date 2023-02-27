@@ -34,3 +34,17 @@ SPDX-License-Identifier: Apache-2.0
     margin-top: -0.25em;
     position: relative;
 }
+
+.mdm-api-property__colour-input-container{
+    input{ 
+        display: inline;
+
+        &[type=text]{
+            width: 150px;
+        }
+        &[type=color]{
+            display: inline-block;
+            width: 24px;
+        }
+    }
+}

@@ -58,7 +58,6 @@ SPDX-License-Identifier: Apache-2.0
                     type="button"
                     mat-stroked-button
                     [matMenuTriggerFor]="filterMenu"
-                    *ngIf="isLoggedIn()"
                     matTooltipPosition="below"
                     matTooltip="Filters"
                     [disabled]="levels.current === 1"

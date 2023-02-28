@@ -63,11 +63,11 @@ SPDX-License-Identifier: Apache-2.0
                 <span>Value</span>
             </th>
             <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <span *ngIf="record.metadata.key.includes('theme.color')">{{record.original?.value}} <input  type="color" value="{{record.original?.value}}" disabled class="mdm-api-property-table__colour-display"></span>
-                <span *ngIf="!record.metadata.key.includes('theme.color') && (record.metadata.editType === EditType.Text || record.metadata.editType === EditType.Html)" class="mdm-api-property-table__value--content">
+                <span *ngIf="record.metadata.key | matchThemeColorPattern">{{record.original?.value}} <input  type="color" value="{{record.original?.value}}" disabled class="mdm-api-property-table__colour-display"></span>
+                <span *ngIf="!(record.metadata.key | matchThemeColorPattern) && (record.metadata.editType === EditType.Text || record.metadata.editType === EditType.Html)" class="mdm-api-property-table__value--content">
                     Content
                 </span>
-                <span *ngIf=" !record.metadata.key.includes('theme.color') && (record.metadata.editType === EditType.Value || record.metadata.editType === EditType.Boolean)">{{record.original?.value}}</span>
+                <span *ngIf=" !(record.metadata.key | matchThemeColorPattern) && (record.metadata.editType === EditType.Value || record.metadata.editType === EditType.Boolean)">{{record.original?.value}}</span>
             </td>
         </ng-container>
           <ng-container matColumnDef="icons">

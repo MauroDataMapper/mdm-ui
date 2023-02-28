@@ -15,8 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { QueryParameters, Uuid } from '@maurodatamapper/mdm-resources';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -31,8 +38,8 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
   styleUrls: ['./newer-versions.component.scss']
 })
 export class NewerVersionsComponent implements AfterViewInit {
-
-  @ViewChild(MdmPaginatorComponent, { static: false }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: false })
+  paginator: MdmPaginatorComponent;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input() catalogueItem: FederatedDataModel;
@@ -50,7 +57,8 @@ export class NewerVersionsComponent implements AfterViewInit {
   constructor(
     private resouces: MdmResourcesService,
     private gridService: GridService,
-    private stateHandler: StateHandlerService) { }
+    private stateHandler: StateHandlerService
+  ) {}
 
   ngAfterViewInit(): void {
     merge(this.sort.sortChange, this.paginator.page)
@@ -58,7 +66,12 @@ export class NewerVersionsComponent implements AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.fetchNewerVersions(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction);
+          return this.fetchNewerVersions(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction
+          );
         }),
         map((data: any) => {
           this.totalNewVersionCount = data.body.newerPublishedModels.length;
@@ -72,27 +85,37 @@ export class NewerVersionsComponent implements AfterViewInit {
           return [];
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.newVersionsRecords = data;
-
-
       });
   }
 
-  fetchNewerVersions(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: string) {
+  fetchNewerVersions(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection
+  ) {
     // Future proofing to enable paging if number of versions increases
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const options: QueryParameters = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType);
-    return this.resouces.subscribedCatalogues
-      .newerVersions(
-        this.catalogueId,
-        this.catalogueItem.modelId,
-        {},
-        { handleGetErrors: false });
+    const options: QueryParameters = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType
+    );
+    return this.resouces.subscribedCatalogues.newerVersions(
+      this.catalogueId,
+      this.catalogueItem.modelId,
+      {},
+      { handleGetErrors: false }
+    );
   }
 
   navigateToNewerVersion(record: FederatedDataModel) {
-    this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel', { parentId: this.catalogueId, id: record.modelId });
+    this.stateHandler.Go(
+      'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
+      { parentId: this.catalogueId, id: record.modelId }
+    );
   }
-
 }

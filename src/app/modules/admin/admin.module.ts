@@ -27,6 +27,7 @@ import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-das
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
+import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
     ProfilesDashboardComponent,
     OpenidConnectProviderTableComponent,
     OpenidConnectProviderComponent,
-    DoiRedirectComponent
+    DoiRedirectComponent,
+    MatchThemeColorPatternPipe
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [
@@ -45,7 +47,8 @@ import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
     EmailsComponent,
     GroupMemberTableComponent,
     UserComponent,
-    ProfilesDashboardComponent
+    ProfilesDashboardComponent,
+    MatchThemeColorPatternPipe
   ]
 })
 export class AdminModule {}

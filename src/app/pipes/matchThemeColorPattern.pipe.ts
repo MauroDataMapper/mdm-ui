@@ -15,36 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-.mdm-api-property__html-container {
-    margin: .25em 0;
-    padding-bottom: 1.3em;
-}
 
-.mdm-api-property__system-message {
-    margin: 16px;
-    padding: 16px;
-    border: 1px solid #b7d4ef;
-    color: #4F575F;
-    background-color: #eaf5ff;
-    border-radius: 6px;;
-}
+import { Pipe, PipeTransform } from '@angular/core';
 
-.mdm-api-property__checkbox {
-    padding: 0 .75em 0.75em;
-    margin-top: -0.25em;
-    position: relative;
-}
+@Pipe({
+  name: 'matchThemeColorPattern',
+  pure: true
+})
+export class MatchThemeColorPatternPipe implements PipeTransform {
+  constructor() {}
 
-.mdm-api-property__colour-input-container{
-    input{ 
-        display: inline;
+  public transform(value: string): boolean {
+    // This expression matches any text with
+    // no numeric characters which contains
+    // theme and then color somewhere within the string.
+    // It can have other text in between, but theme has
+    // to be found before color.
+    const regexThemeColorPattern = /\D*theme\D*color\D*/;
 
-        &[type=text]{
-            width: 100px;
-        }
-        &[type=color]{
-            display: inline-block;
-            width: 24px;
-        }
-    }
+    return regexThemeColorPattern.test(value);
+  }
 }

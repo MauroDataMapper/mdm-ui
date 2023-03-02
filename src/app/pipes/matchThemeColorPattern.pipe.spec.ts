@@ -25,123 +25,123 @@ describe('MatchThemeColorPatternPipe', () => {
     it('should detect theme color pattern names', () => {
         // Arrange
         interface TestData {
-          stringToTest: string,
-          expectedOutcome:  boolean,
+          stringToTest: string;
+          expectedOutcome:  boolean;
         };
-        
+
         const testingCases : TestData[]= [
           {
-            stringToTest: "",
+            stringToTest: '',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.material.colors.primary",
+            stringToTest: 'explorer.theme.material.colors.primary',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.material.colors.accent",
+            stringToTest: 'explorer.theme.material.colors.accent',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.material.colors.warn",
+            stringToTest: 'explorer.theme.material.colors.warn',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.material.typography.fontfamily",
+            stringToTest: 'explorer.theme.material.typography.fontfamily',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.material.typography.bodyone",
+            stringToTest: 'explorer.theme.material.typography.bodyone',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.material.typography.bodytwo",
+            stringToTest: 'explorer.theme.material.typography.bodytwo',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.material.typography.button",
+            stringToTest: 'explorer.theme.material.typography.button',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.regularcolors.requestcount",
+            stringToTest: 'explorer.theme.regularcolors.requestcount',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.regularcolors.hyperlink",
+            stringToTest: 'explorer.theme.regularcolors.hyperlink',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.contrastcolors.page",
+            stringToTest: 'explorer.theme.contrastcolors.page',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.contrastcolors.unsentrequest",
+            stringToTest: 'explorer.theme.contrastcolors.unsentrequest',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.contrastcolors.submittedrequest",
+            stringToTest: 'explorer.theme.contrastcolors.submittedrequest',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.contrastcolors.classrow",
+            stringToTest: 'explorer.theme.contrastcolors.classrow',
             expectedOutcome: true,
           },
           {
-            stringToTest: "explorer.theme.material.colors.primary",
+            stringToTest: 'explorer.theme.material.colors.primary',
             expectedOutcome: true,
           },
           {
-            stringToTest: "email.theme.material.colors.primary",
+            stringToTest: 'email.theme.material.colors.primary',
             expectedOutcome: true,
           },
           {
-            stringToTest: "mauro.theme.material.colors.primary",
+            stringToTest: 'mauro.theme.material.colors.primary',
             expectedOutcome: true,
           },
           {
-            stringToTest: "mdm.theme.material.colors.accent",
+            stringToTest: 'mdm.theme.material.colors.accent',
             expectedOutcome: true,
           },
           {
-            stringToTest: "email.theme.material.colors.warn",
+            stringToTest: 'email.theme.material.colors.warn',
             expectedOutcome: true,
           },
           {
-            stringToTest: "mdm.color.material.themes.accent",
+            stringToTest: 'mdm.color.material.themes.accent',
             expectedOutcome: false,
           },
           {
-            stringToTest: "email.colors.material.theme.warn",
+            stringToTest: 'email.colors.material.theme.warn',
             expectedOutcome: false,
           },
           {
-            stringToTest: "email.admin_confirm_registration.body",
+            stringToTest: 'email.admin_confirm_registration.body',
             expectedOutcome: false,
           },
           {
-            stringToTest: "email.password_reset.subject",
+            stringToTest: 'email.password_reset.subject',
             expectedOutcome: false,
           },
           {
-            stringToTest: "datatype.date.formats",
+            stringToTest: 'datatype.date.formats',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.config.root_data_model_path",
+            stringToTest: 'explorer.config.root_data_model_path',
             expectedOutcome: false,
           },
           {
-            stringToTest: "explorer.theme.color.chip.unsent",
+            stringToTest: 'explorer.theme.color.chip.unsent',
             expectedOutcome: true,
           },
         ];
-    
+
         // Act
         testingCases.forEach((testCase) => {
           const result = pipe.transform(testCase.stringToTest);
-          // Uncomment the line below is very useful for debuging the test. 
-          //console.log(`For element "${testCase.stringToTest}" expected is "${testCase.expectedOutcome}" actual response is "${result}"`);
-          
+          // Uncomment the line below is very useful for debuging the test.
+          // console.log(`For element "${testCase.stringToTest}" expected is "${testCase.expectedOutcome}" actual response is "${result}"`);
+
           // Assert
           expect(result).toBe(testCase.expectedOutcome);
         });

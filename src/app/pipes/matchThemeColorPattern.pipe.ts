@@ -19,21 +19,20 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'matchThemeColorPattern',
-    pure: true,
-  })
-  export class MatchThemeColorPatternPipe implements PipeTransform {
-  
-    constructor() {}
-  
-   public transform( value: string): boolean {
-        // This expression matches any text with
-        // no numeric characters which contains
-        // theme and then color somewhere within the string.
-        // It can have other text in between, but theme has
-        // to be found before color.
-        const regexThemeColorPattern = /\D*theme\D*color\D*/;
-        
-        return regexThemeColorPattern.test(value);
-    }
+  name: 'matchThemeColorPattern',
+  pure: true
+})
+export class MatchThemeColorPatternPipe implements PipeTransform {
+  constructor() {}
+
+  public transform(value: string): boolean {
+    // This expression matches any text with
+    // no numeric characters which contains
+    // theme and then color somewhere within the string.
+    // It can have other text in between, but theme has
+    // to be found before color.
+    const regexThemeColorPattern = /\D*theme\D*color\D*/;
+
+    return regexThemeColorPattern.test(value);
   }
+}

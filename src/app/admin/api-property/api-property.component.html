@@ -56,9 +56,13 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Html" appearance="outline">
         <mat-label>Value</mat-label>
-        <input *ngIf="property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
-        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
-        <mat-select *ngIf="property.metadata.editType === EditTypes.Boolean" formControlName="value" required>
+        <div *ngIf="key.value | matchThemeColorPattern" class="mdm-api-property__colour-input-container">
+            <input type="text" matInput name="value" formControlName="value" [value]="value.value" required>
+            <input type="color" matInput name="value" formControlName="value" required [value]="value.value">
+        </div>
+        <input *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
+        <textarea *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
+        <mat-select *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Boolean" formControlName="value" required>
           <mat-option [value]="'true'">Yes</mat-option>
           <mat-option [value]="'false'">No</mat-option>
         </mat-select>

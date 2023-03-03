@@ -349,17 +349,16 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   async expand(node: MdmTreeItem) {
-    let options: any = {};
-    if (this.shared.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDeleted:
-            this.userSettingsHandler.get('includeDeleted') || false,
-          includeModelSuperseded:
-            this.userSettingsHandler.get('includeModelSuperseded') || false
-        }
-      };
-    }
+    const options: any = {
+      queryStringParams: {
+        includeDeleted:
+          (this.shared.isLoggedIn() &&
+            this.userSettingsHandler.get('includeDeleted')) ||
+          false,
+        includeModelSuperseded:
+          this.userSettingsHandler.get('includeModelSuperseded') || false
+      }
+    };
 
     try {
       switch (node.domainType) {

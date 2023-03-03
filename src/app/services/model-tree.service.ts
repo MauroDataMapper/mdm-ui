@@ -85,19 +85,19 @@ export class ModelTreeService implements OnDestroy {
   }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<MdmTreeItem[]> {
-    let options: any = {};
-    if (this.sharedService.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded:
-            this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          includeModelSuperseded:
-            this.userSettingsHandler.get('includeModelSuperseded') || false,
-          includeDeleted:
-            this.userSettingsHandler.get('includeDeleted') || false
-        }
-      };
-    }
+    const options: any = {
+      queryStringParams: {
+        includeDocumentSuperseded:
+          this.userSettingsHandler.get('includeDocumentSuperseded') || false,
+        includeModelSuperseded:
+          this.userSettingsHandler.get('includeModelSuperseded') || false,
+        includeDeleted:
+          (this.sharedService.isLoggedIn() &&
+            this.userSettingsHandler.get('includeDeleted')) ||
+          false
+      }
+    };
+
     if (noCache) {
       options.queryStringParams.noCache = true;
     }

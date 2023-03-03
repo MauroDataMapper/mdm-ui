@@ -198,11 +198,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.title.setTitle('Models');
 
+    this.includeModelSuperseded =
+      this.userSettingsHandler.get('includeModelSuperseded') || false;
+    this.showSupersededModels =
+      this.userSettingsHandler.get('showSupersededModels') || false;
+
     if (this.sharedService.isLoggedIn()) {
-      this.includeModelSuperseded =
-        this.userSettingsHandler.get('includeModelSuperseded') || false;
-      this.showSupersededModels =
-        this.userSettingsHandler.get('showSupersededModels') || false;
       this.includeDeleted =
         this.userSettingsHandler.get('includeDeleted') || false;
 
@@ -437,15 +438,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this[filerName] = !this[filerName];
     this.reloading = true;
 
+    this.userSettingsHandler.update(
+      'includeModelSuperseded',
+      this.includeModelSuperseded
+    );
+    this.userSettingsHandler.update(
+      'showSupersededModels',
+      this.showSupersededModels
+    );
     if (this.sharedService.isLoggedIn()) {
-      this.userSettingsHandler.update(
-        'includeModelSuperseded',
-        this.includeModelSuperseded
-      );
-      this.userSettingsHandler.update(
-        'showSupersededModels',
-        this.showSupersededModels
-      );
       this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
@@ -602,10 +603,14 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private loadApiContentProperties(properties: ApiProperty[]) {
     this.isRootFolderRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.root.folder') ?? 'false'
+      this.getContentProperty(properties, 'security.restrict.root.folder') ??
+        'false'
     );
     this.isClassifierCreateRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.classifier.create') ?? 'false'
+      this.getContentProperty(
+        properties,
+        'security.restrict.classifier.create'
+      ) ?? 'false'
     );
   }
 

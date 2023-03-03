@@ -16,10 +16,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
 /**
@@ -27,29 +32,18 @@ import { LoadingService } from './loading.service';
  */
 @Injectable()
 export class HttpRequestProgressInterceptor implements HttpInterceptor {
+  constructor(private loading: LoadingService) {}
 
-  private requests: HttpRequest<any>[] = [];
-
-  constructor(private loading: LoadingService) { }
-
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     this.loading.setHttpLoading(true, request.url);
-    return next
-      .handle(request)
-      .pipe(
-        catchError(error => {
-          this.loading.setHttpLoading(false, request.url);
-          return throwError(error);
-        })
-      )
-      .pipe(
-        map((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
-            this.loading.setHttpLoading(false, request.url);
-          }
-          return event;
-        })
-      );
-  }
 
+    return next.handle(request).pipe(
+      finalize(() => {
+        this.loading.setHttpLoading(false, request.url);
+      })
+    );
+  }
 }

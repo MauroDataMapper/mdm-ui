@@ -16,78 +16,210 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm--shadow-block">
-    <div class="heading-container">
-        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-            <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-                <h4 class="marginless">
-                  Properties <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                </h4>
-            </div>
-            <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-                <mat-select #categoryFilter [(value)]="selectedCategory" name="category" placeholder="Category" (selectionChange)="categoryChanged($event)">
-                    <mat-option></mat-option>
-                    <mat-option [value]="category" *ngFor="let category of categories">{{category}}</mat-option>
-                </mat-select>
-            </div>
-            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                <mdm-data-type-list-buttons [displayRecords]="properties" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
-            </div>
-        </div>
+  <div class="heading-container">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayout.md="row"
+      fxLayout.sm="row"
+      fxLayout.xs="column"
+      fxLayoutAlign="space-around"
+    >
+      <div
+        fxFlex
+        fxLayout="row"
+        fxFlex="80"
+        fxFlex.md="80"
+        fxFlex.sm="80"
+        fxFlex.xs="100"
+        fxLayoutAlign="flex-start center"
+      >
+        <h4 class="marginless">
+          Properties
+          <span class="mdm--badge mdm--element-count">{{
+            totalItemCount
+          }}</span>
+        </h4>
+      </div>
+      <div
+        fxFlex
+        fxLayout="row"
+        fxFlex="60"
+        fxFlex.md="80"
+        fxFlex.sm="80"
+        fxFlex.xs="100"
+        fxLayoutAlign="flex-start center"
+      >
+        <mat-select
+          #categoryFilter
+          [(value)]="selectedCategory"
+          name="category"
+          placeholder="Category"
+          (selectionChange)="categoryChanged($event)"
+        >
+          <mat-option></mat-option>
+          <mat-option [value]="category" *ngFor="let category of categories">{{
+            category
+          }}</mat-option>
+        </mat-select>
+      </div>
+      <div
+        fxFlex
+        fxLayout="row"
+        fxFlex="20"
+        fxFlex.md="20"
+        fxFlex.sm="25"
+        fxFlex.xs="100"
+        fxLayoutAlign="flex-end center"
+        fxLayoutAlign.xs="flex-start center"
+      >
+        <mdm-data-type-list-buttons
+          [displayRecords]="properties"
+          [showContentDropdown]="false"
+          [showDeleteButton]="false"
+          [add]="add"
+        ></mdm-data-type-list-buttons>
+      </div>
     </div>
-    <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table table-striped marginless">
-          <ng-container matColumnDef="key">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="key" scope="col">
-                  <span>Key</span>
-              </th>
-              <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <span>{{record.metadata.key}}</span>
-                <span *ngIf="record.metadata.isSystem" class="ml-2">
-                    <span class="fas fa-cog" matTooltip="System property"></span>
-                </span>
-                <span *ngIf="record.metadata.publiclyVisible" class="ml-2">
-                    <span class="fas fa-globe" matTooltip="Publicly visible"></span>
-                </span>
-              </td>
-          </ng-container>
-          <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="category" scope="col">
-                <span>Category</span>
-            </th>
-            <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-              <span>{{record.metadata.category}}</span>
-            </td>
-        </ng-container>
-          <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="value" scope="col">
-                <span>Value</span>
-            </th>
-            <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <span *ngIf="record.metadata.key | matchThemeColorPattern" class="mdm-api-property-table__colour-text">{{record.original?.value}} </span><input *ngIf="record.metadata.key | matchThemeColorPattern"  type="color" value="{{record.original?.value}}" disabled class="mdm-api-property-table__colour-display">
-                <span *ngIf="!(record.metadata.key | matchThemeColorPattern) && (record.metadata.editType === EditType.Text || record.metadata.editType === EditType.Html)" class="mdm-api-property-table__value--content">
-                    Content
-                </span>
-                <span *ngIf=" !(record.metadata.key | matchThemeColorPattern) && (record.metadata.editType === EditType.Value || record.metadata.editType === EditType.Boolean)">{{record.original?.value}}</span>
-            </td>
-        </ng-container>
-          <ng-container matColumnDef="icons">
-              <td mat-header-cell *matHeaderCellDef columnName="icons" style="width: 7%; text-align: center;"></td>
-              <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
-                  <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
-                    <span class="fas fa-ellipsis-v"></span>
-                  </button>
-                  <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-                      <button mat-menu-item (click)="edit(record)">
-                          <span class="fas fa-pencil-alt"></span> Edit
-                      </button>
-                      <button mat-menu-item (click)="delete(record)">
-                          <span class="far fa-trash-alt warning"></span> Delete
-                      </button>
-                  </mat-menu>
-              </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
-      </table>
-    </div>
+  </div>
+  <div class="table-responsive">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="mdm--mat-table table table-striped marginless"
+    >
+      <ng-container matColumnDef="key">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 40%"
+          columnName="key"
+          scope="col"
+        >
+          <span>Key</span>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="text-align: left; word-wrap: break-word"
+        >
+          <span>{{ record.metadata.key }}</span>
+          <span *ngIf="record.metadata.isSystem" class="ml-2">
+            <span class="fas fa-cog" matTooltip="System property"></span>
+          </span>
+          <span *ngIf="record.metadata.publiclyVisible" class="ml-2">
+            <span class="fas fa-globe" matTooltip="Publicly visible"></span>
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="category">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 40%"
+          columnName="category"
+          scope="col"
+        >
+          <span>Category</span>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="text-align: left; word-wrap: break-word"
+        >
+          <span>{{ record.metadata.category }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          style="cursor: pointer; max-width: 40%"
+          columnName="value"
+          scope="col"
+        >
+          <span>Value</span>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="text-align: left; word-wrap: break-word"
+        >
+          <span
+            *ngIf="record.metadata.key | matchThemeColorPattern"
+            class="mdm-api-property-table__colour-text"
+            >{{ record.original?.value }} </span
+          ><input
+            *ngIf="record.metadata.key | matchThemeColorPattern"
+            type="color"
+            value="{{ record.original?.value }}"
+            disabled
+            class="mdm-api-property-table__colour-display"
+          />
+          <span
+            *ngIf="
+              !(record.metadata.key | matchThemeColorPattern) &&
+              (record.metadata.editType === EditType.Text ||
+                record.metadata.editType === EditType.Html)
+            "
+            class="mdm-api-property-table__value--content"
+          >
+            Content
+          </span>
+          <span
+            *ngIf="
+              !(record.metadata.key | matchThemeColorPattern) &&
+              record.metadata.editType === EditType.Boolean
+            "
+          >
+            {{
+              record.original?.value === 'true'
+                ? 'Yes'
+                : record.original?.value === 'false'
+                ? 'No'
+                : ''
+            }}
+          </span>
+          <span
+            *ngIf="
+              !(record.metadata.key | matchThemeColorPattern) &&
+              record.metadata.editType === EditType.Value
+            "
+            >{{ record.original?.value }}</span
+          >
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="icons">
+        <td
+          mat-header-cell
+          *matHeaderCellDef
+          columnName="icons"
+          style="width: 7%; text-align: center"
+        ></td>
+        <td
+          mat-cell
+          *matCellDef="let record; let i = index"
+          style="text-align: center; word-wrap: break-word"
+        >
+          <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
+            <span class="fas fa-ellipsis-v"></span>
+          </button>
+          <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+            <button mat-menu-item (click)="edit(record)">
+              <span class="fas fa-pencil-alt"></span> Edit
+            </button>
+            <button mat-menu-item (click)="delete(record)">
+              <span class="far fa-trash-alt warning"></span> Delete
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+    </table>
+  </div>
 </div>

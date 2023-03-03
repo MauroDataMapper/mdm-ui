@@ -25,7 +25,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -41,7 +41,8 @@ import { GridService } from '@mdm/services/grid.service';
 export class EmailsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
@@ -49,46 +50,77 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   filter: {};
 
   records: any[] = [];
-  displayedColumns = ['sentToEmailAddress', 'dateTimeSent', 'subject', 'body', 'successfullySent'];
+  displayedColumns = [
+    'sentToEmailAddress',
+    'dateTimeSent',
+    'subject',
+    'body',
+    'successfullySent'
+  ];
 
   constructor(
     private resourcesService: MdmResourcesService,
     private title: Title,
     private changeRef: ChangeDetectorRef,
     private gridService: GridService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.title.setTitle('Emails');
   }
 
   ngAfterViewInit() {
+    this.sort.active = 'dateTimeSent';
+    this.sort.direction = 'desc';
+
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
-      return this.mailsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
-    }),
-      map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        return data.body.items;
-
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        return [];
-      })).subscribe(data => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.mailsFetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction,
+            this.filter
+          );
+        }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe((data) => {
         this.records = data;
-
       });
     this.changeRef.detectChanges();
   }
 
-  mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  mailsFetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection,
+    filters?: {}
+  ): Observable<any> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
+    );
     return this.resourcesService.admin.emails(options);
   }
+
   applyFilter = () => {
     const filter = {};
     this.filters.forEach((x: any) => {

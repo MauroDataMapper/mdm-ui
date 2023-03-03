@@ -24,7 +24,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   Term,
@@ -119,9 +119,14 @@ export class TermListComponent implements AfterViewInit {
 
   applyFilter() {
     this.filter = {
-      ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter }),
-      ...(this.descriptionFilter && this.descriptionFilter !== '' && { description: this.descriptionFilter })
+      ...(this.codeFilter &&
+        this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter &&
+        this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter &&
+        this.descriptionFilter !== '' && {
+          description: this.descriptionFilter
+        })
     };
 
     this.filterEvent.emit();
@@ -137,7 +142,7 @@ export class TermListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
+    sortType?: SortDirection,
     filters?: {}
   ): Observable<TermIndexResponse> {
     const options = this.gridService.constructOptions(

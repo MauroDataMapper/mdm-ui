@@ -29,7 +29,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -106,8 +106,8 @@ export class DataElementsListComponent implements AfterViewInit {
           this.isLoadingResults = true;
           this.isOrderedDataSource = true;
           if (!this.sort?.direction) {
-             this.isOrderedDataSource = false;
-             [this.sort.active, this.sort.direction] = ['idx', 'asc'];
+            this.isOrderedDataSource = false;
+            [this.sort.active, this.sort.direction] = ['idx', 'asc'];
           }
           return this.dataElementsFetch(
             this.paginator?.pageSize,
@@ -233,7 +233,7 @@ export class DataElementsListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
+    sortType?: SortDirection,
     filters?: {}
   ): Observable<any> {
     const options = this.gridService.constructOptions(

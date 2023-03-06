@@ -30,6 +30,11 @@ SPDX-License-Identifier: Apache-2.0
     &__header {
       background-color: $search-result-heading-background-color;
       color: $search-result-heading-color;
+
+      a {
+        color: $search-result-heading-color;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -61,6 +66,16 @@ $search-result-border-radius: 4px;
     }
   }
 
+  .panel-body {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0;
+  }
+
+  .item-type {
+    margin: 1em 1em 0em 1em;
+  }
+
   &__content,
   &__footer {
     padding: $search-result-content-padding;
@@ -69,7 +84,7 @@ $search-result-border-radius: 4px;
     border-radius: $search-result-border-radius;
   }
 
-  .panel-body {
-    padding: 0;
+  &__no-content {
+    font-style: italic;
   }
 }

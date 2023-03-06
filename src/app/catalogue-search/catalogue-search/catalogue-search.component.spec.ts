@@ -19,34 +19,43 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   CatalogueItemDomainType,
   Classifier,
+  ClassifierIndexResponse,
+  FilterQueryParameters,
   MdmTreeItem,
-  ModelDomainType
+  ModelDomainType,
+  ProfileSummaryIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services';
 import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
-import { of } from 'rxjs';
+import { MockComponent } from 'ng-mocks';
+import { Observable, of } from 'rxjs';
 import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
+import { CatalogueSearchProfileFilterListComponent } from '../catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 import { CatalogueSearchComponent } from './catalogue-search.component';
-
-interface StateHandlerServiceStub {
-  Go: jest.Mock;
-}
 
 describe('CatalogueSearchComponent', () => {
   let harness: ComponentHarness<CatalogueSearchComponent>;
 
-  const stateHandlerStub: StateHandlerServiceStub = {
+  const stateHandlerStub = {
     Go: jest.fn()
   };
 
   const resourcesStub = {
     classifier: {
-      list: jest.fn()
+      list: jest.fn() as jest.MockedFunction<
+        (query?: FilterQueryParameters) => Observable<ClassifierIndexResponse>
+      >
+    },
+    profile: {
+      providers: jest.fn() as jest.MockedFunction<
+        () => Observable<ProfileSummaryIndexResponse>
+      >
     }
   };
 
@@ -54,7 +63,9 @@ describe('CatalogueSearchComponent', () => {
     harness = await setupTestModuleForComponent(CatalogueSearchComponent, {
       declarations: [
         CatalogueSearchFormComponent,
-        CatalogueSearchAdvancedFormComponent
+        CatalogueSearchAdvancedFormComponent,
+        CatalogueSearchProfileFilterListComponent,
+        MockComponent(ModelSelectorTreeComponent)
       ],
       providers: [
         {
@@ -70,26 +81,35 @@ describe('CatalogueSearchComponent', () => {
   });
 
   beforeEach(() => {
-    // SET UP TEST DATA
-    resourcesStub.classifier.list.mockImplementationOnce(() =>
+    resourcesStub.classifier.list.mockImplementation(() =>
       of({
         body: {
+          count: 0,
           items: []
         }
       })
     );
-    harness.component.catalogueSearchFormComponent.ngOnInit();
-    harness.component.catalogueSearchAdvancedFormComponent.ngOnInit();
+
+    resourcesStub.profile.providers.mockImplementationOnce(() =>
+      of({ body: [] })
+    );
+
+    // "Expand" the filters section and force change detection so that
+    // the @ViewChild elements will get populated
+    harness.component.showMore = true;
+    harness.detectChanges();
+
+    harness.component.searchForm.ngOnInit();
+    harness.component.advancedForm.ngOnInit();
   });
 
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });
 
-  it('should Use values to call the router', () => {
-    // set up searchform data
-    harness.component.catalogueSearchFormComponent.formGroup = new FormGroup({
-      searchTerms: new FormControl('testSearch')
+  it('should use values to call the router', () => {
+    harness.component.searchForm.formGroup.setValue({
+      searchTerms: 'testSearch'
     });
 
     const context: MdmTreeItem = {
@@ -100,6 +120,7 @@ describe('CatalogueSearchComponent', () => {
       modelId: 'testModelId',
       availableActions: null
     };
+
     // set up advanced form data
     const contextTest: MdmTreeItem[] = [context];
     const testClassifier: Classifier = {
@@ -112,33 +133,17 @@ describe('CatalogueSearchComponent', () => {
     };
     const classifiers: Classifier[] = [testClassifier, testClassifier2];
 
-    harness.component.catalogueSearchAdvancedFormComponent.context.setValue(
-      contextTest
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.domainTypes.setValue(
-      [ModelDomainType.DataModels, ModelDomainType.Classifiers]
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.labelOnly.setValue(
-      true
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.exactMatch.setValue(
-      true
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.classifiers.setValue(
-      classifiers
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.createdAfter.setValue(
-      new Date('July 21, 1983 01:15:00')
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.createdBefore.setValue(
-      new Date('July 22, 1983 01:15:00')
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.lastUpdatedAfter.setValue(
-      new Date('July 23, 1983 01:15:00')
-    );
-    harness.component.catalogueSearchAdvancedFormComponent.lastUpdatedBefore.setValue(
-      new Date('July 24, 1983 01:15:00')
-    );
+    harness.component.advancedForm.formGroup.setValue({
+      context: contextTest,
+      domainTypes: [ModelDomainType.DataModels, ModelDomainType.Classifiers],
+      labelOnly: true,
+      exactMatch: true,
+      classifiers,
+      createdAfter: new Date('July 21, 1983 01:15:00'),
+      createdBefore: new Date('July 22, 1983 01:15:00'),
+      lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
+      lastUpdatedBefore: new Date('July 24, 1983 01:15:00')
+    });
 
     harness.component.search();
 
@@ -163,18 +168,58 @@ describe('CatalogueSearchComponent', () => {
     );
   });
 
-  it('should ResetValues', () => {
-    const formSpy = jest.spyOn(
-      harness.component.catalogueSearchFormComponent,
-      'reset'
-    );
-    const advancedSpy = jest.spyOn(
-      harness.component.catalogueSearchAdvancedFormComponent,
+  it('should reset all values', () => {
+    const formSpy = jest.spyOn(harness.component.searchForm, 'reset');
+    const advancedSpy = jest.spyOn(harness.component.advancedForm, 'reset');
+    const profileFiltersSpy = jest.spyOn(
+      harness.component.profileFiltersForm,
       'reset'
     );
 
     harness.component.reset();
     expect(formSpy).toHaveBeenCalled();
     expect(advancedSpy).toHaveBeenCalled();
+    expect(profileFiltersSpy).toHaveBeenCalled();
+  });
+
+  it.each([true, false])(
+    'should toggle the advanced filters when initial state is %p',
+    (initial) => {
+      harness.component.showMore = initial;
+      harness.component.toggleShowMore();
+      expect(harness.component.showMore).toBe(!initial);
+    }
+  );
+
+  // Testing validity of the parent component requires modifying data in child forms
+  // This raises change events to update parent state
+  describe('validity', () => {
+    beforeEach(() => {
+      // Fake initial state
+      harness.component.valid = true;
+
+      // Profile filters list is only child form that can potentially have invalid data
+      // Having a new filter row with no values set counts as invalid
+      harness.component.profileFiltersForm.addFilter();
+    });
+
+    it('should mark component as invalid when errors in child forms', () => {
+      expect(harness.component.valid).toBe(false);
+    });
+
+    it('should mark component as valid when child forms are valid', () => {
+      expect(harness.component.valid).toBe(false);
+
+      const filter = harness.component.profileFiltersForm.filters.at(
+        0
+      ) as FormGroup<any>;
+      filter.patchValue({
+        provider: 'provider',
+        key: 'key',
+        value: 'value'
+      });
+
+      expect(harness.component.valid).toBe(true);
+    });
   });
 });

@@ -15,9 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { Subject, takeUntil } from 'rxjs';
 
 /**
  * Top-level component that represents the overall Catalogue Search page.
@@ -30,15 +38,18 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
   templateUrl: './catalogue-search-form.component.html',
   styleUrls: ['./catalogue-search-form.component.scss']
 })
-export class CatalogueSearchFormComponent implements OnInit {
+export class CatalogueSearchFormComponent implements OnInit, OnDestroy {
   @Input() appearance: MatFormFieldAppearance = 'outline';
   @Input() routeSearchTerm?: string = '';
 
+  @Output() valueChange = new EventEmitter<void>();
   @Output() searchEvent = new EventEmitter<string>();
 
   formGroup = new FormGroup({
     searchTerms: new FormControl(this.routeSearchTerm)
   });
+
+  private unsubscribe$ = new Subject<void>();
 
   get searchTerms() {
     return this.formGroup.controls.searchTerms;
@@ -46,6 +57,15 @@ export class CatalogueSearchFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchTerms.setValue(this.routeSearchTerm);
+
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.valueChange.emit());
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   reset() {

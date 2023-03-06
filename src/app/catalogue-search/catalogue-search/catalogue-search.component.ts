@@ -15,70 +15,109 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { StateHandlerService } from '@mdm/services';
 import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
+import { CatalogueSearchProfileFilterListComponent } from '../catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 
 @Component({
   selector: 'mdm-catalogue-search',
   templateUrl: './catalogue-search.component.html',
   styleUrls: ['./catalogue-search.component.scss']
 })
-export class CatalogueSearchComponent implements OnInit {
+export class CatalogueSearchComponent implements OnInit, AfterViewInit {
   constructor(private stateHandler: StateHandlerService) {}
 
-  @ViewChild(CatalogueSearchFormComponent, { static: true })
-  catalogueSearchFormComponent: CatalogueSearchFormComponent;
-  @ViewChild(CatalogueSearchAdvancedFormComponent, { static: true })
-  catalogueSearchAdvancedFormComponent: CatalogueSearchAdvancedFormComponent;
+  @ViewChild(CatalogueSearchFormComponent)
+  searchForm: CatalogueSearchFormComponent;
+
+  @ViewChild(CatalogueSearchAdvancedFormComponent)
+  advancedForm: CatalogueSearchAdvancedFormComponent;
+
+  @ViewChild(CatalogueSearchProfileFilterListComponent)
+  profileFiltersForm: CatalogueSearchProfileFilterListComponent;
+
+  showMore = false;
+  valid = false;
 
   ngOnInit(): void {}
 
+  ngAfterViewInit(): void {
+    // Avoid an "ExpressionChangedAfterItHasBeenCheckedError"
+    setTimeout(() => this.setValid());
+  }
+
+  toggleShowMore() {
+    this.showMore = !this.showMore;
+  }
+
+  onValueChange() {
+    this.setValid();
+  }
+
   reset() {
-    this.catalogueSearchFormComponent.reset();
-    this.catalogueSearchAdvancedFormComponent.reset();
+    this.searchForm.reset();
+
+    // These two forms may or may not be bound depending on visibility
+    this.advancedForm?.reset();
+    this.profileFiltersForm?.reset();
   }
 
   search() {
-    const context: MdmTreeItem | undefined | null = this
-      .catalogueSearchAdvancedFormComponent.context.value?.[0];
+    if (!this.valid) {
+      return;
+    }
+
+    const context: MdmTreeItem | undefined | null = this.advancedForm?.context
+      ?.value?.[0];
+
+    // TODO: include profile filters to redirect URL
 
     this.stateHandler.Go('appContainer.mainApp.catalogueSearchListing', {
-      contextDomainType: context?.domainType ?? null,
-      contextId: context?.id ?? null,
-      contextLabel: context?.label ?? null,
-      contextParentId: context?.parentId ?? null,
-      contextDataModelId: context?.modelId ?? null,
+      search: this.searchForm.searchTerms.value,
 
-      search: this.catalogueSearchFormComponent.searchTerms.value,
+      ...(context && {
+        contextDomainType: context.domainType ?? null,
+        contextId: context.id ?? null,
+        contextLabel: context.label ?? null,
+        contextParentId: context.parentId ?? null,
+        contextDataModelId: context.modelId ?? null
+      }),
 
-      labelOnly: this.catalogueSearchAdvancedFormComponent.labelOnly.value,
-      exactMatch: this.catalogueSearchAdvancedFormComponent.exactMatch.value,
-      domainTypes: this.catalogueSearchAdvancedFormComponent.domainTypes.value,
+      ...(this.advancedForm && {
+        labelOnly: this.advancedForm.labelOnly.value,
+        exactMatch: this.advancedForm.exactMatch.value,
+        domainTypes: this.advancedForm.domainTypes.value,
 
-      classifiers: this.catalogueSearchAdvancedFormComponent.classifierNames,
+        classifiers: this.advancedForm.classifierNames,
 
-      lastUpdatedAfter:
-        this.catalogueSearchAdvancedFormComponent.formatDate(
-          this.catalogueSearchAdvancedFormComponent.lastUpdatedAfter.value
-        ) ?? null,
+        lastUpdatedAfter:
+          this.advancedForm.formatDate(
+            this.advancedForm.lastUpdatedAfter.value
+          ) ?? null,
 
-      lastUpdatedBefore:
-        this.catalogueSearchAdvancedFormComponent.formatDate(
-          this.catalogueSearchAdvancedFormComponent.lastUpdatedBefore.value
-        ) ?? null,
+        lastUpdatedBefore:
+          this.advancedForm.formatDate(
+            this.advancedForm.lastUpdatedBefore.value
+          ) ?? null,
 
-      createdAfter:
-        this.catalogueSearchAdvancedFormComponent.formatDate(
-          this.catalogueSearchAdvancedFormComponent.createdAfter.value
-        ) ?? null,
+        createdAfter:
+          this.advancedForm.formatDate(this.advancedForm.createdAfter.value) ??
+          null,
 
-      createdBefore:
-        this.catalogueSearchAdvancedFormComponent.formatDate(
-          this.catalogueSearchAdvancedFormComponent.createdBefore.value
-        ) ?? null
+        createdBefore:
+          this.advancedForm.formatDate(this.advancedForm.createdBefore.value) ??
+          null
+      })
     });
+  }
+
+  private setValid() {
+    this.valid =
+      this.searchForm.formGroup.valid &&
+      (this.advancedForm?.formGroup?.valid ?? true) &&
+      (this.profileFiltersForm?.formGroup?.valid ?? true);
   }
 }

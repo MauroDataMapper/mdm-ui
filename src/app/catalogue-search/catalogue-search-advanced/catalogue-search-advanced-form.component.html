@@ -15,180 +15,171 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container mb-2">
-  <button mat-stroked-button color="primary" (click)="toggleAdvancedSearch()">
-    {{ advancedSearch ? 'Less filters' : 'More filters...' }}
-  </button>
-</div>
-<div *ngIf="advancedSearch">
-  <form [formGroup]="formGroup" (keyup.enter)="callParentSearch()" role="form">
-    <div class="container">
-      <div class="row search-section">
-        <div class="col">
-          <div>
-            <mat-checkbox
-              class="checkbox-filter"
-              color="primary"
-              formControlName="labelOnly"
-              >Label only</mat-checkbox
-            >
-            <mat-checkbox
-              class="checkbox-filter"
-              color="primary"
-              formControlName="exactMatch"
-              >Exact match</mat-checkbox
-            >
-          </div>
-        </div>
-      </div>
-      <div class="row search-section">
-        <div class="col">
-          <mdm-model-selector-tree
-            [ngModel]="context.value"
-            (ngModelChange)="contextValue = $event"
-            [ngModelOptions]="{ standalone: true }"
-            ngDefaultControl
-            [placeholder]="
-              'Choose a Folder, Data Model, Data Class, or Terminology:'
-            "
-            [accepts]="['Folder', 'DataModel', 'DataClass', 'Terminology']"
+<form [formGroup]="formGroup" role="form">
+  <div class="container">
+    <div class="row search-section">
+      <div class="col">
+        <div>
+          <mat-checkbox
+            class="checkbox-filter"
+            color="primary"
+            formControlName="labelOnly"
+            >Label only</mat-checkbox
           >
-          </mdm-model-selector-tree>
-        </div>
-      </div>
-      <div class="row search-section-columns">
-        <div class="col">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Domain type</mat-label>
-            <mat-select formControlName="domainTypes" multiple>
-              <mat-option value="DataModel">Data Model</mat-option>
-              <mat-option value="DataClass">Data Class</mat-option>
-              <mat-option value="DataElement">Data Element</mat-option>
-              <mat-option value="DataType">Data Type</mat-option>
-              <mat-option value="EnumerationValue"
-                >Enumeration Value</mat-option
-              >
-              <mat-option value="ReferenceDataModel"
-                >Reference Data Model</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="col">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Select classifiers</mat-label>
-            <mat-select formControlName="classifiers" multiple>
-              <mat-option
-                *ngFor="let classification of classifications"
-                [value]="classification"
-              >
-                {{ classification.label }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row search-section-columns">
-        <div class="col">
-          <mat-form-field
-            appearance="outline"
-            class="full-width form-field-align-center"
+          <mat-checkbox
+            class="checkbox-filter"
+            color="primary"
+            formControlName="exactMatch"
+            >Exact match</mat-checkbox
           >
-            <mat-label>Last Updated After</mat-label>
-            <input
-              matInput
-              [matDatepicker]="updatedAfter"
-              [formControl]="lastUpdatedAfter"
-            />
-            <mat-icon
-              matDatepickerToggleIcon
-              (click)="onDateClear('lastUpdatedAfter')"
-              >clear</mat-icon
-            >
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="updatedAfter"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #updatedAfter></mat-datepicker>
-          </mat-form-field>
-        </div>
-
-        <div class="col">
-          <mat-form-field
-            appearance="outline"
-            class="full-width form-field-align-center"
-          >
-            <mat-label>Last Updated Before</mat-label>
-            <input
-              matInput
-              [matDatepicker]="updatedBefore"
-              [formControl]="lastUpdatedBefore"
-            />
-            <mat-icon
-              matDatepickerToggleIcon
-              (click)="onDateClear('lastUpdatedBefore')"
-              >clear</mat-icon
-            >
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="updatedBefore"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #updatedBefore></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row search-section-columns">
-        <div class="col">
-          <mat-form-field
-            appearance="outline"
-            class="full-width form-field-align-center"
-          >
-            <mat-label>Created After</mat-label>
-            <input
-              matInput
-              [matDatepicker]="createdAfterPicker"
-              [formControl]="createdAfter"
-            />
-            <mat-icon
-              matDatepickerToggleIcon
-              (click)="onDateClear('createdAfter')"
-              >clear</mat-icon
-            >
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="createdAfterPicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #createdAfterPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
-
-        <div class="col">
-          <mat-form-field
-            appearance="outline"
-            class="full-width form-field-align-center"
-          >
-            <mat-label>Created Before</mat-label>
-            <input
-              matInput
-              [matDatepicker]="createdBeforePicker"
-              [formControl]="createdBefore"
-            />
-            <mat-icon
-              matDatepickerToggleIcon
-              (click)="onDateClear('createdBefore')"
-              >clear</mat-icon
-            >
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="createdBeforePicker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #createdBeforePicker></mat-datepicker>
-          </mat-form-field>
         </div>
       </div>
     </div>
-  </form>
-</div>
+    <div class="row search-section">
+      <div class="col">
+        <mdm-model-selector-tree
+          [ngModel]="context.value"
+          (ngModelChange)="contextValue = $event"
+          [ngModelOptions]="{ standalone: true }"
+          ngDefaultControl
+          [placeholder]="
+            'Choose a Folder, Data Model, Data Class, or Terminology:'
+          "
+          [accepts]="['Folder', 'DataModel', 'DataClass', 'Terminology']"
+        >
+        </mdm-model-selector-tree>
+      </div>
+    </div>
+    <div class="row search-section-columns">
+      <div class="col">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Domain type</mat-label>
+          <mat-select formControlName="domainTypes" multiple>
+            <mat-option value="DataModel">Data Model</mat-option>
+            <mat-option value="DataClass">Data Class</mat-option>
+            <mat-option value="DataElement">Data Element</mat-option>
+            <mat-option value="DataType">Data Type</mat-option>
+            <mat-option value="EnumerationValue">Enumeration Value</mat-option>
+            <mat-option value="ReferenceDataModel"
+              >Reference Data Model</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select classifiers</mat-label>
+          <mat-select formControlName="classifiers" multiple>
+            <mat-option
+              *ngFor="let classification of classifications"
+              [value]="classification"
+            >
+              {{ classification.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row search-section-columns">
+      <div class="col">
+        <mat-form-field
+          appearance="outline"
+          class="full-width form-field-align-center"
+        >
+          <mat-label>Last Updated After</mat-label>
+          <input
+            matInput
+            [matDatepicker]="updatedAfter"
+            [formControl]="lastUpdatedAfter"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('lastUpdatedAfter')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="updatedAfter"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #updatedAfter></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <mat-form-field
+          appearance="outline"
+          class="full-width form-field-align-center"
+        >
+          <mat-label>Last Updated Before</mat-label>
+          <input
+            matInput
+            [matDatepicker]="updatedBefore"
+            [formControl]="lastUpdatedBefore"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('lastUpdatedBefore')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="updatedBefore"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #updatedBefore></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row search-section-columns">
+      <div class="col">
+        <mat-form-field
+          appearance="outline"
+          class="full-width form-field-align-center"
+        >
+          <mat-label>Created After</mat-label>
+          <input
+            matInput
+            [matDatepicker]="createdAfterPicker"
+            [formControl]="createdAfter"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('createdAfter')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="createdAfterPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #createdAfterPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <mat-form-field
+          appearance="outline"
+          class="full-width form-field-align-center"
+        >
+          <mat-label>Created Before</mat-label>
+          <input
+            matInput
+            [matDatepicker]="createdBeforePicker"
+            [formControl]="createdBefore"
+          />
+          <mat-icon
+            matDatepickerToggleIcon
+            (click)="onDateClear('createdBefore')"
+            >clear</mat-icon
+          >
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="createdBeforePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #createdBeforePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>

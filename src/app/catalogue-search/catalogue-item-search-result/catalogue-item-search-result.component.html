@@ -20,30 +20,31 @@ SPDX-License-Identifier: Apache-2.0
   class="mdm-catalogue-item-search-result panel panel-default mdm--shadow-block"
 >
   <div class="mdm-catalogue-item-search-result__header">
-    <span>
-      <h3>
+    <h3>
+      <a [href]="linkUrl">
         {{ item.label }}
-      </h3>
-      <mdm-breadcrumb
-        *ngIf="showBreadcrumb"
-        class="mdm-data-element-search-result__header__breadcrumb"
-        [item]="item"
-      ></mdm-breadcrumb>
-    </span>
-    <span>
-      {{ item.domainType }}
-    </span>
+      </a>
+    </h3>
+    <mdm-breadcrumb
+      *ngIf="showBreadcrumb"
+      class="mdm-data-element-search-result__header__breadcrumb"
+      [item]="item"
+    ></mdm-breadcrumb>
   </div>
   <div class="panel-body">
+    <span class="item-type">{{ item.domainType }}</span>
     <div
       *ngIf="item.description"
       class="mdm-catalogue-item-search-result__content"
     >
-    <mdm-more-description [description]="item.description">
-    </mdm-more-description>
+      <mdm-more-description [description]="item.description">
+      </mdm-more-description>
     </div>
-    <div class="mdm-catalogue-item-search-result__footer">
-      <a [href]="linkUrl">View Details</a>
+    <div
+      *ngIf="!item.description"
+      class="mdm-catalogue-item-search-result__content mdm-catalogue-item-search-result__no-content"
+    >
+      No description available
     </div>
   </div>
 </div>

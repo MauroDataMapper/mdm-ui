@@ -15,56 +15,50 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="input-group">
-  <button
-    mat-button
-    color="primary"
-    (click)="toggleAdvancedSearch()"
-    class="ml-1 px-1"
-  >
-    Advanced
+<div class="container mb-2">
+  <button mat-stroked-button color="primary" (click)="toggleAdvancedSearch()">
+    {{ advancedSearch ? 'Less filters' : 'More filters...' }}
   </button>
 </div>
-
-<div>
-  <ng-template [ngIf]="advancedSearch">
-    <form
-      [formGroup]="formGroup"
-      (keyup.enter)="callParentSearch()"
-      role="form"
-    >
-      <h5 class="marginless">Apply Restrictions and filters:</h5>
-      <ng-template [ngIf]="true">
-        <div class="row search-section">
-          <div class="col">
-            <mdm-model-selector-tree
-              [ngModel]="context.value"
-              (ngModelChange)="contextValue = $event"
-              [ngModelOptions]="{ standalone: true }"
-              ngDefaultControl
-              [placeholder]="'Choose a Folder, Data Model, Data Class, or Terminology:'"
-              [accepts]="['Folder', 'DataModel', 'DataClass', 'Terminology']"
-            >
-            </mdm-model-selector-tree>
-          </div>
-        </div>
-      </ng-template>
-
-      <div class="row search-section-columns">
+<div *ngIf="advancedSearch">
+  <form [formGroup]="formGroup" (keyup.enter)="callParentSearch()" role="form">
+    <div class="container">
+      <div class="row search-section">
         <div class="col">
           <div>
-            <mat-checkbox class="checkbox-filter" formControlName="labelOnly"
+            <mat-checkbox
+              class="checkbox-filter"
+              color="primary"
+              formControlName="labelOnly"
               >Label only</mat-checkbox
             >
-            <mat-checkbox class="checkbox-filter" formControlName="exactMatch"
+            <mat-checkbox
+              class="checkbox-filter"
+              color="primary"
+              formControlName="exactMatch"
               >Exact match</mat-checkbox
             >
           </div>
         </div>
       </div>
+      <div class="row search-section">
+        <div class="col">
+          <mdm-model-selector-tree
+            [ngModel]="context.value"
+            (ngModelChange)="contextValue = $event"
+            [ngModelOptions]="{ standalone: true }"
+            ngDefaultControl
+            [placeholder]="
+              'Choose a Folder, Data Model, Data Class, or Terminology:'
+            "
+            [accepts]="['Folder', 'DataModel', 'DataClass', 'Terminology']"
+          >
+          </mdm-model-selector-tree>
+        </div>
+      </div>
       <div class="row search-section-columns">
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Domain type</mat-label>
             <mat-select formControlName="domainTypes" multiple>
               <mat-option value="DataModel">Data Model</mat-option>
@@ -82,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Select classifiers</mat-label>
             <mat-select formControlName="classifiers" multiple>
               <mat-option
@@ -98,7 +92,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <div class="row search-section-columns">
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field
+            appearance="outline"
+            class="full-width form-field-align-center"
+          >
             <mat-label>Last Updated After</mat-label>
             <input
               matInput
@@ -119,7 +116,10 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field
+            appearance="outline"
+            class="full-width form-field-align-center"
+          >
             <mat-label>Last Updated Before</mat-label>
             <input
               matInput
@@ -142,7 +142,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <div class="row search-section-columns">
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field
+            appearance="outline"
+            class="full-width form-field-align-center"
+          >
             <mat-label>Created After</mat-label>
             <input
               matInput
@@ -163,7 +166,10 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div class="col">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field
+            appearance="outline"
+            class="full-width form-field-align-center"
+          >
             <mat-label>Created Before</mat-label>
             <input
               matInput
@@ -183,6 +189,6 @@ SPDX-License-Identifier: Apache-2.0
           </mat-form-field>
         </div>
       </div>
-    </form>
-  </ng-template>
+    </div>
+  </form>
 </div>

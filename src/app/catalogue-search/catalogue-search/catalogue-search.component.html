@@ -27,27 +27,29 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
 
-    <div class="form-actions row">
-      <div class="col">
-        <div class="search-button">
-          <button
-            class="mr-1"
-            type="button"
-            mat-stroked-button
-            color="primary"
-            (click)="this.reset()"
-          >
-            Reset
-          </button>
-          <button
-            type="submit"
-            mat-flat-button
-            color="primary"
-            [disabled]="this.catalogueSearchFormComponent.formGroup.invalid"
-            (click)="search()"
-          >
-            Search
-          </button>
+    <div class="container">
+      <div class="form-actions row">
+        <div class="col">
+          <div class="search-button">
+            <button
+              class="mr-1"
+              type="button"
+              mat-stroked-button
+              color="primary"
+              (click)="this.reset()"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              mat-flat-button
+              color="primary"
+              [disabled]="this.catalogueSearchFormComponent.formGroup.invalid"
+              (click)="search()"
+            >
+              Search
+            </button>
+          </div>
         </div>
       </div>
     </div>

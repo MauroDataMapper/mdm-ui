@@ -21,7 +21,9 @@ SPDX-License-Identifier: Apache-2.0
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
 
-  $search-filters-heading-background-color: mat.get-color-from-palette($primary);
+  $search-filters-heading-background-color: mat.get-color-from-palette(
+    $primary
+  );
   $search-filters-heading-color: mat.get-color-from-palette(
     $primary,
     '500-contrast'
@@ -29,21 +31,23 @@ SPDX-License-Identifier: Apache-2.0
 
   .mdm-search-filters {
     &__header {
-      border-radius: 2px;
+      border-radius: 4px;
       background-color: $search-filters-heading-background-color;
       color: $search-filters-heading-color;
 
       h3 {
         font-weight: 500;
-        padding-left: 4px;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding: 0.25em 0.5em;
         vertical-align: middle;
       }
     }
 
     &__section {
       margin-top: 1em;
+
+      .mat-divider {
+        margin: 0.85em 0;
+      }
     }
 
     ul {
@@ -62,10 +66,6 @@ SPDX-License-Identifier: Apache-2.0
       float: right;
       cursor: pointer;
       color: rgba(0, 0, 0, 0.5);
-    }
-
-    mat-icon.clear-date {
-      top: -8px;
     }
   }
 }

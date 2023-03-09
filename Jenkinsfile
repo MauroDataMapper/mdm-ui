@@ -226,7 +226,7 @@ pipeline {
   post {
     always {
       outputTestResults()
-      zulipNotification(topic: 'mdm-ui')
+      //zulipNotification(topic: 'mdm-ui')
     }
   }
 }

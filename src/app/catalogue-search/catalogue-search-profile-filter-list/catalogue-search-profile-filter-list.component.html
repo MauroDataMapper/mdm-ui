@@ -19,8 +19,14 @@ SPDX-License-Identifier: Apache-2.0
   <div class="profile-filter-list__title">
     <h4 class="marginless">Profile Filters</h4>
     <span class="mdm--badge mdm--element-count">{{ filters.length }}</span>
+    <span>Add up to {{ max }} filters</span>
   </div>
-  <button mat-stroked-button color="primary" (click)="addFilter()">
+  <button
+    mat-stroked-button
+    color="primary"
+    [disabled]="filters.length >= max"
+    (click)="addFilter()"
+  >
     <span class="fas fa-plus"></span>
     Add
   </button>

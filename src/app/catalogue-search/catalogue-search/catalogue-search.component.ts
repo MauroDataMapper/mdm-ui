@@ -15,19 +15,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { StateHandlerService } from '@mdm/services';
 import { CatalogueSearchAdvancedFormComponent } from '../catalogue-search-advanced/catalogue-search-advanced-form.component';
 import { CatalogueSearchFormComponent } from '../catalogue-search-form/catalogue-search-form.component';
 import { CatalogueSearchProfileFilterListComponent } from '../catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
+import {
+  CatalogueSearchContext,
+  CatalogueSearchParameters,
+  mapProfileFiltersToDto,
+  mapSearchParametersToRawParams
+} from '../catalogue-search.types';
 
 @Component({
   selector: 'mdm-catalogue-search',
   templateUrl: './catalogue-search.component.html',
   styleUrls: ['./catalogue-search.component.scss']
 })
-export class CatalogueSearchComponent implements OnInit, AfterViewInit {
+export class CatalogueSearchComponent implements AfterViewInit {
   constructor(private stateHandler: StateHandlerService) {}
 
   @ViewChild(CatalogueSearchFormComponent)
@@ -41,8 +47,6 @@ export class CatalogueSearchComponent implements OnInit, AfterViewInit {
 
   showMore = false;
   valid = false;
-
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     // Avoid an "ExpressionChangedAfterItHasBeenCheckedError"
@@ -73,45 +77,48 @@ export class CatalogueSearchComponent implements OnInit, AfterViewInit {
     const context: MdmTreeItem | undefined | null = this.advancedForm?.context
       ?.value?.[0];
 
-    // TODO: include profile filters to redirect URL
+    const searchContext: CatalogueSearchContext | undefined = context
+      ? {
+          domainType: context.domainType,
+          id: context.id,
+          label: context.label,
+          parentId: context.parentId,
+          dataModelId: context.modelId
+        }
+      : undefined;
 
-    this.stateHandler.Go('appContainer.mainApp.catalogueSearchListing', {
+    const profileFilters = this.profileFiltersForm?.mapToProfileFilters();
+
+    const parameters: CatalogueSearchParameters = {
       search: this.searchForm.searchTerms.value,
 
-      ...(context && {
-        contextDomainType: context.domainType ?? null,
-        contextId: context.id ?? null,
-        contextLabel: context.label ?? null,
-        contextParentId: context.parentId ?? null,
-        contextDataModelId: context.modelId ?? null
-      }),
+      // Default search to "labelOnly" check if no explicit value provided
+      labelOnly: this.advancedForm?.labelOnly?.value ?? true,
+
+      context: searchContext,
 
       ...(this.advancedForm && {
-        labelOnly: this.advancedForm.labelOnly.value,
         exactMatch: this.advancedForm.exactMatch.value,
         domainTypes: this.advancedForm.domainTypes.value,
 
         classifiers: this.advancedForm.classifierNames,
 
-        lastUpdatedAfter:
-          this.advancedForm.formatDate(
-            this.advancedForm.lastUpdatedAfter.value
-          ) ?? null,
+        lastUpdatedAfter: this.advancedForm.lastUpdatedAfter.value,
+        lastUpdatedBefore: this.advancedForm.lastUpdatedBefore.value,
+        createdAfter: this.advancedForm.createdAfter.value,
+        createdBefore: this.advancedForm.createdBefore.value
+      }),
 
-        lastUpdatedBefore:
-          this.advancedForm.formatDate(
-            this.advancedForm.lastUpdatedBefore.value
-          ) ?? null,
-
-        createdAfter:
-          this.advancedForm.formatDate(this.advancedForm.createdAfter.value) ??
-          null,
-
-        createdBefore:
-          this.advancedForm.formatDate(this.advancedForm.createdBefore.value) ??
-          null
+      ...(profileFilters && {
+        profileFiltersDto: mapProfileFiltersToDto(profileFilters)
       })
-    });
+    };
+
+    const routeParams = mapSearchParametersToRawParams(parameters);
+    this.stateHandler.Go(
+      'appContainer.mainApp.catalogueSearchListing',
+      routeParams
+    );
   }
 
   private setValid() {

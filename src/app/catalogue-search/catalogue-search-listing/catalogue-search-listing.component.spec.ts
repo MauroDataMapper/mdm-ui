@@ -18,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 import { PageEvent } from '@angular/material/paginator';
 import {
   CatalogueItemDomainType,
-  CatalogueItemSearchResult
+  CatalogueItemSearchResult,
+  ProfileDefinitionResponse,
+  ProfileField,
+  ProfileSummary,
+  ProfileSummaryResponse
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services';
@@ -27,31 +31,41 @@ import {
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
 import { StateParams, UIRouterGlobals } from '@uirouter/core';
-import { of, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import {
   CatalogueSearchParameters,
+  CatalogueSearchProfileFilter,
   mapSearchParametersToRawParams
 } from '../catalogue-search.types';
 
 import { CatalogueSearchListingComponent } from './catalogue-search-listing.component';
-
-interface MdmResourcesServiceStub {
-  catalogueItem: {
-    search: jest.Mock;
-  };
-}
-
-const resourcesStub: MdmResourcesServiceStub = {
-  catalogueItem: {
-    search: jest.fn()
-  }
-};
 
 describe('CatalogueSearchListingComponent', () => {
   let harness: ComponentHarness<CatalogueSearchListingComponent>;
 
   const stateRouterStub = {
     Go: jest.fn()
+  };
+
+  const resourcesStub = {
+    catalogueItem: {
+      search: jest.fn()
+    },
+    profile: {
+      provider: jest.fn() as jest.MockedFunction<
+        (
+          namespace: string,
+          name: string,
+          version?: string
+        ) => Observable<ProfileSummaryResponse>
+      >,
+      definition: jest.fn() as jest.MockedFunction<
+        (
+          namespace: string,
+          name: string
+        ) => Observable<ProfileDefinitionResponse>
+      >
+    }
   };
 
   const setupComponentTest = async (parameters: CatalogueSearchParameters) => {
@@ -204,6 +218,75 @@ describe('CatalogueSearchListingComponent', () => {
 
       expect(harness.component.status).toBe('error');
       expect(harness.component.resultSet).toBeUndefined();
+    });
+  });
+
+  describe('profile filters', () => {
+    const namespace = 'test.namespace';
+    const name = 'TestProfile';
+    const version = '1.0.0';
+    const metadataPropertyName = 'testKey';
+    const value = 'testValue';
+
+    const parameters: CatalogueSearchParameters = {
+      search: '',
+      profileFiltersDto: {
+        [`${namespace}|${name}|${version}`]: {
+          [metadataPropertyName]: value
+        }
+      }
+    };
+
+    const provider = {
+      namespace,
+      name,
+      version
+    } as ProfileSummary;
+
+    const key = {
+      metadataPropertyName
+    } as ProfileField;
+
+    beforeEach(async () => {
+      harness = await setupComponentTest(parameters);
+
+      // Don't care about what mock search returns for these scenarios
+      resourcesStub.catalogueItem.search.mockImplementationOnce(() => {
+        return of({});
+      });
+
+      resourcesStub.profile.provider.mockImplementation(() =>
+        of({
+          body: provider
+        })
+      );
+
+      resourcesStub.profile.definition.mockImplementation(() =>
+        of({
+          body: {
+            sections: [
+              {
+                name: 'section',
+                fields: [key]
+              }
+            ]
+          }
+        })
+      );
+
+      harness.component.ngOnInit();
+    });
+
+    it('should map from URL to full object list', () => {
+      const expected: CatalogueSearchProfileFilter[] = [
+        {
+          provider,
+          key,
+          value
+        }
+      ];
+
+      expect(harness.component.profileFilters).toStrictEqual(expected);
     });
   });
 });

@@ -368,6 +368,8 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mdm--mat-pagination">
   <mdm-paginator
     [length]="enumsCount"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizes"
     (page)="pageSizeClicked($event)"
     showFirstLastButtons
   ></mdm-paginator>

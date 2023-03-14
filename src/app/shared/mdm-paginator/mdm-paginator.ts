@@ -26,17 +26,16 @@ export class MdmPaginatorComponent extends MatPaginator implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.pageSizeOptions = [5, 10, 20, 50];
-
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
-      // If there is no pageSize specified then use the settings value, if any
+      // If there is no pageSize or pageSizeOptions specified then use the settings value, if any.
       this.pageSize = this.pageSize ?? settings.countPerTable;
-      this.pageSizeOptions =  settings.counts;
+      this.pageSizeOptions = this.pageSizeOptions ?? settings.counts;
     }
 
-    // If still no pageSize then default to 20
+    // Set defaults if still no values.
     this.pageSize = this.pageSize ?? 20;
+    this.pageSizeOptions = this.pageSizeOptions ?? [5, 10, 20, 50];
   }
 
   get pageOffset() {
@@ -48,5 +47,4 @@ export class MdmPaginatorComponent extends MatPaginator implements OnInit {
     this.pageIndex = value.pageIndex;
     this.page.emit(value);
   }
-
 }

@@ -15,7 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   Classifier,
@@ -24,16 +30,17 @@ import {
   ModelDomainType
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'mdm-catalogue-search-advanced-form',
   templateUrl: './catalogue-search-advanced-form.component.html',
   styleUrls: ['./catalogue-search-advanced-form.component.scss']
 })
-export class CatalogueSearchAdvancedFormComponent implements OnInit {
-  advancedSearch: boolean;
+export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
+  @Output() valueChange = new EventEmitter<void>();
+
   classifications: Classifier[];
-  @Output() searchEvent = new EventEmitter<string>();
 
   formGroup = new FormGroup({
     context: new FormControl<MdmTreeItem[]>(null),
@@ -46,6 +53,8 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
     lastUpdatedAfter: new FormControl<Date>(null),
     lastUpdatedBefore: new FormControl<Date>(null)
   });
+
+  private unsubscribe$ = new Subject<void>();
 
   get context() {
     return this.formGroup.controls.context;
@@ -99,18 +108,23 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
     return this.formGroup.controls.createdBefore;
   }
 
+  constructor(private resources: MdmResourcesService) {}
+
   ngOnInit(): void {
     this.resources.classifier
       .list({ all: true })
       .subscribe((result: ClassifierIndexResponse) => {
         this.classifications = result.body.items;
       });
+
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.valueChange.emit());
   }
 
-  constructor(private resources: MdmResourcesService) {}
-
-  toggleAdvancedSearch() {
-    this.advancedSearch = !this.advancedSearch;
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   formatDate(date: Date) {
@@ -130,18 +144,6 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   reset() {
-    this.context.reset();
-    this.domainTypes.reset();
-    this.labelOnly.reset();
-    this.exactMatch.reset();
-    this.classifiers.reset();
-    this.createdAfter.reset();
-    this.createdBefore.reset();
-    this.lastUpdatedAfter.reset();
-    this.lastUpdatedBefore.reset();
-  }
-
-  callParentSearch() {
-    this.searchEvent.emit('advancedFormCallSearch');
+    this.formGroup.reset();
   }
 }

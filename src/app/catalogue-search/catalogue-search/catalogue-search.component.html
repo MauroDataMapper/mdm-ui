@@ -16,42 +16,49 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="container">
-  <form>
-    <div class="highlight-box__content">
-      <mdm-catalogue-search-form
-        (searchEvent)="search()"
-      ></mdm-catalogue-search-form>
-      <div class="catalogue-search-advanced-form">
-        <mdm-catalogue-search-advanced-form (searchEvent)="search()">
-        </mdm-catalogue-search-advanced-form>
-      </div>
+  <div class="highlight-box__content">
+    <mdm-catalogue-search-form
+      (valueChange)="onValueChange()"
+      (searchEvent)="search()"
+    ></mdm-catalogue-search-form>
+    <div class="container mb-2">
+      <button mat-stroked-button color="primary" (click)="toggleShowMore()">
+        {{ showMore ? 'Less filters' : 'More filters...' }}
+      </button>
     </div>
+    <div *ngIf="showMore" class="catalogue-search-advanced-form">
+      <mdm-catalogue-search-advanced-form (valueChange)="onValueChange()">
+      </mdm-catalogue-search-advanced-form>
+      <mdm-catalogue-search-profile-filter-list
+        (valueChange)="onValueChange()"
+      ></mdm-catalogue-search-profile-filter-list>
+    </div>
+  </div>
 
-    <div class="container">
-      <div class="form-actions row">
-        <div class="col">
-          <div class="search-button">
-            <button
-              class="mr-1"
-              type="button"
-              mat-stroked-button
-              color="primary"
-              (click)="this.reset()"
-            >
-              Reset
-            </button>
-            <button
-              type="submit"
-              mat-flat-button
-              color="primary"
-              [disabled]="this.catalogueSearchFormComponent.formGroup.invalid"
-              (click)="search()"
-            >
-              Search
-            </button>
-          </div>
+  <div class="container">
+    <div class="form-actions row">
+      <div class="col">
+        <div class="search-button">
+          <button
+            class="mr-1"
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="this.reset()"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            mat-flat-button
+            color="primary"
+            [disabled]="!valid"
+            (click)="search()"
+          >
+            Search
+          </button>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </div>

@@ -246,10 +246,6 @@ export class McEnumerationListWithCategoryComponent
     }
   };
 
-  identify(item) {
-    return item.id;
-  }
-
   // Accepts the array and key
   groupBy = (array, key) => {
     // Return the end result

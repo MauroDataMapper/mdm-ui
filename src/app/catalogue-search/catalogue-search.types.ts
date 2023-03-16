@@ -154,7 +154,7 @@ export const mapProfileFiltersToDto = (
 
 /**
  * Unpack a {@link CatalogueSearchProfileFilterDto} and flatten into a straight list of
- * objects containint the key information contained in the DTO.
+ * objects containing the key information contained in the DTO.
  *
  * @param dto A DTO to unpack.
  * @returns A flattened list of objects containing the key information from the DTO.
@@ -205,7 +205,7 @@ export const serializeProfileFiltersDto = (
  * @param base64String The encoded string to decode and deserialize
  * @returns A {@link CatalogueSearchProfileFilterDto} object.
  *
- * With the decoded DTO, you will need to transform into into suitable {@link CatalogueSearchProfileFilter}
+ * With the decoded DTO, you will need to transform into suitable {@link CatalogueSearchProfileFilter}
  * objects.
  *
  * @see {@link CatalogueSearchService.mapProfileFilters}

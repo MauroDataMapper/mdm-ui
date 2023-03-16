@@ -91,7 +91,6 @@ export class CatalogueSearchListingComponent implements OnInit {
           // Profile filters must be mapped to the correct object type before they can be
           // used properly
           this.profileFilters = profileFilters;
-          console.log(this.profileFilters);
 
           if (!this.parameters.search || this.parameters.search === '') {
             return of<CatalogueSearchResultSet>({

@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectChange } from '@angular/material/select';
@@ -134,7 +135,7 @@ export class SearchFiltersComponent implements OnInit {
 
   constructor(
     private resources: MdmResourcesService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -191,20 +192,8 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name: 'exactMatch', value: event.checked });
   }
 
-  onDateChange(name: string, event) {
-    // If date is not null, format as yyyy-MM-dd but ignoring timezone
-    let formatted: String = null;
-
-    if (event.value) {
-      const yyyy: String = event.value.getFullYear().toString();
-      const mm: String = (parseInt(event.value.getMonth(), 10) + 1)
-        .toString()
-        .padStart(2, '0');
-      const dd: String = event.value.getDate().toString().padStart(2, '0');
-
-      formatted = `${yyyy}-${mm}-${dd}`;
-    }
-    this.filterChange.emit({ name, value: formatted });
+  onDateChange(name: string, event: MatDatepickerInputEvent<Date>) {
+    this.filterChange.emit({ name, value: event.value });
   }
 
   onDateClear(name: string) {
@@ -220,19 +209,23 @@ export class SearchFiltersComponent implements OnInit {
   }
 
   openCatalogueItemSelectModal() {
-    this.dialog.open(CatalogueItemSelectModalComponent, { }).afterClosed().subscribe((catalogueItem) => {
-      if (catalogueItem) {
-        // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
-        this.contextChange.emit(
-          {
+    this.dialog
+      .open(CatalogueItemSelectModalComponent, {})
+      .afterClosed()
+      .subscribe((catalogueItem) => {
+        if (catalogueItem) {
+          // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
+          this.contextChange.emit({
             domainType: catalogueItem.domainType,
             id: catalogueItem.id,
             label: catalogueItem.label,
             parentId: catalogueItem.parentId ?? null,
-            dataModelId: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
-          }
-        );
-      }
-    });
+            dataModelId:
+              catalogueItem.domainType === 'DataClass'
+                ? catalogueItem.modelId
+                : null
+          });
+        }
+      });
   }
 }

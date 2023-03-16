@@ -76,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
     [dataSource]="displayItems"
     cdkDropList
     [cdkDropListData]="dataSource"
-    (cdkDropListDropped)="dropTable($event)"
+    (cdkDropListDropped)="handleDrop($event)"
     class="mdm--mat-table table-striped"
   >
     <ng-container matColumnDef="group">

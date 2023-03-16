@@ -135,8 +135,13 @@ export class McEnumerationListWithCategoryComponent
     this.unsubscribe$.complete();
   }
 
-  // Drag and drop
-  dropTable(event: CdkDragDrop<any[]>) {
+  // Handle drag and drop events
+  handleDrop(event: CdkDragDrop<any[]>) {
+    // If the drop event takes place outside of the table, leave the table unchanged.
+    if (!event.isPointerOverContainer) {
+      return;
+    }
+
     const prevIndex = this.displayItems.findIndex(
       (r) => r.id === event.item.data.id
     );
@@ -245,10 +250,6 @@ export class McEnumerationListWithCategoryComponent
         );
     }
   };
-
-  identify(item) {
-    return item.id;
-  }
 
   // Accepts the array and key
   groupBy = (array, key) => {

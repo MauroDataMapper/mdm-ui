@@ -66,6 +66,7 @@ export enum PathElementType {
   TermRelationshipType = 'trt',
   UserGroup = 'ug',
   UserImageFile = 'uif',
+  ThemeImageFile = 'tif',
   VersionedFolder = 'vf',
   VersionLink = 'vl'
 }
@@ -115,6 +116,7 @@ export const pathElementTypeNames = new Map<PathElementType, string>([
   [PathElementType.TermRelationshipType, 'Term relationship type'],
   [PathElementType.UserGroup, 'User group'],
   [PathElementType.UserImageFile, 'User image file'],
+  [PathElementType.ThemeImageFile, 'Theme image file'],
   [PathElementType.VersionedFolder, 'Versioned folder'],
   [PathElementType.VersionLink, 'Version link']
 ]);

@@ -22,7 +22,8 @@ export enum ApiPropertyEditType {
   Value,
   Text,
   Html,
-  Boolean // eslint-disable-line id-blacklist
+  Boolean, // eslint-disable-line id-blacklist
+  Image
 }
 
 export interface ApiPropertyMetadata {
@@ -324,6 +325,14 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     editType: ApiPropertyEditType.Boolean,
     isSystem: true,
     publiclyVisible: true,
-    requiresReload: true
+    requiresReload: true,
+  },
+  {
+    key: 'explorer.theme.images.header.logo',
+    category: 'Mauro Data Explorer',
+    editType: ApiPropertyEditType.Image,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true,
   }
 ];

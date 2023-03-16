@@ -36,10 +36,20 @@ import { StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   DataClassDetail,
-  DataModelDetail
+  DataModelDetail,
+  DataTypeDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { FormControl } from '@angular/forms';
-import { map, startWith, Subject, takeUntil } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  takeUntil
+} from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
@@ -142,24 +152,17 @@ export class McEnumerationListWithCategoryComponent
       return;
     }
 
-    const prevIndex = this.displayItems.findIndex(
-      (r) => r.id === event.item.data.id
-    );
+    const swappedItem = this.displayItems[event.currentIndex];
+    const movedItem = event.item.data;
 
-    moveItemInArray(this.displayItems, prevIndex, event.currentIndex);
+    moveItemInArray(this.displayItems, event.previousIndex, event.currentIndex);
+
+    this.updateLocalList(swappedItem, movedItem);
 
     let prevRec = this.displayItems[event.currentIndex - 1];
-    const nextRec = this.displayItems[event.currentIndex + 1];
 
     if (prevRec === undefined) {
       return;
-    }
-
-    let newPosition = 0;
-    if (prevRec.isCategoryRow) {
-      newPosition = nextRec.index;
-    } else {
-      newPosition = parseInt(prevRec.index, 10) + 1;
     }
 
     let newCategory = null;
@@ -177,79 +180,67 @@ export class McEnumerationListWithCategoryComponent
       }
     }
 
-    this.updateOrder(event.item.data.id, newPosition, newCategory);
+    if (this.clientSide) {
+      this.showRecords(this.allRecords);
+    } else {
+      this.updateOrderServer(newCategory, movedItem);
+    }
 
     this.table.renderRows();
   }
 
-  updateOrder = (enumId, newPosition, newCategory) => {
-    if (this.clientSide) {
-      const sorted = this.allRecords;
+  updateLocalList(swappedItem, movedItem) {
+    const sorted = this.allRecords;
 
-      // find it & remove it
-      let index = 0;
-      sorted.forEach((item, i) => {
-        if (item.id === enumId) {
-          index = i;
-        }
+    // Identify the items that were swapped by ID to locate their correct index
+    // then perform the same array move operation as on displayItems array to keep
+    // both arrays in sync correctly.
+    const foundSwappedItemIndex = sorted.findIndex(
+      (r) => r.id === swappedItem.id
+    );
+    const foundMovedItemIndex = sorted.findIndex((r) => r.id === movedItem.id);
+
+    moveItemInArray(sorted, foundMovedItemIndex, foundSwappedItemIndex);
+
+    // Fix mapped indexes in records after the move
+    sorted.forEach((r, index) => (r.index = index + 1));
+
+    this.allRecords = sorted;
+  }
+
+  updateOrderServer(newCategory, movedItem) {
+    // Find the correct updated index of the moved item
+    const foundMovedItemIndex = this.allRecords.findIndex(
+      (r) => r.id === movedItem.id
+    );
+
+    const resource = {
+      index: foundMovedItemIndex,
+      category: newCategory
+    };
+
+    this.resourcesService.enumerationValues
+      .updateInEnumeratedType(
+        this.parent.model,
+        this.parent.id,
+        movedItem.id,
+        resource
+      )
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the enumeration.',
+            error
+          );
+          return EMPTY;
+        }),
+        switchMap(() => this.reloadRecordsFromServer())
+      )
+      .subscribe((data: DataTypeDetailResponse) => {
+        this.showRecords(data.body.enumerationValues);
+        this.messageHandler.showSuccess('Enumeration updated successfully.');
       });
-
-      const foundRecords = sorted.splice(index, 1);
-      if (foundRecords && foundRecords.length > 0) {
-        const record = foundRecords[0];
-
-        let location = -1;
-        for (let i = 0; i < sorted.length && location === -1; i++) {
-          if (
-            (i === 0 && newPosition < sorted[i].index) ||
-            sorted[i].index === newPosition ||
-            (sorted[i].index < newPosition &&
-              i + 1 < sorted.length &&
-              newPosition < sorted[i + 1].index)
-          ) {
-            record.index = newPosition;
-            // record[0].edit.index = newPosition;
-            sorted.splice(i, 0, record);
-            location = i;
-          }
-        }
-        for (let i = 0; i < sorted.length; i++) {
-          sorted[i].index = i + 1;
-        }
-        this.showRecords(sorted);
-      }
-    } else {
-      const resource = {
-        index: newPosition,
-        category: newCategory
-      };
-
-      this.resourcesService.enumerationValues
-        .updateInEnumeratedType(
-          this.parent.model,
-          this.parent.id,
-          enumId,
-          resource
-        )
-        .subscribe(
-          () => {
-            this.reloadRecordsFromServer().subscribe((data) => {
-              this.showRecords(data.body.enumerationValues);
-            });
-
-            this.messageHandler.showSuccess(
-              'Enumeration updated successfully.'
-            );
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the enumeration.',
-              error
-            );
-          }
-        );
-    }
-  };
+  }
 
   // Accepts the array and key
   groupBy = (array, key) => {
@@ -660,7 +651,7 @@ export class McEnumerationListWithCategoryComponent
     record.edit.category = this.categoryCtrl.value;
   }
 
-  reloadRecordsFromServer() {
+  reloadRecordsFromServer(): Observable<DataTypeDetailResponse> {
     return this.resourcesService.dataType.get(
       this.parent.model,
       this.parent.id

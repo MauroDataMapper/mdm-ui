@@ -123,8 +123,13 @@ export class DataElementStep2Component
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm?.form.valueChanges.subscribe(x => {
-      this.validate(x);
+    // Prevent ExpressionChangedAfterChecked error.
+    setTimeout(() => {
+      this.formChangesSubscription = this.myForm?.form.valueChanges.subscribe(
+        (val) => {
+          this.validate(val);
+        }
+      );
     });
   }
 
@@ -201,24 +206,24 @@ export class DataElementStep2Component
           .pipe(
             startWith({}),
             switchMap(() => {
-          this.isLoadingResults = true;
-          return this.dataElementsFetch(
-            this.paginator.toArray()[0].pageSize,
+              this.isLoadingResults = true;
+              return this.dataElementsFetch(
+                this.paginator.toArray()[0].pageSize,
                 this.paginator.toArray()[0].pageIndex *
                   this.paginator.toArray()[0].pageSize,
-            this.sort.toArray()[0].active,
-            this.sort.toArray()[0].direction,
-            this.filter
-          );
-        }),
-          map((data: any) => {
-            this.totalItemCount = data.body.count;
-            this.isLoadingResults = false;
-            return data.body.items;
-          }),
-          catchError(() => {
-            this.isLoadingResults = false;
-            return [];
+                this.sort.toArray()[0].active,
+                this.sort.toArray()[0].direction,
+                this.filter
+              );
+            }),
+            map((data: any) => {
+              this.totalItemCount = data.body.count;
+              this.isLoadingResults = false;
+              return data.body.items;
+            }),
+            catchError(() => {
+              this.isLoadingResults = false;
+              return [];
             })
           )
           .subscribe((data) => {
@@ -392,7 +397,7 @@ export class DataElementStep2Component
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-       filter[name] = value;
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -422,9 +427,9 @@ export class DataElementStep2Component
     this.model.selectedDataElements.forEach((dc: any) => {
       promise = promise
         .then((result: any) => {
-        this.successCount++;
-        this.finalResult[dc.id] = { result, hasError: false };
-        switch (this.model.createType) {
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          switch (this.model.createType) {
             case 'copy':
               return this.resources.dataElement
                 .copyDataElement(
@@ -447,24 +452,24 @@ export class DataElementStep2Component
                   null
                 )
                 .toPromise();
-        }
+          }
         })
         .catch((error) => {
-        this.failCount++;
-        const errorText = this.messageHandler.getErrorText(error);
-        this.finalResult[dc.id] = { result: errorText, hasError: true };
-      });
+          this.failCount++;
+          const errorText = this.messageHandler.getErrorText(error);
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
+        });
     });
 
     promise
       .then(() => {
-      this.processing = false;
-      this.isProcessComplete = true;
-      this.broadcast.reloadCatalogueTree();
+        this.processing = false;
+        this.isProcessComplete = true;
+        this.broadcast.reloadCatalogueTree();
       })
       .catch(() => {
-      this.processing = false;
-      this.isProcessComplete = true;
-    });
+        this.processing = false;
+        this.isProcessComplete = true;
+      });
   };
 }

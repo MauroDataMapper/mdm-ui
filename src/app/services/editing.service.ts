@@ -113,6 +113,10 @@ export class EditingService {
    * place. If not or the user allows the transition, the original tab click event will be carried out.
    */
   setTabGroupClickEvent(tabGroup: MatTabGroup) {
+    if (!tabGroup) {
+      return;
+    }
+
     tabGroup._handleClick = (
       tab: MatTab,
       tabHeader: MatTabHeader,

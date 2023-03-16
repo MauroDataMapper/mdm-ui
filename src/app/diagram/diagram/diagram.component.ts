@@ -58,7 +58,6 @@ export class DiagramComponent implements OnInit {
   isLoading: boolean;
   isPopup = false;
 
-
   initPan: SvgPanZoom.Point;
   initZoom: number;
 
@@ -179,7 +178,9 @@ export class DiagramComponent implements OnInit {
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
     svg.querySelector('#svg-pan-zoom-controls').setAttribute('transform', 'translate(0 0) scale(0.75)');
-
+    // Avoid the content being too close to controls
+    this.svgPanZoom.zoomOut();
+    
     if (this.diagramComponent) {
       this.svgPanZoom.zoom(this.diagramComponent.svgPanZoom.getZoom());
       this.svgPanZoom.pan(this.diagramComponent.svgPanZoom.getPan());

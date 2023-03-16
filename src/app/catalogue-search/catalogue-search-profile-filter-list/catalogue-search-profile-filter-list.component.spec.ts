@@ -155,6 +155,19 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
       expect(harness.component.filters.length).toBe(0);
       expect(valueChangeSpy).toHaveBeenCalled();
     });
+
+    it('should not add more rows than allowed maximum', () => {
+      harness.component.ngOnInit();
+
+      Array.from(Array(harness.component.max).keys()).forEach(() =>
+        harness.component.addFilter()
+      );
+
+      expect(harness.component.filters.length).toBe(harness.component.max);
+
+      harness.component.addFilter();
+      expect(harness.component.filters.length).toBe(harness.component.max);
+    });
   });
 
   describe('filter rows', () => {

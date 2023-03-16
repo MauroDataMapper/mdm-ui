@@ -18,12 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
   CatalogueSearchContext,
   CatalogueSearchParameters,
+  CatalogueSearchProfileFilter,
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
@@ -56,6 +57,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
+  profileFilters?: CatalogueSearchProfileFilter[];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -74,12 +76,47 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.parameters.order
     );
 
-    if (!this.parameters.search || this.parameters.search === '') {
-      this.setEmptyResultPage();
-      return;
-    }
+    this.status = 'loading';
 
-    this.performSearch();
+    this.catalogueSearch
+      .mapProfileFilters(this.parameters.profileFiltersDto)
+      .pipe(
+        catchError(() => {
+          this.messageHandler.showWarning(
+            'A problem occurred when getting your profile filters.'
+          );
+          return of([] as CatalogueSearchProfileFilter[]); // Continue
+        }),
+        switchMap((profileFilters) => {
+          // Profile filters must be mapped to the correct object type before they can be
+          // used properly
+          this.profileFilters = profileFilters;
+
+          if (!this.parameters.search || this.parameters.search === '') {
+            return of<CatalogueSearchResultSet>({
+              count: 0,
+              page: 1,
+              pageSize: 10,
+              items: []
+            });
+          }
+
+          // TODO: apply profileFilters (if any) to search endpoint
+          return this.catalogueSearch.search(this.parameters);
+        }),
+        catchError((error) => {
+          this.status = 'error';
+          this.messageHandler.showError(
+            'A problem occurred when searching.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((resultSet) => {
+        this.status = 'ready';
+        this.resultSet = resultSet;
+      });
   }
 
   /**
@@ -137,37 +174,6 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.createdBefore = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
-  }
-
-  private setEmptyResultPage() {
-    this.resultSet = {
-      count: 0,
-      page: 1,
-      pageSize: 10,
-      items: []
-    };
-    this.status = 'ready';
-  }
-
-  private performSearch() {
-    this.status = 'loading';
-
-    this.catalogueSearch
-      .search(this.parameters)
-      .pipe(
-        catchError((error) => {
-          this.status = 'error';
-          this.messageHandler.showError(
-            'A problem occurred when searching.',
-            error
-          );
-          return EMPTY;
-        })
-      )
-      .subscribe((resultSet) => {
-        this.resultSet = resultSet;
-        this.status = 'ready';
-      });
   }
 
   /**

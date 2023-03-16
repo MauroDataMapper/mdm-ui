@@ -32,6 +32,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
+import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
 
 @Component({
   selector: 'mdm-catalogue-search-profile-filter-list',
@@ -41,6 +42,11 @@ import { map, Subject, switchMap, takeUntil } from 'rxjs';
 export class CatalogueSearchProfileFilterListComponent
   implements OnInit, OnDestroy {
   @Output() valueChange = new EventEmitter<void>();
+
+  /**
+   * Maximum number of filters allowed.
+   */
+  readonly max = 5;
 
   providers: ProfileSummary[] = [];
   formGroup = new FormGroup({
@@ -57,7 +63,7 @@ export class CatalogueSearchProfileFilterListComponent
 
   ngOnInit(): void {
     this.resources.profile
-      .providers()
+      .providers({ latestVersionByMetadataNamespace: true })
       .pipe(
         map((response: ProfileSummaryIndexResponse) =>
           response.body.sort((a, b) =>
@@ -78,6 +84,10 @@ export class CatalogueSearchProfileFilterListComponent
   }
 
   addFilter() {
+    if (this.filters.length >= this.max) {
+      return;
+    }
+
     this.filters.push(this.createFilter());
   }
 
@@ -87,6 +97,28 @@ export class CatalogueSearchProfileFilterListComponent
 
   reset() {
     this.filters.clear();
+  }
+
+  mapToProfileFilters(): CatalogueSearchProfileFilter[] | undefined {
+    if (this.formGroup.invalid || this.filters.length === 0) {
+      return undefined;
+    }
+
+    return this.filters.controls.map(
+      (
+        row: FormGroup<{
+          provider: FormControl<ProfileSummary>;
+          key: FormControl<ProfileField>;
+          value: FormControl<string>;
+        }>
+      ) => {
+        return {
+          provider: row.controls.provider.value,
+          key: row.controls.key.value,
+          value: row.controls.value.value
+        };
+      }
+    );
   }
 
   private createFilter() {

@@ -90,9 +90,7 @@ describe('CatalogueSearchComponent', () => {
       })
     );
 
-    resourcesStub.profile.providers.mockImplementationOnce(() =>
-      of({ body: [] })
-    );
+    resourcesStub.profile.providers.mockImplementation(() => of({ body: [] }));
 
     // "Expand" the filters section and force change detection so that
     // the @ViewChild elements will get populated
@@ -101,71 +99,116 @@ describe('CatalogueSearchComponent', () => {
 
     harness.component.searchForm.ngOnInit();
     harness.component.advancedForm.ngOnInit();
+    harness.component.profileFiltersForm.ngOnInit();
   });
 
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });
 
-  it('should use values to call the router', () => {
-    harness.component.searchForm.formGroup.setValue({
-      searchTerms: 'testSearch'
-    });
+  describe('trigger search', () => {
+    beforeEach(() => stateHandlerStub.Go.mockClear());
 
-    const context: MdmTreeItem = {
-      domainType: CatalogueItemDomainType.Folder,
-      id: 'testId',
-      label: 'testContextLabel',
-      parentId: 'testParentId',
-      modelId: 'testModelId',
-      availableActions: null
-    };
+    it('should use values to call the router', () => {
+      harness.component.searchForm.formGroup.setValue({
+        searchTerms: 'testSearch'
+      });
 
-    // set up advanced form data
-    const contextTest: MdmTreeItem[] = [context];
-    const testClassifier: Classifier = {
-      domainType: CatalogueItemDomainType.Classifier,
-      label: 'testLabel1'
-    };
-    const testClassifier2: Classifier = {
-      domainType: CatalogueItemDomainType.Classifier,
-      label: 'testLabel2'
-    };
-    const classifiers: Classifier[] = [testClassifier, testClassifier2];
+      const context: MdmTreeItem = {
+        domainType: CatalogueItemDomainType.Folder,
+        id: 'testId',
+        label: 'testContextLabel',
+        parentId: 'testParentId',
+        modelId: 'testModelId',
+        availableActions: null
+      };
 
-    harness.component.advancedForm.formGroup.setValue({
-      context: contextTest,
-      domainTypes: [ModelDomainType.DataModels, ModelDomainType.Classifiers],
-      labelOnly: true,
-      exactMatch: true,
-      classifiers,
-      createdAfter: new Date('July 21, 1983 01:15:00'),
-      createdBefore: new Date('July 22, 1983 01:15:00'),
-      lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
-      lastUpdatedBefore: new Date('July 24, 1983 01:15:00')
-    });
+      // set up advanced form data
+      const contextTest: MdmTreeItem[] = [context];
+      const testClassifier: Classifier = {
+        domainType: CatalogueItemDomainType.Classifier,
+        label: 'testLabel1'
+      };
+      const testClassifier2: Classifier = {
+        domainType: CatalogueItemDomainType.Classifier,
+        label: 'testLabel2'
+      };
+      const classifiers: Classifier[] = [testClassifier, testClassifier2];
 
-    harness.component.search();
-
-    expect(stateHandlerStub.Go).toHaveBeenCalledWith(
-      'appContainer.mainApp.catalogueSearchListing',
-      {
-        contextDomainType: context.domainType,
-        contextId: context.id,
-        contextLabel: context.label,
-        contextParentId: context.parentId,
-        contextDataModelId: context.modelId,
-        classifiers: ['testLabel1', 'testLabel2'],
-        createdAfter: '1983-06-21',
-        createdBefore: '1983-06-22',
-        domainTypes: ['dataModels', 'classifiers'],
-        exactMatch: true,
+      harness.component.advancedForm.formGroup.setValue({
+        context: contextTest,
+        domainTypes: [ModelDomainType.DataModels, ModelDomainType.Classifiers],
         labelOnly: true,
-        lastUpdatedAfter: '1983-06-23',
-        lastUpdatedBefore: '1983-06-24',
-        search: 'testSearch'
-      }
-    );
+        exactMatch: true,
+        classifiers,
+        createdAfter: new Date('July 21, 1983 01:15:00'),
+        createdBefore: new Date('July 22, 1983 01:15:00'),
+        lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
+        lastUpdatedBefore: new Date('July 24, 1983 01:15:00')
+      });
+
+      harness.component.search();
+
+      expect(stateHandlerStub.Go).toHaveBeenCalledWith(
+        'appContainer.mainApp.catalogueSearchListing',
+        {
+          cxdt: context.domainType,
+          cxid: context.id,
+          cxl: context.label,
+          cxpid: context.parentId,
+          cxmid: context.modelId,
+          cls: ['testLabel1', 'testLabel2'],
+          ca: '1983-07-21',
+          cb: '1983-07-22',
+          dt: ['dataModels', 'classifiers'],
+          e: true,
+          l: true,
+          lua: '1983-07-23',
+          lub: '1983-07-24',
+          search: 'testSearch'
+        }
+      );
+    });
+
+    it('should send serialized profile filters to search listing page', () => {
+      harness.component.profileFiltersForm.addFilter();
+
+      const namespace = 'test.namespace';
+      const name = 'TestProfile';
+      const version = '1.0.0';
+      const metadataPropertyName = 'testKey';
+      const value = 'testValue';
+
+      const filter = harness.component.profileFiltersForm.filters.at(
+        0
+      ) as FormGroup<any>;
+      filter.patchValue({
+        provider: {
+          namespace,
+          name,
+          version
+        },
+        key: {
+          metadataPropertyName
+        },
+        value
+      });
+
+      const expectedMdBase64 =
+        'eyJ0ZXN0Lm5hbWVzcGFjZXxUZXN0UHJvZmlsZXwxLjAuMCI6eyJ0ZXN0S2V5IjoidGVzdFZhbHVlIn19';
+
+      harness.component.search();
+
+      expect(stateHandlerStub.Go).toHaveBeenCalledWith(
+        'appContainer.mainApp.catalogueSearchListing',
+        {
+          cls: [],
+          dt: [],
+          l: true,
+          md: expectedMdBase64
+        }
+      );
+    });
   });
 
   it('should reset all values', () => {

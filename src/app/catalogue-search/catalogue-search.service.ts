@@ -24,13 +24,14 @@ import {
   PageParameters,
   ProfileDefinition,
   ProfileDefinitionResponse,
+  ProfileFieldQueryData,
   ProfileSummary,
   ProfileSummaryResponse,
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
   CatalogueSearchContext,
   CatalogueSearchParameters,
@@ -53,20 +54,55 @@ export class CatalogueSearchService {
     params: CatalogueSearchParameters
   ): Observable<CatalogueSearchResultSet> {
     const [page, pageParams] = this.getPageParameters(params);
-    const query: SearchQueryParameters = {
-      ...this.getCommonQueryParameters(params),
-      ...pageParams,
-      searchTerm: this.getSearchTerm(params)
-    };
 
-    return this.searchCatalogue(query, params.context).pipe(
-      map((searchResults) => {
-        return {
-          count: searchResults.count,
-          pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          page,
-          items: searchResults.items
+    // Create a stream emitting the profile filters to be used in the query
+    const profileFieldsQueryData$ = params.profileFiltersDto
+      ? this.getProfileFiltersForQuery(params.profileFiltersDto)
+      : of<ProfileFieldQueryData[]>([]);
+
+    return profileFieldsQueryData$.pipe(
+      switchMap((profileFieldsQueryData) => {
+        // Create the searchQuery with the emitted profile info
+        const query: SearchQueryParameters = {
+          ...this.getCommonQueryParameters(params),
+          ...pageParams,
+          searchTerm: this.getSearchTerm(params),
+          profileFields: profileFieldsQueryData
         };
+
+        return this.searchCatalogue(query, params.context).pipe(
+          map((searchResults) => {
+            return {
+              count: searchResults.count,
+              pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+              page,
+              items: searchResults.items
+            };
+          })
+        );
+      })
+    );
+  }
+
+  private getProfileFiltersForQuery(
+    dto?: CatalogueSearchProfileFilterDto
+  ): Observable<ProfileFieldQueryData[]> {
+    if (!dto) {
+      return of([]);
+    }
+
+    return this.mapProfileFilters(dto).pipe(
+      map((profileFiltersWithMetadata) => {
+        const profilesQueryData = profileFiltersWithMetadata.map((filter) => {
+          return {
+            metadataNamespace: filter.provider.metadataNamespace,
+            metadataPropertyName: filter.key.metadataPropertyName,
+            filterTerm: filter.value,
+            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'keyword'
+          } as ProfileFieldQueryData;
+        });
+
+        return profilesQueryData;
       })
     );
   }
@@ -96,7 +132,7 @@ export class CatalogueSearchService {
 
     const ungroupedDto = ungroupProfileFiltersDto(dto);
 
-    const foo = ungroupedDto.map((item) => {
+    const profileFilterDataWithMetadata$ = ungroupedDto.map((item) => {
       const provider$: Observable<ProfileSummary> = this.resources.profile
         .provider(item.namespace, item.name, item.version)
         .pipe(map((response: ProfileSummaryResponse) => response.body));
@@ -124,7 +160,7 @@ export class CatalogueSearchService {
       );
     });
 
-    return forkJoin(foo);
+    return forkJoin(profileFilterDataWithMetadata$);
   }
 
   /**

@@ -127,18 +127,6 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  formatDate(date: Date) {
-    if (!date) {
-      return;
-    }
-
-    const yyyy: String = date.getFullYear().toString();
-    const mm: String = date.getMonth().toString().padStart(2, '0');
-    const dd: String = date.getDate().toString().padStart(2, '0');
-
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
   onDateClear(control: string) {
     this.formGroup.get(control).setValue(null);
   }

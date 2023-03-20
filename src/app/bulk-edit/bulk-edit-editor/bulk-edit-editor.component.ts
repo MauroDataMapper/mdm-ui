@@ -61,6 +61,9 @@ export class BulkEditEditorComponent implements OnInit {
 
   @Output() backEvent = new EventEmitter<void>();
 
+  @Output() saved = new EventEmitter<void>();
+  @Output() changed = new EventEmitter<any>();
+
   /** Two-way binding */
   @Input() tab: BulkEditProfileContext;
   @Output() tabChanged = new EventEmitter();
@@ -152,6 +155,8 @@ export class BulkEditEditorComponent implements OnInit {
         }
       });
     });
+
+    this.changed.emit(data);
   }
 
   validate() {
@@ -200,6 +205,7 @@ export class BulkEditEditorComponent implements OnInit {
         this.messageHandler.showSuccess(
           `'${this.tab.displayName}' was saved successfully.`
         );
+        this.saved.emit();
       });
   }
 
@@ -254,7 +260,7 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   private excludeAutoResizeColumns(columnIds) {
-    const pathColKey = 'Path';
+    const pathColKey = 'path';
     const pathId = this.gridColumnApi.getColumn(pathColKey).getColId();
     const pathIndex = columnIds.indexOf(pathId);
     if (pathIndex > -1) {

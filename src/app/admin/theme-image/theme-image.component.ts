@@ -98,7 +98,7 @@ export class ThemeImageComponent implements OnInit {
   // Saves the theme image
   public saveImage() {
 
-    this.resourcesService.themeImage.update(this.apiPropertyId, { image: this.imageSource, type: 'image/png' }).subscribe((result: { body }) => {
+    this.resourcesService.themeImage.update(this.apiPropertyId, { image: this.imageSource, type: this.getFileType() }).subscribe((result: { body }) => {
       this.messageHandler.showSuccess('Theme image updated successfully.');
       this.imageVersion++;
       this.imageSavedEvent.emit();
@@ -169,5 +169,20 @@ export class ThemeImageComponent implements OnInit {
     else {
       this.value.setValue(this.DefaultImageMessage);
     }
+  }
+
+  private getFileType(): string {
+    if (this.imageSource) {
+      const fileType = this.imageSource.split(':').pop().split(';')[0];
+      if (fileType) {
+        if (fileType === 'image/jpg') {
+          return 'image/jpeg'
+        }
+        else {
+          return fileType
+        }
+      }  
+    }
+    return 'unknown'
   }
 }

@@ -101,7 +101,6 @@ export class CatalogueSearchListingComponent implements OnInit {
             });
           }
 
-          // TODO: apply profileFilters (if any) to search endpoint
           return this.catalogueSearch.search(this.parameters);
         }),
         catchError((error) => {

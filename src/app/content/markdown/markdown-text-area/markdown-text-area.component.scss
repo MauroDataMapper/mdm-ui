@@ -16,16 +16,31 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+$md-preview-background-color: #f9f9f9;
+$md-preview-border-color: #cecece;
+$md-toolbar-font-size: 16px;
+
 .mdm-markdown-text-area {
+  textarea {
+    width: 100%;
+  }
 
   .spacer {
     flex: 1 1 auto;
   }
 
   &__preview {
-    background-color: #f9f9f9;
-    border: 1px solid #cecece;
+    background-color: $md-preview-background-color;
+    border: 1px solid $md-preview-border-color;
     padding: 10px;
   }
 
+  &__toolbar {
+    font-size: $md-toolbar-font-size;
+    height: auto;
+
+    button {
+      font-size: $md-toolbar-font-size;
+    }
+  }
 }

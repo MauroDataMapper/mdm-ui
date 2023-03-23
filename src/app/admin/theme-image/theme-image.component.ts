@@ -169,6 +169,8 @@ export class ThemeImageComponent implements OnInit {
 
   private getFileType(): string {
     if (this.imageSource) {
+      // We expect the imageSource to be in the format of "data:image/jpg;base64,JVBERi0xLjQKJSDi48/..."
+      // hence the following string manipulation.
       const fileType = this.imageSource.split(':').pop().split(';')[0];
       if (fileType) {
         if (fileType === 'image/jpg') {

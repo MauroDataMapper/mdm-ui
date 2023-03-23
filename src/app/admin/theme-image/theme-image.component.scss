@@ -16,21 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.mdm--profile-block {
-  .mdm-profile__image {
-    background-color: rgba(77, 114, 156, 0.1);
-    display: inline-block;
-
-    &--avatar {
-      margin: 16px;
-      width: 256px;
-      height: auto;
-      border-radius: 100%;
-      margin-right: 10px;
-    }
-  }
-}
-
 .mdm-profile__image__edit {
   text-align: right;
 }

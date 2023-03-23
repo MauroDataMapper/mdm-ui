@@ -19,7 +19,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { ApiPropertyResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { catchError } from 'rxjs';
@@ -48,10 +48,9 @@ export class ThemeImageComponent implements OnInit {
 
   currentUser: UserDetails;
   imageVersion = 1;
-  imageSource: any = '';
+  imageSource: string = '';
   themeImagePath: string;
-  trustedUrl: any;
-  afterSave: (result: { body: { id: any } }) => void;
+  trustedUrl: SafeResourceUrl;
   backendUrl: string = environment.apiEndpoint;
   showImage = false;
   originalValueWasDefault = false;
@@ -96,10 +95,7 @@ export class ThemeImageComponent implements OnInit {
       });
   }
 
-  // Saves the theme image
-  public saveImage() {
-
-    this.resourcesService.themeImage.update(this.apiPropertyId, { image: this.imageSource, type: this.getFileType() }).subscribe((result: { body }) => {
+  saveImage() {
       this.messageHandler.showSuccess('Theme image updated successfully.');
       this.imageVersion++;
       this.imageSavedEvent.emit();
@@ -109,7 +105,6 @@ export class ThemeImageComponent implements OnInit {
     });
   }
 
-  // When a file is selected
   fileChangeEvent(fileInput: any): void {
     this.readThis(fileInput.target);
     this.showImage = true;
@@ -119,7 +114,6 @@ export class ThemeImageComponent implements OnInit {
     });
   }
 
-  // When an image is removed
   imageRemoveEvent(): void {
     this.imageSource = null;
     this.showImage = false;
@@ -134,12 +128,13 @@ export class ThemeImageComponent implements OnInit {
     const file: File = inputValue.files[0];
     const myReader: FileReader = new FileReader();
     myReader.onloadend = () => {
+      if (typeof myReader.result === 'string') {
       this.imageSource = myReader.result;
+      }
     };
     myReader.readAsDataURL(file);
   }
 
-  // Remove the theme image
   public removeImage() {
     this.resourcesService.themeImage.remove(this.apiPropertyId).subscribe(() => {
       this.messageHandler.showSuccess('Api Property image removed successfully.');

@@ -41,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="item.controlType === profileControlType.text"
             matInput
             type="text"
-            name="{item.displayName}}"
+            name="{{item.displayName}}"
             [(ngModel)]="item.value"
             value="item.value"
             class="outlined-input form-control"
@@ -121,6 +121,7 @@ SPDX-License-Identifier: Apache-2.0
                   [parentDataModel]="data.parentCatalogueItem"
                   [showClassification]="false"
                   [showParentDataModel]="false"
+                  [showLabelAndDescription]="true"
                 >
                 </mdm-data-type-inline>
               </div>

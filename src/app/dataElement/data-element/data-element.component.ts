@@ -90,17 +90,6 @@ export class DataElementComponent
     'rules',
     'annotations'
   ]);
-  newlyAddedDataType = {
-    label: '',
-    description: '',
-
-    metadata: [],
-    domainType: 'PrimitiveType',
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataClass: '',
-    referencedTerminology: ''
-  };
 
   constructor(
     private resourcesService: MdmResourcesService,

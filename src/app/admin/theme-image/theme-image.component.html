@@ -17,31 +17,63 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mb-2" [formGroup]="formGroup">
   <div>
-	<mat-form-field appearance="outline">
-	  <mat-label>Value</mat-label>
-	  <img *ngIf="showImage" [src]="imageSource || trustedUrl" alt="Theme image" class="mdm--background-color">
-	  <input matInput name="value" formControlName="value" required [readonly]="true"/>
-	  <div class="mt-2 mb-4">
-		<button mat-flat-button color="primary" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
-		  <span class="fas fa-pencil-alt"></span> Edit image
-		</button>
-	  </div>
-	</mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Value</mat-label>
+      <img
+        *ngIf="showImage"
+        [src]="imageSource || trustedUrl"
+        alt="Theme image"
+        class="mdm--background-color"
+      />
+      <input
+        matInput
+        name="value"
+        formControlName="value"
+        required
+        [readonly]="true"
+      />
+      <div class="mt-2 mb-4">
+        <button
+          mat-flat-button
+          color="primary"
+          [matMenuTriggerFor]="menuProfile"
+          aria-label="Edit profile picture"
+        >
+          <span class="fas fa-pencil-alt"></span> Edit image
+        </button>
+      </div>
+    </mat-form-field>
   </div>
 
-	<mat-menu #menuProfile>
-		<label mat-menu-item>
-			<span class="fas fa-camera"></span>
-			Change image
-			<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*" onclick="value = null">
-		</label>
-		<button *ngIf="!showImage" mat-menu-item (click)="imageRemoveEvent()" disabled="true">
-			<span class="fas fa-times"></span>
-			Remove image
-		</button>
-		<button *ngIf="showImage" mat-menu-item (click)="imageRemoveEvent()" disabled="false">
-			<span class="fas fa-times warning"></span>
-			Remove image
-		</button>
-	</mat-menu>
+  <mat-menu #menuProfile>
+    <label mat-menu-item>
+      <span class="fas fa-camera"></span>
+      Change image
+      <input
+        type="file"
+        style="display: none"
+        (change)="fileChangeEvent($event)"
+        accept="image/*"
+        onclick="value = null"
+      />
+    </label>
+    <button
+      *ngIf="!showImage"
+      mat-menu-item
+      (click)="imageRemoveEvent()"
+      disabled="true"
+    >
+      <span class="fas fa-times"></span>
+      Remove image
+    </button>
+    <button
+      *ngIf="showImage"
+      mat-menu-item
+      (click)="imageRemoveEvent()"
+      disabled="false"
+    >
+      <span class="fas fa-times warning"></span>
+      Remove image
+    </button>
+  </mat-menu>
 </div>

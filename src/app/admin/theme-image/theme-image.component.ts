@@ -69,13 +69,15 @@ export class ThemeImageComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
     private sanitizer: DomSanitizer,
-    private resources: MdmResourcesService,
+    private resources: MdmResourcesService
   ) {
     this.currentUser = this.securityHandler.getCurrentUser();
   }
 
   ngOnInit() {
-    this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.backendUrl + '/admin/properties/' + this.apiPropertyId + '/image');
+    this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      this.backendUrl + '/admin/properties/' + this.apiPropertyId + '/image'
+    );
 
     this.resources.apiProperties
       .get(this.apiPropertyId)
@@ -91,18 +93,30 @@ export class ThemeImageComponent implements OnInit {
       .subscribe((data: ApiPropertyResponse) => {
         this.showImage = this.isUUID(data.body.value);
         this.showDefaultMessageIfRequired();
-        this.originalValueWasDefault = (this.value?.value === this.DefaultImageMessage);
+        this.originalValueWasDefault =
+          this.value?.value === this.DefaultImageMessage;
       });
   }
 
   saveImage() {
-      this.messageHandler.showSuccess('Theme image updated successfully.');
-      this.imageVersion++;
-      this.imageSavedEvent.emit();
-
-    }, error => {
-      this.messageHandler.showError('There was a problem updating the Theme Image.', error);
-    });
+    this.resourcesService.themeImage
+      .update(this.apiPropertyId, {
+        image: this.imageSource,
+        type: this.getFileType()
+      })
+      .subscribe(
+        (result: { body }) => {
+          this.messageHandler.showSuccess('Theme image updated successfully.');
+          this.imageVersion++;
+          this.imageSavedEvent.emit();
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Theme Image.',
+            error
+          );
+        }
+      );
   }
 
   fileChangeEvent(fileInput: any): void {
@@ -119,7 +133,9 @@ export class ThemeImageComponent implements OnInit {
     this.showImage = false;
     this.showDefaultMessageIfRequired();
     this.imageChangedEvent.emit({
-      changeEvent: (this.originalValueWasDefault) ? ImageChangeType.nochange : ImageChangeType.removed
+      changeEvent: this.originalValueWasDefault
+        ? ImageChangeType.nochange
+        : ImageChangeType.removed
     });
   }
 
@@ -129,22 +145,28 @@ export class ThemeImageComponent implements OnInit {
     const myReader: FileReader = new FileReader();
     myReader.onloadend = () => {
       if (typeof myReader.result === 'string') {
-      this.imageSource = myReader.result;
+        this.imageSource = myReader.result;
       }
     };
     myReader.readAsDataURL(file);
   }
 
   public removeImage() {
-    this.resourcesService.themeImage.remove(this.apiPropertyId).subscribe(() => {
-      this.messageHandler.showSuccess('Api Property image removed successfully.');
-      this.imageVersion++;
-      this.imageSavedEvent.emit({
-        id: this.apiPropertyId
-      });
-    },
-      error => {
-        this.messageHandler.showError('There was a problem removing the user profile image.', error);
+    this.resourcesService.themeImage.remove(this.apiPropertyId).subscribe(
+      () => {
+        this.messageHandler.showSuccess(
+          'Api Property image removed successfully.'
+        );
+        this.imageVersion++;
+        this.imageSavedEvent.emit({
+          id: this.apiPropertyId
+        });
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem removing the user profile image.',
+          error
+        );
       }
     );
   }
@@ -161,8 +183,7 @@ export class ThemeImageComponent implements OnInit {
     if (this.showImage) {
       // This is required to avoid a mat-form-field must contain a MatFormFieldControl error
       this.value.setValue(' ');
-    }
-    else {
+    } else {
       this.value.setValue(this.DefaultImageMessage);
     }
   }
@@ -174,13 +195,12 @@ export class ThemeImageComponent implements OnInit {
       const fileType = this.imageSource.split(':').pop().split(';')[0];
       if (fileType) {
         if (fileType === 'image/jpg') {
-          return 'image/jpeg'
+          return 'image/jpeg';
+        } else {
+          return fileType;
         }
-        else {
-          return fileType
-        }
-      }  
+      }
     }
-    return 'unknown'
+    return 'unknown';
   }
 }

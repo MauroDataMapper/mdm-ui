@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
 import { NavigatableProfile } from '@mdm/mauro/mauro-item.types';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { ICellRendererParams } from 'ag-grid-community';
+import { ICellRendererAngularComp } from '@ag-grid-community/angular';
+import { ICellRendererParams } from '@ag-grid-community/core';
 
 @Component({
   selector: 'mdm-path-cell-renderer',

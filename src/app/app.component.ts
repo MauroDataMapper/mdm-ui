@@ -36,6 +36,10 @@ import { FeaturesService } from './services/features.service';
 import { SharedService } from './services/shared.service';
 import { ThemingService } from './services/theming.service';
 import { FooterLink } from './shared/footer/footer.component';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 const defaultCopyright =
   'Clinical Informatics, NIHR Oxford Biomedical Research Centre';

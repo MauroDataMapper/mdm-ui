@@ -24,6 +24,7 @@ import { environment } from '@env/environment';
 import { ApiPropertyResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { catchError } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserDetails } from '@mdm/services/handlers/security-handler.model';
 
 export enum ImageChangeType {
   uploaded,
@@ -45,7 +46,7 @@ export class ThemeImageComponent implements OnInit {
   @Output() imageSavedEvent = new EventEmitter();
   @Output() imageChangedEvent = new EventEmitter<ImageChangedEvent>();
 
-  currentUser: any;
+  currentUser: UserDetails;
   imageVersion = 1;
   imageSource: any = '';
   themeImagePath: string;

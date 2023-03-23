@@ -22,7 +22,7 @@ import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 
@@ -35,6 +35,7 @@ export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
   parent: MauroItem;
   currentStep: BulkEditStep = BulkEditStep.Selection;
+  hasChanged = false;
 
   public Steps = BulkEditStep;
 
@@ -78,20 +79,38 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    this.editing
-      .confirmCancelAsync()
-      .pipe(filter((confirm) => !!confirm))
-      .subscribe(() => {
-        this.editing.stop();
-        this.stateHandler.GoPrevious();
-      });
+    const confirm$ =
+      this.currentStep === BulkEditStep.Editor && this.hasChanged
+        ? this.editing.confirmCancelAsync()
+        : of(true);
+
+    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+      this.editing.stop();
+      this.stateHandler.GoPrevious();
+    });
   }
 
   next() {
     this.currentStep = this.currentStep + 1;
+    this.hasChanged = false;
   }
 
   previous() {
-    this.currentStep = this.currentStep - 1;
+    const confirm$ = this.hasChanged
+      ? this.editing.confirmCancelAsync()
+      : of(true);
+
+    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+      this.currentStep = this.currentStep - 1;
+      this.hasChanged = false;
+    });
+  }
+
+  onChanged() {
+    this.hasChanged = true;
+  }
+
+  onSaved() {
+    this.hasChanged = false;
   }
 }

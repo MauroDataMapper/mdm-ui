@@ -45,6 +45,7 @@ import {
   MdmUserGroupsResource,
   MdmVersionLinkResource,
   MdmUserImageFileResource,
+  MdmThemeImageFileResource,
   MdmReferenceDataModelResource,
   MdmReferenceDataElementResource,
   MdmReferenceDataTypeResource,
@@ -148,6 +149,10 @@ export class MdmResourcesService {
     this.restHandler
   );
   userImage = new MdmUserImageFileResource(
+    this.resourcesConfig,
+    this.restHandler
+  );
+  themeImage = new MdmThemeImageFileResource(
     this.resourcesConfig,
     this.restHandler
   );

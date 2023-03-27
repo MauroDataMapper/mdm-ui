@@ -29,7 +29,6 @@ import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provid
 import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
 import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
 import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.component';
-import { UsersModule } from '../users/users.module';
 
 @NgModule({
   declarations: [

@@ -48,7 +48,7 @@ export class ThemeImageComponent implements OnInit {
 
   currentUser: UserDetails;
   imageVersion = 1;
-  imageSource: string = '';
+  imageSource = '';
   themeImagePath: string;
   trustedUrl: SafeResourceUrl;
   backendUrl: string = environment.apiEndpoint;
@@ -105,7 +105,7 @@ export class ThemeImageComponent implements OnInit {
         type: this.getFileType()
       })
       .subscribe(
-        (result: { body }) => {
+        () => {
           this.messageHandler.showSuccess('Theme image updated successfully.');
           this.imageVersion++;
           this.imageSavedEvent.emit();

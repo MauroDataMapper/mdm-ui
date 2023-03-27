@@ -155,7 +155,7 @@ export class ApiPropertyComponent implements OnInit {
     }
 
     if (this.editExisting) {
-      if (this.property.metadata.editType == ApiPropertyEditType.Image) {
+      if (this.property.metadata.editType === ApiPropertyEditType.Image) {
         switch (this.imageChangeType) {
           case ImageChangeType.uploaded:
             this.themeImageComponent.saveImage();

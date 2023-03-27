@@ -153,7 +153,7 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     const el = this.textArea.nativeElement;
 
     if (options.type === 'block' && el.value.length > 0) {
-      el.value = el.value + `\r\n\r\n`;
+      el.value = el.value + '\r\n\r\n';
     }
 
     // Track current selection if there is one

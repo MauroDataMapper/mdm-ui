@@ -20,7 +20,10 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  DataType
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
   DefaultProfileModalConfiguration,
@@ -57,6 +60,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     protected editing: EditingService
   ) {}
 
+  newDataTypeHasErrors = false;
+
   ngOnInit(): void {}
 
   save() {
@@ -77,7 +82,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
           hasError = true;
         }
       } else if (item.controlType === ProfileControlTypes.dataType) {
-        hasError = !this.validateDataType(item);
+        hasError = this.newDataTypeHasErrors;
       }
     });
 
@@ -99,48 +104,6 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
-  }
-
-  validateDataType(item: any) {
-    let isValid = true;
-
-    if (!this.showNewInlineDataType) {
-      return true;
-    }
-    if (!item.value.label || item.value.label.trim().length === 0) {
-      isValid = false;
-    }
-    // Check if for EnumerationType, at least one value is added
-    if (
-      item.value.domainType === CatalogueItemDomainType.EnumerationType &&
-      item.value.enumerationValues.length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for ReferenceType, the dataClass is selected
-    if (
-      item.value.domainType === CatalogueItemDomainType.ReferenceType &&
-      !item.value.referencedDataClass
-    ) {
-      isValid = false;
-    }
-
-    // Check if for TerminologyType, the terminology is selected
-    if (
-      item.value.domainType === CatalogueItemDomainType.TerminologyType &&
-      !item.value.referencedTerminology
-    ) {
-      isValid = false;
-    }
-
-    if (!isValid) {
-      this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
-      return false;
-    } else {
-      return true;
-    }
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
@@ -169,21 +132,26 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     this.showNewInlineDataType = !this.showNewInlineDataType;
     this.dataTypeErrors = '';
     if (this.showNewInlineDataType) {
-       const newDT = {
+      const newDT: DataType = {
         label: item.value.label,
         description: '',
         metadata: [],
         domainType: CatalogueItemDomainType.PrimitiveType,
-        enumerationValues: [],
-        classifiers: [],
-        organisation: '',
-        referencedTerminology: {id : ''},
-        referencedDataType: { id: '' },
-        referencedDataClass: { id: '' },
-        referencedModel: { id: '', domainType: '' }
+        classifiers: []
       };
 
       item.value = newDT;
+    }
+  }
+
+  validationStatusEventHandler(value: string) {
+    const hasErrors = value === 'true' ? true : false;
+    this.newDataTypeHasErrors = hasErrors;
+
+    if (this.newDataTypeHasErrors) {
+      this.dataTypeErrors = '';
+      this.dataTypeErrors =
+        'Please fill in all required values for the new Data Type';
     }
   }
 

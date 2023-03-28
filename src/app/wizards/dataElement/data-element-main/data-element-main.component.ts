@@ -29,7 +29,14 @@ import { DataElementStep1Component } from '../data-element-step1/data-element-st
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, DataElement, DataElementDetailResponse, DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  DataElement,
+  DataElementDetailResponse,
+  DataType,
+  DataTypeDetail,
+  DataTypeDetailResponse
+} from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
 
 @Component({
@@ -55,8 +62,8 @@ export class DataElementMainComponent implements OnInit {
     dataType: undefined,
     description: undefined,
     classifiers: [],
-    parentDataModel: { id: null},
-    parentDataClass: { id: null},
+    parentDataModel: { id: null },
+    parentDataClass: { id: null },
     parent: {},
     createType: 'new',
     copyFromDataClass: [],
@@ -88,7 +95,7 @@ export class DataElementMainComponent implements OnInit {
     private changeRef: ChangeDetectorRef,
     private title: Title,
     private elementTypes: ElementTypesService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.title.setTitle('New Data Element');
@@ -118,15 +125,21 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId).subscribe(result => {
-      result.body.breadcrumbs.push(Object.assign([], result.body));
-      this.model.parent = result.body;
-      this.steps.push(step1);
-      this.steps.push(step2);
-      this.changeRef.detectChanges();
-    });
+    this.resources.dataClass
+      .getChildDataClass(
+        this.parentDataModelId,
+        this.grandParentDataClassId,
+        this.parentDataClassId
+      )
+      .subscribe((result) => {
+        result.body.breadcrumbs.push(Object.assign([], result.body));
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+        this.changeRef.detectChanges();
+      });
 
-    this.resources.dataType.list(this.parentDataModelId).subscribe(result => {
+    this.resources.dataType.list(this.parentDataModelId).subscribe((result) => {
       this.model.allDataTypesCount = result.count;
       if (result.count === 0) {
         this.model.showNewInlineDataType = true;
@@ -180,9 +193,14 @@ export class DataElementMainComponent implements OnInit {
     if (!this.model.showNewInlineDataType) {
       dataType = { id: this.model.dataType.id };
       this.saveDataElement(dataType);
-    }
-    else {
-      const domainType = this.elementTypes.isModelDataType(this.model.newlyAddedDataType.domainType)
+    } else {
+      // Some frontend's domainType are amalgamated
+      // in ModelDataType backend's domain state
+      // (i.e. terminologyReference and CodeSets both translate
+      // to the same ModelDataType type in the backend)
+      const domainType = this.elementTypes.isModelDataType(
+        this.model.newlyAddedDataType.domainType
+      )
         ? CatalogueItemDomainType.ModelDataType
         : this.model.newlyAddedDataType.domainType;
 
@@ -193,51 +211,66 @@ export class DataElementMainComponent implements OnInit {
         domainType,
 
         referenceDataType: {
-          id: this.model.newlyAddedDataType.referencedDataType ? this.model.newlyAddedDataType.referencedDataType.id : null
+          id: this.model.newlyAddedDataType.referencedDataType
+            ? this.model.newlyAddedDataType.referencedDataType.id
+            : null
         },
         referenceClass: {
-          id: this.model.newlyAddedDataType.referencedDataClass ? this.model.newlyAddedDataType.referencedDataClass.id : null
+          id: this.model.newlyAddedDataType.referencedDataClass
+            ? this.model.newlyAddedDataType.referencedDataClass.id
+            : null
         },
 
-        modelResourceDomainType: domainType === CatalogueItemDomainType.ModelDataType ? this.model.newlyAddedDataType.referencedModel.domainType : null,
-        modelResourceId: domainType === CatalogueItemDomainType.ModelDataType ? this.model.newlyAddedDataType.referencedModel.id : null,
+        modelResourceDomainType:
+          domainType === CatalogueItemDomainType.ModelDataType
+            ? (this.model.newlyAddedDataType.referencedModel
+                .domainType as CatalogueItemDomainType)
+            : null,
+        modelResourceId:
+          domainType === CatalogueItemDomainType.ModelDataType
+            ? this.model.newlyAddedDataType.referencedModel.id
+            : null,
 
-        classifiers: this.model.classifiers.map(cls => ({ id: cls.id })),
+        classifiers: this.model.classifiers.map((cls) => ({ id: cls.id })),
         enumerationValues: this.model.newlyAddedDataType.enumerationValues.map(
-          m => ({
+          (m) => ({
             key: m.key,
             value: m.value,
             category: m.category
           })
         ),
-        metadata: this.model.metadata.map(m => ({
+        metadata: this.model.metadata.map((m) => ({
           key: m.key,
           value: m.value,
           namespace: m.namespace
         }))
       };
 
-      this.resources.dataType.save(this.parentDataModelId, res).subscribe((response: DataTypeDetailResponse) => {
-        dataType = response.body;
-        this.saveDataElement(response.body);
-      }, error => {
-        this.messageHandler.showError('There was a problem saving the Data Type.', error);
-      });
+      this.resources.dataType.save(this.parentDataModelId, res).subscribe(
+        (response: DataTypeDetailResponse) => {
+          dataType = response.body;
+          this.saveDataElement(response.body);
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the Data Type.',
+            error
+          );
+        }
+      );
     }
   };
 
-  saveDataElement(dataType: any) {
+  saveDataElement(dataType: DataType) {
     const resource: DataElement = {
       domainType: CatalogueItemDomainType.DataElement,
       label: this.model.label,
       description: this.model.description,
-      dataType: {
-        id: dataType.id
-      },
-      classifiers: this.model.classifiers.map(cls => {
+      dataType,
+      classifiers: this.model.classifiers.map((cls) => {
         return { id: cls.id };
       }),
-      metadata: this.model.metadata.map(m => {
+      metadata: this.model.metadata.map((m) => {
         return {
           key: m.key,
           value: m.value,
@@ -252,21 +285,29 @@ export class DataElementMainComponent implements OnInit {
     this.getMultiplicity(resource, 'maxMultiplicity');
 
     // deferred
-    this.resources.dataElement.save(this.parentDataModelId, this.parentDataClassId, resource).subscribe((response: DataElementDetailResponse) => {
-      this.messageHandler.showSuccess('Data Element saved successfully.');
+    this.resources.dataElement
+      .save(this.parentDataModelId, this.parentDataClassId, resource)
+      .subscribe(
+        (response: DataElementDetailResponse) => {
+          this.messageHandler.showSuccess('Data Element saved successfully.');
 
-      this.stateHandler.Go(
-        'dataElement',
-        {
-          dataModelId: response.body.model || '',
-          dataClassId: response.body.dataClass || '',
-          id: response.body.id
+          this.stateHandler.Go(
+            'dataElement',
+            {
+              dataModelId: response.body.model || '',
+              dataClassId: response.body.dataClass || '',
+              id: response.body.id
+            },
+            { reload: true, location: true }
+          );
         },
-        { reload: true, location: true }
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the Data Element.',
+            error
+          );
+        }
       );
-    }, error => {
-      this.messageHandler.showError('There was a problem saving the Data Element.', error);
-    });
   }
 
   validateDataType() {
@@ -282,16 +323,28 @@ export class DataElementMainComponent implements OnInit {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.EnumerationType && this.model.newlyAddedDataType.enumerationValues.length === 0) {
+    if (
+      this.model.newlyAddedDataType.domainType ===
+        CatalogueItemDomainType.EnumerationType &&
+      this.model.newlyAddedDataType.enumerationValues.length === 0
+    ) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.ReferenceType && !this.model.newlyAddedDataType.referencedDataClass) {
+    if (
+      this.model.newlyAddedDataType.domainType ===
+        CatalogueItemDomainType.ReferenceType &&
+      !this.model.newlyAddedDataType.referencedDataClass
+    ) {
       isValid = false;
     }
 
     // Check if for TerminologyType, the terminology is selected
-    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.TerminologyType && !this.model.newlyAddedDataType.referencedModel) {
+    if (
+      this.model.newlyAddedDataType.domainType ===
+        CatalogueItemDomainType.TerminologyType &&
+      !this.model.newlyAddedDataType.referencedModel
+    ) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       isValid = false;
     }

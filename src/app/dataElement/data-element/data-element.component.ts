@@ -26,16 +26,18 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import {
+  ElementTypesService,
   GridService,
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import {
+  CatalogueItemDomainType,
   DataElement,
   DataElementDetail,
   DataElementDetailResponse,
-  DataTypeReference
+  DataType
 } from '@maurodatamapper/mdm-resources';
 import {
   DefaultProfileItem,
@@ -101,7 +103,8 @@ export class DataElementComponent
     private gridService: GridService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private elementTypes: ElementTypesService
   ) {
     super();
     if (
@@ -136,7 +139,9 @@ export class DataElementComponent
   }
 
   ngOnInit() {
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
@@ -210,7 +215,20 @@ export class DataElementComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       } else if (item.controlType === ProfileControlTypes.dataType) {
-        resource.dataType = item.value as DataTypeReference;
+        let castedValue = item.value as DataType;
+
+        // Backend dataType groups several frontend types into one
+        // (i.e. frontend's referenceType and dataModelReferenceType
+        // both map to backend's ModelDataType)
+        const dataTypeDomainType = this.elementTypes.isModelDataType(
+          castedValue.domainType
+        )
+          ? CatalogueItemDomainType.ModelDataType
+          : castedValue.domainType;
+
+        castedValue.domainType = dataTypeDomainType;
+
+        resource.dataType = castedValue;
       } else {
         resource[item.propertyName] = item.value;
       }

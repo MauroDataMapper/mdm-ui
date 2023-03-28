@@ -17,17 +17,36 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div>
   <span *ngIf="elementDataType.domainType == 'PrimitiveType'">
-    <a class="dataTypePrimitive" href="{{link}}" [hidden]="hideName"><span [innerHtml]="elementDataType.label"></span></a><span class="dataTypeLabel dataTypePrimitive" [hidden]="hideName">(Primitive)</span>
+    <a class="dataTypePrimitive" href="{{ link }}" [hidden]="hideName"
+      ><span [innerHtml]="elementDataType.label"></span></a
+    ><span class="dataTypeLabel dataTypePrimitive" [hidden]="hideName"
+      >(Primitive)</span
+    >
   </span>
   <span *ngIf="elementDataType.domainType == 'EnumerationType'">
-    <a class="dataTypeEnumeration" href="{{link}}" [hidden]="hideName">{{elementDataType.label}}</a>
-    <span class="dataTypeLabel dataTypeEnumeration" [hidden]="hideName">(Enumeration)</span>
-    <span *ngIf="!hideEnumList" class="enumCaretShow" style="margin-right: 2px;cursor: pointer; width:40px;" (click)="showEnums()" matTooltip="Show Enumerations">
+    <a class="dataTypeEnumeration" href="{{ link }}" [hidden]="hideName">{{
+      elementDataType.label
+    }}</a>
+    <span class="dataTypeLabel dataTypeEnumeration" [hidden]="hideName"
+      >(Enumeration)</span
+    >
+    <span
+      *ngIf="!hideEnumList"
+      class="enumCaretShow"
+      style="margin-right: 2px; cursor: pointer; width: 40px"
+      (click)="showEnums()"
+      matTooltip="Show Enumerations"
+    >
       <span class="fas fa-caret-down fa-xs"></span>
       &nbsp;&nbsp;&nbsp;
     </span>
 
-    <table class="table enumerationKeyValueTable" *ngIf="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
+    <table
+      class="table enumerationKeyValueTable"
+      *ngIf="
+        elementDataType.enumerationValues && !hideEnumList && toggleShowEnums
+      "
+    >
       <thead>
         <tr>
           <th *ngIf="hasCategory" scope="col">Group</th>
@@ -36,29 +55,78 @@ SPDX-License-Identifier: Apache-2.0
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let record of allRecordsWithGroups; let i = index">
-          <tr *ngIf="!record.isCategoryRow || (record.isCategoryRow && hasCategory)" [ngClass]="{'moreEnumerationKeyValue': i >= showCount,'hiddenMoreEnumerationKeyValue': i >= showCount}">
-            <td class="full-width" *ngIf="hasCategory && record.isCategoryRow" [attr.colspan]="(hasCategory && record.isCategoryRow) ? 3 : 1">
-              <div *ngIf="record.isCategoryRow" style="font-weight: bold; font-style: italic;">
-                {{record.category}}
+        <ng-container
+          *ngFor="let record of allRecordsWithGroups; let i = index"
+        >
+          <tr
+            *ngIf="
+              !record.isCategoryRow || (record.isCategoryRow && hasCategory)
+            "
+            [ngClass]="{
+              moreEnumerationKeyValue: i >= showCount,
+              hiddenMoreEnumerationKeyValue: i >= showCount
+            }"
+          >
+            <td
+              class="full-width"
+              *ngIf="hasCategory && record.isCategoryRow"
+              [attr.colspan]="hasCategory && record.isCategoryRow ? 3 : 1"
+            >
+              <div
+                *ngIf="record.isCategoryRow"
+                style="font-weight: bold; font-style: italic"
+              >
+                {{ record.category }}
               </div>
               <div *ngIf="!record.category">&nbsp;</div>
             </td>
-            <td *ngIf="hasCategory && !record.isCategoryRow" style="width: 15%"></td>
-            <td style="width: 30%; word-break: break-all;" class="enumerationKey" *ngIf="!record.isCategoryRow">
+            <td
+              *ngIf="hasCategory && !record.isCategoryRow"
+              style="width: 15%"
+            ></td>
+            <td
+              style="width: 30%; word-break: break-all"
+              class="enumerationKey"
+              *ngIf="!record.isCategoryRow"
+            >
               <div *ngIf="!record.isCategoryRow">
-                <span style="margin: 0px !important; width: 100%; padding-left: 2px; word-wrap: break-word; white-space: normal; max-width: 100px; min-width: 50px;" [innerHtml]="record.key"></span>
+                <span
+                  style="
+                    margin: 0px !important;
+                    width: 100%;
+                    padding-left: 2px;
+                    word-wrap: break-word;
+                    white-space: normal;
+                    max-width: 100px;
+                    min-width: 50px;
+                  "
+                  [innerHtml]="record.key"
+                ></span>
               </div>
             </td>
-            <td style="width: 40%; word-break: break-all;" class="enumerationValue" *ngIf="!record.isCategoryRow">
-              <span style="word-wrap: break-word; white-space: normal; display: block; max-width: 400px;" [innerHtml]="record.value ">
+            <td
+              style="width: 40%; word-break: break-all"
+              class="enumerationValue"
+              *ngIf="!record.isCategoryRow"
+            >
+              <span
+                style="
+                  word-wrap: break-word;
+                  white-space: normal;
+                  display: block;
+                  max-width: 400px;
+                "
+                [innerHtml]="record.value"
+              >
               </span>
             </td>
           </tr>
         </ng-container>
-        <tr *ngIf="showMoreIcon" style="list-style: none;">
+        <tr *ngIf="showMoreIcon" style="list-style: none">
           <td [attr.colspan]="hasCategory ? 3 : 2">
-            <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fas fa-caret-down fa-xs"></span></a>
+            <a class="showMoreEnumerations" (click)="showMore($event.target)"
+              >... more <span class="fas fa-caret-down fa-xs"></span
+            ></a>
           </td>
         </tr>
       </tbody>
@@ -66,13 +134,26 @@ SPDX-License-Identifier: Apache-2.0
   </span>
   <span *ngIf="elementDataType.domainType == 'ReferenceType'">
     <span *ngIf="!onlyShowRefDataClass">
-      <div><a href="{{link}}">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span></div>
-      <div *ngIf="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span>
-          <mdm-element-link [element]="elementDataType.referenceClass" [newWindow]="newWindow"></mdm-element-link>]
-        </span></div>
+      <div>
+        <a href="{{ link }}">{{ elementDataType.label }}</a
+        ><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span>
+      </div>
+      <div *ngIf="referenceClass">
+        <span style="font-size: 13px"
+          >[<span style="font-style: italic">ref:&nbsp;</span>
+          <mdm-element-link
+            [element]="elementDataType.referenceClass"
+            [newWindow]="newWindow"
+          ></mdm-element-link
+          >]
+        </span>
+      </div>
     </span>
     <span *ngIf="onlyShowRefDataClass">
-      <mdm-element-link [element]="elementDataType.referenceClass" [newWindow]="newWindow"></mdm-element-link>
+      <mdm-element-link
+        [element]="elementDataType.referenceClass"
+        [newWindow]="newWindow"
+      ></mdm-element-link>
     </span>
   </span>
   <span *ngIf="elementDataType.domainType == 'TerminologyType'">
@@ -88,11 +169,19 @@ SPDX-License-Identifier: Apache-2.0
   </span>
   <span *ngIf="elementDataType.domainType == 'ModelDataType'">
     <div>
-      <a href="{{link}}">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">({{elementDataType.modelResourceDomainType}})</span>
+      <a href="{{ link }}">{{ elementDataType.label }}</a
+      ><span class="dataTypeLabel dataTypeEnumeration"
+        >({{ elementDataType.modelResourceDomainType }})</span
+      >
     </div>
     <div *ngIf="modelResource">
-      <span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span>
-        <mdm-element-link [element]="modelResource" [newWindow]="newWindow"></mdm-element-link>]
+      <span style="font-size: 13px"
+        >[<span style="font-style: italic">ref:&nbsp;</span>
+        <mdm-element-link
+          [element]="modelResource"
+          [newWindow]="newWindow"
+        ></mdm-element-link
+        >]
       </span>
     </div>
   </span>

@@ -26,10 +26,16 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   ElementTypesService,
   MessageHandlerService,
-  SecurityHandlerService,
+  SecurityHandlerService
 } from '@mdm/services';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { DataModel, DataType, DataTypeDetail, DataTypeDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  DataModel,
+  DataType,
+  DataTypeDetail,
+  DataTypeDetailResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -38,7 +44,8 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent extends BaseComponent
+export class DataTypeComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -84,7 +91,7 @@ export class DataTypeComponent extends BaseComponent
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private elementTypes: ElementTypesService,
-    private editingService: EditingService,
+    private editingService: EditingService
   ) {
     super();
   }
@@ -97,12 +104,9 @@ export class DataTypeComponent extends BaseComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.resources.dataModel.get(this.dataModelId).subscribe(
-      (result) =>
-      {
-        this.dataModel = result.body;
-      }
-    );
+    this.resources.dataModel.get(this.dataModelId).subscribe((result) => {
+      this.dataModel = result.body;
+    });
 
     this.title.setTitle('Data Type');
 

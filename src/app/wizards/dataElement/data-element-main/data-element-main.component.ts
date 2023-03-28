@@ -199,11 +199,11 @@ export class DataElementMainComponent implements OnInit {
         description: this.model.newlyAddedDataType.description,
         domainType,
 
-        referenceDataType: {
-          id: this.model.newlyAddedDataType.referencedDataType
-            ? this.model.newlyAddedDataType.referencedDataType.id
-            : null
-        },
+        // referenceDataType: {
+        //   id: this.model.newlyAddedDataType.referencedDataType
+        //     ? this.model.newlyAddedDataType.referencedDataType.id
+        //     : null
+        // },
 
         referenceClass: this.model.newlyAddedDataType.referenceClass
           ? this.model.newlyAddedDataType.referenceClass

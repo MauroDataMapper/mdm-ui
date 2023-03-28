@@ -54,7 +54,6 @@ export class DataTypeComponent
   dataModel: DataModel;
   id: Uuid;
   activeTab: number;
-  showExtraTabs: boolean;
   showEditForm = false;
 
   loadingData = false;
@@ -133,8 +132,6 @@ export class DataTypeComponent
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() || !this.dataType.editable;
       },
       () => {
         this.loadingData = false;

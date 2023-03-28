@@ -156,12 +156,10 @@ export class DataTypeMainComponent implements OnInit {
         ?.domainType as CatalogueItemDomainType;
       resource.modelResourceId = this.model.referencedModel?.id;
     } else {
-      resource.organisation = this.model.organisation;
-      resource.referenceDataType = {
-        id: this.model.referencedDataType
-          ? this.model.referencedDataType.id
-          : null
-      };
+      resource.id = this.model.referencedDataType
+        ? this.model.referencedDataType.id
+        : null;
+
       resource.referenceClass = {
         id: this.model.referencedDataClass
           ? this.model.referencedDataClass.id
@@ -172,13 +170,6 @@ export class DataTypeMainComponent implements OnInit {
           key: m.key,
           value: m.value,
           category: m.category
-        };
-      });
-      resource.metadata = this.model.metadata.map((m) => {
-        return {
-          key: m.key,
-          value: m.value,
-          namespace: m.namespace
         };
       });
     }

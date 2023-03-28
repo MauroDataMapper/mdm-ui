@@ -135,7 +135,6 @@ export class DefaultProfileEditorModalComponent implements OnInit {
       const newDT: DataType = {
         label: item.value.label,
         description: '',
-        metadata: [],
         domainType: CatalogueItemDomainType.PrimitiveType,
         classifiers: []
       };

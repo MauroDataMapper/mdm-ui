@@ -215,7 +215,7 @@ export class DataElementComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       } else if (item.controlType === ProfileControlTypes.dataType) {
-        let castedValue = item.value as DataType;
+        const castedValue = item.value as DataType;
 
         // Backend dataType groups several frontend types into one
         // (i.e. frontend's referenceType and dataModelReferenceType

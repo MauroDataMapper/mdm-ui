@@ -73,17 +73,8 @@ export class DataElementMainComponent implements OnInit {
     showNewInlineDataType: false,
     allDataTypesCount: 0,
     newlyAddedDataType: {
-      label: '',
-      description: '',
-      metadata: [],
-      domainType: CatalogueItemDomainType.PrimitiveType,
-      enumerationValues: [],
-      classifiers: [],
-      organisation: '',
-      referencedDataType: { id: '' },
-      referencedDataClass: { id: '' },
-      referencedModel: { id: '', domainType: '' }
-    },
+      domainType: CatalogueItemDomainType.PrimitiveType
+    } as DataType,
     isProcessComplete: false
   };
 
@@ -154,7 +145,6 @@ export class DataElementMainComponent implements OnInit {
 
   save = () => {
     if (this.model.createType === 'new') {
-      this.validateDataType();
       this.saveNewDataElement();
     } else {
       this.saveCopiedDataClasses();
@@ -207,7 +197,6 @@ export class DataElementMainComponent implements OnInit {
       const res: DataType = {
         label: this.model.newlyAddedDataType.label,
         description: this.model.newlyAddedDataType.description,
-        organisation: this.model.newlyAddedDataType.organisation,
         domainType,
 
         referenceDataType: {
@@ -215,35 +204,28 @@ export class DataElementMainComponent implements OnInit {
             ? this.model.newlyAddedDataType.referencedDataType.id
             : null
         },
-        referenceClass: {
-          id: this.model.newlyAddedDataType.referencedDataClass
-            ? this.model.newlyAddedDataType.referencedDataClass.id
-            : null
-        },
+
+        referenceClass: this.model.newlyAddedDataType.referenceClass
+          ? this.model.newlyAddedDataType.referenceClass
+          : null,
 
         modelResourceDomainType:
           domainType === CatalogueItemDomainType.ModelDataType
-            ? (this.model.newlyAddedDataType.referencedModel
-                .domainType as CatalogueItemDomainType)
+            ? (this.model.newlyAddedDataType
+                .modelResourceDomainType as CatalogueItemDomainType)
             : null,
+
         modelResourceId:
           domainType === CatalogueItemDomainType.ModelDataType
-            ? this.model.newlyAddedDataType.referencedModel.id
+            ? this.model.newlyAddedDataType.modelResourceId
             : null,
 
         classifiers: this.model.classifiers.map((cls) => ({ id: cls.id })),
-        enumerationValues: this.model.newlyAddedDataType.enumerationValues.map(
-          (m) => ({
-            key: m.key,
-            value: m.value,
-            category: m.category
-          })
-        ),
-        metadata: this.model.metadata.map((m) => ({
-          key: m.key,
-          value: m.value,
-          namespace: m.namespace
-        }))
+
+        enumerationValues:
+          domainType === CatalogueItemDomainType.EnumerationType
+            ? this.model.newlyAddedDataType.enumerationValues
+            : null
       };
 
       this.resources.dataType.save(this.parentDataModelId, res).subscribe(
@@ -308,46 +290,6 @@ export class DataElementMainComponent implements OnInit {
           );
         }
       );
-  }
-
-  validateDataType() {
-    let isValid = true;
-
-    if (!this.model.showNewInlineDataType) {
-      return true;
-    }
-    if (
-      !this.model.newlyAddedDataType.label ||
-      this.model.newlyAddedDataType.label.trim().length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for EnumerationType, at least one value is added
-    if (
-      this.model.newlyAddedDataType.domainType ===
-        CatalogueItemDomainType.EnumerationType &&
-      this.model.newlyAddedDataType.enumerationValues.length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.model.newlyAddedDataType.domainType ===
-        CatalogueItemDomainType.ReferenceType &&
-      !this.model.newlyAddedDataType.referencedDataClass
-    ) {
-      isValid = false;
-    }
-
-    // Check if for TerminologyType, the terminology is selected
-    if (
-      this.model.newlyAddedDataType.domainType ===
-        CatalogueItemDomainType.TerminologyType &&
-      !this.model.newlyAddedDataType.referencedModel
-    ) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      isValid = false;
-    }
   }
 
   saveCopiedDataClasses = () => {

@@ -15,21 +15,19 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-// import marked from 'marked/lib/marked';
-import {LinkCreatorService} from '@mdm/utility/markdown/markdown-parser/link-creator.service';
+import { Injectable } from '@angular/core';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import * as marked from 'marked';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomHtmlRendererService extends marked.Renderer {
-
-  constructor(private linkCreatorService: LinkCreatorService) {
+  constructor(private pathNames: PathNameService) {
     super();
   }
 
-  link(href: string, title: string, text: string) {
+  link(href: string, _: string, text: string) {
     if (!href) {
       return `<a href='#'>${text}</a>`;
     }
@@ -39,9 +37,12 @@ export class CustomHtmlRendererService extends marked.Renderer {
       return `<a href='${href}' target="_blank">${text}</a>`;
     }
 
-    // Create internal link
-    const createdLink = this.linkCreatorService.createLink(href, title, text);
-    return `<a href='${createdLink}'>${text}</a>`;
+    // Create internal link, assuming the href is a Mauro path to a catalogue item
+    // First have to convert back hat characters to spaces. This was done in MarkdownParserService
+    // because spaces in the href part meant the marked parser would not get us this far
+    const path = href.replace(/\^/g, ' ');
+    const link = this.pathNames.createHref(path);
+    return `<a href='${link}'>${text}</a>`;
   }
 
   // just reduce header tags for one level

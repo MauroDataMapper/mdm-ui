@@ -19,6 +19,7 @@ import {
   Breadcrumb,
   CatalogueItem,
   MdmResponse,
+  PathableDomainType,
   Profile,
   ProfileValidationError,
   Uuid
@@ -95,4 +96,25 @@ export interface MauroProfileValidationResult {
 
 export interface NavigatableProfile extends Profile {
   breadcrumbs?: Breadcrumb[];
+}
+
+/**
+ * Options to control locating Mauro catalogue items by path.
+ */
+export interface MauroItemLocateOptions {
+  /**
+   * The domain to locate under. If not provided, it will be determined via the first path item if possible.
+   */
+  domain?: PathableDomainType;
+
+  /**
+   * The parent ID of the root item to locate under. If not provided, will search the entire domain.
+   */
+  parentId?: Uuid;
+
+  /**
+   * State if only the latest finalised models should be considered. This has no effect if the path
+   * contains a model version identifier.
+   */
+  finalisedOnly?: boolean;
 }

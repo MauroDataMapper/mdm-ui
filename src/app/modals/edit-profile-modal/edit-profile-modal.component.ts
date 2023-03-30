@@ -60,7 +60,8 @@ export class EditProfileModalComponent implements OnInit {
     errors: []
   };
   isValidated = false;
-  private readonly showCanEditPropertyAlertKey = 'ui.show_can_edit_property_alert';
+  private readonly showCanEditPropertyAlertKey =
+    'ui.show_can_edit_property_alert';
 
   formOptionsMap = {
     integer: 'number',
@@ -116,8 +117,11 @@ export class EditProfileModalComponent implements OnInit {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties.',
+            errors
+          );
           return [];
         })
       )
@@ -218,9 +222,8 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     dg.afterClosed().subscribe((dgData) => {
-      this.markdownParser.createMarkdownLink(dgData).subscribe((mkData) => {
-        field.currentValue = mkData;
-      });
+      const link = this.markdownParser.createMarkdownLink(dgData);
+      field.currentValue = link;
     });
   }
 
@@ -256,10 +259,12 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {
-    this.showCanEditPropertyAlert = JSON.parse(this.getContentProperty(properties, this.showCanEditPropertyAlertKey));
+    this.showCanEditPropertyAlert = JSON.parse(
+      this.getContentProperty(properties, this.showCanEditPropertyAlertKey)
+    );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find(p => p.key === key)?.value;
+    return properties?.find((p) => p.key === key)?.value;
   }
 }

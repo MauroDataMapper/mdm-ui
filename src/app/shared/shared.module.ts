@@ -62,6 +62,8 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -99,7 +101,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     MarkedPipe,
     FileSizePipe,
     MauroItemTreeComponent,
-    ElementLabelComponent
+    ElementLabelComponent,
+    ImgCroppieComponent,
   ],
   imports: [
     CommonModule,
@@ -113,7 +116,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     NgxSkeletonLoaderModule,
     CodemirrorModule,
     JoditAngularModule,
-    UIRouterModule
+    UIRouterModule,
+    ImageCropperModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -160,7 +164,8 @@ import { ElementLabelComponent } from './element-label/element-label.component';
     MarkedPipe,
     FileSizePipe,
     MauroItemTreeComponent,
-    ElementLabelComponent
+    ElementLabelComponent,
+    ImgCroppieComponent,
   ]
 })
 export class SharedModule {}

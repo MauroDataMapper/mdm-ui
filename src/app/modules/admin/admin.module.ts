@@ -28,6 +28,7 @@ import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-p
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
 import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe
     OpenidConnectProviderTableComponent,
     OpenidConnectProviderComponent,
     DoiRedirectComponent,
-    MatchThemeColorPatternPipe
+    MatchThemeColorPatternPipe,
+    ThemeImageComponent,
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [
@@ -48,7 +50,8 @@ import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe
     GroupMemberTableComponent,
     UserComponent,
     ProfilesDashboardComponent,
-    MatchThemeColorPatternPipe
+    MatchThemeColorPatternPipe,
+    ThemeImageComponent,
   ]
 })
 export class AdminModule {}

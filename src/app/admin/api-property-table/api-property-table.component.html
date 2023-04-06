@@ -171,6 +171,26 @@ SPDX-License-Identifier: Apache-2.0
             Content
           </span>
           <span
+          *ngIf="
+            !(record.metadata.key | matchThemeColorPattern) &&
+            record.metadata.editType === EditType.Image &&
+            record.original?.value === 'USE DEFAULT IMAGE'
+          "
+          class="mdm-api-property-table__value--content"
+        >
+          Default image
+        </span>          
+        <span
+        *ngIf="
+          !(record.metadata.key | matchThemeColorPattern) &&
+          record.metadata.editType === EditType.Image &&
+          record.original?.value !== 'USE DEFAULT IMAGE'
+        "
+        class="mdm-api-property-table__value--content"
+      >
+        Custom image
+      </span>          
+          <span
             *ngIf="
               !(record.metadata.key | matchThemeColorPattern) &&
               record.metadata.editType === EditType.Boolean

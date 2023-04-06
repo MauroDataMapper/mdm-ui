@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
@@ -39,6 +39,7 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { catchError, map } from 'rxjs/operators';
+import { ImageChangedEvent, ImageChangeType, ThemeImageComponent } from '../theme-image/theme-image.component';
 
 @Component({
   selector: 'mdm-api-property',
@@ -46,12 +47,17 @@ import { catchError, map } from 'rxjs/operators';
   styleUrls: ['./api-property.component.scss']
 })
 export class ApiPropertyComponent implements OnInit {
+
+  @ViewChild(ThemeImageComponent) themeImageComponent:ThemeImageComponent;
+
   id: string;
   isNew: boolean;
   editExisting = false;
   property: ApiPropertyEditableState;
   systemProperties: ApiPropertyMetadata[];
   selectedSystemProperty: ApiPropertyMetadata;
+  imageChangeType: ImageChangeType = ImageChangeType.nochange;
+  showValue = true;
 
   formGroup = new FormGroup({
     key: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
@@ -135,64 +141,37 @@ export class ApiPropertyComponent implements OnInit {
     });
   }
 
+  imageSavedEventHandler() {
+    this.navigateToParent();
+  }
+
+  imageChangedEventHandler(event: ImageChangedEvent) {
+    this.imageChangeType = event.changeEvent;
+  }
+
   save() {
     if (this.formGroup.invalid) {
       return;
     }
 
     if (this.editExisting) {
-      const updated = Object.assign({}, this.property.original);
-      updated.key = this.key?.value;
-      updated.category = this.category?.value;
-      updated.publiclyVisible = this.publiclyVisible?.value;
-      updated.value = this.value?.value;
-
-      this.resources.apiProperties
-        .update(this.property.original.id, updated)
-        .pipe(
-          catchError((errors) => {
-            this.messageHandler.showError(
-              'There was a problem updating the property.',
-              errors
-            );
-            return [];
-          })
-        )
-        .subscribe(() => {
-          this.messageHandler.showSuccess('Property was updated successfully.');
-          this.broadcast.apiPropertyUpdated({
-            key: this.key.value,
-            value: this.value.value
-          });
-          this.navigateToParent();
-        });
+      if (this.property.metadata.editType === ApiPropertyEditType.Image) {
+        switch (this.imageChangeType) {
+          case ImageChangeType.uploaded:
+            this.themeImageComponent.saveImage();
+            break;
+          case ImageChangeType.removed:
+            this.themeImageComponent.removeImage();
+            break;
+          case ImageChangeType.nochange:
+            this.navigateToParent();
+            break;
+        }
+      } else {
+        this.updateProperty();
+      }
     } else {
-      const data: ApiProperty = {
-        key: this.key?.value,
-        value: this.value?.value,
-        publiclyVisible: this.publiclyVisible?.value ?? false,
-        category: this.category?.value
-      };
-
-      this.resources.apiProperties
-        .save(data)
-        .pipe(
-          catchError((errors) => {
-            this.messageHandler.showError(
-              'There was a problem saving the property.',
-              errors
-            );
-            return [];
-          })
-        )
-        .subscribe(() => {
-          this.messageHandler.showSuccess('Property was saved successfully.');
-          this.broadcast.apiPropertyUpdated({
-            key: this.key.value,
-            value: this.value.value
-          });
-          this.navigateToParent();
-        });
+      this.saveProperty();
     }
   }
 
@@ -294,5 +273,62 @@ export class ApiPropertyComponent implements OnInit {
         inherit: false
       }
     );
+  }
+
+  private updateProperty() {
+    const updated = Object.assign({}, this.property.original);
+    updated.key = this.key?.value;
+    updated.category = this.category?.value;
+    updated.publiclyVisible = this.publiclyVisible?.value;
+    updated.value = this.value?.value;
+
+    this.resources.apiProperties
+      .update(this.property.original.id, updated)
+      .pipe(
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem updating the property.',
+            errors
+          );
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Property was updated successfully.');
+        this.broadcast.apiPropertyUpdated({
+          key: this.key.value,
+          value: this.value.value
+        });
+        this.navigateToParent();
+      });
+  }
+
+  private saveProperty() {
+    const data: ApiProperty = {
+      key: this.key?.value,
+      value: this.value?.value,
+      publiclyVisible: this.publiclyVisible?.value ?? false,
+      category: this.category?.value
+    };
+
+    this.resources.apiProperties
+      .save(data)
+      .pipe(
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem saving the property.',
+            errors
+          );
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Property was saved successfully.');
+        this.broadcast.apiPropertyUpdated({
+          key: this.key.value,
+          value: this.value.value
+        });
+        this.navigateToParent();
+      });
   }
 }

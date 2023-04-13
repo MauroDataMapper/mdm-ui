@@ -78,8 +78,7 @@ SPDX-License-Identifier: Apache-2.0
             >
               <div
                 *ngIf="
-                  model.domainType === 'ReferenceType' &&
-                  !model.referencedDataClass
+                  model.domainType === 'ReferenceType' && !model.referenceClass
                 "
               >
                 Please select the reference DataClass.
@@ -88,7 +87,7 @@ SPDX-License-Identifier: Apache-2.0
               <div
                 *ngIf="
                   model.domainType === 'Terminology' &&
-                  !model.referencedTerminology &&
+                  !model.modelResourceId &&
                   !terminologies
                 "
               >
@@ -98,8 +97,7 @@ SPDX-License-Identifier: Apache-2.0
 
               <div
                 *ngIf="
-                  model.domainType === 'ReferenceType' &&
-                  !model.referencedDataClass
+                  model.domainType === 'ReferenceType' && !model.referenceClass
                 "
               >
                 The DataModel does not have any DataClass, so you can not define
@@ -109,7 +107,8 @@ SPDX-License-Identifier: Apache-2.0
               <div
                 *ngIf="
                   model.domainType === 'EnumerationType' &&
-                  model.enumerationValues == 0
+                  (!model.enumerationValues ||
+                    model.enumerationValues.length == 0)
                 "
               >
                 At least one enumeration key/value should be added.
@@ -159,8 +158,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div
               *ngIf="
-                model.domainType === 'ReferenceDataModelType' &&
-                referenceDataModels
+                model.domainType === 'ReferenceDataModelType' && dataModels
               "
             >
               <mdm-select
@@ -168,7 +166,7 @@ SPDX-License-Identifier: Apache-2.0
                 name="newDataTypeSelect"
                 [acceptTypedInput]="false"
                 [valueType]="'static'"
-                [staticValues]="referenceDataModels"
+                [staticValues]="dataModels"
                 [minInputLength]="1"
                 [hasError]="false"
                 [idProperty]="'id'"
@@ -185,7 +183,7 @@ SPDX-License-Identifier: Apache-2.0
               <mdm-model-selector-tree
                 name="newDataTypeClassSelect"
                 (ngModelChange)="onDataClassSelect($event)"
-                [defaultElements]="model.referencedDataClass"
+                [defaultElements]="model.referenceClass"
                 [root]="parentDataModel"
                 [placeholder]="'Select Data Class'"
                 [readOnlySearchInput]="true"

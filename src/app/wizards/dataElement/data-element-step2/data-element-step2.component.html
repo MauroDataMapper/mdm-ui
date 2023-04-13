@@ -176,6 +176,7 @@ SPDX-License-Identifier: Apache-2.0
                     [model]="model.newlyAddedDataType"
                     [parentDataModel]="model.parentDataModel"
                     [showParentDataModel]="false"
+                    [showLabelAndDescription]="true"
                     (validationStatusEvent)="validationStatusEmitter($event)"
                   >
                   </mdm-data-type-inline>
@@ -203,25 +204,6 @@ SPDX-License-Identifier: Apache-2.0
           </tr>
         </tbody>
       </table>
-
-      <!--
-            <div *ngIf="model.allDataTypesCount === 0">
-                No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
-                <br>Please enter Data Type details:
-            </div>
-
-            <div *ngIf="model.allDataTypesCount != 0" class="mb-2">
-                <div *ngIf="!model.showNewInlineDataType">
-                    Please select a Data Type below or
-                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new Data Type</button>
-                </div>
-                <div *ngIf="model.showNewInlineDataType">
-                    Please
-                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
-                    or Add a new Data Type by completing the form below:</div>
-            </div>
-
--->
     </form>
   </div>
   <div *ngIf="['copy', 'import'].includes(model.createType)" class="mb-3">

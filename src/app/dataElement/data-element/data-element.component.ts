@@ -215,20 +215,20 @@ export class DataElementComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       } else if (item.controlType === ProfileControlTypes.dataType) {
-        const castedValue = item.value as DataType;
+        const dataType = item.value as DataType;
 
         // Backend dataType groups several frontend types into one
         // (i.e. frontend's referenceType and dataModelReferenceType
         // both map to backend's ModelDataType)
         const dataTypeDomainType = this.elementTypes.isModelDataType(
-          castedValue.domainType
+          dataType.domainType
         )
           ? CatalogueItemDomainType.ModelDataType
-          : castedValue.domainType;
+          : dataType.domainType;
 
-        castedValue.domainType = dataTypeDomainType;
+        dataType.domainType = dataTypeDomainType;
 
-        resource.dataType = castedValue;
+        resource.dataType = dataType;
       } else {
         resource[item.propertyName] = item.value;
       }

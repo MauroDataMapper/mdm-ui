@@ -20,7 +20,6 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SharedService } from '../services/shared.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -86,7 +85,6 @@ export class DataTypeComponent
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
-    private sharedService: SharedService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private elementTypes: ElementTypesService,

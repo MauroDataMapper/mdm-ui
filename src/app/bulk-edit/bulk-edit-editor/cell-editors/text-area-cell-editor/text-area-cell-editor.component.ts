@@ -16,14 +16,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ICellEditorAngularComp } from 'ag-grid-angular';
-import { ICellEditorParams } from 'ag-grid-community';
+import { ICellEditorAngularComp } from '@ag-grid-community/angular';
+import { ICellEditorParams } from '@ag-grid-community/core';
 
 interface TextAreaCellEditorParams {
   rows?: number;
   cols?: number;
   onEditClick?: (value: string, params: ICellEditorParams) => void;
 }
+
+export type PopupPosition = 'under' | 'over';
 
 @Component({
   selector: 'mdm-text-area-cell-editor',
@@ -58,7 +60,7 @@ export class TextAreaCellEditorComponent implements ICellEditorAngularComp {
     return true;
   }
 
-  getPopupPosition(): string {
+  getPopupPosition(): PopupPosition {
     return 'under';
   }
 

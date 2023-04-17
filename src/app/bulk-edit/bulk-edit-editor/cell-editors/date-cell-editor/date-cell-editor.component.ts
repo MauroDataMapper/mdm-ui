@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
-import { ICellEditorAngularComp } from 'ag-grid-angular';
-import { ICellEditorParams } from 'ag-grid-community';
+import { ICellEditorAngularComp } from '@ag-grid-community/angular';
+import { ICellEditorParams } from '@ag-grid-community/core';
 
 @Component({
   selector: 'mdm-date-cell-editor',

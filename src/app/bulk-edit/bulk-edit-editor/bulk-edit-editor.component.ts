@@ -28,7 +28,7 @@ import {
   GridApi,
   GridReadyEvent,
   ICellEditorParams
-} from 'ag-grid-community';
+} from '@ag-grid-community/core';
 import { EMPTY } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../bulk-edit.types';

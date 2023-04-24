@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
-import { filter, Subject, switchMap, takeUntil } from 'rxjs';
+import { filter, map, Subject, takeUntil } from 'rxjs';
 import { MarkdownParserService } from '../markdown-parser/markdown-parser.service';
 
 @Component({
@@ -60,7 +60,10 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$),
         filter((element) => !!element),
-        switchMap((element) => this.markdownParser.createMarkdownLink(element))
+        map((element) => {
+          const link = this.markdownParser.createMarkdownLink(element);
+          return link;
+        })
       )
       .subscribe((link) =>
         this.insertText({ type: 'inline', replacement: link })

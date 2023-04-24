@@ -15,7 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemDomainType, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  PathQueryParameters,
+  PathableDomainType,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
@@ -90,6 +95,23 @@ describe('MauroItemProviderService', () => {
     classifier: {
       get: jest.fn() as jest.MockedFunction<
         (id: Uuid) => Observable<MauroItemResponse>
+      >
+    },
+    catalogueItem: {
+      getPath: jest.fn() as jest.MockedFunction<
+        (
+          domainType: PathableDomainType,
+          path: string,
+          query?: PathQueryParameters
+        ) => Observable<MauroItemResponse>
+      >,
+      getPathFromParent: jest.fn() as jest.MockedFunction<
+        (
+          domainType: PathableDomainType,
+          id: Uuid,
+          path: string,
+          query?: PathQueryParameters
+        ) => Observable<MauroItemResponse>
       >
     }
   };
@@ -488,5 +510,146 @@ describe('MauroItemProviderService', () => {
         (id, item) => mockModelRequest(id, item, 'classifier')
       );
     });
+  });
+
+  describe('locate by path', () => {
+    const testCases: [PathableDomainType, string][] = [
+      ['dataModels', 'dm:Simple Test DataModel$1.0.0'],
+      ['dataModels', 'dm:Model Version Tree DataModel$newBranch'],
+      ['dataModels', 'dm:Head and Neck Cancer Audit (HANA)$1.0.0'],
+      ['dataModels', 'dm:Model Version Tree DataModel$3.0.0'],
+      ['dataModels', 'dm:Model Version Tree DataModel'],
+      [
+        'dataModels',
+        'dm:Nautilus 835 Data Marts$main|dt:ADMIN_CATEGORY_SPELL_CD_NHS'
+      ],
+      ['terminologies', 'te:Simple Test Terminology$2.0.0'],
+      ['folders', 'fo:Development Folder|vf:Simple Versioned Folder$1.0.0'],
+      ['folders', 'fo:Data sets'],
+      [
+        'folders',
+        'fo:Mauro Data Explorer Requests|fo:admin[at]maurodatamapper.com'
+      ],
+      ['classifiers', 'cl:NIHR Health Data Finder'],
+      [
+        'dataModels',
+        'dm:test request 3$main|dc:Diagnosis|dc:Diagnosis (ARIA MedOnc)'
+      ],
+      [
+        'dataModels',
+        'dm:Model Version Tree DataModel$1.0.0|dc:V1 Modify Data Class'
+      ],
+      [
+        'dataModels',
+        'dm:Finalised Example Test DataModel$1.0.0|dc:Finalised Data Class|de:Another DataElement'
+      ],
+      [
+        'dataModels',
+        'dm:Nautilus 835 Data Marts$main|dc:Clinicals|dc:CLN_PROCEDURES|de:LATERALITY_CD'
+      ],
+      ['dataModels', 'dm:Complex Test DataModel$main|dt:child'],
+      ['dataModels', 'dm:Complex Test DataModel$main|dt:string'],
+      ['dataModels', 'dm:Nautilus 835 Data Marts$main|dt:ACUITY_LEVEL'],
+      ['dataModels', 'dm:modules$main|dt:complex_term_example'],
+      ['terminologies', 'te:Simple Test Terminology$main'],
+      ['terminologies', 'te:Complex Test Terminology$main|tm:CTT1001'],
+      ['terminologies', 'te:Complex Test Terminology$main|tm:CTT41'],
+      ['codeSets', 'cs:Simple Test CodeSet$1.0.0'],
+      ['referenceDataModels', 'rdm:Simple Reference Data Model$1.0.0'],
+      ['referenceDataModels', 'rdm:Simple Reference Data Model$test2']
+    ];
+
+    // Mock Mauro item to return to mocked path endpoints - contents does not matter
+    const mockMauroItem: MauroItem = {
+      id: '1234',
+      domainType: CatalogueItemDomainType.DataModel,
+      label: 'test item'
+    };
+
+    beforeEach(() => {
+      resourcesStub.catalogueItem.getPath.mockClear();
+      resourcesStub.catalogueItem.getPathFromParent.mockClear();
+
+      resourcesStub.catalogueItem.getPath.mockReturnValue(
+        cold('--a|', { a: { body: mockMauroItem } })
+      );
+
+      resourcesStub.catalogueItem.getPathFromParent.mockReturnValue(
+        cold('--a|', { a: { body: mockMauroItem } })
+      );
+    });
+
+    it.each(testCases)(
+      'should locate specifically under domain %p with path %p',
+      (domain, path) => {
+        const expected$ = cold('--a|', { a: mockMauroItem });
+        const actual$ = service.locate(path, { domain });
+        expect(actual$).toBeObservable(expected$);
+
+        expect(resourcesStub.catalogueItem.getPath).toHaveBeenCalledWith(
+          domain,
+          path,
+          {}
+        );
+
+        expect(
+          resourcesStub.catalogueItem.getPathFromParent
+        ).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each(testCases)(
+      'should locate assuming domain is %p with path %p',
+      (domain, path) => {
+        const expected$ = cold('--a|', { a: mockMauroItem });
+        const actual$ = service.locate(path);
+        expect(actual$).toBeObservable(expected$);
+
+        expect(resourcesStub.catalogueItem.getPath).toHaveBeenCalledWith(
+          domain,
+          path,
+          {}
+        );
+
+        expect(
+          resourcesStub.catalogueItem.getPathFromParent
+        ).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each(testCases)(
+      'should locate finalised items under domain %p with path %p',
+      (domain, path) => {
+        const expected$ = cold('--a|', { a: mockMauroItem });
+        const actual$ = service.locate(path, { domain, finalisedOnly: true });
+        expect(actual$).toBeObservable(expected$);
+
+        expect(resourcesStub.catalogueItem.getPath).toHaveBeenCalledWith(
+          domain,
+          path,
+          { finalised: true }
+        );
+
+        expect(
+          resourcesStub.catalogueItem.getPathFromParent
+        ).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each(testCases)(
+      'should locate specifically under domain %p and parent item with path %p',
+      (domain, path) => {
+        const parentId = '5678';
+        const expected$ = cold('--a|', { a: mockMauroItem });
+        const actual$ = service.locate(path, { domain, parentId });
+        expect(actual$).toBeObservable(expected$);
+
+        expect(
+          resourcesStub.catalogueItem.getPathFromParent
+        ).toHaveBeenCalledWith(domain, parentId, path, {});
+
+        expect(resourcesStub.catalogueItem.getPath).not.toHaveBeenCalled();
+      }
+    );
   });
 });

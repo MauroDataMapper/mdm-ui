@@ -15,7 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  Output,
+  ElementRef,
+  EventEmitter
+} from '@angular/core';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
@@ -70,8 +78,7 @@ export class MarkdownTextAreaComponent implements OnInit {
     private markdownParser: MarkdownParserService,
     private elementDialogueService: ElementSelectorDialogueService,
     private messageService: MessageService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.lastWasShiftKey = null;
@@ -102,28 +109,34 @@ export class MarkdownTextAreaComponent implements OnInit {
   }
 
   public elementSelected() {
-    this.messageService.elementSelector.subscribe(data => {
+    this.messageService.elementSelector.subscribe((data) => {
       this.selectedElement = data;
       if (this.selectedElement != null) {
-        this.markdownParser
-          .createMarkdownLink(this.selectedElement)
-          .subscribe(result => {
-            if (this.editableTextArea) {
-              const startPos = this.editableTextArea.nativeElement.selectionStart;
-              this.editableTextArea.nativeElement.focus();
+        const link = this.markdownParser.createMarkdownLink(
+          this.selectedElement
+        );
 
-              this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart)} ${result} ${this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length)}`;
+        if (this.editableTextArea) {
+          const startPos = this.editableTextArea.nativeElement.selectionStart;
+          this.editableTextArea.nativeElement.focus();
 
-              this.editableTextArea.nativeElement.selectionStart = startPos;
-              this.editableTextArea.nativeElement.focus();
-              this.description = this.editableTextArea.nativeElement.value;
-            }
-          });
+          this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(
+            0,
+            this.editableTextArea.nativeElement.selectionStart
+          )} ${link} ${this.editableTextArea.nativeElement.value.substr(
+            this.editableTextArea.nativeElement.selectionStart,
+            this.editableTextArea.nativeElement.value.length
+          )}`;
+
+          this.editableTextArea.nativeElement.selectionStart = startPos;
+          this.editableTextArea.nativeElement.focus();
+          this.description = this.editableTextArea.nativeElement.value;
+        }
       }
     });
   }
 
   onDescriptionChange = () => {
-      this.description = this.formData.description;
+    this.description = this.formData.description;
   };
 }

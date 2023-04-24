@@ -45,7 +45,7 @@ export class DataModelComponent
   implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
-  showFinalised: string;
+  showFinalised: boolean;
   downloadLinks: HTMLAnchorElement[] = [];
   compareToList: any[] = []; // TODO: define better type
 
@@ -165,7 +165,7 @@ export class DataModelComponent
     }
   }
 
-  dataModelDetails(id: string, showFinalised: string) {
+  dataModelDetails(id: string, showFinalised: boolean) {
     let arr = [];
 
     if (!showFinalised) {

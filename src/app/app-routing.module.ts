@@ -76,6 +76,8 @@ import { FeaturesService } from './services/features.service';
 import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
 import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { redirectUsingPath } from './routing.types';
 
 /**
  * Collection of all page state routes.
@@ -141,7 +143,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: FolderComponent,
       params: { tabView: { value: null, squash: true, dynamic: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Folder
       }
     },
     {
@@ -219,7 +222,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         finalised: { dynamic: true, value: null, squash: true, inherit: false }
       },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataModel
       }
     },
     {
@@ -233,7 +237,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ReferenceDataComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.ReferenceDataModel
       }
     },
     {
@@ -296,7 +301,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Terminology
       }
     },
     {
@@ -305,7 +311,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataClassComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataClass
       }
     },
     {
@@ -315,7 +322,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: { tabView: { dynamic: true, value: null, squash: true } },
       component: DataElementComponent,
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataElement
       }
     },
     {
@@ -324,7 +332,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ClassificationComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: 'Classifier' // Must make sure starts with uppercase character
       }
     },
     {
@@ -348,10 +357,19 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/dataType/:dataModelId/:id/{tabView:string}',
       component: DataTypeComponent,
       params: {
-        tabView: { dynamic: true, value: null, squash: true },
-        data: {
-          allowAnonymous: true
-        }
+        tabView: { dynamic: true, value: null, squash: true }
+      },
+      data: {
+        allowAnonymous: true,
+        domainTypes: [
+          CatalogueItemDomainType.CodeSetType,
+          CatalogueItemDomainType.ModelDataType,
+          CatalogueItemDomainType.PrimitiveType,
+          CatalogueItemDomainType.ReferenceType,
+          CatalogueItemDomainType.EnumerationType,
+          CatalogueItemDomainType.TerminologyType,
+          CatalogueItemDomainType.ReferenceDataModelType
+        ]
       }
     },
     {
@@ -374,7 +392,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Term
       }
     },
     {
@@ -411,7 +430,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.CodeSet
       }
     },
     {
@@ -436,7 +456,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: VersionedFolderComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.VersionedFolder
       }
     },
     {
@@ -494,6 +515,20 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
       url: '/referenceDataType/new?parentModelId',
       component: ReferenceDataTypeMainComponent
+    },
+    {
+      /**
+       * Catch-all URL to automatically redirect to the correct router state to show this item.
+       *
+       * Item is defined by a top-level domain and a Mauro path syntax, which will be located and then
+       * redirected to.
+       */
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+      url: '/item/{domain:string}/{path:string}?{finalised:bool}',
+      params: {
+        finalised: false
+      },
+      redirectTo: redirectUsingPath
     }
   ]
 };

@@ -17,11 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
 import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { LinkCreatorService } from '../markdown/markdown-parser/link-creator.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { Pathable } from '@maurodatamapper/mdm-resources';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 
 const basicButtons = [
   'bold',
@@ -70,8 +71,7 @@ export class HtmlEditorComponent implements OnInit {
   constructor(
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
-    private elementTypesService: ElementTypesService,
-    private linkCreator: LinkCreatorService
+    private pathNames: PathNameService
   ) {}
 
   ngOnInit(): void {
@@ -139,26 +139,18 @@ export class HtmlEditorComponent implements OnInit {
     const focusNode = editor.selection.sel.focusNode;
 
     component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(
-      (element) => {
+      (element: MauroItem & Pathable) => {
         if (!element) {
           return;
         }
 
-        component.elementTypesService
-          .getNamedLinkIdentifier(element)
-          .subscribe((namedLink) => {
-            const href = component.linkCreator.createLink(
-              namedLink,
-              null,
-              null
-            );
-            const html = editor.create.fromHTML(
-              `<a href='${href}' title='${element.label}'>${element.label}</a>`
-            );
+        const href = this.pathNames.createHref(element.path);
+        const link = editor.create.fromHTML(
+          `<a href='${href}' title='${element.label}'>${element.label}</a>`
+        );
 
-            editor.selection.setCursorIn(focusNode);
-            editor.selection.insertHTML(html);
-          });
+        editor.selection.setCursorIn(focusNode);
+        editor.selection.insertHTML(link);
       }
     );
 

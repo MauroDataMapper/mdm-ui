@@ -77,15 +77,13 @@ SPDX-License-Identifier: Apache-2.0
           (filterReset)="onFilterReset()"
         ></mdm-search-filters>
         <mat-divider></mat-divider>
-        <div>
-          <mdm-profile-filters
-            [profileFilters]="this.profileFilters"
-            (updateProfileFilters)="onUpdateProfileFilters($event)"
-            (addProfileFilters)="openProfileFilterDialog()"
-            (resetProfileFilters)="onFilterReset()"
-          >
-          </mdm-profile-filters>
-        </div>
+        <mdm-profile-filters
+          [profileFilters]="this.profileFilters"
+          (updateProfileFilters)="onUpdateProfileFilters($event)"
+          (addProfileFilters)="openProfileFilterDialog()"
+          (resetProfileFilters)="onFilterReset()"
+        >
+        </mdm-profile-filters>
       </div>
       <div class="col-md-9">
         <mdm-catalogue-item-search-result

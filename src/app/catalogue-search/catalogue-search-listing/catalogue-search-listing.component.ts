@@ -67,7 +67,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
     private messageHandler: MessageHandlerService,
-    private profileFilterDialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -195,16 +195,13 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   openProfileFilterDialog() {
-    const dialogRef = this.profileFilterDialog.open(
-      ProfileFilterDialogComponent,
-      {
-        width: '95vw',
-        height: '15vw',
-        data: {
-          profileFilters: this.profileFilters
-        }
+    const dialogRef = this.dialog.open(ProfileFilterDialogComponent, {
+      width: '70vw',
+      height: '40vw',
+      data: {
+        profileFilters: this.profileFilters
       }
-    );
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {

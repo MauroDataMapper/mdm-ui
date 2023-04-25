@@ -21,7 +21,6 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
-  ChangeDetectorRef,
   Input
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -58,10 +57,7 @@ export class CatalogueSearchProfileFilterListComponent
 
   private unsubscribe$ = new Subject<void>();
 
-  constructor(
-    private resources: MdmResourcesService,
-    public cdr: ChangeDetectorRef
-  ) {}
+  constructor(private resources: MdmResourcesService) {}
 
   get filters() {
     return this.formGroup.controls.filters;

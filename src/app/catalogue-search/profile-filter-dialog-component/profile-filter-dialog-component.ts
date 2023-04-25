@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CatalogueSearchProfileFilterListComponent } from '../catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
+import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
 
 @Component({
   selector: 'mdm-profile-filter-dialog-component',
@@ -30,7 +31,8 @@ export class ProfileFilterDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ProfileFilterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { profileFilters: any }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { profileFilters: CatalogueSearchProfileFilter[] }
   ) {}
 
   onCancelClick(): void {

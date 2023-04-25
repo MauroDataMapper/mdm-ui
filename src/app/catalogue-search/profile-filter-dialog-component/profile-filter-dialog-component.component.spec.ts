@@ -15,25 +15,31 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 describe('ProfileFilterDialogComponent', () => {
   let component: ProfileFilterDialogComponent;
-  let fixture: ComponentFixture<ProfileFilterDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileFilterDialogComponent]
+      declarations: [ProfileFilterDialogComponent],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: jest.fn()
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: jest.fn()
+        }
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProfileFilterDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
   });
 });

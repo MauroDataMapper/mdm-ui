@@ -17,24 +17,23 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <mat-card appearance="outline" class="profile-filter-card">
   <button
+    aria-label="Delete Profile Filter Button"
+    matTooltip="Deletes the selected Profile Filter"
     class="profile-filter-card__delete-button"
     mat-stroked-button
     color="primary"
     type="button"
     (click)="onDelete()"
   >
-    <i class="fa fa-times"></i>
+    <span class="fa fa-times"></span>
   </button>
   <div class="profile-filter-card__profile">
-    <mat-label>Profile:</mat-label>
-    <p>{{ profileFilter.provider.displayName }}</p>
+    <h4>{{ profileFilter.provider.displayName }}</h4>
   </div>
   <div class="profile-filter-card__key">
-    <mat-label>Key:</mat-label>
-    <p>{{ profileFilter.key.fieldName }}</p>
+    <strong>{{ profileFilter.key.fieldName }}</strong>
   </div>
   <div class="profile-filter-card__value">
-    <mat-label>Value:</mat-label>
     <p>{{ profileFilter.value }}</p>
   </div>
 </mat-card>

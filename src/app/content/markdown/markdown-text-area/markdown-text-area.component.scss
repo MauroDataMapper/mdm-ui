@@ -21,10 +21,6 @@ $md-preview-border-color: #cecece;
 $md-toolbar-font-size: 16px;
 
 .mdm-markdown-text-area {
-  textarea {
-    width: 100%;
-  }
-
   .spacer {
     flex: 1 1 auto;
   }
@@ -33,6 +29,12 @@ $md-toolbar-font-size: 16px;
     background-color: $md-preview-background-color;
     border: 1px solid $md-preview-border-color;
     padding: 10px;
+  }
+
+  &__edit,
+  &__preview {
+    width: 100%;
+    min-height: 200px;
   }
 
   &__toolbar {

@@ -105,7 +105,7 @@ SPDX-License-Identifier: Apache-2.0
     ></a>
   </mat-toolbar>
   <textarea
-    class="markdownTextArea form-control outlined-block mb-1"
+    class="mdm-markdown-text-area__edit form-control outlined-block mb-1"
     *ngIf="inEditMode && !showPreview"
     [(ngModel)]="description"
     (ngModelChange)="onEditorChanged()"

@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Heading"
-      matTooltip="Heading (Ctrl-H)"
+      [matTooltip]="keyboardShortcuts['heading']"
       [disabled]="showPreview"
       (click)="insertHeading()"
     >
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Bold"
-      matTooltip="Bold (Ctrl-B)"
+      [matTooltip]="keyboardShortcuts['bold']"
       [disabled]="showPreview"
       (click)="insertBold()"
     >
@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Italic"
-      matTooltip="Italic (Ctrl-I)"
+      [matTooltip]="keyboardShortcuts['italic']"
       [disabled]="showPreview"
       (click)="insertItalic()"
     >
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Quote"
-      matTooltip="Quote (Ctrl-')"
+      [matTooltip]="keyboardShortcuts['quote']"
       [disabled]="showPreview"
       (click)="insertQuote()"
     >
@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Bullet list"
-      matTooltip="Bullet list (Ctrl-L)"
+      [matTooltip]="keyboardShortcuts['bulletList']"
       [disabled]="showPreview"
       (click)="insertBulletList()"
     >
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Numbered list"
-      matTooltip="Numbered list (Ctrl-Alt-L)"
+      [matTooltip]="keyboardShortcuts['numberList']"
       [disabled]="showPreview"
       (click)="insertNumberList()"
     >
@@ -87,7 +87,7 @@ SPDX-License-Identifier: Apache-2.0
     <button
       mat-icon-button
       aria-label="Link to catalogue element"
-      matTooltip="Link to catalogue element (Ctrl-K)"
+      [matTooltip]="keyboardShortcuts['mauroLink']"
       [disabled]="showPreview"
       (click)="showAddElementToMarkdown()"
     >

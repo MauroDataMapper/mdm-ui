@@ -30,6 +30,26 @@ import { MessageService } from '@mdm/services/message.service';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { MarkdownParserService } from '../markdown-parser/markdown-parser.service';
 
+const macShortcuts = {
+  bold: 'Bold (⌘ + B)',
+  italic: 'Italic (⌘ + I)',
+  heading: 'Heading (⌘ + H)',
+  quote: "Quote (⌘ + ')",
+  numberList: 'Numbered list (⌘ + Alt + L)',
+  bulletList: 'Bullet list (⌘ + L)',
+  mauroLink: 'Link to catalogue element (⌘ + K)'
+};
+
+const standardShortcuts = {
+  bold: 'Bold (Ctrl + B)',
+  italic: 'Italic (Ctrl + I)',
+  heading: 'Heading (Ctrl + H)',
+  quote: "Quote (Ctrl + ')",
+  numberList: 'Numbered list (Ctrl + Alt + L)',
+  bulletList: 'Bullet list (Ctrl + L)',
+  mauroLink: 'Link to catalogue element (Ctrl + K)'
+};
+
 @Component({
   selector: 'mdm-markdown-text-area',
   templateUrl: './markdown-text-area.component.html',
@@ -49,6 +69,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
 
+  keyboardShortcuts = standardShortcuts;
+
   constructor(
     private markdownParser: MarkdownParserService,
     private elementDialogueService: ElementSelectorDialogueService,
@@ -56,6 +78,11 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.inEditMode) {
+      const usingMacOs = window.navigator.userAgent.search('Mac') !== -1;
+      this.keyboardShortcuts = usingMacOs ? macShortcuts : standardShortcuts;
+    }
+
     this.messageService.elementSelector
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -82,19 +109,21 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   onEditorKeyDown(event: KeyboardEvent) {
     let action: () => void;
 
-    if (event.ctrlKey && event.code === 'KeyB') {
+    const usingModifier = event.ctrlKey || event.metaKey;
+
+    if (usingModifier && event.code === 'KeyB') {
       action = this.insertBold.bind(this);
-    } else if (event.ctrlKey && event.code === 'KeyI') {
+    } else if (usingModifier && event.code === 'KeyI') {
       action = this.insertItalic.bind(this);
-    } else if (event.ctrlKey && event.code === 'KeyH') {
+    } else if (usingModifier && event.code === 'KeyH') {
       action = this.insertHeading.bind(this);
-    } else if (event.ctrlKey && event.code === 'Quote') {
+    } else if (usingModifier && event.code === 'Quote') {
       action = this.insertQuote.bind(this);
-    } else if (event.ctrlKey && event.altKey && event.code === 'KeyL') {
+    } else if (usingModifier && event.altKey && event.code === 'KeyL') {
       action = this.insertNumberList.bind(this);
-    } else if (event.ctrlKey && event.code === 'KeyL') {
+    } else if (usingModifier && event.code === 'KeyL') {
       action = this.insertBulletList.bind(this);
-    } else if (event.ctrlKey && event.code === 'KeyK') {
+    } else if (usingModifier && event.code === 'KeyK') {
       action = this.showAddElementToMarkdown.bind(this);
     }
 

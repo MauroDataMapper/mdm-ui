@@ -1,0 +1,9 @@
+<mat-dialog-content>
+  <mdm-catalogue-search-profile-filter-list
+    [prefilledFilters]="data.profileFilters"
+  ></mdm-catalogue-search-profile-filter-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()">Save</button>
+</mat-dialog-actions>

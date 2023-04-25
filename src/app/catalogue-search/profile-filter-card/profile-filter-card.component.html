@@ -1,0 +1,23 @@
+<mat-card appearance="outline" class="profile-filter-card">
+  <button
+    class="profile-filter-card__delete-button"
+    mat-stroked-button
+    color="primary"
+    type="button"
+    (click)="onDelete()"
+  >
+    <i class="fa fa-times"></i>
+  </button>
+  <div class="profile-filter-card__profile">
+    <mat-label>Profile:</mat-label>
+    <p>{{ profileFilter.provider.displayName }}</p>
+  </div>
+  <div class="profile-filter-card__key">
+    <mat-label>Key:</mat-label>
+    <p>{{ profileFilter.key.fieldName }}</p>
+  </div>
+  <div class="profile-filter-card__value">
+    <mat-label>Value:</mat-label>
+    <p>{{ profileFilter.value }}</p>
+  </div>
+</mat-card>

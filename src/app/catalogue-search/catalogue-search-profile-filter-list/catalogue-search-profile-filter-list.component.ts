@@ -20,7 +20,9 @@ import {
   OnInit,
   OnDestroy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef,
+  Input
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -41,6 +43,7 @@ import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
 })
 export class CatalogueSearchProfileFilterListComponent
   implements OnInit, OnDestroy {
+  @Input() prefilledFilters?: CatalogueSearchProfileFilter[];
   @Output() valueChange = new EventEmitter<void>();
 
   /**
@@ -55,11 +58,14 @@ export class CatalogueSearchProfileFilterListComponent
 
   private unsubscribe$ = new Subject<void>();
 
+  constructor(
+    private resources: MdmResourcesService,
+    public cdr: ChangeDetectorRef
+  ) {}
+
   get filters() {
     return this.formGroup.controls.filters;
   }
-
-  constructor(private resources: MdmResourcesService) {}
 
   ngOnInit(): void {
     this.resources.profile
@@ -72,6 +78,10 @@ export class CatalogueSearchProfileFilterListComponent
         )
       )
       .subscribe((providers: ProfileSummary[]) => (this.providers = providers));
+
+    if (this.prefilledFilters) {
+      this.mapFromProfileFilters(this.prefilledFilters);
+    }
 
     this.formGroup.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -121,6 +131,65 @@ export class CatalogueSearchProfileFilterListComponent
     );
   }
 
+  mapFromProfileFilters(
+    profileFilters: CatalogueSearchProfileFilter[] | undefined
+  ): FormArray {
+    const filters = new FormArray([]);
+    if (!profileFilters) {
+      return filters;
+    }
+    profileFilters.forEach((filter: CatalogueSearchProfileFilter) => {
+      const row = new FormGroup({
+        provider: new FormControl<ProfileSummary>(filter.provider),
+        key: new FormControl<ProfileField>(filter.key),
+        value: new FormControl<string>(filter.value),
+        definition: new FormControl<ProfileDefinition>(null)
+      });
+      /* eslint-enable @typescript-eslint/unbound-method */
+
+      // Set up the initial value for the definition control
+      this.setInitialDefinitionValue(row, filter.provider);
+
+      // When the provider changes, reset any previous key/value set
+      // Use reset() instead of setValue() so that dirty/pristine state is reset too
+      row.controls.provider.valueChanges
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          row.controls.key.reset();
+          row.controls.value.reset();
+        });
+
+      // When the key changes, reset any previous value set
+      // Use reset() instead of setValue() so that dirty/pristine state is reset too
+      row.controls.key.valueChanges
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          row.controls.value.reset();
+        });
+      this.filters.push(row);
+    });
+  }
+
+  setInitialDefinitionValue(row: FormGroup, provider: ProfileSummary): void {
+    this.resources.profile
+      .definition(provider.namespace, provider.name)
+      .subscribe((response: ProfileDefinitionResponse) => {
+        const definition = response.body;
+        row.controls.definition.setValue(definition);
+      });
+  }
+
+  compareProviders(a: ProfileSummary, b: ProfileSummary) {
+    return a.namespace === b.namespace && a.name === b.name;
+  }
+
+  compareKeys(a: ProfileSummary, b: ProfileSummary) {
+    return (
+      a.metadataPropertyName === b.metadataPropertyName &&
+      a.description === b.description
+    );
+  }
+
   private createFilter() {
     /* eslint-disable @typescript-eslint/unbound-method */
     const filter = new FormGroup({
@@ -132,6 +201,7 @@ export class CatalogueSearchProfileFilterListComponent
       // Non-visible form controls, required as dependencies to above
       definition: new FormControl<ProfileDefinition>(null)
     });
+
     /* eslint-enable @typescript-eslint/unbound-method */
 
     // Track when the "provider" field changes, then fetch that profile definition

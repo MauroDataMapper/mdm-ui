@@ -28,6 +28,7 @@ import {
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
+  mapProfileFiltersToDto,
   mapSearchParametersToRawParams,
   mapStateParamsToSearchParameters,
   SearchListingSortByOption,
@@ -36,6 +37,8 @@ import {
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
 import { SearchFilterChange } from '../search-filters/search-filters.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -63,7 +66,8 @@ export class CatalogueSearchListingComponent implements OnInit {
     private routerGlobals: UIRouterGlobals,
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private profileFilterDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -175,6 +179,40 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.updateSearch();
   }
 
+  /**
+   * Updates the profile filters on the page for external changes
+   * solves a bug with seralising a empty array
+   */
+  onUpdateProfileFilters(profileFilters: CatalogueSearchProfileFilter[]) {
+    if (profileFilters.length > 0) {
+      this.parameters.profileFiltersDto = mapProfileFiltersToDto(
+        profileFilters
+      );
+    } else {
+      this.parameters.profileFiltersDto = null;
+    }
+    this.updateSearch();
+  }
+
+  openProfileFilterDialog() {
+    const dialogRef = this.profileFilterDialog.open(
+      ProfileFilterDialogComponent,
+      {
+        width: '95vw',
+        height: '15vw',
+        data: {
+          profileFilters: this.profileFilters
+        }
+      }
+    );
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
+        this.updateSearch();
+      }
+    });
+  }
   /**
    * Match route params sort and order to sortBy option or return the default value if not set.
    *

@@ -1,0 +1,36 @@
+<div class="mdm-profile-filters">
+  <div class="mdm-profile-filters__header">
+    <h3>MetaData Filters</h3>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <button
+    mat-stroked-button
+    color="primary"
+    type="button"
+    class="w-100"
+    (click)="reset()"
+  >
+    Reset All
+  </button>
+
+  <div class="mdm-profile-filters__buttons">
+    <span class="mdm--badge mdm--element-count"
+      >{{ this.numberOfFilters() }} filter{{
+        this.numberOfFilters() === 1 ? '' : 's'
+      }}</span
+    >
+
+    <button mat-stroked-button color="primary" type="button" (click)="onAdd()">
+      <i class="fa fa-plus"></i>
+    </button>
+  </div>
+  <div class="mdm-profile-filters__section">
+    <mdm-profile-filter-card
+      *ngFor="let profileFilter of profileFilters"
+      [profileFilter]="profileFilter"
+      (delete)="emitDeleteEvent($event)"
+    ></mdm-profile-filter-card>
+  </div>
+</div>

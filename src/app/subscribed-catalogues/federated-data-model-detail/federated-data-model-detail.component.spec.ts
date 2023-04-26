@@ -22,46 +22,47 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { FederatedDataModelDetailComponent } from './federated-data-model-detail.component';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
-import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { UIRouterModule } from '@uirouter/angular';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { FormsModule } from '@angular/forms';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
+import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
 
 describe('FederatedDataModelDetailComponent', () => {
   let component: FederatedDataModelDetailComponent;
   let fixture: ComponentFixture<FederatedDataModelDetailComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        FormsModule,
-        ToastrModule.forRoot(),
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          MatDialogModule,
+          FormsModule,
+          ToastrModule.forRoot(),
 
-        // Transitive Dependency
-        UIRouterModule.forRoot({ useHash: true }),
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {}
-        },
-        {
-          provide: MatDialog,
-          useValue: {}
-        },
-      ],
-      declarations: [
-        FederatedDataModelDetailComponent,
-        InlineTextEditComponent,
-        ContentEditorComponent,
-        MarkdownTextAreaComponent,
-        MarkdownDirective
-      ]
+          // Transitive Dependency
+          UIRouterModule.forRoot({ useHash: true })
+        ],
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: {}
+          },
+          {
+            provide: MatDialog,
+            useValue: {}
+          }
+        ],
+        declarations: [
+          FederatedDataModelDetailComponent,
+          InlineTextEditComponent,
+          ContentEditorComponent,
+          MarkdownTextAreaComponent,
+          MarkdownDirective
+        ]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FederatedDataModelDetailComponent);

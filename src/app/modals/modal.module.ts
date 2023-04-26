@@ -52,6 +52,7 @@ import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
+import { ContentModule } from '@mdm/content/content.module';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -70,7 +71,9 @@ const defaultAceConfig: AceConfigInterface = {};
     AceModule,
     CatalogueModule,
     PipesModule,
-    FoldersTreeModule
+    FoldersTreeModule,
+    ContentModule,
+    CatalogueModule
   ],
   declarations: [
     RegisterModalComponent,

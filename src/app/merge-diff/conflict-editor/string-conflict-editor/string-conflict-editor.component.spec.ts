@@ -15,14 +15,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { SafePipe } from '@mdm/content/safe.pipe';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 import { StringConflictEditorComponent } from './string-conflict-editor.component';
 
 describe('StringConflictEditorComponent', () => {
   let harness: ComponentHarness<StringConflictEditorComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(StringConflictEditorComponent);
+    harness = await setupTestModuleForComponent(StringConflictEditorComponent, {
+      declarations: [SafePipe]
+    });
   });
 
   it('should create', () => {

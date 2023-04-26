@@ -30,7 +30,8 @@ type MdEditorAction =
   | 'heading'
   | 'quote'
   | 'bulletlist'
-  | 'numberlist';
+  | 'numberlist'
+  | 'urllink';
 
 describe('MarkdownTextAreaComponent', () => {
   let harness: ComponentHarness<MarkdownTextAreaComponent>;
@@ -186,7 +187,9 @@ describe('MarkdownTextAreaComponent', () => {
 
 1. text`,
           'world'
-        ]
+        ],
+        ['urllink', 'Hello world', 'Hello world[text](https://)', undefined],
+        ['urllink', 'Hello world', '[Hello world](https://)', 'Hello world']
       ];
 
       const performTextManipulationTest = async (
@@ -251,63 +254,101 @@ describe('MarkdownTextAreaComponent', () => {
                 case 'numberlist':
                   harness.component.insertNumberList();
                   break;
+                case 'urllink':
+                  harness.component.insertLink();
+                  break;
               }
             }
           );
         }
       );
 
+      const performKeyboardShortcutTest = async (
+        action: MdEditorAction,
+        original: string,
+        expected: string,
+        selection: string,
+        modifierKey: 'ctrl' | 'mac-command'
+      ) => {
+        const modifierFlags = {
+          ...(modifierKey === 'mac-command' && { metaKey: true }),
+          ...(modifierKey === 'ctrl' && { ctrlKey: true })
+        };
+
+        await performTextManipulationTest(original, expected, selection, () => {
+          let event: KeyboardEvent;
+          switch (action) {
+            case 'bold':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyB',
+                ...modifierFlags
+              });
+              break;
+            case 'italic':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyI',
+                ...modifierFlags
+              });
+              break;
+            case 'heading':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyH',
+                ...modifierFlags
+              });
+              break;
+            case 'quote':
+              event = new KeyboardEvent('keydown', {
+                code: 'Quote',
+                ...modifierFlags
+              });
+              break;
+            case 'bulletlist':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyL',
+                ...modifierFlags
+              });
+              break;
+            case 'numberlist':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyL',
+                shiftKey: true,
+                ...modifierFlags
+              });
+              break;
+            case 'urllink':
+              event = new KeyboardEvent('keydown', {
+                code: 'KeyK',
+                ...modifierFlags
+              });
+              break;
+          }
+
+          harness.component.textArea.nativeElement.dispatchEvent(event);
+        });
+      };
+
       it.each(cases)(
-        'should activate keyboard shortcut for %p on original text %p and return %p when initial selection is %p',
+        'should activate standard keyboard shortcut for %p on original text %p and return %p when initial selection is %p',
         async (action, original, expected, selection) => {
-          await performTextManipulationTest(
+          await performKeyboardShortcutTest(
+            action,
             original,
             expected,
             selection,
-            () => {
-              let event: KeyboardEvent;
-              switch (action) {
-                case 'bold':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'KeyB',
-                    ctrlKey: true
-                  });
-                  break;
-                case 'italic':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'KeyI',
-                    ctrlKey: true
-                  });
-                  break;
-                case 'heading':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'KeyH',
-                    ctrlKey: true
-                  });
-                  break;
-                case 'quote':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'Quote',
-                    ctrlKey: true
-                  });
-                  break;
-                case 'bulletlist':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'KeyL',
-                    ctrlKey: true
-                  });
-                  break;
-                case 'numberlist':
-                  event = new KeyboardEvent('keydown', {
-                    code: 'KeyL',
-                    ctrlKey: true,
-                    altKey: true
-                  });
-                  break;
-              }
+            'ctrl'
+          );
+        }
+      );
 
-              harness.component.textArea.nativeElement.dispatchEvent(event);
-            }
+      it.each(cases)(
+        'should activate MacOS keyboard shortcut for %p on original text %p and return %p when initial selection is %p',
+        async (action, original, expected, selection) => {
+          await performKeyboardShortcutTest(
+            action,
+            original,
+            expected,
+            selection,
+            'mac-command'
           );
         }
       );

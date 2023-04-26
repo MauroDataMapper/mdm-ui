@@ -34,7 +34,7 @@ const macShortcuts = {
   bold: 'Bold (⌘ + B)',
   italic: 'Italic (⌘ + I)',
   heading: 'Heading (⌘ + H)',
-  quote: "Quote (⌘ + ')",
+  quote: 'Quote (⌘ + \')',
   numberList: 'Numbered list (⌘ + Shift + L)',
   bulletList: 'Bullet list (⌘ + L)',
   urlLink: 'Link to URL (⌘ + K)',
@@ -45,7 +45,7 @@ const standardShortcuts = {
   bold: 'Bold (Ctrl + B)',
   italic: 'Italic (Ctrl + I)',
   heading: 'Heading (Ctrl + H)',
-  quote: "Quote (Ctrl + ')",
+  quote: 'Quote (Ctrl + \')',
   numberList: 'Numbered list (Ctrl + Shift + L)',
   bulletList: 'Bullet list (Ctrl + L)',
   urlLink: 'Link to URL (Ctrl + K)',
@@ -111,6 +111,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   onEditorKeyDown(event: KeyboardEvent) {
     let action: () => void;
 
+    // The metaKey modifier is to track the "Command ⌘" key on Mac OS, this is typically the key chord used
+    // for shortcuts. Otherwise assume the Ctrl key is the modifier
     const usingModifier = event.ctrlKey || event.metaKey;
 
     if (usingModifier && event.code === 'KeyB') {
@@ -180,7 +182,7 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.insertText({
       type: 'inline',
       prefix: '[',
-      suffix: '](http://)'
+      suffix: '](https://)'
     });
   }
 

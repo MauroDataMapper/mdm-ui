@@ -86,12 +86,21 @@ SPDX-License-Identifier: Apache-2.0
     </button>
     <button
       mat-icon-button
+      aria-label="Link to URL"
+      [matTooltip]="keyboardShortcuts['urlLink']"
+      [disabled]="showPreview"
+      (click)="insertLink()"
+    >
+      <span class="fas fa-link"></span>
+    </button>
+    <button
+      mat-icon-button
       aria-label="Link to catalogue element"
       [matTooltip]="keyboardShortcuts['mauroLink']"
       [disabled]="showPreview"
       (click)="showAddElementToMarkdown()"
     >
-      <span class="fas fa-link"></span>
+      <span class="fas fa-paperclip"></span>
     </button>
     <span class="spacer"></span>
     <a

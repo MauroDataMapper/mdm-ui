@@ -35,9 +35,10 @@ const macShortcuts = {
   italic: 'Italic (⌘ + I)',
   heading: 'Heading (⌘ + H)',
   quote: "Quote (⌘ + ')",
-  numberList: 'Numbered list (⌘ + Alt + L)',
+  numberList: 'Numbered list (⌘ + Shift + L)',
   bulletList: 'Bullet list (⌘ + L)',
-  mauroLink: 'Link to catalogue element (⌘ + K)'
+  urlLink: 'Link to URL (⌘ + K)',
+  mauroLink: 'Link to catalogue element (⌘ + Shift + K)'
 };
 
 const standardShortcuts = {
@@ -45,9 +46,10 @@ const standardShortcuts = {
   italic: 'Italic (Ctrl + I)',
   heading: 'Heading (Ctrl + H)',
   quote: "Quote (Ctrl + ')",
-  numberList: 'Numbered list (Ctrl + Alt + L)',
+  numberList: 'Numbered list (Ctrl + Shift + L)',
   bulletList: 'Bullet list (Ctrl + L)',
-  mauroLink: 'Link to catalogue element (Ctrl + K)'
+  urlLink: 'Link to URL (Ctrl + K)',
+  mauroLink: 'Link to catalogue element (Ctrl + Shift + K)'
 };
 
 @Component({
@@ -119,12 +121,14 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
       action = this.insertHeading.bind(this);
     } else if (usingModifier && event.code === 'Quote') {
       action = this.insertQuote.bind(this);
-    } else if (usingModifier && event.altKey && event.code === 'KeyL') {
+    } else if (usingModifier && event.shiftKey && event.code === 'KeyL') {
       action = this.insertNumberList.bind(this);
     } else if (usingModifier && event.code === 'KeyL') {
       action = this.insertBulletList.bind(this);
-    } else if (usingModifier && event.code === 'KeyK') {
+    } else if (usingModifier && event.shiftKey && event.code === 'KeyK') {
       action = this.showAddElementToMarkdown.bind(this);
+    } else if (usingModifier && event.code === 'KeyK') {
+      action = this.insertLink.bind(this);
     }
 
     if (action) {
@@ -170,6 +174,14 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   insertNumberList() {
     this.insertText({ type: 'block', prefix: '1. ' });
+  }
+
+  insertLink() {
+    this.insertText({
+      type: 'inline',
+      prefix: '[',
+      suffix: '](http://)'
+    });
   }
 
   private insertText(options: {

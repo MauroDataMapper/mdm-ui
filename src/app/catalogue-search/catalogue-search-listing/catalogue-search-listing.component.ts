@@ -196,8 +196,6 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   openProfileFilterDialog() {
     const dialogRef = this.dialog.open(ProfileFilterDialogComponent, {
-      width: '70vw',
-      height: '40vw',
       data: {
         profileFilters: this.profileFilters
       }

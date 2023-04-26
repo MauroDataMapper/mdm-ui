@@ -141,28 +141,11 @@ export class CatalogueSearchProfileFilterListComponent
         value: new FormControl<string>(filter.value),
         definition: new FormControl<ProfileDefinition>(null)
       });
-      /* eslint-enable @typescript-eslint/unbound-method */
 
       // Set up the initial value for the definition control
       this.setInitialDefinitionValue(row, filter.provider);
 
-      // When the provider changes, reset any previous key/value set
-      // Use reset() instead of setValue() so that dirty/pristine state is reset too
-      row.controls.provider.valueChanges
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          row.controls.key.reset();
-          row.controls.value.reset();
-        });
-
-      // When the key changes, reset any previous value set
-      // Use reset() instead of setValue() so that dirty/pristine state is reset too
-      row.controls.key.valueChanges
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          row.controls.value.reset();
-        });
-      this.filters.push(row);
+      this.filters.push(this.createFilter(row));
     });
   }
 
@@ -186,24 +169,26 @@ export class CatalogueSearchProfileFilterListComponent
     );
   }
 
-  private createFilter() {
+  private createFilter(filter?: FormGroup) {
     /* eslint-disable @typescript-eslint/unbound-method */
-    const filter = new FormGroup({
-      // Important fields required for search filters
-      provider: new FormControl<ProfileSummary>(null, Validators.required),
-      key: new FormControl<ProfileField>(null, Validators.required),
-      value: new FormControl('', Validators.required),
+    if (!filter) {
+      filter = new FormGroup({
+        // Important fields required for search filters
+        provider: new FormControl<ProfileSummary>(null, Validators.required),
+        key: new FormControl<ProfileField>(null, Validators.required),
+        value: new FormControl('', Validators.required),
 
-      // Non-visible form controls, required as dependencies to above
-      definition: new FormControl<ProfileDefinition>(null)
-    });
-
+        // Non-visible form controls, required as dependencies to above
+        definition: new FormControl<ProfileDefinition>(null)
+      });
+    }
     /* eslint-enable @typescript-eslint/unbound-method */
 
     // Track when the "provider" field changes, then fetch that profile definition
     // to be able to select from the list of known fields. Set the definition to a
     // special "backing" field for this form group, this will be used to render the key
     // options to the mat-select in this row
+
     filter.controls.provider.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),

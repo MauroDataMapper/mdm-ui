@@ -98,7 +98,7 @@ export class CatalogueSearchService {
             metadataNamespace: filter.provider.metadataNamespace,
             metadataPropertyName: filter.key.metadataPropertyName,
             filterTerm: filter.value,
-            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'keyword'
+            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'contains'
           } as ProfileFieldQueryData;
         });
 

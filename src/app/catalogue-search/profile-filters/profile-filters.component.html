@@ -33,11 +33,9 @@ SPDX-License-Identifier: Apache-2.0
   </button>
 
   <div class="mdm-profile-filters__buttons">
-    <span class="mdm--badge mdm--element-count"
-      >{{ this.numberOfFilters() }} filter{{
-        this.numberOfFilters() === 1 ? '' : 's'
-      }}</span
-    >
+    <span class="mdm--badge mdm--element-count">{{
+      this.profileFilters.length
+    }}</span>
 
     <button mat-stroked-button color="primary" type="button" (click)="onAdd()">
       <i class="fa fa-plus"></i>

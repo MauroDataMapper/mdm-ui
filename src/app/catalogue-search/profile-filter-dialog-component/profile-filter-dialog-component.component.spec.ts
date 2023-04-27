@@ -15,13 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 describe('ProfileFilterDialogComponent', () => {
   let component: ProfileFilterDialogComponent;
+  let fixture: ComponentFixture<ProfileFilterDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -38,8 +39,12 @@ describe('ProfileFilterDialogComponent', () => {
       ]
     }).compileComponents();
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+    fixture = TestBed.createComponent(ProfileFilterDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });

@@ -24,7 +24,7 @@ import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
   styleUrls: ['./profile-filters.component.scss']
 })
 export class ProfileFiltersComponent implements OnInit {
-  @Input() profileFilters: CatalogueSearchProfileFilter[];
+  @Input() profileFilters: CatalogueSearchProfileFilter[] = [];
   @Output() updateProfileFilters = new EventEmitter<
     CatalogueSearchProfileFilter[]
   >();
@@ -36,10 +36,6 @@ export class ProfileFiltersComponent implements OnInit {
 
   onAdd() {
     this.addProfileFilters.emit();
-  }
-
-  numberOfFilters() {
-    return this.profileFilters.length ?? 0;
   }
 
   emitDeleteEvent(profileFilter: CatalogueSearchProfileFilter) {

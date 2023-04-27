@@ -16,9 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 .mdm-profile-filters {
+  margin-top: 8px;
   &__buttons {
-    margin-top: 18px;
-    margin-bottom: 10px;
+    margin-top: 4px;
+    margin-bottom: 8px;
 
     button {
       float: right;

@@ -20,7 +20,8 @@ import {
   OnInit,
   OnDestroy,
   Output,
-  EventEmitter
+  EventEmitter,
+  Input
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -41,6 +42,7 @@ import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
 })
 export class CatalogueSearchProfileFilterListComponent
   implements OnInit, OnDestroy {
+  @Input() prefilledFilters?: CatalogueSearchProfileFilter[];
   @Output() valueChange = new EventEmitter<void>();
 
   /**
@@ -55,11 +57,11 @@ export class CatalogueSearchProfileFilterListComponent
 
   private unsubscribe$ = new Subject<void>();
 
+  constructor(private resources: MdmResourcesService) {}
+
   get filters() {
     return this.formGroup.controls.filters;
   }
-
-  constructor(private resources: MdmResourcesService) {}
 
   ngOnInit(): void {
     this.resources.profile
@@ -72,6 +74,12 @@ export class CatalogueSearchProfileFilterListComponent
         )
       )
       .subscribe((providers: ProfileSummary[]) => (this.providers = providers));
+
+    if (this.prefilledFilters) {
+      this.prefilledFilters.forEach((filter: CatalogueSearchProfileFilter) => {
+        this.filters.push(this.createFilter(filter));
+      });
+    }
 
     this.formGroup.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -121,23 +129,55 @@ export class CatalogueSearchProfileFilterListComponent
     );
   }
 
-  private createFilter() {
+  setInitialDefinitionValue(row: FormGroup, provider: ProfileSummary): void {
+    this.resources.profile
+      .definition(provider.namespace, provider.name)
+      .subscribe((response: ProfileDefinitionResponse) => {
+        const definition = response.body;
+        row.controls.definition.setValue(definition);
+      });
+  }
+
+  compareProviders(a: ProfileSummary, b: ProfileSummary) {
+    return a.namespace === b.namespace && a.name === b.name;
+  }
+
+  compareKeys(a: ProfileSummary, b: ProfileSummary) {
+    return (
+      a.metadataPropertyName === b.metadataPropertyName &&
+      a.description === b.description
+    );
+  }
+
+  private createFilter(profileFilter?: CatalogueSearchProfileFilter) {
     /* eslint-disable @typescript-eslint/unbound-method */
+
     const filter = new FormGroup({
       // Important fields required for search filters
-      provider: new FormControl<ProfileSummary>(null, Validators.required),
-      key: new FormControl<ProfileField>(null, Validators.required),
-      value: new FormControl('', Validators.required),
+      provider: new FormControl<ProfileSummary>(
+        profileFilter?.provider ?? null,
+        Validators.required
+      ),
+      key: new FormControl<ProfileField>(
+        profileFilter?.key ?? null,
+        Validators.required
+      ),
+      value: new FormControl(profileFilter?.value ?? '', Validators.required),
 
       // Non-visible form controls, required as dependencies to above
       definition: new FormControl<ProfileDefinition>(null)
     });
+
     /* eslint-enable @typescript-eslint/unbound-method */
 
     // Track when the "provider" field changes, then fetch that profile definition
     // to be able to select from the list of known fields. Set the definition to a
     // special "backing" field for this form group, this will be used to render the key
     // options to the mat-select in this row
+    if (profileFilter) {
+      this.setInitialDefinitionValue(filter, profileFilter.provider);
+    }
+
     filter.controls.provider.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),

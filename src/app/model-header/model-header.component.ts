@@ -116,7 +116,8 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return this.item.domainType === CatalogueItemDomainType.DataModel;
+    return this.isLoggedIn &&
+      this.item.domainType === CatalogueItemDomainType.DataModel;
   }
 
   get canShowMergeGraph() {
@@ -124,7 +125,7 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return (
+    return this.isLoggedIn && (
       this.item.domainType === CatalogueItemDomainType.DataModel ||
       this.item.domainType === CatalogueItemDomainType.VersionedFolder
     );

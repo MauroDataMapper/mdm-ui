@@ -168,7 +168,7 @@ SPDX-License-Identifier: Apache-2.0
     data-cy="compare"
     type="button"
     [matMenuTriggerFor]="compareMenu"
-    *ngIf="isAdministrator && canCompareModels"
+    *ngIf="canCompareModels"
     [disabled]="busy"
   >
     <span class="fas fa-balance-scale-right" aria-hidden="true"></span>

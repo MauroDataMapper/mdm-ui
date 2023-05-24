@@ -89,7 +89,8 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
     <p class="marginless">
-      There are no attachments in this table. You can add attachments by clicking the button above.
+      There are no attachments in this table.
+      <span *ngIf="canEdit">You can add attachments by clicking the button above.</span>
     </p>
 </div>
 <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">

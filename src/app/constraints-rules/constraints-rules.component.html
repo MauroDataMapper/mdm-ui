@@ -403,5 +403,15 @@ SPDX-License-Identifier: Apache-2.0
         ></tr>
       </table>
     </div>
+    <div
+      class="bordered is-hidden pxy-2"
+      [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+    >
+      <p class="marginless">There are no rules in this table.</p>
+      <p *ngIf="filteredOpen" class="marginless">
+        This might be due to the current filter settings.
+      </p>
+
+    </div>
   </div>
 </div>

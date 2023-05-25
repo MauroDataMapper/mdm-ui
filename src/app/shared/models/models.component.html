@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
       [selectedIndex]="activeTab"
       (selectedIndexChange)="tabSelected($event)"
     >
-      <mat-tab>
+      <mat-tab style="overflow-y: hidden">
         <ng-template mat-tab-label>
           <span class="fas fa-sitemap"></span>&nbsp; Models
         </ng-template>
@@ -206,9 +206,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </div>
         </div>
-        <div style="width: 100%; clear: left; overflow-y: auto">
           <div
-            style="margin: 3px 0px 0px 0px"
             *ngIf="
               levels.currentFocusedElement &&
               filteredModels.children &&
@@ -245,7 +243,7 @@ SPDX-License-Identifier: Apache-2.0
             </button>
           </div>
 
-          <div *ngIf="filteredModels && !reloading">
+          <div *ngIf="filteredModels && !reloading" class="tree-container">
             <mdm-folders-tree
               [treeName]="'Models'"
               [inSearchMode]="inSearchMode"
@@ -294,7 +292,6 @@ SPDX-License-Identifier: Apache-2.0
               </div>
             </div>
           </div>
-        </div>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>

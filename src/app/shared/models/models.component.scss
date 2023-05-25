@@ -25,3 +25,32 @@ SPDX-License-Identifier: Apache-2.0
     color: mat.get-color-from-palette($primary);
   }
 }
+
+.leftTab {
+  height: 100%;
+}
+
+.container-inner {
+  height: 100%;
+
+  mat-tab-group {
+    height: 100%;
+
+    mat-tab-body {
+      height: 100%;
+
+      .mat-tab-body-content {
+        height: 100%;
+        overflow: hidden;
+
+        .tree-container {
+          height: 100%;
+          overflow: hidden;
+          clear: both;
+
+        }
+      }
+    }
+  }
+}
+

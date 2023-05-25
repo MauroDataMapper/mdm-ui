@@ -27,6 +27,10 @@ mat-tree-node.mat-tree-node {
     flex-direction: row;
     align-items: center;
     min-height: 28px;
+
+    span, small {
+      white-space: nowrap;
+    }
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -113,8 +117,11 @@ mat-tree-node.mat-tree-node {
 }
 
 .mat-tree {
-  padding: 0 10px 10px 10px;
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
 }
+
 .fa-folder,
 .mat-icon.fa-folder-open,
 .fa-folder-plus,
@@ -143,6 +150,10 @@ i.subscribedIcon {
 div.mat-menu-panel.filterMenu {
   width: 100%;
   max-width: 100%;
+}
+
+span.tree-top-actions {
+  white-space: nowrap;
 }
 
 span.tree-top-actions button,

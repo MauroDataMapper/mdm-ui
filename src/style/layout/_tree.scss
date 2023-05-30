@@ -104,7 +104,7 @@ mat-tree-node.mat-tree-node {
 
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
-  vertical-align: 0.09em;
+//  vertical-align: 0.09em;
   min-width: 20px;
   width: 20px;
   color: #f19e3f;
@@ -282,6 +282,7 @@ ul.favourites li:focus {
 
 /*****************************************************************/
 .detail-icons--cta {
+  vertical-align: -0.15em;
   .favouritesIcon {
     @extend .is-not-favourite;
     cursor: pointer;

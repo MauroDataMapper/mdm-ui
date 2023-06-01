@@ -16,10 +16,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="bdi--hero-header mb-3">
-  <div class="container">
-    <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
 
+
+  <div class="container pane">
+    <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+    <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
+      <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
+    </div>
     <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
+      <h1>Mauro Data Mapper</h1>
+      <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
+    </div>
+<!--    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
       <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
 
         <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
@@ -28,11 +36,13 @@ SPDX-License-Identifier: Apache-2.0
           <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
             Log in
           </button>
+          -->
           <!-- <span> or </span>
                     <button mat-stroked-button color="primary" (click)="register()" class="custom mb-1">
                         Register an account
                     </button> -->
-          <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+    <!--
+    <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
         </div>
         <div *ngIf="isLoggedIn && !isLoadingContent">
           <a mat-flat-button color="primary" class="custom"
@@ -44,6 +54,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
       </div>
     </div>
+-->
   </div>
 </div>
 

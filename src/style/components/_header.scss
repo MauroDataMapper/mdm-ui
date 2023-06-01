@@ -21,6 +21,7 @@ header#mdm--header {
   padding: 0 2rem;
   width: 100%;
   z-index: 1000;
+  margin-bottom: 1rem;
   @include respond-to($tablet) {
     padding: 0 15px;
   }

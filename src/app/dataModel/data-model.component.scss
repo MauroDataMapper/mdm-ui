@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 $tabLabelWidth : 50px;
 
 div.mat-tab-label {
-	min-width: $tabLabelWidth !important
+	min-width: $tabLabelWidth !important;
+  font-size: medium !important;
 }
 

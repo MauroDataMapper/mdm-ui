@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   flex-shrink: 0;
 }
 
-.bdi--hero-header {
+.mdm--hero-header {
   padding: 0 16px 24px 16px;
   h3:first-child {
     margin-top: 72px;
@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
       margin-top: 0px;
     }
   }
-  .bdi--hero-header__image {
+  .mdm--hero-header__image {
     img {
       @include respond-to(960px) {
         width: 50%;

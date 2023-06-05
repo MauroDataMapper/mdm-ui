@@ -38,7 +38,7 @@ const defaultHtmlContent = [
   },
   {
     key: 'content.home.intro.right',
-    value: `<div class="text-center bdi--hero-header__image mt-3">
+    value: `<div class="text-center mdm--hero-header__image mt-3">
     <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
 </div>`
   },

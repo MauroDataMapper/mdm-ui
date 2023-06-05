@@ -200,13 +200,11 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .mdm--shadow-block {
-  box-shadow: 0 0 13px 0 rgba(82, 63, 105, 0.05);
   background-color: #fff;
   margin-bottom: 20px;
   border-radius: 4px;
   .panel-body {
     padding: 14px 20px;
-    border: 1px solid #f3f3f3;
   }
 }
 
@@ -252,6 +250,9 @@ a {
 
 .loading-spinner {
   @include size();
+  font-size: 3rem !important;
+  margin-top: 1rem;
+  text-align: center;
   div {
     position: absolute;
     top: 70%;

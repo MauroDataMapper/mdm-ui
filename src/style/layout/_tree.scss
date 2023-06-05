@@ -117,9 +117,9 @@ mat-tree-node.mat-tree-node {
 }
 
 .mat-tree {
-  padding: 10px;
   height: 100%;
   overflow: auto;
+  margin-top: 5px;
 }
 
 .fa-folder,
@@ -171,7 +171,7 @@ span.tree-top-actions button,
 div.mat-tab-label {
   min-width: 25px;
   padding: 0 16px;
-  font-size: $defaultFontSize;
+  font-size: $defaultFontSize !important;
 }
 div.mat-tab-label {
   height: 38px;

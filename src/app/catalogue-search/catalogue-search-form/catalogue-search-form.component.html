@@ -22,21 +22,19 @@ SPDX-License-Identifier: Apache-2.0
   name="catalogueSearchFormComponent"
   (keyup.enter)="callParentSearch()"
 >
-  <div class="container">
-    <div class="mdm-form-input row">
-      <div class="col">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Search the Catalogue...</mat-label>
-          <input
-            matInput
-            type="text"
-            name="searchTerms"
-            formControlName="searchTerms"
-            autocomplete="on"
-            placeholder=""
-          />
-        </mat-form-field>
-      </div>
+  <div class="mdm-form-input row">
+    <div class="col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Search the Catalogue...</mat-label>
+        <input
+          matInput
+          type="text"
+          name="searchTerms"
+          formControlName="searchTerms"
+          autocomplete="on"
+          placeholder=""
+        />
+      </mat-form-field>
     </div>
   </div>
 </form>

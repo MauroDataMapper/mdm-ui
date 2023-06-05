@@ -20,12 +20,11 @@ SPDX-License-Identifier: Apache-2.0
 
   <div class="container pane">
     <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
+      <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
+    </div>
     <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
       <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
-    </div>
-    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
-      <h1>Mauro Data Mapper</h1>
-      <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
     </div>
 <!--    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
       <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
@@ -58,26 +57,24 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
-<div class="mdm--features highlight">
-  <div class="container">
-    <ngx-skeleton-loader *ngIf="isLoadingContent" count="2"></ngx-skeleton-loader>
+<div class="mdm--features container pane">
+  <ngx-skeleton-loader *ngIf="isLoadingContent" count="2"></ngx-skeleton-loader>
 
-    <div *ngIf="!isLoadingContent" [innerHTML]="detailHeading | safe:'html'"></div>
+  <div *ngIf="!isLoadingContent" [innerHTML]="detailHeading | safe:'html'"></div>
 
-    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px"
-      class="flex-block">
-      <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn1 | safe:'html'"></div>
-      </div>
-      <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn2 | safe:'html'"></div>
-      </div>
-      <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-        <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn3 | safe:'html'"></div>
-      </div>
+  <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px"
+    class="flex-block">
+    <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+      <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+      <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn1 | safe:'html'"></div>
+    </div>
+    <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+      <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+      <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn2 | safe:'html'"></div>
+    </div>
+    <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+      <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+      <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn3 | safe:'html'"></div>
     </div>
   </div>
 </div>

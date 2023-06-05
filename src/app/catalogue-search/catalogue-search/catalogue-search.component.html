@@ -15,13 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container">
+<div class="container pane">
   <div class="highlight-box__content">
     <mdm-catalogue-search-form
       (valueChange)="onValueChange()"
       (searchEvent)="search()"
     ></mdm-catalogue-search-form>
-    <div class="container mb-2">
+    <div class="mb-2">
       <button mat-stroked-button color="primary" (click)="toggleShowMore()">
         {{ showMore ? 'Less filters' : 'More filters...' }}
       </button>
@@ -35,29 +35,27 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
 
-  <div class="container">
-    <div class="form-actions row">
-      <div class="col">
-        <div class="search-button">
-          <button
-            class="mr-1"
-            type="button"
-            mat-stroked-button
-            color="primary"
-            (click)="this.reset()"
-          >
-            Reset
-          </button>
-          <button
-            type="submit"
-            mat-flat-button
-            color="primary"
-            [disabled]="!valid"
-            (click)="search()"
-          >
-            Search
-          </button>
-        </div>
+  <div class="form-actions row">
+    <div class="col">
+      <div class="search-button">
+        <button
+          class="mr-1"
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="this.reset()"
+        >
+          Reset
+        </button>
+        <button
+          type="submit"
+          mat-flat-button
+          color="primary"
+          [disabled]="!valid"
+          (click)="search()"
+        >
+          Search
+        </button>
       </div>
     </div>
   </div>

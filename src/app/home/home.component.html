@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mdm--hero-header mb-3">
 
 
-  <div class="container pane">
+  <div class="container padded pane">
     <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
     <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
       <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>

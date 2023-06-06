@@ -35,6 +35,11 @@ body {
   background-color: white;
 }
 
+.padded {
+  padding: 2rem !important;
+}
+
+
 /* include border and padding in element width and height */
 * {
   box-sizing: border-box;

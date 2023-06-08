@@ -25,7 +25,11 @@ SPDX-License-Identifier: Apache-2.0
 body {
   height: 100vh;
   width: 100vw;
-  background-color: #eee;
+  background-color: var(--light);
+}
+
+div.as-split-gutter {
+  background-color: var(--light) !important;
 }
 
 .pane {

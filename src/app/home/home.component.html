@@ -17,13 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm--hero-header mb-3">
 
-
   <div class="container padded pane">
     <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
-    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
-      <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
-    </div>
-    <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
+    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block home-top">
+      <div>
+        <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
+        <div *ngIf="!isLoggedIn && !isLoadingContent">
+          <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
+            Log in
+          </button>
+          <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+        </div>
+      </div>
       <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
     </div>
 <!--    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
@@ -41,7 +46,6 @@ SPDX-License-Identifier: Apache-2.0
                         Register an account
                     </button> -->
     <!--
-    <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
         </div>
         <div *ngIf="isLoggedIn && !isLoadingContent">
           <a mat-flat-button color="primary" class="custom"

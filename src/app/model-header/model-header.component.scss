@@ -16,6 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 .mdm-model-header {
+  padding: 0 0.75rem;
+
   &__title-bar {
     display: flex;
     justify-content: space-between;

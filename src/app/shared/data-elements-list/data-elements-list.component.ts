@@ -66,17 +66,13 @@ export class DataElementsListComponent implements AfterViewInit {
   checkAllCheckbox = false;
 
   processing: boolean;
-  failCount: number;
-  total: number;
   dataElementRecords: DataElement[] = [];
   hideFilters = true;
   displayedColumns: string[];
-  loading: boolean;
   totalDataElementCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
   filter: {};
-  deleteInProgress: boolean;
   bulkActionsVisible = 0;
   isOrderedDataSource = false;
 

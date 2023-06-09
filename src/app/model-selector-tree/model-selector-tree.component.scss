@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2023 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +14,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<form
-  [formGroup]="formGroup"
-  role="form"
-  autocomplete="on"
-  name="catalogueSearchFormComponent"
-  (keyup.enter)="callParentSearch()"
->
-  <div class="mdm-form-input row">
-    <div class="col">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Search the Catalogue...</mat-label>
-        <input
-          matInput
-          type="text"
-          name="searchTerms"
-          formControlName="searchTerms"
-          autocomplete="on"
-          placeholder=""
-        />
-      </mat-form-field>
-    </div>
-  </div>
-</form>
+*/

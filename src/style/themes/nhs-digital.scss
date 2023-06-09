@@ -160,6 +160,10 @@ $nhs-digital-typography: mat.define-typography-config(
 
   /* Style overrides for the NHS Digital theme */
 
+  div.as-split-gutter {
+    background-color: $nhs-digital-background-color !important;
+  }
+
   .heading-container {
     background-color: $nhs-digital-plain-background-color;
   }

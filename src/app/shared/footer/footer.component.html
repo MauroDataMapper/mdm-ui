@@ -27,8 +27,8 @@ SPDX-License-Identifier: Apache-2.0
             >{{ link.label }}</a
           >
           <a
-            [id]="link.routerLink"
             *ngIf="link.routerLink"
+            [id]="link.routerLink"
             [uiSref]="link.routerLink"
             [target]="link.target ?? '_blank'"
             >{{ link.label }}</a
@@ -36,23 +36,29 @@ SPDX-License-Identifier: Apache-2.0
         </li>
       </ul>
     </div>
+    <div class="mdm-footer__version">
+      <ul>
+        <li>
+          Mauro Data Mapper
+          <span *ngIf="version"> (Version {{ version }})</span> &copy; {{ year }}
+        </li>
+      </ul>
+    </div>
     <div class="mdm-footer__copyright">
-      <p>
-        Powered by
-        <img src="assets/images/mdm-logo.png" alt="Mauro Data Mapper" />
-      </p>
-      <p>
-        View more information about the
-        <a
-          href="https://maurodatamapper.github.io/community/support/"
-          target="_blank"
-          >Mauro Foundation</a
-        >
-      </p>
-      <p>
-        Mauro Data Mapper
-        <span *ngIf="version"> (Version {{ version }})</span> &copy; {{ year }}
-      </p>
+      <ul>
+        <li>
+          Powered by
+          <img src="assets/images/mdm-logo.png" alt="Mauro Data Mapper" />
+        </li>
+        <li>
+          View more information about the
+          <a
+            href="https://maurodatamapper.github.io/community/support/"
+            target="_blank"
+            >Mauro Foundation</a
+          >
+        </li>
+      </ul>
     </div>
   </div>
 </footer>

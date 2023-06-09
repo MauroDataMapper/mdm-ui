@@ -50,7 +50,7 @@ import {
 @Component({
   selector: 'mdm-model-selector-tree',
   templateUrl: './model-selector-tree.component.html',
-  styleUrls: ['./model-selector-tree.component.sass']
+  styleUrls: ['./model-selector-tree.component.scss']
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() root: any;

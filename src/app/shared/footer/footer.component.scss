@@ -27,7 +27,6 @@ SPDX-License-Identifier: Apache-2.0
   }
 }
 
-$footer-gap: 1rem;
 $muted-text-color: #6c757d;
 $link-color: white;
 $link-fontweight: 400;
@@ -35,20 +34,36 @@ $link-fontsize: small;
 
 .mdm-footer {
   border-top: 1px solid $muted-text-color;
-  padding: 1rem 2rem;
-  margin: $footer-gap 0 0;
+  padding: 0 2rem;
+  margin: 1rem 0 0 0;
+  height: 5rem;
+
+  color: $link-color !important;
+  font-size: $link-fontsize !important;
+  font-weight: $link-fontweight !important;
+
 
   &__container {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    height: 100%;
 
     @include respond-to($mobile) {
       display: block;
     }
   }
 
-  &__links {
+  &__version {
+    text-align: center;
+  }
+
+  &__links, &__copyright, &__version {
+    width: 33%;
+    float: left;
+    height: 100%;
+    padding-top: 0.5rem;
+
     & > ul {
       list-style: none;
       list-style-image: none;
@@ -57,12 +72,16 @@ $link-fontsize: small;
       & > li {
         padding: 0rem 0;
         white-space: nowrap;
+        color: $link-color !important;
+        font-size: $link-fontsize !important;
+        font-weight: $link-fontweight !important;
 
         & > a {
-          padding: 0 2.2rem 0 0;
-          color: $link-color;
-          font-size: $link-fontsize;
-          font-weight: $link-fontweight;
+          padding: 0;
+          color: $link-color !important;
+          font-size: $link-fontsize !important;
+          font-weight: $link-fontweight !important;
+
         }
       }
     }
@@ -76,20 +95,15 @@ $link-fontsize: small;
       text-align: left;
     }
 
-    p {
+    a {
       color: $link-color;
-      font-size: $link-fontsize;
-      font-weight: $link-fontweight;
-
-      a {
-        color: $link-color;
-        text-decoration: underline;
-      }
+      text-decoration: underline;
     }
 
     img {
       margin-left: 1em;
       height: 2em;
+      margin-bottom: 0.7em;
     }
   }
 }

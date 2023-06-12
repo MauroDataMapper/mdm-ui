@@ -169,15 +169,15 @@ import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-m
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
-import { ReferenceDataTypeMainComponent } from "@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component";
-import { ReferenceDataTypeStep1Component } from "@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component";
-import { ReferenceDataTypeStep2Component } from "@mdm/wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component";
-import { NewReferenceDataTypeFormComponent } from "@mdm/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component";
-import { ReferenceDataTypeSelectComponent } from "@mdm/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component";
-import { ReferenceDataModelMainComponent } from "@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component";
-import { ModelHeaderComponent } from "@mdm/model-header/model-header.component";
+import { ReferenceDataTypeMainComponent } from '@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeStep1Component } from '@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
+import { ReferenceDataTypeStep2Component } from '@mdm/wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
+import { NewReferenceDataTypeFormComponent } from '@mdm/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
+import { ReferenceDataTypeSelectComponent } from '@mdm/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
+import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
-import { DataClassComponentsListComponent } from "@mdm/shared/data-class-components-list/data-class-components-list.component";
+import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 
 @NgModule({
   providers: [

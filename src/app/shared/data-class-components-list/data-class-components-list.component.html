@@ -35,13 +35,13 @@ SPDX-License-Identifier: Apache-2.0
     >
       <h4 class="marginless">
         <span>Data Classes</span>
-        <mdm-skeleton-badge *ngIf="isLoadingResults"></mdm-skeleton-badge>
-        <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{
+        <mdm-skeleton-badge *ngIf="isLoadingClassResults"></mdm-skeleton-badge>
+        <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingClassResults">{{
           totalDataClassCount
         }}</span>
         <span
           class="fas fa-filter"
-          (click)="filterClick()"
+          (click)="classFilterClick()"
           matTooltip="Toggle search"
         ></span>
       </h4>
@@ -61,14 +61,14 @@ SPDX-License-Identifier: Apache-2.0
           mat-stroked-button
           color="primary"
           type="button"
-          [matMenuTriggerFor]="contentBulkActions"
-          *ngIf="bulkActionsVisible > 0"
+          [matMenuTriggerFor]="contentClassBulkActions"
+          *ngIf="bulkClassActionsVisible > 0"
         >
           Bulk actions
           <span class="fas fa-caret-down fa-xs" style="margin-left: 2px"></span>
         </button>
-        <mat-menu #contentBulkActions="matMenu" class="mdm--mat-menu--actions">
-          <button mat-menu-item (click)="bulkEdit()">
+        <mat-menu #contentClassBulkActions="matMenu" class="mdm--mat-menu--actions">
+          <button mat-menu-item (click)="bulkEditClass()">
             <span class="fas fa-pencil-alt"></span> Edit selected rows
           </button>
           <mat-divider></mat-divider>
@@ -96,7 +96,7 @@ SPDX-License-Identifier: Apache-2.0
     #tableDataClasses
     matSort
     cdkDropList
-    (cdkDropListDropped)="dropItem($event)"
+    (cdkDropListDropped)="dropClassItem($event)"
     [dataSource]="dataClassRecords"
     class="mdm--mat-table table-striped"
   >
@@ -105,16 +105,16 @@ SPDX-License-Identifier: Apache-2.0
         mat-header-cell
         *matHeaderCellDef
         mat-sort-header="label"
-        [disabled]="!hideFilters"
+        [disabled]="!hideClassFilters"
         style="cursor: pointer; max-width: 35%; width: 35%"
         columnName="name"
         scope="col"
       >
-        <span [hidden]="!hideFilters">Name</span>
-        <div [hidden]="hideFilters">
+        <span [hidden]="!hideClassFilters">Name</span>
+        <div [hidden]="hideClassFilters">
           <mat-form-field class="filter" floatLabel="never">
             <mat-label>Name</mat-label>
-            <input #filters matInput name="label" (keyup)="applyFilter()" />
+            <input #classFilters matInput name="label" (keyup)="applyClassFilter()" />
           </mat-form-field>
         </div>
       </th>
@@ -151,20 +151,20 @@ SPDX-License-Identifier: Apache-2.0
         mat-header-cell
         *matHeaderCellDef
         mat-sort-header="description"
-        [disabled]="!hideFilters"
+        [disabled]="!hideClassFilters"
         style="cursor: pointer; max-width: 45%; width: 45%"
         columnName="description"
         scope="col"
       >
-        <span [hidden]="!hideFilters">Details</span>
-        <div [hidden]="hideFilters">
+        <span [hidden]="!hideClassFilters">Details</span>
+        <div [hidden]="hideClassFilters">
           <mat-form-field class="filter" floatLabel="never">
             <mat-label>Details</mat-label>
             <input
-              #filters
+              #classFilters
               matInput
               name="description"
-              (keyup)="applyFilter()"
+              (keyup)="applyClassFilter()"
             />
           </mat-form-field>
         </div>
@@ -197,7 +197,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </td>
     </ng-container>
-    <ng-container matColumnDef="label">
+    <ng-container matColumnDef="multiplicity">
       <th
         mat-header-cell
         *matHeaderCellDef
@@ -222,8 +222,8 @@ SPDX-License-Identifier: Apache-2.0
         scope="col"
       >
         <mat-checkbox
-          (change)="onChecked()"
-          [(ngModel)]="checkAllCheckbox"
+          (change)="onClassChecked()"
+          [(ngModel)]="checkAllClassCheckbox"
           aria-label="Select all Checkboxes"
         >
           <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
@@ -238,16 +238,16 @@ SPDX-License-Identifier: Apache-2.0
         <mat-checkbox
           [(ngModel)]="record.checked"
           aria-label="Select this Checkbox"
-          (change)="listChecked()"
+          (change)="classListChecked()"
         >
           <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
         </mat-checkbox>
       </td>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedClassColumns"></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedClassColumns"
       cdkDrag
       [cdkDragData]="row"
       [ngClass]="{ 'mdm--active-row ': row.checked }"
@@ -257,14 +257,14 @@ SPDX-License-Identifier: Apache-2.0
 
 <div
   class="bordered is-hidden pxy-2"
-  [ngClass]="{ block: !totalDataClassCount && !isLoadingResults }"
+  [ngClass]="{ block: !totalDataClassCount && !isLoadingClassResults }"
 >
   <p class="marginless">There are no Data Classes in this model.</p>
-  <p *ngIf="!hideFilters" class="marginless">
+  <p *ngIf="!hideClassFilters" class="marginless">
     This might be due to the current filter settings.
   </p>
 </div>
-<div class="item" *ngIf="isLoadingResults">
+<div class="item" *ngIf="isLoadingClassResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
       <th
@@ -335,6 +335,331 @@ SPDX-License-Identifier: Apache-2.0
 >
   <mdm-paginator
     [length]="totalDataClassCount"
+    showFirstLastButtons
+  ></mdm-paginator>
+</div>
+
+<!-- Elements Below here -->
+<div class="heading-container">
+  <div
+    fxFlex
+    fxLayout="row"
+    fxLayout.md="row"
+    fxLayout.sm="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="space-around"
+  >
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="50"
+      fxFlex.md="50"
+      fxFlex.sm="50"
+      fxFlex.xs="100"
+      fxLayoutAlign="start center"
+    >
+      <h4 class="marginless">
+        <span>Data Elements</span>
+        <mdm-skeleton-badge *ngIf="isLoadingElementResults"></mdm-skeleton-badge>
+        <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingElementResults">{{
+          totalDataElementCount
+          }}</span>
+        <span
+          class="fas fa-filter"
+          (click)="elementFilterClick()"
+          matTooltip="Toggle search"
+        ></span>
+      </h4>
+    </div>
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="50"
+      fxFlex.md="50"
+      fxFlex.sm="50"
+      fxFlex.xs="100"
+      fxLayoutAlign="end center"
+      fxLayoutAlign.xs="start center"
+    >
+      <div *ngIf="isEditable && !parentDataModel.finalised" class="mt-1">
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          [matMenuTriggerFor]="contentElementBulkActions"
+          *ngIf="bulkElementActionsVisible > 0"
+        >
+          Bulk actions
+          <span class="fas fa-caret-down fa-xs" style="margin-left: 2px"></span>
+        </button>
+        <mat-menu #contentElementBulkActions="matMenu" class="mdm--mat-menu--actions">
+          <button mat-menu-item (click)="bulkEditElement()">
+            <span class="fas fa-pencil-alt"></span> Edit selected rows
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="warning" (click)="bulkDelete()">
+            <span class="far fa-trash-alt"></span> Delete selected rows
+          </button>
+        </mat-menu>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          class="ml-1"
+          (click)="addDataElement()"
+        >
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          Add Data Element
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table
+    mat-table
+    #tableDataElements
+    matSort
+    cdkDropList
+    (cdkDropListDropped)="dropElementItem($event)"
+    [dataSource]="dataElementRecords"
+    class="mdm--mat-table table-striped"
+  >
+    <ng-container matColumnDef="name">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="label"
+        [disabled]="!hideElementFilters"
+        style="max-width: 35%; width: 35%"
+        columnName="name"
+        scope="col"
+      >
+        <span [hidden]="!hideElementFilters">Name</span>
+        <div [hidden]="hideElementFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Name</mat-label>
+            <input #elementFilters matInput name="label" (keyup)="applyElementFilter()" />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+        <div>
+          <mdm-element-link
+            [element]="record"
+            [parentDataModel]="{ id: record.dataModel }"
+            [parentDataClass]="{ id: record.dataClassParent }"
+          ></mdm-element-link>
+        </div>
+        <div *ngIf="record.imported">
+          <span
+            class="badge badge-success item-type-imported"
+            title="Reference: {{
+              record.breadcrumbs | joinArray: ' / ':'label'
+            }} / {{ record.label }}"
+          >External Reference &nbsp;<span class="fas fa-info-circle"></span
+          ></span>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header="description"
+        [disabled]="!hideElementFilters"
+        style="max-width: 45%; width: 45%"
+        columnName="description"
+        scope="col"
+      >
+        <span [hidden]="!hideElementFilters">Details</span>
+        <div [hidden]="hideElementFilters">
+          <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Details</mat-label>
+            <input
+              #elementFilters
+              matInput
+              name="description"
+              (keyup)="applyElementFilter()"
+            />
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let record" style="word-wrap: break-word">
+        <div
+          *ngIf="record.description && record.description.length > 0"
+          style="margin-bottom: 10px"
+        >
+          <span style="font-style: italic; font-size: 11px">Description:</span>
+          <mdm-more-description
+            description="{{ record.description }}"
+          ></mdm-more-description>
+        </div>
+        <div
+          *ngIf="record.domainType == 'DataElement'"
+          style="margin-bottom: 9px"
+        >
+          <span style="font-style: italic; font-size: 13px">Data Type:</span>
+          <mdm-element-data-type
+            [hideEnumList]="true"
+            [elementDataType]="record.dataType"
+            [mcParentDataModel]="parentDataModel"
+          ></mdm-element-data-type>
+        </div>
+        <div>
+          <mdm-all-links-in-paged-list
+            [parent]="record"
+          ></mdm-all-links-in-paged-list>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="multiplicity">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 7%; width: 7%"
+        columnName="multiplicity"
+        scope="col"
+      >
+        Multiplicity
+      </th>
+      <td mat-cell *matCellDef="let record" style="text-align: center">
+        <mdm-multiplicity
+          [min]="record.minMultiplicity"
+          [max]="record.maxMultiplicity"
+        ></mdm-multiplicity>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="checkbox">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="cursor: pointer; max-width: 3%; width: 3%; text-align: center"
+        scope="col"
+      >
+        <mat-checkbox
+          (change)="onElementChecked()"
+          [(ngModel)]="checkAllElementCheckbox"
+          aria-label="Select all Checkboxes"
+        >
+          <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
+        </mat-checkbox>
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        aria-label="Select this Checkbox"
+        style="width: 3%; text-align: center"
+      >
+        <mat-checkbox
+          [(ngModel)]="record.checked"
+          aria-label="Select this Checkbox"
+          (change)="elementListChecked()"
+        >
+          <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedElementColumns"></tr>
+    <ng-template [ngIf]="isOrderedDataSource">
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedElementColumns"
+        [ngClass]="{ 'mdm--active-row ': row.checked }"
+      ></tr>
+    </ng-template>
+    <ng-template [ngIf]="!isOrderedDataSource">
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedElementColumns"
+        cdkDrag
+        [cdkDragData]="row"
+        [ngClass]="{ 'mdm--active-row ': row.checked }"
+      ></tr>
+    </ng-template>
+  </table>
+</div>
+
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalDataElementCount && !isLoadingElementResults }"
+>
+  <p class="marginless">There are no Data Elements in this model.</p>
+  <p *ngIf="!hideElementFilters" class="marginless">
+    This might be due to the current filter settings.
+  </p>
+</div>
+<div class="item" *ngIf="isLoadingElementResults">
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th
+        style="width: 3%"
+        scope="col"
+        *ngIf="isEditable && !parentDataModel.finalised"
+      >
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '24px' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 33.5%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 43%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 11.5%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '40%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <td
+        style="width: 10%"
+        *ngIf="isEditable && !parentDataModel.finalised"
+      ></td>
+    </tr>
+    <tr>
+      <td *ngIf="isEditable && !parentDataModel.finalised">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '100%' }"
+        ></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td
+        style="display: flex; justify-content: flex-end"
+        *ngIf="isEditable && !parentDataModel.finalised"
+      >
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{ 'border-radius': '10px' }"
+        ></ngx-skeleton-loader>
+      </td>
+    </tr>
+  </table>
+</div>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalDataElementCount < 6 }"
+>
+  <mdm-paginator
+    [length]="totalDataElementCount"
     showFirstLastButtons
   ></mdm-paginator>
 </div>

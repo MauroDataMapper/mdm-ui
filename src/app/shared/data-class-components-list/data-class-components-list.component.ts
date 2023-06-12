@@ -209,21 +209,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.changeRef.detectChanges();
   }
 
-  openEdit(dataClass: DataClassDetail) {
-    if (!dataClass || (dataClass && !dataClass.id)) {
-      return '';
-    }
-    this.stateHandler.NewWindow(
-      'dataClass',
-      {
-        dataModelId: this.parentDataModel.id,
-        dataClassId: this.parentDataClass ? this.parentDataClass.id : null,
-        id: dataClass.id
-      },
-      null
-    );
-  }
-
   addDataClass() {
     this.stateHandler.Go(
       'newDataClass',
@@ -238,22 +223,57 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     );
   }
 
-  applyFilter() {
-    const filter = {};
-    this.filters.forEach((x: any) => {
+  addDataElement() {
+    this.stateHandler.Go(
+      'newDataElement',
+      {
+        parentDataModelId: this.parentDataModel.id,
+        parentDataClassId: this.parentDataClass
+          ? this.parentDataClass.id
+          : null,
+        grandParentDataClassId: this.grandParentDataClass.id
+      },
+      null
+    );
+  }
+
+
+  applyClassFilter() {
+    const classFilter = {};
+    this.classFilters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-        filter[name] = value;
+        classFilter[name] = value;
       }
     });
-    this.filter = filter;
-    this.filterEvent.emit(filter);
+    this.classFilter = classFilter;
+    console.log(classFilter);
+    this.filterClassEvent.emit(classFilter);
   }
 
-  filterClick() {
-    this.hideFilters = !this.hideFilters;
+  applyElementFilter() {
+    const elementFilter = {};
+    this.elementFilters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
+      if (value !== '') {
+        elementFilter[name] = value;
+      }
+    });
+    this.elementFilter = elementFilter;
+    this.filterElementEvent.emit(elementFilter);
   }
+
+
+  classFilterClick() {
+    this.hideClassFilters = !this.hideClassFilters;
+  }
+
+  elementFilterClick() {
+    this.hideElementFilters = !this.hideElementFilters;
+  }
+
 
   dataClassesFetch(
     pageSize?: number,
@@ -277,23 +297,60 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     );
   }
 
-  onChecked() {
-    this.dataClassRecords.forEach((x) => (x.checked = this.checkAllCheckbox));
-    this.listChecked();
+  dataElementsFetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection,
+    filters?: {}
+  ): Observable<any> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
+    );
+
+    return this.resources.dataElement.list(
+      this.parentDataModel.id,
+      this.parentDataClass.id,
+      options
+    );
   }
 
-  listChecked() {
+  onClassChecked() {
+    this.dataClassRecords.forEach((x) => (x.checked = this.checkAllClassCheckbox));
+    this.classListChecked();
+  }
+
+  onElementChecked() {
+    this.dataElementRecords.forEach((x) => (x.checked = this.checkAllElementCheckbox));
+    this.elementListChecked();
+  }
+
+  classListChecked() {
     let count = 0;
     for (const value of Object.values(this.dataClassRecords)) {
       if (value.checked) {
         count++;
       }
     }
-    this.bulkActionsVisible = count;
+    this.bulkClassActionsVisible = count;
+  }
+
+  elementListChecked() {
+    let count = 0;
+    for (const value of Object.values(this.dataElementRecords)) {
+      if (value.checked) {
+        count++;
+      }
+    }
+    this.bulkElementActionsVisible = count;
   }
 
   // Drag and drop
-  dropItem(event: CdkDragDrop<any, any, DataClassDetail>) {
+  dropClassItem(event: CdkDragDrop<any, any, DataClassDetail>) {
     moveItemInArray(
       this.dataClassRecords,
       event.previousIndex,
@@ -303,11 +360,25 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     if (prevRec === undefined) {
       return;
     }
-    this.updateOrder(event.item, event.currentIndex);
-    this.table.renderRows();
+    this.updateClassOrder(event.item, event.currentIndex);
+    this.classTable.renderRows();
   }
 
-  updateOrder(item: CdkDrag<DataClassDetail>, newPosition: number) {
+  dropElementItem(event: CdkDragDrop<any, any, DataElement>) {
+    moveItemInArray(
+      this.dataElementRecords,
+      event.previousIndex,
+      event.currentIndex
+    );
+    const prevRec = this.dataElementRecords[event.currentIndex];
+    if (prevRec === undefined) {
+      return;
+    }
+    this.updateElementOrder(event.item, event.currentIndex);
+    this.elementTable.renderRows();
+  }
+
+  updateClassOrder(item: CdkDrag<DataClassDetail>, newPosition: number) {
     const resource: DataClass = {
       label: item.data.label,
       domainType: item.data.domainType,
@@ -353,7 +424,37 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     }
   }
 
-  bulkEdit() {
+  updateElementOrder(item: CdkDrag<DataElement>, newPosition: number) {
+    const resource: DataElement = {
+      id: item.data.id,
+      domainType: item.data.domainType,
+      label: item.data.label,
+      index: newPosition
+    };
+
+    this.resources.dataElement
+      .update(
+        this.parentDataModel.id,
+        this.parentDataClass.id,
+        item.data.id,
+        resource
+      )
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess(
+            'Data Element reordered successfully.'
+          );
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Element.',
+            error
+          );
+        }
+      );
+  }
+
+  bulkEditClass() {
     const dataClassIds = this.dataClassRecords
       .filter((record) => record.checked)
       .map((record) => {
@@ -376,21 +477,51 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .subscribe((result) => {
         if (result) {
           this.dataClassRecords.forEach((x) => (x.checked = false));
-          this.checkAllCheckbox = false;
-          this.bulkActionsVisible = 0;
-          this.filterEvent.emit();
+          this.checkAllClassCheckbox = false;
+          this.bulkClassActionsVisible = 0;
+          this.filterClassEvent.emit();
         }
       });
   }
 
-  bulkDelete() {
-    const dataElementIdLst = this.dataClassRecords.filter(
+  bulkEditElement() {
+    const dataElementIds = this.dataElementRecords
+      .filter((record) => record.checked)
+      .map((record) => {
+        return {
+          id: record.id,
+          domainType: record.domainType
+        };
+      });
+
+    this.editing
+      .openDialog(BulkEditModalComponent, {
+        data: {
+          dataElementIdLst: dataElementIds,
+          parentDataModel: this.parentDataModel,
+          parentDataClass: this.parentDataClass
+        },
+        panelClass: 'bulk-edit-modal'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.checkAllElementCheckbox = false;
+          this.bulkElementActionsVisible = 0;
+          this.filterElementEvent.emit();
+        }
+      });
+  }
+
+  bulkClassDelete() {
+    const dataClassIdList = this.dataClassRecords.filter(
       (record) => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {
-          dataElementIdLst,
+          dataClassIdList,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },
@@ -400,9 +531,33 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .subscribe((result) => {
         if (result != null && result.status === 'ok') {
           this.dataClassRecords.forEach((x) => (x.checked = false));
-          this.checkAllCheckbox = false;
-          this.bulkActionsVisible = 0;
-          this.filterEvent.emit();
+          this.checkAllClassCheckbox = false;
+          this.bulkClassActionsVisible = 0;
+          this.filterClassEvent.emit();
+        }
+      });
+  }
+
+  bulkDelete() {
+    const dataElementIdList = this.dataElementRecords.filter(
+      (record) => record.checked
+    );
+    this.dialog
+      .open(BulkDeleteModalComponent, {
+        data: {
+          dataElementIdList,
+          parentDataModel: this.parentDataModel,
+          parentDataClass: this.parentDataClass
+        },
+        panelClass: 'bulk-delete-modal'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.checkAllElementCheckbox = false;
+          this.bulkElementActionsVisible = 0;
+          this.filterElementEvent.emit();
         }
       });
   }

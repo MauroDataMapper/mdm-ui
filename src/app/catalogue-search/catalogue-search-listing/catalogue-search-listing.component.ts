@@ -175,6 +175,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.lastUpdatedBefore = undefined;
     this.parameters.createdAfter = undefined;
     this.parameters.createdBefore = undefined;
+    this.parameters.supercededDocuments = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
   }

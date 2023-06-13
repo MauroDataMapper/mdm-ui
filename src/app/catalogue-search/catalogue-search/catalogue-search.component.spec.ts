@@ -144,7 +144,8 @@ describe('CatalogueSearchComponent', () => {
         createdAfter: new Date('July 21, 1983 01:15:00'),
         createdBefore: new Date('July 22, 1983 01:15:00'),
         lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
-        lastUpdatedBefore: new Date('July 24, 1983 01:15:00')
+        lastUpdatedBefore: new Date('July 24, 1983 01:15:00'),
+        supercededDocuments: false
       });
 
       harness.component.search();
@@ -165,6 +166,7 @@ describe('CatalogueSearchComponent', () => {
           l: true,
           lua: '1983-07-23',
           lub: '1983-07-24',
+          sd: false,
           search: 'testSearch'
         }
       );

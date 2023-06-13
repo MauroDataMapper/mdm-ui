@@ -503,6 +503,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         lub: null, // lastUpdatedBefore: string (date)
         ca: null, // createdAfter: string (date)
         cb: null, // createdBefore: string (date)
+        sd: false, // supercededDocuments: bool
         md: null // metadata: base64 encoded string
       }
     },

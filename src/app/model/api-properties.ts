@@ -334,5 +334,13 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true,
+  },
+  {
+    key: 'feature.attachment_size_limit_mb',
+    category: 'Features',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
   }
 ];

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="!isLoadingClassResults && !isLoadingElementResults && !totalDataClassCount && !totalDataElementCount" class="pxy-2">
+<div *ngIf="!isLoadingClassResults && !isLoadingElementResults && !totalDataClassCount && !totalDataElementCount && !elementFilter && !classFilter" class="pxy-2">
   <div *ngIf="isEditable" style="width: 100%; text-align: right;" >
     <button
       mat-flat-button
@@ -48,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0
   </p>
 </div>
 
-<div [hidden]="isLoadingClassResults || (!totalDataClassCount && !classFilter)">
+<div [hidden]="!totalDataClassCount && !classFilter">
   <div class="heading-container">
     <div
       fxFlex
@@ -120,7 +120,7 @@ SPDX-License-Identifier: Apache-2.0
             <span class="fas fa-plus" aria-hidden="true"></span>
             Add Data Class
           </button>
-          <button *ngIf="!isLoadingElementResults && !totalDataElementCount"
+          <button *ngIf="!isLoadingElementResults && !totalDataElementCount && !elementFilter"
             mat-flat-button
             color="primary"
             type="button"
@@ -320,7 +320,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <!-- Elements Below here -->
-<div *ngIf="totalDataElementCount > 0 || elementFilter">
+<div [hidden]="!totalDataElementCount && !elementFilter">
   <div class="heading-container" >
     <div
       fxFlex
@@ -382,7 +382,7 @@ SPDX-License-Identifier: Apache-2.0
               <span class="far fa-trash-alt"></span> Delete selected rows
             </button>
           </mat-menu>
-          <button *ngIf="!isLoadingClassResults && !totalDataClassCount"
+          <button *ngIf="!isLoadingClassResults && !totalDataClassCount && !classFilter"
             mat-flat-button
             color="primary"
             type="button"

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DataClassesListComponent } from './data-classes-list.component';
+import { DataClassComponentsListComponent } from './data-class-components-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
@@ -47,8 +47,8 @@ import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('DataClassesListComponent', () => {
-   let component: DataClassesListComponent;
-   let fixture: ComponentFixture<DataClassesListComponent>;
+   let component: DataClassComponentsListComponent;
+   let fixture: ComponentFixture<DataClassComponentsListComponent>;
 
    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -85,7 +85,7 @@ describe('DataClassesListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataClassesListComponent,
+            DataClassComponentsListComponent,
             SkeletonBadgeComponent
          ]
       })
@@ -93,7 +93,7 @@ describe('DataClassesListComponent', () => {
    }));
 
    beforeEach(() => {
-      fixture = TestBed.createComponent(DataClassesListComponent);
+      fixture = TestBed.createComponent(DataClassComponentsListComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
    });

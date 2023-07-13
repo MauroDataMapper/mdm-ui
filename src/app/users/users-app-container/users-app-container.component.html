@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
   >
     <aside
       role="menu"
-      class="menu"
+      class="menu pane"
       fxFlex="18"
       fxFlex.md="18"
       fxHide.sm
@@ -158,13 +158,15 @@ SPDX-License-Identifier: Apache-2.0
             uiSrefActive="active"
           >
             <span class="fas fa-user-clock"></span>
+            <span>Pending users</span>
             <span
-              matBadge="{{ pendingUsersCount }}"
-              matBadgeOverlap="false"
-              matBadgeColor="warn"
-              [matBadgeHidden]="!pendingUsersCount"
-              >Pending users</span
+              class="badge pill-card--red"
+              aria-hidden="false"
+              *ngIf="pendingUsersCount > 0"
+              style="margin-left: 6px"
             >
+              {{ pendingUsersCount }}
+            </span>
           </a>
         </li>
         <li>
@@ -202,6 +204,7 @@ SPDX-License-Identifier: Apache-2.0
     </aside>
     <div
       id="settings-content"
+      class="pane padded-pane"
       fxFlex="82"
       fxFlex.md="100"
       fxFlex.sm="100"

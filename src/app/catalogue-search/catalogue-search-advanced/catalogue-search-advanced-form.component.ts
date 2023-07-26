@@ -52,7 +52,7 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
     createdBefore: new FormControl<Date>(null),
     lastUpdatedAfter: new FormControl<Date>(null),
     lastUpdatedBefore: new FormControl<Date>(null),
-    supercededDocuments: new FormControl(false)
+    includeSuperseded: new FormControl(false)
   });
 
   private unsubscribe$ = new Subject<void>();
@@ -109,8 +109,8 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
     return this.formGroup.controls.createdBefore;
   }
 
-  get supercededDocuments() {
-    return this.formGroup.controls.supercededDocuments;
+  get includeSuperseded() {
+    return this.formGroup.controls.includeSuperseded;
   }
 
   constructor(private resources: MdmResourcesService) {}

@@ -289,7 +289,7 @@ export interface CatalogueSearchParameters {
   /**
    * Optionally return documents that were superceded
    */
-  supercededDocuments?: boolean;
+  includeSuperseded?: boolean;
 
   /**
    * AND matching on classifiers
@@ -371,7 +371,7 @@ export const mapStateParamsToSearchParameters = (
     lastUpdatedBefore: query?.lub ? new Date(query.lub) : undefined,
     createdAfter: query?.ca ? new Date(query.ca) : undefined,
     createdBefore: query?.cb ? new Date(query.cb) : undefined,
-    supercededDocuments: query?.sd === true ? true : false,
+    includeSuperseded: query?.is === true ? true : false,
     classifiers,
     profileFiltersDto: profileFilterDto
   };
@@ -414,7 +414,7 @@ export const mapSearchParametersToRawParams = (
     ...(parameters.createdBefore && {
       cb: serializeDate(parameters.createdBefore)
     }),
-    ...(parameters.supercededDocuments && { sd: parameters.supercededDocuments }),
+    ...(parameters.includeSuperseded && { is: parameters.includeSuperseded }),
     ...(parameters.classifiers && { cls: parameters.classifiers }),
     ...(parameters.profileFiltersDto && {
       md: serializeProfileFiltersDto(parameters.profileFiltersDto)

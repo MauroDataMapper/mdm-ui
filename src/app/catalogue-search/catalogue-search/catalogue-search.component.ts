@@ -107,7 +107,7 @@ export class CatalogueSearchComponent implements AfterViewInit {
         lastUpdatedBefore: this.advancedForm.lastUpdatedBefore.value,
         createdAfter: this.advancedForm.createdAfter.value,
         createdBefore: this.advancedForm.createdBefore.value,
-        supercededDocuments: this.advancedForm.supercededDocuments.value
+        includeSuperseded: this.advancedForm.includeSuperseded.value
       }),
 
       ...(profileFilters && {

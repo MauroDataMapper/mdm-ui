@@ -81,7 +81,7 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() createdBefore = null;
 
-  @Input() supercededDocuments = false;
+  @Input() includeSuperseded = false;
 
   @Input() classifiers: string[] = [];
 
@@ -131,8 +131,8 @@ export class SearchFiltersComponent implements OnInit {
     value: null
   };
 
-  supercededDocumentsFilter: SearchFilterCheckbox = {
-    name: 'supercededDocuments',
+  includeSupersededFilter: SearchFilterCheckbox = {
+    name: 'includeSuperseded',
     checked: false
   };
 
@@ -166,7 +166,7 @@ export class SearchFiltersComponent implements OnInit {
 
     this.createdBeforeFilter.value = this.createdBefore;
 
-    this.supercededDocumentsFilter.checked = this.supercededDocuments;
+    this.includeSupersededFilter.checked = this.includeSuperseded;
   }
 
   get hasValues() {
@@ -209,10 +209,10 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name, value: undefined });
   }
 
-  onSupercededDocumentsChange(event: MatCheckboxChange) {
-    this.supercededDocumentsFilter.checked = event.checked;
+  onIncludeSupersededChange(event: MatCheckboxChange) {
+    this.includeSupersededFilter.checked = event.checked;
 
-    this.filterChange.emit({ name: 'supercededDocuments', value: event.checked });
+    this.filterChange.emit({ name: 'includeSuperseded', value: event.checked });
 
   }
 

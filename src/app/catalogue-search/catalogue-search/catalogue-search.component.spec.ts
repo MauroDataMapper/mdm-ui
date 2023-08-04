@@ -145,7 +145,7 @@ describe('CatalogueSearchComponent', () => {
         createdBefore: new Date('July 22, 1983 01:15:00'),
         lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
         lastUpdatedBefore: new Date('July 24, 1983 01:15:00'),
-        includeSuperseded: false
+        includeSuperseded: true
       });
 
       harness.component.search();
@@ -163,10 +163,10 @@ describe('CatalogueSearchComponent', () => {
           cb: '1983-07-22',
           dt: ['dataModels', 'classifiers'],
           e: true,
+          is: true,
           l: true,
           lua: '1983-07-23',
           lub: '1983-07-24',
-          is: false,
           search: 'testSearch'
         }
       );

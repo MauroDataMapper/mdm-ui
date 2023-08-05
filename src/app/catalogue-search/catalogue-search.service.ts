@@ -208,6 +208,7 @@ export class CatalogueSearchService {
       lastUpdatedBefore: serializeDate(params.lastUpdatedBefore),
       createdAfter: serializeDate(params.createdAfter),
       createdBefore: serializeDate(params.createdBefore),
+      includeSuperseded: params.includeSuperseded,
       classifiers: params.classifiers
     };
   }

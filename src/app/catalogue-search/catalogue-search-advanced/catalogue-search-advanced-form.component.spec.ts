@@ -63,7 +63,7 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
     harness.component.lastUpdatedBefore.setValue(
       new Date('July 24, 1983 01:15:00')
     );
-
+    harness.component.includeSuperseded.setValue(false);
     harness.component.reset();
     expect(harness.component.context.value).toBe(null);
     expect(harness.component.domainTypes.value).toBe(null);
@@ -74,6 +74,7 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
     expect(harness.component.createdBefore.value).toBe(null);
     expect(harness.component.lastUpdatedAfter.value).toBe(null);
     expect(harness.component.lastUpdatedBefore.value).toBe(null);
+    expect(harness.component.includeSuperseded.value).toBe(null);
   });
 
   it('it should format dates correctly', () => {

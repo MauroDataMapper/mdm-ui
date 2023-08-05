@@ -81,6 +81,8 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() createdBefore = null;
 
+  @Input() includeSuperseded = false;
+
   @Input() classifiers: string[] = [];
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
@@ -105,7 +107,7 @@ export class SearchFiltersComponent implements OnInit {
   };
 
   exactMatchFilter: SearchFilterCheckbox = {
-    name: 'labelOnly',
+    name: 'exactMatchOnly',
     checked: false
   };
 
@@ -127,6 +129,11 @@ export class SearchFiltersComponent implements OnInit {
   createdBeforeFilter: SearchFilterDate = {
     name: 'createdBefore',
     value: null
+  };
+
+  includeSupersededFilter: SearchFilterCheckbox = {
+    name: 'includeSuperseded',
+    checked: false
   };
 
   classifiersFilter: Classifier[] = [];
@@ -158,6 +165,8 @@ export class SearchFiltersComponent implements OnInit {
     this.createdAfterFilter.value = this.createdAfter;
 
     this.createdBeforeFilter.value = this.createdBefore;
+
+    this.includeSupersededFilter.checked = this.includeSuperseded;
   }
 
   get hasValues() {
@@ -198,6 +207,13 @@ export class SearchFiltersComponent implements OnInit {
 
   onDateClear(name: string) {
     this.filterChange.emit({ name, value: undefined });
+  }
+
+  onIncludeSupersededChange(event: MatCheckboxChange) {
+    this.includeSupersededFilter.checked = event.checked;
+
+    this.filterChange.emit({ name: 'includeSuperseded', value: event.checked });
+
   }
 
   onClassifiersChange(event: MatSelectChange) {

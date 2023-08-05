@@ -49,6 +49,15 @@ SPDX-License-Identifier: Apache-2.0
           Exact Match
         </mat-checkbox>
       </li>
+      <li>
+        <mat-checkbox
+          color="primary"
+          [checked]="includeSupersededFilter.checked"
+          (change)="onIncludeSupersededChange($event)"
+        >
+          Show Superseded
+        </mat-checkbox>
+      </li>
     </ul>
   </div>
   <div class="mdm-search-filters__section">

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { AdminAppContainerComponent } from '@mdm/admin/app-container/app-container.component';
 import { DashboardComponent } from '@mdm/admin/home/home.component';
 import { EmailsComponent } from '@mdm/admin/emails/emails.component';
@@ -32,6 +32,7 @@ import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/
 import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
@@ -129,6 +130,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })]
+  imports: [UIRouterModule.forChild({ states: pageRoutes.states }), SharedModule],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class AdminRoutesModule { }

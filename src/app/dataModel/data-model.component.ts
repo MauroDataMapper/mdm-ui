@@ -34,6 +34,8 @@ import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { LazyElementsModule } from '@angular-extensions/elements';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/compiler';
 
 @Component({
   selector: 'mdm-data-model',
@@ -56,6 +58,8 @@ export class DataModelComponent
   showDelete = false;
   activeTab: any;
   semanticLinks: any[] = [];
+
+  additionalTabs: any[] = [];
   access: Access;
   tabs = new TabCollection([
     'search',
@@ -106,6 +110,9 @@ export class DataModelComponent
     if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
+
+
+
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
     this.showFinalised = this.uiRouterGlobals.params.finalised;
@@ -174,6 +181,22 @@ export class DataModelComponent
         .subscribe(async (result: DataModelDetailResponse) => {
           this.dataModel = result.body;
           this.catalogueItem = result.body;
+
+          console.log(this.resourcesService.dataModel);
+          this.resourcesService.dataModel
+            .dataModelViews(this.dataModel.id)
+            .subscribe((response) => {
+              this.additionalTabs = response.body;
+              this.additionalTabs.forEach((x) => {
+                x.url = this.sharedService.backendURL + '/ui/plugins/dataModel/' +
+                  this.dataModel.id + '/views/' +
+                  x.pluginNamespace + '/' +
+                  x.pluginName + '/' +
+                  x.pluginVersion
+              })
+              console.log(this.additionalTabs);
+            });
+
 
           if (this.dataModel.semanticLinks) {
             this.compareToList = this.dataModel.semanticLinks
@@ -278,6 +301,13 @@ export class DataModelComponent
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
+
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
+  }
+
+  handleChange(change: Partial<number>) {
+    console.log("Change here");
+    console.log(change);
+    // ...
   }
 }

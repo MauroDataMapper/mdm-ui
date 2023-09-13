@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Injector, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule } from "@angular/core";
 import { AboutComponent } from './about/about.component';
 import { FolderComponent } from './folder/folder.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
@@ -78,6 +78,7 @@ import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/refe
 import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { redirectUsingPath } from './routing.types';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 /**
  * Collection of all page state routes.
@@ -224,7 +225,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       data: {
         allowAnonymous: true,
         domainType: CatalogueItemDomainType.DataModel
-      }
+      },
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
@@ -626,13 +627,17 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
     UIRouterModule.forChild({
       states: pageRoutes.states,
       config: routerConfigFn
-    })
+    }),
+    LazyElementsModule
   ],
   providers: [
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class AppRoutingModule {

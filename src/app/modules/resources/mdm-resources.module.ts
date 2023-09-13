@@ -15,10 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {  NgModule, Optional, SkipSelf } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, Optional, SkipSelf } from "@angular/core";
 import { MdmResourcesConfiguration } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from './mdm-resources.service';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 /**
  * A wrapper Angular module for @mdm-api/resources
@@ -27,6 +28,10 @@ import { MdmRestHandlerService } from './mdm-rest-handler.service';
   providers: [
     MdmResourcesService,
     MdmRestHandlerService
+  ],
+  imports: [SharedModule],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class MdmResourcesModule {

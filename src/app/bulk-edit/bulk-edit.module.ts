@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { BulkEditEditorComponent } from './bulk-edit-editor/bulk-edit-editor.component';
 import { AgGridModule } from '@ag-grid-community/angular';
@@ -31,6 +31,7 @@ import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/tex
 import { FullContentEditDialogComponent } from './bulk-edit-editor/dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -50,8 +51,12 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     MaterialModule,
     FormsModule,
     SharedModule,
-    AgGridModule
+    AgGridModule,
+
   ],
-  exports: [BulkEditEditorComponent, BulkEditContainerComponent]
+  exports: [BulkEditEditorComponent, BulkEditContainerComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class BulkEditModule {}

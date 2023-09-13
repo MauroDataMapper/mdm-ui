@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { FormsModule } from '@angular/forms';
@@ -64,6 +64,7 @@ import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.compon
 import { ElementLabelComponent } from './element-label/element-label.component';
 import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { LazyElementsModule } from "@angular-extensions/elements";
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     CodemirrorModule,
     JoditAngularModule,
     UIRouterModule,
-    ImageCropperModule
+    ImageCropperModule,
+    LazyElementsModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -166,6 +168,10 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     MauroItemTreeComponent,
     ElementLabelComponent,
     ImgCroppieComponent,
+    LazyElementsModule
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class SharedModule {}

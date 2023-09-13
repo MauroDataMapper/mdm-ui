@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { UsersAppContainerComponent } from '@mdm/users/users-app-container/users-app-container.component';
 import { ProfileComponent } from '@mdm/userArea/profile/profile.component';
@@ -46,6 +46,9 @@ import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detai
     UsersAppContainerComponent,
     ProfileComponent,
     UserDetailsComponent
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class UsersModule {}

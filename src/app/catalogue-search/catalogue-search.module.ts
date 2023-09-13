@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@mdm/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
@@ -31,6 +31,7 @@ import { CatalogueSearchProfileFilterListComponent } from './catalogue-search-pr
 import { ProfileFilterCardComponent } from './profile-filter-card/profile-filter-card.component';
 import { ProfileFiltersComponent } from './profile-filters/profile-filters.component';
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/profile-filter-dialog-component';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,9 @@ import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/
     MaterialModule,
     FoldersTreeModule
   ],
-  exports: [CatalogueItemSearchComponent]
+  exports: [CatalogueItemSearchComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class CatalogueSearchModule {}

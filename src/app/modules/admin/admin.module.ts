@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { AdminAppContainerComponent } from '@mdm/admin/app-container/app-container.component';
 import { AdminRoutesModule } from '../admin-routes/admin-routes.module';
@@ -29,6 +29,7 @@ import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provid
 import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
 import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
 import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.component';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,9 @@ import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.componen
     ProfilesDashboardComponent,
     MatchThemeColorPatternPipe,
     ThemeImageComponent,
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class AdminModule {}

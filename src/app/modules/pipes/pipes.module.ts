@@ -16,10 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
 import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -27,11 +28,15 @@ import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
     JoinArrayPipe
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   exports: [
     HighlighterPipe,
     JoinArrayPipe
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class PipesModule { }

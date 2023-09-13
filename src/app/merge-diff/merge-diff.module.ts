@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@mdm/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
@@ -28,6 +28,7 @@ import { MergeFilterPipe } from './pipes/merge-filter.pipe';
 import { ConflictEditorModalComponent } from './conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
 import { StringConflictEditorComponent } from './conflict-editor/string-conflict-editor/string-conflict-editor.component';
 import { NumberConflictEditorComponent } from './conflict-editor/number-conflict-editor/number-conflict-editor.component';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 @NgModule({
   declarations: [
@@ -37,9 +38,12 @@ import { NumberConflictEditorComponent } from './conflict-editor/number-conflict
     MergeFilterPipe,
     ConflictEditorModalComponent,
     StringConflictEditorComponent,
-    NumberConflictEditorComponent
+    NumberConflictEditorComponent,
   ],
   imports: [CommonModule, SharedModule, MaterialModule, CatalogueModule],
-  exports: [MergeDiffContainerComponent]
+  exports: [MergeDiffContainerComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class MergeDiffModule {}

@@ -358,4 +358,30 @@ SPDX-License-Identifier: Apache-2.0
       ></mdm-history>
     </div>
   </mat-tab>
+
+  <mat-tab *ngFor="let additionalTab of additionalTabs">
+    <ng-template mat-tab-label>
+      {{ additionalTab.tabName }}
+    </ng-template>
+    <ng-template matTabContent>
+
+      <div class="full-width">
+        <h2>
+          {{ additionalTab.tabName }}
+        </h2>
+
+        <app-element
+          *axLazyElement="'http://localhost:8080/api/ui/plugins/dataModel/b2454938-cefa-4fa5-8c04-a13b48426459/views/uk.ac.ox.softeng.maurodatamapper.plugins.forms.ui/FormsDataModelViewUIProviderService/1.0.0'; module: true; errorTemplate: error; "
+          [number]="dataModel.id"
+        >
+        </app-element>
+
+        <mwc-icon *axLazyElement="'https://unpkg.com/@material/mwc-icon@0.18.0/mwc-icon.js?module'; module: true">
+          favorite
+        </mwc-icon>
+      </div>
+    </ng-template>
+  </mat-tab>
+
 </mat-tab-group>
+<ng-template #error>Loading failed...</ng-template>

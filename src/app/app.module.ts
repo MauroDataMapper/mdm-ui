@@ -21,7 +21,7 @@ import {
   LocationStrategy
 } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from "@angular/core";
 import {
   MatDialogRef,
   MAT_DIALOG_DEFAULT_OPTIONS
@@ -46,6 +46,7 @@ import { HttpRequestProgressInterceptor } from './services/http-request-progress
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
 import { BulkEditModule } from './bulk-edit/bulk-edit.module';
 import { CatalogueSearchModule } from './catalogue-search/catalogue-search.module';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 @NgModule({
   declarations: [AppComponent],
@@ -65,7 +66,8 @@ import { CatalogueSearchModule } from './catalogue-search/catalogue-search.modul
       apiEndpoint: environment.apiEndpoint
     }),
     MergeDiffModule,
-    CatalogueSearchModule
+    CatalogueSearchModule,
+    LazyElementsModule
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
@@ -83,6 +85,9 @@ import { CatalogueSearchModule } from './catalogue-search/catalogue-search.modul
       useClass: HttpRequestProgressInterceptor,
       multi: true
     }
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ],
   bootstrap: [UiViewComponent]
 })

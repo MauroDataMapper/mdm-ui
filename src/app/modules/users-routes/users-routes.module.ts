@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ProfileComponent } from '@mdm/userArea/profile/profile.component';
 import { SettingsComponent } from '@mdm/userArea/settings/settings.component';
@@ -27,6 +27,7 @@ import { AsyncJobListComponent } from '@mdm/userArea/async-job-list/async-job-li
 import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-job-detail.component';
 import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
 import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 export const pageRoutes = {
   states: [
@@ -84,12 +85,15 @@ export const pageRoutes = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
+  imports: [UIRouterModule.forChild({ states: pageRoutes.states }), SharedModule],
   providers: [
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class UsersRoutesModule {}

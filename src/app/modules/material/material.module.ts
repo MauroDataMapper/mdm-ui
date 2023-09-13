@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -52,6 +52,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -89,7 +90,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatTooltipModule,
     MatTreeModule,
     MatNativeDateModule,
-    ScrollingModule
+    ScrollingModule,
   ],
   exports: [
     MatAutocompleteModule,
@@ -128,7 +129,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatNativeDateModule,
     ScrollingModule
   ],
-  providers: []
+  providers: [],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class MaterialModule {
   constructor(public matIconRegistry: MatIconRegistry) {}

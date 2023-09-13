@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { MatTreeModule } from '@angular/material/tree';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +32,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PipesModule } from '@mdm/modules/pipes/pipes.module';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { LazyElementsModule } from '@angular-extensions/elements';
+import { SharedModule } from "@mdm/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -46,7 +48,8 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    PipesModule
+    PipesModule,
+    SharedModule
   ],
   declarations: [
     FoldersTreeComponent,
@@ -60,6 +63,9 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
     MatInputModule,
     ModelSelectorTreeComponent
   ],
-  providers: [FolderService]
+  providers: [FolderService],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class FoldersTreeModule {}

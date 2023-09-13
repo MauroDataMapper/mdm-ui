@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -52,6 +52,7 @@ import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
+import { LazyElementsModule } from '@angular-extensions/elements';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -113,6 +114,9 @@ const defaultAceConfig: AceConfigInterface = {};
     ConfirmationModalComponent,
     ChangeBranchNameModalComponent,
     ExportModelDialogComponent
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class ModalModule {

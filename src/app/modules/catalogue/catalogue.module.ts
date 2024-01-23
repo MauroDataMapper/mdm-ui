@@ -178,6 +178,7 @@ import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel
 import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
+import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 
 @NgModule({
   providers: [
@@ -223,6 +224,7 @@ import { DataClassComponentsListComponent } from '@mdm/shared/data-class-compone
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
+    ElementDataTypeDetailsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -395,6 +397,7 @@ import { DataClassComponentsListComponent } from '@mdm/shared/data-class-compone
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
+    ElementDataTypeDetailsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,

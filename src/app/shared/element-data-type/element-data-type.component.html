@@ -156,17 +156,17 @@ SPDX-License-Identifier: Apache-2.0
       ></mdm-element-link>
     </span>
   </span>
-  <span *ngIf="elementDataType.domainType == 'TerminologyType'">
-    <span *ngIf="!onlyShowRefDataClass">
-      <div>
+  <span *ngIf="elementDataType.domainType == 'TerminologyType' || elementDataType.domainType == 'CodeSetType' || elementDataType.domainType == 'ReferenceDataModelType'">
+    <span>
+      <div *ngIf="!hideName">
         <a href="{{ link }}">{{ elementDataType.label }}</a
-        ><span class="dataTypeLabel dataTypeEnumeration">(Terminology)</span>
+        ><span class="dataTypeLabel dataTypeEnumeration">({{ elementDataType.modelResourceDomainType }})</span>
       </div>
-      <div *ngIf="referenceClass">
+      <div>
         <span style="font-size: 13px"
           >[<span style="font-style: italic">ref:&nbsp;</span>
           <mdm-element-link
-            [element]="elementDataType.modelResourceId"
+            [element]="modelResource"
             [newWindow]="newWindow"
           ></mdm-element-link
           >]
@@ -181,7 +181,7 @@ SPDX-License-Identifier: Apache-2.0
     </span>
   </span>
   <span *ngIf="elementDataType.domainType == 'ModelDataType'">
-    <div>
+    <div *ngIf="!hideName">
       <a href="{{ link }}">{{ elementDataType.label }}</a
       ><span class="dataTypeLabel dataTypeEnumeration"
         >({{ elementDataType.modelResourceDomainType }})</span

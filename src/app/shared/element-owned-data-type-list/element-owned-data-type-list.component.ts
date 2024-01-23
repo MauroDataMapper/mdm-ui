@@ -138,6 +138,19 @@ export class ElementOwnedDataTypeListComponent
         )
         .subscribe((data) => {
           this.records = data;
+          data.forEach((x: any) => {
+            if(x.domainType === 'ModelDataType') {
+              if(x.modelResourceDomainType === 'Terminology') {
+                x.domainType = 'TerminologyType';
+              }
+              if(x.modelResourceDomainType === 'CodeSet') {
+                x.domainType = 'CodeSetType';
+              }
+              if(x.modelResourceDomainType === 'ReferenceDataModel') {
+                x.domainType = 'ReferenceDataModelType';
+              }
+            }
+          });
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
         });

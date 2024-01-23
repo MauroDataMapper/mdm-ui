@@ -152,7 +152,7 @@ export class ElementTypesService {
       title: 'DataType (Reference)',
       baseTitle: 'DataType',
       markdown: 'dt',
-      displayLabel: 'Reference',
+      displayLabel: 'Reference to DataClass',
       classifiable: true,
       domainName: 'referenceTypes'
     },
@@ -162,7 +162,7 @@ export class ElementTypesService {
       title: 'DataType (ModelDataType)',
       baseTitle: 'DataType',
       markdown: 'mdt',
-      displayLabel: 'ModelDataType',
+      displayLabel: 'Reference to Model',
       classifiable: true,
       domainName: 'modelDataTypes'
     },
@@ -172,7 +172,7 @@ export class ElementTypesService {
       title: 'DataType (Terminology)',
       baseTitle: 'DataType',
       markdown: 'dt',
-      displayLabel: 'Terminology',
+      displayLabel: 'Reference to Terminology',
       classifiable: true,
       domainName: 'dataTypes'
     },
@@ -182,7 +182,7 @@ export class ElementTypesService {
       title: 'CodeSet',
       baseTitle: 'DataType',
       markdown: 'cst',
-      displayLabel: 'Code Set',
+      displayLabel: 'Reference to CodeSet',
       classifiable: true,
       domainName: 'dataTypes'
     },
@@ -192,7 +192,7 @@ export class ElementTypesService {
       title: 'ReferenceDataModel',
       baseTitle: 'DataType',
       markdown: 'rdmt',
-      displayLabel: 'Reference Data Model',
+      displayLabel: 'Reference to Reference DataModel',
       classifiable: true,
       domainName: 'referenceDataTypes'
     },

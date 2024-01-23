@@ -85,7 +85,10 @@ export class ElementDataTypeComponent implements OnInit {
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
     }
 
-    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType) {
+    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.TerminologyType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.CodeSetType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
       this.loadModelResource();
     }
 

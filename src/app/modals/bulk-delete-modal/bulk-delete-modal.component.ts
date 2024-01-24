@@ -93,6 +93,10 @@ export class BulkDeleteModalComponent implements AfterViewInit {
             }
           case CatalogueItemDomainType.PrimitiveType:
           case CatalogueItemDomainType.ReferenceType:
+          case CatalogueItemDomainType.ModelDataType:
+          case CatalogueItemDomainType.CodeSetType:
+          case CatalogueItemDomainType.TerminologyType:
+          case CatalogueItemDomainType.ReferenceDataModelType:
           case CatalogueItemDomainType.EnumerationType:
             if (item.imported) {
               return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();

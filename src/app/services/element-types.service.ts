@@ -178,23 +178,23 @@ export class ElementTypesService {
     },
     {
       id: 'CodeSetType',
-      link: 'codeSet',
-      title: 'CodeSet',
+      link: 'dataType',
+      title: 'DataType (CodeSet)',
       baseTitle: 'DataType',
-      markdown: 'cst',
+      markdown: 'dt',
       displayLabel: 'Reference to CodeSet',
       classifiable: true,
       domainName: 'dataTypes'
     },
     {
       id: 'ReferenceDataModelType',
-      link: 'referenceDataModel',
-      title: 'ReferenceDataModel',
+      link: 'dataType',
+      title: 'DataType (ReferenceDataModel)',
       baseTitle: 'DataType',
-      markdown: 'rdmt',
-      displayLabel: 'Reference to Reference DataModel',
+      markdown: 'dt',
+      displayLabel: 'Reference to ReferenceDataModel',
       classifiable: true,
-      domainName: 'referenceDataTypes'
+      domainName: 'dataTypes'
     },
     {
       id: 'EnumerationValue',

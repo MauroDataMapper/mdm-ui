@@ -58,12 +58,12 @@ export class NewDataTypeInlineComponent
   @Input() model: DataType = {
     label: '',
     description: '',
-    domainType: CatalogueItemDomainType.PrimitiveType,
+    domainType: CatalogueItemDomainType.PrimitiveType, // Default value
     model: '',
     breadcrumbs: [],
     classifiers: [],
     modelResourceId: '',
-    modelResourceDomainType: null,
+    modelResourceDomainType: CatalogueItemDomainType.TerminologyType, // Default value
     enumerationValues: [],
     referenceClass: null
   };

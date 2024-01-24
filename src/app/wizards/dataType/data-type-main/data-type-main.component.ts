@@ -26,7 +26,6 @@ import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.compo
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItemDomainType,
-  DataModelDetailResponse,
   DataType,
   Uuid
 } from '@maurodatamapper/mdm-resources';
@@ -99,11 +98,11 @@ export class DataTypeMainComponent implements OnInit {
 
     this.resources.dataModel
       .get(this.parentDataModelId)
-      .subscribe((result: DataModelDetailResponse) => {
+      .subscribe((result) => {
         result.body.breadcrumbs = [];
         result.body.breadcrumbs.push(Object.assign({}, result.body));
-        this.model.parent.id = result.body.id || '';
-
+        // this.model.parent.id = result.body.id || '';
+        this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
         this.changeRef.detectChanges();

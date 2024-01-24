@@ -50,16 +50,19 @@ export class DataTypeMainComponent implements OnInit {
       id: ''
     },
     parentDataModel: { id: '' },
-    label: '',
-    description: '',
-    organisation: '',
-    domainType: CatalogueItemDomainType.PrimitiveType,
-    metadata: [],
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataType: { id: '' },
-    referencedModel: { id: '', domainType: '' },
-    referencedDataClass: { id: '' },
+    dataType: {
+      label : '',
+      description: '',
+      organisation: '',
+      domainType: CatalogueItemDomainType.PrimitiveType,
+      metadata: [],
+      enumerationValues: [],
+      classifiers: [],
+      // referencedDataType: { id: '' },
+      modelResourceId: '',
+      modelResourceDomainType: null,
+      referenceClass: { id: '' },
+    } as DataType,
     isProcessComplete: false
   };
   constructor(
@@ -138,34 +141,35 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    const domainType = this.elementTypes.isModelDataType(this.model.domainType)
+    const domainType = this.elementTypes.isModelDataType(this.model.dataType.domainType)
       ? CatalogueItemDomainType.ModelDataType
-      : this.model.domainType;
+      : this.model.dataType.domainType;
 
     const resource: DataType = {
       domainType,
-      label: this.model.label,
-      description: this.model.description,
-      classifiers: this.model.classifiers.map((cls) => {
+      label: this.model.dataType.label,
+      description: this.model.dataType.description,
+      classifiers: this.model.dataType.classifiers.map((cls) => {
         return { id: cls.id };
       })
     };
-
     if (domainType === CatalogueItemDomainType.ModelDataType) {
-      resource.modelResourceDomainType = this.model.referencedModel
-        ?.domainType as CatalogueItemDomainType;
-      resource.modelResourceId = this.model.referencedModel?.id;
+      resource.modelResourceDomainType = this.model.dataType.modelResourceDomainType;
+      resource.modelResourceId = this.model.dataType.modelResourceId;
+
     } else {
-      resource.id = this.model.referencedDataType
-        ? this.model.referencedDataType.id
+      /*
+      resource.id = this.model.dataType.referencedDataType
+        ? this.model.dataType.referencedDataType.id
         : null;
+      */
 
       resource.referenceClass = {
-        id: this.model.referencedDataClass
-          ? this.model.referencedDataClass.id
+        id: this.model.dataType.referenceClass
+          ? this.model.dataType.referenceClass.id
           : null
       };
-      resource.enumerationValues = this.model.enumerationValues.map((m) => {
+      resource.enumerationValues = this.model.dataType.enumerationValues.map((m) => {
         return {
           key: m.key,
           value: m.value,

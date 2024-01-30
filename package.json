@@ -50,7 +50,7 @@
     "@uirouter/core": "6.0.9",
     "@uirouter/rx": "1.0.0",
     "angular-split": "4.0.0",
-    "backbone": "1.4.0",
+    "backbone": "1.5.0",
     "bootstrap": "4.6.0",
     "brace": "0.11.1",
     "chart.js": "3.9.1",

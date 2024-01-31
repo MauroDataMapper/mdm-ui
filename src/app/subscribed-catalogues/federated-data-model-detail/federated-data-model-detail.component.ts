@@ -19,7 +19,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import {

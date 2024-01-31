@@ -16,11 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyFormFieldAppearance as MatFormFieldAppearance } from '@angular/material/legacy-form-field';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import {
   Classifier,
   ClassifierIndexResponse

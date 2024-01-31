@@ -23,7 +23,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { EMPTY, Subscription } from 'rxjs';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';

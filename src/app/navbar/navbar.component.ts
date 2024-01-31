@@ -21,7 +21,7 @@ import { LoginModalComponent } from '@mdm/modals/login-modal/login-modal.compone
 import { ForgotPasswordModalComponent } from '@mdm/modals/forgot-password-modal/forgot-password-modal.component';
 import { SharedService } from '@mdm/services/shared.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
 import { Subject } from 'rxjs';
 import { EditingService } from '@mdm/services/editing.service';

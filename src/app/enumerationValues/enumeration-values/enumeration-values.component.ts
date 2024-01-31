@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { Title } from '@angular/platform-browser';
 import { DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { UIRouterGlobals } from '@uirouter/core';

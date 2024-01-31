@@ -34,7 +34,7 @@ import {
   MessageService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,

@@ -35,8 +35,8 @@ import { GridService } from '@mdm/services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MatTable } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyTable as MatTable } from '@angular/material/legacy-table';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'mdm-group-member-table',

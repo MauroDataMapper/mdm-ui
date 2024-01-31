@@ -22,7 +22,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';

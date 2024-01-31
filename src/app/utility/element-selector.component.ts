@@ -24,7 +24,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MessageService } from '../services/message.service';
 import {
   animate,
@@ -41,7 +41,7 @@ import {
   filter,
   distinctUntilChanged
 } from 'rxjs/operators';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { GridService } from '@mdm/services/grid.service';
 import {
   ContainerDomainType,

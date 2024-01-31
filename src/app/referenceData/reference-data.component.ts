@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { SharedService } from '@mdm/services/shared.service';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';

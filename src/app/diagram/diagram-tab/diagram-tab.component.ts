@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
 import { DiagramCatalogueItem, DiagramMode } from '../diagram/diagram.model';

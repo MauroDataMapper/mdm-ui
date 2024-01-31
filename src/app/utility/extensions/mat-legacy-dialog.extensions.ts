@@ -16,10 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  MatDialog,
-  MatDialogConfig,
-  MatDialogRef
-} from '@angular/material/dialog';
+  MatLegacyDialog,
+  MatLegacyDialogConfig,
+  MatLegacyDialogRef
+} from '@angular/material/legacy-dialog';
 import {
   Branchable,
   CatalogueItem,
@@ -61,8 +61,8 @@ import {
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-declare module '@angular/material/dialog' {
-  interface MatDialog {
+declare module '@angular/material/legacy-dialog' {
+  interface MatLegacyDialog {
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent`.
      *
@@ -77,8 +77,8 @@ declare module '@angular/material/dialog' {
      * @see `ConfirmationModalResult`
      */
     openConfirmation(
-      config: MatDialogConfig<ConfirmationModalConfig>
-    ): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>;
+      config: MatLegacyDialogConfig<ConfirmationModalConfig>
+    ): MatLegacyDialogRef<ConfirmationModalComponent, ConfirmationModalResult>;
 
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent` and asynchronously
@@ -103,7 +103,7 @@ declare module '@angular/material/dialog' {
      * @see `openDoubleConfirmationAsync()`
      */
     openConfirmationAsync(
-      config: MatDialogConfig<ConfirmationModalConfig>
+      config: MatLegacyDialogConfig<ConfirmationModalConfig>
     ): Observable<void>;
 
     /**
@@ -131,8 +131,8 @@ declare module '@angular/material/dialog' {
      * @see `openConfirmationAsync()`
      */
     openDoubleConfirmationAsync(
-      firstConfig: MatDialogConfig<ConfirmationModalConfig>,
-      finalConfig: MatDialogConfig<ConfirmationModalConfig>
+      firstConfig: MatLegacyDialogConfig<ConfirmationModalConfig>,
+      finalConfig: MatLegacyDialogConfig<ConfirmationModalConfig>
     ): Observable<void>;
 
     /**
@@ -146,7 +146,7 @@ declare module '@angular/material/dialog' {
     openSecurityAccess(
       element: CatalogueItem & SecurableModel,
       resource: SecurityAccessResource
-    ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
+    ): MatLegacyDialogRef<SecurityModalComponent, ModalDialogStatus>;
 
     /**
      * Extension method to open a modal dialog containing the `ChangeLabelModalComponent`.
@@ -187,10 +187,10 @@ declare module '@angular/material/dialog' {
   }
 }
 
-MatDialog.prototype.openConfirmation = function (
-  this: MatDialog,
-  config: MatDialogConfig<ConfirmationModalConfig>
-): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult> {
+MatLegacyDialog.prototype.openConfirmation = function (
+  this: MatLegacyDialog,
+  config: MatLegacyDialogConfig<ConfirmationModalConfig>
+): MatLegacyDialogRef<ConfirmationModalComponent, ConfirmationModalResult> {
   return this.open<
     ConfirmationModalComponent,
     ConfirmationModalConfig,
@@ -198,9 +198,9 @@ MatDialog.prototype.openConfirmation = function (
   >(ConfirmationModalComponent, config);
 };
 
-MatDialog.prototype.openConfirmationAsync = function (
-  this: MatDialog,
-  config: MatDialogConfig<ConfirmationModalConfig>
+MatLegacyDialog.prototype.openConfirmationAsync = function (
+  this: MatLegacyDialog,
+  config: MatLegacyDialogConfig<ConfirmationModalConfig>
 ): Observable<void> {
   return this.openConfirmation(config)
     .afterClosed()
@@ -213,10 +213,10 @@ MatDialog.prototype.openConfirmationAsync = function (
     );
 };
 
-MatDialog.prototype.openDoubleConfirmationAsync = function (
-  this: MatDialog,
-  firstConfig: MatDialogConfig<ConfirmationModalConfig>,
-  finalConfig: MatDialogConfig<ConfirmationModalConfig>
+MatLegacyDialog.prototype.openDoubleConfirmationAsync = function (
+  this: MatLegacyDialog,
+  firstConfig: MatLegacyDialogConfig<ConfirmationModalConfig>,
+  finalConfig: MatLegacyDialogConfig<ConfirmationModalConfig>
 ): Observable<void> {
   return this.openConfirmation(firstConfig)
     .afterClosed()
@@ -236,11 +236,11 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
     );
 };
 
-MatDialog.prototype.openSecurityAccess = function (
-  this: MatDialog,
+MatLegacyDialog.prototype.openSecurityAccess = function (
+  this: MatLegacyDialog,
   element: CatalogueItem & SecurableModel,
   resource: SecurityAccessResource
-): MatDialogRef<SecurityModalComponent, ModalDialogStatus> {
+): MatLegacyDialogRef<SecurityModalComponent, ModalDialogStatus> {
   return this.open<
     SecurityModalComponent,
     SecurityModalConfiguration,
@@ -254,8 +254,8 @@ MatDialog.prototype.openSecurityAccess = function (
   });
 };
 
-MatDialog.prototype.openChangeLabel = function (
-  this: MatDialog,
+MatLegacyDialog.prototype.openChangeLabel = function (
+  this: MatLegacyDialog,
   item: CatalogueItemDetail
 ): Observable<ChangeLabelModalResult> {
   return this.open<
@@ -276,8 +276,8 @@ MatDialog.prototype.openChangeLabel = function (
     );
 };
 
-MatDialog.prototype.openChangeBranchName = function (
-  this: MatDialog,
+MatLegacyDialog.prototype.openChangeBranchName = function (
+  this: MatLegacyDialog,
   model: Modelable & Branchable
 ): Observable<ChangeBranchNameModalResult> {
   return this.open<
@@ -298,8 +298,8 @@ MatDialog.prototype.openChangeBranchName = function (
     );
 };
 
-MatDialog.prototype.openExportModel = function (
-  this: MatDialog,
+MatLegacyDialog.prototype.openExportModel = function (
+  this: MatLegacyDialog,
   data: ExportModelDialogOptions
 ): Observable<ExportModelDialogResponse> {
   return this.open<

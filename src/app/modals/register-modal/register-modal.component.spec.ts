@@ -27,7 +27,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 
 describe('RegisterModalComponent', () => {
   let component: RegisterModalComponent;

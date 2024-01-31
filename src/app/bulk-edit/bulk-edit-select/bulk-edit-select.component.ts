@@ -25,7 +25,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectionListChange } from '@angular/material/list';
+import { MatLegacySelectionListChange as MatSelectionListChange } from '@angular/material/legacy-list';
 import {
   CatalogueItemDomainType,
   FilterQueryParameters,

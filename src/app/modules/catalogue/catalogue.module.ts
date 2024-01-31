@@ -129,7 +129,7 @@ import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
 import { SummaryMetadataPopupComponent } from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';

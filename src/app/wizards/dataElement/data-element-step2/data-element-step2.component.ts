@@ -30,11 +30,11 @@ import {
 import { merge, Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';

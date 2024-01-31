@@ -26,7 +26,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';

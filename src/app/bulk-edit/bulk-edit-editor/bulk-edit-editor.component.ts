@@ -43,7 +43,7 @@ import {
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
 import { TextAreaCellEditorComponent } from './cell-editors/text-area-cell-editor/text-area-cell-editor.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
   FullContentEditDialogComponent,
   FullContentEditDialogData,

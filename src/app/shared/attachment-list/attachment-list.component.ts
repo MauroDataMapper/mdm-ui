@@ -32,7 +32,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import {
   CatalogueItem,
   CatalogueItemDomainType,
@@ -43,7 +43,7 @@ import {
   Securable
 } from '@maurodatamapper/mdm-resources';
 import { EditableRecord } from '@mdm/model/editable-forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 export interface ReferenceFileEditor {
   fileName: string;

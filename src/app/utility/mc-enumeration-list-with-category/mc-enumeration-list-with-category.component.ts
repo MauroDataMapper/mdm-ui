@@ -30,7 +30,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { MatLegacyTable as MatTable } from '@angular/material/legacy-table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -50,7 +50,7 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',

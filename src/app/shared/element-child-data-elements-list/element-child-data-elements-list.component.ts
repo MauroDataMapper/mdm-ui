@@ -32,7 +32,7 @@ import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { MatLegacyTable as MatTable } from '@angular/material/legacy-table';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataElement } from '@maurodatamapper/mdm-resources';
 

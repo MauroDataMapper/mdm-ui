@@ -29,7 +29,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { Title } from '@angular/platform-browser';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource, MatLegacyTable as MatTable } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 

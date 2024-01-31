@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 
 @Component({
   selector: 'mdm-download-link',

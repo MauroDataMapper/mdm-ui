@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';

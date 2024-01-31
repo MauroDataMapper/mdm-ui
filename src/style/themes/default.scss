@@ -130,7 +130,7 @@ $default-theme: mat.define-light-theme(
   $default-theme-warn
 );
 
-$default-typography: mat.define-typography-config(
+$default-typography: mat.define-legacy-typography-config(
   $font-family: 'Nunito Sans, sans-serif',
   $body-1: mat.define-typography-level(17px, 26px, 500),
   $body-2: mat.define-typography-level(18px, 26px, 500),
@@ -143,8 +143,8 @@ $default-typography: mat.define-typography-config(
 );
 
 .default-theme {
-  @include mat.all-component-themes($default-theme);
-  @include mat.all-component-typographies($default-typography);
+  @include mat.all-legacy-component-themes($default-theme);
+  @include mat.all-legacy-component-typographies($default-typography);
   @include mdm-custom-components-theme($default-theme);
 
   .mat-option {

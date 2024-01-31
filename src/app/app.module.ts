@@ -23,10 +23,10 @@ import {
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import {
-  MatDialogRef,
-  MAT_DIALOG_DEFAULT_OPTIONS
-} from '@angular/material/dialog';
-import { MAT_TABS_CONFIG } from '@angular/material/tabs';
+  MatLegacyDialogRef as MatDialogRef,
+  MAT_LEGACY_DIALOG_DEFAULT_OPTIONS as MAT_DIALOG_DEFAULT_OPTIONS
+} from '@angular/material/legacy-dialog';
+import { MAT_LEGACY_TABS_CONFIG as MAT_TABS_CONFIG } from '@angular/material/legacy-tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { UIRouterModule } from '@uirouter/angular';
@@ -41,7 +41,7 @@ import { SharedModule } from './shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
 import { SharedService } from './services/shared.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
 import { BulkEditModule } from './bulk-edit/bulk-edit.module';

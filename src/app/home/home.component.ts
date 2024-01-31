@@ -22,7 +22,7 @@ import { LoginModalComponent } from '../modals/login-modal/login-modal.component
 import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/forgot-password-modal.component';
 import { BroadcastService } from '../services/broadcast.service';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService } from '@mdm/services';
 import { catchError, takeUntil } from 'rxjs/operators';

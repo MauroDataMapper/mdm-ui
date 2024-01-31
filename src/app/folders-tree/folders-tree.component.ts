@@ -26,7 +26,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatLegacyMenuTrigger as MatMenuTrigger } from '@angular/material/legacy-menu';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener
@@ -35,7 +35,7 @@ import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { FlatNode, getCatalogueItemDomainTypeIcon } from './flat-node';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { FolderService } from './folder.service';
 import {
   MessageService,

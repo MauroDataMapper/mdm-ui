@@ -24,7 +24,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatLegacyTable as MatTable } from '@angular/material/legacy-table';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';

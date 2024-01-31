@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';

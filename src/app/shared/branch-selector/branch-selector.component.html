@@ -15,14 +15,43 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<select
-  class="form-control mdm-branch-selector"
-  matTooltip="Switch to another branch"
-  [(ngModel)]="currentVersionId"
-  (ngModelChange)="currentVersionIdChanged()"
-  [disabled]="disabled"
->
-  <option [value]="item.id" *ngFor="let item of versionList">
-    {{ item.displayName ? item.displayName : 'main' }}
-  </option>
-</select>
+
+<mat-form-field appearance="outline" class="paddingless ml-1" style="font-size: 80%; max-width: 430px; width: 100%">
+  <mat-select
+    [(ngModel)]="currentVersionId"
+    matTooltip="Switch to another branch"
+    (ngModelChange)="currentVersionIdChanged()"
+    [disabled]="disabled"
+  >
+    <mat-optgroup [label]="'Draft Branches'" *ngIf="branches && branches.length > 0">
+      <mat-option [value]="item.id" *ngFor="let item of branches">
+        {{ item.modelVersionTag? item.modelVersionTag : (item.displayName ? item.displayName : 'main') }}
+      </mat-option>
+    </mat-optgroup>
+    <mat-optgroup [label]="'Finalised Versions'" *ngIf="finalisedVersions && finalisedVersions.length > 0">
+      <mat-option [value]="item.id" *ngFor="let item of finalisedVersions">
+        {{ item.modelVersionTag? item.modelVersionTag : (item.displayName ? item.displayName : 'main') }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+</mat-form-field>
+<!--
+  <mat-option value="default">Default profile</mat-option>
+  <mat-divider></mat-divider>
+  <mat-option
+    *ngFor="let option of usedProfiles"
+    [value]="option.value"
+  >{{ option.display }}</mat-option
+  >
+  <mat-divider></mat-divider>
+  <mat-option value="other">Other properties</mat-option>
+  <mat-divider
+    *ngIf="canAddMetadata || canAddProfilesAfterFinalisation"
+  ></mat-divider>
+  <mat-option
+    *ngIf="canAddMetadata || canAddProfilesAfterFinalisation"
+    value="addnew"
+  >Add new profile...</mat-option
+  >
+</mat-select>
+-->

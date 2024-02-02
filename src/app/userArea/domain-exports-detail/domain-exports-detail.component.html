@@ -123,7 +123,7 @@ SPDX-License-Identifier: Apache-2.0
             <small *ngIf="model.modelVersion" class="ml-1 text-muted">
               <span> | </span>
               <span class="fas fa-file-alt"></span>
-              <span *ngIf="model.modelVersion">{{ model.modelVersion }}</span>
+              <span> {{ model.modelVersionTag?model.modelVersionTag:model.modelVersion }}</span>
             </small>
           </td>
         </ng-container>

@@ -119,6 +119,10 @@ export class FlatNode {
   get modelVersion() {
     return this.node?.modelVersion;
   }
+
+  get modelVersionTag() {
+    return this.node?.modelVersionTag;
+  }
 }
 
 export interface FlatNodeType {

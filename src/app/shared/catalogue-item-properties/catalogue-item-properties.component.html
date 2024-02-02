@@ -88,11 +88,12 @@ SPDX-License-Identifier: Apache-2.0
   >
     <small>
       <span matTooltip="Model Version" class="fas fa-file-alt"></span>
-      <span><strong>Version: </strong>{{ item.modelVersion }}</span>
-      <span *ngIf="item.modelVersionTag" class="tag-name">
+      <span><strong>Version: </strong>{{ item.modelVersionTag?item.modelVersionTag:item.modelVersion }} </span>
+      <span *ngIf="item.modelVersionTag">({{ item.modelVersion }})</span>
+<!--      <span *ngIf="item.modelVersionTag" class="tag-name">
         <span matTooltip="Model Version Tag" class="fas fa-tag"></span>
-        <span>{{ item.modelVersionTag }}</span>
-      </span>
+
+      </span> -->
     </small>
   </div>
   <div class="text-muted" data-cy="branch" *ngIf="item?.branchName">

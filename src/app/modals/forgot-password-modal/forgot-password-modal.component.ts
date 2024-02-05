@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
+import {MatDialogRef} from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({

@@ -23,10 +23,10 @@ import {
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import {
-  MatLegacyDialogRef as MatDialogRef,
-  MAT_LEGACY_DIALOG_DEFAULT_OPTIONS as MAT_DIALOG_DEFAULT_OPTIONS
-} from '@angular/material/legacy-dialog';
-import { MAT_LEGACY_TABS_CONFIG as MAT_TABS_CONFIG } from '@angular/material/legacy-tabs';
+  MatDialogRef,
+  MAT_DIALOG_DEFAULT_OPTIONS
+} from '@angular/material/dialog';
+import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { UIRouterModule } from '@uirouter/angular';

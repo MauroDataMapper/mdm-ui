@@ -46,13 +46,15 @@ mat-tree-node.mat-tree-node {
       font-weight: 400;
     }
   }
-  .mat-tree-node-content .mat-checkbox {
+  .mat-tree-node-content .mat-mdc-checkbox {
     line-height: 1;
     margin-right: 6px;
   }
 
-  button.mat-icon-button {
-    @include size(25px, 22px);
+  button.mat-mdc-icon-button {
+    width: 25px !important;
+    height: 22px !important;
+    margin-right: 10px;
     color: #a06829;
     line-height: 22px;
     bottom: 1px;
@@ -146,7 +148,7 @@ i.subscribedIcon {
   }
 }
 
-div.mat-menu-panel.filterMenu {
+div.mat-mdc-menu-panel.filterMenu {
   width: 100%;
   max-width: 100%;
 }
@@ -167,36 +169,20 @@ span.tree-top-actions button,
   height: 44px;
 }
 
-div.mat-tab-label {
-  min-width: 25px;
-  padding: 0 16px;
-  font-size: $defaultFontSize !important;
-}
-div.mat-tab-label {
-  height: 38px;
-}
 .table td,
 .table th,
-tr td.mat-cell,
-tr td.mat-footer-cell,
-tr th.mat-header-cell {
+tr td.mat-mdc-cell,
+tr td.mat-mdc-footer-cell,
+tr th.mat-mdc-header-cell {
   padding: 0.45rem 0.75rem;
 }
-tr th.mat-header-cell {
+tr th.mat-mdc-header-cell {
   padding: 0.3rem 0.75rem;
 }
 
 /* Styles for tabs */
-.mat-tab-label {
-  font-weight: normal !important;
-}
+/*
 
-/* Styles for the active tab label */
-.mat-tab-label.mat-tab-label-active {
-  min-width: 25px !important;
-  font-weight: 700 !important;
-  opacity: 1;
-}
 
 /* Styles for the ink bar */
 .mat-ink-bar {

@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 .marginless {
   margin: 0 !important;
 }
+/*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
 .paddingless, .paddingless .mat-form-field-wrapper {
   padding: 0!important;
 }

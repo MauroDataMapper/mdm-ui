@@ -111,7 +111,7 @@ em {
   font-style: oblique;
 }
 
-a.mat-stroked-button {
+a.mat-mdc-outlined-button {
   &:hover {
     text-decoration: none;
   }
@@ -146,7 +146,7 @@ hr {
   margin-bottom: 16px;
 }
 .mat-body,
-.mat-body-1,
+.mat-body-2,
 .mat-typography {
   @include respond-to($tablet) {
     font: 500 16px/24px Nunito Sans, sans-serif;
@@ -157,7 +157,10 @@ hr {
   color: $defaultLinkColour;
   cursor: pointer;
 }
-mat-progress-bar.mat-progress-bar.mat-primary {
+/*
+TODO(mdc-migration): The following rule targets internal classes of progress-bar that may no longer apply for the MDC version.
+*/
+mat-progress-bar.mat-mdc-progress-bar.mat-primary {
   margin-top: 16px;
 }
 
@@ -283,14 +286,6 @@ a {
   background-color: #028821;
 }
 
-.mat-checkbox-layout {
-  white-space: normal !important;
-}
-
-.mat-checkbox-inner-container {
-  margin: 6px 8px auto 0 !important;
-}
-
 // Background colour for mchighlighter pipe
 span.mchighlighter {
   background-color: #fbff00;
@@ -298,10 +293,6 @@ span.mchighlighter {
 
 .mdm-hidden-checkbox-label {
   display: none;
-}
-
-.mdm--mat-menu--actions .warning {
-  color: #a5122a;
 }
 
 .fas.fa-filter {
@@ -316,14 +307,6 @@ span.mchighlighter {
   }
 }
 
-.mat-tab-label,
-.mat-tab-link {
-  color: rgba(0, 0, 0, 0.97) !important;
-}
-
-.mat-form-field-appearance-outline .mat-form-field-infix {
-  padding: 0.6em 0.2em 1em 0.2em !important;
-}
 
 .mdm-openid-connect-icon {
   width: 32px;
@@ -337,7 +320,7 @@ span.mchighlighter {
   margin: 4px 8px;
 }
 
-.create-term-relationship-type-dialog .mat-checkbox > label {
+.create-term-relationship-type-dialog .mat-mdc-checkbox > label {
   font-size: 1rem;
   font-weight: normal;
 }

@@ -35,7 +35,7 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {

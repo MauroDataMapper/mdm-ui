@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
     min-width: 90%;
     max-width: 90%;
   }
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
     margin: 0;
     @include respond-to($mobile-xs) {
       padding: 0;
@@ -45,11 +45,11 @@ SPDX-License-Identifier: Apache-2.0
     min-width: 90%;
     max-width: 90%;
   }
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
     min-height: 789px;
   }
   @include respond-to($mobile-xs) {
-    .mat-dialog-content {
+    .mat-mdc-dialog-content {
       min-height: 510px;
     }
   }
@@ -68,15 +68,15 @@ SPDX-License-Identifier: Apache-2.0
     margin-left: 0;
   }
 }
-.mat-menu-content:not(:empty) {
+.mat-mdc-menu-content:not(:empty) {
   padding: 0 !important;
 }
 
-button.mat-menu-item {
+button.mat-mdc-menu-item {
   color: #575757;
 }
 
-button.mat-menu-item i,
+button.mat-mdc-menu-item i,
 button.mat-menu-item span.fas,
 button.mat-menu-item span.fab,
 button.mat-menu-item span.far {

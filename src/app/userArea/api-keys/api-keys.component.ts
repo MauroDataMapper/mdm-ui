@@ -19,7 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService, MessageHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse } from '@mdm/modals/api-keys-modal/api-keys-modal.component';
 import { ClipboardService } from 'ngx-clipboard';
 import { filter, mergeMap } from 'rxjs/operators';

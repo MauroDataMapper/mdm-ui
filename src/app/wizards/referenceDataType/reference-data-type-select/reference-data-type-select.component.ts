@@ -27,9 +27,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatSelectChange } from '@angular/material/select';
 import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import {
   CatalogueItem,
   ReferenceDataType,

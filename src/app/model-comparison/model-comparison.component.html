@@ -79,8 +79,12 @@ SPDX-License-Identifier: Apache-2.0
 
   <div class="row" style="margin-top:10px;">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <mat-tab-group #tab [selectedIndex]="activeTab">
-                  <mat-tab *ngIf= "diffs?.properties && diffs?.properties.length > 0">
+              <mat-tab-group
+                #tab
+                [selectedIndex]="activeTab"
+                [mat-stretch-tabs]="false"
+              >
+                <mat-tab *ngIf= "diffs?.properties && diffs?.properties.length > 0">
                       <ng-template mat-tab-label>
                           Details <span class="mdm--badge mdm--element-count">{{diffs.properties.length}}</span>
                       </ng-template>

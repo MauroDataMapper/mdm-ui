@@ -18,11 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, TemplateRef } from '@angular/core';
 import {
-  MatLegacyDialog as MatDialog,
-  MatLegacyDialogConfig as MatDialogConfig,
-  MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
-import { MatLegacyTab as MatTab, MatLegacyTabGroup as MatTabGroup, MatLegacyTabHeader as MatTabHeader } from '@angular/material/legacy-tabs';
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

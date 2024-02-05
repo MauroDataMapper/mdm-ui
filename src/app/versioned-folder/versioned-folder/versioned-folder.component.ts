@@ -22,7 +22,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
+import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import {
   Uuid,

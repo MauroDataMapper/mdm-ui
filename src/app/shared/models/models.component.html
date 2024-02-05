@@ -20,6 +20,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab-group
       [selectedIndex]="activeTab"
       (selectedIndexChange)="tabSelected($event)"
+      [mat-stretch-tabs]="false"
     >
       <mat-tab style="overflow-y: hidden">
         <ng-template mat-tab-label>

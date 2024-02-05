@@ -30,7 +30,7 @@ import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
+import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { TabCollection } from '@mdm/model/ui.model';

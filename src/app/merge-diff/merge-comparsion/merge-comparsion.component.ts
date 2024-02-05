@@ -34,7 +34,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { MergeDiffItemModel, MergeItemValueType } from '../types/merge-item-type';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { filter } from 'rxjs/operators';
 import { ConflictEditorModalComponent } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.component';

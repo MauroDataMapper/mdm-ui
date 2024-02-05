@@ -107,23 +107,32 @@ SPDX-License-Identifier: Apache-2.0
     color: #333333;
   }
 }
+/*
+TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.
+*/
 mat-radio-group {
   display: flex;
   flex-direction: column;
   margin: 15px 0;
 }
 
+/*
+TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.
+*/
 .mat-checkbox-layout {
    white-space: normal !important;
  }
 
+ /*
+TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.
+*/
  .mat-checkbox-inner-container {
    margin: 4px 8px auto 0 !important;
  }
 
 #sidenav {
   #sidenav-content {
-    .mat-menu-item.active {
+    .mat-mdc-menu-item.active {
       background-color: rgba(77, 114, 156, 0.1);
       color: #1157a9;
       font-weight: 600;

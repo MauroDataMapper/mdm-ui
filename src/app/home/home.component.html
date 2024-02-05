@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
           <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
             Log in
           </button>
-          <a mat-stroked-button color="primary" class="custom no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
+          <a mat-stroked-button color="primary" class="custom mb-1 no-underline ml-1" target="_blank" [href]="documentationUrl">Learn more</a>
         </div>
       </div>
       <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>

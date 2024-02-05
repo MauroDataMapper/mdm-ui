@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 @Component({

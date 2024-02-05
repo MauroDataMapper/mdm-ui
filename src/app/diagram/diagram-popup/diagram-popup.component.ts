@@ -25,10 +25,10 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import {
-  MatLegacyDialog as MatDialog,
-  MatLegacyDialogRef as MatDialogRef,
-  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA
-} from '@angular/material/legacy-dialog';
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
 import { MatSidenav } from '@angular/material/sidenav';

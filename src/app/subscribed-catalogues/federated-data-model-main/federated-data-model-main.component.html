@@ -27,6 +27,7 @@ SPDX-License-Identifier: Apache-2.0
     #tab
     animationDuration="0ms"
     [selectedIndex]="activeTab"
+    [mat-stretch-tabs]="false"
   >
     <mat-tab *ngIf="showNewerVersionsTab" label="Newer Versions">
       <ng-template matTabContent>

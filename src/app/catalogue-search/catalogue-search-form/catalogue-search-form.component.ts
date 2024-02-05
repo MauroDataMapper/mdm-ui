@@ -24,7 +24,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatLegacyFormFieldAppearance as MatFormFieldAppearance } from '@angular/material/legacy-form-field';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { Subject, takeUntil } from 'rxjs';
 
 /**

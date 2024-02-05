@@ -33,7 +33,7 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
 import {
   CatalogueItemDomainType,

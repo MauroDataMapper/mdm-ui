@@ -19,7 +19,12 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-enumeration-values-details *ngIf="currentEnumerationValue" [enumerationValues]='currentEnumerationValue' [label]='label' [breadcrumbs]='breadCrumbs' [parent]="parent" [parentDataModel]="dataModelId"></mdm-enumeration-values-details>
 </div>
 <div>
-  <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+  <mat-tab-group
+    #tab
+    [selectedIndex]="activeTab"
+    (selectedIndexChange)="tabSelected($event)"
+    [mat-stretch-tabs]="false"
+  >
     <mat-tab label="Properties">
       <ng-template matTabContent>
         <div class="full-width">

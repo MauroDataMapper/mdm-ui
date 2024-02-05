@@ -34,10 +34,10 @@ import {
   SearchListingSortByOption,
   SearchListingStatus
 } from '../catalogue-search.types';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
 import { SearchFilterChange } from '../search-filters/search-filters.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
 
 @Component({

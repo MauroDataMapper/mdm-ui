@@ -33,6 +33,7 @@ SPDX-License-Identifier: Apache-2.0
   animationDuration="0ms"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
+  [mat-stretch-tabs]="false"
 >
   <mat-tab label="Description">
     <ng-template matTabContent>

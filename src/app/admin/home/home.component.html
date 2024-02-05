@@ -15,7 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
+<mat-tab-group
+  [selectedIndex]="activeTab.index"
+  (selectedIndexChange)="tabSelected($event)"
+  dynamicHeight
+  [mat-stretch-tabs]="false"
+>
 	<mat-tab>
 		<ng-template mat-tab-label>
 			<span class="fas fa-users"></span>&nbsp;

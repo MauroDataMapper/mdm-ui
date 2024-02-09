@@ -31,7 +31,6 @@ import { EnumerationCompareComponent } from '@mdm/shared/enumeration-compare/enu
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -107,7 +106,6 @@ import { NgxJoditComponent } from 'ngx-jodit';
     ReactiveFormsModule,
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
@@ -132,7 +130,6 @@ import { NgxJoditComponent } from 'ngx-jodit';
     EnumerationCompareComponent,
     NgxJsonViewerModule,
     ErrorComponent,
-    FlexLayoutModule,
     MdmPaginatorComponent,
     NgxSkeletonLoaderModule,
     CodemirrorModule,

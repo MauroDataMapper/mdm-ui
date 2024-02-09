@@ -349,7 +349,7 @@ import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.compone
   ],
   imports: [
     AdminModule,
-    AngularSplitModule.forRoot(),
+    AngularSplitModule,
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,

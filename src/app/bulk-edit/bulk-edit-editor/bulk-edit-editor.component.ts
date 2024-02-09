@@ -24,7 +24,6 @@ import {
   CellValueChangedEvent,
   ColDef,
   ColGroupDef,
-  ColumnApi,
   GridApi,
   GridReadyEvent,
   ICellEditorParams
@@ -102,7 +101,6 @@ export class BulkEditEditorComponent implements OnInit {
   ];
 
   private gridApi: GridApi;
-  private gridColumnApi: ColumnApi;
 
   constructor(
     private messageHandler: MessageHandlerService,
@@ -138,7 +136,6 @@ export class BulkEditEditorComponent implements OnInit {
 
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
-    this.gridColumnApi = event.columnApi;
     this.screenResize();
   }
 
@@ -236,18 +233,18 @@ export class BulkEditEditorComponent implements OnInit {
   private screenResize() {
     const nonStandardFields = this.nonStandardColWidths.map((c) => c.field);
 
-    const columnIds = this.gridColumnApi
-      .getAllColumns()
+    const columnIds = this.gridApi
+      .getColumns()
       .filter((col) => !nonStandardFields.includes(col.getColDef().field))
       .map((col) => col.getColId());
 
     this.excludeAutoResizeColumns(columnIds);
-    this.gridColumnApi.autoSizeColumns(columnIds);
+    this.gridApi.autoSizeColumns(columnIds);
 
     this.nonStandardColWidths
       .map((nscw) => {
-        const column = this.gridColumnApi
-          .getAllColumns()
+        const column = this.gridApi
+          .getColumns()
           .find((col) => col.getColDef().field === nscw.field);
         return {
           column,
@@ -255,13 +252,13 @@ export class BulkEditEditorComponent implements OnInit {
         };
       })
       .forEach((value) => {
-        this.gridColumnApi.setColumnWidth(value.column, value.width);
+        this.gridApi.setColumnWidth(value.column, value.width);
       });
   }
 
   private excludeAutoResizeColumns(columnIds) {
     const pathColKey = 'path';
-    const pathId = this.gridColumnApi.getColumn(pathColKey).getColId();
+    const pathId = this.gridApi.getColumn(pathColKey).getColId();
     const pathIndex = columnIds.indexOf(pathId);
     if (pathIndex > -1) {
       columnIds.splice(pathIndex, 1);

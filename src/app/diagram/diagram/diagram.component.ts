@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DownloadService } from '@mdm/utility/download.service';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import SvgPanZoom from 'svg-pan-zoom';
 import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';

@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Injectable } from '@angular/core';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 
 import { Observable, throwError } from 'rxjs';
 import { DiagramParameters } from '../diagram/diagram.model';

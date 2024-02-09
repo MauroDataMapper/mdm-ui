@@ -16,10 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, Optional } from '@angular/core';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import dagre from 'dagre';
-import graphlib from 'graphlib';
+import { DirectedGraph } from '@joint/layout-directed-graph';
+import * as dagre from '@dagrejs/dagre';
+import graphlib from '@dagrejs/graphlib';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import _ from 'lodash';
@@ -84,12 +85,10 @@ export abstract class BasicDiagramService {
       rankSep = 250;
     }
 
-    joint.layout.DirectedGraph.layout(this.graph, {
+    DirectedGraph.layout(this.graph, {
       setLabels: true,
       setVertices: true,
       setLinkVertices: true,
-      dagre,
-      graphlib,
       rankDir,
       marginX: 40,
       marginY: 40,

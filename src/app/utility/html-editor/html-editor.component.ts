@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
-import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { Pathable } from '@maurodatamapper/mdm-resources';
@@ -124,8 +123,8 @@ export class HtmlEditorComponent implements OnInit {
     };
   }
 
-  onHtmlEditorChanged(event: EventObj) {
-    this.description = event.editor.value;
+  onHtmlEditorChanged(changedDescription: string) {
+    this.description = changedDescription;
     this.descriptionChange.emit(this.description);
   }
 

@@ -50,6 +50,10 @@ import { PathNameComponent } from './path-name/path-name.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
@@ -60,6 +64,7 @@ import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { LocationPathComponent } from './location-path/location-path.component';
 import { JoditAngularModule } from 'jodit-angular';
+import { NgxJoditComponent } from 'ngx-jodit';
 
 @NgModule({
   declarations: [
@@ -110,6 +115,7 @@ import { JoditAngularModule } from 'jodit-angular';
     JoditAngularModule,
     UIRouterModule,
     ImageCropperModule,
+    NgxJoditComponent,
     ContentModule
   ],
   exports: [

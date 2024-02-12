@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '../utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';

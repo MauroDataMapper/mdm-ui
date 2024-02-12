@@ -27,6 +27,7 @@
     "@ag-grid-community/client-side-row-model": "31.0.3",
     "@ag-grid-community/core": "31.0.3",
     "@ag-grid-community/styles": "31.0.3",
+    "@angular-builders/jest": "^16.0.1",
     "@angular-material-extensions/password-strength": "16.0.0",
     "@angular/animations": "16.2.12",
     "@angular/cdk": "16.2.14",
@@ -35,6 +36,7 @@
     "@angular/core": "16.2.12",
     "@angular/flex-layout": "15.0.0-beta.42",
     "@angular/forms": "16.2.12",
+
     "@angular/material": "16.2.14",
     "@angular/platform-browser": "16.2.12",
     "@angular/platform-browser-dynamic": "16.2.12",

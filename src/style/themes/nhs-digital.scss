@@ -143,12 +143,12 @@ $nhs-digital-theme: mat.define-light-theme(
 
 $nhs-digital-typography: mat.define-typography-config(
   $font-family: "Frutiger, Arial, sans-serif",
-  $body-2: mat.define-typography-level(17px, 26px, 500),
   $subtitle-2: mat.define-typography-level(18px, 26px, 500),
   $headline-5: mat.define-typography-level(36px, 42px, 600),
   $headline-6: mat.define-typography-level(32px, 38px, 600),
   $subtitle-1: mat.define-typography-level(26px, 32px, 600),
-  $body-1: mat.define-typography-level(22px, 28px, 600),
+  $body-1: mat.define-typography-level(18px, 28px, 600),
+  $body-2: mat.define-typography-level(17px, 26px, 500),
   $button: mat.define-typography-level(20px, 26px, 600),
   /* TODO(mdc-migration): No longer supported. Use `body-1` instead. $input: mat.define-typography-level(18px, 1.125, 500)
  */);

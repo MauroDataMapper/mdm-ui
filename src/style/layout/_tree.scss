@@ -16,12 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.default-theme .mat-tree-node, .default-theme .mat-nested-tree-node {
+.mat-tree-node, .mat-nested-tree-node {
   font-size: medium !important;
   min-height: 2.5em !important;
 }
 
-.default-theme .mat-tree-node .mat-mdc-icon-button {
+.mat-tree-node .mat-mdc-icon-button {
   width: 24px !important;
   height: 24px !important;
   padding: 0px !important;

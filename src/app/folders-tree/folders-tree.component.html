@@ -39,8 +39,15 @@ SPDX-License-Identifier: Apache-2.0
     matTreeNodePadding
     matTreeNodePaddingIndent="25"
   >
-    <button type="button" mat-icon-button disabled disableRipple aria-label="Disabled button">
-      <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
+    <button
+      type="button"
+      mat-icon-button
+      [disableRipple]="true"
+      aria-label="Disabled button"
+    >
+      <mat-icon fontSet="fas"
+                class="mat-icon-rtl-mirror"
+      ></mat-icon>
     </button>
 
     <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
@@ -59,11 +66,14 @@ SPDX-License-Identifier: Apache-2.0
         mat-icon-button
         type="button"
         disabled
-        disableRipple
+        matTreeNodeToggle
         aria-disabled="true"
         aria-label="Disabled button"
       >
-        <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
+        <mat-icon
+          fontSet="fas"
+          class="mat-icon-rtl-mirror"
+        ></mat-icon>
       </button>
     </ng-container>
 
@@ -330,7 +340,7 @@ SPDX-License-Identifier: Apache-2.0
     (dragleave)="dragLeave($event)"
     (dragend)="dragEnd()"
   >
-    <!-- <div> -->
+    <div>
     <mat-checkbox
       *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1"
       [(ngModel)]="node.checked"
@@ -359,11 +369,9 @@ SPDX-License-Identifier: Apache-2.0
         selected: node.selected,
         isGhost: node.isGhost,
         modified: node.modified
-      }"
-      [innerHTML]="node.label | mchighlighter: searchCriteria"
-    ></span>
-    <!-- </div> -->
-    <small *ngIf="node.branchName" class="ml-1 text-muted">
+      }">
+      <span [innerHTML]="node.label | mchighlighter: searchCriteria"></span>
+        <small *ngIf="node.branchName" class="ml-1 text-muted">
       <span> | </span>
       <span class="fas fa-code-branch mr-xsm"></span>
       <span>{{ node.branchName }}</span>
@@ -393,5 +401,9 @@ SPDX-License-Identifier: Apache-2.0
         matTooltip="Subscribed"
       ></span>
     </small>
+
+    </span>
+
+    </div>
   </div>
 </ng-template>

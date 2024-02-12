@@ -330,6 +330,10 @@ span.mchighlighter {
   vertical-align: baseline;
 }
 
+.mat-mdc-tab-body-content {
+  margin-top: 3px;
+}
+
 .jodit-container:not(.jodit_inline) .jodit-workplace {
   background-color: white !important; // Fix Jodit background issues
 }

@@ -596,10 +596,10 @@ small.simpleView.elementType {
 
 ///.....................................................................................................................
 
-.mat-mdc-dialog-container {
-  //   padding: 3px !important;
-  // overflow: hidden !important;
+.mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  padding: 24px;
 }
+
 .mat-mdc-table-row-select {
   cursor: pointer;
 }
@@ -633,4 +633,5 @@ small.simpleView.elementType {
 // Fixes a bug that appears in Safari
 .mat-mdc-tab-header {
   display: block !important;
+  margin-bottom: 3px !important;
 }

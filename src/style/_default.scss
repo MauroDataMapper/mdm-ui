@@ -330,6 +330,18 @@ span.mchighlighter {
   vertical-align: baseline;
 }
 
-.mat-mdc-tab-body-content {
-  margin-top: 3px;
+
+.default-theme .mat-mdc-button.mat-mdc-button-base,
+.default-theme .mat-mdc-raised-button.mat-mdc-button-base,
+.default-theme .mat-mdc-unelevated-button.mat-mdc-button-base,
+.default-theme .mat-mdc-outlined-button.mat-mdc-button-base {
+  height: 2.5em !important;
+}
+
+.mat-mdc-menu-panel {
+  max-width: 20em !important;
+}
+
+.mat-mdc-menu-item-text span {
+  width: 2em;
 }

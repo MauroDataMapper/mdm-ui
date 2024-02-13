@@ -48,7 +48,7 @@ export class MergeDiffAdapterService {
       case MultiFacetAwareDomainType.VersionedFolders:
         return this.resources.versionedFolder.get(id);
       default:
-        return throwError(`Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`);
+        return throwError(() => new Error(`Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`));
     }
   }
 

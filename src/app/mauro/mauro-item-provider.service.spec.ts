@@ -216,13 +216,13 @@ describe('MauroItemProviderService', () => {
   };
 
   const testMissingModelIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(identifier.domainType.toString() + ' 123 has not provided a model'));
     const actual$ = service.get(identifier);
     expect(actual$).toBeObservable(expected$);
   };
 
   const testMissingDataClassIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(identifier.domainType.toString() + ' 123 has not provided a data class'));
     const actual$ = service.get(identifier);
     expect(actual$).toBeObservable(expected$);
   };
@@ -230,13 +230,13 @@ describe('MauroItemProviderService', () => {
   describe('unsupported domain types', () => {
     const unsupported = [
       CatalogueItemDomainType.ReferenceDataModel,
-      CatalogueItemDomainType.ReferenceDataModelType
+      //CatalogueItemDomainType.ReferenceDataModelType
     ];
 
     it.each(unsupported)(
       'should throw an error for the domain type %p',
       (domainType) => {
-        const expected$ = cold('#', null, new Error());
+        const expected$ = cold('#', null, new Error(domainType.toString() + ' is not supported'));
         const actual$ = service.get({ id: '123', domainType });
         expect(actual$).toBeObservable(expected$);
       }

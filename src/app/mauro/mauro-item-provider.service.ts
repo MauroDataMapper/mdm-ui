@@ -105,13 +105,13 @@ export class MauroItemProviderService {
     }
 
     if (!response) {
-      return throwError(`${identifier.domainType} is not supported`);
+      return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
     return response.pipe(
       map((res) => res.body),
       catchError((error) => {
-        if (identifier.fetchOptions.failSilently) {
+        if (identifier.fetchOptions?.failSilently) {
           return of({
             ...identifier,
             label: '',
@@ -120,7 +120,7 @@ export class MauroItemProviderService {
           });
         }
 
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -178,8 +178,8 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
@@ -207,14 +207,14 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
     if (!identifier.dataClass) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a data class`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a data class`)
       );
     }
 
@@ -232,8 +232,8 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
@@ -257,8 +257,8 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 

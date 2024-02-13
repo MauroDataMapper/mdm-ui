@@ -84,7 +84,7 @@ export class MauroItemRemoveService {
       return this.removeTerm(identifier);
     }
 
-    return throwError(`${identifier.domainType} is not supported`);
+    return throwError(() => new Error(`${identifier.domainType} is not supported`));
   }
 
   restore(identifier: MauroIdentifier): Observable<MauroItem> {
@@ -107,7 +107,7 @@ export class MauroItemRemoveService {
     }
 
     if (!response) {
-      return throwError(`${identifier.domainType} is not supported`);
+      return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
     return response.pipe(map((res) => res.body));

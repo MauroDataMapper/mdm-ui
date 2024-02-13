@@ -23,9 +23,9 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UserDetails } from './security-handler.model';
+import { SignInError, SignInErrorType, UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { LoginPayload, Securable } from '@maurodatamapper/mdm-resources';
 
 interface MdmSecurityResourceStub {
@@ -112,9 +112,19 @@ describe('SecurityHandlerService', () => {
   });
 
   it('should throw error if sign in fails', () => {
-    resourcesStub.security.login.mockImplementationOnce(() => cold('--#', null, new HttpErrorResponse({})));
+/*    let expectedResponse = new SignInError(new HttpErrorResponse({
+      error: null,
+      headers: new HttpHeaders({
+        headers: null,
+        lazyUpdate: null,
+        normalizedNames: null
+      })
+    }))
+    expectedResponse.type = SignInErrorType.UnknownError
+*/
+    resourcesStub.security.login.mockImplementationOnce(() => cold('--#', null, new SignInError(new HttpErrorResponse({}))));
 
-    const expected$ = cold('--#');
+    const expected$ = cold('--#', null, new SignInError(new HttpErrorResponse({})));
     const actual$ = service.signIn({ username: 'fail', password: 'fail' });
     expect(actual$).toBeObservable(expected$);
   });

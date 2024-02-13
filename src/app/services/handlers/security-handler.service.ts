@@ -133,7 +133,7 @@ export class SecurityHandlerService {
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     return this.resources.security.login(credentials, { login: true }).pipe(
       catchError((error: HttpErrorResponse) =>
-        throwError(new SignInError(error))
+        throwError(() => new SignInError(error))
       ),
       map((response: LoginResponse) => {
         const signIn = response.body;
@@ -208,7 +208,7 @@ export class SecurityHandlerService {
   authorizeOpenIdConnectSession(params: { state: string; sessionState: string; code: string }): Observable<UserDetails> {
     const providerId = localStorage.getItem('openIdConnectProviderId');
     if (!providerId) {
-      return throwError('Cannot retrieve OpenID Connect provider identifier.');
+      return throwError(() => new Error('Cannot retrieve OpenID Connect provider identifier.'));
     }
 
     const redirectUri = this.getOpenIdAuthorizeUrl();

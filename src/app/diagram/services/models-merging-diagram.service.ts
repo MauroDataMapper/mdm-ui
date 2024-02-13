@@ -51,7 +51,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
       case CatalogueItemDomainType.VersionedFolder:
         return this.resourcesService.versionedFolder.modelVersionTree(params.parent.id);
       default:
-        return throwError(`Cannot get merge graph content for '${params.parent.domainType} ${params.parent.id}' - not supported.`);
+        return throwError(() => new Error(`Cannot get merge graph content for '${params.parent.domainType} ${params.parent.id}' - not supported.`));
     }
   }
 

@@ -92,7 +92,7 @@ export class MdmRestHandlerService implements MdmRestHandler {
           this.messageService.lastError = response;
           this.stateHandler.ServerError(response);
         }
-        return throwError(response);
+        return throwError(() => response);
       })
     );
   }

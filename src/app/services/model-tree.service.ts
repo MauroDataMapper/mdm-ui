@@ -384,8 +384,8 @@ export class ModelTreeService implements OnDestroy {
     const baseTypes = this.elementTypes.getBaseTypes();
     const type = baseTypes[item.domainType];
     if (!type) {
-      return throwError(
-        `Cannot find resource name for domain type '${item.domainType}'`
+      return throwError(() =>
+        new Error(`Cannot find resource name for domain type '${item.domainType}'`)
       );
     }
 

@@ -15,105 +15,98 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+.mat-tree-node, .mat-nested-tree-node {
+  font-size: medium !important;
+  min-height: 2.5em !important;
+}
+
+.mat-tree-node .mat-mdc-icon-button {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  & > *[role=img] {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .mat-mdc-button-touch-target {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
 mat-tree-node.mat-tree-node {
-  min-height: 0px;
-  overflow: unset;
-  align-items: baseline;
-  flex-direction: row;
-  margin-bottom: 3px;
 
   .mat-tree-node-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-height: 28px;
 
     span, small {
-      white-space: nowrap;
     }
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
-    margin-right: 5px;
-    vertical-align: 0.09em;
-    min-width: 20px;
     color: #f19e3f;
-    text-align: center;
-    line-height: 22px;
-    @include size(20px, 20px);
-
+    font-size: large !important;
+    padding-right: 1.8em;
     &.fa-folder-open {
-      font-weight: 400;
     }
   }
-  .mat-tree-node-content .mat-checkbox {
-    line-height: 1;
-    margin-right: 6px;
+  .mat-tree-node-content .mat-mdc-checkbox {
   }
 
-  button.mat-icon-button {
-    @include size(25px, 22px);
+  button.mat-mdc-icon-button {
     color: #a06829;
-    line-height: 22px;
-    bottom: 1px;
-    font-size: 16px;
+
+    height: 100%;
+    width: 100%;
   }
   .node-title {
     color: #333;
-    font-size: 15px;
     cursor: pointer;
-    line-height: 1.5;
   }
 
   div.mat-tree-node-inactive {
-    padding: 1px;
+    padding: 5px 10px 0px 10px;
   }
 
   div.mat-tree-node-active {
     background: #e5eeff;
-    padding-right: 6px;
     border-radius: 5px;
     border: 1px solid #b1ccff;
     color: #002147;
+    padding: 5px 10px 0px 10px;
     .mat-tree-node-active {
-      font-size: 15px;
     }
     .mat-icon {
-      // line-height: 26px;
-      line-height: 20px;
     }
   }
 }
 .branch-name {
-  padding: 0px 6px;
   color: #4f575f !important;
-  border: 1px solid #b7d4ef;
-  background-color: #eaf5ff;
-  border-radius: 6px;
 }
 
 .tag-name {
-  margin-left: 8px;
-  display: inline-flex;
-  padding: 0px 4px;
   color: #4f575f !important;
   border: 1px solid #b7d4ef;
   background-color: #eaf5ff;
   border-radius: 6px;
 
   i {
-    margin: auto 4px;
   }
 }
 
 .foldersTree.folderTreeIcon {
-  margin-right: 8px;
-//  vertical-align: 0.09em;
-  min-width: 20px;
-  width: 20px;
   color: #f19e3f;
-  text-align: center;
-  line-height: 25px;
 }
 
 .mat-tree {
@@ -140,63 +133,58 @@ i.subscribedIcon {
   text-decoration: line-through;
 }
 .dataModelTypeIcon {
-  margin-right: 10px;
   i {
-    font-size: 24px;
   }
 }
 
-div.mat-menu-panel.filterMenu {
+div.mat-mdc-menu-panel.filterMenu {
   width: 100%;
   max-width: 100%;
 }
 
-span.tree-top-actions {
-  white-space: nowrap;
+
+.input-group {
+
+  input {
+    height: 44px !important;
+  }
+
+  button,
+  .import-folder-actions button {
+    font-size: large !important;
+    padding: 0;
+    min-width: 44px;
+    height: 44px !important;
+  }
+
 }
 
-span.tree-top-actions button,
-.import-folder-actions button {
-  padding: 0;
-  min-width: 44px;
-  height: 44px;
+span.tree-top-actions {
+  white-space: nowrap;
+
+
 }
+
 .date-from-actions .input-group-btn button {
   padding: 0;
   min-width: 44px;
   height: 44px;
 }
 
-div.mat-tab-label {
-  min-width: 25px;
-  padding: 0 16px;
-  font-size: $defaultFontSize !important;
-}
-div.mat-tab-label {
-  height: 38px;
-}
 .table td,
 .table th,
-tr td.mat-cell,
-tr td.mat-footer-cell,
-tr th.mat-header-cell {
+tr td.mat-mdc-cell,
+tr td.mat-mdc-footer-cell,
+tr th.mat-mdc-header-cell {
   padding: 0.45rem 0.75rem;
 }
-tr th.mat-header-cell {
+tr th.mat-mdc-header-cell {
   padding: 0.3rem 0.75rem;
 }
 
 /* Styles for tabs */
-.mat-tab-label {
-  font-weight: normal !important;
-}
+/*
 
-/* Styles for the active tab label */
-.mat-tab-label.mat-tab-label-active {
-  min-width: 25px !important;
-  font-weight: 700 !important;
-  opacity: 1;
-}
 
 /* Styles for the ink bar */
 .mat-ink-bar {

@@ -97,6 +97,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="tabContainer panel panel-default mdm--shadow-block" fxLayout="row" >
       <div class="full-width" style="clear: both">
         <mat-tab-group
+          [mat-stretch-tabs]="false"
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >

@@ -79,7 +79,7 @@ export class BulkEditProfileService {
     provider: ProfileProvider
   ): Observable<NavigatableProfile[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
@@ -105,7 +105,7 @@ export class BulkEditProfileService {
     payloads: MauroProfileUpdatePayload[]
   ): Observable<Profile[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
@@ -132,7 +132,7 @@ export class BulkEditProfileService {
     profiles: Profile[]
   ): Observable<MauroProfileValidationResult[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }

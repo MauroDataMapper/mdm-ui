@@ -132,22 +132,22 @@ $default-theme: mat.define-light-theme(
 
 $default-typography: mat.define-typography-config(
   $font-family: 'Nunito Sans, sans-serif',
-  $body-1: mat.define-typography-level(17px, 26px, 500),
-  $body-2: mat.define-typography-level(18px, 26px, 500),
-  $headline: mat.define-typography-level(36px, 42px, 600),
-  $title: mat.define-typography-level(32px, 38px, 600),
-  $subheading-2: mat.define-typography-level(26px, 32px, 600),
-  $subheading-1: mat.define-typography-level(22px, 28px, 600),
+  $subtitle-2: mat.define-typography-level(18px, 26px, 500),
+  $headline-5: mat.define-typography-level(36px, 42px, 600),
+  $headline-6: mat.define-typography-level(32px, 38px, 600),
+  $subtitle-1: mat.define-typography-level(26px, 32px, 600),
+  $body-1: mat.define-typography-level(18px, 28px, 600),
+  $body-2: mat.define-typography-level(17px, 26px, 500),
   $button: mat.define-typography-level(20px, 26px, 600),
-  $input: mat.define-typography-level(18px, 1.125, 500)
-);
+  /* TODO(mdc-migration): No longer supported. Use `body-1` instead. $input: mat.define-typography-level(18px, 1.125, 500)
+ */);
 
 .default-theme {
   @include mat.all-component-themes($default-theme);
   @include mat.all-component-typographies($default-typography);
   @include mdm-custom-components-theme($default-theme);
 
-  .mat-option {
+  .mat-mdc-option {
     font-size: 16px;
   }
 }

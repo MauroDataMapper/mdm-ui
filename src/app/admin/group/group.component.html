@@ -48,7 +48,9 @@ SPDX-License-Identifier: Apache-2.0
 </form>
 <div class="mt-3" *ngIf="group && group.id" style="max-width: 800px;">
   <hr style="max-width: 800px;">
-    <mat-tab-group>
+    <mat-tab-group
+      [mat-stretch-tabs]="false"
+    >
         <mat-tab label="Members">
             <ng-template matTabContent>
                 <div class="full-width">

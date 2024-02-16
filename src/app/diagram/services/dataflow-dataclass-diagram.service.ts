@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Observable } from 'rxjs';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { Uuid } from '@maurodatamapper/mdm-resources';
 
 

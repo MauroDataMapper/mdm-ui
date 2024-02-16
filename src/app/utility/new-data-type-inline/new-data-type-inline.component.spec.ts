@@ -38,7 +38,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { EMPTY } from 'rxjs';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 
 describe('NewDataTypeInlineComponent', () => {
   let component: NewDataTypeInlineComponent;

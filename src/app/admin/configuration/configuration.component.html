@@ -15,7 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
+<mat-tab-group
+  [selectedIndex]="activeTab.index"
+  (selectedIndexChange)="tabSelected($event)"
+  [mat-stretch-tabs]="false"
+  dynamicHeight>
     <mat-tab label="Properties">
         <mdm-api-property-table
             [properties]="apiProperties"

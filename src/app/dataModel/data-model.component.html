@@ -41,6 +41,7 @@ SPDX-License-Identifier: Apache-2.0
   *ngIf="dataModel"
   #tab
   animationDuration="0ms"
+  [mat-stretch-tabs]="false"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
 >

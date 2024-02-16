@@ -24,7 +24,7 @@ form.mdm--form {
   border-radius: 5px;
   max-width: $forms-max-width;
   .form-row div.mdm--form-input,
-  .mat-form-field {
+  .mat-mdc-form-field {
     width: 100%;
   }
   .input-group input,
@@ -37,6 +37,12 @@ form.mdm--form {
     border-radius: 5px;
     width: 100%;
   }
+}
+
+.mat-mdc-form-field {
+  //font: $body-1;
+
+
 }
 
 .mdm--form-input {
@@ -59,6 +65,9 @@ form.mdm--form.mdm--form-modal {
   .mdm--form-input {
     width: 100%;
   }
+  /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
   .mat-form-field-infix {
     @include respond-to($mobile) {
       border-bottom: 0.3em solid transparent;
@@ -67,7 +76,9 @@ form.mdm--form.mdm--form-modal {
       padding: 0.5em 0;
     }
   }
-
+  /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
   .mat-form-field-wrapper {
     @include respond-to($mobile) {
       padding-bottom: 10px;
@@ -83,19 +94,25 @@ form.mdm--form.mdm--form-modal {
 }
 /* end of block */
 
-.mat-radio-button .mat-radio-label {
+/*
+TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.
+*/
+.mat-mdc-radio-button .mat-radio-label {
   width: unset;
   width: initial;
 }
 /* Mat design reset */
 .register-modal {
+  /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
   .mat-form-field-appearance-outline .mat-form-field-wrapper {
     margin: 0 !important;
   }
 }
 
 .outlined-input {
-  height: 44px;
+//  height: 44px;
   line-height: 44px;
   border-radius: 5px;
   border: 1px solid #e8e8e8 !important;
@@ -109,7 +126,16 @@ form.mdm--form.mdm--form-modal {
 }
 
 .form-field-align-center {
+  /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
+  /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
   .mat-form-field-wrapper {
+    /*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
     .mat-form-field-flex {
       align-items: center;
     }

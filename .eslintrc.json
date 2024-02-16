@@ -17,6 +17,10 @@
         "project": "tsconfig.json",
         "sourceType": "module"
     },
+    "overrides": [ {
+      "files": ["*.ts"]
+      }
+    ],
     "plugins": [
         "eslint-plugin-import",
         "@angular-eslint/eslint-plugin",
@@ -141,12 +145,6 @@
         "@typescript-eslint/no-unsafe-return": "off",
         "@typescript-eslint/no-unsafe-argument" : "warn",
         "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        "@typescript-eslint/no-shadow": [
-            "error",
-            {
-                "hoist": "all"
-            }
-        ],
         "arrow-parens": [
             "off",
             "always"

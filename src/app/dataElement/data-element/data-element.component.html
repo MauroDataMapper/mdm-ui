@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <mat-tab-group
   #tab
+  [mat-stretch-tabs]="false"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
 >

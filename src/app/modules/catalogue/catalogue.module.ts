@@ -345,7 +345,7 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
   ],
   imports: [
     AdminModule,
-    AngularSplitModule.forRoot(),
+    AngularSplitModule,
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,

@@ -282,7 +282,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
       (sec) => sec.name === defaultProfileSectionName
     );
     if (!section) {
-      return throwError(new Error('Cannot find default profile section'));
+      return throwError(() => new Error('Cannot find default profile section'));
     }
 
     const errors = this.validateSection(profile, section);

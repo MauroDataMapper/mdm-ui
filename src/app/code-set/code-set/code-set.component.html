@@ -27,11 +27,8 @@ SPDX-License-Identifier: Apache-2.0
     [item]="codeSetModel"
   ></mdm-model-header>
 </div>
-
-<div>
   <mat-tab-group
-    #tab
-    animationDuration="0ms"
+    [mat-stretch-tabs]="false"
     [selectedIndex]="activeTab"
     (selectedIndexChange)="tabSelected($event)"
   >
@@ -172,4 +169,3 @@ SPDX-License-Identifier: Apache-2.0
       </ng-template>
     </mat-tab>
   </mat-tab-group>
-</div>

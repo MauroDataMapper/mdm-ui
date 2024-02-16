@@ -211,7 +211,7 @@ describe('CatalogueSearchListingComponent', () => {
 
     it('should display an error when search fails', () => {
       resourcesStub.catalogueItem.search.mockImplementation(() =>
-        throwError(new Error())
+        throwError(() => new Error())
       );
 
       harness.component.ngOnInit();

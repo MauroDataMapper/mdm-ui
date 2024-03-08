@@ -113,7 +113,7 @@ SPDX-License-Identifier: Apache-2.0
             fxLayoutAlign.xs="flex-start center"
           >
 
-          <ng-template [ngIf]="isLoggedIn">
+          <ng-template [ngIf]="isLoggedIn && canEdit">
             <button
               mat-flat-button
               color="primary"

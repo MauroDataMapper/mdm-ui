@@ -84,6 +84,7 @@ export class DataModelComponent
   isLoadingHistory = true;
   showEditDescription = false;
   isLoggedIn = false;
+  canEdit = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -239,6 +240,8 @@ export class DataModelComponent
           }
         });
     }
+
+    this.canEdit = this.dataModel.availableActions.includes('update');
   }
 
   async DataModelPermissions(id: any) {

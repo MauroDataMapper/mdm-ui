@@ -24,6 +24,7 @@ import {
 } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { SharedService } from '../services/shared.service';
 import {
   AddRuleModalComponent,
   AddRuleModalConfig,
@@ -91,6 +92,7 @@ export class ConstraintsRulesComponent implements OnInit {
 
   clickButton = false;
   filteredOpen = false;
+  isLoggedIn = false;
 
   canAddRules: boolean;
   canDeleteRules: boolean;
@@ -98,6 +100,7 @@ export class ConstraintsRulesComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private editing: EditingService,
+    private sharedService: SharedService,
     protected resourcesService: MdmResourcesService,
     protected messageHandler: MessageHandlerService
   ) {
@@ -106,6 +109,7 @@ export class ConstraintsRulesComponent implements OnInit {
     this.languages.push({ displayName: 'All', value: 'all' });
     this.isLoadingResults = true;
     this.selectedLanguage = this.languages.find((x) => x.value === 'all');
+    this.isLoggedIn = this.sharedService.isLoggedIn();
   }
 
   ngOnInit(): void {

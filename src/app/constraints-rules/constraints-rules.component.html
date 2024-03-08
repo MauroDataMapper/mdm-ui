@@ -67,6 +67,8 @@ SPDX-License-Identifier: Apache-2.0
               fxLayoutAlign="flex-end center"
               fxLayoutAlign.xs="flex-start center"
             >
+
+            <ng-template [ngIf]="isLoggedIn">
               <div class="mt-1">
                 <button
                   mat-flat-button
@@ -89,7 +91,9 @@ SPDX-License-Identifier: Apache-2.0
                 >
                   <span class="fas fa-download"></span> Export
                 </button>
+
               </div>
+            </ng-template>
             </div>
           </div>
         </mat-expansion-panel-header>

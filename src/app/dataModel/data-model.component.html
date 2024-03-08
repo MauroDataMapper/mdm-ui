@@ -112,15 +112,19 @@ SPDX-License-Identifier: Apache-2.0
             fxLayoutAlign="flex-end center"
             fxLayoutAlign.xs="flex-start center"
           >
+
+          <ng-template [ngIf]="isLoggedIn">
             <button
               mat-flat-button
               color="primary"
               type="button"
               (click)="addDataClass()"
             >
-              <span class="fas fa-plus" aria-hidden="true"></span>
+            <span class="fas fa-plus" aria-hidden="true"></span>
               Add Data Class
             </button>
+          </ng-template>
+
           </div>
         </div>
       </div>

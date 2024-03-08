@@ -83,6 +83,7 @@ export class DataModelComponent
   historyItemCount = 0;
   isLoadingHistory = true;
   showEditDescription = false;
+  isLoggedIn = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -118,6 +119,8 @@ export class DataModelComponent
     this.title.setTitle('Data Model');
 
     this.dataModelDetails(this.parentId, this.showFinalised);
+
+    this.isLoggedIn = this.sharedService.isLoggedIn();
   }
 
   save(saveItems: Array<DefaultProfileItem>) {

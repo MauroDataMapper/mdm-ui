@@ -22,7 +22,8 @@ import {
   ViewChildren,
   ViewChild,
   ElementRef,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -87,6 +88,7 @@ export class AttachmentListComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private sharedService: SharedService,
     private editingService: EditingService,
+    private changeRef: ChangeDetectorRef,
     private gridService: GridService,
     private dialog: MatDialog
   ) {}
@@ -95,6 +97,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.apiEndpoint = this.sharedService.backendURL;
 
     this.canEdit = this.parent.availableActions.includes('update');
+    this.changeRef.detectChanges();
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.dataSource.sort = this.sort;
@@ -314,7 +317,7 @@ export class AttachmentListComponent implements AfterViewInit {
   }
 
   private loadAttachmentFileSizeLimit(properties: ApiProperty[]) {
-    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey));
+    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey)??'0');
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

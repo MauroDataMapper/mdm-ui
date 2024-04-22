@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.compo
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItemDomainType,
-  DataModelDetailResponse,
   DataType,
   Uuid
 } from '@maurodatamapper/mdm-resources';
@@ -50,16 +49,19 @@ export class DataTypeMainComponent implements OnInit {
       id: ''
     },
     parentDataModel: { id: '' },
-    label: '',
-    description: '',
-    organisation: '',
-    domainType: CatalogueItemDomainType.PrimitiveType,
-    metadata: [],
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataType: { id: '' },
-    referencedModel: { id: '', domainType: '' },
-    referencedDataClass: { id: '' },
+    dataType: {
+      label : '',
+      description: '',
+      organisation: '',
+      domainType: CatalogueItemDomainType.PrimitiveType,
+      metadata: [],
+      enumerationValues: [],
+      classifiers: [],
+      // referencedDataType: { id: '' },
+      modelResourceId: '',
+      modelResourceDomainType: null,
+      referenceClass: { id: '' },
+    } as DataType,
     isProcessComplete: false
   };
   constructor(
@@ -96,11 +98,11 @@ export class DataTypeMainComponent implements OnInit {
 
     this.resources.dataModel
       .get(this.parentDataModelId)
-      .subscribe((result: DataModelDetailResponse) => {
+      .subscribe((result) => {
         result.body.breadcrumbs = [];
         result.body.breadcrumbs.push(Object.assign({}, result.body));
-        this.model.parent.id = result.body.id || '';
-
+        // this.model.parent.id = result.body.id || '';
+        this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
         this.changeRef.detectChanges();
@@ -138,34 +140,35 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    const domainType = this.elementTypes.isModelDataType(this.model.domainType)
+    const domainType = this.elementTypes.isModelDataType(this.model.dataType.domainType)
       ? CatalogueItemDomainType.ModelDataType
-      : this.model.domainType;
+      : this.model.dataType.domainType;
 
     const resource: DataType = {
       domainType,
-      label: this.model.label,
-      description: this.model.description,
-      classifiers: this.model.classifiers.map((cls) => {
+      label: this.model.dataType.label,
+      description: this.model.dataType.description,
+      classifiers: this.model.dataType.classifiers.map((cls) => {
         return { id: cls.id };
       })
     };
-
     if (domainType === CatalogueItemDomainType.ModelDataType) {
-      resource.modelResourceDomainType = this.model.referencedModel
-        ?.domainType as CatalogueItemDomainType;
-      resource.modelResourceId = this.model.referencedModel?.id;
+      resource.modelResourceDomainType = this.model.dataType.modelResourceDomainType;
+      resource.modelResourceId = this.model.dataType.modelResourceId;
+
     } else {
-      resource.id = this.model.referencedDataType
-        ? this.model.referencedDataType.id
+      /*
+      resource.id = this.model.dataType.referencedDataType
+        ? this.model.dataType.referencedDataType.id
         : null;
+      */
 
       resource.referenceClass = {
-        id: this.model.referencedDataClass
-          ? this.model.referencedDataClass.id
+        id: this.model.dataType.referenceClass
+          ? this.model.dataType.referenceClass.id
           : null
       };
-      resource.enumerationValues = this.model.enumerationValues.map((m) => {
+      resource.enumerationValues = this.model.dataType.enumerationValues.map((m) => {
         return {
           key: m.key,
           value: m.value,

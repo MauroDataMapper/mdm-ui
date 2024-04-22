@@ -1,6 +1,6 @@
 import { StateHandlerService } from './../../services/handlers/state-handler.service';
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -93,6 +93,10 @@ export class BulkDeleteModalComponent implements AfterViewInit {
             }
           case CatalogueItemDomainType.PrimitiveType:
           case CatalogueItemDomainType.ReferenceType:
+          case CatalogueItemDomainType.ModelDataType:
+          case CatalogueItemDomainType.CodeSetType:
+          case CatalogueItemDomainType.TerminologyType:
+          case CatalogueItemDomainType.ReferenceDataModelType:
           case CatalogueItemDomainType.EnumerationType:
             if (item.imported) {
               return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();

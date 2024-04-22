@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -339,6 +339,14 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     key: 'feature.attachment_size_limit_mb',
     category: 'Features',
     editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'feature.copy_annotations_to_new_version',
+    category: 'Features',
+    editType: ApiPropertyEditType.Boolean,
     isSystem: true,
     publiclyVisible: true,
     requiresReload: true

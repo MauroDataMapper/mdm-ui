@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -369,7 +369,8 @@ SPDX-License-Identifier: Apache-2.0
     <small *ngIf="node.modelVersion || node.version" class="ml-1 text-muted">
       <span> | </span>
       <span class="mr-xsm fas fa-file-alt"></span>
-      <span *ngIf="node.modelVersion">{{ node.modelVersion }}</span>
+      <span *ngIf="node.modelVersionTag">{{ node.modelVersionTag }}</span>
+      <span *ngIf="!node.modelVersionTag && node.modelVersion">{{ node.modelVersion }}</span>
       <span *ngIf="node.version">{{ node.version }}</span>
     </small>
     <small *ngIf="favourites[node.id]" class="ml-1 text-muted">

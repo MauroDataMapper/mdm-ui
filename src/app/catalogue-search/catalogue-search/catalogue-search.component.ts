@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -106,7 +106,8 @@ export class CatalogueSearchComponent implements AfterViewInit {
         lastUpdatedAfter: this.advancedForm.lastUpdatedAfter.value,
         lastUpdatedBefore: this.advancedForm.lastUpdatedBefore.value,
         createdAfter: this.advancedForm.createdAfter.value,
-        createdBefore: this.advancedForm.createdBefore.value
+        createdBefore: this.advancedForm.createdBefore.value,
+        includeSuperseded: this.advancedForm.includeSuperseded.value
       }),
 
       ...(profileFilters && {

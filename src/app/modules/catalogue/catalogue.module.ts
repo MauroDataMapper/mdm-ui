@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,8 +66,6 @@ import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
-import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
-import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -171,14 +169,16 @@ import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-m
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
-import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
-import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
-import { ReferenceDataTypeStep2Component } from '../../wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
-import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
-import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
-import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
-import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { ReferenceDataTypeMainComponent } from '@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeStep1Component } from '@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
+import { ReferenceDataTypeStep2Component } from '@mdm/wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
+import { NewReferenceDataTypeFormComponent } from '@mdm/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
+import { ReferenceDataTypeSelectComponent } from '@mdm/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
+import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
+import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
+import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 
 @NgModule({
   providers: [
@@ -224,6 +224,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
+    ElementDataTypeDetailsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -239,8 +240,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    DataElementsListComponent,
-    DataClassesListComponent,
+    DataClassComponentsListComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -397,6 +397,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
+    ElementDataTypeDetailsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -412,8 +413,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    DataClassesListComponent,
-    DataElementsListComponent,
+    DataClassComponentsListComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,

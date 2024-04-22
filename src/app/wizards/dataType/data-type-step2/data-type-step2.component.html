@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 	<form #myForm="ngForm" ngNativeValidate class="full-width">
 		<h4>Enter the Data Type details:</h4>
 		<mdm-data-type-inline [parentScopeHandler]="parentScopeHandler"
-								[model]="model"
+								[model]="model.dataType"
 								[parentDataModel]="model.parent"
 								[showParentDataModel]="true"
 								[showClassification]="true"
-                [showLabelAndDescription]="true"
+								[showLabelAndDescription]="false"
 								(validationStatusEvent)="validationStatusEmitter($event)"></mdm-data-type-inline>
 	</form>
 </div>

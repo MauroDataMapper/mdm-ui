@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -152,7 +152,7 @@ export class ElementTypesService {
       title: 'DataType (Reference)',
       baseTitle: 'DataType',
       markdown: 'dt',
-      displayLabel: 'Reference',
+      displayLabel: 'Reference to DataClass',
       classifiable: true,
       domainName: 'referenceTypes'
     },
@@ -162,7 +162,7 @@ export class ElementTypesService {
       title: 'DataType (ModelDataType)',
       baseTitle: 'DataType',
       markdown: 'mdt',
-      displayLabel: 'ModelDataType',
+      displayLabel: 'Reference to Model',
       classifiable: true,
       domainName: 'modelDataTypes'
     },
@@ -172,29 +172,29 @@ export class ElementTypesService {
       title: 'DataType (Terminology)',
       baseTitle: 'DataType',
       markdown: 'dt',
-      displayLabel: 'Terminology',
+      displayLabel: 'Reference to Terminology',
       classifiable: true,
       domainName: 'dataTypes'
     },
     {
       id: 'CodeSetType',
-      link: 'codeSet',
-      title: 'CodeSet',
+      link: 'dataType',
+      title: 'DataType (CodeSet)',
       baseTitle: 'DataType',
-      markdown: 'cst',
-      displayLabel: 'Code Set',
+      markdown: 'dt',
+      displayLabel: 'Reference to CodeSet',
       classifiable: true,
       domainName: 'dataTypes'
     },
     {
       id: 'ReferenceDataModelType',
-      link: 'referenceDataModel',
-      title: 'ReferenceDataModel',
+      link: 'dataType',
+      title: 'DataType (ReferenceDataModel)',
       baseTitle: 'DataType',
-      markdown: 'rdmt',
-      displayLabel: 'Reference Data Model',
+      markdown: 'dt',
+      displayLabel: 'Reference to ReferenceDataModel',
       classifiable: true,
-      domainName: 'referenceDataTypes'
+      domainName: 'dataTypes'
     },
     {
       id: 'EnumerationValue',

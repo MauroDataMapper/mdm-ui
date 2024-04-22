@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -175,6 +175,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.lastUpdatedBefore = undefined;
     this.parameters.createdAfter = undefined;
     this.parameters.createdBefore = undefined;
+    this.parameters.includeSuperseded = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
   }

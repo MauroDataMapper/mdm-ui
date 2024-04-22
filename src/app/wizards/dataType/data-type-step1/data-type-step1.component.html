@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div *ngIf="model" class="mb-2">
-	<span>How do you want to add a new Data Type(s) to </span>
-	<mdm-element-link [parentDataModel]="{id:model.parent}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
+	<span>How do you want to add a new Data Type to </span>
+	<mdm-element-link [parentDataModel]="{id:model.parent.dataModel}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
 	<mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">
 		<mat-radio-button value="new">Create a New Data Type</mat-radio-button>
 		<mat-radio-button value="copy">Copy Data Type(s) from...</mat-radio-button>

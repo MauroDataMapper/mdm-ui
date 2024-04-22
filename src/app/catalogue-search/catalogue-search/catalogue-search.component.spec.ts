@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -144,7 +144,8 @@ describe('CatalogueSearchComponent', () => {
         createdAfter: new Date('July 21, 1983 01:15:00'),
         createdBefore: new Date('July 22, 1983 01:15:00'),
         lastUpdatedAfter: new Date('July 23, 1983 01:15:00'),
-        lastUpdatedBefore: new Date('July 24, 1983 01:15:00')
+        lastUpdatedBefore: new Date('July 24, 1983 01:15:00'),
+        includeSuperseded: true
       });
 
       harness.component.search();
@@ -162,6 +163,7 @@ describe('CatalogueSearchComponent', () => {
           cb: '1983-07-22',
           dt: ['dataModels', 'classifiers'],
           e: true,
+          is: true,
           l: true,
           lua: '1983-07-23',
           lub: '1983-07-24',

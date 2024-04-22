@@ -336,6 +336,14 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     requiresReload: true,
   },
   {
+    key: 'feature.attachment_size_limit_mb',
+    category: 'Features',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
     key: 'feature.copy_annotations_to_new_version',
     category: 'Features',
     editType: ApiPropertyEditType.Boolean,

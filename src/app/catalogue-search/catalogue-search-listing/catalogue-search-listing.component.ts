@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import {
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
+  mapProfileFiltersToDto,
   mapSearchParametersToRawParams,
   mapStateParamsToSearchParameters,
   SearchListingSortByOption,
@@ -36,6 +37,8 @@ import {
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
 import { SearchFilterChange } from '../search-filters/search-filters.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -63,7 +66,8 @@ export class CatalogueSearchListingComponent implements OnInit {
     private routerGlobals: UIRouterGlobals,
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -171,10 +175,40 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.lastUpdatedBefore = undefined;
     this.parameters.createdAfter = undefined;
     this.parameters.createdBefore = undefined;
+    this.parameters.includeSuperseded = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
   }
 
+  /**
+   * Updates the profile filters on the page for external changes
+   * solves a bug with seralising a empty array
+   */
+  onUpdateProfileFilters(profileFilters: CatalogueSearchProfileFilter[]) {
+    if (profileFilters.length > 0) {
+      this.parameters.profileFiltersDto = mapProfileFiltersToDto(
+        profileFilters
+      );
+    } else {
+      this.parameters.profileFiltersDto = null;
+    }
+    this.updateSearch();
+  }
+
+  openProfileFilterDialog() {
+    const dialogRef = this.dialog.open(ProfileFilterDialogComponent, {
+      data: {
+        profileFilters: this.profileFilters
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
+        this.updateSearch();
+      }
+    });
+  }
   /**
    * Match route params sort and order to sortBy option or return the default value if not set.
    *

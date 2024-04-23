@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,23 +16,29 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 .app-footer {
-  margin-top: 32px;
+  //margin-top: 32px;
   flex-shrink: 0;
 }
 
-.bdi--hero-header {
-  padding: 0 16px 24px 16px;
-  h3:first-child {
-    margin-top: 72px;
-    @include respond-to($tablet) {
-      margin-top: 0px;
-    }
+.home-top {
+
+  div {
+    align-items: center;
+    align-self: center;
+    padding: 0 1rem;
   }
-  .bdi--hero-header__image {
+}
+
+.mdm--hero-header {
+
+  h3:first-child {
+  }
+  .mdm--hero-header__image {
     img {
       @include respond-to(960px) {
         width: 50%;
       }
+      max-width: 100%;
     }
   }
 }

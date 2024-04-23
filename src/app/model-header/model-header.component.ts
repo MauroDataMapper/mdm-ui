@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -116,7 +116,8 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return this.item.domainType === CatalogueItemDomainType.DataModel;
+    return this.isLoggedIn &&
+      this.item.domainType === CatalogueItemDomainType.DataModel;
   }
 
   get canShowMergeGraph() {
@@ -124,7 +125,7 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return (
+    return this.isLoggedIn && (
       this.item.domainType === CatalogueItemDomainType.DataModel ||
       this.item.domainType === CatalogueItemDomainType.VersionedFolder
     );

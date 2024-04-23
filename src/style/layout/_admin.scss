@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,10 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 
 .heading-container {
   // padding: 14px 24px;
-  padding: 10px 24px;
-  border-bottom: none;
+  padding: 10px 0;
   position: relative;
-  border: 1px solid #f3f3f3;
   h4 {
     line-height: 1.35;
     display: inline;
@@ -41,7 +39,6 @@ SPDX-License-Identifier: Apache-2.0
   padding: 10px 0;
   margin-bottom: -1px;
   list-style: none;
-  background-color: #fcfcfd;
   li {
     padding: 0;
     position: relative;

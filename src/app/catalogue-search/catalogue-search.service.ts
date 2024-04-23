@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ export class CatalogueSearchService {
             metadataNamespace: filter.provider.metadataNamespace,
             metadataPropertyName: filter.key.metadataPropertyName,
             filterTerm: filter.value,
-            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'keyword'
+            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'contains'
           } as ProfileFieldQueryData;
         });
 
@@ -208,6 +208,7 @@ export class CatalogueSearchService {
       lastUpdatedBefore: serializeDate(params.lastUpdatedBefore),
       createdAfter: serializeDate(params.createdAfter),
       createdBefore: serializeDate(params.createdBefore),
+      includeSuperseded: params.includeSuperseded,
       classifiers: params.classifiers
     };
   }

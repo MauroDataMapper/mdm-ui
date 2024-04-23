@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,7 +45,10 @@ SPDX-License-Identifier: Apache-2.0
       <div class="col">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Profile</mat-label>
-          <mat-select formControlName="provider">
+          <mat-select
+            formControlName="provider"
+            [compareWith]="this.compareProviders"
+          >
             <mat-option *ngFor="let provider of providers" [value]="provider"
               >{{ provider.displayName }} ({{ provider.namespace }})</mat-option
             >
@@ -58,7 +61,8 @@ SPDX-License-Identifier: Apache-2.0
       <div class="col">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Key</mat-label>
-          <mat-select formControlName="key">
+          <mat-select formControlName="key"
+          [compareWith]="this.compareKeys">
             <!--
               Sections and options depend on a ProfileDefinition being loaded (decided by the "provider" field)
               and being mapped to a hidden FormGroup control

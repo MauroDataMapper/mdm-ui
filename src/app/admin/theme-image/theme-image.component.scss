@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,16 +15,3 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-
-.mdm-profile__image__edit {
-  text-align: right;
-}
-
-.mdm--background-color {
-    --color-1: #808080;
-    --color-2: #a9a9a9;
-    --size: 8px;
-    
-    background-image: conic-gradient(var(--color-1) 25%, var(--color-2) 25%, var(--color-2) 50%, var(--color-1) 50%, var(--color-1) 75%, var(--color-2) 75%);
-    background-size: calc(var(--size)*2) calc(var(--size)*2);
-}

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ const defaultHtmlContent = [
   },
   {
     key: 'content.home.intro.right',
-    value: `<div class="text-center bdi--hero-header__image mt-3">
+    value: `<div class="text-center mdm--hero-header__image mt-3">
     <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
 </div>`
   },

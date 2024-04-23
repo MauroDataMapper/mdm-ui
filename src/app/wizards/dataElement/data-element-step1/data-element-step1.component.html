@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div *ngIf="model" class="mb-2">
-    <span>How do you want to add a new Data Element(s) to </span>
+    <span>How do you want to add a new Data Element to </span>
     <mdm-element-link [newWindow]="true" [element]="model.parent"></mdm-element-link>
     <span>?</span>
     <mat-radio-group name="createType" [(ngModel)]="model.createType" (change)="validate()">

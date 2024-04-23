@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 
 <table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
-    <tr *ngIf="isInControlList('code')" data-cy="code">
+  <tr *ngIf="isInControlList('dataTypeDetails')" data-cy="data-type-details">
+    <th class="detailsRowHeader" scope="col">Data Type Details</th>
+    <td data-cy="value">
+      <mdm-element-data-type-details
+        *ngIf="catalogueItem"
+        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
+      ></mdm-element-data-type-details>
+
+    </td>
+  </tr>
+  <tr *ngIf="isInControlList('code')" data-cy="code">
       <td class="detailsRowHeader">Code</td>
       <td data-cy="value" *ngIf="catalogueItem">
         <mdm-inline-text-edit

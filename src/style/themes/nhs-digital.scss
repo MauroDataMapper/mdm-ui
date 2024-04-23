@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -159,6 +159,10 @@ $nhs-digital-typography: mat.define-typography-config(
   @include mdm-custom-components-theme($nhs-digital-theme);
 
   /* Style overrides for the NHS Digital theme */
+
+  div.as-split-gutter {
+    background-color: $nhs-digital-background-color !important;
+  }
 
   .heading-container {
     background-color: $nhs-digital-plain-background-color;

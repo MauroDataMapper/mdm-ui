@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -85,7 +85,10 @@ export class ElementDataTypeComponent implements OnInit {
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
     }
 
-    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType) {
+    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.TerminologyType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.CodeSetType ||
+      this.elementDataType.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
       this.loadModelResource();
     }
 

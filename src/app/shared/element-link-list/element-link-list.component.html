@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
               [element]="record.sourceMultiFacetAwareItem"
               [parentDataModel]="record.sourceMultiFacetAwareItem.dataModel"
               [parentDataClass]="record.sourceMultiFacetAwareItem.dataClass"
-              [showTypeTitle]="'true'"
+              [showTypeTitle]="true"
             ></mdm-element-link>
           </div>
         </div>
@@ -184,7 +184,7 @@ SPDX-License-Identifier: Apache-2.0
                 <mdm-element-link
                   [element]="record.targetMultiFacetAwareItem"
                   [showParentDataModelName]="true"
-                  [showTypeTitle]="'true'"
+                  [showTypeTitle]="true"
                 ></mdm-element-link>
               </div>
               <div *ngIf="record.status == 'target'">
@@ -201,7 +201,7 @@ SPDX-License-Identifier: Apache-2.0
                 <mdm-element-link
                   [element]="record.edit.target"
                   [showParentDataModelName]="true"
-                  [showTypeTitle]="'true'"
+                  [showTypeTitle]="true"
                 ></mdm-element-link>
               </div>
               <div *ngIf="record.status == 'target'">
@@ -274,8 +274,8 @@ SPDX-License-Identifier: Apache-2.0
   [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
 >
   <p class="marginless">
-    There are no links in this table. You can add links by clicking the button
-    above.
+    There are no links in this table.
+    <span *ngIf="access && access.canAddLink">You can add links by clicking the button above.</span>
   </p>
   <p *ngIf="!hideFilters" class="marginless">
     This might be due to the current filter settings.

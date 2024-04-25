@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="item.controlType === profileControlType.text"
             matInput
             type="text"
-            name="{item.displayName}}"
+            name="{{ item.displayName }}"
             [(ngModel)]="item.value"
             value="item.value"
             class="outlined-input form-control"
@@ -123,6 +122,8 @@ SPDX-License-Identifier: Apache-2.0
                 [parentDataModel]="data.parentCatalogueItem"
                 [showClassification]="false"
                 [showParentDataModel]="false"
+                [showLabelAndDescription]="false"
+                (validationStatusEvent)="validationStatusEventHandler($event)"
               >
               </mdm-data-type-inline>
             </div>
@@ -156,12 +157,6 @@ SPDX-License-Identifier: Apache-2.0
                       [showTypeTitle]="true"
                       [showLink]="false"
                     ></mdm-element-link>
-                    <mdm-element-link
-                      [element]="item"
-                      [showTypeTitle]="true"
-                      [showLink]="false"
-                    >
-                    </mdm-element-link>
                   </div>
                 </ng-template>
               </mdm-select>

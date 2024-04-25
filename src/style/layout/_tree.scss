@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,6 +27,10 @@ mat-tree-node.mat-tree-node {
     flex-direction: row;
     align-items: center;
     min-height: 28px;
+
+    span, small {
+      white-space: nowrap;
+    }
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -105,7 +108,7 @@ mat-tree-node.mat-tree-node {
 
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
-  vertical-align: 0.09em;
+//  vertical-align: 0.09em;
   min-width: 20px;
   width: 20px;
   color: #f19e3f;
@@ -114,8 +117,10 @@ mat-tree-node.mat-tree-node {
 }
 
 .mat-tree {
-  padding: 0 10px 10px 10px;
+  height: 100%;
+  overflow: auto;
 }
+
 .fa-folder,
 .mat-icon.fa-folder-open,
 .fa-folder-plus,
@@ -146,6 +151,10 @@ div.mat-menu-panel.filterMenu {
   max-width: 100%;
 }
 
+span.tree-top-actions {
+  white-space: nowrap;
+}
+
 span.tree-top-actions button,
 .import-folder-actions button {
   padding: 0;
@@ -161,7 +170,7 @@ span.tree-top-actions button,
 div.mat-tab-label {
   min-width: 25px;
   padding: 0 16px;
-  font-size: $defaultFontSize;
+  font-size: $defaultFontSize !important;
 }
 div.mat-tab-label {
   height: 38px;
@@ -283,6 +292,7 @@ ul.favourites li:focus {
 
 /*****************************************************************/
 .detail-icons--cta {
+  vertical-align: -0.15em;
   .favouritesIcon {
     @extend .is-not-favourite;
     cursor: pointer;

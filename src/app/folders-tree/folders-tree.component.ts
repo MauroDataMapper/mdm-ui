@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -350,17 +349,16 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   async expand(node: MdmTreeItem) {
-    let options: any = {};
-    if (this.shared.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDeleted:
-            this.userSettingsHandler.get('includeDeleted') || false,
-          includeModelSuperseded:
-            this.userSettingsHandler.get('includeModelSuperseded') || false
-        }
-      };
-    }
+    const options: any = {
+      queryStringParams: {
+        includeDeleted:
+          (this.shared.isLoggedIn() &&
+            this.userSettingsHandler.get('includeDeleted')) ||
+          false,
+        includeModelSuperseded:
+          this.userSettingsHandler.get('includeModelSuperseded') || false
+      }
+    };
 
     try {
       switch (node.domainType) {
@@ -606,12 +604,20 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   handleSoftDelete(fnode: FlatNode) {
+    if (!fnode.access.showSoftDelete) {
+      return;
+    }
+
     this.modelTree.deleteCatalogueItemSoft(fnode).subscribe(() => {
       fnode.deleted = true;
     });
   }
 
   handlePermanentDelete(fnode: FlatNode) {
+    if (!fnode.access.showPermanentDelete) {
+      return;
+    }
+
     this.modelTree.deleteCatalogueItemPermanent(fnode).subscribe(() => {
       this.broadcast.reloadCatalogueTree();
       this.stateHandler.Go(

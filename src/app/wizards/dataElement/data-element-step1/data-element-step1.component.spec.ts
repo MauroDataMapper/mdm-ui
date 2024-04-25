@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataElementStep1Component } from './data-element-step1.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
@@ -30,7 +29,7 @@ describe('DataElementStep1Component', () => {
   let component: DataElementStep1Component;
   let fixture: ComponentFixture<DataElementStep1Component>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatRadioModule,

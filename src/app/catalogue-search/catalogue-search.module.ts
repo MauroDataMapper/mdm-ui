@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,6 +28,10 @@ import { SearchFiltersComponent } from './search-filters/search-filters.componen
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-item-search.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { CatalogueSearchProfileFilterListComponent } from './catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
+import { ProfileFilterCardComponent } from './profile-filter-card/profile-filter-card.component';
+import { ProfileFiltersComponent } from './profile-filters/profile-filters.component';
+import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/profile-filter-dialog-component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,11 @@ import { ContentModule } from '@mdm/content/content.module';
     CatalogueItemSearchResultComponent,
     CatalogueSearchAdvancedFormComponent,
     SearchFiltersComponent,
-    CatalogueItemSearchComponent
+    CatalogueItemSearchComponent,
+    CatalogueSearchProfileFilterListComponent,
+    ProfileFilterCardComponent,
+    ProfileFiltersComponent,
+    ProfileFilterDialogComponent
   ],
   imports: [
     CommonModule,

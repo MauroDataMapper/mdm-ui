@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,15 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
   CatalogueSearchContext,
   CatalogueSearchParameters,
+  CatalogueSearchProfileFilter,
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
+  mapProfileFiltersToDto,
   mapSearchParametersToRawParams,
   mapStateParamsToSearchParameters,
   SearchListingSortByOption,
@@ -36,6 +37,8 @@ import {
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
 import { SearchFilterChange } from '../search-filters/search-filters.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
 
 @Component({
   selector: 'mdm-catalogue-search-listing',
@@ -57,12 +60,14 @@ export class CatalogueSearchListingComponent implements OnInit {
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
+  profileFilters?: CatalogueSearchProfileFilter[];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -75,12 +80,46 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.parameters.order
     );
 
-    if (!this.parameters.search || this.parameters.search === '') {
-      this.setEmptyResultPage();
-      return;
-    }
+    this.status = 'loading';
 
-    this.performSearch();
+    this.catalogueSearch
+      .mapProfileFilters(this.parameters.profileFiltersDto)
+      .pipe(
+        catchError(() => {
+          this.messageHandler.showWarning(
+            'A problem occurred when getting your profile filters.'
+          );
+          return of([] as CatalogueSearchProfileFilter[]); // Continue
+        }),
+        switchMap((profileFilters) => {
+          // Profile filters must be mapped to the correct object type before they can be
+          // used properly
+          this.profileFilters = profileFilters;
+
+          if (!this.parameters.search || this.parameters.search === '') {
+            return of<CatalogueSearchResultSet>({
+              count: 0,
+              page: 1,
+              pageSize: 10,
+              items: []
+            });
+          }
+
+          return this.catalogueSearch.search(this.parameters);
+        }),
+        catchError((error) => {
+          this.status = 'error';
+          this.messageHandler.showError(
+            'A problem occurred when searching.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((resultSet) => {
+        this.status = 'ready';
+        this.resultSet = resultSet;
+      });
   }
 
   /**
@@ -136,41 +175,40 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.lastUpdatedBefore = undefined;
     this.parameters.createdAfter = undefined;
     this.parameters.createdBefore = undefined;
+    this.parameters.includeSuperseded = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
   }
 
-  private setEmptyResultPage() {
-    this.resultSet = {
-      count: 0,
-      page: 1,
-      pageSize: 10,
-      items: []
-    };
-    this.status = 'ready';
+  /**
+   * Updates the profile filters on the page for external changes
+   * solves a bug with seralising a empty array
+   */
+  onUpdateProfileFilters(profileFilters: CatalogueSearchProfileFilter[]) {
+    if (profileFilters.length > 0) {
+      this.parameters.profileFiltersDto = mapProfileFiltersToDto(
+        profileFilters
+      );
+    } else {
+      this.parameters.profileFiltersDto = null;
+    }
+    this.updateSearch();
   }
 
-  private performSearch() {
-    this.status = 'loading';
+  openProfileFilterDialog() {
+    const dialogRef = this.dialog.open(ProfileFilterDialogComponent, {
+      data: {
+        profileFilters: this.profileFilters
+      }
+    });
 
-    this.catalogueSearch
-      .search(this.parameters)
-      .pipe(
-        catchError((error) => {
-          this.status = 'error';
-          this.messageHandler.showError(
-            'A problem occurred when searching.',
-            error
-          );
-          return EMPTY;
-        })
-      )
-      .subscribe((resultSet) => {
-        this.resultSet = resultSet;
-        this.status = 'ready';
-      });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
+        this.updateSearch();
+      }
+    });
   }
-
   /**
    * Match route params sort and order to sortBy option or return the default value if not set.
    *

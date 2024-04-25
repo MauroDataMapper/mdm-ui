@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,9 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataElementsListComponent } from './data-elements-list.component';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+
+import { DataClassComponentsListComponent } from './data-class-components-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
@@ -44,13 +44,13 @@ import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-li
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
-describe('DataElementsListComponent', () => {
-   let component: DataElementsListComponent;
-   let fixture: ComponentFixture<DataElementsListComponent>;
+describe('DataClassesListComponent', () => {
+   let component: DataClassComponentsListComponent;
+   let fixture: ComponentFixture<DataClassComponentsListComponent>;
 
-   beforeEach(async(() => {
+   beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
          imports: [
             NgxSkeletonLoaderModule,
@@ -85,13 +85,15 @@ describe('DataElementsListComponent', () => {
             MdmPaginatorComponent,
             MultiplicityComponent,
             ByteArrayToBase64Pipe,
-            DataElementsListComponent
+            DataClassComponentsListComponent,
+            SkeletonBadgeComponent
          ]
-      }).compileComponents();
+      })
+         .compileComponents();
    }));
 
    beforeEach(() => {
-      fixture = TestBed.createComponent(DataElementsListComponent);
+      fixture = TestBed.createComponent(DataClassComponentsListComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
    });

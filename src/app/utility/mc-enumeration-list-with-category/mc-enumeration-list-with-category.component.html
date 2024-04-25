@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,149 +16,361 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-	<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
-		<div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-			<h4 class="marginless">Enumerations</h4>
-			<span class="mdm--badge mdm--element-count">{{enumsCount}}</span>
-		</div>
-		<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-			<div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="!clientSide">
-				<button mat-flat-button color="primary" type="button" (click)="add()">
-					<span class="fas fa-plus" aria-hidden="true"></span>
-					Add Enumeration
-				</button>
-			</div>
-			<div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="clientSide">
-				<button mat-flat-button color="primary" type="button" (click)="add()">
-					<span class="fas fa-plus" aria-hidden="true"></span>
-					Add Enumeration
-				</button>
-			</div>
-		</div>
-	</div>
+  <div
+    fxFlex
+    fxLayout="row"
+    fxLayout.md="row"
+    fxLayout.sm="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="space-around"
+    fxLayoutGap="24px"
+  >
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="80"
+      fxFlex.md="80"
+      fxFlex.sm="65"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-start center"
+    >
+      <h4 class="marginless">Enumerations</h4>
+      <span class="mdm--badge mdm--element-count">{{ enumsCount }}</span>
+    </div>
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="20"
+      fxFlex.md="20"
+      fxFlex.sm="35"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-end center"
+      fxLayoutAlign.xs="flex-start center"
+    >
+      <div
+        style="float: right; margin-top: -2px; margin-left: 9px"
+        *ngIf="!clientSide"
+      >
+        <button mat-flat-button color="primary" type="button" (click)="add()">
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          Add Enumeration
+        </button>
+      </div>
+      <div
+        style="float: right; margin-top: -2px; margin-left: 9px"
+        *ngIf="clientSide"
+      >
+        <button mat-flat-button color="primary" type="button" (click)="add()">
+          <span class="fas fa-plus" aria-hidden="true"></span>
+          Add Enumeration
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="table-responsive">
-<table mat-table #table [dataSource]="displayItems" cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)" class="mdm--mat-table table-striped">
-	<ng-container matColumnDef="group">
-		<th mat-header-cell *matHeaderCellDef columnName="group" style="max-width: 23%; width: 23%;" scope="col">
-			Group
-		</th>
-		<td mat-cell *matCellDef="let record" [attr.colspan]="(record.isCategoryRow) ? 4 : 1" style="min-width: 25px; max-width: 10%; width: 10%; word-wrap: break-word;">
-			<div *ngIf="record.isCategoryRow" style="float: left">
-				<div *ngIf="record.category" style="padding-left: 2px; font-weight: bold; font-style: italic;">
-					{{record.category}}</div>
-				<div *ngIf="!record.category"></div>
-			</div>
+  <table
+    mat-table
+    #table
+    [dataSource]="displayItems"
+    cdkDropList
+    [cdkDropListData]="dataSource"
+    (cdkDropListDropped)="handleDrop($event)"
+    class="mdm--mat-table table-striped"
+  >
+    <ng-container matColumnDef="group">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        columnName="group"
+        style="max-width: 23%; width: 23%"
+        scope="col"
+      >
+        Group
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        [attr.colspan]="record.isCategoryRow ? 4 : 1"
+        style="
+          min-width: 25px;
+          max-width: 10%;
+          width: 10%;
+          word-wrap: break-word;
+        "
+      >
+        <div *ngIf="record.isCategoryRow" style="float: left">
+          <div
+            *ngIf="record.category"
+            style="padding-left: 2px; font-weight: bold; font-style: italic"
+          >
+            {{ record.category }}
+          </div>
+          <div *ngIf="!record.category"></div>
+        </div>
 
-			<div *ngIf="!record.isCategoryRow && !record.inEdit" style="float: right; cursor: move;">
-				<mat-icon cdkDragHandle>reorder</mat-icon>
-			</div>
+        <div
+          *ngIf="!record.isCategoryRow && !record.inEdit"
+          style="float: right; cursor: move"
+        >
+          <mat-icon cdkDragHandle>reorder</mat-icon>
+        </div>
 
-			<div *ngIf="record.inEdit">
-				<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['category']}">
-					<mdm-select [width]="'100%'" [acceptTypedInput]="true" [valueType]="'static'"
-						[defaultValue]="{key:record.edit.category, value:record.edit.category}" [record]="record.edit"
-						[idProperty]="'key'" [displayProperty]="'value'" [searchProperty]="'key'"
-						[staticValues]="categories" [showAllStaticValues]="true" [onTextUpdated]="onCategoryTextUpdated"
-						(selectEvent)="onCategorySelect($event[0],$event[1])">
-						<ng-template #lineContent let-item>
-							<div>{{item.value}}</div>
-						</ng-template>
-					</mdm-select>
-					<small *ngIf="record.edit.errors && record.edit.errors['category']"
-						class="errorMessage">{{record.edit.errors['category']}}</small>
-				</div>
-			</div>
-		</td>
-	</ng-container>
-	<ng-container matColumnDef="key">
-		<th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="key" scope="col">
-			Key
-		</th>
-		<td mat-cell *matCellDef="let record" [hidden]="record.isCategoryRow" style="max-width: 18%; width: 18%; text-align: left; word-wrap: break-word; overflow: hidden;" >
-			<div *ngIf="!record.isCategoryRow">
-				<div *ngIf="!record.inEdit">
-					{{record.key}}
-				</div>
-				<div *ngIf="record.inEdit">
-					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['key']}">
-						<input class="form-control" type="text" [(ngModel)]="record.edit.key" autocomplete="off" />
-						<small [hidden]="!record.edit.errors && !record.edit.errors['key']"
-							class="errorMessage">{{record.edit.errors['key']}}</small>
-					</div>
-				</div>
-			</div>
-		</td>
-
-  </ng-container>
-	<ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="value" scope="col">
-      Value
-		</th>
-		<td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word; overflow: hidden;" [hidden]="record.isCategoryRow">
-			<div *ngIf="!record.isCategoryRow">
-				<div *ngIf="!record.inEdit">
-					{{record.value}}
-				</div>
-				<div *ngIf="record.inEdit">
-					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-						<input class="form-control" type="text" [(ngModel)]="record.edit.value" autocomplete="off" />
-						<small [hidden]="!record.edit.errors && !record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
-					</div>
-				</div>
-			</div>
-		</td>
-   </ng-container>
-   <ng-container matColumnDef="more">
-      <td mat-header-cell *matHeaderCellDef style="width: 10%;" columnName="more"></td>
+        <div *ngIf="record.inEdit">
+          <div
+            class="form-group"
+            [ngClass]="{
+              'has-error': record.edit.errors && record.edit.errors['category']
+            }"
+          >
+            <input
+              type="text"
+              class="form-control"
+              [formControl]="categoryCtrl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onCategorySelected($event, record)"
+            >
+              <mat-option
+                *ngFor="let category of filteredCategories"
+                [value]="category"
+              >
+                {{ category }}
+              </mat-option>
+            </mat-autocomplete>
+            <small
+              *ngIf="record.edit.errors && record.edit.errors['category']"
+              class="errorMessage"
+              >{{ record.edit.errors['category'] }}</small
+            >
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="key">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 26%; width: 26%"
+        columnName="key"
+        scope="col"
+      >
+        Key
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        [hidden]="record.isCategoryRow"
+        style="
+          max-width: 18%;
+          width: 18%;
+          text-align: left;
+          word-wrap: break-word;
+          overflow: hidden;
+        "
+      >
+        <div *ngIf="!record.isCategoryRow">
+          <div *ngIf="!record.inEdit">
+            {{ record.key }}
+          </div>
+          <div *ngIf="record.inEdit">
+            <div
+              class="form-group"
+              [ngClass]="{
+                'has-error': record.edit.errors && record.edit.errors['key']
+              }"
+            >
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="record.edit.key"
+                autocomplete="off"
+              />
+              <small
+                [hidden]="!record.edit.errors && !record.edit.errors['key']"
+                class="errorMessage"
+                >{{ record.edit.errors['key'] }}</small
+              >
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 26%; width: 26%"
+        columnName="value"
+        scope="col"
+      >
+        Value
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let record"
+        style="
+          max-width: 22%;
+          width: 22%;
+          text-align: left;
+          word-wrap: break-word;
+          overflow: hidden;
+        "
+        [hidden]="record.isCategoryRow"
+      >
+        <div *ngIf="!record.isCategoryRow">
+          <div *ngIf="!record.inEdit">
+            {{ record.value }}
+          </div>
+          <div *ngIf="record.inEdit">
+            <div
+              class="form-group"
+              [ngClass]="{
+                'has-error': record.edit.errors && record.edit.errors['value']
+              }"
+            >
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="record.edit.value"
+                autocomplete="off"
+              />
+              <small
+                [hidden]="!record.edit.errors && !record.edit.errors['value']"
+                class="errorMessage"
+                >{{ record.edit.errors['value'] }}</small
+              >
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="more">
+      <td
+        mat-header-cell
+        *matHeaderCellDef
+        style="width: 10%"
+        columnName="more"
+      ></td>
       <td mat-cell *matCellDef="let record">
         <div *ngIf="!record.isCategoryRow">
-          <button mat-stroked-button color="primary" *ngIf="!clientSide && !isEditable && !record.inEdit" (click)="openEnumerationValues(record)">
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="!clientSide && !isEditable && !record.inEdit"
+            (click)="openEnumerationValues(record)"
+          >
             More details
             <span class="fas fa-external-link-alt"></span>
           </button>
         </div>
       </td>
     </ng-container>
-	<ng-container matColumnDef="buttons">
-		<td mat-header-cell *matHeaderCellDef style="max-width: 26%; width: 26%;" columnName="buttons"></td>
-		<td mat-cell *matCellDef="let record; let i = index;" [hidden]="record.isCategoryRow" style="max-width: 5%; width: 5%; text-align: center; word-wrap: break-word; overflow: hidden;">
-			<div *ngIf="!record.isCategoryRow">
-				<div *ngIf="!record.inEdit && !record.inDelete">
-					<button mat-icon-button color="primary" type="button" class="paddingless" (click)="editClicked(record)">
-						<span class="fas fa-pencil-alt"></span>
-					</button>
+    <ng-container matColumnDef="buttons">
+      <td
+        mat-header-cell
+        *matHeaderCellDef
+        style="max-width: 26%; width: 26%"
+        columnName="buttons"
+      ></td>
+      <td
+        mat-cell
+        *matCellDef="let record; let i = index"
+        [hidden]="record.isCategoryRow"
+        style="
+          max-width: 5%;
+          width: 5%;
+          text-align: center;
+          word-wrap: break-word;
+          overflow: hidden;
+        "
+      >
+        <div *ngIf="!record.isCategoryRow">
+          <div *ngIf="!record.inEdit && !record.inDelete">
+            <button
+              mat-icon-button
+              color="primary"
+              type="button"
+              class="paddingless"
+              (click)="editClicked(record)"
+            >
+              <span class="fas fa-pencil-alt"></span>
+            </button>
 
-					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="deleteClicked(record)">
-						<span class="far fa-trash-alt"></span>
-					</button>
-				</div>
-				<div *ngIf="record.inDelete">
-					<button mat-icon-button color="accent" type="button" class="paddingless" (click)="confirmDeleteClicked(record)">
-						<span class="fas fa-check"></span>
-					</button>
-					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="cancelDeleteClicked(record)">
-						<span class="fas fa-times"></span>
-					</button>
-					<span style="font-size: 11px;"><br>Are you sure?</span>
-				</div>
-				<div *ngIf="record.inEdit">
-					<button mat-icon-button color="accent" type="submit" class="paddingless" (click)="saveClicked(record)">
-						<span class="fas fa-check"></span>
-					</button>
-					<button mat-icon-button color="warn" type="button" class="paddingless" (click)="cancelEditClicked(record)">
-						<span class="fas fa-times"></span>
-					</button>
-				</div>
-			</div>
-		</td>
-	</ng-container>
-	<tr mat-header-row *matHeaderRowDef="displayedColumnsEnums"></tr>
-	<tr mat-row *matRowDef="let record; columns: displayedColumnsEnums;" cdkDrag [cdkDragData]="record" [cdkDragDisabled]="record.isCategoryRow"></tr>
-</table>
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              class="paddingless"
+              (click)="deleteClicked(record)"
+            >
+              <span class="far fa-trash-alt"></span>
+            </button>
+          </div>
+          <div *ngIf="record.inDelete">
+            <button
+              mat-icon-button
+              color="accent"
+              type="button"
+              class="paddingless"
+              (click)="confirmDeleteClicked(record)"
+            >
+              <span class="fas fa-check"></span>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              class="paddingless"
+              (click)="cancelDeleteClicked(record)"
+            >
+              <span class="fas fa-times"></span>
+            </button>
+            <span style="font-size: 11px"><br />Are you sure?</span>
+          </div>
+          <div *ngIf="record.inEdit">
+            <button
+              mat-icon-button
+              color="accent"
+              type="submit"
+              class="paddingless"
+              (click)="saveClicked(record)"
+            >
+              <span class="fas fa-check"></span>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              type="button"
+              class="paddingless"
+              (click)="cancelEditClicked(record)"
+            >
+              <span class="fas fa-times"></span>
+            </button>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsEnums"></tr>
+    <tr
+      mat-row
+      *matRowDef="let record; columns: displayedColumnsEnums"
+      cdkDrag
+      [cdkDragData]="record"
+      [cdkDragDisabled]="record.isCategoryRow || record.inEdit"
+    ></tr>
+  </table>
 </div>
 
 <div class="mdm--mat-pagination">
-	<mdm-paginator [length]="enumsCount" (page)="pageSizeClicked($event)" showFirstLastButtons></mdm-paginator>
+  <mdm-paginator
+    [length]="enumsCount"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizes"
+    (page)="pageSizeClicked($event)"
+    showFirstLastButtons
+  ></mdm-paginator>
 </div>

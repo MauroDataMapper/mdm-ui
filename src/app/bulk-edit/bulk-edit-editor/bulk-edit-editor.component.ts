@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +28,7 @@ import {
   GridApi,
   GridReadyEvent,
   ICellEditorParams
-} from 'ag-grid-community';
+} from '@ag-grid-community/core';
 import { EMPTY } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditDataRow, BulkEditProfileContext } from '../bulk-edit.types';
@@ -61,6 +60,9 @@ export class BulkEditEditorComponent implements OnInit {
   @Input() rootItem: MauroItem;
 
   @Output() backEvent = new EventEmitter<void>();
+
+  @Output() saved = new EventEmitter<void>();
+  @Output() changed = new EventEmitter<any>();
 
   /** Two-way binding */
   @Input() tab: BulkEditProfileContext;
@@ -153,6 +155,8 @@ export class BulkEditEditorComponent implements OnInit {
         }
       });
     });
+
+    this.changed.emit(data);
   }
 
   validate() {
@@ -201,6 +205,7 @@ export class BulkEditEditorComponent implements OnInit {
         this.messageHandler.showSuccess(
           `'${this.tab.displayName}' was saved successfully.`
         );
+        this.saved.emit();
       });
   }
 
@@ -255,7 +260,7 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   private excludeAutoResizeColumns(columnIds) {
-    const pathColKey = 'Path';
+    const pathColKey = 'path';
     const pathId = this.gridColumnApi.getColumn(pathColKey).getColId();
     const pathIndex = columnIds.indexOf(pathId);
     if (pathIndex > -1) {

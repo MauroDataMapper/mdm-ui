@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-@import "style/abstracts/variables";
+@import 'style/abstracts/variables';
 
 /* Form specific style */
 form.mdm--form {
   background-color: #fff;
   border-radius: 5px;
   max-width: $forms-max-width;
-  .form-row div.mdm--form-input, .mat-form-field {
-      width: 100%;
+  .form-row div.mdm--form-input,
+  .mat-form-field {
+    width: 100%;
   }
-  .input-group input, .input-group textarea {
+  .input-group input,
+  .input-group textarea {
     border: 1px solid #e8e8e8;
     border-radius: 2px;
     box-shadow: none;
@@ -55,7 +56,7 @@ form.mdm--form.mdm--form-modal {
     padding: 12px 16px;
   }
 
-  .mdm--form-input{
+  .mdm--form-input {
     width: 100%;
   }
   .mat-form-field-infix {
@@ -88,21 +89,29 @@ form.mdm--form.mdm--form-modal {
 }
 /* Mat design reset */
 .register-modal {
-    .mat-form-field-appearance-outline .mat-form-field-wrapper {
-      margin: 0!important;
-    }
+  .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0 !important;
+  }
 }
 
 .outlined-input {
   height: 44px;
   line-height: 44px;
   border-radius: 5px;
-  border: 1px solid #e8e8e8!important;
+  border: 1px solid #e8e8e8 !important;
   box-shadow: none;
 }
 
 .outlined-block {
   border-radius: 5px;
-  border: 1px solid #e8e8e8!important;
+  border: 1px solid #e8e8e8 !important;
   box-shadow: none;
+}
+
+.form-field-align-center {
+  .mat-form-field-wrapper {
+    .mat-form-field-flex {
+      align-items: center;
+    }
+  }
 }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,6 +25,26 @@ SPDX-License-Identifier: Apache-2.0
 body {
   height: 100vh;
   width: 100vw;
+  background-color: var(--light);
+}
+
+div.as-split-gutter {
+  background-color: var(--light) !important;
+}
+
+.pane {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px;
+  background-color: white;
+}
+
+.padded {
+  padding: 2rem !important;
+}
+
+.padded-pane {
+  padding: 1rem  !important;
 }
 
 /* include border and padding in element width and height */
@@ -48,6 +67,8 @@ body {
 main,
 .mdm-app-component {
   flex: 1 0 auto;
+  height: calc(100vh - 12rem);
+  overflow: auto;
 }
 
 .app-footer {
@@ -79,6 +100,7 @@ ul li {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+
 }
 
 label {
@@ -190,13 +212,11 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .mdm--shadow-block {
-  box-shadow: 0 0 13px 0 rgba(82, 63, 105, 0.05);
   background-color: #fff;
   margin-bottom: 20px;
   border-radius: 4px;
   .panel-body {
     padding: 14px 20px;
-    border: 1px solid #f3f3f3;
   }
 }
 
@@ -242,6 +262,9 @@ a {
 
 .loading-spinner {
   @include size();
+  font-size: 3rem !important;
+  margin-top: 1rem;
+  text-align: center;
   div {
     position: absolute;
     top: 70%;
@@ -317,4 +340,9 @@ span.mchighlighter {
 .create-term-relationship-type-dialog .mat-checkbox > label {
   font-size: 1rem;
   font-weight: normal;
+}
+
+.mat-icon {
+  overflow: initial !important;
+  vertical-align: baseline;
 }

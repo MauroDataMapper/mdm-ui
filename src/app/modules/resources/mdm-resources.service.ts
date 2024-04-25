@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,6 +45,7 @@ import {
   MdmUserGroupsResource,
   MdmVersionLinkResource,
   MdmUserImageFileResource,
+  MdmThemeImageFileResource,
   MdmReferenceDataModelResource,
   MdmReferenceDataElementResource,
   MdmReferenceDataTypeResource,
@@ -149,6 +149,10 @@ export class MdmResourcesService {
     this.restHandler
   );
   userImage = new MdmUserImageFileResource(
+    this.resourcesConfig,
+    this.restHandler
+  );
+  themeImage = new MdmThemeImageFileResource(
     this.resourcesConfig,
     this.restHandler
   );

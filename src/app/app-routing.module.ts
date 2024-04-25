@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -77,6 +76,8 @@ import { FeaturesService } from './services/features.service';
 import { CatalogueSearchListingComponent } from './catalogue-search/catalogue-search-listing/catalogue-search-listing.component';
 import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { redirectUsingPath } from './routing.types';
 
 /**
  * Collection of all page state routes.
@@ -142,7 +143,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: FolderComponent,
       params: { tabView: { value: null, squash: true, dynamic: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Folder
       }
     },
     {
@@ -215,10 +217,13 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
       url: '/dataModel/:id/{tabView:string}?{finalised:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true },
-                finalised: { dynamic: true, value: null, squash: true, inherit: false} },
+      params: {
+        tabView: { dynamic: true, value: null, squash: true },
+        finalised: { dynamic: true, value: null, squash: true, inherit: false }
+      },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataModel
       }
     },
     {
@@ -232,7 +237,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ReferenceDataComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.ReferenceDataModel
       }
     },
     {
@@ -295,7 +301,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Terminology
       }
     },
     {
@@ -304,7 +311,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: DataClassComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataClass
       }
     },
     {
@@ -314,7 +322,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       params: { tabView: { dynamic: true, value: null, squash: true } },
       component: DataElementComponent,
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.DataElement
       }
     },
     {
@@ -323,7 +332,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ClassificationComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: 'Classifier' // Must make sure starts with uppercase character
       }
     },
     {
@@ -347,10 +357,19 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/dataType/:dataModelId/:id/{tabView:string}',
       component: DataTypeComponent,
       params: {
-        tabView: { dynamic: true, value: null, squash: true },
-        data: {
-          allowAnonymous: true
-        }
+        tabView: { dynamic: true, value: null, squash: true }
+      },
+      data: {
+        allowAnonymous: true,
+        domainTypes: [
+          CatalogueItemDomainType.CodeSetType,
+          CatalogueItemDomainType.ModelDataType,
+          CatalogueItemDomainType.PrimitiveType,
+          CatalogueItemDomainType.ReferenceType,
+          CatalogueItemDomainType.EnumerationType,
+          CatalogueItemDomainType.TerminologyType,
+          CatalogueItemDomainType.ReferenceDataModelType
+        ]
       }
     },
     {
@@ -373,7 +392,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.Term
       }
     },
     {
@@ -410,7 +430,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.CodeSet
       }
     },
     {
@@ -435,7 +456,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: VersionedFolderComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } },
       data: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        domainType: CatalogueItemDomainType.VersionedFolder
       }
     },
     {
@@ -449,35 +471,40 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.catalogueSearchListing',
+      // For search URL, compress the parameter names as much as possible - metadata (md) query param value could be very long
       url:
-        '/search/listing?{contextDomainType:string}&{contextId:string}&{contextLabel:string}&{contextParentId:string}&{contextDataModelId:string}&{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{domainTypes:string}&{labelOnly:string}&{exactMatch:string}&{lastUpdatedAfter:string}&{lastUpdatedBefore:string}&{createdAfter:string}&{createdBefore:string}&{classifiers:string}',
+        '/search/listing?{cxdt:string}&{cxid:string}&{cxl:string}&{cxpid:string}&{cxmid:string}&{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{dt:string}&{l:bool}&{e:bool}&{lua:string}&{lub:string}&{ca:string}&{cb:string}&{cls:string}&{md:string}',
       component: CatalogueSearchListingComponent,
       data: {
         allowAnonymous: true
       },
       params: {
-        contextDomainType: null,
-        contextId: null,
-        contextLabel: null,
-        contextParentId: null,
-        contextDataModelId: null,
+        cxdt: null, // contextDomainType: string
+        cxid: null, // contextId: string
+        cxl: null, // contextLabel: string
+        cxpid: null, // contextParentId: string
+        cxmid: null, // contextDataModelId: string
         search: null,
         page: null,
         sort: null,
         order: null,
         pageSize: null,
-        labelOnly: 'false',
-        exactMatch: 'false',
-        domainTypes: {
+        l: false, // labelOnly: bool
+        e: false, // exactMatch: bool
+        dt: {
+          // domain types: array
           array: 'auto'
         },
-        classifiers: {
+        cls: {
+          // classifiers: array
           array: 'auto'
         },
-        lastUpdatedAfter: null,
-        lastUpdatedBefore: null,
-        createdAfter: null,
-        createdBefore: null
+        lua: null, // lastUpdatedAfter: string (date)
+        lub: null, // lastUpdatedBefore: string (date)
+        ca: null, // createdAfter: string (date)
+        cb: null, // createdBefore: string (date)
+        is: false, // includeSuperseded: bool
+        md: null // metadata: base64 encoded string
       }
     },
     {
@@ -489,6 +516,20 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
       url: '/referenceDataType/new?parentModelId',
       component: ReferenceDataTypeMainComponent
+    },
+    {
+      /**
+       * Catch-all URL to automatically redirect to the correct router state to show this item.
+       *
+       * Item is defined by a top-level domain and a Mauro path syntax, which will be located and then
+       * redirected to.
+       */
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+      url: '/item/{domain:string}/{path:string}?{finalised:bool}',
+      params: {
+        finalised: false
+      },
+      redirectTo: redirectUsingPath
     }
   ]
 };

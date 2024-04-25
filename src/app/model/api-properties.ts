@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +22,8 @@ export enum ApiPropertyEditType {
   Value,
   Text,
   Html,
-  Boolean // eslint-disable-line id-blacklist
+  Boolean, // eslint-disable-line id-blacklist
+  Image
 }
 
 export interface ApiPropertyMetadata {
@@ -314,8 +314,38 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     requiresReload: true
   },
   {
+    key: 'security.hide.exception',
+    category: 'security',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true
+  },
+  {
     key: 'ui.show_can_edit_property_alert',
     category: 'UI',
+    editType: ApiPropertyEditType.Boolean,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true,
+  },
+  {
+    key: 'explorer.theme.images.header.logo',
+    category: 'Mauro Data Explorer',
+    editType: ApiPropertyEditType.Image,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true,
+  },
+  {
+    key: 'feature.attachment_size_limit_mb',
+    category: 'Features',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true,
+    requiresReload: true
+  },
+  {
+    key: 'feature.copy_annotations_to_new_version',
+    category: 'Features',
     editType: ApiPropertyEditType.Boolean,
     isSystem: true,
     publiclyVisible: true,

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -147,7 +146,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   get canAddProfilesAfterFinalisation() {
-    if (!this.catalogueItem.finalised) {
+    if (!this.catalogueItem?.finalised) {
       return false;
     }
 
@@ -860,9 +859,12 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         this.useDefaultProfileSimplifiedEntryPropertyKey
       ) === 'true';
 
-    this.showCanEditPropertyAlert = JSON.parse(
-      this.getContentProperty(properties, this.showCanEditPropertyAlertKey)
+    const property = this.getContentProperty(
+      properties,
+      this.showCanEditPropertyAlertKey
     );
+
+    this.showCanEditPropertyAlert = property ? JSON.parse(property) : false;
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

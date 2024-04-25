@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -73,12 +72,6 @@ SPDX-License-Identifier: Apache-2.0
     [dataSource]="records"
     class="mdm--mat-table mat-elevation-z3 table-striped"
   >
-    <<<<<<< HEAD
-    <caption>
-      Metadata
-    </caption>
-    ======= >>>>>>> 843b5bdf (gh-418 Add autocomplete style search to content
-    editors)
     <ng-container matColumnDef="namespace">
       <th
         mat-header-cell
@@ -253,6 +246,9 @@ SPDX-License-Identifier: Apache-2.0
   [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
 >
   <p class="marginless">There are no Properties in this table.</p>
+  <p *ngIf="!hideFilters" class="marginless">
+    This might be due to the current filter settings.
+  </p>
 </div>
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--table-fixed mdm--skeleton-table">

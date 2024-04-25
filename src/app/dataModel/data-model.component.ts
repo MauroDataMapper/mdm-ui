@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +45,7 @@ export class DataModelComponent
   implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
-  showFinalised: string;
+  showFinalised: boolean;
   downloadLinks: HTMLAnchorElement[] = [];
   compareToList: any[] = []; // TODO: define better type
 
@@ -166,7 +165,7 @@ export class DataModelComponent
     }
   }
 
-  dataModelDetails(id: string, showFinalised: string) {
+  dataModelDetails(id: string, showFinalised: boolean) {
     let arr = [];
 
     if (!showFinalised) {

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +19,7 @@ import { Title } from '@angular/platform-browser';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
 import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ComponentHarness,
@@ -41,10 +40,16 @@ interface TitleStub {
 
 interface EditingStub {
   start: jest.Mock;
+  stop: jest.Mock;
+  confirmCancelAsync: jest.Mock;
 }
 
 interface MessageHandlerStub {
   showSuccess: jest.Mock;
+}
+
+interface StateHandlerStub {
+  GoPrevious: jest.Mock;
 }
 
 describe('BulkEditBaseComponent', () => {
@@ -65,11 +70,17 @@ describe('BulkEditBaseComponent', () => {
   };
 
   const editingStub: EditingStub = {
-    start: jest.fn()
+    start: jest.fn(),
+    stop: jest.fn(),
+    confirmCancelAsync: jest.fn()
   };
 
   const messageHandlerStub: MessageHandlerStub = {
     showSuccess: jest.fn()
+  };
+
+  const stateHandlerStub: StateHandlerStub = {
+    GoPrevious: jest.fn()
   };
 
   const id = '123';
@@ -103,6 +114,10 @@ describe('BulkEditBaseComponent', () => {
         {
           provide: MessageHandlerService,
           useValue: messageHandlerStub
+        },
+        {
+          provide: StateHandlerService,
+          useValue: stateHandlerStub
         }
       ]
     });
@@ -112,6 +127,9 @@ describe('BulkEditBaseComponent', () => {
 
   beforeEach(() => {
     itemProviderStub.get.mockImplementationOnce(() => of(dataModel));
+    stateHandlerStub.GoPrevious.mockClear();
+    editingStub.stop.mockClear();
+    editingStub.confirmCancelAsync.mockClear();
   });
 
   it('should create', () => {
@@ -123,20 +141,111 @@ describe('BulkEditBaseComponent', () => {
 
     expect(harness.component.parent).toBe(dataModel);
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
+    expect(harness.component.hasChanged).toBe(false);
     expect(titleStub.setTitle).toHaveBeenCalledWith(
       `Bulk Edit - ${dataModel.label}`
     );
     expect(editingStub.start).toHaveBeenCalled();
   });
 
+  it('should mark as changed when changed event emitted', () => {
+    expect(harness.component.hasChanged).toBe(false);
+    harness.component.onChanged();
+    expect(harness.component.hasChanged).toBe(true);
+  });
+
+  it('should mark as not changed when saved event emitted', () => {
+    harness.component.hasChanged = true;
+    expect(harness.component.hasChanged).toBe(true);
+    harness.component.onSaved();
+    expect(harness.component.hasChanged).toBe(false);
+  });
+
   it('should move to next step', () => {
     harness.component.next();
     expect(harness.component.currentStep).toBe(BulkEditStep.Editor);
+    expect(harness.component.hasChanged).toBe(false);
   });
 
-  it('should move to previous step', () => {
+  it('should move to previous step when nothing has changed', () => {
     harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = false;
     harness.component.previous();
     expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
+    expect(harness.component.hasChanged).toBe(false);
+    expect(editingStub.confirmCancelAsync).not.toHaveBeenCalled();
+  });
+
+  it('should confirm to move to previous step when data has changed and accept', () => {
+    harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = true;
+
+    editingStub.confirmCancelAsync.mockImplementationOnce(() => of(true));
+
+    harness.component.previous();
+
+    expect(harness.component.currentStep).toBe(BulkEditStep.Selection);
+    expect(harness.component.hasChanged).toBe(false);
+    expect(editingStub.confirmCancelAsync).toHaveBeenCalled();
+  });
+
+  it('should confirm to move to previous step when data has changed and cancel', () => {
+    harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = true;
+
+    editingStub.confirmCancelAsync.mockImplementationOnce(() => of(false));
+
+    harness.component.previous();
+
+    expect(harness.component.currentStep).toBe(BulkEditStep.Editor);
+    expect(harness.component.hasChanged).toBe(true);
+    expect(editingStub.confirmCancelAsync).toHaveBeenCalled();
+  });
+
+  it('should cancel from selection step', () => {
+    harness.component.currentStep = BulkEditStep.Selection;
+
+    harness.component.cancel();
+
+    expect(editingStub.stop).toHaveBeenCalled();
+    expect(stateHandlerStub.GoPrevious).toHaveBeenCalled();
+    expect(editingStub.confirmCancelAsync).not.toHaveBeenCalled();
+  });
+
+  it('should close from editor step when no changes made', () => {
+    harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = false;
+
+    harness.component.cancel();
+
+    expect(editingStub.stop).toHaveBeenCalled();
+    expect(stateHandlerStub.GoPrevious).toHaveBeenCalled();
+    expect(editingStub.confirmCancelAsync).not.toHaveBeenCalled();
+  });
+
+  it('should close from editor step when changes made and accept', () => {
+    harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = true;
+
+    editingStub.confirmCancelAsync.mockImplementationOnce(() => of(true));
+
+    harness.component.cancel();
+
+    expect(editingStub.stop).toHaveBeenCalled();
+    expect(stateHandlerStub.GoPrevious).toHaveBeenCalled();
+    expect(editingStub.confirmCancelAsync).toHaveBeenCalled();
+  });
+
+  it('should close from editor step when changes made and cancel', () => {
+    harness.component.currentStep = BulkEditStep.Editor;
+    harness.component.hasChanged = true;
+
+    editingStub.confirmCancelAsync.mockImplementationOnce(() => of(false));
+
+    harness.component.cancel();
+
+    expect(editingStub.stop).not.toHaveBeenCalled();
+    expect(stateHandlerStub.GoPrevious).not.toHaveBeenCalled();
+    expect(editingStub.confirmCancelAsync).toHaveBeenCalled();
   });
 });

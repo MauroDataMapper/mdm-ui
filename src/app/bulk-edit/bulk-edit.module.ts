@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BulkEditEditorComponent } from './bulk-edit-editor/bulk-edit-editor.component';
-import { AgGridModule } from 'ag-grid-angular';
+import { AgGridModule } from '@ag-grid-community/angular';
 import { BulkEditContainerComponent } from './bulk-edit-container/bulk-edit-container.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FormsModule } from '@angular/forms';
@@ -31,6 +30,10 @@ import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit
 import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/text-area-cell-editor/text-area-cell-editor.component';
 import { FullContentEditDialogComponent } from './bulk-edit-editor/dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
   declarations: [
@@ -49,10 +52,7 @@ import { ContentModule } from '@mdm/content/content.module';
     FormsModule,
     SharedModule,
     ContentModule,
-    AgGridModule.withComponents([
-      CheckboxCellRendererComponent,
-      DateCellEditorComponent
-    ])
+    AgGridModule
   ],
   exports: [BulkEditEditorComponent, BulkEditContainerComponent]
 })

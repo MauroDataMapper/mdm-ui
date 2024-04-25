@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 #mdm--tree-container {
-  border: 1px solid #f3f3f3;
-  border-radius: 5px;
+  height: 100%;
+}
+
+
+as-split-area {
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 10px;
+  height: 100%;
+  background-color: white;
 }

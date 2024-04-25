@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,17 +15,28 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  ViewChild,
+  EventEmitter,
+  ChangeDetectorRef
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
 import { GridService } from '@mdm/services';
-import { CatalogueItem, ModelDomainType, Securable } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItem,
+  ModelDomainType,
+  Securable
+} from '@maurodatamapper/mdm-resources';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
 
 @Component({
@@ -39,7 +49,8 @@ export class AnnotationListComponent implements AfterViewInit {
   @Input() domainType: ModelDomainType;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
   currentUser: UserDetails;
   displayedColumns: string[] = ['lastUpdated'];
@@ -55,7 +66,8 @@ export class AnnotationListComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private editingService: EditingService,
-    private gridService: GridService) { }
+    private gridService: GridService
+  ) {}
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -89,7 +101,7 @@ export class AnnotationListComponent implements AfterViewInit {
           return EMPTY;
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.records = data;
       });
   }
@@ -98,17 +110,20 @@ export class AnnotationListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,): Observable<any> {
+    sortType?: SortDirection
+  ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
       sortBy,
-      sortType);
+      sortType
+    );
 
     return this.resources.catalogueItem.listAnnotations(
       this.domainType,
       this.parent.id,
-      options);
+      options
+    );
   }
 
   add() {
@@ -133,7 +148,7 @@ export class AnnotationListComponent implements AfterViewInit {
   }
 
   cancelEdit(record: any, index: number) {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }
@@ -156,8 +171,11 @@ export class AnnotationListComponent implements AfterViewInit {
     this.resources.catalogueItem
       .saveAnnotations(this.domainType, this.parent.id, resource)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem adding the comment.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem adding the comment.',
+            error
+          );
           return EMPTY;
         })
       )
@@ -175,14 +193,22 @@ export class AnnotationListComponent implements AfterViewInit {
     };
 
     this.resources.catalogueItem
-      .saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource)
+      .saveAnnotationChildren(
+        this.domainType,
+        this.parent.id,
+        annotation.id,
+        resource
+      )
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem saving the comment.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the comment.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         annotation.childAnnotations = annotation.childAnnotations || [];
         annotation.childAnnotations.push(response.body);
         annotation.newChildText = '';
@@ -193,8 +219,7 @@ export class AnnotationListComponent implements AfterViewInit {
   showChildren(annotation: any) {
     if (annotation.show) {
       annotation.show = false;
-    }
-    else {
+    } else {
       annotation.newChildText = '';
       annotation.show = true;
     }

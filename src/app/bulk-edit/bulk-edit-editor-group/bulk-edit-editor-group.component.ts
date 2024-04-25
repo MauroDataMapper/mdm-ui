@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,6 +28,9 @@ export class BulkEditEditorGroupComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
   @Output() previous = new EventEmitter<void>();
 
+  @Output() saved = new EventEmitter<any>();
+  @Output() changed = new EventEmitter<any>();
+
   /** Two way binding */
   @Input() context: BulkEditContext;
   @Output() contextChanged = new EventEmitter<BulkEditContext>();
@@ -52,5 +54,16 @@ export class BulkEditEditorGroupComponent implements OnInit {
 
   onPrevious() {
     this.previous.emit();
+  }
+
+  onTabChanged(changes, tab) {
+    this.changed.emit({
+      changes,
+      tab
+    });
+  }
+
+  onTabSaved(tab) {
+    this.saved.emit(tab);
   }
 }

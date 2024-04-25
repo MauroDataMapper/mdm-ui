@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm-bulk-edit__container-controls">
-  <button mat-stroked-button color="primary" type="button" (click)="onPrevious()">
+  <button
+    mat-stroked-button
+    color="primary"
+    type="button"
+    (click)="onPrevious()"
+  >
     <span class="fas fa-tasks"></span>
     Select items
   </button>
@@ -33,6 +37,8 @@ SPDX-License-Identifier: Apache-2.0
       *ngIf="tab"
       [rootItem]="context.rootItem"
       [(tab)]="tabs[index]"
+      (changed)="onTabChanged($event, tabs[index])"
+      (saved)="onTabSaved(tabs[index])"
     ></mdm-bulk-edit-editor>
   </mat-tab>
 </mat-tab-group>

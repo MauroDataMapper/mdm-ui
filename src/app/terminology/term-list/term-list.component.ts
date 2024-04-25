@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +24,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   Term,
@@ -120,9 +119,14 @@ export class TermListComponent implements AfterViewInit {
 
   applyFilter() {
     this.filter = {
-      ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter }),
-      ...(this.descriptionFilter && this.descriptionFilter !== '' && { description: this.descriptionFilter })
+      ...(this.codeFilter &&
+        this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter &&
+        this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter &&
+        this.descriptionFilter !== '' && {
+          description: this.descriptionFilter
+        })
     };
 
     this.filterEvent.emit();
@@ -138,7 +142,7 @@ export class TermListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
+    sortType?: SortDirection,
     filters?: {}
   ): Observable<TermIndexResponse> {
     const options = this.gridService.constructOptions(

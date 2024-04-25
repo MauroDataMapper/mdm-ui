@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,17 +18,20 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import {
   CatalogueItemDomainType,
-  isDataType
+  isDataType,
+  PathQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import {
   MdmHttpHandlerOptions,
   MdmResourcesService
 } from '@mdm/modules/resources';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
   MauroIdentifier,
   MauroItem,
+  MauroItemLocateOptions,
   MauroItemResponse
 } from './mauro-item.types';
 
@@ -40,7 +42,10 @@ import {
   providedIn: 'root'
 })
 export class MauroItemProviderService {
-  constructor(private resources: MdmResourcesService) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private pathNames: PathNameService
+  ) {}
 
   /**
    * Get any Mauro catalogue item based on the identifier information provided.
@@ -130,6 +135,35 @@ export class MauroItemProviderService {
   getMany(identifiers: MauroIdentifier[]): Observable<MauroItem[]> {
     const requests$ = identifiers.map((identifier) => this.get(identifier));
     return forkJoin(requests$);
+  }
+
+  /**
+   * Locate a catalogue item from its path.
+   *
+   * @param path The path to locate.
+   * @param options The options to control the locate function.
+   * @returns The matching catalogue item if found.
+   */
+  locate(
+    path: string,
+    options?: MauroItemLocateOptions
+  ): Observable<MauroItem> {
+    const domain =
+      options?.domain ?? this.pathNames.getPathableDomainFromPath(path);
+    const query: PathQueryParameters = {
+      ...(options?.finalisedOnly && { finalised: options.finalisedOnly })
+    };
+
+    const request$: Observable<MauroItemResponse> = options?.parentId
+      ? this.resources.catalogueItem.getPathFromParent(
+          domain,
+          options.parentId,
+          path,
+          query
+        )
+      : this.resources.catalogueItem.getPath(domain, path, query);
+
+    return request$.pipe(map((response) => response.body));
   }
 
   private getDataModel(

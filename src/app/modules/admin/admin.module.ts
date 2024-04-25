@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,6 +27,8 @@ import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-das
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
+import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,9 @@ import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
     ProfilesDashboardComponent,
     OpenidConnectProviderTableComponent,
     OpenidConnectProviderComponent,
-    DoiRedirectComponent
+    DoiRedirectComponent,
+    MatchThemeColorPatternPipe,
+    ThemeImageComponent,
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [
@@ -46,7 +49,9 @@ import { DoiRedirectComponent } from '@mdm/doi-redirect/doi-redirect.component';
     EmailsComponent,
     GroupMemberTableComponent,
     UserComponent,
-    ProfilesDashboardComponent
+    ProfilesDashboardComponent,
+    MatchThemeColorPatternPipe,
+    ThemeImageComponent,
   ]
 })
 export class AdminModule {}

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,20 +17,20 @@ SPDX-License-Identifier: Apache-2.0
 */
 div {
   .checkbox-filter {
-    margin-right: 10px;
+    margin-right: 2em;
   }
 
   .search-section {
     border: 1px solid #e5e5e5;
     border-radius: 4px;
-    padding: 4px;
-    margin: 1px;
+    padding: 1em 0;
+    margin: 1em 0;
   }
   .search-section-columns {
     border: 1px solid #e5e5e5;
     border-radius: 4px;
-    padding: 4px;
-    margin: 1px;
+    padding-top: 0.5em;
+    margin: 1em 0;
 
     .mat-datepicker-input {
       width: 85%;
@@ -40,9 +39,7 @@ div {
     mat-icon {
       position: relative;
       float: right;
-      top: -10px;
       cursor: pointer;
-      color: rgba(0, 0, 0, 0.54);
     }
   }
 

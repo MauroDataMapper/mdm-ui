@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,16 +20,21 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SharedService } from '../services/shared.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ElementTypesService,
   MessageHandlerService,
-  SecurityHandlerService,
+  SecurityHandlerService
 } from '@mdm/services';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { DataModel, DataType, DataTypeDetail, DataTypeDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  DataModel,
+  DataType,
+  DataTypeDetail,
+  DataTypeDetailResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
@@ -39,7 +43,8 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent extends BaseComponent
+export class DataTypeComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -48,7 +53,6 @@ export class DataTypeComponent extends BaseComponent
   dataModel: DataModel;
   id: Uuid;
   activeTab: number;
-  showExtraTabs: boolean;
   showEditForm = false;
 
   loadingData = false;
@@ -81,11 +85,10 @@ export class DataTypeComponent extends BaseComponent
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
-    private sharedService: SharedService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private elementTypes: ElementTypesService,
-    private editingService: EditingService,
+    private editingService: EditingService
   ) {
     super();
   }
@@ -98,12 +101,9 @@ export class DataTypeComponent extends BaseComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.resources.dataModel.get(this.dataModelId).subscribe(
-      (result) =>
-      {
-        this.dataModel = result.body;
-      }
-    );
+    this.resources.dataModel.get(this.dataModelId).subscribe((result) => {
+      this.dataModel = result.body;
+    });
 
     this.title.setTitle('Data Type');
 
@@ -130,8 +130,6 @@ export class DataTypeComponent extends BaseComponent
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() || !this.dataType.editable;
       },
       () => {
         this.loadingData = false;

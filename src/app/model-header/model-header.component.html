@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,129 +15,127 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="item" class="panel panel-default mdm--shadow-block">
-  <div class="panel-body">
-    <div class="mdm-model-header__title-bar">
-      <div class="mdm-model-header__title">
-        <h4
-          class="inline-block marginless"
-          data-cy="catalogue-item-label"
-          [ngClass]="{ deletedDataModelTitle: item?.deleted }"
-        >
-          <mdm-element-icon [element]="item"></mdm-element-icon>
-          <span class="dataModelDetailsLabel">{{ item.label }}</span>
-        </h4>
-        <span *ngIf="item?.deleted" class="inline-block">
-          <small class="warning"> | Deleted</small>
-        </span>
-        <mdm-element-status
-          *ngIf="isFinalisable"
-          [result]="item"
-        ></mdm-element-status>
-        <span *ngIf="!isChildItem" class="detail-icons--cta ml-2">
-          <mdm-favorite-button [catalogueItem]="item"> </mdm-favorite-button>
-        </span>
-      </div>
-      <div class="mdm-model-header__toolbar">
-        <button
-          *ngIf="access.showEdit"
-          mat-icon-button
-          color="primary"
-          type="button"
-          class="paddingless"
-          data-cy="edit-label"
-          matTooltip="Edit Title"
-          aria-label="Edit Title"
-          [disabled]="busy"
-          (click)="editLabel()"
-        >
-          <span class="fas fa-pencil-alt"></span>
-        </button>
-        <button
-          mat-icon-button
-          data-cy="finalise"
-          type="button"
-          *ngIf="access.showFinalise"
-          [disabled]="busy"
-          matTooltip="Finalise"
-          aria-label="Finalise"
-          (click)="finalise()"
-        >
-          <span
-            class="fas fa-check-circle"
-            [ngClass]="{ 'has-text-green': !busy }"
-            aria-hidden="true"
-          ></span>
-        </button>
-        <button
-          mat-icon-button
-          data-cy="create-new-version"
-          type="button"
-          *ngIf="access.showNewVersion"
-          matTooltip="Create a New Version"
-          aria-label="Create a New Version"
-          [disabled]="busy"
-          (click)="newVersion()"
-        >
-          <span class="fas fa-copy"></span>
-        </button>
-        <button
-          mat-icon-button
-          data-cy="export-menu"
-          color="primary"
-          type="button"
-          *ngIf="isLoggedIn && canExport"
-          class="paddingless"
-          matTooltip="Export"
-          aria-label="Export"
-          [disabled]="busy"
-          (click)="exportModel()"
-        >
-          <span class="fas fa-download"></span>
-        </button>
-        <button
-          *ngIf="access.showPermission && !isChildItem"
-          mat-icon-button
-          data-cy="user-group-access"
-          color="primary"
-          type="button"
-          class="paddingless"
-          matTooltip="User & Group Access"
-          aria-label="User & Group Access"
-          [disabled]="busy"
-          (click)="openUserGroupAccessDialog()"
-        >
-          <span class="fas fa-user-lock"></span>
-        </button>
-        <button
-          *ngIf="hasMenuOptions"
-          type="button"
-          data-cy="user-actions-menu"
-          mat-icon-button
-          [matMenuTriggerFor]="userActions"
-        >
-          <span class="fas fa-ellipsis-v"></span>
-        </button>
-      </div>
+<div *ngIf="item" class="mdm-model-header panel panel-default mdm--shadow-block">
+  <div class="mdm-model-header__title-bar">
+    <div class="mdm-model-header__title">
+      <h4
+        class="inline-block marginless"
+        data-cy="catalogue-item-label"
+        [ngClass]="{ deletedDataModelTitle: item?.deleted }"
+      >
+        <mdm-element-icon [element]="item"></mdm-element-icon>
+        <span class="dataModelDetailsLabel">{{ item.label }}</span>
+      </h4>
+      <span *ngIf="item?.deleted" class="inline-block">
+        <small class="warning"> | Deleted</small>
+      </span>
+      <mdm-element-status
+        *ngIf="isFinalisable"
+        [result]="item"
+      ></mdm-element-status>
+      <span *ngIf="!isChildItem" class="detail-icons--cta ml-2">
+        <mdm-favorite-button [catalogueItem]="item"> </mdm-favorite-button>
+      </span>
     </div>
-
-    <mdm-model-path
-      *ngIf="isChildItem"
-      [path]="item.breadcrumbs"
-    ></mdm-model-path>
-
-    <mdm-catalogue-item-properties [item]="item">
-    </mdm-catalogue-item-properties>
+    <div class="mdm-model-header__toolbar">
+      <button
+        *ngIf="access.showEdit"
+        mat-icon-button
+        color="primary"
+        type="button"
+        class="paddingless"
+        data-cy="edit-label"
+        matTooltip="Edit Title"
+        aria-label="Edit Title"
+        [disabled]="busy"
+        (click)="editLabel()"
+      >
+        <span class="fas fa-pencil-alt"></span>
+      </button>
+      <button
+        mat-icon-button
+        data-cy="finalise"
+        type="button"
+        *ngIf="access.showFinalise"
+        [disabled]="busy"
+        matTooltip="Finalise"
+        aria-label="Finalise"
+        (click)="finalise()"
+      >
+        <span
+          class="fas fa-check-circle"
+          [ngClass]="{ 'has-text-green': !busy }"
+          aria-hidden="true"
+        ></span>
+      </button>
+      <button
+        mat-icon-button
+        data-cy="create-new-version"
+        type="button"
+        *ngIf="access.showNewVersion"
+        matTooltip="Create a New Version"
+        aria-label="Create a New Version"
+        [disabled]="busy"
+        (click)="newVersion()"
+      >
+        <span class="fas fa-copy"></span>
+      </button>
+      <button
+        mat-icon-button
+        data-cy="export-menu"
+        color="primary"
+        type="button"
+        *ngIf="isLoggedIn && canExport"
+        class="paddingless"
+        matTooltip="Export"
+        aria-label="Export"
+        [disabled]="busy"
+        (click)="exportModel()"
+      >
+        <span class="fas fa-download"></span>
+      </button>
+      <button
+        *ngIf="access.showPermission && !isChildItem"
+        mat-icon-button
+        data-cy="user-group-access"
+        color="primary"
+        type="button"
+        class="paddingless"
+        matTooltip="User & Group Access"
+        aria-label="User & Group Access"
+        [disabled]="busy"
+        (click)="openUserGroupAccessDialog()"
+      >
+        <span class="fas fa-user-lock"></span>
+      </button>
+      <button
+        *ngIf="hasMenuOptions"
+        type="button"
+        data-cy="user-actions-menu"
+        mat-icon-button
+        [matMenuTriggerFor]="userActions"
+      >
+        <span class="fas fa-ellipsis-v"></span>
+      </button>
+    </div>
   </div>
-  <mat-progress-bar
-    *ngIf="busy"
-    value="50"
-    bufferValue="75"
-    color="accent"
-    mode="indeterminate"
-  ></mat-progress-bar>
-  <mdm-download-link [links]="downloadLinks"></mdm-download-link>
+
+  <mdm-model-path
+    *ngIf="isChildItem"
+    [path]="item.breadcrumbs"
+  ></mdm-model-path>
+
+  <mdm-catalogue-item-properties [item]="item">
+  </mdm-catalogue-item-properties>
 </div>
+<mat-progress-bar
+  *ngIf="busy"
+  value="50"
+  bufferValue="75"
+  color="accent"
+  mode="indeterminate"
+></mat-progress-bar>
+<mdm-download-link [links]="downloadLinks"></mdm-download-link>
 
 <mat-menu
   #userActions="matMenu"
@@ -169,7 +166,7 @@ SPDX-License-Identifier: Apache-2.0
     data-cy="compare"
     type="button"
     [matMenuTriggerFor]="compareMenu"
-    *ngIf="isAdministrator && canCompareModels"
+    *ngIf="canCompareModels"
     [disabled]="busy"
   >
     <span class="fas fa-balance-scale-right" aria-hidden="true"></span>

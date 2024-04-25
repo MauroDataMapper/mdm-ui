@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,8 +20,8 @@ header#mdm--header {
   position: relative;
   padding: 0 2rem;
   width: 100%;
-  margin-bottom: 24px;
   z-index: 1000;
+  margin-bottom: 1rem;
   @include respond-to($tablet) {
     padding: 0 15px;
   }

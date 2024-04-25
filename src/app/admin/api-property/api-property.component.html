@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,14 +37,14 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <mat-form-field appearance="outline">
         <mat-label>Key</mat-label>
-        <input matInput formControlName="key" required [readOnly]="property.metadata.isSystem">
+        <input matInput formControlName="key" required [readonly]="property.metadata.isSystem">
         <mat-error *ngIf="key?.errors?.required">
             Key is required
         </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Category</mat-label>
-        <input matInput formControlName="category" required [readOnly]="property.metadata.isSystem">
+        <input matInput formControlName="category" required [readonly]="property.metadata.isSystem">
         <mat-error *ngIf="category?.errors?.required">
             Category is required
         </mat-error>
@@ -55,13 +54,17 @@ SPDX-License-Identifier: Apache-2.0
             Publicly visible
         </mat-checkbox>
     </div>
-    <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Html" appearance="outline">
+    <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Image && property.metadata.editType !== EditTypes.Html" appearance="outline">
         <mat-label>Value</mat-label>
-        <input *ngIf="property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
-        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
-        <mat-select *ngIf="property.metadata.editType === EditTypes.Boolean" formControlName="value" required>
-          <mat-option [value]="'true'">Yes</mat-option>
-          <mat-option [value]="'false'">No</mat-option>
+        <div *ngIf="key.value | matchThemeColorPattern" class="mdm-api-property__colour-input-container">
+            <input type="text" matInput name="value" formControlName="value" [value]="value.value" required>
+            <input type="color" matInput name="value" formControlName="value" required [value]="value.value">
+        </div>
+        <input *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
+        <textarea *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
+        <mat-select *ngIf="!(key.value | matchThemeColorPattern) && property.metadata.editType === EditTypes.Boolean" formControlName="value" required>
+        <mat-option [value]="'true'">Yes</mat-option>
+        <mat-option [value]="'false'">No</mat-option>
         </mat-select>
         <mat-error *ngIf="value?.errors?.required">
             Value is required
@@ -73,6 +76,13 @@ SPDX-License-Identifier: Apache-2.0
         <mat-error *ngIf="value?.errors?.required">
             Value is required
         </mat-error>
+    </div>
+    <div *ngIf="property.metadata.editType === EditTypes.Image ">
+        <mdm-theme-image
+            [apiPropertyId]=id
+            (imageSavedEvent)=imageSavedEventHandler()
+            (imageChangedEvent)=imageChangedEventHandler($event)
+        ></mdm-theme-image>
     </div>
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
         Cancel

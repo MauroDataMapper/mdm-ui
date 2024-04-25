@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+/**
+ * Prefixes used in Mauro to represent Fully Qualified Paths (FQPs).
+ */
+import {
+  CatalogueItemDomainType,
+  PathableDomainType
+} from '@maurodatamapper/mdm-resources';
 
 /**
  * Prefixes used in Mauro to represent Fully Qualified Paths (FQPs).
@@ -64,6 +69,7 @@ export enum PathElementType {
   TermRelationshipType = 'trt',
   UserGroup = 'ug',
   UserImageFile = 'uif',
+  ThemeImageFile = 'tif',
   VersionedFolder = 'vf',
   VersionLink = 'vl'
 }
@@ -113,6 +119,7 @@ export const pathElementTypeNames = new Map<PathElementType, string>([
   [PathElementType.TermRelationshipType, 'Term relationship type'],
   [PathElementType.UserGroup, 'User group'],
   [PathElementType.UserImageFile, 'User image file'],
+  [PathElementType.ThemeImageFile, 'Theme image file'],
   [PathElementType.VersionedFolder, 'Versioned folder'],
   [PathElementType.VersionLink, 'Version link']
 ]);
@@ -134,6 +141,54 @@ export const pathElementDomainTypes = new Map<
   [CatalogueItemDomainType.Term, PathElementType.Term],
   [CatalogueItemDomainType.Terminology, PathElementType.Terminology],
   [CatalogueItemDomainType.VersionedFolder, PathElementType.VersionedFolder]
+]);
+
+export const pathableDomainTypesFromPrefix = new Map<
+  PathElementType,
+  PathableDomainType
+>([
+  [PathElementType.Annotation, 'annotations'],
+  [PathElementType.Authority, 'authorities'],
+  [PathElementType.Classifier, 'classifiers'],
+  [PathElementType.CodeSet, 'codeSets'],
+  [PathElementType.CatalogueUser, 'catalogueUsers'],
+  [PathElementType.DataClass, 'dataClasses'],
+  [PathElementType.DataClassComponent, 'dataClassComponents'],
+  [PathElementType.DataElement, 'dataElements'],
+  [PathElementType.DataElementComponent, 'dataElementComponents'],
+  [PathElementType.DataFlow, 'dataFlows'],
+  [PathElementType.DataModel, 'dataModels'],
+  [PathElementType.EnumerationType, 'enumerationTypes'],
+  [PathElementType.Edit, 'edits'],
+  [PathElementType.EnumerationValue, 'enumerationValues'],
+  [PathElementType.Folder, 'folders'],
+  [PathElementType.GroupRole, 'groupRoles'],
+  [PathElementType.Metadata, 'metadata'],
+  [PathElementType.ReferenceDataElement, 'referenceDataElements'],
+  [PathElementType.ReferenceDataModel, 'referenceDataModels'],
+  [PathElementType.ReferenceEnumerationType, 'referenceEnumerationTypes'],
+  [PathElementType.ReferenceDataValue, 'referenceDataValues'],
+  [PathElementType.ReferenceEnumerationValue, 'referenceEnumerationValues'],
+  [PathElementType.ReferenceFile, 'referenceFiles'],
+  [PathElementType.RuleRepresentation, 'ruleRepresentations'],
+  [PathElementType.ReferenceSummaryMetadata, 'referenceSummaryMetadata'],
+  [
+    PathElementType.ReferenceSummaryMetadataReport,
+    'referenceSummaryMetadataReports'
+  ],
+  [PathElementType.Rule, 'rules'],
+  [PathElementType.SemanticLink, 'semanticLinks'],
+  [PathElementType.SummaryMetadata, 'summaryMetadata'],
+  [PathElementType.SummaryMetadataReport, 'summaryMetadataReports'],
+  [PathElementType.Terminology, 'terminologies'],
+  [PathElementType.Term, 'terms'],
+  [PathElementType.TermRelationship, 'termRelationships'],
+  [PathElementType.TermRelationshipType, 'termRelationshipTypes'],
+  [PathElementType.UserGroup, 'userGroups'],
+  [PathElementType.UserImageFile, 'userImageFiles'],
+  [PathElementType.ThemeImageFile, 'themeImageFiles'],
+  [PathElementType.VersionedFolder, 'versionedFolders'],
+  [PathElementType.VersionLink, 'versionLinks']
 ]);
 
 export interface PathProperty {

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +16,35 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { EnumerationValuesDetailsComponent } from './enumeration-values-details.component';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 
 describe('EnumerationValuesDetailsComponent', () => {
-  let harness: ComponentHarness<EnumerationValuesDetailsComponent>;
+  let component: SubscribedCatalogueDetailComponent;
+  let fixture: ComponentFixture<SubscribedCatalogueDetailComponent>;
 
-  beforeEach(async () => {
-    harness = await setupTestModuleForComponent(EnumerationValuesDetailsComponent);
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ModelPathComponent
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SubscribedCatalogueDetailComponent);
+    component = fixture.componentInstance;
+    component.subscribedCatalogue = {
+      url: '',
+      label: '',
+      subscribedCatalogueType: 'test',
+      subscribedCatalogueAuthenticationType: ''
+    };
+    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(harness.isComponentCreated).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });

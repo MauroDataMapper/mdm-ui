@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +47,10 @@ export interface ExportModelDialogResponse {
 })
 export class ExportModelDialogComponent implements OnInit {
   exporters: Exporter[];
-  formGroup: FormGroup;
+  formGroup = new FormGroup({
+    exporter: new FormControl<Exporter>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    asynchronous: new FormControl(false)
+  });
 
   constructor(
     private dialogRef: MatDialogRef<
@@ -61,19 +63,14 @@ export class ExportModelDialogComponent implements OnInit {
   ) {}
 
   get exporter() {
-    return this.formGroup.get('exporter');
+    return this.formGroup.controls.exporter;
   }
 
   get asynchronous() {
-    return this.formGroup.get('asynchronous');
+    return this.formGroup.controls.asynchronous;
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      exporter: new FormControl(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      asynchronous: new FormControl(false)
-    });
-
     this.resources
       .getExportableResource(this.data.domain)
       .exporters()

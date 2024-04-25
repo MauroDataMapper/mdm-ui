@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -87,7 +86,7 @@ SPDX-License-Identifier: Apache-2.0
           "
           color="primary"
           type="button"
-          class="mr-1"
+          class=""
           (click)="editCustomProfile()"
         >
           <span class="fas fa-pencil-alt"></span> Edit
@@ -99,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
           *ngIf="currentView === 'default' && canEdit"
           color="primary"
           type="button"
-          class="mr-1"
+          class=""
           [matMenuTriggerFor]="editMenu"
         >
           <span class="fas fa-pencil-alt"></span> Edit
@@ -191,7 +190,12 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 
   <mdm-alert
-    *ngIf="catalogueItem.finalised && canEditCustomProfile && showCanEditPropertyAlert"
+    *ngIf="
+      catalogueItem &&
+      catalogueItem.finalised &&
+      canEditCustomProfile &&
+      showCanEditPropertyAlert
+    "
     alertStyle="info"
     showIcon="true"
   >

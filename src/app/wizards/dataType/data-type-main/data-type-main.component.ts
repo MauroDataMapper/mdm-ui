@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +24,17 @@ import { Step } from '@mdm/model/stepModel';
 import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 import { Title } from '@angular/platform-browser';
-import { CatalogueItemDomainType, DataModelDetailResponse, DataType, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  DataType,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-type-main',
   templateUrl: './data-type-main.component.html',
-  styleUrls: ['./data-type-main.component.sass'],
+  styleUrls: ['./data-type-main.component.sass']
 })
 export class DataTypeMainComponent implements OnInit {
   parentDataModelId: Uuid;
@@ -43,20 +46,23 @@ export class DataTypeMainComponent implements OnInit {
     copyFromDataModel: [],
     isValid: false,
     parent: {
-      id: '',
+      id: ''
     },
     parentDataModel: { id: '' },
-    label: '',
-    description: '',
-    organisation: '',
-    domainType: CatalogueItemDomainType.PrimitiveType,
-    metadata: [],
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataType: { id: '' },
-    referencedModel: { id: '', domainType: '' },
-    referencedDataClass: { id: '' },
-    isProcessComplete: false,
+    dataType: {
+      label : '',
+      description: '',
+      organisation: '',
+      domainType: CatalogueItemDomainType.PrimitiveType,
+      metadata: [],
+      enumerationValues: [],
+      classifiers: [],
+      // referencedDataType: { id: '' },
+      modelResourceId: '',
+      modelResourceDomainType: null,
+      referenceClass: { id: '' },
+    } as DataType,
+    isProcessComplete: false
   };
   constructor(
     private stateService: StateService,
@@ -66,7 +72,7 @@ export class DataTypeMainComponent implements OnInit {
     private title: Title,
     private changeRef: ChangeDetectorRef,
     private elementTypes: ElementTypesService
-  ) { }
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -90,15 +96,17 @@ export class DataTypeMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataModel.get(this.parentDataModelId).subscribe((result: DataModelDetailResponse) => {
-      result.body.breadcrumbs = [];
-      result.body.breadcrumbs.push(Object.assign({}, result.body));
-      this.model.parent.id = result.body.id || '';
-
-      this.steps.push(step1);
-      this.steps.push(step2);
-      this.changeRef.detectChanges();
-    });
+    this.resources.dataModel
+      .get(this.parentDataModelId)
+      .subscribe((result) => {
+        result.body.breadcrumbs = [];
+        result.body.breadcrumbs.push(Object.assign({}, result.body));
+        // this.model.parent.id = result.body.id || '';
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+        this.changeRef.detectChanges();
+      });
 
     this.title.setTitle('New Data Type');
   }
@@ -132,56 +140,58 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    const domainType = this.elementTypes.isModelDataType(this.model.domainType)
+    const domainType = this.elementTypes.isModelDataType(this.model.dataType.domainType)
       ? CatalogueItemDomainType.ModelDataType
-      : this.model.domainType;
+      : this.model.dataType.domainType;
 
     const resource: DataType = {
       domainType,
-      label: this.model.label,
-      description: this.model.description,
-      classifiers: this.model.classifiers.map((cls) => {
+      label: this.model.dataType.label,
+      description: this.model.dataType.description,
+      classifiers: this.model.dataType.classifiers.map((cls) => {
         return { id: cls.id };
       })
     };
-
     if (domainType === CatalogueItemDomainType.ModelDataType) {
-      resource.modelResourceDomainType = this.model.referencedModel?.domainType;
-      resource.modelResourceId = this.model.referencedModel?.id;
-    }
-    else {
-      resource.organisation = this.model.organisation;
-      resource.referenceDataType = {
-        id: this.model.referencedDataType ? this.model.referencedDataType.id : null
-      };
+      resource.modelResourceDomainType = this.model.dataType.modelResourceDomainType;
+      resource.modelResourceId = this.model.dataType.modelResourceId;
+
+    } else {
+      /*
+      resource.id = this.model.dataType.referencedDataType
+        ? this.model.dataType.referencedDataType.id
+        : null;
+      */
+
       resource.referenceClass = {
-        id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
+        id: this.model.dataType.referenceClass
+          ? this.model.dataType.referenceClass.id
+          : null
       };
-      resource.enumerationValues = this.model.enumerationValues.map((m) => {
+      resource.enumerationValues = this.model.dataType.enumerationValues.map((m) => {
         return {
           key: m.key,
           value: m.value,
           category: m.category
         };
       });
-      resource.metadata = this.model.metadata.map((m) => {
-        return {
-          key: m.key,
-          value: m.value,
-          namespace: m.namespace
-        };
-      });
     }
-    this.resources.dataType.save(this.model.parent.id, resource).subscribe(response => {
-      this.messageHandler.showSuccess('Data Type saved successfully.');
-      this.stateHandler.Go(
-        'DataType',
-        { dataModelId: response.body.model, id: response.body.id },
-        { reload: true, location: true }
-      );
-    }, error => {
-      this.messageHandler.showError('There was a problem saving the Data Type.', error);
-    });
+    this.resources.dataType.save(this.model.parent.id, resource).subscribe(
+      (response) => {
+        this.messageHandler.showSuccess('Data Type saved successfully.');
+        this.stateHandler.Go(
+          'DataType',
+          { dataModelId: response.body.model, id: response.body.id },
+          { reload: true, location: true }
+        );
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem saving the Data Type.',
+          error
+        );
+      }
+    );
   }
 
   saveCopiedDataTypes = () => {

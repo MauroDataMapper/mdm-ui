@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,17 +22,26 @@ import {
   CatalogueItemSearchResult,
   MdmIndexBody,
   PageParameters,
+  ProfileDefinition,
+  ProfileDefinitionResponse,
+  ProfileFieldQueryData,
+  ProfileSummary,
+  ProfileSummaryResponse,
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   CatalogueSearchContext,
   CatalogueSearchParameters,
+  CatalogueSearchProfileFilter,
+  CatalogueSearchProfileFilterDto,
   CatalogueSearchResultSet,
   defaultPage,
-  defaultPageSize
+  defaultPageSize,
+  serializeDate,
+  ungroupProfileFiltersDto
 } from './catalogue-search.types';
 
 @Injectable({
@@ -46,22 +54,113 @@ export class CatalogueSearchService {
     params: CatalogueSearchParameters
   ): Observable<CatalogueSearchResultSet> {
     const [page, pageParams] = this.getPageParameters(params);
-    const query: SearchQueryParameters = {
-      ...this.getCommonQueryParameters(params),
-      ...pageParams,
-      searchTerm: this.getSearchTerm(params)
-    };
 
-    return this.searchCatalogue(query, params.context).pipe(
-      map((searchResults) => {
-        return {
-          count: searchResults.count,
-          pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          page,
-          items: searchResults.items
+    // Create a stream emitting the profile filters to be used in the query
+    const profileFieldsQueryData$ = params.profileFiltersDto
+      ? this.getProfileFiltersForQuery(params.profileFiltersDto)
+      : of<ProfileFieldQueryData[]>([]);
+
+    return profileFieldsQueryData$.pipe(
+      switchMap((profileFieldsQueryData) => {
+        // Create the searchQuery with the emitted profile info
+        const query: SearchQueryParameters = {
+          ...this.getCommonQueryParameters(params),
+          ...pageParams,
+          searchTerm: this.getSearchTerm(params),
+          profileFields: profileFieldsQueryData
         };
+
+        return this.searchCatalogue(query, params.context).pipe(
+          map((searchResults) => {
+            return {
+              count: searchResults.count,
+              pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+              page,
+              items: searchResults.items
+            };
+          })
+        );
       })
     );
+  }
+
+  private getProfileFiltersForQuery(
+    dto?: CatalogueSearchProfileFilterDto
+  ): Observable<ProfileFieldQueryData[]> {
+    if (!dto) {
+      return of([]);
+    }
+
+    return this.mapProfileFilters(dto).pipe(
+      map((profileFiltersWithMetadata) => {
+        const profilesQueryData = profileFiltersWithMetadata.map((filter) => {
+          return {
+            metadataNamespace: filter.provider.metadataNamespace,
+            metadataPropertyName: filter.key.metadataPropertyName,
+            filterTerm: filter.value,
+            type: filter.key.dataType === 'enumeration' ? 'phrase' : 'contains'
+          } as ProfileFieldQueryData;
+        });
+
+        return profilesQueryData;
+      })
+    );
+  }
+
+  /**
+   * Maps a {@link CatalogueSearchProfileFilterDto} into a full featured list of profile filters with usable
+   * information.
+   *
+   * @param dto The DTO to map and transform.
+   * @returns A list of {@link CatalogueSearchProfileFilter} objects.
+   *
+   * The DTO provided will only contain the essential information:
+   *
+   * 1. Profile provider - namespace, name and version
+   * 2. Metadata key
+   * 3. Metadata value
+   *
+   * Once unpacked, this function will then also fetch secondary information, such as the profile provider and
+   * metadata key display names.
+   */
+  mapProfileFilters(
+    dto?: CatalogueSearchProfileFilterDto
+  ): Observable<CatalogueSearchProfileFilter[]> {
+    if (!dto) {
+      return of([]);
+    }
+
+    const ungroupedDto = ungroupProfileFiltersDto(dto);
+
+    const profileFilterDataWithMetadata$ = ungroupedDto.map((item) => {
+      const provider$: Observable<ProfileSummary> = this.resources.profile
+        .provider(item.namespace, item.name, item.version)
+        .pipe(map((response: ProfileSummaryResponse) => response.body));
+
+      const definition$: Observable<ProfileDefinition> = this.resources.profile
+        .definition(item.namespace, item.name)
+        .pipe(map((response: ProfileDefinitionResponse) => response.body));
+
+      return forkJoin([provider$, definition$]).pipe(
+        map(([provider, definition]) => {
+          const fields = definition.sections.flatMap(
+            (section) => section.fields
+          );
+
+          const key = fields.find(
+            (field) => field.metadataPropertyName === item.key
+          );
+
+          return {
+            provider,
+            key,
+            value: item.value
+          };
+        })
+      );
+    });
+
+    return forkJoin(profileFilterDataWithMetadata$);
   }
 
   /**
@@ -105,10 +204,11 @@ export class CatalogueSearchService {
       order: params.order,
       domainTypes: params.domainTypes,
       labelOnly: params.labelOnly,
-      lastUpdatedAfter: params.lastUpdatedAfter,
-      lastUpdatedBefore: params.lastUpdatedBefore,
-      createdAfter: params.createdAfter,
-      createdBefore: params.createdBefore,
+      lastUpdatedAfter: serializeDate(params.lastUpdatedAfter),
+      lastUpdatedBefore: serializeDate(params.lastUpdatedBefore),
+      createdAfter: serializeDate(params.createdAfter),
+      createdBefore: serializeDate(params.createdBefore),
+      includeSuperseded: params.includeSuperseded,
       classifiers: params.classifiers
     };
   }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { McDataSetMetadataComponent } from './mc-data-set-metadata.component';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -37,44 +36,48 @@ import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('McDataSetMetadataComponent', () => {
   let component: McDataSetMetadataComponent;
   let fixture: ComponentFixture<McDataSetMetadataComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatFormFieldModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatDialogModule,
-        NoopAnimationsModule,
-        MatInputModule,
-        MatSortModule,
-        MatCheckboxModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {}
-        }
-      ],
-      declarations: [
-        MdmPaginatorComponent,
-        McSelectComponent,
-        TableButtonsComponent,
-        MarkdownTextAreaComponent,
-        MarkdownDirective,
-        MoreDescriptionComponent,
-        McDataSetMetadataComponent
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgxSkeletonLoaderModule,
+          MatFormFieldModule,
+          MatPaginatorModule,
+          MatTableModule,
+          MatDialogModule,
+          NoopAnimationsModule,
+          MatInputModule,
+          MatSortModule,
+          MatCheckboxModule,
+          FormsModule,
+          UIRouterModule.forRoot({ useHash: true }),
+          ToastrModule.forRoot()
+        ],
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: {}
+          }
+        ],
+        declarations: [
+          MdmPaginatorComponent,
+          McSelectComponent,
+          TableButtonsComponent,
+          MarkdownTextAreaComponent,
+          MarkdownDirective,
+          MoreDescriptionComponent,
+          McDataSetMetadataComponent,
+          SkeletonBadgeComponent
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(McDataSetMetadataComponent);

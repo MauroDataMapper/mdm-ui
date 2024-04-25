@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container">
+<div class="container padded pane">
   <div class="mdm-search-listing__search">
     <form role="form" name="search" (submit)="onSearchTerm()">
       <mat-form-field
@@ -72,11 +71,20 @@ SPDX-License-Identifier: Apache-2.0
           [lastUpdatedBefore]="parameters.lastUpdatedBefore"
           [createdAfter]="parameters.createdAfter"
           [createdBefore]="parameters.createdBefore"
+          [includeSuperseded]="parameters.includeSuperseded"
           [classifiers]="parameters.classifiers"
           (contextChange)="onContextChanged($event)"
           (filterChange)="onFilterChanged($event)"
           (filterReset)="onFilterReset()"
         ></mdm-search-filters>
+        <mat-divider></mat-divider>
+        <mdm-profile-filters
+          [profileFilters]="this.profileFilters"
+          (updateProfileFilters)="onUpdateProfileFilters($event)"
+          (addProfileFilters)="openProfileFilterDialog()"
+          (resetProfileFilters)="onFilterReset()"
+        >
+        </mdm-profile-filters>
       </div>
       <div class="col-md-9">
         <mdm-catalogue-item-search-result

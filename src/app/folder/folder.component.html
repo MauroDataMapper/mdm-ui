@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div
+  *ngIf="folder"
   class="full-width mb-1 mdm--shadow-block"
   data-cy="catalogue-item-container"
   [attr.data-catalogue-item-id]="folder.id"

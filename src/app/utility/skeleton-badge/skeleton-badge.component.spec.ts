@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SkeletonBadgeComponent } from './skeleton-badge.component';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 describe('SkeletonBadgeComponent', () => {
   let component: SkeletonBadgeComponent;
@@ -26,7 +26,7 @@ describe('SkeletonBadgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SkeletonBadgeComponent ]
+      declarations: [ SkeletonBadgeComponent, NgxSkeletonLoaderComponent ]
     })
     .compileComponents();
   });

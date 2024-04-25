@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +22,8 @@ import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
 
 @Component({
@@ -36,6 +35,7 @@ export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
   parent: MauroItem;
   currentStep: BulkEditStep = BulkEditStep.Selection;
+  hasChanged = false;
 
   public Steps = BulkEditStep;
 
@@ -79,15 +79,38 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    // The state handler is also tied to the EditingService, so will automatically confirm to leave first
-    this.stateHandler.GoPrevious();
+    const confirm$ =
+      this.currentStep === BulkEditStep.Editor && this.hasChanged
+        ? this.editing.confirmCancelAsync()
+        : of(true);
+
+    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+      this.editing.stop();
+      this.stateHandler.GoPrevious();
+    });
   }
 
   next() {
     this.currentStep = this.currentStep + 1;
+    this.hasChanged = false;
   }
 
   previous() {
-    this.currentStep = this.currentStep - 1;
+    const confirm$ = this.hasChanged
+      ? this.editing.confirmCancelAsync()
+      : of(true);
+
+    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+      this.currentStep = this.currentStep - 1;
+      this.hasChanged = false;
+    });
+  }
+
+  onChanged() {
+    this.hasChanged = true;
+  }
+
+  onSaved() {
+    this.hasChanged = false;
   }
 }

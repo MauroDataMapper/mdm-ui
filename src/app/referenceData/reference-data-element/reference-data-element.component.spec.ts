@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,30 +15,31 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReferenceDataElementComponent } from './reference-data-element.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('ReferenceDataElementComponent', () => {
   let component: ReferenceDataElementComponent;
   let fixture: ComponentFixture<ReferenceDataElementComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatPaginatorModule,
         MatDialogModule,
         NgxSkeletonLoaderModule,
         MatTableModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
       ],
       providers: [
         {
@@ -47,12 +47,16 @@ describe('ReferenceDataElementComponent', () => {
           useValue: {
             referenceDataElement: {
               // tslint:disable-next-line: deprecation
-              list: () => empty()
+              list: () => EMPTY
             }
           }
         }
       ],
-      declarations: [ReferenceDataElementComponent, MdmPaginatorComponent]
+      declarations: [
+        ReferenceDataElementComponent,
+        MdmPaginatorComponent,
+        SkeletonBadgeComponent
+      ]
     }).compileComponents();
   }));
 

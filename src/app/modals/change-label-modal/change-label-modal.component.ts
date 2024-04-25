@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +37,11 @@ export interface ChangeLabelModalResult {
 })
 export class ChangeLabelModalComponent implements OnInit {
   item: CatalogueItemDetail;
-  formGroup: FormGroup;
+  formGroup = new FormGroup({
+    label: new FormControl('', [
+      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+    ])
+  });
 
   constructor(
     private dialogRef: MatDialogRef<
@@ -46,16 +49,10 @@ export class ChangeLabelModalComponent implements OnInit {
       ChangeLabelModalResult
     >,
     @Inject(MAT_DIALOG_DATA) public data: ChangeLabelModalData
-  ) {
-    this.formGroup = new FormGroup({
-      label: new FormControl('', [
-        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
-      ])
-    });
-  }
+  ) {}
 
   get label() {
-    return this.formGroup.get('label');
+    return this.formGroup.controls.label;
   }
 
   ngOnInit(): void {

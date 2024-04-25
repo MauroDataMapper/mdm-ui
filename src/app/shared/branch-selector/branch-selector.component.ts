@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,6 +44,8 @@ export class BranchSelectorComponent implements OnInit {
   @Output() selectedCatalogueItemChanged = new EventEmitter<Uuid>();
 
   versionList: BasicModelVersionItem[];
+  branches: BasicModelVersionItem[];
+  finalisedVersions: BasicModelVersionItem[];
   currentVersionId: Uuid;
 
   constructor(
@@ -78,6 +79,8 @@ export class BranchSelectorComponent implements OnInit {
         this.versionList.sort((a, b) =>
           a.displayName.localeCompare(b.displayName)
         );
+        this.setBranches();
+        this.setFinalisedVersions();
       });
   }
 
@@ -96,5 +99,13 @@ export class BranchSelectorComponent implements OnInit {
         }
       );
     }
+  }
+
+  setBranches() {
+    this.branches = this.versionList.filter(x => x.modelVersion === null);
+  }
+
+  setFinalisedVersions() {
+    this.finalisedVersions = this.versionList.filter(x => x.modelVersion != null);
   }
 }

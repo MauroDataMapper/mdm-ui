@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -57,6 +56,9 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { JoditAngularModule } from 'jodit-angular';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,8 @@ import { ContentModule } from '@mdm/content/content.module';
     BreadcrumbComponent,
     FileSizePipe,
     MauroItemTreeComponent,
-    ElementLabelComponent
+    ElementLabelComponent,
+    ImgCroppieComponent
   ],
   imports: [
     CommonModule,
@@ -101,8 +104,10 @@ import { ContentModule } from '@mdm/content/content.module';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
+    ContentModule,
+    JoditAngularModule,
     UIRouterModule,
-    ContentModule
+    ImageCropperModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -143,7 +148,8 @@ import { ContentModule } from '@mdm/content/content.module';
     BreadcrumbComponent,
     FileSizePipe,
     MauroItemTreeComponent,
-    ElementLabelComponent
+    ElementLabelComponent,
+    ImgCroppieComponent
   ]
 })
 export class SharedModule {}

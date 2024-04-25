@@ -21,8 +21,10 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   CatalogueItem,
   Modelable,
-  Navigatable
+  Navigatable,
+  Pathable
 } from '@maurodatamapper/mdm-resources';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
@@ -31,7 +33,6 @@ import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter } from 'rxjs/operators';
-import { LinkCreatorService } from '../../markdown/markdown-parser/link-creator.service';
 
 const basicButtons = [
   'bold',
@@ -115,7 +116,6 @@ export class HtmlEditorComponent implements OnInit {
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
     private elementTypesService: ElementTypesService,
-    private linkCreator: LinkCreatorService,
     private dialog: MatDialog,
     private pathNames: PathNameService,
     private resources: MdmResourcesService
@@ -167,22 +167,12 @@ export class HtmlEditorComponent implements OnInit {
     const focusNode = editor.selection.sel.focusNode;
 
     component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(
-      (element) => {
+      (element: MauroItem & Pathable) => {
         if (!element) {
           return;
         }
 
-        component.elementTypesService
-          .getNamedLinkIdentifier(element)
-          .subscribe((namedLink) => {
-            const href = component.linkCreator.createLink(namedLink);
-            const html = editor.create.fromHTML(
-              `<a href='${href}' title='${element.label}'>${element.label}</a>`
-            );
-
-            editor.selection.setCursorIn(focusNode);
-            editor.selection.insertHTML(html);
-          });
+        this.createAndInsertLink(this, editor, focusNode, element);
       }
     );
 
@@ -220,7 +210,7 @@ export class HtmlEditorComponent implements OnInit {
     element: Modelable & Navigatable
   ) {
     const path = component.pathNames.createFromBreadcrumbs(element);
-    const href = component.linkCreator.createLink(path);
+    const href = this.pathNames.createHref(path);
     const html = editor.create.fromHTML(
       `<a href='${href}' title='${element.label}'>${element.label}</a>`
     );

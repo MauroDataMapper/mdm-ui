@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,20 +15,37 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ApiPropertyEditableState, ApiPropertyEditType } from '@mdm/model/api-properties';
+import {
+  ApiPropertyEditableState,
+  ApiPropertyEditType
+} from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import {
+  BroadcastService,
+  MessageHandlerService,
+  StateHandlerService
+} from '@mdm/services';
 import { catchError, switchMap } from 'rxjs/operators';
 
 export interface ApiPropertyTableViewChange {
   category?: string;
   sortBy?: string;
-  sortType?: string;
+  sortType?: SortDirection;
 }
 
 @Component({
@@ -37,14 +53,16 @@ export interface ApiPropertyTableViewChange {
   templateUrl: './api-property-table.component.html',
   styleUrls: ['./api-property-table.component.scss']
 })
-export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewInit {
-
+export class ApiPropertyTableComponent
+  implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() properties: ApiPropertyEditableState[] = [];
   @Input() categories: string[] = [];
 
-  @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
+  @Output() readonly viewChange = new EventEmitter<
+    ApiPropertyTableViewChange
+  >();
 
   @Output() valueCleared = new EventEmitter();
 
@@ -61,18 +79,21 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     private resources: MdmResourcesService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService) { }
+    private broadcast: BroadcastService
+  ) {}
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe((sort: Sort) => this.viewChange.emit({
-      category: this.selectedCategory,
-      sortBy: sort.active,
-      sortType: sort.direction
-    }));
+    this.sort.sortChange.subscribe((sort: Sort) =>
+      this.viewChange.emit({
+        category: this.selectedCategory,
+        sortBy: sort.active,
+        sortType: sort.direction
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -99,7 +120,9 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
       return;
     }
 
-    this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', { id: record.original.id });
+    this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', {
+      id: record.original.id
+    });
   }
 
   delete(record: ApiPropertyEditableState) {
@@ -114,24 +137,31 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
         }
       })
       .pipe(
-        switchMap(() => this.resources.apiProperties.remove(record.original.id)),
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem deleting the property.', errors);
+        switchMap(() =>
+          this.resources.apiProperties.remove(record.original.id)
+        ),
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem deleting the property.',
+            errors
+          );
           return [];
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`Successfully deleted the property ${record.original.key}.`);
+        this.messageHandler.showSuccess(
+          `Successfully deleted the property ${record.original.key}.`
+        );
 
         this.broadcast.apiPropertyUpdated({
           key: record.original.key,
           value: record.original.value,
-          deleted: true });
+          deleted: true
+        });
 
         if (record.metadata.requiresReload) {
           this.stateHandler.reload();
-        }
-        else {
+        } else {
           this.viewChange.emit({
             category: this.selectedCategory,
             sortBy: this.sort.active,

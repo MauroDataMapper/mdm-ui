@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,139 +15,167 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-  <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-      <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100"
-        fxLayoutAlign="flex-start center">
-        <h4 class="marginless">
-          Restrict user access based on group(s)
-          <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
-        </h4>
-      </div>
-      <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-        <div *ngIf="canAddGroups" class="mt-1">
-          <button mat-flat-button color="primary" type="button" (click)="add()">
-            <span class="fas fa-plus"></span>
-            Add Group
-          </button>
-        </div>
+<div class="heading-container">
+  <div
+    fxFlex
+    fxLayout="row"
+    fxLayout.md="row"
+    fxLayout.sm="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="space-around"
+  >
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="80"
+      fxFlex.md="80"
+      fxFlex.sm="75"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-start center"
+    >
+      <h4 class="marginless">
+        Restrict user access by group(s)
+        <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
+      </h4>
+    </div>
+    <div
+      fxFlex
+      fxLayout="row"
+      fxFlex="20"
+      fxFlex.md="20"
+      fxFlex.sm="25"
+      fxFlex.xs="100"
+      fxLayoutAlign="flex-end center"
+      fxLayoutAlign.xs="flex-start center"
+    >
+      <div *ngIf="canAddGroups" class="mt-1">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="state === 'add'"
+          (click)="startAdding()"
+        >
+          <span class="fas fa-plus"></span>
+          Add Group
+        </button>
       </div>
     </div>
   </div>
-  <form>
-    <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
-      <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Group name</th>
-        <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
-          <div *ngIf="!record.inEdit">
-            {{ record.userGroup.name }}
-          </div>
-
-          <div *ngIf="record.inEdit">
-            <div *ngIf="!record.isNew">
-              {{ record.userGroup.name }}
-            </div>
-            <div *ngIf="record.isNew">
-              <mdm-select [width]="'100%'"
-                          [acceptTypedInput]="false"
-                          [valueType]="'static'"
-                          [defaultValue]="record.group"
-                          [staticValues]="allGroups"
-                          [minInputLength]="1"
-                          [hasError]="record.edit.errors && record.edit.errors['group']"
-                          [record]="record"
-                          [idProperty]="'id'"
-                          [displayProperty]="'name'"
-                          [searchProperty]="'name'"
-                          (selectEvent)="onGroupSelect($event[0], $event[1])">
-                <ng-template #lineContent let-item>
-                  <div>{{ item.name }}</div>
-                </ng-template>
-              </mdm-select>
-              <small *ngIf="record.edit.errors && record.edit.errors['group']" class="warning">{{ record.edit.errors['group'] }}</small>
-            </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="access">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Access Level</th>
-        <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
-          <div *ngIf="!record.inEdit">
-            {{ record.groupRole.displayName }}
-          </div>
-
-          <div *ngIf="record.inEdit">
-            <div *ngIf="!record.isNew">
-              {{ record.groupRole.displayName }}
-            </div>
-            <div *ngIf="record.isNew">
-              <mdm-select [width]="'100%'"
-                          [acceptTypedInput]="false"
-                          [valueType]="'static'"
-                          [defaultValue]="record.groupLevelId"
-                          [staticValues]="accessLevels"
-                          [minInputLength]="1"
-                          [record]="record"
-                          [idProperty]="'id'"
-                          [displayProperty]="'displayName'"
-                          [searchProperty]="'displayName'"
-                          (selectEvent)="onGroupAccessSelect($event[0], $event[1])">
-                <ng-template #lineContent let-item>
-                  <div>{{ item.displayName }}</div>
-                </ng-template>
-              </mdm-select>
-              <small *ngIf="record.edit.errors && record.edit.errors['group']"
-                class="warning">{{ record.edit.errors['group'] }}</small>
-            </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="edit">
-        <td mat-header-cell *matHeaderCellDef></td>
-        <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
-          <div *ngIf="!record.isNew">
-            <button mat-icon-button color="warn" (click)="deleteRecord(record)" type="button" aria-label="Cancel edit">
-              <span class="far fa-trash-alt"></span>
-            </button>
-          </div>
-          <div *ngIf="record.isNew">
-            <div>
-              <button mat-icon-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
-                <span class="fas fa-times"></span>
-              </button>
-              <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record)" type="button" aria-label="Save record">
-                <span class="fas fa-check"></span>
-              </button>
-            </div>
-          </div>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+</div>
+<div *ngIf="state === 'add'" class="mdm-group-access__add-form">
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline">
+      <mat-label>Group</mat-label>
+      <mat-select formControlName="userGroup">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let userGroup of userGroups" [value]="userGroup">{{
+          userGroup.name
+        }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('userGroup')?.errors?.required"
+        >Group is required</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="groupRole">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let groupRole of groupRoles" [value]="groupRole">{{
+          groupRole.displayName
+        }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('groupRole')?.errors?.required"
+        >Role is required</mat-error
+      >
+    </mat-form-field>
+    <span>
+      <button
+        mat-stroked-button
+        color="accent"
+        type="button"
+        aria-label="Add group"
+        matTooltip="Add group"
+        [disabled]="formGroup.invalid"
+        (click)="addGroup()"
+      >
+        <span class="fas fa-check"></span>
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        type="button"
+        aria-label="Cancel"
+        matTooltip="Cancel"
+        (click)="stopAdding()"
+      >
+        <span class="fas fa-times"></span>
+      </button>
+    </span>
   </form>
+</div>
+<table
+  mat-table
+  [dataSource]="dataSource"
+  matSort
+  class="mdm--mat-table table-striped"
+>
+  <ng-container matColumnDef="userGroup">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Group</th>
+    <td
+      mat-cell
+      *matCellDef="let record; let i = index"
+      style="text-align: left; word-wrap: break-word"
+    >
+      {{ record.userGroup.name }}
+    </td>
+  </ng-container>
 
-  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !loading}">
-    <p class="marginless">There are no groups this repository.</p>
-  </div>
+  <ng-container matColumnDef="groupRole">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Role</th>
+    <td
+      mat-cell
+      *matCellDef="let record; let i = index"
+      style="text-align: left; word-wrap: break-word"
+    >
+      {{ record.groupRole.displayName }}
+    </td>
+  </ng-container>
 
-  <div class="item" *ngIf="loading">
-    <table class="mdm--mat-table mdm--skeleton-table">
-      <tr>
-        <th style="width: 33.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-        <th style="width: 43%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-        <th style="width: 11.5%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-    </tr>
-    <tr>
-        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      </tr>
-    </table>
+  <ng-container matColumnDef="action">
+    <td mat-header-cell *matHeaderCellDef></td>
+    <td
+      mat-cell
+      *matCellDef="let record; let i = index"
+      style="text-align: center; word-wrap: break-word"
+    >
+      <button
+        mat-icon-button
+        color="warn"
+        [disabled]="state === 'add'"
+        (click)="deleteGroup(record)"
+        type="button"
+        aria-label="Remove"
+        matTooltip="Remove"
+      >
+        <span class="far fa-trash-alt"></span>
+      </button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !loading }"
+>
+  <p class="marginless">There are no groups this repository.</p>
 </div>
 
-  <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
-    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
-  </div>
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+>
+  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+</div>

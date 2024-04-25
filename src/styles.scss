@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,5 +60,5 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import 'style/layout/browse';
 @import 'style/layout/tree';
 
-@import 'ag-grid-community/dist/styles/ag-grid.css';
-@import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+@import '@ag-grid-community/styles/ag-grid.css';
+@import '@ag-grid-community/styles/ag-theme-alpine.css';

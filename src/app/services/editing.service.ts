@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -114,6 +113,10 @@ export class EditingService {
    * place. If not or the user allows the transition, the original tab click event will be carried out.
    */
   setTabGroupClickEvent(tabGroup: MatTabGroup) {
+    if (!tabGroup) {
+      return;
+    }
+
     tabGroup._handleClick = (
       tab: MatTab,
       tabHeader: MatTabHeader,

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Branchable, Modelable } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -26,7 +32,9 @@ export const defaultBranchName = 'main';
 
 const defaultBranchNameValidator = (): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
-    return defaultBranchName.localeCompare(control.value as string, undefined, { sensitivity: 'accent' }) === 0
+    return defaultBranchName.localeCompare(control.value as string, undefined, {
+      sensitivity: 'accent'
+    }) === 0
       ? { invalidBranchName: { value: control.value } }
       : null;
   };
@@ -49,22 +57,23 @@ export interface ChangeBranchNameModalResult {
 export class ChangeBranchNameModalComponent implements OnInit {
   model: Modelable & Branchable;
   newBranchName: string;
-  formGroup: FormGroup;
+  formGroup = new FormGroup({
+    branchName: new FormControl('', [
+      Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+      defaultBranchNameValidator()
+    ])
+  });
 
   constructor(
-    private dialogRef: MatDialogRef<ChangeBranchNameModalComponent, ChangeBranchNameModalResult>,
+    private dialogRef: MatDialogRef<
+      ChangeBranchNameModalComponent,
+      ChangeBranchNameModalResult
+    >,
     @Inject(MAT_DIALOG_DATA) public data: ChangeBranchNameModalData
-  ) {
-    this.formGroup = new FormGroup({
-      branchName: new FormControl('', [
-        Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
-        defaultBranchNameValidator()
-      ])
-    });
-  }
+  ) {}
 
   get branchName() {
-    return this.formGroup.get('branchName');
+    return this.formGroup.controls.branchName;
   }
 
   ngOnInit(): void {
@@ -85,5 +94,4 @@ export class ChangeBranchNameModalComponent implements OnInit {
       branchName: this.branchName.value
     });
   }
-
 }

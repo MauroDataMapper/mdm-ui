@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,16 +26,18 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import {
+  ElementTypesService,
   GridService,
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import {
+  CatalogueItemDomainType,
   DataElement,
   DataElementDetail,
   DataElementDetailResponse,
-  DataTypeReference
+  DataType
 } from '@maurodatamapper/mdm-resources';
 import {
   DefaultProfileItem,
@@ -91,17 +92,6 @@ export class DataElementComponent
     'rules',
     'annotations'
   ]);
-  newlyAddedDataType = {
-    label: '',
-    description: '',
-
-    metadata: [],
-    domainType: 'PrimitiveType',
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataClass: '',
-    referencedTerminology: ''
-  };
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -113,7 +103,8 @@ export class DataElementComponent
     private gridService: GridService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private elementTypes: ElementTypesService
   ) {
     super();
     if (
@@ -148,7 +139,9 @@ export class DataElementComponent
   }
 
   ngOnInit() {
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
@@ -222,7 +215,20 @@ export class DataElementComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       } else if (item.controlType === ProfileControlTypes.dataType) {
-        resource.dataType = item.value as DataTypeReference;
+        const dataType = item.value as DataType;
+
+        // Backend dataType groups several frontend types into one
+        // (i.e. frontend's referenceType and dataModelReferenceType
+        // both map to backend's ModelDataType)
+        const dataTypeDomainType = this.elementTypes.isModelDataType(
+          dataType.domainType
+        )
+          ? CatalogueItemDomainType.ModelDataType
+          : dataType.domainType;
+
+        dataType.domainType = dataTypeDomainType;
+
+        resource.dataType = dataType;
       } else {
         resource[item.propertyName] = item.value;
       }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, Output, EventEmitter } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { FilterQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
@@ -46,30 +46,25 @@ export class GridService {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
-    filters?: {}
+    sortType?: SortDirection,
+    filters?: { [key: string]: any }
   ): FilterQueryParameters {
-    const options = {};
+    const parsedFilters = Object.entries(filters ?? {}).reduce(
+      (prev, [key, value]) => {
+        return {
+          ...prev,
+          [key]: encodeURIComponent(value)
+        };
+      },
+      {}
+    );
 
-    if (pageSize) {
-      options['max'] = pageSize;
-    }
-    if (pageIndex) {
-      options['offset'] = pageIndex;
-    }
-    if (sortBy) {
-      options['sort'] = sortBy;
-    }
-    if (sortType) {
-      options['order'] = sortType;
-    }
-
-    if (filters) {
-      Object.keys(filters).forEach((key) => {
-        options[key] = filters[key];
-      });
-    }
-
-    return options;
+    return {
+      ...(pageSize && { max: pageSize }),
+      ...(pageIndex && { offset: pageIndex }),
+      ...(sortBy && { sort: sortBy }),
+      ...(sortType && { order: sortType }),
+      ...parsedFilters
+    };
   }
 }

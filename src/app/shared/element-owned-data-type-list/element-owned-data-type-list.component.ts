@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -139,6 +138,19 @@ export class ElementOwnedDataTypeListComponent
         )
         .subscribe((data) => {
           this.records = data;
+          data.forEach((x: any) => {
+            if(x.domainType === 'ModelDataType') {
+              if(x.modelResourceDomainType === 'Terminology') {
+                x.domainType = 'TerminologyType';
+              }
+              if(x.modelResourceDomainType === 'CodeSet') {
+                x.domainType = 'CodeSetType';
+              }
+              if(x.modelResourceDomainType === 'ReferenceDataModel') {
+                x.domainType = 'ReferenceDataModelType';
+              }
+            }
+          });
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
         });

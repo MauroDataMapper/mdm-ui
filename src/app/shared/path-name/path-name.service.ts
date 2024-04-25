@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,13 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { Modelable, Navigatable } from '@maurodatamapper/mdm-resources';
 import {
+  Modelable,
+  Navigatable,
+  PathableDomainType
+} from '@maurodatamapper/mdm-resources';
+import {
+  pathableDomainTypesFromPrefix,
   PathElement,
   pathElementDomainTypes,
   PathElementType,
   pathElementTypeNames
 } from './path-name.model';
+import { UIRouter } from '@uirouter/core';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +39,7 @@ export class PathNameService {
   private readonly propSeparator = '@';
   private readonly branchSeparator = '$';
 
-  constructor() {}
+  constructor(private router: UIRouter) {}
 
   parse(path: string): PathElement[] | null {
     if (!path || path.length === 0) {
@@ -112,5 +117,21 @@ export class PathNameService {
         return `${pathType}:${crumb.label}`;
       })
       .join('|');
+  }
+
+  getPathableDomainFromPath(path: string): PathableDomainType {
+    const pathElements = this.parse(path);
+    return pathableDomainTypesFromPrefix.get(pathElements[0].type);
+  }
+
+  createHref(path: string) {
+    const domain = this.getPathableDomainFromPath(path);
+    return this.router.stateService.href(
+      'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+      {
+        domain,
+        path
+      }
+    );
   }
 }

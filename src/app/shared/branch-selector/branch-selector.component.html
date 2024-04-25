@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +15,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<select
-  class="form-control mdm-branch-selector"
-  matTooltip="Switch to another branch"
-  [(ngModel)]="currentVersionId"
-  (ngModelChange)="currentVersionIdChanged()"
-  [disabled]="disabled"
->
-  <option [value]="item.id" *ngFor="let item of versionList">
-    {{ item.displayName ? item.displayName : 'main' }}
-  </option>
-</select>
+
+<mat-form-field appearance="outline" class="paddingless ml-1" style="font-size: 80%; max-width: 430px; width: 100%">
+  <mat-select
+    [(ngModel)]="currentVersionId"
+    matTooltip="Switch to another branch"
+    (ngModelChange)="currentVersionIdChanged()"
+    [disabled]="disabled"
+  >
+    <mat-optgroup [label]="'Draft Branches'" *ngIf="branches && branches.length > 0">
+      <mat-option [value]="item.id" *ngFor="let item of branches">
+        {{ item.modelVersionTag? item.modelVersionTag : (item.displayName ? item.displayName : 'main') }}
+      </mat-option>
+    </mat-optgroup>
+    <mat-optgroup [label]="'Finalised Versions'" *ngIf="finalisedVersions && finalisedVersions.length > 0">
+      <mat-option [value]="item.id" *ngFor="let item of finalisedVersions">
+        {{ item.modelVersionTag? item.modelVersionTag : (item.displayName ? item.displayName : 'main') }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+</mat-form-field>

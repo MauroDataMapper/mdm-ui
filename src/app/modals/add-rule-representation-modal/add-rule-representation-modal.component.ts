@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -136,19 +135,19 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   formGroup = new FormGroup({
     language: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
     representation: new FormControl(''),
-    importFileName: new FormControl()
+    importFileName: new FormControl('')
   });
 
   get language() {
-    return this.formGroup.get('language');
+    return this.formGroup.controls.language;
   }
 
   get representation() {
-    return this.formGroup.get('representation');
+    return this.formGroup.controls.representation;
   }
 
   get importFileName() {
-    return this.formGroup.get('importFileName');
+    return this.formGroup.controls.importFileName;
   }
 
   constructor(

@@ -1,6 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,38 +33,110 @@ SPDX-License-Identifier: Apache-2.0
   </mat-form-field>
   <mat-form-field
     appearance="outline"
-    hintLabel="Provide the domain URL to the Mauro system to connect to"
+    hintLabel="The Syndication feed URL to connect to"
+    style="padding-bottom: 20px"
   >
     <mat-label>URL</mat-label>
     <input matInput name="url" formControlName="url" required />
     <mat-error *ngIf="url?.errors?.required">URL is required</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Type</mat-label>
-    <mat-select formControlName="type">
+    <mat-label>Connection type</mat-label>
+    <mat-select formControlName="connectionType">
       <mat-option *ngFor="let type of connectionTypes" [value]="type">{{
         type
       }}</mat-option>
     </mat-select>
-    <mat-error *ngIf="type?.errors?.required"
+    <mat-error *ngIf="connectionType?.errors?.required"
       >Connection type is required</mat-error
     >
   </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Authentication type</mat-label>
+    <mat-select formControlName="authenticationType">
+      <mat-option
+        *ngFor="let authenticationType of authenticationTypes"
+        [value]="authenticationType"
+        >{{ authenticationType }}</mat-option
+      >
+    </mat-select>
+    <mat-error *ngIf="authenticationType?.errors?.required"
+      >Authentication type is required</mat-error
+    >
+  </mat-form-field>
   <mat-form-field
+    *ngIf="useApiKeyAuthentication"
     appearance="outline"
     hintLabel="An API key is required to view non-public models in the subscribed catalogue"
+    style="padding-bottom: 20px"
   >
     <mat-label>API Key</mat-label>
-    <input matInput name="apiKey" formControlName="apiKey" />
+    <input matInput name="apiKey" formControlName="apiKey" required />
+    <mat-error *ngIf="apiKey?.errors?.required"
+      >An API key is required for this authentication type</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="useOauthAuthentication"
+    appearance="outline"
+    hintLabel="OAuth Access Token Endpoint URL"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Token Endpoint URL</mat-label>
+    <input matInput name="tokenUrl" formControlName="tokenUrl" required />
+    <mat-error *ngIf="tokenUrl?.errors?.required"
+      >A token URL is required for this authentication type</mat-error
+    >
+    <mat-error *ngIf="tokenUrl?.errors?.url">
+      Please provide a valid URL
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="useOauthAuthentication"
+    appearance="outline"
+    hintLabel="OAuth Client ID"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Client ID</mat-label>
+    <input matInput name="clientId" formControlName="clientId" required />
+    <mat-error *ngIf="clientId?.errors?.required"
+      >A client ID is required for this authentication type</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="useOauthAuthentication"
+    appearance="outline"
+    hintLabel="OAuth Client Secret"
+    style="padding-bottom: 20px"
+  >
+    <mat-label>Client Secret</mat-label>
+    <input
+      matInput
+      type="password"
+      name="clientSecret"
+      formControlName="clientSecret"
+      required
+    />
+    <mat-error *ngIf="clientSecret?.errors?.required"
+      >A client secret is required for this authentication type</mat-error
+    >
   </mat-form-field>
   <mat-form-field appearance="outline" style="max-width: 200px">
     <mat-label>Refresh period (days)</mat-label>
     <input
       type="number"
       matInput
+      min="1"
+      max="365"
       name="refreshPeriod"
       formControlName="refreshPeriod"
     />
+    <mat-error *ngIf="refreshPeriod?.errors?.min">
+      The minimum value is {{ refreshPeriod.errors.min.min }}
+    </mat-error>
+    <mat-error *ngIf="refreshPeriod?.errors?.max">
+      The maximum value is {{ refreshPeriod.errors.max.max }}
+    </mat-error>
   </mat-form-field>
   <div>
     <button

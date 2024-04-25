@@ -105,11 +105,7 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.messageService.elementSelector.subscribe((data) => {
       this.selectedElement = data;
       if (this.selectedElement != null) {
-        this.markdownParser
-          .createMarkdownLink(this.selectedElement)
-          .subscribe((result) => {
-            this.insertText(result);
-          });
+        this.createAndInsertLink(this.selectedElement);
       }
     });
   }

@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectChange } from '@angular/material/select';
@@ -81,6 +81,8 @@ export class SearchFiltersComponent implements OnInit {
 
   @Input() createdBefore = null;
 
+  @Input() includeSuperseded = false;
+
   @Input() classifiers: string[] = [];
 
   @Input() appearance: MatFormFieldAppearance = 'outline';
@@ -105,7 +107,7 @@ export class SearchFiltersComponent implements OnInit {
   };
 
   exactMatchFilter: SearchFilterCheckbox = {
-    name: 'labelOnly',
+    name: 'exactMatchOnly',
     checked: false
   };
 
@@ -129,13 +131,18 @@ export class SearchFiltersComponent implements OnInit {
     value: null
   };
 
+  includeSupersededFilter: SearchFilterCheckbox = {
+    name: 'includeSuperseded',
+    checked: false
+  };
+
   classifiersFilter: Classifier[] = [];
 
   isReady = false;
 
   constructor(
     private resources: MdmResourcesService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -158,6 +165,8 @@ export class SearchFiltersComponent implements OnInit {
     this.createdAfterFilter.value = this.createdAfter;
 
     this.createdBeforeFilter.value = this.createdBefore;
+
+    this.includeSupersededFilter.checked = this.includeSuperseded;
   }
 
   get hasValues() {
@@ -192,24 +201,19 @@ export class SearchFiltersComponent implements OnInit {
     this.filterChange.emit({ name: 'exactMatch', value: event.checked });
   }
 
-  onDateChange(name: string, event) {
-    // If date is not null, format as yyyy-MM-dd but ignoring timezone
-    let formatted: String = null;
-
-    if (event.value) {
-      const yyyy: String = event.value.getFullYear().toString();
-      const mm: String = (parseInt(event.value.getMonth(), 10) + 1)
-        .toString()
-        .padStart(2, '0');
-      const dd: String = event.value.getDate().toString().padStart(2, '0');
-
-      formatted = `${yyyy}-${mm}-${dd}`;
-    }
-    this.filterChange.emit({ name, value: formatted });
+  onDateChange(name: string, event: MatDatepickerInputEvent<Date>) {
+    this.filterChange.emit({ name, value: event.value });
   }
 
   onDateClear(name: string) {
     this.filterChange.emit({ name, value: undefined });
+  }
+
+  onIncludeSupersededChange(event: MatCheckboxChange) {
+    this.includeSupersededFilter.checked = event.checked;
+
+    this.filterChange.emit({ name: 'includeSuperseded', value: event.checked });
+
   }
 
   onClassifiersChange(event: MatSelectChange) {
@@ -221,19 +225,23 @@ export class SearchFiltersComponent implements OnInit {
   }
 
   openCatalogueItemSelectModal() {
-    this.dialog.open(CatalogueItemSelectModalComponent, { }).afterClosed().subscribe((catalogueItem) => {
-      if (catalogueItem) {
-        // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
-        this.contextChange.emit(
-          {
+    this.dialog
+      .open(CatalogueItemSelectModalComponent, {})
+      .afterClosed()
+      .subscribe((catalogueItem) => {
+        if (catalogueItem) {
+          // When a Data Class is selected, we also need the Data Model ID, which should be in catalogueItem.modelId
+          this.contextChange.emit({
             domainType: catalogueItem.domainType,
             id: catalogueItem.id,
             label: catalogueItem.label,
             parentId: catalogueItem.parentId ?? null,
-            dataModelId: catalogueItem.domainType === 'DataClass' ? catalogueItem.modelId : null,
-          }
-        );
-      }
-    });
+            dataModelId:
+              catalogueItem.domainType === 'DataClass'
+                ? catalogueItem.modelId
+                : null
+          });
+        }
+      });
   }
 }

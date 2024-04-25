@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ProfilePictureComponent } from './shared/profile-picture/profile-picture.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -34,41 +33,46 @@ import { MdmResourcesService } from './modules/resources';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FeaturesService } from './services/features.service';
+import { MockComponent } from 'ng-mocks';
+import { LoadingIndicatorComponent } from './utility/loading-indicator/loading-indicator.component';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatDialogModule,
-        MatBadgeModule,
-        MatToolbarModule,
-        NoopAnimationsModule,
-        MatSidenavModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {},
-        },
-        {
-          provide: FeaturesService,
-          useValue: jest.fn()
-        }
-      ],
-      declarations: [
-        ProfilePictureComponent,
-        ByteArrayToBase64Pipe,
-        NavbarComponent,
-        FooterComponent,
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgxSkeletonLoaderModule,
+          MatTooltipModule,
+          MatMenuModule,
+          MatDialogModule,
+          MatBadgeModule,
+          MatToolbarModule,
+          NoopAnimationsModule,
+          MatSidenavModule,
+          UIRouterModule.forRoot({ useHash: true }),
+          ToastrModule.forRoot()
+        ],
+        providers: [
+          {
+            provide: MdmResourcesService,
+            useValue: {}
+          },
+          {
+            provide: FeaturesService,
+            useValue: jest.fn()
+          }
+        ],
+        declarations: [
+          ProfilePictureComponent,
+          ByteArrayToBase64Pipe,
+          NavbarComponent,
+          FooterComponent,
+          AppComponent,
+          MockComponent(LoadingIndicatorComponent)
+        ]
+      }).compileComponents();
+    })
+  );
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
@@ -81,5 +85,4 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('mdm-ui');
   });
-
 });

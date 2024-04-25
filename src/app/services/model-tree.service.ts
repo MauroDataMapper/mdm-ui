@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -86,19 +85,19 @@ export class ModelTreeService implements OnDestroy {
   }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<MdmTreeItem[]> {
-    let options: any = {};
-    if (this.sharedService.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded:
-            this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          includeModelSuperseded:
-            this.userSettingsHandler.get('includeModelSuperseded') || false,
-          includeDeleted:
-            this.userSettingsHandler.get('includeDeleted') || false
-        }
-      };
-    }
+    const options: any = {
+      queryStringParams: {
+        includeDocumentSuperseded:
+          this.userSettingsHandler.get('includeDocumentSuperseded') || false,
+        includeModelSuperseded:
+          this.userSettingsHandler.get('includeModelSuperseded') || false,
+        includeDeleted:
+          (this.sharedService.isLoggedIn() &&
+            this.userSettingsHandler.get('includeDeleted')) ||
+          false
+      }
+    };
+
     if (noCache) {
       options.queryStringParams.noCache = true;
     }
@@ -231,7 +230,7 @@ export class ModelTreeService implements OnDestroy {
               domainType: CatalogueItemDomainType.FederatedDataModel,
               hasChildren: false,
               label: item.label,
-              modelVersion: item.version,
+              modelVersion: item.version ?? item.modelVersionTag,
               parentId: item.catalogueId,
               availableActions: []
             }
@@ -355,37 +354,27 @@ export class ModelTreeService implements OnDestroy {
   }
 
   deleteCatalogueItemPermanent(item: Modelable): Observable<void> {
-    return this.securityHandler.isAdministrator().pipe(
-      switchMap((isAdministrator) => {
-        if (!isAdministrator) {
-          this.messageHandler.showWarning(
-            'Only administrators may permanently delete catalogue items.'
-          );
-          return of();
-        }
-
-        return this.dialog.openDoubleConfirmationAsync(
-          {
-            data: {
-              title: 'Permanent deletion',
-              okBtnTitle: 'Yes, delete',
-              btnType: 'warn',
-              message: `Are you sure you want to <span class=\'warning\'>permanently</span> delete '${item.label}'?`
-            }
-          },
-          {
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message:
-                '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
-            }
+    return this.dialog
+      .openDoubleConfirmationAsync(
+        {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `Are you sure you want to <span class=\'warning\'>permanently</span> delete '${item.label}'?`
           }
-        );
-      }),
-      switchMap(() => this.deleteCatalogueItem(item, true))
-    );
+        },
+        {
+          data: {
+            title: 'Confirm permanent deletion',
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message:
+              '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
+          }
+        }
+      )
+      .pipe(switchMap(() => this.deleteCatalogueItem(item, true)));
   }
 
   private deleteCatalogueItem(

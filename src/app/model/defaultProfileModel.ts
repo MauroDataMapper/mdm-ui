@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -78,7 +77,13 @@ export  class DefaultProfileControls {
     ];
 
     const folder = ['description'];
-    const dataType = ['description', 'aliases', 'classifications', 'dataType'];
+    const dataType = [
+      'description',
+      'aliases',
+      'classifications',
+      'dataTypeDetails'
+      /* , 'dataType' */
+    ];
 
     const term = [
       'code',

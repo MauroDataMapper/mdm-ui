@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,17 +18,37 @@ SPDX-License-Identifier: Apache-2.0
 import {
   CatalogueItemDomainType,
   Modelable,
-  Navigatable
+  Navigatable,
+  PathableDomainType
 } from '@maurodatamapper/mdm-resources';
-import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { PathElement, PathElementType } from './path-name.model';
 import { PathNameService } from './path-name.service';
+import { UIRouter } from '@uirouter/core';
+import { TestBed } from '@angular/core/testing';
 
 describe('PathNameService', () => {
   let service: PathNameService;
 
+  const routerStub = {
+    stateService: {
+      href: jest.fn()
+    }
+  };
+
   beforeEach(() => {
-    service = setupTestModuleForService(PathNameService);
+    // Setup the test bed manually instead of using setupTestModuleForService()
+    // so that the UIRouterModule is not imported, will override the UIRouter service
+    // so it can be mocked
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: UIRouter,
+          useValue: routerStub
+        }
+      ]
+    });
+
+    service = TestBed.inject(PathNameService);
   });
 
   it('should be created', () => {
@@ -370,5 +389,167 @@ describe('PathNameService', () => {
       const actualPath = service.createFromBreadcrumbs(item);
       expect(actualPath).toBe(expectedPath);
     });
+  });
+
+  describe('get pathable domain types', () => {
+    const testCases: [string, PathableDomainType][] = [
+      ['fo:Development Folder|vf:Simple Versioned Folder$1.0.0', 'folders'],
+      ['vf:Simple Versioned Folder$1.0.0', 'versionedFolders'],
+      ['cl:NIHR Health Data Finder', 'classifiers'],
+      ['dm:Simple Test DataModel$1.0.0', 'dataModels'],
+      [
+        'dm:Nautilus 835 Data Marts$main|dt:ADMIN_CATEGORY_SPELL_CD_NHS',
+        'dataModels'
+      ],
+      [
+        'dm:Model Version Tree DataModel$1.0.0|dc:V1 Modify Data Class',
+        'dataModels'
+      ],
+      [
+        'dm:Finalised Example Test DataModel$1.0.0|dc:Finalised Data Class|de:Another DataElement',
+        'dataModels'
+      ],
+      ['te:Simple Test Terminology$2.0.0', 'terminologies'],
+      ['te:Complex Test Terminology$main|tm:CTT1001', 'terminologies'],
+      ['rdm:Simple Reference Data Model$1.0.0', 'referenceDataModels']
+    ];
+
+    it.each(testCases)(
+      'should assume %p refers to domain %p',
+      (path, domain) => {
+        const actual = service.getPathableDomainFromPath(path);
+        expect(actual).toBe(domain);
+      }
+    );
+  });
+
+  describe('create href', () => {
+    beforeEach(() => {
+      routerStub.stateService.href.mockClear();
+      routerStub.stateService.href.mockImplementation((_, args) => {
+        // Encode the path using RFC3986 URL specification
+        const encodedPath = encodeURIComponent(args.path).replace(
+          /['()*]/g,
+          (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
+        );
+
+        return `http://localhost:4200/#/catalogue/item/${args.domain}/${encodedPath}`;
+      });
+    });
+
+    const testCases = [
+      [
+        'dm:Simple Test DataModel$1.0.0',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3ASimple%20Test%20DataModel%241.0.0'
+      ],
+      [
+        'dm:Model Version Tree DataModel$newBranch',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AModel%20Version%20Tree%20DataModel%24newBranch'
+      ],
+      [
+        'dm:Head and Neck Cancer Audit (HANA)$1.0.0',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AHead%20and%20Neck%20Cancer%20Audit%20%28HANA%29%241.0.0'
+      ],
+      [
+        'dm:Model Version Tree DataModel$3.0.0',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AModel%20Version%20Tree%20DataModel%243.0.0'
+      ],
+      [
+        'dm:Model Version Tree DataModel',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AModel%20Version%20Tree%20DataModel'
+      ],
+      [
+        'dm:Nautilus 835 Data Marts$main|dt:ADMIN_CATEGORY_SPELL_CD_NHS',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3ANautilus%20835%20Data%20Marts%24main%7Cdt%3AADMIN_CATEGORY_SPELL_CD_NHS'
+      ],
+      [
+        'te:Simple Test Terminology$2.0.0',
+        'http://localhost:4200/#/catalogue/item/terminologies/te%3ASimple%20Test%20Terminology%242.0.0'
+      ],
+      [
+        'fo:Development Folder|vf:Simple Versioned Folder$1.0.0',
+        'http://localhost:4200/#/catalogue/item/folders/fo%3ADevelopment%20Folder%7Cvf%3ASimple%20Versioned%20Folder%241.0.0'
+      ],
+      [
+        'fo:Data sets',
+        'http://localhost:4200/#/catalogue/item/folders/fo%3AData%20sets'
+      ],
+      [
+        'fo:Mauro Data Explorer Requests|fo:admin[at]maurodatamapper.com',
+        'http://localhost:4200/#/catalogue/item/folders/fo%3AMauro%20Data%20Explorer%20Requests%7Cfo%3Aadmin%5Bat%5Dmaurodatamapper.com'
+      ],
+      [
+        'cl:NIHR Health Data Finder',
+        'http://localhost:4200/#/catalogue/item/classifiers/cl%3ANIHR%20Health%20Data%20Finder'
+      ],
+      [
+        'dm:test request 3$main|dc:Diagnosis|dc:Diagnosis (ARIA MedOnc)',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3Atest%20request%203%24main%7Cdc%3ADiagnosis%7Cdc%3ADiagnosis%20%28ARIA%20MedOnc%29'
+      ],
+      [
+        'dm:Model Version Tree DataModel$1.0.0|dc:V1 Modify Data Class',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AModel%20Version%20Tree%20DataModel%241.0.0%7Cdc%3AV1%20Modify%20Data%20Class'
+      ],
+      [
+        'dm:Finalised Example Test DataModel$1.0.0|dc:Finalised Data Class|de:Another DataElement',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AFinalised%20Example%20Test%20DataModel%241.0.0%7Cdc%3AFinalised%20Data%20Class%7Cde%3AAnother%20DataElement'
+      ],
+      [
+        'dm:Nautilus 835 Data Marts$main|dc:Clinicals|dc:CLN_PROCEDURES|de:LATERALITY_CD',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3ANautilus%20835%20Data%20Marts%24main%7Cdc%3AClinicals%7Cdc%3ACLN_PROCEDURES%7Cde%3ALATERALITY_CD'
+      ],
+      [
+        'dm:Complex Test DataModel$main|dt:child',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AComplex%20Test%20DataModel%24main%7Cdt%3Achild'
+      ],
+      [
+        'dm:Complex Test DataModel$main|dt:string',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3AComplex%20Test%20DataModel%24main%7Cdt%3Astring'
+      ],
+      [
+        'dm:Nautilus 835 Data Marts$main|dt:ACUITY_LEVEL',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3ANautilus%20835%20Data%20Marts%24main%7Cdt%3AACUITY_LEVEL'
+      ],
+      [
+        'dm:modules$main|dt:complex_term_example',
+        'http://localhost:4200/#/catalogue/item/dataModels/dm%3Amodules%24main%7Cdt%3Acomplex_term_example'
+      ],
+      [
+        'te:Simple Test Terminology$main',
+        'http://localhost:4200/#/catalogue/item/terminologies/te%3ASimple%20Test%20Terminology%24main'
+      ],
+      [
+        'te:Complex Test Terminology$main|tm:CTT1001',
+        'http://localhost:4200/#/catalogue/item/terminologies/te%3AComplex%20Test%20Terminology%24main%7Ctm%3ACTT1001'
+      ],
+      [
+        'te:Complex Test Terminology$main|tm:CTT41',
+        'http://localhost:4200/#/catalogue/item/terminologies/te%3AComplex%20Test%20Terminology%24main%7Ctm%3ACTT41'
+      ],
+      [
+        'cs:Simple Test CodeSet$1.0.0',
+        'http://localhost:4200/#/catalogue/item/codeSets/cs%3ASimple%20Test%20CodeSet%241.0.0'
+      ],
+      [
+        'rdm:Simple Reference Data Model$1.0.0',
+        'http://localhost:4200/#/catalogue/item/referenceDataModels/rdm%3ASimple%20Reference%20Data%20Model%241.0.0'
+      ],
+      [
+        'rdm:Simple Reference Data Model$test2',
+        'http://localhost:4200/#/catalogue/item/referenceDataModels/rdm%3ASimple%20Reference%20Data%20Model%24test2'
+      ]
+    ];
+
+    it.each(testCases)(
+      'should turn %p into the URL %p',
+      (path, expectedUrl) => {
+        const actualUrl = service.createHref(path);
+        expect(actualUrl).toBe(expectedUrl);
+        expect(routerStub.stateService.href).toHaveBeenCalledWith(
+          'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+          expect.objectContaining({ path })
+        );
+      }
+    );
   });
 });

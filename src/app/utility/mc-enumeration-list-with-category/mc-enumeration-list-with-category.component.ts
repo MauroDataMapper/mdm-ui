@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  Output,
+  EventEmitter,
+  OnDestroy
+} from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -27,17 +34,34 @@ import { MatTable } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataClassDetail, DataModelDetail } from '@maurodatamapper/mdm-resources';
+import {
+  DataClassDetail,
+  DataModelDetail,
+  DataTypeDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { FormControl } from '@angular/forms';
+import {
+  catchError,
+  EMPTY,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  takeUntil
+} from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
   templateUrl: './mc-enumeration-list-with-category.component.html',
   styleUrls: ['./mc-enumeration-list-with-category.component.sass']
 })
-export class McEnumerationListWithCategoryComponent implements OnInit {
-  @Input() parent : DataModelDetail | DataClassDetail;
+export class McEnumerationListWithCategoryComponent
+  implements OnInit, OnDestroy {
+  @Input() parent: DataModelDetail | DataClassDetail;
   @Input() clientSide = false;
-  @Input() enumerationValues ;
+  @Input() enumerationValues;
   @Input() onUpdate;
   @Input() type: any;
   @Input() isEditable = false;
@@ -45,7 +69,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   @Output() afterSave = new EventEmitter<any>();
 
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
@@ -53,7 +78,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   enumsCount: number;
   total: number;
   displayItems: any[];
-  categories = [];
+  categories: string[] = [];
+  filteredCategories: string[] = [];
   allRecords = [];
   allRecordsWithGroups = [];
 
@@ -69,6 +95,10 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   sortBy = 'group';
   sortType = '';
 
+  categoryCtrl = new FormControl('');
+
+  private unsubscribe$ = new Subject<void>();
+
   constructor(
     private userSettingsHandler: UserSettingsHandlerService,
     private securityHandler: SecurityHandlerService,
@@ -76,18 +106,31 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
     private stateHandler: StateHandlerService,
-    private editingService: EditingService) {
-  }
+    private editingService: EditingService
+  ) {}
 
   ngOnInit() {
-
-   if (!this.clientSide) {
+    if (!this.clientSide) {
       this.displayedColumnsEnums = ['group', 'key', 'value', 'more', 'buttons'];
     } else {
       this.displayedColumnsEnums = ['group', 'key', 'value', 'buttons'];
     }
 
-    if (this.enumerationValues !== null && this.enumerationValues !== undefined) {
+    // Handle changes to the category select control
+    this.categoryCtrl.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        startWith(''),
+        map((value) => this.filterCategories(value))
+      )
+      .subscribe(
+        (filteredCategories) => (this.filteredCategories = filteredCategories)
+      );
+
+    if (
+      this.enumerationValues !== null &&
+      this.enumerationValues !== undefined
+    ) {
       this.showRecords(this.enumerationValues);
 
       if (this.parent !== null && this.parent !== undefined) {
@@ -97,25 +140,29 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     }
   }
 
-  // Drag and drop
-  dropTable(event: CdkDragDrop<any[]>) {
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
-    const prevIndex = this.displayItems.findIndex(r => r.id === event.item.data.id);
-
-    moveItemInArray(this.displayItems, prevIndex, event.currentIndex);
-
-    let prevRec = this.displayItems[event.currentIndex - 1];
-    const nextRec = this.displayItems[event.currentIndex + 1];
-
-    if (prevRec === undefined) {
+  // Handle drag and drop events
+  handleDrop(event: CdkDragDrop<any[]>) {
+    // If the drop event takes place outside of the table, leave the table unchanged.
+    if (!event.isPointerOverContainer) {
       return;
     }
 
-    let newPosition = 0;
-    if (prevRec.isCategoryRow) {
-      newPosition = nextRec.index;
-    } else {
-      newPosition = parseInt(prevRec.index, 10) + 1;
+    const swappedItem = this.displayItems[event.currentIndex];
+    const movedItem = event.item.data;
+
+    moveItemInArray(this.displayItems, event.previousIndex, event.currentIndex);
+
+    this.updateLocalList(swappedItem, movedItem);
+
+    let prevRec = this.displayItems[event.currentIndex - 1];
+
+    if (prevRec === undefined) {
+      return;
     }
 
     let newCategory = null;
@@ -133,72 +180,66 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
     }
 
-    this.updateOrder(event.item.data.id, newPosition, newCategory);
+    if (this.clientSide) {
+      this.showRecords(this.allRecords);
+    } else {
+      this.updateOrderServer(newCategory, movedItem);
+    }
 
     this.table.renderRows();
-
   }
 
-  updateOrder = (enumId, newPosition, newCategory) => {
+  updateLocalList(swappedItem, movedItem) {
+    const sorted = this.allRecords;
 
-    if (this.clientSide) {
-      const sorted = this.allRecords;
+    // Identify the items that were swapped by ID to locate their correct index
+    // then perform the same array move operation as on displayItems array to keep
+    // both arrays in sync correctly.
+    const foundSwappedItemIndex = sorted.findIndex(
+      (r) => r.id === swappedItem.id
+    );
+    const foundMovedItemIndex = sorted.findIndex((r) => r.id === movedItem.id);
 
-      // find it & remove it
-      let index = 0;
-      sorted.forEach((item, i) => {
-        if (item.id === enumId) {
-          index = i;
-        }
-      });
+    moveItemInArray(sorted, foundMovedItemIndex, foundSwappedItemIndex);
 
-      const foundRecords = sorted.splice(index, 1);
-      if (foundRecords && foundRecords.length > 0) {
-        const record = foundRecords[0];
+    // Fix mapped indexes in records after the move
+    sorted.forEach((r, index) => (r.index = index + 1));
 
-        let location = -1;
-        for (let i = 0; i < sorted.length && location === -1; i++) {
-          if (
-            (i === 0 && newPosition < sorted[i].index) ||
-            sorted[i].index === newPosition ||
-            (sorted[i].index < newPosition &&
-              i + 1 < sorted.length &&
-              newPosition < sorted[i + 1].index)
-          ) {
-            record.index = newPosition;
-            // record[0].edit.index = newPosition;
-            sorted.splice(i, 0, record);
-            location = i;
-          }
-        }
-        for (let i = 0; i < sorted.length; i++) {
-          sorted[i].index = i + 1;
-        }
-        this.showRecords(sorted);
-      }
-    } else {
-      const resource = {
-        index: newPosition,
-        category: newCategory
-      };
+    this.allRecords = sorted;
+  }
 
-      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.model, this.parent.id, enumId, resource).subscribe(() => {
-        this.reloadRecordsFromServer().subscribe(data => {
-          this.showRecords(data.body.enumerationValues);
-        });
+  updateOrderServer(newCategory, movedItem) {
+    // Find the correct updated index of the moved item
+    const foundMovedItemIndex = this.allRecords.findIndex(
+      (r) => r.id === movedItem.id
+    );
 
+    const resource = {
+      index: foundMovedItemIndex,
+      category: newCategory
+    };
+
+    this.resourcesService.enumerationValues
+      .updateInEnumeratedType(
+        this.parent.model,
+        this.parent.id,
+        movedItem.id,
+        resource
+      )
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the enumeration.',
+            error
+          );
+          return EMPTY;
+        }),
+        switchMap(() => this.reloadRecordsFromServer())
+      )
+      .subscribe((data: DataTypeDetailResponse) => {
+        this.showRecords(data.body.enumerationValues);
         this.messageHandler.showSuccess('Enumeration updated successfully.');
-      },
-        error => {
-
-          this.messageHandler.showError('There was a problem updating the enumeration.', error);
-        }
-      );
-    }
-  };
-
-  identify(item) {
-    return item.id;
+      });
   }
 
   // Accepts the array and key
@@ -239,11 +280,14 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     let categories = [];
     categories = this.groupBy(this.allRecords, 'category');
 
-
     let hasEmptyCategory = false;
 
     for (const category in categories) {
-      if (category !== null && category !== 'null' && !categoryNames.includes(category)) {
+      if (
+        category !== null &&
+        category !== 'null' &&
+        !categoryNames.includes(category)
+      ) {
         categoryNames.push(category);
       } else {
         hasEmptyCategory = true;
@@ -261,11 +305,11 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     }
 
     const allRecordsWithGroups = [];
-    categoryNames.forEach(category => {
+    categoryNames.forEach((category) => {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
       if (category !== null && category !== '' && category !== undefined) {
-        this.categories.push({ key: category, value: category });
+        this.categories.push(category);
       }
 
       allRecordsWithGroups.push({
@@ -274,7 +318,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         isCategoryRow: true
       });
 
-      categories[category].forEach(row => {
+      categories[category].forEach((row) => {
         allRecordsWithGroups.push(row);
       });
     });
@@ -285,7 +329,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     const start = this.pageSize * this.currentPage;
     let e = 0;
     let skippedCategories = 0;
-
 
     for (let i = 0; i < allRecordsWithGroups.length; i++) {
       if (i < start + skippedCategories) {
@@ -336,9 +379,17 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     }
   }
 
-  openEnumerationValues = record => {
-      this.stateHandler.Go('enumerationvalues', { dataModelId: this.parent.model, dataTypeId: this.parent.id, id: record.id}, {reload: true, location: true, notify: false});
-   };
+  openEnumerationValues = (record) => {
+    this.stateHandler.Go(
+      'enumerationvalues',
+      {
+        dataModelId: this.parent.model,
+        dataTypeId: this.parent.id,
+        id: record.id
+      },
+      { reload: true, location: true, notify: false }
+    );
+  };
 
   add() {
     const newRecord = {
@@ -388,10 +439,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         if (!recordWithGroup) {
           continue;
         }
-        if (
-          recordWithGroup.isCategoryRow ||
-          record.id === recordWithGroup.id
-        ) {
+        if (recordWithGroup.isCategoryRow || record.id === recordWithGroup.id) {
           continue;
         }
         if (
@@ -414,6 +462,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     record.edit.errors = [];
     record.inEdit = true;
     this.editingService.setFromCollection(this.displayItems);
+
+    this.categoryCtrl.setValue(record.edit.category);
   }
 
   deleteClicked(record) {
@@ -431,16 +481,25 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
       this.showRecords([].concat(this.allRecords));
     } else {
-      this.resourcesService.enumerationValues.removeFromEnumeratedType(this.parent.model, this.parent.id, record.id).subscribe(() => {
-        this.messageHandler.showSuccess('Enumeration deleted successfully.');
-        // reload all enums
-        this.reloadRecordsFromServer().subscribe((data) => {
-          this.showRecords(data.body.enumerationValues);
-        });
-      }, error => {
-        this.messageHandler.showError('There was a problem deleting the enumeration.', error);
-      });
-
+      this.resourcesService.enumerationValues
+        .removeFromEnumeratedType(this.parent.model, this.parent.id, record.id)
+        .subscribe(
+          () => {
+            this.messageHandler.showSuccess(
+              'Enumeration deleted successfully.'
+            );
+            // reload all enums
+            this.reloadRecordsFromServer().subscribe((data) => {
+              this.showRecords(data.body.enumerationValues);
+            });
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem deleting the enumeration.',
+              error
+            );
+          }
+        );
     }
     if (this.onUpdate) {
       this.onUpdate(this.allRecords);
@@ -452,7 +511,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   cancelEditClicked(record) {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }
@@ -497,7 +556,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         // find max index
         let maxIndex = -1;
 
-        this.allRecords.forEach(item => {
+        this.allRecords.forEach((item) => {
           if (item.index > maxIndex) {
             maxIndex = item.index;
           }
@@ -525,56 +584,99 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
     // in edit mode, we save them here
     if (record.id && record.id.indexOf('temp-') !== 0) {
-      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.model, this.parent.id, record.id, resource).subscribe(() => {
-        if (this.afterSave) {
-          this.afterSave.emit(resource);
-        }
-        record.key = resource.key;
-        record.value = resource.value;
-        record.category = resource.category;
-        record.inEdit = false;
-        this.editingService.setFromCollection(this.displayItems);
+      this.resourcesService.enumerationValues
+        .updateInEnumeratedType(
+          this.parent.model,
+          this.parent.id,
+          record.id,
+          resource
+        )
+        .subscribe(
+          () => {
+            if (this.afterSave) {
+              this.afterSave.emit(resource);
+            }
+            record.key = resource.key;
+            record.value = resource.value;
+            record.category = resource.category;
+            record.inEdit = false;
+            this.editingService.setFromCollection(this.displayItems);
 
-        this.reloadRecordsFromServer().subscribe((data) => {
-          this.showRecords(data.body.enumerationValues);
-        });
+            this.reloadRecordsFromServer().subscribe((data) => {
+              this.showRecords(data.body.enumerationValues);
+            });
 
-        this.messageHandler.showSuccess('Enumeration updated successfully.');
-      }, error => {
-
-        this.messageHandler.showError('There was a problem updating the enumeration.', error);
-      });
+            this.messageHandler.showSuccess(
+              'Enumeration updated successfully.'
+            );
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem updating the enumeration.',
+              error
+            );
+          }
+        );
     } else {
-      this.resourcesService.enumerationValues.saveToEnumeratedType(this.parent.model, this.parent.id, resource).subscribe(() => {
-        this.reloadRecordsFromServer().subscribe(data => {
-          this.showRecords(data.body.enumerationValues);
-        });
-        this.messageHandler.showSuccess('Enumeration saved successfully.');
-      }, error => {
-        this.messageHandler.showError('There was a problem saving the enumeration.', error);
-      });
+      this.resourcesService.enumerationValues
+        .saveToEnumeratedType(this.parent.model, this.parent.id, resource)
+        .subscribe(
+          () => {
+            this.reloadRecordsFromServer().subscribe((data) => {
+              this.showRecords(data.body.enumerationValues);
+            });
+            this.messageHandler.showSuccess('Enumeration saved successfully.');
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem saving the enumeration.',
+              error
+            );
+          }
+        );
     }
   }
 
-  onCategorySelect(selectedValue, record) {
-    if (selectedValue == null || (selectedValue && selectedValue.key === -1)) {
-      return;
+  onCategorySelected(event: MatAutocompleteSelectedEvent, record: any) {
+    const value: string = event.option.value;
+
+    if (value.startsWith('Add new \'') && value.endsWith('\'?')) {
+      // Add new value to categories
+      const newCategory = value.replace('Add new \'', '').replace('\'?', '');
+      this.categories.push(newCategory);
+      this.categoryCtrl.setValue(newCategory);
     }
 
-    record.category = selectedValue.key;
+    // Keep data in sync for saving later
+    record.edit.category = this.categoryCtrl.value;
   }
 
-  onCategoryTextUpdated(text, record) {
-    record.category = text;
-  }
-
-  reloadRecordsFromServer() {
-    return this.resourcesService.dataType.get(this.parent.model, this.parent.id);
+  reloadRecordsFromServer(): Observable<DataTypeDetailResponse> {
+    return this.resourcesService.dataType.get(
+      this.parent.model,
+      this.parent.id
+    );
   }
 
   pageSizeClicked(paginator) {
     this.pageSize = paginator.pageSize;
     this.currentPage = paginator.pageIndex;
     this.showRecords(this.allRecords);
+  }
+
+  private filterCategories(value: string) {
+    const filtered = this.categories.filter((category) =>
+      category.toLowerCase().includes(value)
+    );
+
+    if (filtered.length > 0) {
+      return filtered;
+    }
+
+    if (value.length > 0) {
+      return [`Add new '${value}'?`];
+    }
+
+    return this.categories;
   }
 }

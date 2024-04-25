@@ -1,6 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford
-and Health and Social Care Information Centre, also known as NHS Digital
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,6 +19,7 @@ import {
   Breadcrumb,
   CatalogueItem,
   MdmResponse,
+  PathableDomainType,
   Profile,
   ProfileValidationError,
   Uuid
@@ -96,4 +96,25 @@ export interface MauroProfileValidationResult {
 
 export interface NavigatableProfile extends Profile {
   breadcrumbs?: Breadcrumb[];
+}
+
+/**
+ * Options to control locating Mauro catalogue items by path.
+ */
+export interface MauroItemLocateOptions {
+  /**
+   * The domain to locate under. If not provided, it will be determined via the first path item if possible.
+   */
+  domain?: PathableDomainType;
+
+  /**
+   * The parent ID of the root item to locate under. If not provided, will search the entire domain.
+   */
+  parentId?: Uuid;
+
+  /**
+   * State if only the latest finalised models should be considered. This has no effect if the path
+   * contains a model version identifier.
+   */
+  finalisedOnly?: boolean;
 }

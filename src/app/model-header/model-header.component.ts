@@ -25,6 +25,7 @@ import {
   catalogueItemToMultiFacetAware,
   Exporter,
   isModelDomainType,
+  MdmTreeItem,
   MergableCatalogueItem,
   ModelDomain,
   Securable
@@ -51,8 +52,9 @@ import {
   SecurityHandlerService,
   StateHandlerService
 } from '@mdm/services';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { EMPTY, forkJoin, of } from 'rxjs';
-import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
 
 export type ModelHeaderCatalogueItem = CatalogueItemDetail &
   Securable &
@@ -72,6 +74,21 @@ export class ModelHeaderComponent implements OnInit {
   isAdministrator = false;
   access: Access;
   downloadLinks: HTMLAnchorElement[] = [];
+  ancestorTreeItems: MdmTreeItem[] = [];
+
+  constructor(
+    private security: SecurityHandlerService,
+    private dialog: MatDialog,
+    private elementTypes: ElementTypesService,
+    private stateHandler: StateHandlerService,
+    private itemUpdates: MauroItemUpdateService,
+    private messageHandler: MessageHandlerService,
+    private exportHandler: ExportHandlerService,
+    private modelVersioning: MauroModelVersioningService,
+    private itemRemoval: MauroItemRemoveService,
+    private broadcast: BroadcastService,
+    private modelTree: ModelTreeService
+  ) {}
 
   get isFinalisable() {
     if (!this.item) {
@@ -116,8 +133,10 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return this.isLoggedIn &&
-      this.item.domainType === CatalogueItemDomainType.DataModel;
+    return (
+      this.isLoggedIn &&
+      this.item.domainType === CatalogueItemDomainType.DataModel
+    );
   }
 
   get canShowMergeGraph() {
@@ -125,9 +144,10 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return this.isLoggedIn && (
-      this.item.domainType === CatalogueItemDomainType.DataModel ||
-      this.item.domainType === CatalogueItemDomainType.VersionedFolder
+    return (
+      this.isLoggedIn &&
+      (this.item.domainType === CatalogueItemDomainType.DataModel ||
+        this.item.domainType === CatalogueItemDomainType.VersionedFolder)
     );
   }
 
@@ -183,19 +203,6 @@ export class ModelHeaderComponent implements OnInit {
     );
   }
 
-  constructor(
-    private security: SecurityHandlerService,
-    private dialog: MatDialog,
-    private elementTypes: ElementTypesService,
-    private stateHandler: StateHandlerService,
-    private itemUpdates: MauroItemUpdateService,
-    private messageHandler: MessageHandlerService,
-    private exportHandler: ExportHandlerService,
-    private modelVersioning: MauroModelVersioningService,
-    private itemRemoval: MauroItemRemoveService,
-    private broadcast: BroadcastService
-  ) {}
-
   ngOnInit(): void {
     this.isLoggedIn = this.security.isLoggedIn();
     this.access = this.security.elementAccess(this.item);
@@ -203,6 +210,22 @@ export class ModelHeaderComponent implements OnInit {
     this.security
       .isAdministrator()
       .subscribe((state) => (this.isAdministrator = state));
+
+    if (this.item) {
+      this.modelTree
+        .getAncestors(this.item)
+        .pipe(
+          map((rootItem) => {
+            const itemList: MdmTreeItem[] = [];
+            this.flattenTreeItemChildren(rootItem, itemList);
+            return itemList;
+          })
+        )
+        .subscribe((ancestorTreeItems) => {
+          this.ancestorTreeItems = ancestorTreeItems;
+          console.log(this.ancestorTreeItems);
+        });
+    }
   }
 
   openUserGroupAccessDialog() {
@@ -512,27 +535,6 @@ export class ModelHeaderComponent implements OnInit {
       });
   }
 
-  private handleStandardExporterResponse(
-    exporter: Exporter,
-    response: HttpResponse<ArrayBuffer>
-  ) {
-    const fileName = this.exportHandler.createFileName(
-      this.item.label,
-      exporter
-    );
-    const file = new Blob([response.body], {
-      type: exporter.fileType
-    });
-    const link = this.exportHandler.createBlobLink(file, fileName);
-    this.downloadLinks.push(link);
-  }
-
-  private handleAsyncExporterResponse() {
-    this.messageHandler.showInfo(
-      'A new background task to export your model has started. You can continue working while the export continues.'
-    );
-  }
-
   deleteItem(permanent: boolean) {
     this.busy = true;
     this.itemRemoval
@@ -560,5 +562,38 @@ export class ModelHeaderComponent implements OnInit {
           this.stateHandler.reload();
         }
       });
+  }
+
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.item.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
+    });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
+  }
+
+  private flattenTreeItemChildren(item: MdmTreeItem, itemList: MdmTreeItem[]) {
+    itemList.push(item);
+
+    if (!item || !item.children || item.children.length === 0) {
+      return;
+    }
+
+    item.children.forEach((child) => {
+      this.flattenTreeItemChildren(child, itemList);
+    });
   }
 }

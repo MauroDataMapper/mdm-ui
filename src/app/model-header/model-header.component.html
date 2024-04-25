@@ -15,7 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="item" class="mdm-model-header panel panel-default mdm--shadow-block">
+<div
+  *ngIf="item"
+  class="mdm-model-header panel panel-default mdm--shadow-block"
+>
   <div class="mdm-model-header__title-bar">
     <div class="mdm-model-header__title">
       <h4
@@ -120,13 +123,10 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
 
-  <mdm-model-path
-    *ngIf="isChildItem"
-    [path]="item.breadcrumbs"
-  ></mdm-model-path>
-
-  <mdm-catalogue-item-properties [item]="item">
-  </mdm-catalogue-item-properties>
+  <mdm-catalogue-item-properties
+    [item]="item"
+    [ancestorTreeItems]="ancestorTreeItems"
+  ></mdm-catalogue-item-properties>
 </div>
 <mat-progress-bar
   *ngIf="busy"

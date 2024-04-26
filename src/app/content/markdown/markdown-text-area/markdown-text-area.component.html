@@ -1,0 +1,139 @@
+<!--
+Copyright 2020-2024 University of Oxford and NHS England
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm-markdown-text-area">
+  <mat-toolbar *ngIf="inEditMode" class="mdm-markdown-text-area__toolbar">
+    <button *ngIf="!showPreview" mat-button (click)="togglePreview()">
+      <span class="fas fa-eye"></span>
+      Preview
+    </button>
+    <button
+      *ngIf="showPreview"
+      mat-flat-button
+      color="primary"
+      (click)="togglePreview()"
+    >
+      <span class="fas fa-eye"></span>
+      Preview
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Heading"
+      [matTooltip]="keyboardShortcuts['heading']"
+      [disabled]="showPreview"
+      (click)="insertHeading()"
+    >
+      <span class="fas fa-heading"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Bold"
+      [matTooltip]="keyboardShortcuts['bold']"
+      [disabled]="showPreview"
+      (click)="insertBold()"
+    >
+      <span class="fas fa-bold"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Italic"
+      [matTooltip]="keyboardShortcuts['italic']"
+      [disabled]="showPreview"
+      (click)="insertItalic()"
+    >
+      <span class="fas fa-italic"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Quote"
+      [matTooltip]="keyboardShortcuts['quote']"
+      [disabled]="showPreview"
+      (click)="insertQuote()"
+    >
+      <span class="fas fa-quote-right"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Bullet list"
+      [matTooltip]="keyboardShortcuts['bulletList']"
+      [disabled]="showPreview"
+      (click)="insertBulletList()"
+    >
+      <span class="fas fa-list-ul"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Numbered list"
+      [matTooltip]="keyboardShortcuts['numberList']"
+      [disabled]="showPreview"
+      (click)="insertNumberList()"
+    >
+      <span class="fas fa-list-ol"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Link to URL"
+      [matTooltip]="keyboardShortcuts['urlLink']"
+      [disabled]="showPreview"
+      (click)="insertLink()"
+    >
+      <span class="fas fa-link"></span>
+    </button>
+    <button
+      mat-icon-button
+      aria-label="Link to catalogue element"
+      [matTooltip]="keyboardShortcuts['mauroLink']"
+      [disabled]="showPreview"
+      (click)="showAddElementToMarkdown()"
+    >
+      <span class="fas fa-paperclip"></span>
+    </button>
+    <span class="spacer"></span>
+    <a
+      *ngIf="!hideHelpText"
+      mat-icon-button
+      href="https://guides.github.com/features/mastering-markdown/"
+      target="_blank"
+      rel="noopener"
+      matTooltip="Markdown guide"
+      ><span class="fas fa-info-circle"></span
+    ></a>
+  </mat-toolbar>
+  <textarea
+    class="mdm-markdown-text-area__edit form-control outlined-block mb-1"
+    *ngIf="inEditMode && !showPreview"
+    [(ngModel)]="description"
+    (ngModelChange)="onEditorChanged()"
+    (keydown)="onEditorKeyDown($event)"
+    #editableTextArea
+    rows="{{ rows ? rows : '6' }}"
+    placeholder="Start writing..."
+  >
+  </textarea>
+  <div
+    [ngClass]="{
+      'mdm-markdown-text-area__preview': showPreview && inEditMode
+    }"
+    style="clear: both"
+  >
+    <span
+      mdmMarkdown
+      [markdown]="description"
+      *ngIf="(showPreview && inEditMode) || !inEditMode"
+    ></span>
+  </div>
+</div>

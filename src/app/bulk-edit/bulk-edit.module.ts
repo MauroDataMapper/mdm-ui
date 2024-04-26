@@ -31,6 +31,7 @@ import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/tex
 import { FullContentEditDialogComponent } from './bulk-edit-editor/dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { ContentModule } from '@mdm/content/content.module';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -50,7 +51,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     MaterialModule,
     FormsModule,
     SharedModule,
-    AgGridModule
+    AgGridModule,
+    ContentModule
   ],
   exports: [BulkEditEditorComponent, BulkEditContainerComponent]
 })

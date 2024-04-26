@@ -177,6 +177,7 @@ import { ReferenceDataTypeSelectComponent } from '@mdm/wizards/referenceDataType
 import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
+import { ContentModule } from '@mdm/content/content.module';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 
@@ -187,9 +188,9 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
       // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
       useValue: {
         idle: 600,
-        timeout: 300,
-      },
-    },
+        timeout: 300
+      }
+    }
   ],
   declarations: [
     FolderComponent,
@@ -351,6 +352,7 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     BrowserAnimationsModule,
     NgChartsModule,
     CommonModule,
+    ContentModule,
     DragDropModule,
     FoldersTreeModule,
     FormsModule,

@@ -17,8 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <mdm-markdown-text-area
   *ngIf="contentFormat === 'markdown'"
-  [element]="element"
-  [property]="property"
   [inEditMode]="inEditMode"
   [description]="content"
   [hideHelpText]="!markdownOptions.showHelpText"
@@ -28,8 +26,6 @@ SPDX-License-Identifier: Apache-2.0
 
 <mdm-html-editor
   *ngIf="contentFormat === 'html'"
-  [element]="element"
-  [property]="property"
   [inEditMode]="inEditMode"
   [description]="content"
   [buttonMode]="
@@ -42,7 +38,11 @@ SPDX-License-Identifier: Apache-2.0
 </mdm-html-editor>
 
 <div *ngIf="isInEditMode()">
-  <mat-button-toggle-group name="format" aria-label="Format" [(ngModel)]="contentFormat">
+  <mat-button-toggle-group
+    name="format"
+    aria-label="Format"
+    [(ngModel)]="contentFormat"
+  >
     <mat-button-toggle value="markdown">Markdown</mat-button-toggle>
     <mat-button-toggle value="html">HTML</mat-button-toggle>
   </mat-button-toggle-group>

@@ -51,8 +51,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     MaterialModule,
     FormsModule,
     SharedModule,
-    ContentModule,
-    AgGridModule
+    AgGridModule,
+    ContentModule
   ],
   exports: [BulkEditEditorComponent, BulkEditContainerComponent]
 })

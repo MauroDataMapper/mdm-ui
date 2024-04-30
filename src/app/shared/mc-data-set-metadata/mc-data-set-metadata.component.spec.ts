@@ -37,6 +37,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
+import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
 
 describe('McDataSetMetadataComponent', () => {
   let component: McDataSetMetadataComponent;

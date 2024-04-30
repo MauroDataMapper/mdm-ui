@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 $md-preview-background-color: #f9f9f9;
 $md-preview-border-color: #cecece;
+$md-toolbar-font-size: 16px;
 
 .mdm-markdown-text-area {
   textarea {
@@ -32,5 +33,20 @@ $md-preview-border-color: #cecece;
     background-color: $md-preview-background-color;
     border: 1px solid $md-preview-border-color;
     padding: 10px;
+  }
+
+  &__edit,
+  &__preview {
+    width: 100%;
+    min-height: 200px;
+  }
+
+  &__toolbar {
+    font-size: $md-toolbar-font-size;
+    height: auto;
+
+    button {
+      font-size: $md-toolbar-font-size;
+    }
   }
 }

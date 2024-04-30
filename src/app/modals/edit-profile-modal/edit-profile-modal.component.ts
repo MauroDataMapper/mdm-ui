@@ -44,6 +44,7 @@ import {
   EditProfileModalResult
 } from './edit-profile-modal.model';
 import { EditingService } from '@mdm/services/editing.service';
+
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',

@@ -107,7 +107,8 @@ import { JoditAngularModule } from 'jodit-angular';
     ContentModule,
     JoditAngularModule,
     UIRouterModule,
-    ImageCropperModule
+    ImageCropperModule,
+    ContentModule
   ],
   exports: [
     EditableFormButtonsComponent,

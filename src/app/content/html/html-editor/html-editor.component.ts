@@ -26,7 +26,6 @@ import {
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { EventObj } from 'jodit-angular/lib/Events';
@@ -114,7 +113,6 @@ export class HtmlEditorComponent implements OnInit {
   constructor(
     private elementDialogService: ElementSelectorDialogueService,
     private messageService: MessageService,
-    private elementTypesService: ElementTypesService,
     private dialog: MatDialog,
     private pathNames: PathNameService,
     private resources: MdmResourcesService

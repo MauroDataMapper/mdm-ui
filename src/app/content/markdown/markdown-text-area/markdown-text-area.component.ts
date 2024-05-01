@@ -29,14 +29,11 @@ import { MarkdownParserService } from '../markdown-parser/markdown-parser.servic
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  CatalogueItem,
-  Modelable,
-  Navigatable
-} from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Pathable } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { filter, map, Subject, takeUntil } from 'rxjs';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 
 const macShortcuts = {
   bold: 'Bold (⌘ + B)',
@@ -289,8 +286,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.description = el.value;
   }
 
-  private createAndInsertLink(element: Modelable & Navigatable) {
-    const path = this.pathNames.createFromBreadcrumbs(element);
+  private createAndInsertLink(element: MauroItem & Pathable) {
+    const path = element.path ?? this.pathNames.createFromBreadcrumbs(element);
     const link = `[${element.label}](${path})`;
     this.insertText({
       type: 'inline',

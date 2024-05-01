@@ -15,14 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import {
-  CatalogueItem,
-  Modelable,
-  Navigatable,
-  Pathable
-} from '@maurodatamapper/mdm-resources';
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItem, Pathable } from '@maurodatamapper/mdm-resources';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
@@ -31,6 +34,7 @@ import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter } from 'rxjs/operators';
+import { HtmlParserService } from '../html-parser/html-parser.service';
 
 const basicButtons = [
   'bold',
@@ -93,7 +97,8 @@ export enum HtmlButtonMode {
   selector: 'mdm-html-editor',
   templateUrl: './html-editor.component.html'
 })
-export class HtmlEditorComponent implements OnInit {
+export class HtmlEditorComponent implements OnInit, OnChanges {
+  /* Inputs for manual properties */
   @Input() inEditMode: boolean;
   @Input() description: string;
   @Output() descriptionChange = new EventEmitter<string>();
@@ -108,6 +113,8 @@ export class HtmlEditorComponent implements OnInit {
 
   editorConfig: object;
 
+  displayContent = '';
+
   private elementSelectorSubscription: Subscription;
 
   constructor(
@@ -115,7 +122,8 @@ export class HtmlEditorComponent implements OnInit {
     private messageService: MessageService,
     private dialog: MatDialog,
     private pathNames: PathNameService,
-    private resources: MdmResourcesService
+    private resources: MdmResourcesService,
+    private htmlParser: HtmlParserService
   ) {}
 
   get allowAutocompleteSearch() {
@@ -136,6 +144,19 @@ export class HtmlEditorComponent implements OnInit {
       buttonsSM: buttons,
       buttonsXS: buttons
     };
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.description) {
+      if (this.inEditMode) {
+        // Nothing to display because the edit control is being used
+        this.displayContent = '';
+        return;
+      }
+
+      // Intercept the HTML content to render for display only so that certain parts can be altered
+      this.displayContent = this.htmlParser.parseAndModify(this.description);
+    }
   }
 
   onHtmlEditorChanged(event: EventObj) {
@@ -204,12 +225,16 @@ export class HtmlEditorComponent implements OnInit {
     component: HtmlEditorComponent,
     editor: any,
     focusNode: any,
-    element: Modelable & Navigatable
+    element: MauroItem & Pathable
   ) {
-    const path = component.pathNames.createFromBreadcrumbs(element);
-    const href = this.pathNames.createHref(path);
+    const path =
+      element.path ?? component.pathNames.createFromBreadcrumbs(element);
+
+    // The href will be the Mauro item path. This is not a valid URL, but the HtmlParserService will
+    // automatically look for these paths in the content and rewrite them to correct URLs before
+    // rendering for display
     const html = editor.create.fromHTML(
-      `<a href='${href}' title='${element.label}'>${element.label}</a>`
+      `<a href='${path}' title='${element.label}'>${element.label}</a>`
     );
 
     editor.selection.setCursorIn(focusNode);

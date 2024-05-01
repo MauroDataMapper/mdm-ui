@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
+*/
+export const isUrl = (href: string): boolean => {
+  let url: URL;
+  try {
+    url = new URL(href);
+  } catch (_) {
+    return false;
+  }
 
-<jodit-editor
-  *ngIf="inEditMode"
-  [(ngModel)]="description"
-  [config]="editorConfig"
-  (onChange)="onHtmlEditorChanged($event)"
-  (onKeydown)="onHtmlEditorKeydown($event)"
->
-</jodit-editor>
-<div style="clear: both">
-  <span [innerHTML]="displayContent | safe: 'html'" *ngIf="!inEditMode"></span>
-</div>
+  return url.protocol === 'http:' || url.protocol === 'https:';
+};

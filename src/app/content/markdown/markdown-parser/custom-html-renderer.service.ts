@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import * as marked from 'marked';
 
@@ -32,7 +33,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
       return `<a href='#'>${text}</a>`;
     }
 
-    if (this.isUrl(href)) {
+    if (isUrl(href)) {
       // Create external link
       return `<a href='${href}' target="_blank">${text}</a>`;
     }
@@ -55,15 +56,4 @@ export class CustomHtmlRendererService extends marked.Renderer {
   table = (header, body) => {
     return `<table class='table table-bordered'> ${header} ${body}</table>`;
   };
-
-  private isUrl(href: string): boolean {
-    let url: URL;
-    try {
-      url = new URL(href);
-    } catch (_) {
-      return false;
-    }
-
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  }
 }

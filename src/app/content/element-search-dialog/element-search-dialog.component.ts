@@ -22,8 +22,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   CatalogueItem,
   CatalogueItemSearchResponse,
-  CatalogueItemSearchResult
+  CatalogueItemSearchResult,
+  Pathable
 } from '@maurodatamapper/mdm-resources';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EMPTY } from 'rxjs';
 import {
@@ -45,7 +47,7 @@ export interface ElementSearchDialogData {
 }
 
 export interface ElementSearchDialogResponse {
-  selected?: CatalogueItemSearchResult;
+  selected?: MauroItem & Pathable;
 }
 
 @Component({
@@ -120,6 +122,7 @@ export class ElementSearchDialogComponent implements OnInit {
 
   onCatalogueItemSelected(event: MatAutocompleteSelectedEvent) {
     const selected = event.option.value as CatalogueItemSearchResult;
-    this.dialogRef.close({ selected });
+    const item = (selected as unknown) as MauroItem & Pathable;
+    this.dialogRef.close({ selected: item });
   }
 }

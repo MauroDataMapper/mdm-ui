@@ -26,6 +26,15 @@ SPDX-License-Identifier: Apache-2.0
         [matAutocomplete]="auto"
         [formControl]="searchTerm"
       />
+      <mat-hint
+        *ngIf="
+          (!catalogueItems || catalogueItems.length === 0) &&
+          !firstSearch &&
+          !loading
+        "
+        align="end"
+        >No matches found</mat-hint
+      >
       <mat-error *ngIf="error">{{ error }}</mat-error>
     </mat-form-field>
     <mat-progress-spinner

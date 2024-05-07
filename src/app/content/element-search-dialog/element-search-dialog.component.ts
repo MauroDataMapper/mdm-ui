@@ -57,6 +57,7 @@ export class ElementSearchDialogComponent implements OnInit {
   searchTerm = new FormControl();
   minSearchTermLength = defaultMinSearchTermLength;
   loading = false;
+  firstSearch = true;
   error: string;
   catalogueItems: CatalogueItemSearchResult[] = [];
 
@@ -103,6 +104,7 @@ export class ElementSearchDialogComponent implements OnInit {
               }),
               finalize(() => {
                 this.loading = false;
+                this.firstSearch = false;
               })
             );
         })

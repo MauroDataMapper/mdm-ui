@@ -15,32 +15,33 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="items && items.length > 0">
-  <nav aria-label="breadcrumb" class="location-path">
-    <ol>
-      <li>
-        <small>
-          <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
-          <strong>Location: </strong>
-        </small>
-      </li>
-      <li class="breadcrumb-item" *ngFor="let item of items">
-        <small>
-          <a [href]="item.href">
-            <span>{{ item.label }}</span>
-            <span *ngIf="item.branchName" class="model-suffix">
-              <span class="fas fa-code-branch"></span>
-              {{ item.branchName }}</span
-            >
-            <span *ngIf="item.modelVersion" class="model-suffix">
-              <span class="fas fa-file-alt"></span>{{ item.modelVersion }}</span
-            >
-            <span *ngIf="item.modelVersionTag" class="model-suffix">
-              <span class="fas fa-tag"></span>{{ item.modelVersionTag }}</span
-            ></a
+<nav aria-label="breadcrumb" class="location-path">
+  <ol>
+    <li>
+      <small>
+        <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
+        <strong>Location: </strong>
+      </small>
+    </li>
+    <li class="breadcrumb-item" *ngIf="!items || items.length === 0">
+      <small>Locating...</small>
+    </li>
+    <li class="breadcrumb-item" *ngFor="let item of items">
+      <small>
+        <a [href]="item.href">
+          <span>{{ item.label }}</span>
+          <span *ngIf="item.branchName" class="model-suffix">
+            <span class="fas fa-code-branch"></span>
+            {{ item.branchName }}</span
           >
-        </small>
-      </li>
-    </ol>
-  </nav>
-</div>
+          <span *ngIf="item.modelVersion" class="model-suffix">
+            <span class="fas fa-file-alt"></span>{{ item.modelVersion }}</span
+          >
+          <span *ngIf="item.modelVersionTag" class="model-suffix">
+            <span class="fas fa-tag"></span>{{ item.modelVersionTag }}</span
+          ></a
+        >
+      </small>
+    </li>
+  </ol>
+</nav>

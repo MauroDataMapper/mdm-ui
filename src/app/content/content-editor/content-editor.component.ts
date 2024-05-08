@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
 import { HtmlButtonMode } from '../html/html-editor/html-editor.component';
@@ -36,14 +37,14 @@ export interface ContentEditorHtmlOptions {
 export class ContentEditorComponent implements OnInit {
   @Input() contentFormat: ContentEditorFormat = 'markdown';
 
-  /* Inputs/outputs for manual properties */
   @Input() inEditMode: boolean;
   @Input() content: string;
   @Output() contentChange = new EventEmitter<string>();
 
-  // /* Inputs for model binding */
-  // @Input() element: any;
-  // @Input() property: string;
+  /**
+   * Root catalogue element that can be optionally used to assist with autocomplete search.
+   */
+  @Input() rootElement?: CatalogueItem;
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;
   @Input() htmlOptions: ContentEditorHtmlOptions;

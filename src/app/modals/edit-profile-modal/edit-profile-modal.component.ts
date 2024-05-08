@@ -36,6 +36,7 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MessageHandlerService } from '@mdm/services';
+import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
@@ -43,7 +44,7 @@ import {
   EditProfileModalResult
 } from './edit-profile-modal.model';
 import { EditingService } from '@mdm/services/editing.service';
-import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
+
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',

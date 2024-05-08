@@ -28,7 +28,11 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <mdm-alert *ngIf="data.finalised && showCanEditPropertyAlert" alertStyle="info" showIcon="true">
+    <mdm-alert
+      *ngIf="data.finalised && showCanEditPropertyAlert"
+      alertStyle="info"
+      showIcon="true"
+    >
       Only certain fields can be edited on this profile as the catalogue item is
       finalised.
     </mdm-alert>
@@ -59,7 +63,8 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-content-editor
               [(content)]="field.currentValue"
               id="{{ field.fieldName }}"
-              [inEditMode]="!field.readOnly"
+              [inEditMode]="!field.uneditable"
+              [rootElement]="data.catalogueItem"
               *ngIf="field.dataType === 'text'"
             ></mdm-content-editor>
 
@@ -91,7 +96,7 @@ SPDX-License-Identifier: Apache-2.0
                 field.dataType != 'enumeration'
               "
             >
-              <span *ngIf="field.readOnly">{{ field.currentValue }}</span>
+              <span *ngIf="field.uneditable">{{ field.currentValue }}</span>
               <input
                 *ngIf="!field.readOnly"
                 matInput

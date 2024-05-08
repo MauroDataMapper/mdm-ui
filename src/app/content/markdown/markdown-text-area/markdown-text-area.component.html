@@ -102,6 +102,15 @@ SPDX-License-Identifier: Apache-2.0
     >
       <span class="fas fa-paperclip"></span>
     </button>
+    <button
+      *ngIf="allowAutocompleteSearch"
+      mat-icon-button
+      [matTooltip]="keyboardShortcuts['elementSearch']"
+      [disabled]="showPreview"
+      (click)="onElementSearch()"
+    >
+      <span class="fas fa-search"></span>
+    </button>
     <span class="spacer"></span>
     <a
       *ngIf="!hideHelpText"

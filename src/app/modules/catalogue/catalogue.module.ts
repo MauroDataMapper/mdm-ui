@@ -167,7 +167,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 import { ReferenceDataTypeMainComponent } from '@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataTypeStep1Component } from '@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
@@ -502,7 +501,6 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent
   ]

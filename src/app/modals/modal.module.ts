@@ -69,7 +69,6 @@ const defaultAceConfig: AceConfigInterface = {};
     MaterialModule,
     SharedModule,
     AceModule,
-    CatalogueModule,
     PipesModule,
     FoldersTreeModule,
     ContentModule,

@@ -67,7 +67,10 @@ SPDX-License-Identifier: Apache-2.0
         <tr>
           <th class="detailsRowHeader" scope="col">Description</th>
           <td class="elementDetailDescription">
-            <mdm-content-editor [(content)]="dataModel.description">
+            <mdm-content-editor
+              [inEditMode]="false"
+              [(content)]="dataModel.description"
+            >
             </mdm-content-editor>
           </td>
         </tr>

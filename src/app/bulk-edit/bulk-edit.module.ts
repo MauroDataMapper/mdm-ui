@@ -29,9 +29,9 @@ import { BulkEditSelectComponent } from './bulk-edit-select/bulk-edit-select.com
 import { BulkEditEditorGroupComponent } from './bulk-edit-editor-group/bulk-edit-editor-group.component';
 import { TextAreaCellEditorComponent } from './bulk-edit-editor/cell-editors/text-area-cell-editor/text-area-cell-editor.component';
 import { FullContentEditDialogComponent } from './bulk-edit-editor/dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
+import { ContentModule } from '@mdm/content/content.module';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
-import { ContentModule } from '@mdm/content/content.module';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 

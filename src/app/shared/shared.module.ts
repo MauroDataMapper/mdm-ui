@@ -55,9 +55,10 @@ import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { ContentModule } from '@mdm/content/content.module';
 import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
-import { ContentModule } from '@mdm/content/content.module';
+import { JoditAngularModule } from 'jodit-angular';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,8 @@ import { ContentModule } from '@mdm/content/content.module';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
+    ContentModule,
+    JoditAngularModule,
     UIRouterModule,
     ImageCropperModule,
     ContentModule

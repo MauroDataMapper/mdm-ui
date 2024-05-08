@@ -35,6 +35,7 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="item.controlType === profileControlType.html"
             [(content)]="item.value"
             id="{{ item.value }}"
+            [rootElement]="data.parentCatalogueItem"
             [inEditMode]="true"
           ></mdm-content-editor>
           <input

@@ -25,7 +25,6 @@ import * as marked from 'marked';
  */
 @Pipe({ name: 'marked' })
 export class MarkedPipe implements PipeTransform {
-
   transform(value: string, options = {}) {
     if (value) {
       const md = marked.marked.setOptions(options);

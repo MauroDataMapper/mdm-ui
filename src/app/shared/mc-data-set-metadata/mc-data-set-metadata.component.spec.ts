@@ -34,9 +34,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
 
 describe('McDataSetMetadataComponent', () => {
   let component: McDataSetMetadataComponent;

@@ -20,6 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   [inEditMode]="inEditMode"
   [description]="content"
   [hideHelpText]="!markdownOptions.showHelpText"
+  [rootElement]="rootElement"
   (descriptionChange)="onEditorDescriptionChanged($event)"
 >
 </mdm-markdown-text-area>
@@ -28,6 +29,7 @@ SPDX-License-Identifier: Apache-2.0
   *ngIf="contentFormat === 'html'"
   [inEditMode]="inEditMode"
   [description]="content"
+  [rootElement]="rootElement"
   [buttonMode]="
     htmlOptions.useBasicButtons
       ? ButtonModeTypes.Basic

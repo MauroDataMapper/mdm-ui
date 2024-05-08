@@ -25,6 +25,7 @@ import { HtmlEditorComponent } from './html/html-editor/html-editor.component';
 import { ContentEditorComponent } from './content-editor/content-editor.component';
 import { JoditAngularModule } from 'jodit-angular';
 import { SafePipe } from './safe.pipe';
+import { ElementSearchDialogComponent } from './element-search-dialog/element-search-dialog.component';
 import { MarkedPipe } from './markdown/marked.pipe';
 
 const components = [
@@ -33,6 +34,7 @@ const components = [
   HtmlEditorComponent,
   ContentEditorComponent,
   SafePipe,
+  ElementSearchDialogComponent,
   MarkedPipe
 ];
 

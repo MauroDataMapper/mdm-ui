@@ -25,31 +25,43 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core';
+import { MarkdownParserService } from '../markdown-parser/markdown-parser.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  CatalogueItem,
+  Modelable,
+  Navigatable
+} from '@maurodatamapper/mdm-resources';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { filter, map, Subject, takeUntil } from 'rxjs';
-import { MarkdownParserService } from '../markdown-parser/markdown-parser.service';
 
 const macShortcuts = {
   bold: 'Bold (⌘ + B)',
   italic: 'Italic (⌘ + I)',
   heading: 'Heading (⌘ + H)',
-  quote: 'Quote (⌘ + \')',
+  // eslint-disable-next-line @typescript-eslint/quotes
+  quote: "Quote (⌘ + ')",
   numberList: 'Numbered list (⌘ + Shift + L)',
   bulletList: 'Bullet list (⌘ + L)',
   urlLink: 'Link to URL (⌘ + K)',
-  mauroLink: 'Link to catalogue element (⌘ + Shift + K)'
+  mauroLink: 'Link to catalogue element (⌘ + Shift + K)',
+  elementSearch: 'Search for element (⌘ + Space)'
 };
 
 const standardShortcuts = {
   bold: 'Bold (Ctrl + B)',
   italic: 'Italic (Ctrl + I)',
   heading: 'Heading (Ctrl + H)',
-  quote: 'Quote (Ctrl + \')',
+  // eslint-disable-next-line @typescript-eslint/quotes
+  quote: "Quote (Ctrl + ')",
   numberList: 'Numbered list (Ctrl + Shift + L)',
   bulletList: 'Bullet list (Ctrl + L)',
   urlLink: 'Link to URL (Ctrl + K)',
-  mauroLink: 'Link to catalogue element (Ctrl + Shift + K)'
+  mauroLink: 'Link to catalogue element (Ctrl + Shift + K)',
+  elementSearch: 'Search for element (Ctrl + Space)'
 };
 
 @Component({
@@ -67,19 +79,38 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   @Input() description: string;
   @Output() descriptionChange = new EventEmitter<string>();
 
+  /**
+   * Root catalogue element that can be optionally used to assist with autocomplete search.
+   */
+  @Input() rootElement?: CatalogueItem;
+
   @Input() showPreview = false;
 
-  private unsubscribe$ = new Subject<void>();
+  selectedElement: any;
 
   keyboardShortcuts = standardShortcuts;
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private markdownParser: MarkdownParserService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    private pathNames: PathNameService,
+    private resources: MdmResourcesService
   ) {}
 
+  get allowAutocompleteSearch() {
+    return (
+      this.rootElement &&
+      this.resources.getSearchableResource(this.rootElement.domainType)
+    );
+  }
+
   ngOnInit() {
+    this.elementSelected();
+
     if (this.inEditMode) {
       const usingMacOs = window.navigator.userAgent.search('Mac') !== -1;
       this.keyboardShortcuts = usingMacOs ? macShortcuts : standardShortcuts;
@@ -131,6 +162,12 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
       action = this.showAddElementToMarkdown.bind(this);
     } else if (usingModifier && event.code === 'KeyK') {
       action = this.insertLink.bind(this);
+    } else if (
+      usingModifier &&
+      event.code === 'Space' &&
+      this.allowAutocompleteSearch
+    ) {
+      action = this.onElementSearch.bind(this);
     }
 
     if (action) {
@@ -152,6 +189,29 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   public showAddElementToMarkdown() {
     this.elementDialogueService.open([], []);
+  }
+
+  public elementSelected() {
+    this.messageService.elementSelector.subscribe((data) => {
+      this.selectedElement = data;
+      if (this.selectedElement != null) {
+        this.createAndInsertLink(this.selectedElement);
+      }
+    });
+  }
+
+  onElementSearch() {
+    if (!this.allowAutocompleteSearch) {
+      return;
+    }
+
+    this.dialog
+      .openElementSearch(this.rootElement)
+      .afterClosed()
+      .pipe(filter((response) => !!response?.selected))
+      .subscribe((response) => {
+        this.createAndInsertLink(response.selected);
+      });
   }
 
   insertBold() {
@@ -227,5 +287,14 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
     // Update binding
     this.description = el.value;
+  }
+
+  private createAndInsertLink(element: Modelable & Navigatable) {
+    const path = this.pathNames.createFromBreadcrumbs(element);
+    const link = `[${element.label}](${path})`;
+    this.insertText({
+      type: 'inline',
+      replacement: link
+    });
   }
 }

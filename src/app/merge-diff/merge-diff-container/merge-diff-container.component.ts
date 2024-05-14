@@ -27,20 +27,23 @@ import {
   MergeDiffType,
   MergableMultiFacetAwareDomainType,
   MergableCatalogueItem,
-  MainBranchResponse
-} from '@maurodatamapper/mdm-resources';
+  MainBranchResponse,
+  BasicModelVersionTreeResponse,
+  BasicModelVersionItem} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
+  ElementTypesService,
   MessageHandlerService,
   StateHandlerService
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY, of } from 'rxjs';
-import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
 import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -67,6 +70,8 @@ export class MergeDiffContainerComponent implements OnInit {
   activeTab: number;
 
   constructor(
+    private elementTypes: ElementTypesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private mergeDiff: MergeDiffAdapterService,
@@ -91,17 +96,20 @@ export class MergeDiffContainerComponent implements OnInit {
         switchMap(response => {
           this.source = response.body;
           if (!targetId) {
-            return this.mergeDiff.getMainBranch(this.domainType, this.source.id);
-          }
-
-          return of(targetId);
-        }),
+            return this.mergeDiff.getMainBranch(this.domainType, this.source.id).pipe(
+              map(mainResponse => {
+                if (sourceId !== mainResponse.body.id){
+                  return mainResponse.body.id;
+                }
+                 return this.getOtherBranches().find((branch) => branch.id !== sourceId).id;
+            }));
+        }}),
         catchError(error => {
           this.messageHandler.showError('There was a problem finding the main branch.', error);
           return EMPTY;
         }),
-        switchMap((response: MainBranchResponse | Uuid) => {
-          const actualTargetId: Uuid = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
+        switchMap((id: Uuid) => {
+          const actualTargetId: Uuid = targetId ? targetId : id;
           return this.loadTarget(actualTargetId);
         }),
         finalize(() => this.loaded = true)
@@ -317,6 +325,26 @@ export class MergeDiffContainerComponent implements OnInit {
           return EMPTY;
         }),
         finalize(() => this.targetLoaded = true)
+      );
+  }
+
+  private getOtherBranches(): BasicModelVersionItem[] {
+    const domainElementType = this.elementTypes.getBaseTypeForDomainType(
+      this.source.domainType
+    );
+    return this.resources[domainElementType.resourceName]
+      .simpleModelVersionTree(this.source.id, { branchesOnly: true })
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem fetching the branch list.',
+            error
+          );
+          return EMPTY;
+        }),
+        map((response: BasicModelVersionTreeResponse) => {
+          return response.body.sort((a, b) => a.displayName.localeCompare(b.displayName));
+        })
       );
   }
 }

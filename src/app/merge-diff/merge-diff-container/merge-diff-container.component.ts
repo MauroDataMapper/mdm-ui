@@ -27,9 +27,7 @@ import {
   MergeDiffType,
   MergableMultiFacetAwareDomainType,
   MergableCatalogueItem,
-  MainBranchResponse,
-  BasicModelVersionTreeResponse,
-  BasicModelVersionItem} from '@maurodatamapper/mdm-resources';
+  BasicModelVersionTreeResponse} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
@@ -39,7 +37,7 @@ import {
   StateHandlerService
 } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
 import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
@@ -101,7 +99,15 @@ export class MergeDiffContainerComponent implements OnInit {
                 if (sourceId !== mainResponse.body.id){
                   return mainResponse.body.id;
                 }
-                 return this.getOtherBranches().find((branch) => branch.id !== sourceId).id;
+                // returns the first branch id that is not the source branch
+                 const otherBranches = this.getOtherBranches();
+                 return otherBranches.subscribe((branches) => {
+                    branches.find((branch) => {
+                      if (branch.id !== sourceId) {
+                        return branch.id;
+                      }
+                    });
+                  });
             }));
         }}),
         catchError(error => {
@@ -328,7 +334,7 @@ export class MergeDiffContainerComponent implements OnInit {
       );
   }
 
-  private getOtherBranches(): BasicModelVersionItem[] {
+  private getOtherBranches() {
     const domainElementType = this.elementTypes.getBaseTypeForDomainType(
       this.source.domainType
     );
@@ -343,7 +349,7 @@ export class MergeDiffContainerComponent implements OnInit {
           return EMPTY;
         }),
         map((response: BasicModelVersionTreeResponse) => {
-          return response.body.sort((a, b) => a.displayName.localeCompare(b.displayName));
+          return  response.body.sort((a, b) => a.displayName.localeCompare(b.displayName));
         })
       );
   }

@@ -76,15 +76,15 @@ SPDX-License-Identifier: Apache-2.0
             >
           </small>
         </div>
-        <div *ngIf="targetLoaded" class="text-muted">
+        <div class="text-muted">
           <small>
-            <span class="fas fa-file-import" matTooltip="{{target.branchName}}"></span>
+            <span class="fas fa-file-import" matTooltip="{{target?.branchName}}"></span>
             <span><strong>Target Branch : </strong></span>
             <span>
-              <mdm-branch-selector
-                [disabled]="this.committingList.length > 0"
+              <mdm-branch-selector                
                 [forMerge]="true"
-                [catalogueItem]="target"
+                [sourceCatalogueItem]="source"
+                [targetCatalogueItem]="target"
                 (selectedCatalogueItemChanged)="setTarget($event)"
               ></mdm-branch-selector>
             </span>

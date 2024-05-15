@@ -38,7 +38,8 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./branch-selector.component.scss']
 })
 export class BranchSelectorComponent implements OnInit {
-  @Input() catalogueItem: CatalogueItem;
+  @Input() sourceCatalogueItem: CatalogueItem;
+  @Input() targetCatalogueItem?: CatalogueItem;
   @Input() forMerge: boolean;
   @Input() disabled: boolean;
   @Output() selectedCatalogueItemChanged = new EventEmitter<Uuid>();
@@ -56,15 +57,15 @@ export class BranchSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentVersionId = this.catalogueItem.id;
+    this.currentVersionId = this.targetCatalogueItem?.id;
     this.disabled = this.disabled ?? false;
 
     const domainElementType = this.elementTypes.getBaseTypeForDomainType(
-      this.catalogueItem.domainType
+      this.sourceCatalogueItem.domainType
     );
 
     this.resources[domainElementType.resourceName]
-      .simpleModelVersionTree(this.catalogueItem.id,{branchesOnly : this.forMerge})
+      .simpleModelVersionTree(this.sourceCatalogueItem.id,{branchesOnly : this.forMerge})
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -89,7 +90,7 @@ export class BranchSelectorComponent implements OnInit {
       this.selectedCatalogueItemChanged.emit(this.currentVersionId);
     } else {
       this.stateHandler.Go(
-        this.catalogueItem.domainType,
+        this.sourceCatalogueItem.domainType,
         {
           id: this.currentVersionId
         },
@@ -102,7 +103,11 @@ export class BranchSelectorComponent implements OnInit {
   }
 
   setBranches() {
-    this.branches = this.versionList.filter(x => x.modelVersion === null);
+    this.branches = this.versionList
+      .filter((x) => x.modelVersion === null)
+      .filter((x) =>
+        this.forMerge ? x.id !== this.sourceCatalogueItem.id : true
+      );
   }
 
   setFinalisedVersions() {

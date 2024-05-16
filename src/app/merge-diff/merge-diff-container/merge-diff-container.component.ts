@@ -79,11 +79,9 @@ export class MergeDiffContainerComponent implements OnInit {
 
     ngOnInit(): void {
       this.title.setTitle('Merge Changes');
-  
       const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
       const targetId: Uuid = this.uiRouterGlobals.params.targetId;
       this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-  
       this.mergeDiff
         .getCatalogueItemDetails(this.domainType, sourceId)
         .pipe(
@@ -102,7 +100,6 @@ export class MergeDiffContainerComponent implements OnInit {
                 this.source.id
               );
             }
-  
             return of(targetId);
           }),
           catchError((error) => {
@@ -118,7 +115,6 @@ export class MergeDiffContainerComponent implements OnInit {
             if (possibleMainBranchId && possibleMainBranchId === sourceId) {
               return of(null);
             }
-  
             const actualTargetId: Uuid =
               (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
             return this.loadTarget(actualTargetId);
@@ -132,55 +128,6 @@ export class MergeDiffContainerComponent implements OnInit {
           }
         });
     }
-
-    // Ollie - original
-  // ngOnInit(): void {
-  //   this.title.setTitle('Merge Changes');
-
-  //   const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
-  //   const targetId: Uuid = this.uiRouterGlobals.params.targetId;
-  //   this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-
-  //   this.mergeDiff
-  //     .getCatalogueItemDetails(this.domainType, sourceId)
-  //     .pipe(
-  //       catchError(error => {
-  //         this.messageHandler.showError('There was a problem loading the source item.', error);
-  //         return EMPTY;
-  //       }),
-  //       switchMap(response => {
-  //         this.source = response.body;
-  //         if (!targetId) {
-  //           // when source != main branch get main and check
-  //           // when source == main
-
-  //           return this.mergeDiff.getMainBranch(this.domainType, this.source.id).pipe(
-  //             map(mainResponse => {
-  //               if (sourceId !== mainResponse.body.id){
-  //                 return mainResponse.body.id;
-  //               }
-  //               // returns the first branch id that is not the source branch
-  //                const otherBranches = this.getOtherBranches();
-  //                return otherBranches.pipe(map (branches => {
-  //                   return branches.find(branch => branch.id !== sourceId).id;
-  //                 }));
-  //           }));
-  //       }}),
-  //       catchError(error => {
-  //         this.messageHandler.showError('There was a problem finding the main branch.', error);
-  //         return EMPTY;
-  //       }),
-  //       switchMap((id: Uuid) => {
-  //         const actualTargetId: Uuid = targetId ? targetId : id;
-  //         return this.loadTarget(actualTargetId);
-  //       }),
-  //       finalize(() => this.loaded = true)
-  //     )
-  //     .subscribe(response => {
-  //       this.target = response.body;
-  //       this.runDiff();
-  //     });
-  // }
 
   setTarget(id: Uuid) {
     this.loadTarget(id)
@@ -390,23 +337,4 @@ export class MergeDiffContainerComponent implements OnInit {
       );
   }
 
-  // private getOtherBranches() : Observable<BasicModelVersionItem[]> {
-  //   const domainElementType = this.elementTypes.getBaseTypeForDomainType(
-  //     this.source.domainType
-  //   );
-  //   return this.resources[domainElementType.resourceName]
-  //     .simpleModelVersionTree(this.source.id, { branchesOnly: true })
-  //     .pipe(
-  //       catchError((error) => {
-  //         this.messageHandler.showError(
-  //           'There was a problem fetching the branch list.',
-  //           error
-  //         );
-  //         return EMPTY;
-  //       }),
-  //       map((response: BasicModelVersionTreeResponse) => {
-  //         return response.body.sort((a, b) => a.displayName.localeCompare(b.displayName));
-  //       })
-  //     );
-  // }
 }

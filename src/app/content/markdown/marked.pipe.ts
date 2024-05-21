@@ -15,23 +15,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { SafePipe } from '@mdm/content/safe.pipe';
-import {
-  ComponentHarness,
-  setupTestModuleForComponent
-} from '@mdm/testing/testing.helpers';
-import { StringConflictEditorComponent } from './string-conflict-editor.component';
+import { Pipe, PipeTransform } from '@angular/core';
+import * as marked from 'marked';
 
-describe('StringConflictEditorComponent', () => {
-  let harness: ComponentHarness<StringConflictEditorComponent>;
-
-  beforeEach(async () => {
-    harness = await setupTestModuleForComponent(StringConflictEditorComponent, {
-      declarations: [SafePipe]
-    });
-  });
-
-  it('should create', () => {
-    expect(harness?.isComponentCreated).toBeTruthy();
-  });
-});
+/**
+ * A utility to do simple markdown parsing.
+ *
+ * Usage: <span [innerHTML]="value | marked:<options>"></span>
+ */
+@Pipe({ name: 'marked' })
+export class MarkedPipe implements PipeTransform {
+  transform(value: string, options = {}) {
+    if (value) {
+      const md = marked.marked.setOptions(options);
+      return md.parse(value);
+    }
+    return value;
+  }
+}

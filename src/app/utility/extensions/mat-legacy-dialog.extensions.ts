@@ -29,6 +29,11 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
+  ElementSearchDialogComponent,
+  ElementSearchDialogData,
+  ElementSearchDialogResponse
+} from '@mdm/content/element-search-dialog/element-search-dialog.component';
+import {
   ChangeBranchNameModalComponent,
   ChangeBranchNameModalData,
   ChangeBranchNameModalResult
@@ -174,6 +179,11 @@ declare module '@angular/material/dialog' {
     openExportModel(
       data: ExportModelDialogOptions
     ): Observable<ExportModelDialogResponse>;
+
+    openElementSearch(
+      root: CatalogueItem,
+      searchTerm?: string
+    ): MatDialogRef<ElementSearchDialogComponent, ElementSearchDialogResponse>;
   }
 }
 
@@ -302,4 +312,23 @@ MatDialog.prototype.openExportModel = function (
   })
     .afterClosed()
     .pipe(filter((response) => response.status === ModalDialogStatus.Ok));
+};
+
+MatDialog.prototype.openElementSearch = function (
+  this: MatDialog,
+  root: CatalogueItem,
+  searchTerm?: string
+): MatDialogRef<ElementSearchDialogComponent, ElementSearchDialogResponse> {
+  return this.open<
+    ElementSearchDialogComponent,
+    ElementSearchDialogData,
+    ElementSearchDialogResponse
+  >(ElementSearchDialogComponent, {
+    data: {
+      root,
+      searchTerm
+    },
+    minWidth: 600,
+    autoFocus: true
+  });
 };

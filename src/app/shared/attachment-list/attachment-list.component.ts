@@ -22,7 +22,8 @@ import {
   ViewChildren,
   ViewChild,
   ElementRef,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -40,7 +41,9 @@ import {
   ReferenceFile,
   ReferenceFileCreatePayload,
   ReferenceFileIndexResponse,
-  Securable
+  Securable,
+  ApiProperty,
+  ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -76,12 +79,16 @@ export class AttachmentListComponent implements AfterViewInit {
     EditableRecord<ReferenceFile, ReferenceFileEditor>
   >();
   apiEndpoint: string;
+  attachmentFileSizeLimit = 0;
+
+  private readonly attachmentFileSizeLimitKey = 'feature.attachment_size_limit_mb';
 
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private sharedService: SharedService,
     private editingService: EditingService,
+    private changeRef: ChangeDetectorRef,
     private gridService: GridService,
     private dialog: MatDialog
   ) {}
@@ -90,6 +97,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.apiEndpoint = this.sharedService.backendURL;
 
     this.canEdit = this.parent.availableActions.includes('update');
+    this.changeRef.detectChanges();
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.dataSource.sort = this.sort;
@@ -136,6 +144,18 @@ export class AttachmentListComponent implements AfterViewInit {
         );
 
         this.dataSource.data = this.records;
+      });
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadAttachmentFileSizeLimit(response.body.items);
       });
   }
 
@@ -269,6 +289,11 @@ export class AttachmentListComponent implements AfterViewInit {
         fileContents: Array.from(fileBytes)
       };
 
+      if (this.attachmentFileSizeLimit > 0 && +file.size/1000000 > this.attachmentFileSizeLimit) {
+        this.messageHandler.showError(`There was a problem saving the attachment. Files cannot be larger than ${this.attachmentFileSizeLimit}mb.`);
+        return EMPTY;
+      }
+
       this.resources.catalogueItem
         .saveReferenceFiles(this.domainType, this.parent.id, data)
         .pipe(
@@ -289,5 +314,13 @@ export class AttachmentListComponent implements AfterViewInit {
           this.filterEvent.emit();
         });
     };
+  }
+
+  private loadAttachmentFileSizeLimit(properties: ApiProperty[]) {
+    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey)??'0');
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
   }
 }

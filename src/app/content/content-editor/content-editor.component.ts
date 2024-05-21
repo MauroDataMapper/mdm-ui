@@ -15,10 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
-import { HtmlButtonMode } from '../html-editor/html-editor.component';
+import { HtmlButtonMode } from '../html/html-editor/html-editor.component';
 
 export interface ContentEditorMarkdownOptions {
   showHelpText: boolean;
@@ -34,42 +35,41 @@ export interface ContentEditorHtmlOptions {
   styleUrls: ['./content-editor.component.scss']
 })
 export class ContentEditorComponent implements OnInit {
-
   @Input() contentFormat: ContentEditorFormat = 'markdown';
 
-  /* Inputs/outputs for manual properties */
   @Input() inEditMode: boolean;
   @Input() content: string;
   @Output() contentChange = new EventEmitter<string>();
 
-  /* Inputs for model binding */
-  @Input() element: any;
-  @Input() property: string;
+  /**
+   * Root catalogue element that can be optionally used to assist with autocomplete search.
+   */
+  @Input() rootElement?: CatalogueItem;
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;
   @Input() htmlOptions: ContentEditorHtmlOptions;
 
   ButtonModeTypes = HtmlButtonMode;
 
-  constructor(private userSettings: UserSettingsHandlerService) { }
+  constructor(private userSettings: UserSettingsHandlerService) {}
 
   ngOnInit(): void {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
     this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
 
-    const formatPreference = this.userSettings.get<ContentEditorFormat>('editorFormat')
-      ?? this.userSettings.defaultSettings.editorFormat;
+    const formatPreference =
+      this.userSettings.get<ContentEditorFormat>('editorFormat') ??
+      this.userSettings.defaultSettings.editorFormat;
 
-    if(this.isEmptyContent()) {
+    if (this.isEmptyContent()) {
       this.contentFormat = formatPreference;
     } else {
       this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
-
   }
 
-  isInEditMode() : boolean {
-      return this.inEditMode;
+  isInEditMode(): boolean {
+    return this.inEditMode;
   }
 
   onEditorDescriptionChanged(value: string) {
@@ -81,14 +81,12 @@ export class ContentEditorComponent implements OnInit {
     return !this.content;
   }
 
-
   isHtmlContent() {
-
     if (!this.content) {
       return false;
     }
 
-    const expression = /<([A-Z][A-Z0-9]*)\b[^>]*>(.*?)<\/\1>/gmi;
+    const expression = /<([A-Z][A-Z0-9]*)\b[^>]*>(.*?)<\/\1>/gim;
     return expression.test(this.content);
   }
 }

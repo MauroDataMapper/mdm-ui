@@ -17,11 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import * as marked from 'marked';
-import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
-import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
-import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { Pathable } from '@maurodatamapper/mdm-resources';
+import { CustomTokenizerService } from './custom-tokenizer.service';
+import { CustomHtmlRendererService } from './custom-html-renderer.service';
+import { CustomTextRendererService } from './custom-text-renderer.service';
 
 @Injectable({
   providedIn: 'root'

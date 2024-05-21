@@ -203,6 +203,7 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-content-editor
               [(content)]="record.edit.value"
               [inEditMode]="true"
+              [rootElement]="parent"
               [markdownOptions]="{ showHelpText: false }"
               [htmlOptions]="{ useBasicButtons: true }"
             >
@@ -248,7 +249,6 @@ SPDX-License-Identifier: Apache-2.0
   <p *ngIf="!hideFilters" class="marginless">
     This might be due to the current filter settings.
   </p>
-
 </div>
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--table-fixed mdm--skeleton-table">
@@ -271,6 +271,7 @@ SPDX-License-Identifier: Apache-2.0
           [theme]="{ 'background-color': '#b7bbc5', width: '25%' }"
         ></ngx-skeleton-loader>
       </th>
+      <th></th>
     </tr>
     <tr>
       <td>

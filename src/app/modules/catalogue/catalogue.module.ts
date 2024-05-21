@@ -167,7 +167,6 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
 import { ReferenceDataTypeMainComponent } from '@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
 import { ReferenceDataTypeStep1Component } from '@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
@@ -177,6 +176,7 @@ import { ReferenceDataTypeSelectComponent } from '@mdm/wizards/referenceDataType
 import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
+import { ContentModule } from '@mdm/content/content.module';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 
@@ -187,9 +187,9 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
       // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
       useValue: {
         idle: 600,
-        timeout: 300,
-      },
-    },
+        timeout: 300
+      }
+    }
   ],
   declarations: [
     FolderComponent,
@@ -351,6 +351,7 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     BrowserAnimationsModule,
     NgChartsModule,
     CommonModule,
+    ContentModule,
     DragDropModule,
     FoldersTreeModule,
     FormsModule,
@@ -500,7 +501,6 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     NewerVersionsComponent,
     TerminologyMainComponent,
     SkeletonBadgeComponent,
-    MoreDescriptionComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent
   ]

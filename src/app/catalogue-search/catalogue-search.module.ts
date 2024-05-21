@@ -27,6 +27,7 @@ import { CatalogueSearchAdvancedFormComponent } from './catalogue-search-advance
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { CatalogueItemSearchComponent } from './catalogue-item-search/catalogue-item-search.component';
+import { ContentModule } from '@mdm/content/content.module';
 import { CatalogueSearchProfileFilterListComponent } from './catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 import { ProfileFilterCardComponent } from './profile-filter-card/profile-filter-card.component';
 import { ProfileFiltersComponent } from './profile-filters/profile-filters.component';
@@ -48,10 +49,10 @@ import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/
   ],
   imports: [
     CommonModule,
-    FoldersTreeModule,
     SharedModule,
     MaterialModule,
-    FoldersTreeModule
+    FoldersTreeModule,
+    ContentModule
   ],
   exports: [CatalogueItemSearchComponent]
 })

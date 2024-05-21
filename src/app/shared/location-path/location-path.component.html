@@ -23,8 +23,14 @@ SPDX-License-Identifier: Apache-2.0
         <strong>Location: </strong>
       </small>
     </li>
-    <li class="breadcrumb-item" *ngIf="!items || items.length === 0">
+    <li class="breadcrumb-item" *ngIf="loading">
       <small>Locating...</small>
+    </li>
+    <li
+      class="breadcrumb-item"
+      *ngIf="!loading && (!items || items.length === 0)"
+    >
+      <small>Root item</small>
     </li>
     <li class="breadcrumb-item" *ngFor="let item of items">
       <small>

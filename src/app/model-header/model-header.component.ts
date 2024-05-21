@@ -222,7 +222,10 @@ export class ModelHeaderComponent implements OnInit {
           })
         )
         .subscribe((ancestorTreeItems) => {
-          this.ancestorTreeItems = ancestorTreeItems;
+          // Exclude the item being shown (not relevant to display twice)
+          this.ancestorTreeItems = ancestorTreeItems.filter(
+            (treeItem) => treeItem.id !== this.item.id
+          );
           console.log(this.ancestorTreeItems);
         });
     }

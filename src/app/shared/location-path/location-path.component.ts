@@ -15,7 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '../path-name/path-name.service';
 
@@ -32,12 +38,17 @@ interface LocationPathItem {
   templateUrl: './location-path.component.html',
   styleUrls: ['./location-path.component.scss']
 })
-export class LocationPathComponent implements OnChanges {
+export class LocationPathComponent implements OnInit, OnChanges {
   @Input() ancestorTreeItems: MdmTreeItem[] = [];
 
   items: LocationPathItem[] = [];
+  loading = true;
 
   constructor(private pathName: PathNameService) {}
+
+  ngOnInit(): void {
+    this.loading = !this.items || this.items.length === 0;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.ancestorTreeItems) {
@@ -51,6 +62,8 @@ export class LocationPathComponent implements OnChanges {
             modelVersionTag: ancestor.modelVersionTag
           };
         }) ?? [];
+
+      this.loading = false;
     }
   }
 }

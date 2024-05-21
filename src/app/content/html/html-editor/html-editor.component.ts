@@ -31,7 +31,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
-import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter } from 'rxjs/operators';
 import { HtmlParserService } from '../html-parser/html-parser.service';
@@ -159,17 +158,16 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  onHtmlEditorChanged(event: EventObj) {
-    this.description = event.editor.value;
+  onHtmlEditorChanged(newValue: string) {
+    this.description = newValue;
     this.descriptionChange.emit(this.description);
   }
 
-  onHtmlEditorKeydown(event: EventObj) {
-    const keyEvent = event.args[0] as KeyboardEvent;
+  onHtmlEditorKeydown(event: KeyboardEvent) {
 
-    if (this.rootElement && keyEvent.ctrlKey && keyEvent.code === 'Space') {
-      keyEvent.stopPropagation();
-      this.onElementSearch(this, event.editor);
+    if (this.rootElement && event.ctrlKey && event.code === 'Space') {
+      event.stopPropagation();
+      this.onElementSearch(this, event.target);
     }
   }
 

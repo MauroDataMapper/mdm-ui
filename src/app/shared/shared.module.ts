@@ -112,7 +112,6 @@ import { NgxJoditComponent } from 'ngx-jodit';
     NgxSkeletonLoaderModule,
     CodemirrorModule,
     ContentModule,
-    JoditAngularModule,
     UIRouterModule,
     ImageCropperModule,
     NgxJoditComponent,

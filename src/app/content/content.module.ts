@@ -23,10 +23,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownDirective } from './markdown/markdown.directive';
 import { HtmlEditorComponent } from './html/html-editor/html-editor.component';
 import { ContentEditorComponent } from './content-editor/content-editor.component';
-import { JoditAngularModule } from 'jodit-angular';
 import { SafePipe } from './safe.pipe';
 import { ElementSearchDialogComponent } from './element-search-dialog/element-search-dialog.component';
 import { MarkedPipe } from './markdown/marked.pipe';
+import { NgxJoditComponent } from 'ngx-jodit';
 
 const components = [
   MarkdownTextAreaComponent,
@@ -45,7 +45,7 @@ const components = [
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    JoditAngularModule
+    NgxJoditComponent
   ],
   exports: components
 })

@@ -58,6 +58,7 @@ import { ElementLabelComponent } from './element-label/element-label.component';
 import { ContentModule } from '@mdm/content/content.module';
 import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { LocationPathComponent } from './location-path/location-path.component';
 import { JoditAngularModule } from 'jodit-angular';
 
 @NgModule({
@@ -91,7 +92,8 @@ import { JoditAngularModule } from 'jodit-angular';
     FileSizePipe,
     MauroItemTreeComponent,
     ElementLabelComponent,
-    ImgCroppieComponent
+    ImgCroppieComponent,
+    LocationPathComponent
   ],
   imports: [
     CommonModule,
@@ -150,7 +152,8 @@ import { JoditAngularModule } from 'jodit-angular';
     FileSizePipe,
     MauroItemTreeComponent,
     ElementLabelComponent,
-    ImgCroppieComponent
+    ImgCroppieComponent,
+    LocationPathComponent
   ]
 })
 export class SharedModule {}

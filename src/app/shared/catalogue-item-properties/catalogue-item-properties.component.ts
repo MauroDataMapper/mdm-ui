@@ -16,16 +16,26 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Branchable, CatalogueItem, CatalogueItemDomainType, DataModelDetail, Finalisable, Historical, ModelableDetail, SecurableModel, Versionable } from '@maurodatamapper/mdm-resources';
+import {
+  Branchable,
+  CatalogueItem,
+  CatalogueItemDomainType,
+  DataModelDetail,
+  Finalisable,
+  Historical,
+  MdmTreeItem,
+  ModelableDetail,
+  SecurableModel,
+  Versionable
+} from '@maurodatamapper/mdm-resources';
 
-export type CatalogueItemPropertiesType =
-  CatalogueItem
-  & Partial<ModelableDetail>
-  & Partial<SecurableModel>
-  & Partial<Finalisable>
-  & Partial<Versionable>
-  & Partial<Branchable>
-  & Partial<Historical>;
+export type CatalogueItemPropertiesType = CatalogueItem &
+  Partial<ModelableDetail> &
+  Partial<SecurableModel> &
+  Partial<Finalisable> &
+  Partial<Versionable> &
+  Partial<Branchable> &
+  Partial<Historical>;
 
 @Component({
   selector: 'mdm-catalogue-item-properties',
@@ -34,10 +44,11 @@ export type CatalogueItemPropertiesType =
 })
 export class CatalogueItemPropertiesComponent implements OnChanges {
   @Input() item: CatalogueItemPropertiesType;
+  @Input() ancestorTreeItems: MdmTreeItem[] = [];
 
   itemType: string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.item) {
@@ -64,5 +75,4 @@ export class CatalogueItemPropertiesComponent implements OnChanges {
         break;
     }
   }
-
 }

@@ -90,7 +90,7 @@ pipeline {
       post {
         always {
           junit allowEmptyResults: true, testResults: 'test-report/junit.xml'
-          publishCoverage adapters: [istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')], sourceFileResolver: sourceFiles('NEVER_STORE')
+          recordCoverage sourceCodeRetention: 'NEVER', tools: [[parser: 'COBERTURA', pattern: 'coverage/cobertura-coverage.xml']]
           publishHTML([
             allowMissing         : true,
             alwaysLinkToLastBuild: true,

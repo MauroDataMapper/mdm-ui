@@ -25,11 +25,15 @@ import {
   FolderDetailResponse,
   MdmTreeItem,
   MdmTreeItemListResponse,
+  MdmTreeItemResponse,
   Modelable,
   SubscribedCatalogue,
   SubscribedCatalogueIndexResponse,
   Uuid,
-  VersionedFolderDetailResponse
+  VersionedFolderDetailResponse,
+  catalogueItemDomainTypeToContainerDomainType,
+  catalogueItemToMultiFacetAware,
+  isContainerDomainType
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FlatNode } from '@mdm/folders-tree/flat-node';
@@ -52,6 +56,7 @@ import { SecurityHandlerService } from './handlers/security-handler.service';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
 import { UserSettingsHandlerService } from './utility/user-settings-handler.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 
 @Injectable({
   providedIn: 'root'
@@ -370,11 +375,32 @@ export class ModelTreeService implements OnDestroy {
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message:
-              '<strong>Note: </strong> This item and all its contents will be deleted <span class=\'warning\'>permanently</span>.'
+              '<strong>Note: </strong> This item and all its contents will be deleted <span class="warning">permanently</span>.'
           }
         }
       )
       .pipe(switchMap(() => this.deleteCatalogueItem(item, true)));
+  }
+
+  getAncestors(item: MauroItem): Observable<MdmTreeItem> {
+    const response$: Observable<MdmTreeItemResponse> = isContainerDomainType(
+      item.domainType
+    )
+      ? this.resources.tree.containerAncestors(
+          item.domainType === CatalogueItemDomainType.VersionedFolder // If a VersionedFolder, must call the "folders" domain endpoint for backend to accept
+            ? ContainerDomainType.Folders
+            : catalogueItemDomainTypeToContainerDomainType(item.domainType),
+          item.id
+        )
+      : this.resources.tree.ancestors(
+          ContainerDomainType.Folders,
+          catalogueItemToMultiFacetAware(item.domainType),
+          item.id
+        );
+
+    return response$.pipe(
+      map((response: MdmTreeItemResponse) => response.body)
+    );
   }
 
   private deleteCatalogueItem(

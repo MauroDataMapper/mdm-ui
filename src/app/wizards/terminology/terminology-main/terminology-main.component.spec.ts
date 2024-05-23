@@ -35,6 +35,7 @@ import { ElementClassificationsComponent } from '@mdm/utility/element-classifica
 import { MockComponent } from 'ng-mocks';
 import { Observable, of } from 'rxjs';
 import { TerminologyMainComponent } from './terminology-main.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 describe('TerminologyMainComponent', () => {
   let harness: ComponentHarness<TerminologyMainComponent>;
@@ -81,7 +82,9 @@ describe('TerminologyMainComponent', () => {
     );
 
     harness = await setupTestModuleForComponent(TerminologyMainComponent, {
-      declarations: [MockComponent(ElementClassificationsComponent)],
+      declarations: [
+        MockComponent(ElementClassificationsComponent),
+        ContentEditorComponent],
       providers: [
         {
           provide: FolderService,

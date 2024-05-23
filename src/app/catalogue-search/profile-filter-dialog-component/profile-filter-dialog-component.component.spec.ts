@@ -18,15 +18,37 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MockComponent, MockDirective } from 'ng-mocks';
+import { CatalogueSearchProfileFilterListComponent } from '@mdm/catalogue-search/catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { ClassifierIndexResponse, FilterQueryParameters, ProfileSummaryIndexResponse } from '../../../../../mdm-resources';
+import { Observable } from 'rxjs';
 
 describe('ProfileFilterDialogComponent', () => {
   let component: ProfileFilterDialogComponent;
   let fixture: ComponentFixture<ProfileFilterDialogComponent>;
 
+  const resourcesStub = {
+    classifier: {
+      list: jest.fn() as jest.MockedFunction<
+        (query?: FilterQueryParameters) => Observable<ClassifierIndexResponse>
+      >
+    },
+    profile: {
+      providers: jest.fn() as jest.MockedFunction<
+        () => Observable<ProfileSummaryIndexResponse>
+      >
+    }
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileFilterDialogComponent],
+      declarations: [
+        ProfileFilterDialogComponent,
+        MockComponent(CatalogueSearchProfileFilterListComponent),
+        MockDirective(MatDialogContent),
+        MockDirective(MatDialogActions)],
       providers: [
         {
           provide: MatDialogRef,
@@ -35,6 +57,10 @@ describe('ProfileFilterDialogComponent', () => {
         {
           provide: MAT_DIALOG_DATA,
           useValue: jest.fn()
+        },
+        {
+          provide: MdmResourcesService,
+          useValue: resourcesStub
         }
       ]
     }).compileComponents();

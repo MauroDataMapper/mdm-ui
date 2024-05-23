@@ -18,6 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileFiltersComponent } from './profile-filters.component';
+import { MatDivider } from '@angular/material/divider';
+import { MockComponent } from 'ng-mocks';
 
 describe('ProfileFiltersComponent', () => {
   let component: ProfileFiltersComponent;
@@ -25,7 +27,7 @@ describe('ProfileFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileFiltersComponent]
+      declarations: [ProfileFiltersComponent, MockComponent(MatDivider)]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileFiltersComponent);

@@ -35,6 +35,7 @@ import { ElementClassificationsComponent } from '@mdm/utility/element-classifica
 import { MockComponent } from 'ng-mocks';
 import { Observable, of } from 'rxjs';
 import { ReferenceDataModelMainComponent } from './reference-data-model-main.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 describe('ReferenceDataModelMainComponent', () => {
   let harness: ComponentHarness<ReferenceDataModelMainComponent>;
@@ -83,7 +84,9 @@ describe('ReferenceDataModelMainComponent', () => {
     harness = await setupTestModuleForComponent(
       ReferenceDataModelMainComponent,
       {
-        declarations: [MockComponent(ElementClassificationsComponent)],
+        declarations: [
+          MockComponent(ElementClassificationsComponent),
+          ContentEditorComponent],
         providers: [
           {
             provide: FolderService,

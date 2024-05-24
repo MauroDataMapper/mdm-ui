@@ -179,7 +179,6 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
 import { ContentModule } from '@mdm/content/content.module';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
-import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 @NgModule({
   providers: [
@@ -342,8 +341,7 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     ReferenceDataTypeStep2Component,
     NewReferenceDataTypeFormComponent,
     ReferenceDataTypeSelectComponent,
-    ModelHeaderComponent,
-    ContentEditorComponent
+    ModelHeaderComponent
   ],
   imports: [
     AdminModule,
@@ -504,8 +502,7 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     TerminologyMainComponent,
     SkeletonBadgeComponent,
     ReferenceDataModelMainComponent,
-    ModelHeaderComponent,
-    ContentEditorComponent
+    ModelHeaderComponent
   ]
 })
 export class CatalogueModule {}

@@ -347,7 +347,6 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     ReferenceDataTypeSelectComponent,
     ModelHeaderComponent,
     ContentEditorComponent,
-    ModelHeaderComponent,
     CopyActionComponent
   ],
   imports: [
@@ -512,7 +511,6 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     ReferenceDataModelMainComponent,
     ModelHeaderComponent,
     ContentEditorComponent,
-    ModelHeaderComponent,
     CopyActionComponent
   ]
 })

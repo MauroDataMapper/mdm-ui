@@ -80,6 +80,7 @@ jobs:
 
       - name: Report Test results
         uses: dorny/test-reporter@v1
+        working-directory: ./mdm-ui
         if: success() || failure()
         with:
           working-directory: ./mdm-ui
@@ -118,6 +119,7 @@ jobs:
       - name: Report ESLint results
         uses: dorny/test-reporter@v1
         if: success() || failure()
+        working-directory: ./mdm-ui
         with:
           working-directory: ./mdm-ui
           name: ESLint Results

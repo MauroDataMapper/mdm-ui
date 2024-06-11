@@ -1,0 +1,132 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mdm-ui # Only applies to `run` steps
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ./mdm-ui
+
+      - name: Install and configure
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.0'
+          path: ./mdm-ui
+
+      - name: Install tools
+        run: |
+          npm i -g npm@10.2.3
+          npm i -g @angular/cli
+          npm i -g symlinked
+          npm i -g npm-check
+
+      - name: Check tool versions
+        run: |
+          node --version
+          npm --version
+
+
+      - name: Clean install dependencies
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm install
+
+
+#########
+#     Link a local copy of mdm-resources
+#########
+      - name: Checkout mdm-resources
+        if: success() && github.ref != 'refs/heads/master'
+        working-directory: ./mdm-resources
+        uses: actions/checkout@v4
+        with:
+          repository: MauroDataMapper/mdm-resources
+          ref: refs/heads/feature/upgrade-angular # change this to test against another branch
+          path: ./mdm-resources
+
+      - name: Build mdm-resources
+        if: success() && github.ref != 'refs/heads/master'
+        working-directory: ./mdm-resources
+        run: |
+          npm install
+          npm run build
+          npm link
+
+      # Back in the (default) mdm-ui directory
+      - name: Link mdm-resources
+        if: success() && github.ref != 'refs/heads/master'
+        run: |
+          npm link @maurodatamapper/mdm-resources
+
+      - name: Report links
+        run: symlinked names
+
+      - name: License header check
+        run: npm run license-check check
+
+      - name: Run tests
+        run: npm run test-with-coverage-serial
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test Results
+          path: 'mdm-ui/test-report/*.xml'
+          reporter: java-junit
+
+      - name: MegaLinter
+        uses:  oxsecurity/megalinter/flavors/javascript@v7.12.0
+        env:
+          # All available variables are described in documentation
+          # https://megalinter.io/configuration/
+          VALIDATE_ALL_CODEBASE: true
+          ENABLE_LINTERS: TYPESCRIPT_ES
+          LINTER_RULES_PATH: '.eslintrc.json' # This is the default anyway
+          DISABLE_ERRORS: true #Flag to have the linter complete with exit code 0 even if errors were detected.
+          SARIF_REPORTER: true
+          GITHUB_STATUS_REPORTER: true
+          GITHUB_COMMENT_REPORTER: true
+          MARKDOWN_SUMMARY_REPORTER: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload MegaLinter scan results to GitHub Security tab
+        if: ${{ success() }} || ${{ failure() }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'mdm-ui/megalinter-reports/megalinter-report.sarif'
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: ESLint Results
+          path: 'mdm-ui/eslint/eslint_report.xml'
+          reporter: java-junit
+
+
+      - name: Build distribution with original theme
+        run: npm run dist
+
+      - name: Build distribution with nhs digital theme
+        run: npm run dist
+        env:
+          MDM_UI_THEME_NAME: nhs-digital
+
+      - name: Archive distribution artifacts
+        if: success() && ( github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' )
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution artifacts
+          path: dist/mdm-ui-*.tgz

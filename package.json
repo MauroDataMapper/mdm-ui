@@ -11,6 +11,7 @@
     "test:watch": "ng test --watch",
     "test-clearCache": "ng test --clear-cache",
     "test-with-coverage": "ng test --coverage",
+    "test-with-coverage-serial": "ng test --coverage --run-in-band",
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --fix",
     "eslint-nofix": "tsc --noEmit && eslint . --ext ts",

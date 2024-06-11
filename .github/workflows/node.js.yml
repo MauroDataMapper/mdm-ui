@@ -84,7 +84,7 @@ jobs:
         with:
           working-directory: ./mdm-ui
           name: Test Results
-          path: 'test-report/*.xml'
+          path: 'test-report/junit.xml'
           reporter: java-junit
 
       - name: MegaLinter
@@ -114,7 +114,7 @@ jobs:
         with:
           working-directory: ./mdm-ui
           name: ESLint Results
-          path: 'mdm-ui/eslint/eslint_report.xml'
+          path: 'eslint/eslint_report.xml'
           reporter: java-junit
 
 

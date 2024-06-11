@@ -106,7 +106,7 @@ jobs:
         if: ${{ success() }} || ${{ failure() }}
         uses: github/codeql-action/upload-sarif@v3
         with:
-          working-directory: ./mdm-ui
+          checkout_path: ./mdm-ui
           sarif_file: 'megalinter-reports/megalinter-report.sarif'
 
       - name: Run ESLint
@@ -137,3 +137,15 @@ jobs:
         with:
           name: distribution artifacts
           path: dist/mdm-ui-*.tgz
+
+      - name: Send a stream message
+        if: ${{ success() }} || ${{ failure() }}
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIP_API_KEY }}
+          email: "githubactionsbot-bot@maurodatamapper.zulipchat.com"
+          organization-url: "https://maurodatamapper.zulipchat.com"
+          to: "build/github-actions"
+          type: "stream"
+          topic: "${{github.repository}}"
+          content: "${{ job.status == 'success' && ':check_mark:' || ':cross_mark:' }} ${{github.repository}} : **${{github.ref}}**\nGitHub Actions build result: **${{ job.status }}**\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"

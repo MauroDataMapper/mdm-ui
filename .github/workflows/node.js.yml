@@ -80,10 +80,11 @@ jobs:
 
       - name: Test Report
         uses: dorny/test-reporter@v1
+        working-directory: ./mdm-ui
         if: success() || failure()
         with:
           name: Test Results
-          path: 'mdm-ui/test-report/*.xml'
+          path: 'test-report/*.xml'
           reporter: java-junit
 
       - name: MegaLinter
@@ -110,6 +111,7 @@ jobs:
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
+        working-directory: ./mdm-ui
         with:
           name: ESLint Results
           path: 'mdm-ui/eslint/eslint_report.xml'

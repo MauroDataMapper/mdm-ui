@@ -21,11 +21,12 @@ jobs:
       - name: Install and configure
         uses: actions/setup-node@v4
         with:
-          node-version: '16.10.0'
+          node-version: '18.19.0'
+          path: ./mdm-ui
 
       - name: Install tools
         run: |
-          npm i -g npm@8.3.0
+          npm i -g npm@10.2.3
           npm i -g @angular/cli
           npm i -g symlinked
           npm i -g npm-check
@@ -46,16 +47,16 @@ jobs:
       #     Link a local copy of mdm-resources
       #########
       - name: Checkout mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
-        # working-directory: ./mdm-resources
+        if: success() && github.ref != 'refs/heads/master'
+        working-directory: ./mdm-resources
         uses: actions/checkout@v4
         with:
           repository: MauroDataMapper/mdm-resources
-          ref: refs/heads/develop # change this to test against another branch
+          ref: refs/heads/feature/upgrade-angular # change this to test against another branch
           path: ./mdm-resources
 
       - name: Build mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
+        if: success() && github.ref != 'refs/heads/master'
         working-directory: ./mdm-resources
         run: |
           npm install
@@ -64,7 +65,7 @@ jobs:
 
       # Back in the (default) mdm-ui directory
       - name: Link mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
+        if: success() && github.ref != 'refs/heads/master'
         run: |
           npm link @maurodatamapper/mdm-resources
 

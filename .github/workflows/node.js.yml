@@ -48,7 +48,7 @@ jobs:
 #########
       - name: Checkout mdm-resources
         if: success() && github.ref != 'refs/heads/master'
-        working-directory: ./mdm-resources
+        # working-directory: ./mdm-resources
         uses: actions/checkout@v4
         with:
           repository: MauroDataMapper/mdm-resources

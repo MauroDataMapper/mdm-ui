@@ -70,21 +70,27 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
         <div class="text-muted">
           <small>
-            <span class="fas fa-file-export" matTooltip="{{ source.branchName }}"></span>
+            <span
+              class="fas fa-file-export"
+              matTooltip="{{ source.branchName }}"
+            ></span>
             <span
               ><strong>Source Branch : {{ source.branchName }} </strong></span
             >
           </small>
         </div>
-        <div *ngIf="targetLoaded" class="text-muted">
+        <div class="text-muted">
           <small>
-            <span class="fas fa-file-import" matTooltip="{{target.branchName}}"></span>
+            <span
+              class="fas fa-file-import"
+              matTooltip="{{ target?.branchName }}"
+            ></span>
             <span><strong>Target Branch : </strong></span>
             <span>
               <mdm-branch-selector
-                [disabled]="this.committingList.length > 0"
                 [forMerge]="true"
-                [catalogueItem]="target"
+                [sourceCatalogueItem]="source"
+                [targetCatalogueItem]="target"
                 (selectedCatalogueItemChanged)="setTarget($event)"
               ></mdm-branch-selector>
             </span>
@@ -94,15 +100,27 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div>
-    <div class="tabContainer panel panel-default mdm--shadow-block" fxLayout="row" >
+    <div
+      class="tabContainer panel panel-default mdm--shadow-block"
+      fxLayout="row"
+    >
       <div class="full-width" style="clear: both">
         <mat-tab-group
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >
+
+        <!-- Displays if no branch is selected -->
+          <mat-tab *ngIf="!changesList">
+            <ng-template mat-tab-label> No Branch </ng-template>
+            <div class="noContent">
+              <h4 style="margin-top: 75px">No Target Branch Selected</h4>
+            </div>
+          </mat-tab>
+        <!-- Displays if a branch is selected -->
           <mat-tab *ngIf="changesList">
             <ng-template mat-tab-label>
-              Changes ({{changesList.length}})
+              Changes ({{ changesList.length }})
             </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">
@@ -117,7 +135,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <span class="fas fa-file-export" aria-hidden="true"></span>
-                  Use all of "{{source.branchName}}"
+                  Use all of "{{ source.branchName }}"
                 </button>
                 <button
                   *ngIf="changesList.length > 0"
@@ -129,7 +147,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <span class="fas fa-file-import" aria-hidden="true"></span>
-                  Use all of "{{target.branchName}}"
+                  Use all of "{{ target.branchName }}"
                 </button>
               </mat-toolbar>
 
@@ -147,7 +165,7 @@ SPDX-License-Identifier: Apache-2.0
           </mat-tab>
           <mat-tab *ngIf="committingList">
             <ng-template mat-tab-label>
-              Committing ({{committingList.length}})
+              Committing ({{ committingList.length }})
             </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">

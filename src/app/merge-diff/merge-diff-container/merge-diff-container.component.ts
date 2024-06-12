@@ -30,17 +30,21 @@ import {
   MainBranchResponse
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
-import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
-  MessageHandlerService,
-  StateHandlerService
-} from '@mdm/services';
+  CheckinModelConfiguration,
+  CheckinModelResult
+} from '@mdm/modals/check-in-modal/check-in-modal-payload';
+import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, of } from 'rxjs';
 import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
+import {
+  branchNameField,
+  MergeDiffItemModel,
+  MergeItemSelection
+} from '../types/merge-item-type';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -72,75 +76,91 @@ export class MergeDiffContainerComponent implements OnInit {
     private mergeDiff: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private title: Title) { }
+    private title: Title
+  ) {}
 
   ngOnInit(): void {
     this.title.setTitle('Merge Changes');
-
     const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
     const targetId: Uuid = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-
     this.mergeDiff
       .getCatalogueItemDetails(this.domainType, sourceId)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the source item.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the source item.',
+            error
+          );
           return EMPTY;
         }),
-        switchMap(response => {
+        switchMap((response) => {
           this.source = response.body;
           if (!targetId) {
-            return this.mergeDiff.getMainBranch(this.domainType, this.source.id);
+            return this.mergeDiff.getMainBranch(
+              this.domainType,
+              this.source.id
+            );
           }
-
           return of(targetId);
         }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem finding the main branch.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem finding the main branch.',
+            error
+          );
           return EMPTY;
         }),
         switchMap((response: MainBranchResponse | Uuid) => {
-          const actualTargetId: Uuid = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
+          const possibleMainBranchId = (response as MainBranchResponse)?.body
+            ?.id;
+          if (possibleMainBranchId && possibleMainBranchId === sourceId) {
+            return of(null);
+          }
+          const actualTargetId: Uuid =
+            (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
           return this.loadTarget(actualTargetId);
         }),
-        finalize(() => this.loaded = true)
+        finalize(() => (this.loaded = true))
       )
-      .subscribe(response => {
-        this.target = response.body;
-        this.runDiff();
+      .subscribe((response) => {
+        this.target = response?.body;
+        if (this.target) {
+          this.runDiff();
+        }
       });
   }
 
   setTarget(id: Uuid) {
-    this.loadTarget(id)
-      .subscribe(response => {
-        this.target = response.body;
-        this.runDiff();
-      });
+    this.loadTarget(id).subscribe((response) => {
+      this.target = response.body;
+      this.runDiff();
+    });
   }
 
   onCommitChanges(): void {
     this.dialog
-      .open<CheckInModalComponent, CheckinModelConfiguration, CheckinModelResult>(
+      .open<
         CheckInModalComponent,
-        {
-          data: {
-            deleteSourceBranch: false,
-            items: this.committingList,
-            label: this.source.label,
-            domainType: this.domainType,
-            isDataAsset: this.source?.type === 'Data Asset',
-            source: this.source,
-            target: this.target
-          }
-        })
+        CheckinModelConfiguration,
+        CheckinModelResult
+      >(CheckInModalComponent, {
+        data: {
+          deleteSourceBranch: false,
+          items: this.committingList,
+          label: this.source.label,
+          domainType: this.domainType,
+          isDataAsset: this.source?.type === 'Data Asset',
+          source: this.source,
+          target: this.target
+        }
+      })
       .afterClosed()
       .pipe(
-        filter(result => result.status === ModalDialogStatus.Ok),
-        switchMap(result => {
+        filter((result) => result.status === ModalDialogStatus.Ok),
+        switchMap((result) => {
           const patches = this.committingList.filter(
-            item => item.branchSelected !== MergeConflictResolution.Target
+            (item) => item.branchSelected !== MergeConflictResolution.Target
           );
 
           const data: CommitMergePayload = {
@@ -159,18 +179,19 @@ export class MergeDiffContainerComponent implements OnInit {
             this.domainType,
             this.source.id,
             this.target.id,
-            data);
+            data
+          );
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`);
-        this.stateHandler.Go(
-          this.target.domainType,
-          {
-            id: this.target.id,
-            reload: true,
-            location: true
-          });
+        this.messageHandler.showSuccess(
+          `Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`
+        );
+        this.stateHandler.Go(this.target.domainType, {
+          id: this.target.id,
+          reload: true,
+          location: true
+        });
       });
   }
 
@@ -182,7 +203,7 @@ export class MergeDiffContainerComponent implements OnInit {
     this.resetLists();
     this.mergeDiff
       .getMergeDiff(this.domainType, this.source.id, this.target.id)
-      .subscribe(data => {
+      .subscribe((data) => {
         data.diffs.forEach((item: MergeDiffItemModel) => {
           if (item.fieldName === branchNameField) {
             // A merge diff item with the field name "branchName" should not be considered for the user
@@ -192,8 +213,7 @@ export class MergeDiffContainerComponent implements OnInit {
 
           if (item.isMergeConflict) {
             this.changesList.push(item);
-          }
-          else {
+          } else {
             // This item can be merged automatically
             item.branchSelected = MergeConflictResolution.Source;
             item.branchNameSelected = this.source.branchName;
@@ -309,14 +329,15 @@ export class MergeDiffContainerComponent implements OnInit {
 
   private loadTarget(id: Uuid) {
     this.targetLoaded = false;
-    return this.mergeDiff
-      .getCatalogueItemDetails(this.domainType, id)
-      .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the target item.', error);
-          return EMPTY;
-        }),
-        finalize(() => this.targetLoaded = true)
-      );
+    return this.mergeDiff.getCatalogueItemDetails(this.domainType, id).pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'There was a problem loading the target item.',
+          error
+        );
+        return EMPTY;
+      }),
+      finalize(() => (this.targetLoaded = true))
+    );
   }
 }

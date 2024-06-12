@@ -87,30 +87,32 @@ jobs:
           path: 'test-report/junit.xml'
           reporter: java-junit
 
-      - name: MegaLinter
-        uses:  oxsecurity/megalinter/flavors/javascript@v7.12.0
-        env:
-          # All available variables are described in documentation
-          # https://megalinter.io/configuration/
-          VALIDATE_ALL_CODEBASE: true
-          ENABLE_LINTERS: TYPESCRIPT_ES
-          LINTER_RULES_PATH: '.eslintrc.json' # This is the default anyway
-          DISABLE_ERRORS: true #Flag to have the linter complete with exit code 0 even if errors were detected.
-          SARIF_REPORTER: true
-          GITHUB_STATUS_REPORTER: true
-          GITHUB_COMMENT_REPORTER: true
-          MARKDOWN_SUMMARY_REPORTER: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Can't successfully get Megalinter to run in another folder.
+      # Disable it and use the native eslint instead
+      #- name: MegaLinter
+      #  uses:  oxsecurity/megalinter/flavors/javascript@v7.12.0
+      #  env:
+      #    # All available variables are described in documentation
+      #    # https://megalinter.io/configuration/
+      #    VALIDATE_ALL_CODEBASE: true
+      #    ENABLE_LINTERS: TYPESCRIPT_ES
+      #    LINTER_RULES_PATH: '.eslintrc.json' # This is the default anyway
+      #    DISABLE_ERRORS: true #Flag to have the linter complete with exit code 0 even if errors were detected.
+      #    SARIF_REPORTER: true
+      #    GITHUB_STATUS_REPORTER: true
+      #    GITHUB_COMMENT_REPORTER: true
+      #    MARKDOWN_SUMMARY_REPORTER: true
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload MegaLinter scan results to GitHub Security tab
-        if: ${{ success() }} || ${{ failure() }}
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          checkout_path: ./mdm-ui
-          sarif_file: 'megalinter-reports/megalinter-report.sarif'
+      #- name: Upload MegaLinter scan results to GitHub Security tab
+      #  if: ${{ success() }} || ${{ failure() }}
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    checkout_path: ./mdm-ui
+      #    sarif_file: 'megalinter-reports/megalinter-report.sarif'
 
       - name: Run ESLint
-        run: npm run eslint-report
+        run: npm run eslint-junit
 
 
       - name: Report ESLint results
@@ -119,7 +121,7 @@ jobs:
         with:
           working-directory: ./mdm-ui
           name: ESLint Results
-          path: 'eslint/eslint_report.xml'
+          path: 'eslint/eslint-junit.xml'
           reporter: java-junit
 
 

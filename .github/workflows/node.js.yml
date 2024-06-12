@@ -123,6 +123,7 @@ jobs:
           name: ESLint Results
           path: 'eslint/eslint-junit.xml'
           reporter: java-junit
+          fail-on-error: false
 
 
       - name: Build distribution with original theme

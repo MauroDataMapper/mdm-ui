@@ -112,7 +112,7 @@ jobs:
       #    sarif_file: 'megalinter-reports/megalinter-report.sarif'
 
       - name: Run ESLint
-        run: npm run eslint-junit
+        run: npm run eslint-junit || true # Always succeed, even with linting errors
 
 
       - name: Report ESLint results

@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.19.0'
-          path: ./mdm-ui
 
       - name: Install tools
         run: |

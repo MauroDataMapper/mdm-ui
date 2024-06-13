@@ -26,9 +26,7 @@
   "private": true,
   "eslint-junit": {
     "suiteName": "eslint tests",
-    "output": "./eslint/eslint-junit.xml",
-    "classNameTemplate": "{ruleId}",
-    "titleTemplate": "{line} : {source}"
+    "output": "./eslint/eslint-junit.xml"
   },
   "dependencies": {
     "@ag-grid-community/angular": "31.0.3",

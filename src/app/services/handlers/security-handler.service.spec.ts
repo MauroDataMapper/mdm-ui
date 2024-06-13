@@ -23,9 +23,9 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SignInError, SignInErrorType, UserDetails } from './security-handler.model';
+import { SignInError, UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { LoginPayload, Securable } from '@maurodatamapper/mdm-resources';
 
 interface MdmSecurityResourceStub {

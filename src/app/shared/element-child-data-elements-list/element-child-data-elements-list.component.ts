@@ -140,5 +140,5 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     }, error => {
       this.messageHandler.showError('There was a problem updating the Data Element.', error);
     });
-  };
+  }
 }

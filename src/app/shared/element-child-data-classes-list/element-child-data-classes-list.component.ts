@@ -192,7 +192,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.bulkActionsVisible = 0;
       this.filterEvent.emit();
     }).catch(() => console.warn('error'));
-  };
+  }
 
   // Drag and drop
   dropTable(event: CdkDragDrop<any[]>) {
@@ -224,5 +224,5 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     }
-  };
+  }
 }

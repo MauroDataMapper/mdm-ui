@@ -148,5 +148,5 @@ export class BulkEditModalComponent implements AfterViewInit {
       this.processing = false;
       this.isProcessComplete = true;
     });
-  };
+  }
 }

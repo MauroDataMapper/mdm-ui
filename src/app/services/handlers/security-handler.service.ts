@@ -23,7 +23,6 @@ import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import {
   AuthenticatedSessionError,
-  SignInError,
   UserDetails
 } from './security-handler.model';
 import { Observable, of, throwError } from 'rxjs';

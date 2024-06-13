@@ -230,7 +230,7 @@ describe('MauroItemProviderService', () => {
   describe('unsupported domain types', () => {
     const unsupported = [
       CatalogueItemDomainType.ReferenceDataModel,
-      //CatalogueItemDomainType.ReferenceDataModelType
+      // CatalogueItemDomainType.ReferenceDataModelType
     ];
 
     it.each(unsupported)(

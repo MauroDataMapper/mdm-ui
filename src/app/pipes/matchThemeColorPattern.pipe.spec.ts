@@ -27,7 +27,7 @@ describe('MatchThemeColorPatternPipe', () => {
         interface TestData {
           stringToTest: string;
           expectedOutcome:  boolean;
-        };
+        }
 
         const testingCases : TestData[]= [
           {

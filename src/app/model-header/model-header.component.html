@@ -176,7 +176,7 @@ SPDX-License-Identifier: Apache-2.0
     mat-menu-item
     data-cy="merge"
     type="button"
-    *ngIf="access.canMergeInto && !isChildItem"
+    *ngIf="access.canMergeInto"
     [disabled]="busy"
     (click)="merge()"
   >

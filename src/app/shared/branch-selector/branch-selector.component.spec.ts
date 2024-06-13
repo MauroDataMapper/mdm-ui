@@ -17,7 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 import { of } from 'rxjs';
 import { BranchSelectorComponent } from './branch-selector.component';
 
@@ -39,19 +42,17 @@ describe('BranchSelectorComponent', () => {
   };
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(
-      BranchSelectorComponent,
-      {
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: mdmResourcesStub
-          }
-        ]
-      });
+    harness = await setupTestModuleForComponent(BranchSelectorComponent, {
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: mdmResourcesStub
+        }
+      ]
+    });
 
-    harness.detectChanges(component => {
-      component.catalogueItem = {
+    harness.detectChanges((component) => {
+      component.sourceCatalogueItem = {
         id: '1234',
         domainType: CatalogueItemDomainType.DataModel
       };

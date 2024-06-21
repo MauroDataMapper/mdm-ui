@@ -179,6 +179,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
 import { ContentModule } from '@mdm/content/content.module';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
+import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
 
 @NgModule({
   providers: [
@@ -218,6 +219,7 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     SummaryMetadataPopupComponent,
     ElementOwnedDataTypeListComponent,
     ElementChildDataClassesListComponent,
+    FlattenedDataClassesComponent,
     McDataSetMetadataComponent,
     ElementStatusComponent,
     ElementClassificationsComponent,
@@ -392,6 +394,7 @@ import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-d
     SummaryMetadataChartComponent,
     ElementOwnedDataTypeListComponent,
     ElementChildDataClassesListComponent,
+    FlattenedDataClassesComponent,
     McDataSetMetadataComponent,
     ElementStatusComponent,
     ElementClassificationsComponent,

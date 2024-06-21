@@ -99,6 +99,7 @@ SPDX-License-Identifier: Apache-2.0
               <mat-select [(ngModel)]="schemaView" name="schemaView">
                 <mat-option value="list">List</mat-option>
                 <mat-option value="diagram">Diagram</mat-option>
+                <mat-option value="flat">Flattened View</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -141,13 +142,24 @@ SPDX-License-Identifier: Apache-2.0
           [mode]="'umlclass'"
         ></mdm-diagram-tab>
       </div>
+      <div *ngIf="schemaView === 'flat'">
+        <mdm-flattened-data-classes-list
+        *ngIf="catalogueItem"
+        [parentDataModel]="catalogueItem"
+        [isEditable]="access.showEdit"
+        [parentDataClass]="{ id: null }"
+        [mcDataClass]="{ id: null }"
+        [type]="'dynamic'"
+        (totalCount)="schemaCountEmitter($event)"
+      ></mdm-flattened-data-classes-list>
+    </div>
     </div>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       Types
       <mdm-skeleton-badge *ngIf="isLoadingTypes"></mdm-skeleton-badge>
-      ({{ typesItemCount }})
+      ({{ typesItemCount }})  
     </ng-template>
     <div class="full-width">
       <mdm-element-owned-data-type-list

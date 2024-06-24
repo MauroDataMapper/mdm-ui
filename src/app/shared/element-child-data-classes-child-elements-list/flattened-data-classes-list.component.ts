@@ -30,7 +30,7 @@ import {
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
-import { DataClass } from '@maurodatamapper/mdm-resources';
+import { DataClass, DataElement } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-flattened-data-classes-list',
@@ -102,12 +102,13 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
       this.changeRef.detectChanges();
       return this.flattenedElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
     }), map((data: any) => {
-      this.totalItemCount = data.body.count;
-      this.totalCount.emit(String(data.body.count));
+      this.totalItemCount = data.count;
+      this.totalCount.emit(String(data.count));
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
-      return data.body.items;
-    }), catchError(() => {
+      return data.items;
+    }), catchError((error) => {
+      console.error('An error occurred:', error);
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
       return [];
@@ -140,11 +141,25 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   flattenedElementsFetch(pageSize?, pageIndex?, filters?): Observable<any> {
     const sortBy = 'idx';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
+  
+    return this.resources.dataModel.dataElements(this.parentDataModel.id, options).pipe(
+      switchMap((dataElements: any) => {
+        return this.resources.dataClass.all(this.parentDataModel.id, options).pipe(
+          map((dataClasses: any) => {
+            // Update data elements with the corresponding data class object
+            const updatedDataElements = dataElements.body.items.map(de => {
+              const dataClass = dataClasses.body.items.find(dc => dc.id === de.dataClass);
+              if (dataClass) {
+                de.dataClass = dataClass;
+              }
+              return de;
+            });
 
-    if (!this.parentDataClass.id) {
-      return this.resources.dataClass.all(this.parentDataModel.id, options);
-    }
-    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
+            return {count: updatedDataElements.length, items: updatedDataElements};
+          })
+        );
+      })
+    );
   }
 
   onChecked = () => {

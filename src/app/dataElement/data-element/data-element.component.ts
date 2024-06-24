@@ -319,4 +319,8 @@ export class DataElementComponent
         this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
+
+  moveDataElement(item: DataElement) {
+    alert(`Moving ${item.label}...`);
+  }
 }

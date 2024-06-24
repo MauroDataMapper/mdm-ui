@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { HttpResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   Branchable,
@@ -69,6 +69,8 @@ export class ModelHeaderComponent implements OnInit {
   @Input() item: ModelHeaderCatalogueItem;
   @Input() busy = false;
   @Input() compareModelsList: any[] = []; // TODO: define better type
+
+  @Output() moving = new EventEmitter<ModelHeaderCatalogueItem>();
 
   isLoggedIn: boolean;
   isAdministrator = false;
@@ -187,6 +189,17 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return isModelDomainType(this.item.domainType);
+  }
+
+  get canMove() {
+    if (!this.item) {
+      return false;
+    }
+
+    return (
+      this.access.showEdit &&
+      this.item.domainType === CatalogueItemDomainType.DataElement
+    );
   }
 
   get hasMenuOptions() {
@@ -565,6 +578,10 @@ export class ModelHeaderComponent implements OnInit {
           this.stateHandler.reload();
         }
       });
+  }
+
+  move() {
+    this.moving.emit(this.item);
   }
 
   private handleStandardExporterResponse(

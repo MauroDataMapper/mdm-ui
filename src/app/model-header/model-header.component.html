@@ -192,6 +192,16 @@ SPDX-License-Identifier: Apache-2.0
   >
     <span class="fas fa-code-branch"></span> Merge graph
   </button>
+  <button
+    mat-menu-item
+    data-cy="move"
+    type="button"
+    *ngIf="canMove"
+    [disabled]="busy"
+    (click)="move()"
+  >
+    <span class="fas fa-angle-right"></span> Move...
+  </button>
   <mat-divider></mat-divider>
   <button
     mat-menu-item

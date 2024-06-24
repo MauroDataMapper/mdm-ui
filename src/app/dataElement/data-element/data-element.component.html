@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-model-header
     *ngIf="dataElementOutput"
     [item]="dataElementOutput"
+    (moving)="moveDataElement($event)"
   ></mdm-model-header>
 </div>
 <mat-tab-group

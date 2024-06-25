@@ -21,7 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -37,6 +37,7 @@ import {
   DataElement,
   DataElementDetail,
   DataElementDetailResponse,
+  DataModel,
   DataType
 } from '@maurodatamapper/mdm-resources';
 import {
@@ -45,6 +46,12 @@ import {
 } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  MoveDataElementDialogComponent,
+  MoveDataElementDialogPayload,
+  MoveDataElementDialogResponse
+} from '@mdm/modals/move-data-element-dialog/move-data-element-dialog.component';
 
 @Component({
   selector: 'mdm-data-element',
@@ -104,7 +111,8 @@ export class DataElementComponent
     private title: Title,
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService,
-    private elementTypes: ElementTypesService
+    private elementTypes: ElementTypesService,
+    private dialog: MatDialog
   ) {
     super();
     if (
@@ -320,7 +328,19 @@ export class DataElementComponent
     }
   }
 
-  moveDataElement(item: DataElement) {
-    alert(`Moving ${item.label}...`);
+  moveDataElement(dataElement: DataElement) {
+    this.dialog
+      .open<
+        MoveDataElementDialogComponent,
+        MoveDataElementDialogPayload,
+        MoveDataElementDialogResponse
+      >(MoveDataElementDialogComponent, {
+        data: {
+          dataElement
+        },
+        minWidth: 600
+      })
+      .afterClosed()
+      .subscribe(() => {});
   }
 }

@@ -53,6 +53,7 @@ import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { MoveDataElementDialogComponent } from './move-data-element-dialog/move-data-element-dialog.component';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -99,7 +100,8 @@ const defaultAceConfig: AceConfigInterface = {};
     ChangeBranchNameModalComponent,
     CatalogueItemSelectModalComponent,
     ExportModelDialogComponent,
-    ChangeLabelModalComponent
+    ChangeLabelModalComponent,
+    MoveDataElementDialogComponent
   ],
   providers: [
     ModalService,
@@ -114,7 +116,8 @@ const defaultAceConfig: AceConfigInterface = {};
     ForgotPasswordModalComponent,
     ConfirmationModalComponent,
     ChangeBranchNameModalComponent,
-    ExportModelDialogComponent
+    ExportModelDialogComponent,
+    MoveDataElementDialogComponent
   ]
 })
 export class ModalModule {

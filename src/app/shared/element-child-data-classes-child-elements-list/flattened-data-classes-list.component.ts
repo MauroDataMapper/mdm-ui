@@ -30,7 +30,7 @@ import {
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
-import { catchError, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
-import { DataClass, DataElement } from '@maurodatamapper/mdm-resources';
+import { DataClass } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-flattened-data-classes-list',
@@ -52,7 +52,6 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   @Input() mcDataClass: any;
   @Input() type: any;
   @Input() childDataClasses: any;
-  // @Input() childDataElements: any;
   @Input() isEditable: any;
   @Output() totalCount = new EventEmitter<string>();
 
@@ -141,12 +140,10 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   flattenedElementsFetch(pageSize?, pageIndex?, filters?): Observable<any> {
     const sortBy = 'idx';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
-  
     return this.resources.dataModel.dataElements(this.parentDataModel.id, options).pipe(
       switchMap((dataElements: any) => {
         return this.resources.dataClass.all(this.parentDataModel.id, options).pipe(
           map((dataClasses: any) => {
-            // Update data elements with the corresponding data class object
             const updatedDataElements = dataElements.body.items.map(de => {
               const dataClass = dataClasses.body.items.find(dc => dc.id === de.dataClass);
               if (dataClass) {

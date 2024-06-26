@@ -15,157 +15,44 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="heading-container" *ngIf="bulkActionsVisible > 0">
-  <div
-    fxFlex
-    fxLayout="row"
-    fxLayout.md="row"
-    fxLayout.sm="row"
-    fxLayout.xs="column"
-    fxLayoutAlign="space-around"
-  >
-    <div
-      fxFlex
-      fxLayout="row"
-      fxFlex="100"
-      fxFlex.md="100"
-      fxFlex.sm="100"
-      fxFlex.xs="100"
-      fxLayoutAlign="flex-start center"
-      fxLayoutAlign.xs="flex-start center"
-    >
-      <div *ngIf="isEditable && !parentDataModel.finalised" class="mt-1">
-        <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          [matMenuTriggerFor]="contentBulkActions"
-          *ngIf="bulkActionsVisible > 0"
-        >
-          Bulk actions
-          <span class="fas fa-caret-down fa-xs" style="margin-left: 2px"></span>
-        </button>
-        <mat-menu #contentBulkActions="matMenu" class="mdm--mat-menu--actions">
-          <button mat-menu-item class="warning" (click)="bulkDelete()">
-            <span class="far fa-trash-alt"></span> Delete selected rows
-          </button>
-        </mat-menu>
-      </div>
+<div class="heading-container">
+  <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+    <div fxFlex  fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
+        <h4 class="marginless">
+            Data Elements
+            <span class="mdm--badge mdm--element-count">{{totalItemCount}} </span>
+            <span class="ffas a-filter" (click)="filterClick()"></span>
+        </h4>
     </div>
-  </div>
+</div>
 </div>
 
 <div class="table-responsive">
   <table
     mat-table
+    matSort
     #table
     [dataSource]="records"
-    cdkDropList
-    (cdkDropListDropped)="dropTable($event)"
     class="mdm--mat-table mat-elevation-z3 table-striped"
   >
-    <ng-container matColumnDef="checkbox">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        style="width: 5%; text-align: center"
-        scope="col"
-      >
-        <mat-checkbox
-          (change)="onChecked()"
-          [(ngModel)]="checkAllCheckbox"
-          aria-label="Select all Checkboxes"
-        >
-          <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
-        </mat-checkbox>
-      </th>
-      <td
-        mat-cell
-        *matCellDef="let record"
-        style="width: 5%; text-align: center"
-      >
-        <mat-checkbox
-          [(ngModel)]="record.checked"
-          aria-label="Select this Checkbox"
-          (change)="listChecked()"
-        >
-          <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
-        </mat-checkbox>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="name">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        style="max-width: 35%; width: 35%"
-        columnName="name"
-        scope="col"
-      >
-        Name
-      </th>
-      <td
-        mat-cell
-        *matCellDef="let record"
-        style="overflow-wrap: break-word; word-break: break-word"
-      >
-        <div>
-          <mdm-element-link
-            [element]="record"
-            [parentDataModel]="{ id: record.dataModel }"
-          ></mdm-element-link>
-          <div *ngIf="record.imported">
-            <span
-              class="badge badge-success item-type-imported"
-              title="Reference: {{
-                record.breadcrumbs | joinArray: ' / ':'label'
-              }} / {{ record.label }}"
-              >External Reference &nbsp;<span class="fas fa-info-circle"></span
-            ></span>
-          </div>
-        </div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="dataclass">
+   <ng-container matColumnDef="element">
       <th
       mat-header-cell
       *matHeaderCellDef
       style="max-width: 35%; width: 35%"
-      columnName="dataclass"
-      scope="col"
-    >
-    Data Class
-    </th>
-    <td
-      mat-cell
-      *matCellDef="let record"
-      style="overflow-wrap: break-word; word-break: break-word"
-    > 
-      <div>
-        <mdm-element-link
-            [element]="record.dataClass"
-            [parentDataModel]="{id:record.dataModel}"
-        ></mdm-element-link>
-        <div *ngIf="record.imported">
-          <span
-            class="badge badge-success item-type-imported"
-            title="Reference: {{
-              record.breadcrumbs | joinArray: ' / ':'label'
-            }} / {{ record.label }}"
-            >External Reference &nbsp;<span class="fas fa-info-circle"></span
-          ></span>
-        </div>
-      </div>
-   
-    </ng-container>
-    <ng-container matColumnDef="element">
-      <th
-      mat-header-cell
-      *matHeaderCellDef
-      style="max-width: 35%; width: 35%"
+      [disabled]="!hideFilters"
       columnName="element"
+      mat-sort-header="element"
       scope="col"
+    
+
     >
+    <div [hidden]="hideFilters">
+      <mat-form-field class="filter" floatLabel="never">
+          <mat-label>Data Element</mat-label>
+          <input #filters matInput name="element" (keyup)="applyFilter()">
+      </mat-form-field>
+  </div>
     Data Element
     </th>
     <td
@@ -189,8 +76,6 @@ SPDX-License-Identifier: Apache-2.0
           ></span>
         </div>
       </div>
-      
-   
     </ng-container>
 
     <ng-container matColumnDef="description">
@@ -200,6 +85,7 @@ SPDX-License-Identifier: Apache-2.0
         style="max-width: 50%; width: 50%"
         columnName="description"
         scope="col"
+        [disabled]="!hideFilters"
       >
         Description
       </th>
@@ -219,30 +105,40 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </td>
     </ng-container>
-    <ng-container matColumnDef="actions">
-      <td
-        mat-header-cell
-        *matHeaderCellDef
-        columnName="actions"
-        style="width: 5%; max-width: 5%; text-align: center"
-      ></td>
-      <td
-        mat-cell
-        *matCellDef="let record"
-        style="width: 5%; max-width: 5%; text-align: center"
-      >
-        <button
-          mat-icon-button
-          color="warn"
-          type="button"
-          (click)="toggleDelete(record)"
-          class="warning"
-          aria-label="Delete"
-          matTooltip="Delete"
-        >
-          <span class="far fa-trash-alt"></span>
-        </button>
-      </td>
+   
+    <ng-container matColumnDef="dataclass">
+      <th
+      mat-header-cell
+      *matHeaderCellDef
+      style="max-width: 35%; width: 35%"
+      columnName="dataclass"
+      mat-sort-header="dataclass"
+      scope="col"
+      [disabled]="!hideFilters"
+    >
+    Data Class
+    </th>
+    <td
+      mat-cell
+      *matCellDef="let record"
+      style="overflow-wrap: break-word; word-break: break-word"
+    > 
+      <div>
+        <mdm-element-link
+            [element]="record.dataClassObject"
+            [parentDataModel]="{id:record.dataModel}"
+        ></mdm-element-link>
+        <div *ngIf="record.imported">
+          <span
+            class="badge badge-success item-type-imported"
+            title="Reference: {{
+              record.breadcrumbs | joinArray: ' / ':'label'
+            }} / {{ record.label }}"
+            >External Reference &nbsp;<span class="fas fa-info-circle"></span
+          ></span>
+        </div>
+      </div>
+   
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
@@ -250,7 +146,7 @@ SPDX-License-Identifier: Apache-2.0
       *matRowDef="let row; columns: displayedColumns"
       cdkDrag
       [cdkDragData]="row"
-      [ngClass]="{ 'mdm--active-row ': row.checked }"
+    
     ></tr>
   </table>
 </div>

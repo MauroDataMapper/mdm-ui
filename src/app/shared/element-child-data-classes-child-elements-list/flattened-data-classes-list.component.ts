@@ -34,10 +34,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
 import { DataClass } from '@maurodatamapper/mdm-resources';
 
@@ -56,9 +53,9 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   @Output() totalCount = new EventEmitter<string>();
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
 
   processing: boolean;
   failCount: number;
@@ -75,7 +72,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   filter: {};
   deleteInProgress: boolean;
   checkAllCheckbox = false;
-  bulkActionsVisible = 0;
+
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -87,14 +84,11 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.isEditable && !this.parentDataModel.finalised) {
-      this.displayedColumns = ['checkbox', 'dataclass', 'element', 'description', 'actions'];
-    } else {
       this.displayedColumns = ['dataclass', 'element', 'description'];
-    }
   }
 
   ngAfterViewInit() {
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
     merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
@@ -113,6 +107,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
       return [];
     })).subscribe(data => {
       this.records = data;
+
     });
   }
 
@@ -147,7 +142,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
             const updatedDataElements = dataElements.body.items.map(de => {
               const dataClass = dataClasses.body.items.find(dc => dc.id === de.dataClass);
               if (dataClass) {
-                de.dataClass = dataClass;
+                de.dataClassObject = dataClass;
               }
               return de;
             });
@@ -159,64 +154,6 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
     );
   }
 
-  onChecked = () => {
-    this.records.forEach(x => (x.checked = this.checkAllCheckbox));
-    this.listChecked();
-  };
-
-  toggleDelete = (record) => {
-    this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisible = 0;
-    record.checked = true;
-    this.bulkDelete();
-  };
-
-  listChecked = () => {
-    let count = 0;
-    for (const value of Object.values(this.records)) {
-      if (value.checked) {
-        count++;
-      }
-    }
-    this.bulkActionsVisible = count;
-  };
-
-  bulkDelete() {
-    const dataElementIdLst = this.records.filter(record => record.checked === true);
-
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
-        panelClass: 'bulk-delete-modal'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-    promise.then(() => {
-      this.records.forEach(x => (x.checked = false));
-      // this.records = this.records;
-      this.checkAllCheckbox = false;
-      this.bulkActionsVisible = 0;
-      this.filterEvent.emit();
-    }).catch(() => console.warn('error'));
-  };
-
-  // Drag and drop
-  dropTable(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.records, event.previousIndex, event.currentIndex);
-    const prevRec = this.records[event.currentIndex];
-    if (prevRec === undefined) {
-      return;
-    }
-    this.updateOrder(event.item, event.currentIndex);
-    this.table.renderRows();
-  }
 
   updateOrder(item, newPosition) {
     const resource: DataClass = {

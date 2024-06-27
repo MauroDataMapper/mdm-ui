@@ -49,6 +49,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   @Input() type: any;
   @Input() childDataClasses: DataClass[];
   @Input() isEditable: boolean;
+  @Input() pageSize = 50;
   @Output() totalCount = new EventEmitter<string>();
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -140,7 +141,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
               return de;
             });
 
-            return {count: updatedDataElements.length, items: updatedDataElements};
+            return {count: dataElements.body.count, items: updatedDataElements};
           })
         );
       })

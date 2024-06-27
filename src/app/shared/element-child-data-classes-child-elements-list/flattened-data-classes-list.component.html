@@ -210,5 +210,7 @@ SPDX-License-Identifier: Apache-2.0
   class="mdm--mat-pagination"
   [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
 >
-  <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
+  <mdm-paginator [length]="totalItemCount" [pageSize]="pageSize" pageIndex="0" showFirstLastButtons></mdm-paginator>
+</div>
 </div>

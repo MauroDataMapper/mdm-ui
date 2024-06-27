@@ -31,25 +31,24 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
 import { MessageHandlerService } from '@mdm/services';
-import { DataClass } from '@maurodatamapper/mdm-resources';
+import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-flattened-data-classes-list',
   templateUrl: './flattened-data-classes-list.component.html',
-  styleUrls: ['./flattened-data-classes-list.component.sass']
+  styleUrls: ['./flattened-data-classes-list.component.scss']
 })
 export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
-  @Input() parentDataModel: any;
-  @Input() parentDataClass: any;
-  @Input() mcDataClass: any;
+  @Input() parentDataModel: DataModel;
+  @Input() parentDataClass: DataClass;
   @Input() type: any;
-  @Input() childDataClasses: any;
-  @Input() isEditable: any;
+  @Input() childDataClasses: DataClass[];
+  @Input() isEditable: boolean;
   @Output() totalCount = new EventEmitter<string>();
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -57,11 +56,7 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 
-  processing: boolean;
-  failCount: number;
   total: number;
-  showStaticRecords: any;
-  dataSource: any;
   records: any[] = [];
   hideFilters = true;
   displayedColumns: string[];
@@ -70,9 +65,6 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
   filter: {};
-  deleteInProgress: boolean;
-  checkAllCheckbox = false;
-
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -84,16 +76,16 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
   ) { }
 
   ngOnInit(): void {
-      this.displayedColumns = ['dataclass', 'element', 'description'];
+      this.displayedColumns = ['element', 'dataclass',  'description'];
   }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+    merge(this.paginator.page, this.filterEvent, this.sort.sortChange).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-      return this.flattenedElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
+      return this.flattenedElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter, this.sort.active, this.sort.direction);
     }), map((data: any) => {
       this.totalItemCount = data.count;
       this.totalCount.emit(String(data.count));
@@ -132,12 +124,13 @@ export class FlattenedDataClassesComponent implements AfterViewInit, OnInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  flattenedElementsFetch(pageSize?, pageIndex?, filters?): Observable<any> {
-    const sortBy = 'idx';
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
-    return this.resources.dataModel.dataElements(this.parentDataModel.id, options).pipe(
+  flattenedElementsFetch(pageSize?, pageIndex?, filters?, sortBy?: string,
+    sortType?: SortDirection): Observable<any> {
+    const elementOptions = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    const dataClassOptions  = this.gridService.constructOptions();
+    return this.resources.dataModel.dataElements(this.parentDataModel.id, elementOptions).pipe(
       switchMap((dataElements: any) => {
-        return this.resources.dataClass.all(this.parentDataModel.id, options).pipe(
+        return this.resources.dataClass.all(this.parentDataModel.id, dataClassOptions).pipe(
           map((dataClasses: any) => {
             const updatedDataElements = dataElements.body.items.map(de => {
               const dataClass = dataClasses.body.items.find(dc => dc.id === de.dataClass);

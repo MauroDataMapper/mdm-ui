@@ -16,15 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-  <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
     <div fxFlex  fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
         <h4 class="marginless">
             Data Elements
             <span class="mdm--badge mdm--element-count">{{totalItemCount}} </span>
-            <span class="ffas a-filter" (click)="filterClick()"></span>
+            <!-- <span class="fas fa-filter" (click)="filterClick()"></span> -->
+            <!-- filtering disabled till endpoint is updated -->
         </h4>
     </div>
-</div>
 </div>
 
 <div class="table-responsive">
@@ -42,18 +41,17 @@ SPDX-License-Identifier: Apache-2.0
       style="max-width: 35%; width: 35%"
       [disabled]="!hideFilters"
       columnName="element"
-      mat-sort-header="element"
+      mat-sort-header="label"
       scope="col"
-    
 
     >
     <div [hidden]="hideFilters">
-      <mat-form-field class="filter" floatLabel="never">
-          <mat-label>Data Element</mat-label>
-          <input #filters matInput name="element" (keyup)="applyFilter()">
-      </mat-form-field>
-  </div>
-    Data Element
+        <mat-form-field class="filter" floatLabel="never">
+            <mat-label>Data Element</mat-label>
+            <input #filters matInput name="label" (keyup)="applyFilter()">
+        </mat-form-field>
+    </div>
+    <span [hidden]="!hideFilters">Data Element</span>
     </th>
     <td
       mat-cell
@@ -66,15 +64,6 @@ SPDX-License-Identifier: Apache-2.0
         [parentDataClass]="{id:record.dataClass}"
         [parentDataModel]="{id:record.dataModel}"
       ></mdm-element-link>
-        <div *ngIf="record.imported">
-          <span
-            class="badge badge-success item-type-imported"
-            title="Reference: {{
-              record.breadcrumbs | joinArray: ' / ':'label'
-            }} / {{ record.label }}"
-            >External Reference &nbsp;<span class="fas fa-info-circle"></span
-          ></span>
-        </div>
       </div>
     </ng-container>
 
@@ -85,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
         style="max-width: 50%; width: 50%"
         columnName="description"
         scope="col"
-        [disabled]="!hideFilters"
+       
       >
         Description
       </th>
@@ -112,11 +101,10 @@ SPDX-License-Identifier: Apache-2.0
       *matHeaderCellDef
       style="max-width: 35%; width: 35%"
       columnName="dataclass"
-      mat-sort-header="dataclass"
       scope="col"
-      [disabled]="!hideFilters"
     >
-    Data Class
+
+  <span> Data Class </span>
     </th>
     <td
       mat-cell
@@ -128,15 +116,6 @@ SPDX-License-Identifier: Apache-2.0
             [element]="record.dataClassObject"
             [parentDataModel]="{id:record.dataModel}"
         ></mdm-element-link>
-        <div *ngIf="record.imported">
-          <span
-            class="badge badge-success item-type-imported"
-            title="Reference: {{
-              record.breadcrumbs | joinArray: ' / ':'label'
-            }} / {{ record.label }}"
-            >External Reference &nbsp;<span class="fas fa-info-circle"></span
-          ></span>
-        </div>
       </div>
    
     </ng-container>

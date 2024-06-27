@@ -71,7 +71,6 @@ export class DataModelComponent
   errorMessage = '';
 
   schemaView = 'list';
-  flattenedSchemaView = 'flat';
 
   contextView = 'default';
   annotationsView = 'default';

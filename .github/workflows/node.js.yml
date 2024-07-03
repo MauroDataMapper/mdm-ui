@@ -46,7 +46,7 @@ jobs:
 #     Link a local copy of mdm-resources
 #########
       - name: Checkout mdm-resources
-        if: success() && github.ref != 'refs/heads/master'
+        if: success() && github.ref != 'refs/heads/main'
         # working-directory: ./mdm-resources
         uses: actions/checkout@v4
         with:
@@ -55,7 +55,7 @@ jobs:
           path: ./mdm-resources
 
       - name: Build mdm-resources
-        if: success() && github.ref != 'refs/heads/master'
+        if: success() && github.ref != 'refs/heads/main'
         working-directory: ./mdm-resources
         run: |
           npm install

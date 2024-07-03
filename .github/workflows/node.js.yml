@@ -64,7 +64,7 @@ jobs:
 
       # Back in the (default) mdm-ui directory
       - name: Link mdm-resources
-        if: success() && github.ref != 'refs/heads/master'
+        if: success() && github.ref != 'refs/heads/main'
         run: |
           npm link @maurodatamapper/mdm-resources
 

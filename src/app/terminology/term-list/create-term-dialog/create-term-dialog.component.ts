@@ -90,12 +90,18 @@ export class CreateTermDialogComponent implements OnInit {
       return;
     }
 
+    // If no definition provided, default to using the code
+    const definition =
+      this.definition.value && this.definition.value.length > 0
+        ? this.definition.value
+        : this.code.value;
+
     this.submitting = true;
     this.resources.terms
       .save(this.data.terminology.id, {
         domainType: CatalogueItemDomainType.Term,
         code: this.code.value,
-        definition: this.definition.value ?? this.code.value,
+        definition,
         description: this.description.value
       })
       .pipe(

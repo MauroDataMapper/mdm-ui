@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { TransitionOptions, UIRouter } from '@uirouter/angular';
+import { copy, TransitionOptions, UIRouter } from '@uirouter/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 
@@ -98,7 +98,8 @@ export class StateHandlerService {
       simpleviewhome: 'appContainer.simpleApp.home',
       simpleviewresult: 'appContainer.simpleApp.result',
       simpleviewelement: 'appContainer.simpleApp.element',
-      about: 'appContainer.mainApp.about'
+      about: 'appContainer.mainApp.about',
+      copy: 'appContainer.mainApp.twoSidePanel.catalogue.copy',
     }
   };
   constructor(

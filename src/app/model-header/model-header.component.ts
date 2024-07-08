@@ -257,6 +257,13 @@ export class ModelHeaderComponent implements OnInit {
     });
   }
 
+  copy() {
+    return this.stateHandler.Go('copy', {
+      id: this.item.id,
+      domainType: this.item.domainType
+    });
+  }
+
   merge() {
     return this.stateHandler.Go('mergediff', {
       sourceId: this.item.id,

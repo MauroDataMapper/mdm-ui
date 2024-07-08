@@ -161,6 +161,17 @@ SPDX-License-Identifier: Apache-2.0
   >
     <span class="fas fa-clone"></span> Bulk Edit
   </button>
+ 
+  <button
+  mat-menu-item
+  type="button"
+  *ngIf="access.showEdit"
+  [disabled]="busy"
+  (click)="copy()"
+>
+  <span class="fas fa-clone"></span> Copy
+</button>
+
   <button
     mat-menu-item
     data-cy="compare"

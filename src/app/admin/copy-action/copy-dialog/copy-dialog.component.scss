@@ -1,0 +1,95 @@
+/*
+Copyright 2020-2024 University of Oxford and NHS England
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+  .headerContainer{
+    justify-content:space-between;
+    flex-direction: row;
+    margin-top: 5px;
+    display:flex;
+  }
+
+  .mdm-copy {
+    &__type__option {
+      white-space: normal !important;
+      line-height: normal !important;
+      height: auto !important;
+      padding: 16px;
+    }
+  
+    &__checkbox-option {
+      margin: 1em 0.5em;
+    }
+  }
+
+.tabContainer{
+  height: 20%;
+  min-height:300px
+}
+
+
+  .div {
+    position: relative;
+    margin: 2.5px;
+   }
+
+   .div1 {
+     @extend .div;
+     width:20%;
+     overflow-x: auto;
+     overflow-y: hidden;
+   }
+
+  .div2 {
+    @extend .div;
+    width:80%;
+  }
+
+  .title
+  {
+      text-align: center;
+  }
+
+  .noContent
+  {
+    height: 250px;
+    text-align: center;
+  }
+
+  .selectBtn
+  {
+    position: relative;
+    float: right;
+     margin-right: 75px;
+     margin-top: 15px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .button {
+    padding-right: 10px !important;
+    font-size: small  !important;
+    width: fit-content !important;
+  }
+
+  .cancelButton
+  {
+    padding-right: 90px;
+    font-size: small;
+  }

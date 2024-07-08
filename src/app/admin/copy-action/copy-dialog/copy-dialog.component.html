@@ -1,0 +1,134 @@
+<!--
+Copyright 2020-2024 University of Oxford and NHS England
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<div *ngIf="source" class="mdm-copy">
+  <div class="mdm--shadow-block">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="heading-container">
+          <h4>Create copy of "{{ source.label }}"</h4>
+        </div>
+
+        <div class="mb-2">
+          <div class="loading-spinner" *ngIf="!loaded">
+          <div>
+            <span class="fas fa-sync-alt fa-spin"></span>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="mb-2 mt-2">
+            <p>
+              A new copy of <strong>{{ source.label }}</strong> keeps
+              all of the following:
+            </p>
+            <ul>
+              <li *ngIf="domainType === 'VersionedFolder'">Models</li>
+              <li *ngIf="domainType === 'VersionedFolder'">Folders</li>
+              <li>Classes</li>
+              <li>Types</li>
+              <li>Elements</li>
+              <li>Properties</li>
+            </ul>
+          </div>
+     
+
+            <div *ngIf="loaded" class="container">
+              <div fxLayout="row" class="panel panel-default mdm--shadow-block">
+                <div class="full-width" style="clear: both">
+          
+                  <div class="text-muted">
+        
+                        <form [formGroup]="setupForm">
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Copy Name</mat-label>
+                          <input
+                            matInput
+                            type="text"
+                            formControlName="label"
+                            placeholder ="{{ targetName }}"
+                            required 
+                          />
+                          <mat-hint
+                            >The name should be different from the current name '{{
+                              source.label
+                            }}'</mat-hint
+                          >
+                          <mat-error *ngIf="setupForm && label?.errors?.required">
+                            Please enter a label
+                          </mat-error>
+                          <mat-error
+                            *ngIf="setupForm && label?.errors?.forbiddenName"
+                          >
+                            Please choose a different label than '{{
+                              source.label
+                            }}'
+                          </mat-error>
+                        </mat-form-field>
+                        </form>
+                  
+                    </div>
+                    <mat-label>Destination Folder</mat-label>
+                    <mdm-folders-tree
+                    justShowFolders = "true"
+                    tree-name="'folders'"
+                    [node]="folders">
+                    </mdm-folders-tree>
+
+                  </div>
+                  <div style="position: relative; float: right; margin-right: 8px">
+                    <button
+                      mat-menu-item
+                      type="button"
+                      matToolTip="Cancel"
+                      aria-label="Cancel"
+                      (click)="cancelCopy()"
+                    >
+                      <i
+                        class="fas fa-times-circle"
+                        style="color: red"
+                        aria-hidden="true"
+                      ></i>
+                      Cancel
+                    </button>
+                  </div>
+            
+                  <div style="position: relative; float: right; margin-right: 8px">
+                    <button
+                      mat-menu-item
+                      type="button"
+                      matToolTip="Commit"
+                      aria-label="Commit"
+                      (click)="commitCopy()"
+                    >
+                      <i
+                        class="fas fa-check-circle"
+                        style="color: green"
+                        aria-hidden="true"
+                      ></i>
+                      Create Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+
+

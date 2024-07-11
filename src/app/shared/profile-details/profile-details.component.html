@@ -15,7 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<table *ngIf="this.currentProfileDetails" class="table table-bordered" role="presentation">
+<table
+  *ngIf="this.currentProfileDetails"
+  class="table table-bordered"
+  role="presentation"
+>
   <tbody *ngFor="let section of this.currentProfileDetails?.sections">
     <tr>
       <td [attr.colspan]="2" class="detailsRowHeader">
@@ -63,7 +67,8 @@ SPDX-License-Identifier: Apache-2.0
             field.dataType != 'datetime' &&
             field.dataType != 'boolean' &&
             field.dataType != 'folder' &&
-            field.dataType != 'boolean'
+            field.dataType != 'boolean' &&
+            field.dataType != 'json'
           "
           style="background-color: #ffffff; width: 100%; border: hidden"
           [readonly]="true"
@@ -94,6 +99,12 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div *ngIf="field.dataType === 'folder'">
           {{ field.currentValue }}
+        </div>
+        <div *ngIf="field.dataType === 'json'">
+          <ngx-json-viewer
+            [json]="convertStringToJson(field.currentValue)"
+            [expanded]="true"
+          ></ngx-json-viewer>
         </div>
       </td>
     </tr>

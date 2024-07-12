@@ -31,7 +31,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services';
-import { UIRouterGlobals } from '@uirouter/angular';
+import { StateParams, UIRouterGlobals } from '@uirouter/angular';
 import { Observable } from 'rxjs';
 
 /**
@@ -77,14 +77,8 @@ export class CopyDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle('Copy Item');
-
-    //Think we need to either modify the routing to pass the parent id or parent parent id or we need to get the parent id from the source object
-    //I think this is somethign that exists but ask pete how it might work?
     const sourceId: Uuid = this.uiRouterGlobals.params.id;
-    this.domainType = this.uiRouterGlobals.params.domainType;
-    this.parentId =
-      this.uiRouterGlobals.params.parentId ?? null;
-    this.parentParentId = this.uiRouterGlobals.params.parentParentId ?? null;
+    this.extractParams(this.uiRouterGlobals.params);
     this.getCatalogueItemDetails(this.domainType, sourceId).subscribe(
       (response) => {
         this.source = response.body;
@@ -100,17 +94,39 @@ export class CopyDialogComponent implements OnInit {
     });
   }
 
+  extractParams(params: StateParams) {
+    if (!params.domainType) {
+      this.stateHandler.GoPrevious();
+    }
+
+    this.domainType = params.domainType;
+
+    switch (this.domainType) {
+        case CatalogueItemDomainType.Term:
+          this.parentId = params.terminologyId;
+          break;
+        case CatalogueItemDomainType.DataElement:
+          this.parentId = params.dataClassId;
+          this.parentParentId = params.dataModelId;
+          break;
+        case CatalogueItemDomainType.DataClass:
+          this.parentId = params.dataModelId;
+          break;
+        default:
+          break;
+  }}
+
   cancelCopy() {
     this.stateHandler.GoPrevious();
   }
 
   commitCopy() {
     if (!this.targetDestinationId) {
-      this.messageHandler.showError(`Please select a target folder to copy the ${this.domainType} to.`);
+      this.messageHandler.showError(
+        `Please select a target folder to copy the ${this.domainType} to.`
+      );
       return;
     }
-
-
 
     const payload:
       | CopyContainerPayload
@@ -245,7 +261,11 @@ export class CopyDialogComponent implements OnInit {
       case CatalogueItemDomainType.DataClass:
         return this.resources.dataClass.get(this.parentId, id);
       case CatalogueItemDomainType.DataElement:
-        return this.resources.dataElement.get(this.parentParentId, this.parentId, id);
+        return this.resources.dataElement.get(
+          this.parentParentId,
+          this.parentId,
+          id
+        );
 
       default:
         this.messageHandler.showError(
@@ -254,7 +274,7 @@ export class CopyDialogComponent implements OnInit {
     }
   }
 
-  loadNodes  = () =>{
+  loadNodes = () => {
     switch (this.domainType) {
       case CatalogueItemDomainType.DataModel:
         return this.loadFolders();
@@ -268,7 +288,7 @@ export class CopyDialogComponent implements OnInit {
       //   return this.loadDataModels();
       // case CatalogueItemDomainType.DataClass:
       //   return this.loadDataClasses();
-       default:
+      default:
         return this.loadFolders();
     }
   };
@@ -304,6 +324,4 @@ export class CopyDialogComponent implements OnInit {
   onNodeInTreeSelect(node) {
     this.targetDestinationId = node.id;
   }
-
-
 }

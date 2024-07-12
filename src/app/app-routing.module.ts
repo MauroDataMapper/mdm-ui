@@ -519,8 +519,23 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ReferenceDataTypeMainComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.copy',
-      url: '/:domainType/copy/:id/:parentId?/:parentParentId?',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
+      url: '/:domainType/copy/:id/',
+      component: CopyDialogComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
+      url: '/:domainType/:dataModelId/:dataClassId/copy/:id/',
+      component: CopyDialogComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
+      url: '/:domainType/:dataModelId/copy/:id/',
+      component: CopyDialogComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy',
+      url: '/:domainType/:terminologyId/copy/:id/',
       component: CopyDialogComponent
     },
     {

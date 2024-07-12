@@ -258,10 +258,51 @@ export class ModelHeaderComponent implements OnInit {
   }
 
   copy() {
-    return this.stateHandler.Go('copy', {
-      id: this.item.id,
-      domainType: this.item.domainType
-    });
+    switch (this.item.domainType) {
+      case CatalogueItemDomainType.Term: {
+        return this.stateHandler.Go('termCopy', {
+          id: this.item.id,
+          terminologyId: this.item.model.terminology.id
+        });
+      }
+      case CatalogueItemDomainType.DataClass: {
+        return this.stateHandler.Go('dataClassCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType,
+          dataModelId: this.item.model
+        });
+      }
+      case CatalogueItemDomainType.DataElement: {
+        return this.stateHandler.Go('dataElementCopy', {
+          id: this.item.id,
+          dataModelId: this.item.model,
+          dataClassId: this.item.dataClass,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.DataModel: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.Terminology: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.CodeSet: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      default:
+        this.messageHandler.showError(
+          `Cannot get catalogue item details for ${this.item.domainType} ${this.item.label}: unrecognised domain type.`
+        );
+    }
   }
 
   merge() {

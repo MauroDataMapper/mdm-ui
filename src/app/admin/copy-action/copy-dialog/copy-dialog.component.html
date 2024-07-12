@@ -83,13 +83,53 @@ SPDX-License-Identifier: Apache-2.0
                         </form>
                   
                     </div>
+                    <!-- ng if for different selectors depending on the domain type -->
+                    <div *ngIf="this.domainType == 'DataModel' || 'CodeSet' || 'Terminology'">
                     <mat-label>Destination Folder</mat-label>
                     <mdm-folders-tree
                     justShowFolders = "true"
                     tree-name="'folders'"
-                    [node]="folders">
-                    </mdm-folders-tree>
-
+                    [node]="folders"
+                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                  </mdm-folders-tree>
+                  </div>
+                  <div *ngIf="this.domainType == 'Term'">
+                    <mat-label>Destination Terminology</mat-label>
+                    <mdm-folders-tree
+                    [doNotShowDataClasses]="true";
+                    [doNotShowChildDataClasses]="true";
+                    [doNotShowTerms]="true";
+                    [filterByDomainType]="['Terminology']"
+                    tree-name="'Terminologies'"
+                    [node]="terminologies"
+                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>#
+                  </div>
+                  <div *ngIf="this.domainType == 'DataClass'">
+                    <mat-label>Destination DataModel</mat-label>
+                    <mdm-folders-tree
+                    justShowFolders = "true"
+                    tree-name="'DataModels'"
+                    [filterByDomainType]="['DataModel']"
+                    [node]="dataModels"
+                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>#
+                  </div>
+                  <div *ngIf="this.domainType == 'DataElement'">
+                    <mat-label>Destination DataClass</mat-label>
+                    <mdm-folders-tree
+                    justShowFolders = "true"
+                    [filterByDomainType]="['DataClass']"
+                    tree-name="'DataClasses'"
+                    [node]="dataClasses"
+                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>#
+                  </div>
+                
                   </div>
                   <div style="position: relative; float: right; margin-right: 8px">
                     <button

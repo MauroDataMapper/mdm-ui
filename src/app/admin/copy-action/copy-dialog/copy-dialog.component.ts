@@ -97,6 +97,9 @@ export class CopyDialogComponent implements OnInit {
   extractParams(params: StateParams) {
     if (!params.domainType) {
       this.stateHandler.GoPrevious();
+      this.messageHandler.showError(
+        `Cannot get catalogue item details for ${this.source.label}: unrecognised domain type.`
+      );
     }
 
     this.domainType = params.domainType;

@@ -188,6 +188,27 @@ export class ModelHeaderComponent implements OnInit {
 
     return isModelDomainType(this.item.domainType);
   }
+  
+  get canCopy() {
+    if (!this.item) {
+      return false;
+    }
+
+    if (![CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet,  CatalogueItemDomainType.DataClass, CatalogueItemDomainType.DataElement, CatalogueItemDomainType.Term].includes(this.item.domainType)) {
+      return false;
+    }
+
+    if ([CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet].includes(this.item.domainType)) {
+      // need to check it is in a versionedfolder
+      // has a ancestor with a domaintype.versionedfolder property
+      return this.ancestorTreeItems.some(item => item.domainType === CatalogueItemDomainType.VersionedFolder);
+
+    }
+
+    return this.item.availableActions.includes('update');
+  }
+
+
 
   get hasMenuOptions() {
     if (!this.item) {
@@ -206,7 +227,6 @@ export class ModelHeaderComponent implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = this.security.isLoggedIn();
     this.access = this.security.elementAccess(this.item);
-
     this.security
       .isAdministrator()
       .subscribe((state) => (this.isAdministrator = state));

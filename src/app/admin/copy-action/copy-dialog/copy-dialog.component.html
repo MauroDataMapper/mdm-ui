@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="source" class="mdm-copy">
+<div *ngIf="source" >
   <div class="mdm--shadow-block">
     <div class="panel">
       <div class="panel-heading">
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
                   <div class="text-muted">
                     <form [formGroup]="setupForm">
                       <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Copy Name</mat-label>
+                        <mat-label>Label of copy</mat-label>
                         <input
                           matInput
                           type="text"
@@ -78,93 +78,99 @@ SPDX-License-Identifier: Apache-2.0
                       </mat-form-field>
                     </form>
                   </div>
+                </div>
+              </div>
 
                   <div *ngIf="loaded" class="container">
                     <!-- ng if for different selectors depending on the domain type -->
                     <div *ngIf="destinationSelector() === 'folders'">
-                      <mat-label>Destination Folder</mat-label>
+                       <mat-label>Destination Folder</mat-label>
+                       <div class="destination"> 
                       <mdm-folders-tree
+                        [doNotShowDataClasses]="true"
+                        [doNotShowChildDataClasses]="true"
+                        [doNotShowTerms]="true"
                         justShowFolders="true"
-                        tree-name="'folders'"
-                        [node]="folders"
+                        tree-name="'Folders'"
+                        [node]="tree"
+                        (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      >
+                      </mdm-folders-tree>
+                      </div>
+                    </div>
+                    <div *ngIf="destinationSelector() === 'terminologies'">
+                      <mat-label>Destination Terminology</mat-label>
+                      <div class="destination">
+
+                      <mdm-folders-tree
+                        [doNotShowDataClasses]="true"
+                        [doNotShowChildDataClasses]="true"
+                        [doNotShowTerms]="true"
+                        [filterByDomainType]="['Terminology']"
+                        tree-name="'Terminologies'"
+                        [node]="tree"
+                        (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      >
+                      </mdm-folders-tree>
+                      </div>
+                    </div>
+                    <div *ngIf="destinationSelector() === 'datamodels'">
+                      <mat-label>Destination DataModel</mat-label>
+                      <div class="destination">
+
+                      <mdm-folders-tree
+                        tree-name="'DataModels'"
+                        [filterByDomainType]="['Folder', 'DataModel']"
+                        [node]="tree"
+                        (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      >
+                      </mdm-folders-tree>
+                      </div>
+                    </div>
+                    <div *ngIf="destinationSelector() === 'dataclasses'">
+                      <mat-label>Destination DataClass</mat-label>
+                      <div class="destination">
+                      <mdm-folders-tree
+                        [filterByDomainType]="['Folder', 'DataModel', 'DataClass']"
+                        tree-name="'DataClasses'"
+                        [node]="tree"
                         (nodeClickEvent)="onNodeInTreeSelect($event)"
                       >
                       </mdm-folders-tree>
                     </div>
-                    <div
-                      *ngIf="destinationSelector() === 'terminologies'"
-                    >
-                    <mat-label>Destination Terminology</mat-label>
-                    <mdm-folders-tree
-                      [doNotShowDataClasses]="true"                    
-                      [doNotShowChildDataClasses]="true"
-                      [doNotShowTerms]="true"
-                      [filterByDomainType]="['Terminology']"
-                      tree-name="'Terminologies'"
-                      [node]="folders"
-                      (nodeClickEvent)="onNodeInTreeSelect($event)"
-                    >
-                    </mdm-folders-tree>
-                  </div>
-                  <div *ngIf="destinationSelector() === 'datamodels'">
-                    <mat-label>Destination DataModel</mat-label>
-                    <mdm-folders-tree
-                      justShowFolders="true"
-                      tree-name="'DataModels'"
-                      [filterByDomainType]="['DataModel']"
-                      [node]="folders"
-                      (nodeClickEvent)="onNodeInTreeSelect($event)"
-                    >
-                    </mdm-folders-tree>
-                  </div>
-                  <div *ngIf="destinationSelector() === 'dataclasses'">
-                    <mat-label>Destination DataClass</mat-label>
-                    <mdm-folders-tree
-                      justShowFolders="true"
-                      [filterByDomainType]="['DataClass']"
-                      tree-name="'DataClasses'"
-                      [node]="folders"
-                      (nodeClickEvent)="onNodeInTreeSelect($event)"
-                    >
-                    </mdm-folders-tree>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div style="position: relative; float: right; margin-right: 8px">
-                <button
-                  mat-menu-item
-                  type="button"
-                  matToolTip="Cancel"
-                  aria-label="Cancel"
-                  (click)="cancelCopy()"
-                >
-                  <i
-                    class="fas fa-times-circle"
-                    style="color: red"
-                    aria-hidden="true"
-                  ></i>
-                  Cancel
-                </button>
-              </div>
-
-              <div style="position: relative; float: right; margin-right: 8px">
-                <button
-                  mat-menu-item
-                  type="button"
-                  matToolTip="Commit"
-                  aria-label="Commit"
-                  (click)="commitCopy()"
-                >
-                  <i
-                    class="fas fa-check-circle"
-                    style="color: green"
-                    aria-hidden="true"
-                  ></i>
-                  Create Copy
-                </button>
-              </div>
             </div>
-          </div>
+            <div *ngIf="loaded" class="mt-4"></div>
+            <button
+              mat-button
+              color="warn"
+              (click)="cancelCopy()"
+              [disabled]="setupForm.disabled"
+              
+            >
+              Cancel
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              class="custom"
+              (click)="commitCopy()"
+              [disabled]="!setupForm.valid || setupForm.disabled || !targetClick"
+            >
+              Create
+            </button>
+
+            <div style="margin-top: 5px" *ngIf="!loaded">
+              <mat-progress-bar
+                value="50"
+                bufferValue="75"
+                color="accent"
+                mode="indeterminate"
+              ></mat-progress-bar>
+   
         </div>
       </div>
     </div>

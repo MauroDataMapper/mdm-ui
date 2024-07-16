@@ -165,7 +165,7 @@ SPDX-License-Identifier: Apache-2.0
   <button
   mat-menu-item
   type="button"
-  *ngIf="access.showEdit"
+  *ngIf="canCopy"
   [disabled]="busy"
   (click)="copy()"
 >

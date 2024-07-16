@@ -48,6 +48,7 @@ import { Observable } from 'rxjs';
 export class CopyDialogComponent implements OnInit {
   loaded = false;
   loadingContent = false;
+  targetClick = false;
   source: CatalogueItemDetail;
   domainType: CatalogueItemDomainType;
   activeTab: number;
@@ -55,8 +56,8 @@ export class CopyDialogComponent implements OnInit {
   targetDestinationId: Uuid;
   subTargetDestinationId: Uuid;
   setupForm: FormGroup;
-  folders: any;
-  copyPermissions: false;
+  tree: any;
+  copyPermissions = false;
   parentId: Uuid;
   parentParentId: Uuid;
 
@@ -87,7 +88,6 @@ export class CopyDialogComponent implements OnInit {
 
     this.setupForm = new FormGroup({
       label: new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
-
     });
   }
 
@@ -102,25 +102,25 @@ export class CopyDialogComponent implements OnInit {
     this.domainType = params.domainType;
 
     switch (this.domainType) {
-        case CatalogueItemDomainType.Term:
-          if(params.terminologyId ){
+      case CatalogueItemDomainType.Term:
+        if (params.terminologyId) {
           this.parentId = params.terminologyId;
-          }
-          else{
-            // params are wrapped differently by a refresh of the page. this handles that case
-            this.parentId = params.dataModelId;
-          }
-          break;
-        case CatalogueItemDomainType.DataElement:
-          this.parentId = params.dataClassId;
-          this.parentParentId = params.dataModelId;
-          break;
-        case CatalogueItemDomainType.DataClass:
+        } else {
+          // params are wrapped differently by a refresh of the page. this handles that case
           this.parentId = params.dataModelId;
-          break;
-        default:
-          break;
-  }}
+        }
+        break;
+      case CatalogueItemDomainType.DataElement:
+        this.parentId = params.dataClassId;
+        this.parentParentId = params.dataModelId;
+        break;
+      case CatalogueItemDomainType.DataClass:
+        this.parentId = params.dataModelId;
+        break;
+      default:
+        break;
+    }
+  }
 
   cancelCopy() {
     this.stateHandler.GoPrevious();
@@ -141,24 +141,69 @@ export class CopyDialogComponent implements OnInit {
       | CopyDataClassPayload
       | CopyDataElementPayload = this.generatePayloadByDomain(this.domainType);
 
-      this.sendCopyRequest(payload).subscribe(
-        (response) => {
-          this.messageHandler.showSuccess(
-            `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName}.`
-          );
-        },
-        (error) => {
-          this.messageHandler.showError(
-            `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
-            error
-          );
+    this.sendCopyRequest(payload).subscribe(
+      (response) => {
+        this.messageHandler.showSuccess(
+          `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName}.`
+        );
+        switch (this.domainType) {
+          case CatalogueItemDomainType.DataModel:
+            this.stateHandler.Go(
+              'datamodel',
+              { id: response.body.id },
+              { reload: true, location: true }
+            );
+            break;
+          case CatalogueItemDomainType.Terminology:
+            this.stateHandler.Go(
+              'terminology',
+              { id: response.body.id },
+              { reload: true, location: true }
+            );
+            break;
+          case CatalogueItemDomainType.CodeSet:
+            this.stateHandler.Go(
+              'codeset',
+              { id: response.body.id },
+              { reload: true, location: true }
+            );
+            break;
+          case CatalogueItemDomainType.Term:
+            this.stateHandler.Go(
+              'term',
+              { id: response.body.id, terminologyId: this.parentId },
+              { reload: true, location: true }
+            );
+            break;
+          case CatalogueItemDomainType.DataElement:
+            this.stateHandler.Go(
+              'datamodel',
+              { id: response.body.model },
+              { reload: true, location: true }
+            );
+            break;
+          case CatalogueItemDomainType.DataClass:
+            this.stateHandler.Go(
+              'datamodel',
+              { id: response.body.model },
+              { reload: true, location: true }
+            );
+            break;
+          default:
+            this.stateHandler.GoPrevious();
+            break;
         }
-      );
-
-    this.stateHandler.GoPrevious();
+      },
+      (error) => {
+        this.messageHandler.showError(
+          `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
+          error
+        );
+      }
+    );
   }
 
-  sendCopyRequest(payload) : Observable<any> {
+  sendCopyRequest(payload): Observable<any> {
     if (!payload) {
       this.messageHandler.showError(
         `no payload generated for ${this.domainType} ${this.source.label}: unrecognised domain type.`
@@ -252,14 +297,14 @@ export class CopyDialogComponent implements OnInit {
         return {
           targetDataModelId: this.targetDestinationId,
           targetDataClassId: this.subTargetDestinationId,
-          sourceDataModelId: this.source.model.id,
-          sourceDataClassId: this.source.dataClass.id
+          sourceDataModelId: this.source.model,
+          sourceDataClassId: this.source.dataClass
         };
       }
       case CatalogueItemDomainType.DataClass: {
         return {
           targetDataModelId: this.targetDestinationId,
-          sourceDataModelId: this.source.model.id
+          sourceDataModelId: this.source.model
         };
       }
       default:
@@ -299,7 +344,6 @@ export class CopyDialogComponent implements OnInit {
     }
   }
 
-
   loadNodes = () => {
     this.loaded = false;
     const options = {
@@ -315,10 +359,49 @@ export class CopyDialogComponent implements OnInit {
     );
     url.subscribe(
       (resp) => {
-        this.folders = {
+        this.tree = {
           children: resp.body,
           isRoot: true
         };
+
+        let removedNodes = [];
+
+        this.tree.children.forEach((node) => {
+
+          if (node.finalised ?? false) {
+            removedNodes = [...removedNodes, node];
+          }
+
+          if (
+            [
+              CatalogueItemDomainType.DataModel.toString(),
+              CatalogueItemDomainType.Terminology.toString(),
+              CatalogueItemDomainType.CodeSet.toString()
+            ].includes(this.domainType)
+          ) {
+            // remove node if it is not a versioned folder
+            if (
+              node.domainType !==
+              CatalogueItemDomainType.VersionedFolder.toString()
+            ) {
+              removedNodes = [...removedNodes, node];
+            }
+          } else {
+            // remove node if it has no children in the case of data element and data class
+            if (!node.hasChildren ?? false) {
+              removedNodes = [...removedNodes, node];
+            }
+
+            // it might be possible to futher filter out nodes based if they have a child of the same parent domain type
+            // but this would involve getting the tree for each node and slows down the loading so I removed it
+
+          }
+        });
+
+        this.tree.children = this.tree.children.filter(
+          (node) => !removedNodes.includes(node)
+        );
+
         this.loaded = true;
       },
       (err) => {
@@ -329,10 +412,12 @@ export class CopyDialogComponent implements OnInit {
   };
 
   onNodeInTreeSelect(node) {
+    this.targetClick = true;
     this.targetDestinationId = node.id;
+    this.subTargetDestinationId = node.modelId ? node.modelId : null;
   }
 
-  destinationSelector(): string{
+  destinationSelector(): string {
     switch (this.domainType) {
       case CatalogueItemDomainType.Term:
         return 'terminologies';
@@ -343,6 +428,5 @@ export class CopyDialogComponent implements OnInit {
       default:
         return 'folders';
     }
-
   }
 }

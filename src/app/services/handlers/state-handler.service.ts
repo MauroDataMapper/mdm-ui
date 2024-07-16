@@ -102,7 +102,7 @@ export class StateHandlerService {
       containercopy: 'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
       dataclasscopy: 'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
       dataelementcopy: 'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
-      termCopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy',
+      termcopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy',
     }
   };
   constructor(

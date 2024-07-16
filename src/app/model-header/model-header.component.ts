@@ -262,7 +262,8 @@ export class ModelHeaderComponent implements OnInit {
       case CatalogueItemDomainType.Term: {
         return this.stateHandler.Go('termCopy', {
           id: this.item.id,
-          terminologyId: this.item.terminology.id
+          terminologyId: this.item.terminology.id,
+          domainType: this.item.domainType
         });
       }
       case CatalogueItemDomainType.DataClass: {

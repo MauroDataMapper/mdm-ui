@@ -30,7 +30,7 @@ import {
   CopyContainerPayload
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { StateParams, UIRouterGlobals } from '@uirouter/angular';
 import { Observable } from 'rxjs';
 
@@ -55,11 +55,7 @@ export class CopyDialogComponent implements OnInit {
   targetDestinationId: Uuid;
   subTargetDestinationId: Uuid;
   setupForm: FormGroup;
-  messageHandler: any;
   folders: any;
-  dataModels: any;
-  dataClasses: any;
-  terminologies: any;
   copyPermissions: false;
   parentId: Uuid;
   parentParentId: Uuid;
@@ -68,7 +64,8 @@ export class CopyDialogComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private title: Title,
-    private resources: MdmResourcesService
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService
   ) {}
 
   get label() {
@@ -89,8 +86,8 @@ export class CopyDialogComponent implements OnInit {
     this.loadNodes();
 
     this.setupForm = new FormGroup({
-      action: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-      asynchronous: new FormControl(false)
+      label: new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+
     });
   }
 
@@ -106,7 +103,13 @@ export class CopyDialogComponent implements OnInit {
 
     switch (this.domainType) {
         case CatalogueItemDomainType.Term:
+          if(params.terminologyId ){
           this.parentId = params.terminologyId;
+          }
+          else{
+            // params are wrapped differently by a refresh of the page. this handles that case
+            this.parentId = params.dataModelId;
+          }
           break;
         case CatalogueItemDomainType.DataElement:
           this.parentId = params.dataClassId;
@@ -124,6 +127,7 @@ export class CopyDialogComponent implements OnInit {
   }
 
   commitCopy() {
+    this.targetName = this.setupForm.get('label').value;
     if (!this.targetDestinationId) {
       this.messageHandler.showError(
         `Please select a target folder to copy the ${this.domainType} to.`
@@ -137,6 +141,24 @@ export class CopyDialogComponent implements OnInit {
       | CopyDataClassPayload
       | CopyDataElementPayload = this.generatePayloadByDomain(this.domainType);
 
+      this.sendCopyRequest(payload).subscribe(
+        (response) => {
+          this.messageHandler.showSuccess(
+            `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName}.`
+          );
+        },
+        (error) => {
+          this.messageHandler.showError(
+            `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
+            error
+          );
+        }
+      );
+
+    this.stateHandler.GoPrevious();
+  }
+
+  sendCopyRequest(payload) : Observable<any> {
     if (!payload) {
       this.messageHandler.showError(
         `no payload generated for ${this.domainType} ${this.source.label}: unrecognised domain type.`
@@ -165,7 +187,7 @@ export class CopyDialogComponent implements OnInit {
       }
       // modelItems
       case CatalogueItemDomainType.Term: {
-        return this.resources.term.copy(
+        return this.resources.terms.copy(
           this.parentId,
           this.source.id,
           payload as CopyTermPayload
@@ -258,7 +280,7 @@ export class CopyDialogComponent implements OnInit {
         return this.resources.terminology.get(id);
       case CatalogueItemDomainType.CodeSet:
         return this.resources.codeSet.get(id);
-      // modelItems
+      // modelItems have different get endpoint requirements
       case CatalogueItemDomainType.Term:
         return this.resources.term.get(this.parentId, id);
       case CatalogueItemDomainType.DataClass:
@@ -277,26 +299,8 @@ export class CopyDialogComponent implements OnInit {
     }
   }
 
-  loadNodes = () => {
-    switch (this.domainType) {
-      case CatalogueItemDomainType.DataModel:
-        return this.loadFolders();
-      case CatalogueItemDomainType.Terminology:
-        return this.loadFolders();
-      case CatalogueItemDomainType.CodeSet:
-        return this.loadFolders();
-      // case CatalogueItemDomainType.Term:
-      //   return this.loadTerminologies();
-      // case CatalogueItemDomainType.DataElement:
-      //   return this.loadDataModels();
-      // case CatalogueItemDomainType.DataClass:
-      //   return this.loadDataClasses();
-      default:
-        return this.loadFolders();
-    }
-  };
 
-  loadFolders = () => {
+  loadNodes = () => {
     this.loaded = false;
     const options = {
       queryStringParams: {
@@ -326,5 +330,19 @@ export class CopyDialogComponent implements OnInit {
 
   onNodeInTreeSelect(node) {
     this.targetDestinationId = node.id;
+  }
+
+  destinationSelector(): string{
+    switch (this.domainType) {
+      case CatalogueItemDomainType.Term:
+        return 'terminologies';
+      case CatalogueItemDomainType.DataElement:
+        return 'dataclasses';
+      case CatalogueItemDomainType.DataClass:
+        return 'datamodels';
+      default:
+        return 'folders';
+    }
+
   }
 }

@@ -26,149 +26,147 @@ SPDX-License-Identifier: Apache-2.0
 
         <div class="mb-2">
           <div class="loading-spinner" *ngIf="!loaded">
-          <div>
-            <span class="fas fa-sync-alt fa-spin"></span>
+            <div>
+              <span class="fas fa-sync-alt fa-spin"></span>
+            </div>
           </div>
-        </div>
 
-        <div class="panel-body">
-          <div class="mb-2 mt-2">
-            <p>
-              A new copy of <strong>{{ source.label }}</strong> keeps
-              all of the following:
-            </p>
-            <ul>
-              <li *ngIf="domainType === 'VersionedFolder'">Models</li>
-              <li *ngIf="domainType === 'VersionedFolder'">Folders</li>
-              <li>Classes</li>
-              <li>Types</li>
-              <li>Elements</li>
-              <li>Properties</li>
-            </ul>
-          </div>
-     
+          <div class="panel-body">
+            <div class="mb-2 mt-2">
+              <p>
+                A new copy of <strong>{{ source.label }}</strong> keeps all of
+                the following:
+              </p>
+              <ul>
+                <li *ngIf="domainType === 'VersionedFolder'">Models</li>
+                <li *ngIf="domainType === 'VersionedFolder'">Folders</li>
+                <li>Classes</li>
+                <li>Types</li>
+                <li>Elements</li>
+                <li>Properties</li>
+              </ul>
+            </div>
 
             <div *ngIf="loaded" class="container">
               <div fxLayout="row" class="panel panel-default mdm--shadow-block">
                 <div class="full-width" style="clear: both">
-          
                   <div class="text-muted">
-        
-                        <form [formGroup]="setupForm">
-                        <mat-form-field appearance="outline" class="full-width">
-                          <mat-label>Copy Name</mat-label>
-                          <input
-                            matInput
-                            type="text"
-                            formControlName="label"
-                            placeholder ="{{ targetName }}"
-                            required 
-                          />
-                          <mat-hint
-                            >The name should be different from the current name '{{
-                              source.label
-                            }}'</mat-hint
-                          >
-                          <mat-error *ngIf="setupForm && label?.errors?.required">
-                            Please enter a label
-                          </mat-error>
-                          <mat-error
-                            *ngIf="setupForm && label?.errors?.forbiddenName"
-                          >
-                            Please choose a different label than '{{
-                              source.label
-                            }}'
-                          </mat-error>
-                        </mat-form-field>
-                        </form>
-                  
-                    </div>
-                    <!-- ng if for different selectors depending on the domain type -->
-                    <div *ngIf="this.domainType == 'DataModel' || 'CodeSet' || 'Terminology'">
-                    <mat-label>Destination Folder</mat-label>
-                    <mdm-folders-tree
-                    justShowFolders = "true"
-                    tree-name="'folders'"
-                    [node]="folders"
-                    (nodeClickEvent)="onNodeInTreeSelect($event)"
-                    >
-                  </mdm-folders-tree>
+                    <form [formGroup]="setupForm">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Copy Name</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          formControlName="label"
+                          placeholder="{{ targetName }}"
+                          required
+                        />
+                        <mat-hint
+                          >The name should be different from the current name
+                          '{{ source.label }}'</mat-hint
+                        >
+                        <mat-error *ngIf="setupForm && label?.errors?.required">
+                          Please enter a label
+                        </mat-error>
+                        <mat-error
+                          *ngIf="setupForm && label?.errors?.forbiddenName"
+                        >
+                          Please choose a different label than '{{
+                            source.label
+                          }}'
+                        </mat-error>
+                      </mat-form-field>
+                    </form>
                   </div>
-                  <div *ngIf="this.domainType == 'Term'">
+
+                  <div *ngIf="loaded" class="container">
+                    <!-- ng if for different selectors depending on the domain type -->
+                    <div *ngIf="destinationSelector() === 'folders'">
+                      <mat-label>Destination Folder</mat-label>
+                      <mdm-folders-tree
+                        justShowFolders="true"
+                        tree-name="'folders'"
+                        [node]="folders"
+                        (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      >
+                      </mdm-folders-tree>
+                    </div>
+                    <div
+                      *ngIf="destinationSelector() === 'terminologies'"
+                    >
                     <mat-label>Destination Terminology</mat-label>
                     <mdm-folders-tree
-                    [doNotShowDataClasses]="true";
-                    [doNotShowChildDataClasses]="true";
-                    [doNotShowTerms]="true";
-                    [filterByDomainType]="['Terminology']"
-                    tree-name="'Terminologies'"
-                    [node]="terminologies"
-                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      [doNotShowDataClasses]="true"                    
+                      [doNotShowChildDataClasses]="true"
+                      [doNotShowTerms]="true"
+                      [filterByDomainType]="['Terminology']"
+                      tree-name="'Terminologies'"
+                      [node]="folders"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
                     >
-                    </mdm-folders-tree>#
+                    </mdm-folders-tree>
                   </div>
-                  <div *ngIf="this.domainType == 'DataClass'">
+                  <div *ngIf="destinationSelector() === 'datamodels'">
                     <mat-label>Destination DataModel</mat-label>
                     <mdm-folders-tree
-                    justShowFolders = "true"
-                    tree-name="'DataModels'"
-                    [filterByDomainType]="['DataModel']"
-                    [node]="dataModels"
-                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      justShowFolders="true"
+                      tree-name="'DataModels'"
+                      [filterByDomainType]="['DataModel']"
+                      [node]="folders"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
                     >
-                    </mdm-folders-tree>#
+                    </mdm-folders-tree>
                   </div>
-                  <div *ngIf="this.domainType == 'DataElement'">
+                  <div *ngIf="destinationSelector() === 'dataclasses'">
                     <mat-label>Destination DataClass</mat-label>
                     <mdm-folders-tree
-                    justShowFolders = "true"
-                    [filterByDomainType]="['DataClass']"
-                    tree-name="'DataClasses'"
-                    [node]="dataClasses"
-                    (nodeClickEvent)="onNodeInTreeSelect($event)"
+                      justShowFolders="true"
+                      [filterByDomainType]="['DataClass']"
+                      tree-name="'DataClasses'"
+                      [node]="folders"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
                     >
-                    </mdm-folders-tree>#
-                  </div>
-                
-                  </div>
-                  <div style="position: relative; float: right; margin-right: 8px">
-                    <button
-                      mat-menu-item
-                      type="button"
-                      matToolTip="Cancel"
-                      aria-label="Cancel"
-                      (click)="cancelCopy()"
-                    >
-                      <i
-                        class="fas fa-times-circle"
-                        style="color: red"
-                        aria-hidden="true"
-                      ></i>
-                      Cancel
-                    </button>
-                  </div>
-            
-                  <div style="position: relative; float: right; margin-right: 8px">
-                    <button
-                      mat-menu-item
-                      type="button"
-                      matToolTip="Commit"
-                      aria-label="Commit"
-                      (click)="commitCopy()"
-                    >
-                      <i
-                        class="fas fa-check-circle"
-                        style="color: green"
-                        aria-hidden="true"
-                      ></i>
-                      Create Copy
-                    </button>
+                    </mdm-folders-tree>
                   </div>
                 </div>
               </div>
+              <div style="position: relative; float: right; margin-right: 8px">
+                <button
+                  mat-menu-item
+                  type="button"
+                  matToolTip="Cancel"
+                  aria-label="Cancel"
+                  (click)="cancelCopy()"
+                >
+                  <i
+                    class="fas fa-times-circle"
+                    style="color: red"
+                    aria-hidden="true"
+                  ></i>
+                  Cancel
+                </button>
+              </div>
+
+              <div style="position: relative; float: right; margin-right: 8px">
+                <button
+                  mat-menu-item
+                  type="button"
+                  matToolTip="Commit"
+                  aria-label="Commit"
+                  (click)="commitCopy()"
+                >
+                  <i
+                    class="fas fa-check-circle"
+                    style="color: green"
+                    aria-hidden="true"
+                  ></i>
+                  Create Copy
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-
+</div>

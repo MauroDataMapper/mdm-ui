@@ -17,60 +17,162 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
   <h4 class="marginless">History</h4>
-  <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+  <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
 </div>
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
-  <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--mat-table mat-elevation-z3 table-striped">
-      <ng-container matColumnDef="createdBy">
-          <th style="cursor:pointer;max-width: 30%;width: 30%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-              User
-          </th>
-          <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-              <div style="float: left;margin: 3px;">
-                   <span [innerHTML]="element.createdByUser.name"></span>
-              </div>
-          </td>
-      </ng-container>
+<div class="table-responsive" [ngClass]="{ 'is-hidden': isLoadingResults }">
+  <table
+    mat-table
+    [dataSource]="records"
+    matSort
+    (matSortChange)="getSortedData($event)"
+    class="mdm--mat-table mat-elevation-z3 table-striped"
+  >
+    <ng-container matColumnDef="createdBy">
+      <th
+        style="cursor: pointer; max-width: 20%; width: 20%"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        scope="col"
+      >
+        User
+      </th>
+      <td
+        style="
+          max-width: 20%;
+          width: 20%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+        mat-cell
+        *matCellDef="let element"
+      >
+        <div style="float: left; margin: 3px">
+          <span [innerHTML]="element.createdByUser.name"></span>
+        </div>
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="dateCreated">
-          <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-              Date
-          </th>
-          <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-              {{element.dateCreated | date:"dd/MM/yyyy h:mm a"}}
-          </td>
-      </ng-container>
+    <ng-container matColumnDef="dateCreated">
+      <th
+        style="cursor: pointer; max-width: 20%; width: 20%"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        scope="col"
+      >
+        Date
+      </th>
+      <td
+        style="
+          max-width: 20%;
+          width: 20%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+        mat-cell
+        *matCellDef="let element"
+      >
+        {{ element.dateCreated | date: 'dd/MM/yyyy h:mm a' }}
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="description">
-          <th style="cursor:pointer;max-width: 50%;width: 50%;" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-              Description
-          </th>
-          <td style="max-width: 50%;width: 50%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-              {{element.description}}
-          </td>
-      </ng-container>
+    <ng-container matColumnDef="title">
+      <th
+        style="cursor: pointer; max-width: 10%; width: 10%"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        scope="col"
+      >
+        Action
+      </th>
+      <td
+        style="
+          max-width: 10%;
+          width: 10%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+        mat-cell
+        *matCellDef="let element"
+      >
+        {{ element.title }}
+      </td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="description">
+      <th
+        style="cursor: pointer; max-width: 50%; width: 50%"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        scope="col"
+      >
+        Description
+      </th>
+      <td
+        style="
+          max-width: 50%;
+          width: 50%;
+          text-align: left;
+          word-wrap: break-word;
+        "
+        mat-cell
+        *matCellDef="let element"
+      >
+        {{ element.description }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>
-<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+<div
+  class="bordered is-hidden pxy-2"
+  [ngClass]="{ block: !totalItemCount && !isLoadingResults }"
+>
   <p class="marginless">There are no records in this table.</p>
 </div>
 <div class="item" *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--table-fixed skeleton-table">
-      <tr>
-          <th style="width: 20%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-          <th style="width: 20%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-          <th style="width: 60%;" scope="col"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '20%'}"></ngx-skeleton-loader></th>
-      </tr>
-      <tr>
-          <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-          <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-          <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      </tr>
+    <tr>
+      <th style="width: 20%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 20%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '30%' }"
+        ></ngx-skeleton-loader>
+      </th>
+      <th style="width: 60%" scope="col">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{ 'background-color': '#b7bbc5', width: '20%' }"
+        ></ngx-skeleton-loader>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+    </tr>
   </table>
 </div>
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
+<div
+  class="mdm--mat-pagination"
+  [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
+>
   <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

@@ -15,7 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectorRef,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
 import { ElementTypesService } from '@mdm/services/element-types.service';
@@ -30,10 +41,10 @@ import { GridService } from '@mdm/services/grid.service';
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
-
 export class HistoryComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   @Input() parent: any;
   @Input() parentType: string;
   @Input() parentId: string;
@@ -43,7 +54,12 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   public result: SearchResult;
   public dataSetResult: any[];
   options;
-  displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
+  displayedColumns: string[] = [
+    'createdBy',
+    'dateCreated',
+    'title',
+    'description'
+  ];
   totalItemCount = 0;
   elementMap: any[];
   parentVal;
@@ -53,18 +69,33 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   records: any[] = [];
   filter: any = '';
-  applyFilter :any;
+  applyFilter: any;
 
-  constructor(public resourcesService: MdmResourcesService, private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
-
-  }
+  constructor(
+    public resourcesService: MdmResourcesService,
+    private gridService: GridService,
+    private elementTypeService: ElementTypesService,
+    private changeRef: ChangeDetectorRef
+  ) {}
 
   public getServerData($event) {
-    this.fetch($event.pageSize, $event.pageIndex, $event.pageIndex, this.sort?.active, this.sort?.direction);
+    this.fetch(
+      $event.pageSize,
+      $event.pageIndex,
+      $event.pageIndex,
+      this.sort?.active,
+      this.sort?.direction
+    );
   }
 
   public getSortedData($event) {
-    this.fetch(this.paginator.pageSize, this.paginator.pageIndex, this.paginator.pageIndex, $event.active, $event.direction);
+    this.fetch(
+      this.paginator.pageSize,
+      this.paginator.pageIndex,
+      this.paginator.pageIndex,
+      $event.active,
+      $event.direction
+    );
   }
 
   ngOnInit() {
@@ -72,44 +103,62 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     this.parentIdVal = this.parentId ? this.parentId : this.parent?.id;
     this.parentVal = this.parent;
     this.applyFilter = this.gridService.applyFilter(this.filters);
-
   }
 
   ngAfterViewInit() {
     this.sort?.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    this.gridService.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort?.sortChange, this.paginator.page, this.gridService.reloadEvent).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
-      return this.fetch(
-        this.paginator.pageSize,
-        this.paginator.pageOffset,
-        this.sort?.active,
-        this.sort?.direction,
-        this.filter
-      );
-    }), map((data: any) => {
-      this.totalItemCount = data.body.count;
-      this.totalCount.emit(String(data.body.count));
-      this.isLoadingResults = false;
-      return data.body.items;
-    }), catchError(() => {
-      this.isLoadingResults = false;
-      return [];
-    })).subscribe(data => {
-      this.records = data;
-    });
+    this.gridService.reloadEvent.subscribe(
+      () => (this.paginator.pageIndex = 0)
+    );
+    merge(
+      this.sort?.sortChange,
+      this.paginator.page,
+      this.gridService.reloadEvent
+    )
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          return this.fetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort?.active,
+            this.sort?.direction,
+            this.filter
+          );
+        }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.totalCount.emit(String(data.body.count));
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe((data) => {
+        this.records = data;
+      });
     this.changeRef.detectChanges();
   }
-  public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
+  public fetch(
+    pageSize: number,
+    offset: number,
+    sortBy,
+    sortType,
+    filters
+  ): any {
     this.options = {
       pageSize,
       pageIndex: offset,
       sortBy,
-      sortType,
+      sortType
     };
 
     if (filters) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         this.options[key] = filters[key];
       });
     }
@@ -127,7 +176,11 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     if (this.parentId) {
       return this.resourcesService.edit.status(this.domainType, this.parentId);
     } else {
-      return this.resourcesService.edit.status(this.domainType, this.parent?.id, this.options);
+      return this.resourcesService.edit.status(
+        this.domainType,
+        this.parent?.id,
+        this.options
+      );
     }
   }
 }

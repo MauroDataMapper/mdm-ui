@@ -191,6 +191,14 @@ export const pathableDomainTypesFromPrefix = new Map<
   [PathElementType.VersionLink, 'versionLinks']
 ]);
 
+export const branchablePathTypes = [
+  PathElementType.DataModel,
+  PathElementType.Terminology,
+  PathElementType.CodeSet,
+  PathElementType.ReferenceDataModel,
+  PathElementType.VersionedFolder
+];
+
 export interface PathProperty {
   name: string;
   qualifiedName: string[];
@@ -203,3 +211,7 @@ export interface PathElement {
   version?: string;
   property?: PathProperty;
 }
+
+export const isPathElementBranchable = (pathElement: PathElement): boolean => {
+  return branchablePathTypes.includes(pathElement.type);
+};

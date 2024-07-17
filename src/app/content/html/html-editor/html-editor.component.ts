@@ -155,7 +155,11 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       }
 
       // Intercept the HTML content to render for display only so that certain parts can be altered
-      this.displayContent = this.htmlParser.parseAndModify(this.description);
+      // The version or branch override will try to force all Mauro path links to work within the same context as
+      // the containing model the root element is in, if available
+      this.displayContent = this.htmlParser.parseAndModify(this.description, {
+        versionOrBranchOverride: this.getVersionOrBranchOverride()
+      });
     }
   }
 
@@ -276,5 +280,21 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
         customButtons.find((custom) => `component:${custom.name}` === button) ||
         button
     );
+  }
+
+  private getVersionOrBranchOverride() {
+    if (!this.rootElement) {
+      return undefined;
+    }
+
+    const pathableRootElement = (this.rootElement as unknown) as CatalogueItem &
+      Pathable;
+
+    if (!pathableRootElement.path) {
+      return undefined;
+    }
+
+    const pathElements = this.pathNames.parse(pathableRootElement.path);
+    return this.pathNames.getVersionOrBranchName(pathElements);
   }
 }

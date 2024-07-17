@@ -552,4 +552,64 @@ describe('PathNameService', () => {
       }
     );
   });
+
+  describe('building paths', () => {
+    it.each([undefined, null])(
+      'should return nothing when no path elements are provided',
+      (path) => {
+        const actual = service.build(path as PathElement[]);
+        expect(actual).toBeNull();
+      }
+    );
+
+    it('should return nothing when empty path elements list is provided', () => {
+      const actual = service.build([]);
+      expect(actual).toBeNull();
+    });
+
+    const pathCases = [
+      'dm:Test Data Model',
+      'dm:Test Data Model$another-branch',
+      'dm:Test Data Model$2.0.0',
+      'te:Test Terminology',
+      'cs:Test Code Set',
+      'dm:Test Data Model|dc:Test Data Class',
+      'dm:Test Data Model|dc:Test Data Class|de:Test Data Element',
+      'dm:Test Data Model@description',
+      'dm:Test Data Model$2.0.0@description',
+      'dm:Test Data Model@rule:rule-representation',
+      'dm:Test Data Model|dc:Test Data Class@description',
+      'dm:Test Data Model$test-branch|dc:Test Data Class@description'
+    ];
+
+    it.each(pathCases)(
+      'when building %p then the correct string is returned',
+      (expected) => {
+        const pathElements = service.parse(expected);
+        const actual = service.build(pathElements);
+        expect(actual).toBe(expected);
+      }
+    );
+  });
+
+  describe('get branch name', () => {
+    it.each([
+      ['', 'dm:Data Model'],
+      ['main', 'dm:Data Model$main'],
+      ['another-branch', 'dm:Data Model$another-branch'],
+      ['main', 'dm:Data Model$main|dc:Data Class'],
+      ['another-branch', 'dm:Data Model$another-branch|dc:Data Class'],
+      ['main', 'te:Terminology$main'],
+      ['another-branch', 'te:Terminology$another-branch'],
+      ['main', 'te:Terminology$main|tm:Term'],
+      ['another-branch', 'te:Terminology$another-branch|tm:Term']
+    ])(
+      'should return branch name %p when given the path %p',
+      (branchName, path) => {
+        const pathElements = service.parse(path);
+        const actual = service.getVersionOrBranchName(pathElements);
+        expect(actual).toBe(branchName);
+      }
+    );
+  });
 });

@@ -22,6 +22,7 @@ import {
   PathableDomainType
 } from '@maurodatamapper/mdm-resources';
 import {
+  isPathElementBranchable,
   pathableDomainTypesFromPrefix,
   PathElement,
   pathElementDomainTypes,
@@ -97,6 +98,48 @@ export class PathNameService {
     });
   }
 
+  parseAndOverrideVersionOrBranch(
+    path: string,
+    versionOrBranch: string
+  ): PathElement[] | null {
+    const pathElements = this.parse(path);
+    if (!pathElements) {
+      return null;
+    }
+
+    pathElements
+      .filter((pathElement) => isPathElementBranchable(pathElement))
+      .forEach((pathElement) => {
+        pathElement.version = versionOrBranch;
+      });
+
+    return pathElements;
+  }
+
+  build(pathElements: PathElement[]): string {
+    if (!pathElements || pathElements.length === 0) {
+      return null;
+    }
+
+    const pathElementsAsStrings = pathElements.map((pathElement) => {
+      let pathElementAsString = `${pathElement.type}${this.partSeparator}${pathElement.label}`;
+      if (pathElement.version) {
+        pathElementAsString = `${pathElementAsString}${this.branchSeparator}${pathElement.version}`;
+      }
+
+      if (pathElement.property) {
+        const propertyElementAsString = pathElement.property.qualifiedName.join(
+          this.partSeparator
+        );
+        pathElementAsString = `${pathElementAsString}${this.propSeparator}${propertyElementAsString}`;
+      }
+
+      return pathElementAsString;
+    });
+
+    return pathElementsAsStrings.join(this.elementSeparator);
+  }
+
   createFromBreadcrumbs(item: Modelable & Navigatable): string {
     if (!item) {
       return null;
@@ -124,8 +167,38 @@ export class PathNameService {
     return pathableDomainTypesFromPrefix.get(pathElements[0].type);
   }
 
+  getVersionOrBranchName(pathElements: PathElement[]) {
+    if (!pathElements || pathElements.length === 0) {
+      return null;
+    }
+
+    const matching = pathElements.find(
+      (pathElement) =>
+        isPathElementBranchable(pathElement) && !!pathElement.version
+    );
+    if (!matching) {
+      return '';
+    }
+
+    return matching.version;
+  }
+
   createHref(path: string) {
     const domain = this.getPathableDomainFromPath(path);
+    return this.createHrefFromPath(domain, path);
+  }
+
+  createHrefRelativeToVersionOrBranch(path: string, branchName: string) {
+    const pathElements = this.parseAndOverrideVersionOrBranch(path, branchName);
+    const overriddenPath = this.build(pathElements);
+
+    const domain = pathableDomainTypesFromPrefix.get(pathElements[0].type);
+
+    // Create a href to the path pointing to the version/branch, not the original parameter
+    return this.createHrefFromPath(domain, overriddenPath);
+  }
+
+  private createHrefFromPath(domain: PathableDomainType, path: string) {
     return this.router.stateService.href(
       'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
       {

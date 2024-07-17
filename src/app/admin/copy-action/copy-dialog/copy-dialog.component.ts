@@ -122,15 +122,50 @@ export class CopyDialogComponent implements OnInit {
     }
   }
 
-  cancelCopy() {
-    this.stateHandler.GoPrevious();
+  getCatalogueItemDetails(
+    domainType: CatalogueItemDomainType,
+    id: Uuid
+  ): Observable<MdmResponse<CatalogueItemDetail>> {
+    switch (domainType) {
+      case CatalogueItemDomainType.DataModel:
+        return this.resources.dataModel.get(id);
+      case CatalogueItemDomainType.Terminology:
+        return this.resources.terminology.get(id);
+      case CatalogueItemDomainType.CodeSet:
+        return this.resources.codeSet.get(id);
+      // modelItems have different get endpoint requirements
+      case CatalogueItemDomainType.Term:
+        return this.resources.term.get(this.parentId, id);
+      case CatalogueItemDomainType.DataClass:
+        return this.resources.dataClass.get(this.parentId, id);
+      case CatalogueItemDomainType.DataElement:
+        return this.resources.dataElement.get(
+          this.parentParentId,
+          this.parentId,
+          id
+        );
+
+      default:
+        this.messageHandler.showError(
+          `Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`
+        );
+    }
   }
+
 
   commitCopy() {
     this.targetName = this.setupForm.get('label').value;
     if (!this.targetDestinationId) {
       this.messageHandler.showError(
         `Please select a target folder to copy the ${this.domainType} to.`
+      );
+      return;
+    }
+
+    if (this.domainType === CatalogueItemDomainType.DataElement && !this.subTargetDestinationId) {
+      this.messageHandler.showError(
+        `Please select a target data class to copy the ${this.domainType} to.`
+
       );
       return;
     }
@@ -144,7 +179,7 @@ export class CopyDialogComponent implements OnInit {
     this.sendCopyRequest(payload).subscribe(
       (response) => {
         this.messageHandler.showSuccess(
-          `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName}.`
+          `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName} as ${this.targetName}.`
         );
         switch (this.domainType) {
           case CatalogueItemDomainType.DataModel:
@@ -203,6 +238,71 @@ export class CopyDialogComponent implements OnInit {
     );
   }
 
+  cancelCopy() {
+    this.stateHandler.GoPrevious();
+  }
+
+  generatePayloadByDomain(
+    domainType: CatalogueItemDomainType
+  ):
+    | CopyContainerPayload
+    | CopyTermPayload
+    | CopyDataClassPayload
+    | CopyDataElementPayload {
+    switch (domainType) {
+      case CatalogueItemDomainType.DataModel: {
+        return {
+          folderId: this.targetDestinationId,
+          label: this.targetName,
+          copyPermissions: this.copyPermissions
+        };
+      }
+      case CatalogueItemDomainType.Terminology: {
+        return {
+          folderId: this.targetDestinationId,
+          label: this.targetName,
+          copyPermissions: this.copyPermissions
+        };
+      }
+      case CatalogueItemDomainType.CodeSet: {
+        return {
+          folderId: this.targetDestinationId,
+          label: this.targetName,
+          copyPermissions: this.copyPermissions
+        };
+      }
+      // modelItems
+      case CatalogueItemDomainType.Term: {
+        return {
+          targetTerminologyId: this.targetDestinationId,
+          code: this.targetName
+        };
+      }
+      case CatalogueItemDomainType.DataElement: {
+        return {
+          targetDataModelId: this.targetDestinationId,
+          targetDataClassId: this.subTargetDestinationId,
+          sourceDataModelId: this.source.model,
+          sourceDataClassId: this.source.dataClass,
+          copyLabel : this.targetName,
+          copyPermissions: this.copyPermissions
+        };
+      }
+      case CatalogueItemDomainType.DataClass: {
+        return {
+          targetDataModelId: this.targetDestinationId,
+          sourceDataModelId: this.source.model,
+          copyLabel : this.targetName,
+          copyPermissions: this.copyPermissions
+        };
+      }
+      default:
+        this.messageHandler.showError(
+          `Cannot generate payload for ${this.domainType}: unrecognised domain type.`
+        );
+    }
+  }
+
   sendCopyRequest(payload): Observable<any> {
     if (!payload) {
       this.messageHandler.showError(
@@ -253,93 +353,6 @@ export class CopyDialogComponent implements OnInit {
       default:
         this.messageHandler.showError(
           `Cannot get catalogue item details for ${this.domainType} ${this.source.label}: unrecognised domain type.`
-        );
-    }
-  }
-
-  generatePayloadByDomain(
-    domainType: CatalogueItemDomainType
-  ):
-    | CopyContainerPayload
-    | CopyTermPayload
-    | CopyDataClassPayload
-    | CopyDataElementPayload {
-    switch (domainType) {
-      case CatalogueItemDomainType.DataModel: {
-        return {
-          folderId: this.targetDestinationId,
-          label: this.targetName,
-          copyPermissions: this.copyPermissions
-        };
-      }
-      case CatalogueItemDomainType.Terminology: {
-        return {
-          folderId: this.targetDestinationId,
-          label: this.targetName,
-          copyPermissions: this.copyPermissions
-        };
-      }
-      case CatalogueItemDomainType.CodeSet: {
-        return {
-          folderId: this.targetDestinationId,
-          label: this.targetName,
-          copyPermissions: this.copyPermissions
-        };
-      }
-      // modelItems
-      case CatalogueItemDomainType.Term: {
-        return {
-          targetTerminologyId: this.targetDestinationId,
-          code: this.targetName
-        };
-      }
-      case CatalogueItemDomainType.DataElement: {
-        return {
-          targetDataModelId: this.targetDestinationId,
-          targetDataClassId: this.subTargetDestinationId,
-          sourceDataModelId: this.source.model,
-          sourceDataClassId: this.source.dataClass
-        };
-      }
-      case CatalogueItemDomainType.DataClass: {
-        return {
-          targetDataModelId: this.targetDestinationId,
-          sourceDataModelId: this.source.model
-        };
-      }
-      default:
-        this.messageHandler.showError(
-          `Cannot generate payload for ${this.domainType}: unrecognised domain type.`
-        );
-    }
-  }
-
-  getCatalogueItemDetails(
-    domainType: CatalogueItemDomainType,
-    id: Uuid
-  ): Observable<MdmResponse<CatalogueItemDetail>> {
-    switch (domainType) {
-      case CatalogueItemDomainType.DataModel:
-        return this.resources.dataModel.get(id);
-      case CatalogueItemDomainType.Terminology:
-        return this.resources.terminology.get(id);
-      case CatalogueItemDomainType.CodeSet:
-        return this.resources.codeSet.get(id);
-      // modelItems have different get endpoint requirements
-      case CatalogueItemDomainType.Term:
-        return this.resources.term.get(this.parentId, id);
-      case CatalogueItemDomainType.DataClass:
-        return this.resources.dataClass.get(this.parentId, id);
-      case CatalogueItemDomainType.DataElement:
-        return this.resources.dataElement.get(
-          this.parentParentId,
-          this.parentId,
-          id
-        );
-
-      default:
-        this.messageHandler.showError(
-          `Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`
         );
     }
   }

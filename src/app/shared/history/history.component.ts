@@ -29,8 +29,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
-import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -53,7 +52,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public result: SearchResult;
   public dataSetResult: any[];
-  options;
   displayedColumns: string[] = [
     'createdBy',
     'dateCreated',
@@ -61,7 +59,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     'description'
   ];
   totalItemCount = 0;
-  elementMap: any[];
   parentVal;
   parentTypeVal;
   parentIdVal;
@@ -74,24 +71,12 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   constructor(
     public resourcesService: MdmResourcesService,
     private gridService: GridService,
-    private elementTypeService: ElementTypesService,
     private changeRef: ChangeDetectorRef
   ) {}
 
-  public getServerData($event) {
-    this.fetch(
-      $event.pageSize,
-      $event.pageIndex,
-      $event.pageIndex,
-      this.sort?.active,
-      this.sort?.direction
-    );
-  }
-
-  public getSortedData($event) {
+  public getSortedData($event: Sort) {
     this.fetch(
       this.paginator.pageSize,
-      this.paginator.pageIndex,
       this.paginator.pageIndex,
       $event.active,
       $event.direction
@@ -123,8 +108,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
             this.paginator.pageSize,
             this.paginator.pageOffset,
             this.sort?.active,
-            this.sort?.direction,
-            this.filter
+            this.sort?.direction
           );
         }),
         map((data: any) => {
@@ -143,43 +127,31 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       });
     this.changeRef.detectChanges();
   }
+
   public fetch(
     pageSize: number,
-    offset: number,
-    sortBy,
-    sortType,
-    filters
+    pageOffset: number,
+    sortBy: string,
+    sortType: SortDirection
   ): any {
-    this.options = {
+    const options = this.gridService.constructOptions(
       pageSize,
-      pageIndex: offset,
+      pageOffset,
       sortBy,
       sortType
-    };
-
-    if (filters) {
-      Object.keys(filters).forEach((key) => {
-        this.options[key] = filters[key];
-      });
-    }
-
-    this.elementMap = this.elementTypeService.getBaseWithUserTypes();
-    // let resource = this.elementMap.find(x => x.id === this.parentType);
-
-    // for (const type in this.elementMap) {
-    //   if (this.elementMap[type].id === this.parentTypeVal) {
-    //     resource = this.elementMap[type];
-    //     break;
-    //   }
-    // }
+    );
 
     if (this.parentId) {
-      return this.resourcesService.edit.status(this.domainType, this.parentId);
+      return this.resourcesService.edit.status(
+        this.domainType,
+        this.parentId,
+        options
+      );
     } else {
       return this.resourcesService.edit.status(
         this.domainType,
         this.parent?.id,
-        this.options
+        options
       );
     }
   }

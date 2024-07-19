@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -48,6 +48,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   @Input() parentType: string;
   @Input() parentId: string;
   @Input() domainType: string;
+  @Input() pageSize: number;
   @Output() totalCount = new EventEmitter<string>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public result: SearchResult;
@@ -74,12 +75,18 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef
   ) {}
 
-  public getSortedData($event: Sort) {
+  public getSortedData(
+    pageSize?: number,
+    pageIndex?: number,
+    filters?: {},
+    sortBy?: string,
+    sortType?: SortDirection) {
     this.fetch(
-      this.paginator.pageSize,
-      this.paginator.pageIndex,
-      $event.active,
-      $event.direction
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
     );
   }
 
@@ -112,6 +119,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
           );
         }),
         map((data: any) => {
+          // this is always the base item count for some reason
           this.totalItemCount = data.body.count;
           this.totalCount.emit(String(data.body.count));
           this.isLoadingResults = false;
@@ -132,13 +140,15 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     pageSize: number,
     pageOffset: number,
     sortBy: string,
-    sortType: SortDirection
+    sortType: SortDirection,
+    filters?: {}
   ): any {
     const options = this.gridService.constructOptions(
       pageSize,
       pageOffset,
       sortBy,
-      sortType
+      sortType,
+      filters
     );
 
     if (this.parentId) {

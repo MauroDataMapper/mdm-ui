@@ -84,13 +84,16 @@ export class DataElementComponent
   isValid = false;
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   access: any;
   tabs = new TabCollection([
     'description',
     'links',
     'summaryMetadata',
     'rules',
-    'annotations'
+    'annotations',
+    'history'
   ]);
 
   constructor(
@@ -291,6 +294,11 @@ export class DataElementComponent
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 
   toggleShowNewInlineDataType() {

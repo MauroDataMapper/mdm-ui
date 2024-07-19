@@ -18,17 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 
 <table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
-  <tr *ngIf="isInControlList('dataTypeDetails')" data-cy="data-type-details">
-    <th class="detailsRowHeader" scope="col">Data Type Details</th>
-    <td data-cy="value">
-      <mdm-element-data-type-details
-        *ngIf="catalogueItem"
-        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
-      ></mdm-element-data-type-details>
-
-    </td>
-  </tr>
-  <tr *ngIf="isInControlList('code')" data-cy="code">
+    <tr *ngIf="isInControlList('dataTypeDetails')" data-cy="data-type-details">
+      <th class="detailsRowHeader" scope="col">Data Type Details</th>
+      <td data-cy="value">
+        <mdm-element-data-type-details
+          *ngIf="catalogueItem"
+          [elementDataType]="
+            catalogueItem.dataType ? catalogueItem.dataType : catalogueItem
+          "
+        ></mdm-element-data-type-details>
+      </td>
+    </tr>
+    <tr *ngIf="isInControlList('code')" data-cy="code">
       <td class="detailsRowHeader">Code</td>
       <td data-cy="value" *ngIf="catalogueItem">
         <mdm-inline-text-edit
@@ -54,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('aliases')" data-cy="aliases" >
+    <tr *ngIf="isInControlList('aliases')" data-cy="aliases">
       <td class="detailsRowHeader">Aliases</td>
       <td data-cy="value">
         <mdm-element-alias
@@ -72,6 +73,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="catalogueItem">
           <mdm-content-editor
             [(content)]="catalogueItem.description"
+            [rootElement]="catalogueItem"
             [inEditMode]="false"
           ></mdm-content-editor>
         </div>
@@ -156,11 +158,13 @@ SPDX-License-Identifier: Apache-2.0
       <th class="detailsRowHeader" scope="col">Data Type</th>
       <td data-cy="value">
         <mdm-element-data-type
-        *ngIf="catalogueItem"
-        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
-        [mcParentDataModel]="catalogueItem"
-      >
-      </mdm-element-data-type>
+          *ngIf="catalogueItem"
+          [elementDataType]="
+            catalogueItem.dataType ? catalogueItem.dataType : catalogueItem
+          "
+          [mcParentDataModel]="catalogueItem"
+        >
+        </mdm-element-data-type>
       </td>
     </tr>
 

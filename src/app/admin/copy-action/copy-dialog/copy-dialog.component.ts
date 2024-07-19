@@ -27,7 +27,7 @@ import {
   CopyTermPayload,
   CopyDataClassPayload,
   CopyDataElementPayload,
-  CopyContainerPayload
+  CopyModelPayload
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
@@ -152,7 +152,6 @@ export class CopyDialogComponent implements OnInit {
     }
   }
 
-
   commitCopy() {
     this.targetName = this.setupForm.get('label').value;
     if (!this.targetDestinationId) {
@@ -162,16 +161,18 @@ export class CopyDialogComponent implements OnInit {
       return;
     }
 
-    if (this.domainType === CatalogueItemDomainType.DataElement && !this.subTargetDestinationId) {
+    if (
+      this.domainType === CatalogueItemDomainType.DataElement &&
+      !this.subTargetDestinationId
+    ) {
       this.messageHandler.showError(
         `Please select a target data class to copy the ${this.domainType} to.`
-
       );
       return;
     }
 
     const payload:
-      | CopyContainerPayload
+      | CopyModelPayload
       | CopyTermPayload
       | CopyDataClassPayload
       | CopyDataElementPayload = this.generatePayloadByDomain(this.domainType);
@@ -245,7 +246,7 @@ export class CopyDialogComponent implements OnInit {
   generatePayloadByDomain(
     domainType: CatalogueItemDomainType
   ):
-    | CopyContainerPayload
+    | CopyModelPayload
     | CopyTermPayload
     | CopyDataClassPayload
     | CopyDataElementPayload {
@@ -280,19 +281,13 @@ export class CopyDialogComponent implements OnInit {
       }
       case CatalogueItemDomainType.DataElement: {
         return {
-          targetDataModelId: this.targetDestinationId,
-          targetDataClassId: this.subTargetDestinationId,
-          sourceDataModelId: this.source.model,
-          sourceDataClassId: this.source.dataClass,
-          copyLabel : this.targetName,
+          copyLabel: this.targetName,
           copyPermissions: this.copyPermissions
         };
       }
       case CatalogueItemDomainType.DataClass: {
         return {
-          targetDataModelId: this.targetDestinationId,
-          sourceDataModelId: this.source.model,
-          copyLabel : this.targetName,
+          copyLabel: this.targetName,
           copyPermissions: this.copyPermissions
         };
       }
@@ -315,19 +310,19 @@ export class CopyDialogComponent implements OnInit {
       case CatalogueItemDomainType.DataModel: {
         return this.resources.dataModel.copy(
           this.source.id,
-          payload as CopyContainerPayload
+          payload as CopyModelPayload
         );
       }
       case CatalogueItemDomainType.Terminology: {
         return this.resources.terminology.copy(
           this.source.id,
-          payload as CopyContainerPayload
+          payload as CopyModelPayload
         );
       }
       case CatalogueItemDomainType.CodeSet: {
         return this.resources.codeSet.copy(
           this.source.id,
-          payload as CopyContainerPayload
+          payload as CopyModelPayload
         );
       }
       // modelItems
@@ -340,12 +335,18 @@ export class CopyDialogComponent implements OnInit {
       }
       case CatalogueItemDomainType.DataElement: {
         return this.resources.dataElement.copy(
+          this.subTargetDestinationId,
+          this.targetDestinationId,
+          this.source.model,
+          this.source.dataClass,
           this.source.id,
           payload as CopyDataElementPayload
         );
       }
       case CatalogueItemDomainType.DataClass: {
         return this.resources.dataClass.copy(
+          this.targetDestinationId,
+          this.source.model,
           this.source.id,
           payload as CopyDataClassPayload
         );
@@ -380,7 +381,6 @@ export class CopyDialogComponent implements OnInit {
         let removedNodes = [];
 
         this.tree.children.forEach((node) => {
-
           if (node.finalised ?? false) {
             removedNodes = [...removedNodes, node];
           }
@@ -407,7 +407,6 @@ export class CopyDialogComponent implements OnInit {
 
             // it might be possible to futher filter out nodes based if they have a child of the same parent domain type
             // but this would involve getting the tree for each node and slows down the loading so I removed it
-
           }
         });
 

@@ -19,20 +19,6 @@ SPDX-License-Identifier: Apache-2.0
   &__list {
     max-height: 400px;
     overflow: auto;
-
-    mat-table {
-      max-height: 100%;
-      overflow: auto;
-
-      mat-cell {
-        max-width: 50%;
-        width: 50%;
-        text-align: left;
-        word-wrap: break-word;
-        padding-right: 5px;
-        padding-left: 5px;
-      }
-    }
   }
 
   &__list-footer {

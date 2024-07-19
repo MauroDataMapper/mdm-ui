@@ -218,13 +218,13 @@ describe('MauroItemUpdateService', () => {
   };
 
   const testMissingModelIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(identifier.domainType.toString() + ' ' + identifier.id + ' has not provided a model'));
     const actual$ = service.save(identifier, {} as MauroItem);
     expect(actual$).toBeObservable(expected$);
   };
 
   const testMissingDataClassIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(`${identifier.domainType.toString()} ${identifier.id} has not provided a data class`));
     const actual$ = service.save(identifier, {} as MauroItem);
     expect(actual$).toBeObservable(expected$);
   };
@@ -238,7 +238,7 @@ describe('MauroItemUpdateService', () => {
     it.each(unsupported)(
       'should throw an error for the domain type %p',
       (domainType) => {
-        const expected$ = cold('#', null, new Error());
+        const expected$ = cold('#', null, new Error(`${domainType.toString()} 123 has not provided a model`));
         const actual$ = service.save(
           { id: '123', domainType },
           {} as MauroItem

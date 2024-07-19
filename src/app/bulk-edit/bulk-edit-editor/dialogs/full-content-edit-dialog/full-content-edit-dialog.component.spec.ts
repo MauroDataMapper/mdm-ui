@@ -22,6 +22,7 @@ import {
 } from '@mdm/testing/testing.helpers';
 
 import { FullContentEditDialogComponent } from './full-content-edit-dialog.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 describe('FullContentEditDialogComponent', () => {
   let harness: ComponentHarness<FullContentEditDialogComponent>;
@@ -33,7 +34,8 @@ describe('FullContentEditDialogComponent', () => {
         providers: [
           { provide: MatDialogRef, useValue: {} },
           { provide: MAT_DIALOG_DATA, useValue: {} }
-        ]
+        ],
+        declarations: [ContentEditorComponent]
       }
     );
   });

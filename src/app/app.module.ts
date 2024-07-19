@@ -41,11 +41,12 @@ import { SharedModule } from './shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
 import { SharedService } from './services/shared.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { MergeDiffModule } from './merge-diff/merge-diff.module';
 import { BulkEditModule } from './bulk-edit/bulk-edit.module';
 import { CatalogueSearchModule } from './catalogue-search/catalogue-search.module';
+import { NgxJoditComponent } from 'ngx-jodit';
 
 @NgModule({
   declarations: [AppComponent],
@@ -65,7 +66,8 @@ import { CatalogueSearchModule } from './catalogue-search/catalogue-search.modul
       apiEndpoint: environment.apiEndpoint
     }),
     MergeDiffModule,
-    CatalogueSearchModule
+    CatalogueSearchModule,
+    NgxJoditComponent
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

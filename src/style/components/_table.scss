@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-table.mat-table .mat-header-cell {
+table.mat-mdc-table .mat-mdc-header-cell {
   font-size: $defaultFontSize;
   font-weight: 600;
 }
@@ -33,9 +33,9 @@ table td {
 
 tr td,
 tr th,
-tr td.mat-cell,
-tr td.mat-footer-cell,
-tr th.mat-header-cell {
+tr td.mat-mdc-cell,
+tr td.mat-mdc-footer-cell,
+tr th.mat-mdc-header-cell {
   padding: 0.75em;
   border-bottom: 0.07rem solid #ebedf2;
   vertical-align: top;
@@ -60,7 +60,7 @@ table.mdm--table {
   }
 }
 
-td.mat-cell:last-of-type {
+td.mat-mdc-cell:last-of-type {
   padding-right: 16px !important;
 }
 .table-responsive {
@@ -81,7 +81,7 @@ table.table thead {
   table-layout: fixed;
 }
 
-.mat-card.mdm--progress-spinner {
+.mat-mdc-card.mdm--progress-spinner {
   position: absolute;
   top: 0;
   left: 0;
@@ -93,7 +93,7 @@ table.table thead {
   align-items: center;
 }
 
-table.mat-table .mat-header-cell, table.mat-table .mat-header-row td {
+table.mat-mdc-table .mat-mdc-header-cell, table.mat-table .mat-mdc-header-row td {
     font-size: $defaultFontSize;
     font-weight: 700;
     color: #333;
@@ -101,7 +101,7 @@ table.mat-table .mat-header-cell, table.mat-table .mat-header-row td {
     border-bottom: 2px solid #e9ecef;
   }
 
-table.mat-table .mat-header-row td {
+table.mat-mdc-table .mat-mdc-header-row td {
   border-left: none;
   border-right: none;
 }

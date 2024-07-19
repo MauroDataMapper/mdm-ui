@@ -21,14 +21,14 @@ SPDX-License-Identifier: Apache-2.0
 >
   <div class="mdm-model-header__title-bar">
     <div class="mdm-model-header__title">
-      <h4
-        class="inline-block marginless"
+      <h3
+        class="inline-block"
         data-cy="catalogue-item-label"
         [ngClass]="{ deletedDataModelTitle: item?.deleted }"
       >
-        <mdm-element-icon [element]="item"></mdm-element-icon>
+        <mdm-element-icon [element]="item"></mdm-element-icon>&nbsp;
         <span class="dataModelDetailsLabel">{{ item.label }}</span>
-      </h4>
+      </h3>
       <span *ngIf="item?.deleted" class="inline-block">
         <small class="warning"> | Deleted</small>
       </span>
@@ -150,7 +150,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="editBranchName()"
   >
-    <span class="fas fa-code-branch"></span> Edit Branch Name
+    <span class="fas fa-code-branch"></span>  Edit Branch Name
   </button>
   <button
     mat-menu-item
@@ -159,7 +159,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="bulkEdit()"
   >
-    <span class="fas fa-clone"></span> Bulk Edit
+    <span class="fas fa-clone"></span>  Bulk Edit
   </button>
   <button
     mat-menu-item
@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
   >
     <span class="fas fa-balance-scale-right" aria-hidden="true"></span>
-    Compare
+     Compare
   </button>
   <button
     mat-menu-item
@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="merge()"
   >
-    <span class="fas fa-window-restore"></span> Merge...
+    <span class="fas fa-window-restore"></span>  Merge...
   </button>
   <button
     mat-menu-item
@@ -190,7 +190,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="showMergeGraph()"
   >
-    <span class="fas fa-code-branch"></span> Merge graph
+    <span class="fas fa-code-branch"></span>  Merge graph
   </button>
   <mat-divider></mat-divider>
   <button
@@ -202,7 +202,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="restore()"
   >
-    <span class="fas fa-trash-restore has-text-green"></span> Restore
+    <span class="fas fa-trash-restore has-text-green"></span>  Restore
   </button>
   <button
     mat-menu-item
@@ -213,7 +213,7 @@ SPDX-License-Identifier: Apache-2.0
     class="warning"
     [disabled]="busy"
   >
-    <span class="far fa-trash-alt warning"></span> Delete
+    <span class="far fa-trash-alt warning"></span>  Delete
   </button>
   <button
     mat-menu-item
@@ -223,7 +223,7 @@ SPDX-License-Identifier: Apache-2.0
     [disabled]="busy"
     (click)="askForPermanentDelete()"
   >
-    <span class="far fa-trash-alt warning"></span> Delete
+    <span class="far fa-trash-alt warning"></span>  Delete
   </button>
 </mat-menu>
 
@@ -242,7 +242,7 @@ SPDX-License-Identifier: Apache-2.0
     *ngIf="access.showPermanentDelete"
     (click)="askForPermanentDelete()"
   >
-    Delete <span class="warning">permanently</span>
+     Delete <span class="warning">permanently</span>
   </button>
 </mat-menu>
 

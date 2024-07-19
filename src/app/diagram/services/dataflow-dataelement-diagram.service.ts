@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Observable, forkJoin } from 'rxjs';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { mergeMap } from 'rxjs/operators';
 
 

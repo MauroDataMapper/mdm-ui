@@ -347,7 +347,7 @@ import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-cl
   ],
   imports: [
     AdminModule,
-    AngularSplitModule.forRoot(),
+    AngularSplitModule,
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,

@@ -30,7 +30,10 @@ SPDX-License-Identifier: Apache-2.0
     Close
   </button>
 </div>
-<mat-tab-group class="pxy-2">
+<mat-tab-group
+  class="pxy-2"
+  [mat-stretch-tabs]="false"
+>
   <mat-tab *ngFor="let tab of tabs; let index = index" class="tab-title">
     <ng-template mat-tab-label>{{ tab.displayName }}</ng-template>
     <mdm-bulk-edit-editor

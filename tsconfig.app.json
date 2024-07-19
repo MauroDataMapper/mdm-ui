@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["node"]
+    "types": ["node"],
+    // Added for ngx-jodit
+    "skipLibCheck": true
   },
   "files": [
     "src/main.ts",

@@ -596,23 +596,16 @@ small.simpleView.elementType {
 
 ///.....................................................................................................................
 
-.mat-dialog-container {
-  //   padding: 3px !important;
-  // overflow: hidden !important;
+.mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  padding: 24px;
 }
-.mat-table-row-select {
+
+.mat-mdc-table-row-select {
   cursor: pointer;
 }
 
-mat-tab-label {
-  min-width: 50px !important;
-}
-.mat-tab-label,
-.mat-tab-link {
-  color: rgba(0, 0, 0, 0.97);
-}
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
   min-height: 32px !important;
 }
 
@@ -622,7 +615,7 @@ mat-tab-label {
   font-weight: bold;
 }
 
-.full-width-dialog .mat-dialog-container {
+.full-width-dialog .mat-mdc-dialog-container {
   max-width: 100vw !important;
   width: 100vw;
 }
@@ -633,7 +626,7 @@ mat-tab-label {
   font-size: 0.8rem;
 }
 
-.mat-tooltip {
+.mat-mdc-tooltip {
   font-size: 12px !important;
 }
 
@@ -641,4 +634,11 @@ blockquote {
   padding: 0 1em;
   color: #57606a;
   border-left: 0.25em solid #d0d7de;
+}
+
+
+// Fixes a bug that appears in Safari
+.mat-mdc-tab-header {
+  display: block !important;
+  margin-bottom: 3px !important;
 }

@@ -175,7 +175,7 @@ describe('BulkEditProfileService', () => {
         label: 'test'
       };
 
-      const expected$ = cold('#', null, new Error());
+      const expected$ = cold('#', null, new Error(domain.toString() + ' is not a model domain type'));
       const actual$ = action(rootItem);
       expect(actual$).toBeObservable(expected$);
     };

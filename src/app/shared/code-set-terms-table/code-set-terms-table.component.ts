@@ -201,5 +201,5 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     }, error => {
       this.messageHandler.showError('There was a problem adding the Terms.', error);
     });
-  };
+  }
 }

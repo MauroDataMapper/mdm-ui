@@ -52,7 +52,7 @@ export class SharedService {
 
   logout() {
     this.securityHandler.logout();
-  };
+  }
 
   handleRequiredToLogin()
   {

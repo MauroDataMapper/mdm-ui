@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="source" >
+<div *ngIf="source">
   <div class="mdm--shadow-block">
     <div class="panel">
       <div class="panel-heading">
@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
               </ul>
             </div>
 
-            <div *ngIf="loaded" class="container">
+            <div *ngIf="loaded">
               <div fxLayout="row" class="panel panel-default mdm--shadow-block">
                 <div class="full-width" style="clear: both">
                   <div class="text-muted">
@@ -81,96 +81,105 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
               </div>
 
-                  <div *ngIf="loaded" class="container">
-                    <!-- ng if for different selectors depending on the domain type -->
-                    <div *ngIf="destinationSelector() === 'folders'">
-                       <mat-label>Destination Folder</mat-label>
-                       <div class="destination"> 
-                      <mdm-folders-tree
-                        [doNotShowDataClasses]="true"
-                        [doNotShowChildDataClasses]="true"
-                        [doNotShowTerms]="true"
-                        justShowFolders="true"
-                        tree-name="'Folders'"
-                        [node]="tree"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                      >
-                      </mdm-folders-tree>
-                      </div>
-                    </div>
-                    <div *ngIf="destinationSelector() === 'terminologies'">
-                      <mat-label>Destination Terminology</mat-label>
-                      <div class="destination">
-
-                      <mdm-folders-tree
-                        [doNotShowDataClasses]="true"
-                        [doNotShowChildDataClasses]="true"
-                        [doNotShowTerms]="true"
-                        [filterByDomainType]="['Folder', 'Terminology']"
-                        tree-name="'Terminologies'"
-                        [node]="tree"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                      >
-                      </mdm-folders-tree>
-                      </div>
-                    </div>
-                    <div *ngIf="destinationSelector() === 'datamodels'">
-                      <mat-label>Destination DataModel</mat-label>
-                      <div class="destination">
-
-                      <mdm-folders-tree
-                        tree-name="'DataModels'"
-                        [filterByDomainType]="['Folder', 'DataModel']"
-                        [node]="tree"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                      >
-                      </mdm-folders-tree>
-                      </div>
-                    </div>
-                    <div *ngIf="destinationSelector() === 'dataclasses'">
-                      <mat-label>Destination DataClass</mat-label>
-                      <div class="destination">
-                      <mdm-folders-tree
-                        [filterByDomainType]="['Folder', 'DataModel', 'DataClass']"
-                        tree-name="'DataClasses'"
-                        [node]="tree"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                      >
-                      </mdm-folders-tree>
-                    </div>
-                    </div>
+              <div *ngIf="loaded">
+                <!-- ng if for different selectors depending on the domain type -->
+                <div *ngIf="destinationSelector() === 'folders'">
+                  <mat-label>Destination Folder</mat-label>
+                  <div class="destination">
+                    <mdm-folders-tree
+                      [doNotShowDataClasses]="true"
+                      [doNotShowChildDataClasses]="true"
+                      [doNotShowTerms]="true"
+                      [filterByDomainType]="['Folder', 'VersionedFolder']"
+                      tree-name="'Folders'"
+                      [node]="tree"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>
+                  </div>
+                </div>
+                <div *ngIf="destinationSelector() === 'terminologies'">
+                  <mat-label>Destination Terminology</mat-label>
+                  <div class="destination">
+                    <mdm-folders-tree
+                      [doNotShowDataClasses]="true"
+                      [doNotShowChildDataClasses]="true"
+                      [doNotShowTerms]="true"
+                      [filterByDomainType]="[
+                        'Folder',
+                        'VersionedFolder',
+                        'Terminology'
+                      ]"
+                      tree-name="'Terminologies'"
+                      [node]="tree"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>
+                  </div>
+                </div>
+                <div *ngIf="destinationSelector() === 'datamodels'">
+                  <mat-label>Destination DataModel</mat-label>
+                  <div class="destination">
+                    <mdm-folders-tree
+                      tree-name="'DataModels'"
+                      [filterByDomainType]="[
+                        'Folder',
+                        'VersionedFolder',
+                        'DataModel'
+                      ]"
+                      [node]="tree"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>
+                  </div>
+                </div>
+                <div *ngIf="destinationSelector() === 'dataclasses'">
+                  <mat-label>Destination DataClass</mat-label>
+                  <div class="destination">
+                    <mdm-folders-tree
+                      [filterByDomainType]="[
+                        'Folder',
+                        'VersionedFolder',
+                        'DataModel',
+                        'DataClass'
+                      ]"
+                      tree-name="'DataClasses'"
+                      [node]="tree"
+                      (nodeClickEvent)="onNodeInTreeSelect($event)"
+                    >
+                    </mdm-folders-tree>
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="loaded" class="mt-4"></div>
-            <button
-              mat-button
-              color="warn"
-              (click)="cancelCopy()"
-              [disabled]="setupForm.disabled"
-              
-            >
-              Cancel
-            </button>
-            <button
-              mat-flat-button
-              color="primary"
-              class="custom"
-              (click)="commitCopy()"
-              [disabled]="!setupForm.valid || setupForm.disabled || !targetClick"
-            >
-              Create
-            </button>
+          </div>
+        </div>
+        <div *ngIf="loaded" class="mt-4"></div>
+        <button
+          mat-button
+          color="warn"
+          (click)="cancelCopy()"
+          [disabled]="setupForm.disabled"
+        >
+          Cancel
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          class="custom"
+          (click)="commitCopy()"
+          [disabled]="!setupForm.valid || setupForm.disabled || !targetClick"
+        >
+          Create
+        </button>
 
-            <div style="margin-top: 5px" *ngIf="!loaded">
-              <mat-progress-bar
-                value="50"
-                bufferValue="75"
-                color="accent"
-                mode="indeterminate"
-              ></mat-progress-bar>
-   
+        <div style="margin-top: 5px" *ngIf="!loaded">
+          <mat-progress-bar
+            value="50"
+            bufferValue="75"
+            color="accent"
+            mode="indeterminate"
+          ></mat-progress-bar>
         </div>
       </div>
     </div>

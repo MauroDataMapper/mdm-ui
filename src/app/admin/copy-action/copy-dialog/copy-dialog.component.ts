@@ -392,13 +392,7 @@ export class CopyDialogComponent implements OnInit {
               CatalogueItemDomainType.CodeSet.toString()
             ].includes(this.domainType)
           ) {
-            // remove node if it is not a versioned folder
-            if (
-              node.domainType !==
-              CatalogueItemDomainType.VersionedFolder.toString()
-            ) {
-              removedNodes = [...removedNodes, node];
-            }
+            // TODO: clean this condition up
           } else {
             // remove node if it has no children in the case of data element and data class
             if (!node.hasChildren ?? false) {

@@ -49,12 +49,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="mdm--form-input">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Author</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="author"
-        name="author"
-      />
+      <input matInput type="text" formControlName="author" name="author" />
     </mat-form-field>
   </div>
 
@@ -75,7 +70,8 @@ SPDX-License-Identifier: Apache-2.0
     <mdm-content-editor
       [content]="description.value"
       (contentChange)="description.setValue($event)"
-      [inEditMode]="true">
+      [inEditMode]="true"
+    >
     </mdm-content-editor>
   </div>
 
@@ -85,6 +81,11 @@ SPDX-License-Identifier: Apache-2.0
     class="mb-2"
   ></mdm-element-classifications>
 </form>
+<div class="full-width mt-2">
+  <div *ngIf="submitting">
+    <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  </div>
+</div>
 <button
   mat-flat-button
   type="button"

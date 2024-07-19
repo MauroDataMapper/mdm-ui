@@ -50,7 +50,7 @@ export class TerminologyMainComponent implements OnInit {
     classifiers: new FormControl([])
   });
 
-  private submitting: boolean;
+  submitting: boolean;
 
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
@@ -151,4 +151,3 @@ export class TerminologyMainComponent implements OnInit {
       });
   }
 }
-

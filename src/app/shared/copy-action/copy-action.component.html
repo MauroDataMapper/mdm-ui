@@ -83,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
 
               <div *ngIf="loaded">
                 <!-- ng if for different selectors depending on the domain type -->
-                <div *ngIf="destinationSelector() === 'folders'">
+                <div *ngIf="destinationSelector === 'folders'">
                   <mat-label>Destination Folder</mat-label>
                   <div class="destination">
                     <mdm-folders-tree
@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
                     </mdm-folders-tree>
                   </div>
                 </div>
-                <div *ngIf="destinationSelector() === 'terminologies'">
+                <div *ngIf="destinationSelector === 'terminologies'">
                   <mat-label>Destination Terminology</mat-label>
                   <div class="destination">
                     <mdm-folders-tree
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
                     </mdm-folders-tree>
                   </div>
                 </div>
-                <div *ngIf="destinationSelector() === 'datamodels'">
+                <div *ngIf="destinationSelector === 'datamodels'">
                   <mat-label>Destination DataModel</mat-label>
                   <div class="destination">
                     <mdm-folders-tree
@@ -133,7 +133,7 @@ SPDX-License-Identifier: Apache-2.0
                     </mdm-folders-tree>
                   </div>
                 </div>
-                <div *ngIf="destinationSelector() === 'dataclasses'">
+                <div *ngIf="destinationSelector === 'dataclasses'">
                   <mat-label>Destination DataClass</mat-label>
                   <div class="destination">
                     <mdm-folders-tree
@@ -155,11 +155,19 @@ SPDX-License-Identifier: Apache-2.0
           </div>
         </div>
         <div *ngIf="loaded" class="mt-4"></div>
+        <div class="full-width mt-2">
+          <div *ngIf="copying">
+            <mat-progress-bar
+              mode="indeterminate"
+              color="accent"
+            ></mat-progress-bar>
+          </div>
+        </div>
         <button
           mat-button
           color="warn"
           (click)="cancelCopy()"
-          [disabled]="setupForm.disabled"
+          [disabled]="setupForm.disabled || copying"
         >
           Cancel
         </button>
@@ -168,7 +176,9 @@ SPDX-License-Identifier: Apache-2.0
           color="primary"
           class="custom"
           (click)="commitCopy()"
-          [disabled]="!setupForm.valid || setupForm.disabled || !targetClick"
+          [disabled]="
+            !setupForm.valid || setupForm.disabled || !targetClick || copying
+          "
         >
           Create
         </button>

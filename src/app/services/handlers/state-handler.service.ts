@@ -1,9 +1,9 @@
 /*
-right 2020-2024 University of Oxford and NHS England
+Copyright 2020-2024 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a  of the License at
+You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
@@ -99,10 +99,13 @@ export class StateHandlerService {
       simpleviewresult: 'appContainer.simpleApp.result',
       simpleviewelement: 'appContainer.simpleApp.element',
       about: 'appContainer.mainApp.about',
-      containercopy: 'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
-      dataclasscopy: 'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
-      dataelementcopy: 'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
-      termcopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy',
+      containercopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
+      dataclasscopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
+      dataelementcopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
+      termcopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy'
     }
   };
   constructor(

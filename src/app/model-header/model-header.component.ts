@@ -188,7 +188,7 @@ export class ModelHeaderComponent implements OnInit {
 
     return isModelDomainType(this.item.domainType);
   }
-  
+
   get canCopy() {
     if (!this.item) {
       return false;

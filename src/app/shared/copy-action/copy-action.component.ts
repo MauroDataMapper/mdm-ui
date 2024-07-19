@@ -32,7 +32,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { StateParams, UIRouterGlobals } from '@uirouter/angular';
-import { Observable } from 'rxjs';
+import { catchError, EMPTY, finalize, Observable } from 'rxjs';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -60,6 +60,12 @@ export class CopyActionComponent implements OnInit {
   copyPermissions = false;
   parentId: Uuid;
   parentParentId: Uuid;
+  destinationSelector:
+    | 'folders'
+    | 'terminologies'
+    | 'dataclasses'
+    | 'datamodels' = 'folders';
+  copying = false;
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -100,6 +106,21 @@ export class CopyActionComponent implements OnInit {
     }
 
     this.domainType = params.domainType;
+
+    switch (this.domainType) {
+      case CatalogueItemDomainType.Term:
+        this.destinationSelector = 'terminologies';
+        break;
+      case CatalogueItemDomainType.DataElement:
+        this.destinationSelector = 'dataclasses';
+        break;
+      case CatalogueItemDomainType.DataClass:
+        this.destinationSelector = 'datamodels';
+        break;
+      default:
+        this.destinationSelector = 'folders';
+        break;
+    }
 
     switch (this.domainType) {
       case CatalogueItemDomainType.Term:
@@ -177,8 +198,20 @@ export class CopyActionComponent implements OnInit {
       | CopyDataClassPayload
       | CopyDataElementPayload = this.generatePayloadByDomain(this.domainType);
 
-    this.sendCopyRequest(payload).subscribe(
-      (response) => {
+    this.copying = true;
+
+    this.sendCopyRequest(payload)
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.copying = false))
+      )
+      .subscribe((response) => {
         this.messageHandler.showSuccess(
           `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName} as ${this.targetName}.`
         );
@@ -207,21 +240,29 @@ export class CopyActionComponent implements OnInit {
           case CatalogueItemDomainType.Term:
             this.stateHandler.Go(
               'term',
-              { id: response.body.id, terminologyId: this.parentId },
+              { id: response.body.id, terminologyId: response.body.model },
               { reload: true, location: true }
             );
             break;
           case CatalogueItemDomainType.DataElement:
             this.stateHandler.Go(
-              'datamodel',
-              { id: response.body.model },
+              'dataelement',
+              {
+                id: response.body.id,
+                dataModelId: response.body.model,
+                dataClassId: response.body.dataClass
+              },
               { reload: true, location: true }
             );
             break;
           case CatalogueItemDomainType.DataClass:
             this.stateHandler.Go(
-              'datamodel',
-              { id: response.body.model },
+              'dataclass',
+              {
+                id: response.body.id,
+                dataModelId: response.body.model,
+                dataClassId: response.body.parentDataClass ?? ''
+              },
               { reload: true, location: true }
             );
             break;
@@ -229,14 +270,7 @@ export class CopyActionComponent implements OnInit {
             this.stateHandler.GoPrevious();
             break;
         }
-      },
-      (error) => {
-        this.messageHandler.showError(
-          `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
-          error
-        );
-      }
-    );
+      });
   }
 
   cancelCopy() {
@@ -421,18 +455,5 @@ export class CopyActionComponent implements OnInit {
     this.targetClick = true;
     this.targetDestinationId = node.id;
     this.subTargetDestinationId = node.modelId ? node.modelId : null;
-  }
-
-  destinationSelector(): string {
-    switch (this.domainType) {
-      case CatalogueItemDomainType.Term:
-        return 'terminologies';
-      case CatalogueItemDomainType.DataElement:
-        return 'dataclasses';
-      case CatalogueItemDomainType.DataClass:
-        return 'datamodels';
-      default:
-        return 'folders';
-    }
   }
 }

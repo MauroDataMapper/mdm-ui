@@ -50,6 +50,23 @@ export class TerminologyMainComponent implements OnInit {
     classifiers: new FormControl([])
   });
 
+  private submitting: boolean;
+
+  constructor(
+    private uiRouterGlobals: UIRouterGlobals,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private folders: FolderService,
+    private title: Title
+  ) {
+    this.submitting = false;
+  }
+
+  get submitDisabled(): boolean {
+    return this.setupForm.invalid || this.submitting;
+  }
+
   get label() {
     return this.setupForm.controls.label;
   }
@@ -73,15 +90,6 @@ export class TerminologyMainComponent implements OnInit {
   set classifiersValue(value: any[]) {
     this.classifiers.setValue(value);
   }
-
-  constructor(
-    private uiRouterGlobals: UIRouterGlobals,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private folders: FolderService,
-    private title: Title
-  ) {}
 
   ngOnInit(): void {
     this.title.setTitle('New Terminology');
@@ -119,10 +127,12 @@ export class TerminologyMainComponent implements OnInit {
       folder: this.parentFolderId
     };
 
+    this.submitting = true;
     this.resources.terminology
       .create(this.parentFolderId, payload)
       .pipe(
         catchError((error) => {
+          this.submitting = false;
           this.messageHandler.showError(
             'There was a problem creating the Terminology.',
             error
@@ -137,6 +147,8 @@ export class TerminologyMainComponent implements OnInit {
           { id: response.body.id },
           { reload: true }
         );
+        this.submitting = false;
       });
   }
 }
+

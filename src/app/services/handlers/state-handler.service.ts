@@ -98,7 +98,14 @@ export class StateHandlerService {
       simpleviewhome: 'appContainer.simpleApp.home',
       simpleviewresult: 'appContainer.simpleApp.result',
       simpleviewelement: 'appContainer.simpleApp.element',
-      about: 'appContainer.mainApp.about'
+      about: 'appContainer.mainApp.about',
+      containercopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
+      dataclasscopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
+      dataelementcopy:
+        'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
+      termcopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy'
     }
   };
   constructor(

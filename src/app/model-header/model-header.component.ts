@@ -189,6 +189,27 @@ export class ModelHeaderComponent implements OnInit {
     return isModelDomainType(this.item.domainType);
   }
 
+  get canCopy() {
+    if (!this.item) {
+      return false;
+    }
+
+    if (![CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet,  CatalogueItemDomainType.DataClass, CatalogueItemDomainType.DataElement, CatalogueItemDomainType.Term].includes(this.item.domainType)) {
+      return false;
+    }
+
+    if ([CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet].includes(this.item.domainType)) {
+      // need to check it is in a versionedfolder
+      // has a ancestor with a domaintype.versionedfolder property
+      return this.ancestorTreeItems.some(item => item.domainType === CatalogueItemDomainType.VersionedFolder);
+
+    }
+
+    return this.item.availableActions.includes('update');
+  }
+
+
+
   get hasMenuOptions() {
     if (!this.item) {
       return false;
@@ -206,7 +227,6 @@ export class ModelHeaderComponent implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = this.security.isLoggedIn();
     this.access = this.security.elementAccess(this.item);
-
     this.security
       .isAdministrator()
       .subscribe((state) => (this.isAdministrator = state));
@@ -255,6 +275,55 @@ export class ModelHeaderComponent implements OnInit {
         dataClassId: this.item.parentDataClass
       })
     });
+  }
+
+  copy() {
+    switch (this.item.domainType) {
+      case CatalogueItemDomainType.Term: {
+        return this.stateHandler.Go('termCopy', {
+          id: this.item.id,
+          terminologyId: this.item.terminology.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.DataClass: {
+        return this.stateHandler.Go('dataClassCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType,
+          dataModelId: this.item.model
+        });
+      }
+      case CatalogueItemDomainType.DataElement: {
+        return this.stateHandler.Go('dataElementCopy', {
+          id: this.item.id,
+          dataModelId: this.item.model,
+          dataClassId: this.item.dataClass,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.DataModel: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.Terminology: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.CodeSet: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      default:
+        this.messageHandler.showError(
+          `Cannot get catalogue item details for ${this.item.domainType} ${this.item.label}: unrecognised domain type.`
+        );
+    }
   }
 
   merge() {

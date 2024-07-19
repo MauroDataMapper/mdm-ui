@@ -96,6 +96,10 @@ export class DataTypeComponent
     super();
   }
 
+  get typeOfDataType() {
+    return this.dataType.domainType;
+  }
+
   ngOnInit() {
     this.id = this.uiRouterGlobals.params.id;
     this.dataModelId = this.uiRouterGlobals.params.dataModelId;

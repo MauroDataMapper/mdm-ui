@@ -49,9 +49,7 @@ import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
   templateUrl: './term.component.html',
   styleUrls: ['./term.component.scss']
 })
-export class TermComponent
-  implements OnInit, AfterViewChecked {
-
+export class TermComponent implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
   term: TermDetail;
@@ -75,10 +73,18 @@ export class TermComponent
   isLoadingRules = true;
   isLoadingCodeSets = true;
   isLoadingRelationships = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   showEdit = false;
   showDelete = false;
   access: Access;
-  tabs = new TabCollection(['description', 'links', 'rules', 'annotations']);
+  tabs = new TabCollection([
+    'description',
+    'links',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -90,8 +96,7 @@ export class TermComponent
     private title: Title,
     private editingService: EditingService,
     private securityHandler: SecurityHandlerService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     if (!this.uiRouterGlobals.params.id) {
@@ -105,7 +110,9 @@ export class TermComponent
     this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as Uuid).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as Uuid
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.termDetails(this.parentId);
@@ -117,7 +124,10 @@ export class TermComponent
   }
 
   ngAfterViewChecked(): void {
-    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+    if (
+      this.tabGroup &&
+      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+    ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
@@ -129,7 +139,6 @@ export class TermComponent
 
   termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
-
 
     forkJoin([
       this.resources.terminology.get(terminologyId) as Observable<
@@ -147,7 +156,6 @@ export class TermComponent
         .subscribe((resp) => {
           this.term.semanticLinks = resp.body.items;
         });
-
 
       this.watchTermObject();
 
@@ -176,7 +184,6 @@ export class TermComponent
     }
   }
 
-
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
     this.stateHandler.Go('term', { tabView: tab.name }, { notify: false });
@@ -187,7 +194,6 @@ export class TermComponent
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
-
     const resource: Term = {
       id: this.term.id,
       domainType: this.term.domainType,
@@ -200,20 +206,20 @@ export class TermComponent
     });
 
     this.resources.term
-    .update(this.terminology.id, this.term.id, resource)
-    .subscribe(
-      (result:TermDetailResponse) => {
-        this.termDetails(result.body.id);
-        this.messageHandler.showSuccess('Term updated successfully.');
-        this.editingService.stop();
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Term.',
-          error
-        );
-      }
-    );
+      .update(this.terminology.id, this.term.id, resource)
+      .subscribe(
+        (result: TermDetailResponse) => {
+          this.termDetails(result.body.id);
+          this.messageHandler.showSuccess('Term updated successfully.');
+          this.editingService.stop();
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Term.',
+            error
+          );
+        }
+      );
   }
 
   codeSetCountEmitter(count: number) {
@@ -222,11 +228,7 @@ export class TermComponent
   }
 
   onCodeSetSelect(codeset) {
-    this.stateHandler.Go(
-      'codeset',
-      { id: codeset.id },
-      null
-    );
+    this.stateHandler.Go('codeset', { id: codeset.id }, null);
   }
 
   relationshipCountEmitter(count: number) {
@@ -240,5 +242,10 @@ export class TermComponent
       { terminologyId: term.model, id: term.id },
       null
     );
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 }

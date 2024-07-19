@@ -62,6 +62,8 @@ export class DataTypeComponent
   contextView = 'default';
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   errorMessage: any;
   elementType: any;
   showEdit: boolean;
@@ -74,7 +76,8 @@ export class DataTypeComponent
     'rules',
     'comments',
     'links',
-    'attachments'
+    'attachments',
+    'history'
   ]);
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
@@ -184,5 +187,10 @@ export class DataTypeComponent
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 }

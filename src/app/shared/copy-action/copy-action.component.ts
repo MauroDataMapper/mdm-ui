@@ -42,10 +42,10 @@ import { Observable } from 'rxjs';
  */
 @Component({
   selector: 'mdm-copy-dialog',
-  templateUrl: './copy-dialog.component.html',
-  styleUrls: ['./copy-dialog.component.scss']
+  templateUrl: './copy-action.component.html',
+  styleUrls: ['./copy-action.component.scss']
 })
-export class CopyDialogComponent implements OnInit {
+export class CopyActionComponent implements OnInit {
   loaded = false;
   loadingContent = false;
   targetClick = false;

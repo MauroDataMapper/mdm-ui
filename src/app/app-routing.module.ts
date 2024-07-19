@@ -78,7 +78,7 @@ import { ReferenceDataTypeMainComponent } from './wizards/referenceDataType/refe
 import { ReferenceDataModelMainComponent } from './wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { redirectUsingPath } from './routing.types';
-import { CopyDialogComponent } from './admin/copy-action/copy-dialog/copy-dialog.component';
+import { CopyActionComponent } from './shared/copy-action/copy-action.component';
 
 /**
  * Collection of all page state routes.
@@ -521,22 +521,22 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
       url: '/:domainType/copy/:id/',
-      component: CopyDialogComponent
+      component: CopyActionComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
       url: '/:domainType/:dataModelId/:dataClassId/copy/:id/',
-      component: CopyDialogComponent
+      component: CopyActionComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
       url: '/:domainType/:dataModelId/copy/:id/',
-      component: CopyDialogComponent
+      component: CopyActionComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy',
       url: '/:domainType/:terminologyId/copy/:id/',
-      component: CopyDialogComponent
+      component: CopyActionComponent
     },
     {
       /**

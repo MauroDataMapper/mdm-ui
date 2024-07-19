@@ -180,7 +180,7 @@ import { ContentModule } from '@mdm/content/content.module';
 import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
-import { CopyDialogComponent } from '@mdm/admin/copy-action/copy-dialog/copy-dialog.component';
+import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.component';
 
 @NgModule({
   providers: [
@@ -345,8 +345,7 @@ import { CopyDialogComponent } from '@mdm/admin/copy-action/copy-dialog/copy-dia
     NewReferenceDataTypeFormComponent,
     ReferenceDataTypeSelectComponent,
     ModelHeaderComponent,
-    CopyDialogComponent
-
+    CopyActionComponent
   ],
   imports: [
     AdminModule,
@@ -509,7 +508,7 @@ import { CopyDialogComponent } from '@mdm/admin/copy-action/copy-dialog/copy-dia
     SkeletonBadgeComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent,
-    CopyDialogComponent
+    CopyActionComponent
   ]
 })
 export class CatalogueModule {}

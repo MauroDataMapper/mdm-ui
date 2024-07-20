@@ -144,4 +144,22 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </ng-template>
   </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      History
+      <mdm-skeleton-badge *ngIf="isLoadingHistory"></mdm-skeleton-badge>
+      ({{ historyItemCount }})
+    </ng-template>
+
+    <div class="full-width">
+      <mdm-history
+        (totalCount)="historyCountEmitter($event)"
+        *ngIf="dataElementOutput"
+        [parent]="dataElementOutput"
+        [parentType]="'DataElement'"
+        [parentId]="parentId"
+        [domainType]="'dataElements'"
+      ></mdm-history>
+    </div>
+  </mat-tab>
 </mat-tab-group>

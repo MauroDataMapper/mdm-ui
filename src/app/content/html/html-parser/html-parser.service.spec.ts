@@ -15,26 +15,39 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { HtmlParserService } from './html-parser.service';
-import { PathNameService } from '@mdm/shared/path-name/path-name.service';
+import { HrefOptions, RawParams, StateOrName, UIRouter } from '@uirouter/core';
+import { TestBed } from '@angular/core/testing';
 
 describe('HtmlParserService', () => {
   let service: HtmlParserService;
 
-  const pathNamesStub = {
-    createHref: jest.fn() as jest.MockedFunction<(path: string) => string>
+  const uiRouterStub = {
+    stateService: {
+      href: jest.fn() as jest.MockedFunction<
+        (
+          stateOrName: StateOrName,
+          params?: RawParams,
+          options?: HrefOptions
+        ) => string
+      >
+    }
   };
 
   beforeEach(() => {
-    service = setupTestModuleForService(HtmlParserService, {
+    // Setup the test bed manually instead of using setupTestModuleForService()
+    // so that the UIRouterModule is not imported, will override the UIRouter service
+    // so it can be mocked
+    TestBed.configureTestingModule({
       providers: [
         {
-          provide: PathNameService,
-          useValue: pathNamesStub
+          provide: UIRouter,
+          useValue: uiRouterStub
         }
       ]
     });
+
+    service = TestBed.inject(HtmlParserService);
   });
 
   it('should be created', () => {
@@ -43,13 +56,13 @@ describe('HtmlParserService', () => {
 
   it('should ignore empty hrefs in links', () => {
     const content = '<a href="">No link</a>';
-    const modified = service.parseAndModify(content);
+    const modified = service.parseAndModify(content, {});
     expect(modified).toStrictEqual(content);
   });
 
   it('should ignore empty fragment links', () => {
     const content = '<a href="#">Empty fragment</a>';
-    const modified = service.parseAndModify(content);
+    const modified = service.parseAndModify(content, {});
     expect(modified).toStrictEqual(content);
   });
 
@@ -59,7 +72,7 @@ describe('HtmlParserService', () => {
     'https://my.web.site/folder/page'
   ])('should ignore regular url %p', (url) => {
     const content = `<a href="${url}">Page link</a>`;
-    const modified = service.parseAndModify(content);
+    const modified = service.parseAndModify(content, {});
     expect(modified).toStrictEqual(content);
   });
 
@@ -69,13 +82,42 @@ describe('HtmlParserService', () => {
     ['dm:model|dc:class|de:element', '/dataModels/dm:model|dc:class|de:element']
   ])('should rewrite mauro item path %p to valid url %p', (path, pathUrl) => {
     const baseUrl = 'http://localhost/#/catalogue/item';
-    pathNamesStub.createHref.mockImplementationOnce(
+    uiRouterStub.stateService.href.mockImplementationOnce(
       () => `${baseUrl}${pathUrl}`
     );
 
     const content = `<a href="${path}">Mauro item link</a>`;
     const expected = `<a href="${baseUrl}${pathUrl}">Mauro item link</a>`;
-    const modified = service.parseAndModify(content);
+    const modified = service.parseAndModify(content, {});
     expect(modified).toStrictEqual(expected);
   });
+
+  it.each([
+    ['dm:model', '/dataModels/dm:model$anotherbranch', 'another-branch'],
+    [
+      'dm:model|dc:class',
+      '/dataModels/dm:model$test-branch|dc:class',
+      'test-branch'
+    ],
+    [
+      'dm:model|dc:class|de:element',
+      '/dataModels/dm:model$Branch 1234|dc:class|de:element',
+      'Branch 1234'
+    ]
+  ])(
+    'should rewrite mauro item path %p to valid url %p when the overridden branch name is %p',
+    (path, pathUrl, branchName) => {
+      const baseUrl = 'http://localhost/#/catalogue/item';
+      uiRouterStub.stateService.href.mockImplementationOnce(
+        () => `${baseUrl}${pathUrl}`
+      );
+
+      const content = `<a href="${path}">Mauro item link</a>`;
+      const expected = `<a href="${baseUrl}${pathUrl}">Mauro item link</a>`;
+      const modified = service.parseAndModify(content, {
+        versionOrBranchOverride: branchName
+      });
+      expect(modified).toStrictEqual(expected);
+    }
+  );
 });

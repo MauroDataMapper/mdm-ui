@@ -119,7 +119,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
           );
         }),
         map((data: any) => {
-          // this is always the base item count for some reason
           this.totalItemCount = data.body.count;
           this.totalCount.emit(String(data.body.count));
           this.isLoadingResults = false;

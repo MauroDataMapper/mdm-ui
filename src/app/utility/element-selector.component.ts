@@ -185,7 +185,6 @@ export class ElementSelectorComponent implements OnInit {
 
     if (this.formData.selectedType === 'Term') {
       this.showPrevBtn = true;
-      this.loadTerminologies();
     }
     this.showPrevBtn = true;
   }
@@ -227,36 +226,6 @@ export class ElementSelectorComponent implements OnInit {
       },
       () => {
         this.loading = false;
-      }
-    );
-  };
-
-  loadTerminologies = () => {
-    this.reloading = true;
-    this.resourceService.terminology.list({ all: true }).subscribe(
-      (res: TerminologyIndexResponse) => {
-        if (
-          this.data.notAllowedToSelectIds &&
-          this.data.notAllowedToSelectIds.length > 0
-        ) {
-          let i = res.body.items.length - 1;
-          while (i >= 0) {
-            let found = false;
-            this.data.notAllowedToSelectIds.forEach((terminologyId) => {
-              if (terminologyId === res.body.items[i].id) {
-                found = true;
-              }
-            });
-            if (found) {
-              res.body.items.splice(i, 1);
-            }
-            i--;
-          }
-        }
-        this.terminologies = res.body.items;
-      },
-      () => {
-        this.reloading = false;
       }
     );
   };

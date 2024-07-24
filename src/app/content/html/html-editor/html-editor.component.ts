@@ -234,11 +234,19 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     const path =
       element.path ?? component.pathNames.createFromBreadcrumbs(element);
 
+    // Need to do this for NHS England, local paths should be used so that links can be maintained within the context of the branches
+    // they live under
+    const pathElements = this.pathNames.parse(path);
+    const pathElementsWithoutBranch = this.pathNames.removeVersionOrBranchName(
+      pathElements
+    );
+    const pathWithoutBranch = this.pathNames.build(pathElementsWithoutBranch);
+
     // The href will be the Mauro item path. This is not a valid URL, but the HtmlParserService will
     // automatically look for these paths in the content and rewrite them to correct URLs before
     // rendering for display
     const html = editor.create.fromHTML(
-      `<a href='${path}' title='${element.label}'>${element.label}</a>`
+      `<a href='${pathWithoutBranch}' title='${element.label}'>${element.label}</a>`
     );
 
     editor.selection.setCursorIn(focusNode);

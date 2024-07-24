@@ -48,7 +48,6 @@ import {
   FolderIndexResponse,
   MdmTreeItemListResponse,
   Terminology,
-  TerminologyIndexResponse,
   SearchQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';

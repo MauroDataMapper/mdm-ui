@@ -183,6 +183,15 @@ export class PathNameService {
     return matching.version;
   }
 
+  removeVersionOrBranchName(pathElements: PathElement[]): PathElement[] {
+    if (!pathElements || pathElements.length === 0) {
+      return [];
+    }
+
+    pathElements.forEach((pathElement) => (pathElement.version = ''));
+    return pathElements;
+  }
+
   createHref(path: string) {
     const domain = this.getPathableDomainFromPath(path);
     return this.createHrefFromPath(domain, path);

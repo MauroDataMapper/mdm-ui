@@ -612,4 +612,26 @@ describe('PathNameService', () => {
       }
     );
   });
+
+  describe('remove branch name', () => {
+    it.each([
+      ['dm:Data Model$main', 'dm:Data Model'],
+      ['dm:Data Model$main|dc:Data Class', 'dm:Data Model|dc:Data Class'],
+      ['dm:Data Model$another', 'dm:Data Model'],
+      [
+        'dm:Data Model$another|dc:Data Class|de:Data Element',
+        'dm:Data Model|dc:Data Class|de:Data Element'
+      ]
+    ])(
+      'should remove the branch name from %p to give %p',
+      (originalPath, expectedPath) => {
+        const originaPathElements = service.parse(originalPath);
+        const updatedPathElements = service.removeVersionOrBranchName(
+          originaPathElements
+        );
+        const actualPath = service.build(updatedPathElements);
+        expect(actualPath).toBe(expectedPath);
+      }
+    );
+  });
 });

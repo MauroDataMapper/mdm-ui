@@ -139,8 +139,8 @@ SPDX-License-Identifier: Apache-2.0
               [inSearchMode]="formData.inSearchMode"
               [doNotMakeSelectedBold]="true"
               [searchCriteria]="formData.treeSearchText"
-              [filterByDomainType]="['Folder', 'CodeSet']"
-              [expandOnNodeClickFor]="['Folder']"
+              [filterByDomainType]="['Folder', 'VersionedFolder', 'CodeSet']"
+              [expandOnNodeClickFor]="['Folder', 'VersionedFolder']"
               (nodeClickEvent)="onNodeInTreeSelect($event)"
               [node]="rootNode"
             ></mdm-folders-tree>
@@ -167,8 +167,8 @@ SPDX-License-Identifier: Apache-2.0
               [inSearchMode]="formData.inSearchMode"
               [doNotMakeSelectedBold]="true"
               [searchCriteria]="formData.treeSearchText"
-              [filterByDomainType]="['Folder', 'DataModel']"
-              [expandOnNodeClickFor]="['Folder']"
+              [filterByDomainType]="['Folder', 'VersionedFolder', 'DataModel']"
+              [expandOnNodeClickFor]="['Folder', 'VersionedFolder']"
               (nodeClickEvent)="onNodeInTreeSelect($event)"
               [node]="rootNode"
             ></mdm-folders-tree>
@@ -195,8 +195,18 @@ SPDX-License-Identifier: Apache-2.0
             <mdm-folders-tree
               [inSearchMode]="formData.inSearchMode"
               [doNotMakeSelectedBold]="true"
-              [filterByDomainType]="['Folder', 'DataModel', 'DataClass']"
-              [expandOnNodeClickFor]="['Folder', 'DataModel', 'DataClass']"
+              [filterByDomainType]="[
+                'Folder',
+                'VersionedFolder',
+                'DataModel',
+                'DataClass'
+              ]"
+              [expandOnNodeClickFor]="[
+                'Folder',
+                'VersionedFolder',
+                'DataModel',
+                'DataClass'
+              ]"
               [searchCriteria]="formData.treeSearchText"
               (nodeClickEvent)="onNodeInTreeSelect($event)"
               [node]="rootNode"

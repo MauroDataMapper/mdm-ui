@@ -16,12 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<div *ngIf="source">
+<div *ngIf="sourceItem">
   <div class="mdm--shadow-block">
     <div class="panel">
       <div class="panel-heading">
         <div class="heading-container">
-          <h4>Create copy of "{{ source.label }}"</h4>
+          <h4>Create copy of "{{ sourceItem.label }}"</h4>
         </div>
 
         <div class="mb-2">
@@ -34,8 +34,8 @@ SPDX-License-Identifier: Apache-2.0
           <div class="panel-body">
             <div class="mb-2 mt-2">
               <p>
-                A new copy of <strong>{{ source.label }}</strong> keeps all of
-                the following:
+                A new copy of <strong>{{ sourceItem.label }}</strong> keeps all
+                of the following:
               </p>
               <ul>
                 <li *ngIf="domainType === 'VersionedFolder'">Models</li>
@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
                         />
                         <mat-hint
                           >The name should be different from the current name
-                          '{{ source.label }}'</mat-hint
+                          '{{ sourceItem.label }}'</mat-hint
                         >
                         <mat-error *ngIf="setupForm && label?.errors?.required">
                           Please enter a label
@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
                           *ngIf="setupForm && label?.errors?.forbiddenName"
                         >
                           Please choose a different label than '{{
-                            source.label
+                            sourceItem.label
                           }}'
                         </mat-error>
                       </mat-form-field>
@@ -118,14 +118,15 @@ SPDX-License-Identifier: Apache-2.0
                   </div>
                 </div>
                 <div *ngIf="destinationSelector === 'datamodels'">
-                  <mat-label>Destination DataModel</mat-label>
+                  <mat-label>Destination DataModel or DataClass</mat-label>
                   <div class="destination">
                     <mdm-folders-tree
                       tree-name="'DataModels'"
                       [filterByDomainType]="[
                         'Folder',
                         'VersionedFolder',
-                        'DataModel'
+                        'DataModel',
+                        'DataClass'
                       ]"
                       [node]="tree"
                       (nodeClickEvent)="onNodeInTreeSelect($event)"

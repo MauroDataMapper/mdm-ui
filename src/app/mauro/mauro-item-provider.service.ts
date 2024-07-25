@@ -184,7 +184,7 @@ export class MauroItemProviderService {
     }
 
     const dataClassId = identifier.parentDataClass ?? identifier.dataClass;
-    if (dataClassId) {
+    if (dataClassId && dataClassId !== '') {
       return this.resources.dataClass.getChildDataClass(
         identifier.model,
         dataClassId,

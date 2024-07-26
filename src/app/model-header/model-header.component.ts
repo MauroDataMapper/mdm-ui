@@ -194,21 +194,35 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    if (![CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet,  CatalogueItemDomainType.DataClass, CatalogueItemDomainType.DataElement, CatalogueItemDomainType.Term].includes(this.item.domainType)) {
+    if (
+      ![
+        CatalogueItemDomainType.DataModel,
+        CatalogueItemDomainType.Terminology,
+        CatalogueItemDomainType.CodeSet,
+        CatalogueItemDomainType.DataClass,
+        CatalogueItemDomainType.DataElement,
+        CatalogueItemDomainType.Term
+      ].includes(this.item.domainType)
+    ) {
       return false;
     }
 
-    if ([CatalogueItemDomainType.DataModel, CatalogueItemDomainType.Terminology, CatalogueItemDomainType.CodeSet].includes(this.item.domainType)) {
+    if (
+      [
+        CatalogueItemDomainType.DataModel,
+        CatalogueItemDomainType.Terminology,
+        CatalogueItemDomainType.CodeSet
+      ].includes(this.item.domainType)
+    ) {
       // need to check it is in a versionedfolder
       // has a ancestor with a domaintype.versionedfolder property
-      return this.ancestorTreeItems.some(item => item.domainType === CatalogueItemDomainType.VersionedFolder);
-
+      return this.ancestorTreeItems.some(
+        (item) => item.domainType === CatalogueItemDomainType.VersionedFolder
+      );
     }
 
     return this.item.availableActions.includes('update');
   }
-
-
 
   get hasMenuOptions() {
     if (!this.item) {
@@ -290,7 +304,8 @@ export class ModelHeaderComponent implements OnInit {
         return this.stateHandler.Go('dataClassCopy', {
           id: this.item.id,
           domainType: this.item.domainType,
-          dataModelId: this.item.model
+          dataModelId: this.item.model,
+          dataClassId: this.item.parentDataClass ?? ''
         });
       }
       case CatalogueItemDomainType.DataElement: {

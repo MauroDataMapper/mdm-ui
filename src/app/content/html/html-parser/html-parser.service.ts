@@ -19,6 +19,10 @@ import { Injectable } from '@angular/core';
 import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 
+export interface HtmlParserContext {
+  versionOrBranchOverride?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,16 +35,17 @@ export class HtmlParserService {
    * Parse the given HTML (fragment) and modify to make suitable for local content display.
    *
    * @param original The original HTML source.
+   * @param context Information relevant for applying to the resulting HTML.
    * @returns A modified version of the HTML source for local content display.
    */
-  parseAndModify(original: string): string {
+  parseAndModify(original: string, context: HtmlParserContext): string {
     const document = this.domParser.parseFromString(original, 'text/html');
-    this.rewriteHrefs(document);
+    this.rewriteHrefs(document, context);
 
     return document.body.innerHTML;
   }
 
-  private rewriteHrefs(document: Document) {
+  private rewriteHrefs(document: Document, context: HtmlParserContext) {
     const links = document.querySelectorAll('a');
 
     links.forEach((link) => {
@@ -56,7 +61,12 @@ export class HtmlParserService {
 
       // Create internal link, assuming the href is a Mauro path to a catalogue item
       const path = link.href;
-      const internalHref = this.pathNames.createHref(path);
+      const internalHref = context.versionOrBranchOverride
+        ? this.pathNames.createHrefRelativeToVersionOrBranch(
+            path,
+            context.versionOrBranchOverride
+          )
+        : this.pathNames.createHref(path);
       link.href = internalHref;
     });
   }

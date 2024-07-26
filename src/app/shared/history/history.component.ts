@@ -64,6 +64,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   parentTypeVal;
   parentIdVal;
   isLoadingResults = true;
+  pageSizeOptions = [10, 20, 50];
 
   records: any[] = [];
   filter: any = '';
@@ -80,14 +81,9 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     pageIndex?: number,
     filters?: {},
     sortBy?: string,
-    sortType?: SortDirection) {
-    this.fetch(
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    );
+    sortType?: SortDirection
+  ) {
+    this.fetch(pageSize, pageIndex, sortBy, sortType, filters);
   }
 
   ngOnInit() {

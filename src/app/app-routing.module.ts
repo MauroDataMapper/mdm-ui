@@ -530,7 +530,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
-      url: '/:domainType/:dataModelId/copy/:id/',
+      url: '/:domainType/:dataModelId/:dataClassId/copy/:id/',
       component: CopyActionComponent
     },
     {

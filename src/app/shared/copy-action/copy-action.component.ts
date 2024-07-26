@@ -21,14 +21,17 @@ import { Title } from '@angular/platform-browser';
 import {
   Uuid,
   CatalogueItemDomainType,
-  MdmResponse,
-  CatalogueItemDetail,
   ContainerDomainType,
   CopyTermPayload,
   CopyDataClassPayload,
   CopyDataElementPayload,
-  CopyModelPayload
+  CopyModelPayload,
+  Term,
+  DataElement,
+  DataClass
 } from '@maurodatamapper/mdm-resources';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
+import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { StateParams, UIRouterGlobals } from '@uirouter/angular';
@@ -49,7 +52,7 @@ export class CopyActionComponent implements OnInit {
   loaded = false;
   loadingContent = false;
   targetClick = false;
-  source: CatalogueItemDetail;
+  sourceItem: MauroItem;
   domainType: CatalogueItemDomainType;
   activeTab: number;
   targetName: string;
@@ -58,8 +61,6 @@ export class CopyActionComponent implements OnInit {
   setupForm: FormGroup;
   tree: any;
   copyPermissions = false;
-  parentId: Uuid;
-  parentParentId: Uuid;
   destinationSelector:
     | 'folders'
     | 'terminologies'
@@ -68,6 +69,7 @@ export class CopyActionComponent implements OnInit {
   copying = false;
 
   constructor(
+    private mauroItemProvider: MauroItemProviderService,
     private stateHandler: StateHandlerService,
     private uiRouterGlobals: UIRouterGlobals,
     private title: Title,
@@ -81,31 +83,12 @@ export class CopyActionComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle('Copy Item');
-    const sourceId: Uuid = this.uiRouterGlobals.params.id;
-    this.extractParams(this.uiRouterGlobals.params);
-    this.getCatalogueItemDetails(this.domainType, sourceId).subscribe(
-      (response) => {
-        this.source = response.body;
-        this.targetName = this.source.label + ' (copy)';
-        this.loaded = true;
-      }
-    );
-    this.loadNodes();
 
     this.setupForm = new FormGroup({
       label: new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
     });
-  }
 
-  extractParams(params: StateParams) {
-    if (!params.domainType) {
-      this.stateHandler.GoPrevious();
-      this.messageHandler.showError(
-        `Cannot get catalogue item details for ${this.source.label}: unrecognised domain type.`
-      );
-    }
-
-    this.domainType = params.domainType;
+    const identifier = this.getMauroIdentifier(this.uiRouterGlobals.params);
 
     switch (this.domainType) {
       case CatalogueItemDomainType.Term:
@@ -122,55 +105,53 @@ export class CopyActionComponent implements OnInit {
         break;
     }
 
-    switch (this.domainType) {
-      case CatalogueItemDomainType.Term:
-        if (params.terminologyId) {
-          this.parentId = params.terminologyId;
-        } else {
-          // params are wrapped differently by a refresh of the page. this handles that case
-          this.parentId = params.dataModelId;
-        }
-        break;
-      case CatalogueItemDomainType.DataElement:
-        this.parentId = params.dataClassId;
-        this.parentParentId = params.dataModelId;
-        break;
-      case CatalogueItemDomainType.DataClass:
-        this.parentId = params.dataModelId;
-        break;
-      default:
-        break;
-    }
+    this.mauroItemProvider
+      .get(identifier)
+      .pipe(
+        catchError((error) => {
+          this.messageHandler.showError(
+            'Unable to get the item to copy.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((mauroItem) => {
+        this.sourceItem = mauroItem;
+        this.targetName = this.sourceItem.label + ' (copy)';
+        this.loaded = true;
+      });
+
+    this.loadNodes();
   }
 
-  getCatalogueItemDetails(
-    domainType: CatalogueItemDomainType,
-    id: Uuid
-  ): Observable<MdmResponse<CatalogueItemDetail>> {
-    switch (domainType) {
-      case CatalogueItemDomainType.DataModel:
-        return this.resources.dataModel.get(id);
-      case CatalogueItemDomainType.Terminology:
-        return this.resources.terminology.get(id);
-      case CatalogueItemDomainType.CodeSet:
-        return this.resources.codeSet.get(id);
-      // modelItems have different get endpoint requirements
-      case CatalogueItemDomainType.Term:
-        return this.resources.term.get(this.parentId, id);
-      case CatalogueItemDomainType.DataClass:
-        return this.resources.dataClass.get(this.parentId, id);
-      case CatalogueItemDomainType.DataElement:
-        return this.resources.dataElement.get(
-          this.parentParentId,
-          this.parentId,
-          id
-        );
-
-      default:
-        this.messageHandler.showError(
-          `Cannot get catalogue item details for ${domainType} ${id}: unrecognised domain type.`
-        );
+  getMauroIdentifier(params: StateParams): MauroIdentifier {
+    if (!params.domainType) {
+      this.messageHandler.showError(
+        'Cannot get catalogue item details: unrecognised domain type.'
+      );
+      this.stateHandler.GoPrevious();
     }
+
+    this.domainType = params.domainType;
+
+    const identifier: MauroIdentifier = {
+      id: params.id,
+      domainType: this.domainType,
+      ...(this.domainType === CatalogueItemDomainType.DataClass && {
+        model: params.dataModelId,
+        parentDataClass: params.dataClassId
+      }),
+      ...(this.domainType === CatalogueItemDomainType.DataElement && {
+        model: params.dataModelId,
+        dataClass: params.dataClassId
+      }),
+      ...(this.domainType === CatalogueItemDomainType.Term && {
+        model: params.terminologyId
+      })
+    };
+
+    return identifier;
   }
 
   commitCopy() {
@@ -204,7 +185,7 @@ export class CopyActionComponent implements OnInit {
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
-            `Failed to copy ${this.domainType} ${this.source.label} to ${this.targetName}.`,
+            `Failed to copy ${this.domainType} ${this.sourceItem.label} to ${this.targetName}.`,
             error
           );
           return EMPTY;
@@ -213,7 +194,7 @@ export class CopyActionComponent implements OnInit {
       )
       .subscribe((response) => {
         this.messageHandler.showSuccess(
-          `Successfully copied ${this.domainType} ${this.source.label} to ${this.targetName} as ${this.targetName}.`
+          `Successfully copied ${this.domainType} ${this.sourceItem.label} to ${this.targetName} as ${this.targetName}.`
         );
         switch (this.domainType) {
           case CatalogueItemDomainType.DataModel:
@@ -335,7 +316,7 @@ export class CopyActionComponent implements OnInit {
   sendCopyRequest(payload): Observable<any> {
     if (!payload) {
       this.messageHandler.showError(
-        `no payload generated for ${this.domainType} ${this.source.label}: unrecognised domain type.`
+        `no payload generated for ${this.domainType} ${this.sourceItem.label}: unrecognised domain type.`
       );
       return;
     }
@@ -343,51 +324,64 @@ export class CopyActionComponent implements OnInit {
     switch (this.domainType) {
       case CatalogueItemDomainType.DataModel: {
         return this.resources.dataModel.copy(
-          this.source.id,
+          this.sourceItem.id,
           payload as CopyModelPayload
         );
       }
       case CatalogueItemDomainType.Terminology: {
         return this.resources.terminology.copy(
-          this.source.id,
+          this.sourceItem.id,
           payload as CopyModelPayload
         );
       }
       case CatalogueItemDomainType.CodeSet: {
         return this.resources.codeSet.copy(
-          this.source.id,
+          this.sourceItem.id,
           payload as CopyModelPayload
         );
       }
       // modelItems
       case CatalogueItemDomainType.Term: {
+        const termItem = this.sourceItem as Term;
         return this.resources.terms.copy(
-          this.parentId,
-          this.source.id,
+          termItem.model,
+          termItem.id,
           payload as CopyTermPayload
         );
       }
       case CatalogueItemDomainType.DataElement: {
+        const dataElementItem = this.sourceItem as DataElement;
         return this.resources.dataElement.copy(
           this.subTargetDestinationId,
           this.targetDestinationId,
-          this.source.model,
-          this.source.dataClass,
-          this.source.id,
+          dataElementItem.model,
+          dataElementItem.dataClass,
+          dataElementItem.id,
           payload as CopyDataElementPayload
         );
       }
       case CatalogueItemDomainType.DataClass: {
+        const dataClassItem = this.sourceItem as DataClass;
+        if (dataClassItem.parentDataClass) {
+          return this.resources.dataClass.copyChildClass(
+            this.subTargetDestinationId,
+            this.targetDestinationId,
+            dataClassItem.model,
+            dataClassItem.id,
+            payload as CopyDataClassPayload
+          );
+        }
+
         return this.resources.dataClass.copy(
           this.targetDestinationId,
-          this.source.model,
-          this.source.id,
+          dataClassItem.model,
+          dataClassItem.id,
           payload as CopyDataClassPayload
         );
       }
       default:
         this.messageHandler.showError(
-          `Cannot get catalogue item details for ${this.domainType} ${this.source.label}: unrecognised domain type.`
+          `Cannot get catalogue item details for ${this.domainType} ${this.sourceItem.label}: unrecognised domain type.`
         );
     }
   }

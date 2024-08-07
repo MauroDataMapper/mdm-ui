@@ -340,7 +340,10 @@ export class ElementSelectorComponent implements OnInit {
           context: {
             id: this.formData.currentContext.id,
             domainType: this.formData.currentContext.domainType,
-            label: this.formData.currentContext.label
+            label: this.formData.currentContext.label,
+            ...(this.formData.currentContext.domainType === 'DataClass' && {
+              dataModelId: this.formData.currentContext.modelId
+            })
           }
         })
       };
@@ -380,10 +383,18 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
 
-  loadAllDataElements(dataClass) {
+  loadAllDataElements(dataClass, pageSize, pageIndex) {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      'label',
+      'asc'
+    );
+
     return this.resourceService.dataElement.list(
       dataClass.modelId,
-      dataClass.id
+      dataClass.id,
+      options
     );
   }
   loadAllContextElements(currentContext, selectedType, pageSize, offset) {
@@ -393,24 +404,33 @@ export class ElementSelectorComponent implements OnInit {
     ) {
       this.loading = true;
       this.formData.searchResultOffset = offset;
-      this.loadAllDataElements(currentContext).subscribe((result) => {
-        const rows = [];
-        result.body.items.forEach((element) => {
-          if (element.hasOwnProperty('breadcrumbs')) {
-            rows.push(element, { detailRow: true, element });
+      this.loadAllDataElements(currentContext, pageSize, offset).subscribe(
+        (result) => {
+          const rows = [];
+          result.body.items.forEach((element) => {
+            if (element.hasOwnProperty('breadcrumbs')) {
+              rows.push(element, { detailRow: true, element });
+            } else {
+              rows.push(element);
+            }
+          });
+          this.formData.searchResult = result.items;
+          this.calculateDisplayedSoFar(result);
+          if (this.dataSource.data) {
+            this.dataSource.data = this.dataSource.data.concat(rows);
           } else {
-            rows.push(element);
+            this.dataSource.data = rows;
           }
-        });
-        this.formData.searchResult = result.items;
-        this.calculateDisplayedSoFar(result);
-        if (this.dataSource.data) {
-          this.dataSource.data = this.dataSource.data.concat(rows);
-        } else {
-          this.dataSource.data = rows;
+          this.totalItemCount = result.body.count;
+          this.currentRecord = this.dataSource.data.filter(
+            (x) => !x.hasOwnProperty('detailRow')
+          ).length;
+          this.dataSource._updateChangeSubscription();
+          this.noData = false;
+          this.isProcessing = false;
+          this.loading = false;
         }
-        this.loading = false;
-      });
+      );
     } else if (
       currentContext.domainType === 'DataModel' &&
       selectedType === 'DataType'

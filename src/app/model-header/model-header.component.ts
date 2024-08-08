@@ -260,7 +260,6 @@ export class ModelHeaderComponent implements OnInit {
           this.ancestorTreeItems = ancestorTreeItems.filter(
             (treeItem) => treeItem.id !== this.item.id
           );
-          console.log(this.ancestorTreeItems);
         });
     }
   }

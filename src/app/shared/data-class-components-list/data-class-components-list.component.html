@@ -15,8 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="!isLoadingClassResults && !isLoadingElementResults && !totalDataClassCount && !totalDataElementCount && !elementFilter && !classFilter" class="pxy-2">
-  <div *ngIf="isEditable" style="width: 100%; text-align: right;" >
+<div
+  *ngIf="
+    !isLoadingClassResults &&
+    !isLoadingElementResults &&
+    !totalDataClassCount &&
+    !totalDataElementCount &&
+    !elementFilter &&
+    !classFilter
+  "
+  class="pxy-2"
+>
+  <div *ngIf="isEditable" style="width: 100%; text-align: right">
     <button
       mat-flat-button
       color="primary"
@@ -37,11 +47,10 @@ SPDX-License-Identifier: Apache-2.0
       <span class="fas fa-plus" aria-hidden="true"></span>
       Add Data Element
     </button>
-
   </div>
   <p>
     This Data Class has no contents: data classes or data elements
-    <br/>
+    <br />
     <span *ngIf="isEditable">
       Click one of the buttons above to begin adding content to this Data Class
     </span>
@@ -69,10 +78,14 @@ SPDX-License-Identifier: Apache-2.0
       >
         <h4 class="marginless">
           <span>Data Classes</span>
-          <mdm-skeleton-badge *ngIf="isLoadingClassResults"></mdm-skeleton-badge>
-          <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingClassResults">{{
-            totalDataClassCount
-          }}</span>
+          <mdm-skeleton-badge
+            *ngIf="isLoadingClassResults"
+          ></mdm-skeleton-badge>
+          <span
+            class="mdm--badge mdm--element-count"
+            *ngIf="!isLoadingClassResults"
+            >{{ totalDataClassCount }}</span
+          >
           <span
             class="fas fa-filter"
             (click)="classFilterClick()"
@@ -99,9 +112,15 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="bulkClassActionsVisible > 0"
           >
             Bulk actions
-            <span class="fas fa-caret-down fa-xs" style="margin-left: 2px"></span>
+            <span
+              class="fas fa-caret-down fa-xs"
+              style="margin-left: 2px"
+            ></span>
           </button>
-          <mat-menu #contentClassBulkActions="matMenu" class="mdm--mat-menu--actions">
+          <mat-menu
+            #contentClassBulkActions="matMenu"
+            class="mdm--mat-menu--actions"
+          >
             <button mat-menu-item (click)="bulkEditClass()">
               <span class="fas fa-pencil-alt"></span> Edit selected rows
             </button>
@@ -120,7 +139,12 @@ SPDX-License-Identifier: Apache-2.0
             <span class="fas fa-plus" aria-hidden="true"></span>
             Add Data Class
           </button>
-          <button *ngIf="!isLoadingElementResults && !totalDataElementCount && !elementFilter"
+          <button
+            *ngIf="
+              !isLoadingElementResults &&
+              !totalDataElementCount &&
+              !elementFilter
+            "
             mat-flat-button
             color="primary"
             type="button"
@@ -137,7 +161,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="table-responsive">
     <table
       mat-table
-      #tableDataClasses
+      #tableDataClasses="matSort"
       matSort
       cdkDropList
       (cdkDropListDropped)="dropClassItem($event)"
@@ -158,7 +182,12 @@ SPDX-License-Identifier: Apache-2.0
           <div [hidden]="hideClassFilters">
             <mat-form-field class="filter" floatLabel="never">
               <mat-label>Name</mat-label>
-              <input #classFilters matInput name="label" (keyup)="applyClassFilter()" />
+              <input
+                #classFilters
+                matInput
+                name="label"
+                (keyup)="applyClassFilter()"
+              />
             </mat-form-field>
           </div>
         </th>
@@ -218,7 +247,9 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="record.description && record.description.length > 0"
             style="margin-bottom: 10px"
           >
-            <span style="font-style: italic; font-size: 11px">Description:</span>
+            <span style="font-style: italic; font-size: 11px"
+              >Description:</span
+            >
             <mdm-more-description
               description="{{ record.description }}"
             ></mdm-more-description>
@@ -313,7 +344,9 @@ SPDX-License-Identifier: Apache-2.0
     [ngClass]="{ 'is-hidden': totalDataClassCount < 6 }"
   >
     <mdm-paginator
+      #classPaginator
       [length]="totalDataClassCount"
+      [pageSizeOptions]="pageSizeOptions"
       showFirstLastButtons
     ></mdm-paginator>
   </div>
@@ -321,7 +354,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <!-- Elements Below here -->
 <div [hidden]="!totalDataElementCount && !elementFilter">
-  <div class="heading-container" >
+  <div class="heading-container">
     <div
       fxFlex
       fxLayout="row"
@@ -341,10 +374,14 @@ SPDX-License-Identifier: Apache-2.0
       >
         <h4 class="marginless">
           <span>Data Elements</span>
-          <mdm-skeleton-badge *ngIf="isLoadingElementResults"></mdm-skeleton-badge>
-          <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingElementResults">{{
-            totalDataElementCount
-            }}</span>
+          <mdm-skeleton-badge
+            *ngIf="isLoadingElementResults"
+          ></mdm-skeleton-badge>
+          <span
+            class="mdm--badge mdm--element-count"
+            *ngIf="!isLoadingElementResults"
+            >{{ totalDataElementCount }}</span
+          >
           <span
             class="fas fa-filter"
             (click)="elementFilterClick()"
@@ -371,9 +408,15 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="bulkElementActionsVisible > 0"
           >
             Bulk actions
-            <span class="fas fa-caret-down fa-xs" style="margin-left: 2px"></span>
+            <span
+              class="fas fa-caret-down fa-xs"
+              style="margin-left: 2px"
+            ></span>
           </button>
-          <mat-menu #contentElementBulkActions="matMenu" class="mdm--mat-menu--actions">
+          <mat-menu
+            #contentElementBulkActions="matMenu"
+            class="mdm--mat-menu--actions"
+          >
             <button mat-menu-item (click)="bulkEditElement()">
               <span class="fas fa-pencil-alt"></span> Edit selected rows
             </button>
@@ -382,7 +425,10 @@ SPDX-License-Identifier: Apache-2.0
               <span class="far fa-trash-alt"></span> Delete selected rows
             </button>
           </mat-menu>
-          <button *ngIf="!isLoadingClassResults && !totalDataClassCount && !classFilter"
+          <button
+            *ngIf="
+              !isLoadingClassResults && !totalDataClassCount && !classFilter
+            "
             mat-flat-button
             color="primary"
             type="button"
@@ -409,7 +455,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="table-responsive">
     <table
       mat-table
-      #tableDataElements
+      #tableDataElements="matSort"
       matSort
       cdkDropList
       (cdkDropListDropped)="dropElementItem($event)"
@@ -430,7 +476,12 @@ SPDX-License-Identifier: Apache-2.0
           <div [hidden]="hideElementFilters">
             <mat-form-field class="filter" floatLabel="never">
               <mat-label>Name</mat-label>
-              <input #elementFilters matInput name="label" (keyup)="applyElementFilter()" />
+              <input
+                #elementFilters
+                matInput
+                name="label"
+                (keyup)="applyElementFilter()"
+              />
             </mat-form-field>
           </div>
         </th>
@@ -448,7 +499,7 @@ SPDX-License-Identifier: Apache-2.0
               title="Reference: {{
                 record.breadcrumbs | joinArray: ' / ':'label'
               }} / {{ record.label }}"
-            >External Reference &nbsp;<span class="fas fa-info-circle"></span
+              >External Reference &nbsp;<span class="fas fa-info-circle"></span
             ></span>
           </div>
         </td>
@@ -481,7 +532,9 @@ SPDX-License-Identifier: Apache-2.0
             *ngIf="record.description && record.description.length > 0"
             style="margin-bottom: 10px"
           >
-            <span style="font-style: italic; font-size: 11px">Description:</span>
+            <span style="font-style: italic; font-size: 11px"
+              >Description:</span
+            >
             <mdm-more-description
               description="{{ record.description }}"
             ></mdm-more-description>
@@ -585,7 +638,9 @@ SPDX-License-Identifier: Apache-2.0
     [ngClass]="{ 'is-hidden': totalDataElementCount < 6 }"
   >
     <mdm-paginator
+      #elementPaginator
       [length]="totalDataElementCount"
+      [pageSizeOptions]="pageSizeOptions"
       showFirstLastButtons
     ></mdm-paginator>
   </div>

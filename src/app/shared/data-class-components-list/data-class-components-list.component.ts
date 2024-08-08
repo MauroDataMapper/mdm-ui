@@ -55,17 +55,23 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./data-class-components-list.component.scss']
 })
 export class DataClassComponentsListComponent implements AfterViewInit {
-  @ViewChildren('classFilters', { read: ElementRef }) classFilters: ElementRef[];
-  @ViewChildren('elementFilters', { read: ElementRef }) elementFilters: ElementRef[];
+  @ViewChildren('classFilters', { read: ElementRef })
+  classFilters: ElementRef[];
+  @ViewChildren('elementFilters', { read: ElementRef })
+  elementFilters: ElementRef[];
 
-  @ViewChild(MatSort, { static: false }) classSort: MatSort;
-  @ViewChild(MatSort, { static: false }) elementSort: MatSort;
+  @ViewChild('tableDataClasses', { static: false }) classSort: MatSort;
+  @ViewChild('tableDataElements', { static: false }) elementSort: MatSort;
 
-  @ViewChild(MdmPaginatorComponent, { static: true }) classPaginator: MdmPaginatorComponent;
-  @ViewChild(MdmPaginatorComponent, { static: true }) elementPaginator: MdmPaginatorComponent;
+  @ViewChild('classPaginator', { static: true })
+  classPaginator: MdmPaginatorComponent;
+  @ViewChild('elementPaginator', { static: true })
+  elementPaginator: MdmPaginatorComponent;
 
   @ViewChild(MatTable, { static: false }) classTable: MatTable<DataClassDetail>;
-  @ViewChild(MatTable, { static: false }) elementTable: MatTable<DataElementDetail>;
+  @ViewChild(MatTable, { static: false }) elementTable: MatTable<
+    DataElementDetail
+  >;
 
   @Input() parentDataModel: DataModelDetail;
   @Input() grandParentDataClass: DataClassDetail;
@@ -97,6 +103,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   bulkElementActionsVisible = 0;
 
   isOrderedDataSource = false;
+  pageSizeOptions = [10, 20, 50];
 
   constructor(
     private resources: MdmResourcesService,
@@ -110,18 +117,34 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     if (this.isEditable && !this.parentDataModel.finalised) {
-      this.displayedClassColumns = ['name', 'description', 'multiplicity', 'checkbox'];
-      this.displayedElementColumns = ['name', 'description', 'multiplicity', 'checkbox'];
+      this.displayedClassColumns = [
+        'name',
+        'description',
+        'multiplicity',
+        'checkbox'
+      ];
+      this.displayedElementColumns = [
+        'name',
+        'description',
+        'multiplicity',
+        'checkbox'
+      ];
     } else {
       this.displayedClassColumns = ['name', 'description', 'multiplicity'];
       this.displayedElementColumns = ['name', 'description', 'multiplicity'];
     }
     this.changeRef.detectChanges();
-    this.classSort?.sortChange.subscribe(() => (this.classPaginator.pageIndex = 0));
-    this.elementSort?.sortChange.subscribe(() => (this.elementPaginator.pageIndex = 0));
+    this.classSort?.sortChange.subscribe(
+      () => (this.classPaginator.pageIndex = 0)
+    );
+    this.elementSort?.sortChange.subscribe(
+      () => (this.elementPaginator.pageIndex = 0)
+    );
 
     this.filterClassEvent.subscribe(() => (this.classPaginator.pageIndex = 0));
-    this.filterElementEvent.subscribe(() => (this.elementPaginator.pageIndex = 0));
+    this.filterElementEvent.subscribe(
+      () => (this.elementPaginator.pageIndex = 0)
+    );
 
     this.loadDataClasses();
     this.loadDataElements();
@@ -130,7 +153,11 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   }
 
   loadDataClasses() {
-    merge(this.classSort?.sortChange, this.classPaginator?.page, this.filterClassEvent)
+    merge(
+      this.classSort?.sortChange,
+      this.classPaginator?.page,
+      this.filterClassEvent
+    )
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -174,7 +201,11 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       });
   }
   loadDataElements() {
-    merge(this.elementSort?.sortChange, this.elementPaginator?.page, this.filterElementEvent)
+    merge(
+      this.elementSort?.sortChange,
+      this.elementPaginator?.page,
+      this.filterElementEvent
+    )
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -182,7 +213,10 @@ export class DataClassComponentsListComponent implements AfterViewInit {
           this.isOrderedDataSource = true;
           if (!this.elementSort?.direction) {
             this.isOrderedDataSource = false;
-            [this.elementSort.active, this.elementSort.direction] = ['idx', 'asc'];
+            [this.elementSort.active, this.elementSort.direction] = [
+              'idx',
+              'asc'
+            ];
           }
           return this.dataElementsFetch(
             this.elementPaginator?.pageSize,
@@ -237,7 +271,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     );
   }
 
-
   applyClassFilter() {
     const classFilter = {};
     this.classFilters.forEach((x: any) => {
@@ -265,7 +298,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.filterElementEvent.emit(elementFilter);
   }
 
-
   classFilterClick() {
     this.hideClassFilters = !this.hideClassFilters;
   }
@@ -273,7 +305,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   elementFilterClick() {
     this.hideElementFilters = !this.hideElementFilters;
   }
-
 
   dataClassesFetch(
     pageSize?: number,
@@ -320,12 +351,16 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   }
 
   onClassChecked() {
-    this.dataClassRecords.forEach((x) => (x.checked = this.checkAllClassCheckbox));
+    this.dataClassRecords.forEach(
+      (x) => (x.checked = this.checkAllClassCheckbox)
+    );
     this.classListChecked();
   }
 
   onElementChecked() {
-    this.dataElementRecords.forEach((x) => (x.checked = this.checkAllElementCheckbox));
+    this.dataElementRecords.forEach(
+      (x) => (x.checked = this.checkAllElementCheckbox)
+    );
     this.elementListChecked();
   }
 

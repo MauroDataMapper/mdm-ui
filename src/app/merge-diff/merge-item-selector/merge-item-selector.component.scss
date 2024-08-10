@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
 .mat-list-option {
   font-size: smaller !important;
   border-bottom: 1px solid rgb(132, 132, 132);
+  height: auto;
 }
 
 .creation {
@@ -35,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0
 
 .mdm-merge-item-selector {
   &__scroll-viewport {
-    height: 50vh;
+    height: 40vh;
     width: 100%;
   }
 }

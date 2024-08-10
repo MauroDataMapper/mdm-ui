@@ -62,6 +62,7 @@ export class MergeDiffContainerComponent implements OnInit {
   loadingContent = false;
   targetLoaded = false;
   comparingBranches = false;
+  committingDiffs = false;
   domainType: MergableMultiFacetAwareDomainType;
   source: MergableCatalogueItem;
   target: MergableCatalogueItem;
@@ -180,13 +181,16 @@ export class MergeDiffContainerComponent implements OnInit {
             }
           };
 
+          this.committingDiffs = true;
+
           return this.mergeDiff.commitMergePatches(
             this.domainType,
             this.source.id,
             this.target.id,
             data
           );
-        })
+        }),
+        finalize(() => (this.committingDiffs = false))
       )
       .subscribe(() => {
         this.messageHandler.showSuccess(

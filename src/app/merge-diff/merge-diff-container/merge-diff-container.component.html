@@ -46,7 +46,9 @@ SPDX-License-Identifier: Apache-2.0
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
-          [disabled]="!committingList || committingList.length === 0"
+          [disabled]="
+            !committingList || committingList.length === 0 || committingDiffs
+          "
           (click)="onCommitChanges()"
         >
           <i
@@ -108,8 +110,13 @@ SPDX-License-Identifier: Apache-2.0
       <p>Depending on the size of the branches, this may take some time.</p>
       <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
+    <div *ngIf="committingDiffs" class="panel panel-default mdm--shadow-block">
+      <p>Committing your selected changes...</p>
+      <p>Depending on the of differences selected, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
     <div
-      *ngIf="!comparingBranches"
+      *ngIf="!comparingBranches && !committingDiffs"
       class="tabContainer panel panel-default mdm--shadow-block"
       fxLayout="row"
     >

@@ -61,6 +61,7 @@ export class MergeDiffContainerComponent implements OnInit {
   loaded = false;
   loadingContent = false;
   targetLoaded = false;
+  comparingBranches = false;
   domainType: MergableMultiFacetAwareDomainType;
   source: MergableCatalogueItem;
   target: MergableCatalogueItem;
@@ -78,6 +79,10 @@ export class MergeDiffContainerComponent implements OnInit {
     private dialog: MatDialog,
     private title: Title
   ) {}
+
+  public get MergeUsed() {
+    return MergeConflictResolution;
+  }
 
   ngOnInit(): void {
     this.title.setTitle('Merge Changes');
@@ -201,8 +206,10 @@ export class MergeDiffContainerComponent implements OnInit {
 
   runDiff() {
     this.resetLists();
+    this.comparingBranches = true;
     this.mergeDiff
       .getMergeDiff(this.domainType, this.source.id, this.target.id)
+      .pipe(finalize(() => (this.comparingBranches = false)))
       .subscribe((data) => {
         data.diffs.forEach((item: MergeDiffItemModel) => {
           if (item.fieldName === branchNameField) {
@@ -232,10 +239,6 @@ export class MergeDiffContainerComponent implements OnInit {
   resetLists() {
     this.changesList = Array<MergeDiffItemModel>();
     this.committingList = Array<MergeDiffItemModel>();
-  }
-
-  public get MergeUsed() {
-    return MergeConflictResolution;
   }
 
   selectAll(branchUsed: MergeConflictResolution) {

@@ -101,6 +101,15 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div>
     <div
+      *ngIf="comparingBranches"
+      class="panel panel-default mdm--shadow-block"
+    >
+      <p>Comparing branches...</p>
+      <p>Depending on the size of the branches, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div
+      *ngIf="!comparingBranches"
       class="tabContainer panel panel-default mdm--shadow-block"
       fxLayout="row"
     >
@@ -109,15 +118,14 @@ SPDX-License-Identifier: Apache-2.0
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >
-
-        <!-- Displays if no branch is selected -->
+          <!-- Displays if no branch is selected -->
           <mat-tab *ngIf="!changesList">
             <ng-template mat-tab-label> No Branch </ng-template>
             <div class="noContent">
               <h4 style="margin-top: 75px">No Target Branch Selected</h4>
             </div>
           </mat-tab>
-        <!-- Displays if a branch is selected -->
+          <!-- Displays if a branch is selected -->
           <mat-tab *ngIf="changesList">
             <ng-template mat-tab-label>
               Changes ({{ changesList.length }})

@@ -20,31 +20,39 @@ SPDX-License-Identifier: Apache-2.0
     <input matInput #mergeItemSearch placeholder="Filter" />
   </mat-form-field>
   <mat-selection-list [multiple]="false">
-    <mat-list-option
-      [ngClass]="{
-        creation: item.type === mergeType.Creation,
-        deletion: item.type === mergeType.Deletion
-      }"
-      *ngFor="let item of mergeItems | mergeFilter: mergeItemSearch.value"
-      [value]="item"
-      (click)="selectedItem(item)"
+    <cdk-virtual-scroll-viewport
+      itemSize="20"
+      class="mdm-merge-item-selector__scroll-viewport"
     >
-      <span
-        mat-list-icon
-        class="fas"
+      <mat-list-option
         [ngClass]="{
-          'fa-plus-square': item.type === mergeType.Creation,
-          'fa-minus-square': item.type === mergeType.Deletion,
-          'fa-pen-square': item.type === mergeType.Modification
+          creation: item.type === mergeType.Creation,
+          deletion: item.type === mergeType.Deletion
         }"
-        [matTooltip]="getMergeTypeTooltip(item.type)"
-      ></span>
-      <mdm-path-name
-        [path]="item.path"
-        [suffixLabel]="item.branchNameSelected | uppercase"
-        [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
-        [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
-      ></mdm-path-name>
-    </mat-list-option>
+        *cdkVirtualFor="
+          let item of mergeItems | mergeFilter: mergeItemSearch.value;
+          templateCacheSize: 0
+        "
+        [value]="item"
+        (click)="selectedItem(item)"
+      >
+        <span
+          mat-list-icon
+          class="fas"
+          [ngClass]="{
+            'fa-plus-square': item.type === mergeType.Creation,
+            'fa-minus-square': item.type === mergeType.Deletion,
+            'fa-pen-square': item.type === mergeType.Modification
+          }"
+          [matTooltip]="getMergeTypeTooltip(item.type)"
+        ></span>
+        <mdm-path-name
+          [path]="item.path"
+          [suffixLabel]="item.branchNameSelected | uppercase"
+          [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
+          [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
+        ></mdm-path-name>
+      </mat-list-option>
+    </cdk-virtual-scroll-viewport>
   </mat-selection-list>
 </div>

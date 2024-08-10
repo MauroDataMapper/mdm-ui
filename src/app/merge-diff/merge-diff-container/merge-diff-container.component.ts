@@ -262,6 +262,11 @@ export class MergeDiffContainerComponent implements OnInit {
         tempArray.push(item);
       }
     });
+
+    // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+    // array instance must be observed to affect a render
+    this.committingList = [...this.committingList];
+
     this.changesList = new Array<MergeDiffItemModel>();
     this.changesList = Object.assign([], tempArray);
   }
@@ -283,6 +288,11 @@ export class MergeDiffContainerComponent implements OnInit {
             item.branchNameSelected = null;
             this.changesList.push(item);
           });
+
+          // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+          // array instance must be observed to affect a render
+          this.changesList = [...this.changesList];
+
           this.committingList = new Array<MergeDiffItemModel>();
         }
       });
@@ -292,10 +302,19 @@ export class MergeDiffContainerComponent implements OnInit {
     const index = this.committingList.findIndex((x) => x === item);
     if (index >= 0) {
       this.selectedItem = null;
+
       this.committingList.splice(index, 1);
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.committingList = [...this.committingList];
+
       item.branchSelected = null;
       item.branchNameSelected = null;
-      this.changesList.push(item);
+
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.changesList = [...this.changesList, item];
+
       this.activeTab = 0;
       this.setSelectedMergeItem(item, false);
     }
@@ -305,6 +324,10 @@ export class MergeDiffContainerComponent implements OnInit {
     const index = this.changesList.findIndex((x) => x === item);
     if (index >= 0) {
       this.changesList.splice(index, 1);
+
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.changesList = [...this.changesList];
 
       switch (item.branchSelected) {
         case MergeConflictResolution.Source:
@@ -321,7 +344,10 @@ export class MergeDiffContainerComponent implements OnInit {
           break;
       }
 
-      this.committingList.push(item);
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.committingList = [...this.committingList, item];
+
       this.selectedItem = null;
     }
   }

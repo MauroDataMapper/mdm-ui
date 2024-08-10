@@ -32,3 +32,10 @@ SPDX-License-Identifier: Apache-2.0
 .deletion {
   color: darkred !important;
 }
+
+.mdm-merge-item-selector {
+  &__scroll-viewport {
+    height: 50vh;
+    width: 100%;
+  }
+}

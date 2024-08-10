@@ -17,9 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MergeDiffItem, MergeDiffType, MergeConflictResolution } from '@maurodatamapper/mdm-resources';
 import {
-   MergeDiffItemModel} from '../types/merge-item-type';
+  MergeDiffItem,
+  MergeDiffType,
+  MergeConflictResolution
+} from '@maurodatamapper/mdm-resources';
+import { MergeDiffItemModel } from '../types/merge-item-type';
 
 @Component({
   selector: 'mdm-merge-item-selector',
@@ -35,15 +38,14 @@ export class MergeItemSelectorComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
-
-  selectedItem(mergeItem: MergeDiffItem) {
-    this.selectedMergeItemChanged.emit( mergeItem);
-  }
-
   public get mergeType() {
     return MergeDiffType;
+  }
+
+  ngOnInit(): void {}
+
+  selectedItem(mergeItem: MergeDiffItem) {
+    this.selectedMergeItemChanged.emit(mergeItem);
   }
 
   getBranchSelectedIcon(selected: MergeConflictResolution) {

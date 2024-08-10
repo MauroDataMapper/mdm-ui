@@ -16,23 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.changesArea
-{
-    padding-bottom: 10px;
+.changesArea {
+  padding-bottom: 10px;
 }
 
-.mat-list-option
-{
-    font-size: smaller !important;
-    height: 25px !important;
+.mat-list-option {
+  font-size: smaller !important;
+  border-bottom: 1px solid rgb(132, 132, 132);
 }
 
-.creation
-{
-    color:green !important ;
+.creation {
+  color: green !important ;
 }
 
-.deletion
-{
-    color: darkred !important;
+.deletion {
+  color: darkred !important;
 }

@@ -171,10 +171,8 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="changesList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4 style="margin-top: 75px" *ngIf="changesList.length === 0">
-                  No Pending Changes
-                </h4>
+              <div class="noContent" *ngIf="changesList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Changes</h4>
               </div>
             </div>
           </mat-tab>
@@ -204,13 +202,8 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="committingList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4
-                  style="margin-top: 75px"
-                  *ngIf="committingList.length === 0"
-                >
-                  No Pending Commits
-                </h4>
+              <div class="noContent" *ngIf="committingList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Commits</h4>
               </div>
             </div>
           </mat-tab>

@@ -17,6 +17,7 @@
     "eslint-nofix": "tsc --noEmit && eslint . --ext ts",
     "eslint-nofix-quiet": "tsc --noEmit && eslint . --ext ts --quiet",
     "eslint-report": "eslint . --ext ts --format checkstyle -o eslint/eslint_report.xml",
+    "eslint-junit": "eslint . --ext ts -f ./node_modules/eslint-junit/index.js",
     "e2e": "ng e2e",
     "postinstall": "ngcc",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version",

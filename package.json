@@ -25,6 +25,10 @@
     "pr-checks": "npm run license-check check && npm run eslint && npm run test"
   },
   "private": true,
+  "eslint-junit": {
+    "suiteName": "eslint tests",
+    "output": "./eslint/eslint-junit.xml"
+  },
   "dependencies": {
     "@ag-grid-community/angular": "29.3.5",
     "@ag-grid-community/client-side-row-model": "29.3.5",
@@ -114,11 +118,12 @@
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
     "eslint": "^7.32.0",
-    "eslint-config-prettier": "6.12.0",
     "eslint-plugin-import": "2.25.3",
-    "eslint-plugin-jsdoc": "37.0.3",
+    "eslint-plugin-jsdoc": "48.0.6",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-prettier": "4.0.0",
+    "eslint-config-prettier": "6.12.0",
+    "eslint-junit": "1.0.1",
     "file-saver": "2.0.5",
     "jest": "^28.1.3",
     "jest-html-reporter": "3.10.2",

@@ -1,0 +1,153 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mdm-ui # Only applies to `run` steps
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ./mdm-ui
+
+      - name: Install and configure
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.10.0'
+
+      - name: Install tools
+        run: |
+          npm i -g npm@8.3.0
+          npm i -g @angular/cli
+          npm i -g symlinked
+          npm i -g npm-check
+
+      - name: Check tool versions
+        run: |
+          node --version
+          npm --version
+
+
+      - name: Clean install dependencies
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm install
+
+
+      #########
+      #     Link a local copy of mdm-resources
+      #########
+      - name: Checkout mdm-resources
+        if: success() && github.ref != 'refs/heads/main'
+        # working-directory: ./mdm-resources
+        uses: actions/checkout@v4
+        with:
+          repository: MauroDataMapper/mdm-resources
+          ref: refs/heads/develop # change this to test against another branch
+          path: ./mdm-resources
+
+      - name: Build mdm-resources
+        if: success() && github.ref != 'refs/heads/main'
+        working-directory: ./mdm-resources
+        run: |
+          npm install
+          npm run build
+          npm link
+
+      # Back in the (default) mdm-ui directory
+      - name: Link mdm-resources
+        if: success() && github.ref != 'refs/heads/main'
+        run: |
+          npm link @maurodatamapper/mdm-resources
+
+      - name: Report links
+        run: symlinked names
+
+      - name: License header check
+        run: npm run license-check check
+
+      - name: Run tests
+        run: npm run test-with-coverage-serial
+
+      - name: Report Test results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          working-directory: ./mdm-ui
+          name: Test Results
+          path: 'test-report/junit.xml'
+          reporter: java-junit
+
+      # Can't successfully get Megalinter to run in another folder.
+      # Disable it and use the native eslint instead
+      #- name: MegaLinter
+      #  uses:  oxsecurity/megalinter/flavors/javascript@v7.12.0
+      #  env:
+      #    # All available variables are described in documentation
+      #    # https://megalinter.io/configuration/
+      #    VALIDATE_ALL_CODEBASE: true
+      #    ENABLE_LINTERS: TYPESCRIPT_ES
+      #    LINTER_RULES_PATH: '.eslintrc.json' # This is the default anyway
+      #    DISABLE_ERRORS: true #Flag to have the linter complete with exit code 0 even if errors were detected.
+      #    SARIF_REPORTER: true
+      #    GITHUB_STATUS_REPORTER: true
+      #    GITHUB_COMMENT_REPORTER: true
+      #    MARKDOWN_SUMMARY_REPORTER: true
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      #- name: Upload MegaLinter scan results to GitHub Security tab
+      #  if: ${{ success() }} || ${{ failure() }}
+      #  uses: github/codeql-action/upload-sarif@v3
+      #  with:
+      #    checkout_path: ./mdm-ui
+      #    sarif_file: 'megalinter-reports/megalinter-report.sarif'
+
+      - name: Run ESLint
+        run: npm run eslint-junit || true # Always succeed, even with linting errors
+
+
+      - name: Report ESLint results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          working-directory: ./mdm-ui
+          name: ESLint Results
+          path: 'eslint/eslint-junit.xml'
+          reporter: java-junit
+          fail-on-error: false
+
+
+      - name: Build distribution with original theme
+        run: npm run dist
+
+      - name: Build distribution with nhs digital theme
+        run: npm run dist
+        env:
+          MDM_UI_THEME_NAME: nhs-digital
+
+      - name: Archive distribution artifacts
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution artifacts
+          path: dist/mdm-ui-*.tgz
+
+      - name: Send a stream message
+        if: success() || failure()
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIP_API_KEY }}
+          email: "githubactionsbot-bot@maurodatamapper.zulipchat.com"
+          organization-url: "https://maurodatamapper.zulipchat.com"
+          to: "build/github-actions"
+          type: "stream"
+          topic: "${{github.repository}}"
+          content: "${{ job.status == 'success' && ':check_mark:' || ':cross_mark:' }} ${{github.repository}} : **${{github.ref}}**\nGitHub Actions build result: **${{ job.status }}**\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"

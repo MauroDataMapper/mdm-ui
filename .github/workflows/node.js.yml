@@ -134,7 +134,8 @@ jobs:
           MDM_UI_THEME_NAME: nhs-digital
 
       - name: Archive distribution artifacts
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
+        if: success() || failure()
+#        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
         run: |
           for i in dist/mdm-ui-*.tgz; do \
             echo Uploading $i... \

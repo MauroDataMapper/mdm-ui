@@ -135,10 +135,11 @@ jobs:
 
       - name: Archive distribution artifacts
         if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
-        uses: actions/upload-artifact@v4
-        with:
-          name: distribution artifacts
-          path: dist/mdm-ui-*.tgz
+        run: |
+          for i in dist/mdm-ui-*.tgz; do \
+            echo Uploading $i... \
+            curl -X PUT -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui/$i ; \
+          done
 
       - name: Send a stream message
         if: success() || failure()

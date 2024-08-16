@@ -134,13 +134,12 @@ jobs:
           MDM_UI_THEME_NAME: nhs-digital
 
       - name: Archive distribution artifacts
-        if: success() || failure()
-#        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
+        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
         run: |
           cd dist ; \
           for i in mdm-ui-*.tgz; do \
             echo Uploading $i... ; \
-            curl -X PUT -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui/$i ; \
+            curl -X PUT -H "X-Generate-Checksums: true" -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui/$i ; \
           done
 
       - name: Send a stream message

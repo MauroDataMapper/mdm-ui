@@ -138,7 +138,7 @@ jobs:
 #        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
         run: |
           for i in dist/mdm-ui-*.tgz; do \
-            echo Uploading $i... \
+            echo Uploading $i... ; \
             curl -X PUT -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui/$i ; \
           done
 

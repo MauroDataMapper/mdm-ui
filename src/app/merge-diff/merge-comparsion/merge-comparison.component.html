@@ -112,6 +112,9 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 <div *ngIf="mergeItem.type === MergeType.Modification">
+  <div class="modified-item">
+    <mdm-path-name [path]="mergeItem.path"></mdm-path-name>
+  </div>
   <div *ngIf="!isCommitting">
     <div fxLayout="row">
       <h4>{{ source.branchName }}</h4>
@@ -161,16 +164,18 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 <div *ngIf="mergeItem.type === MergeType.Deletion">
-  <div class="deleteContent">
-    <h4 style="margin-top: 75px; color: red">
-      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be deleted
-    </h4>
+  <div class="content">
+    <div class="delete-item">
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name>
+    </div>
+    <div class="delete-item">Item will be deleted</div>
   </div>
 </div>
 <div *ngIf="mergeItem.type === MergeType.Creation">
-  <div class="deleteContent">
-    <h4 style="margin-top: 75px; color: green">
-      <mdm-path-name [path]="mergeItem.path"></mdm-path-name> will be created
-    </h4>
+  <div class="content">
+    <div class="create-item">
+      <mdm-path-name [path]="mergeItem.path"></mdm-path-name>
+    </div>
+    <div class="create-item">Item will be created</div>
   </div>
 </div>

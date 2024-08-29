@@ -54,29 +54,34 @@ SPDX-License-Identifier: Apache-2.0
     </h5>
     <div class="mdm--form-input" class="mergeItemsList">
       <mat-list>
-        <mat-list-item
-          [ngClass]="{
-            creation: item.type === mergeType.Creation,
-            deletion: item.type === mergeType.Deletion
-          }"
-          *ngFor="let item of items"
+        <cdk-virtual-scroll-viewport
+          itemSize="20"
+          class="mdm-check-in-modal__scroll-viewport"
         >
-          <span
-            mat-list-icon
-            class="fas"
+          <mat-list-item
             [ngClass]="{
-              'fa-plus-square': item.type === mergeType.Creation,
-              'fa-minus-square': item.type === mergeType.Deletion,
-              'fa-pen-square': item.type === mergeType.Modification
+              creation: item.type === mergeType.Creation,
+              deletion: item.type === mergeType.Deletion
             }"
-          ></span>
-          <mdm-path-name
-            [path]="item.path"
-            [suffixLabel]="item.branchNameSelected | uppercase"
-            [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
-            [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
-          ></mdm-path-name>
-        </mat-list-item>
+            *cdkVirtualFor="let item of items; templateCacheSize: 0"
+          >
+            <span
+              mat-list-icon
+              class="fas"
+              [ngClass]="{
+                'fa-plus-square': item.type === mergeType.Creation,
+                'fa-minus-square': item.type === mergeType.Deletion,
+                'fa-pen-square': item.type === mergeType.Modification
+              }"
+            ></span>
+            <mdm-path-name
+              [path]="item.path"
+              [suffixLabel]="item.branchNameSelected | uppercase"
+              [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
+              [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
+            ></mdm-path-name>
+          </mat-list-item>
+        </cdk-virtual-scroll-viewport>
       </mat-list>
     </div>
     <p class="mt-2">Are you sure you wish to commit these changes?</p>

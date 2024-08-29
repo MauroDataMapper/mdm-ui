@@ -46,7 +46,9 @@ SPDX-License-Identifier: Apache-2.0
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
-          [disabled]="!committingList || committingList.length === 0"
+          [disabled]="
+            !committingList || committingList.length === 0 || committingDiffs
+          "
           (click)="onCommitChanges()"
         >
           <i
@@ -101,6 +103,20 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div>
     <div
+      *ngIf="comparingBranches"
+      class="panel panel-default mdm--shadow-block"
+    >
+      <p>Comparing branches...</p>
+      <p>Depending on the size of the branches, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div *ngIf="committingDiffs" class="panel panel-default mdm--shadow-block">
+      <p>Committing your selected changes...</p>
+      <p>Depending on the of differences selected, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div
+      *ngIf="!comparingBranches && !committingDiffs"
       class="tabContainer panel panel-default mdm--shadow-block"
       fxLayout="row"
     >
@@ -109,15 +125,14 @@ SPDX-License-Identifier: Apache-2.0
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >
-
-        <!-- Displays if no branch is selected -->
+          <!-- Displays if no branch is selected -->
           <mat-tab *ngIf="!changesList">
             <ng-template mat-tab-label> No Branch </ng-template>
             <div class="noContent">
               <h4 style="margin-top: 75px">No Target Branch Selected</h4>
             </div>
           </mat-tab>
-        <!-- Displays if a branch is selected -->
+          <!-- Displays if a branch is selected -->
           <mat-tab *ngIf="changesList">
             <ng-template mat-tab-label>
               Changes ({{ changesList.length }})
@@ -156,10 +171,8 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="changesList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4 style="margin-top: 75px" *ngIf="changesList.length === 0">
-                  No Pending Changes
-                </h4>
+              <div class="noContent" *ngIf="changesList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Changes</h4>
               </div>
             </div>
           </mat-tab>
@@ -189,13 +202,8 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="committingList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4
-                  style="margin-top: 75px"
-                  *ngIf="committingList.length === 0"
-                >
-                  No Pending Commits
-                </h4>
+              <div class="noContent" *ngIf="committingList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Commits</h4>
               </div>
             </div>
           </mat-tab>

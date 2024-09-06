@@ -346,3 +346,7 @@ span.mchighlighter {
   overflow: initial !important;
   vertical-align: baseline;
 }
+
+.jodit-container:not(.jodit_inline) .jodit-workplace {
+  background-color: white !important; // Fix Jodit background issues
+}

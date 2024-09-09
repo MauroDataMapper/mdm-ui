@@ -349,6 +349,11 @@ export class BulkEditEditorComponent implements OnInit {
     const data = {};
     profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
+        if(field.dataType === 'boolean') {
+          if(field.currentValue !== 'true') {
+            field.currentValue = 'false';
+          }
+        }
         data[field.metadataPropertyName] = field.currentValue;
       });
     });

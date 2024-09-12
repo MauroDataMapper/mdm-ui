@@ -92,7 +92,11 @@ export class EditProfileModalComponent implements OnInit {
         if (data.isNew && field.defaultValue) {
           field.currentValue = field.defaultValue;
         }
-
+        if(field.dataType === 'boolean') {
+          if(field.currentValue !== 'true') {
+            field.currentValue = 'false';
+          }
+        }
         if (field.dataType === 'folder') {
           if (
             field.currentValue === '[]' ||

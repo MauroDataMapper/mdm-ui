@@ -42,7 +42,9 @@ module.exports = {
   },
   reporters: [
     'default',
-    ['jest-junit',{outputDirectory: 'test-report'}],
+    ["jest-junit", {
+      outputDirectory: "test-report",
+      reportTestSuiteErrors: "true"}],
     ['jest-html-reporter', {
       pageTitle: 'Mauro UI: Test Report',
       outputPath: 'test-report/index.html',

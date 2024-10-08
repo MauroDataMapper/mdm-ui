@@ -17,10 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
 import {
   CatalogueElementType,
   ElementTypesService
 } from '@mdm/services/element-types.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'mdm-element-link',
@@ -62,7 +64,10 @@ export class ElementLinkComponent implements OnInit {
   replaceLabelBy: any;
   disableLink: any;
 
-  constructor(private elementTypes: ElementTypesService) {}
+  constructor(
+    private elementTypes: ElementTypesService,
+    private itemProvider: MauroItemProviderService
+  ) {}
 
   ngOnInit() {
     this.label = '';
@@ -98,12 +103,23 @@ export class ElementLinkComponent implements OnInit {
         this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
-      this.label = parentDM?.label
-        ? `${parentDM?.label} : ${this.label}`
-        : this.label;
-      if (this.label === 'undefined : undefined') {
-        this.label = '';
-      }
+
+      this.itemProvider
+        .get({ id: parentDM.id, domainType: parentDM.domainType })
+        .pipe(
+          map((model) => {
+            if (model.finalised) {
+              return `${model.label} [${model.modelVersion}] : ${
+                this.element?.label ?? this.element?.definition ?? ''
+              }`;
+            }
+
+            return `${model.label} [${model.branchName}] : ${
+              this.element?.label ?? this.element?.definition ?? ''
+            }`;
+          })
+        )
+        .subscribe((fullLabel) => (this.label = fullLabel));
     }
 
     this.initTypeLabel();

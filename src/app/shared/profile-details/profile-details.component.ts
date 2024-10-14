@@ -37,4 +37,8 @@ export class ProfileDetailsComponent {
     datetime: 'datetime',
     decimal: 'number'
   };
+
+  convertStringToJson(value: string) {
+    return JSON.parse(value);
+  }
 }

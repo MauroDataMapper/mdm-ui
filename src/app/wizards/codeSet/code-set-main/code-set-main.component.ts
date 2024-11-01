@@ -49,7 +49,9 @@ export class CodeSetMainComponent implements OnInit {
     organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
     description: new FormControl(''),
     classifiers: new FormControl([]),
-    terms: new FormControl([]) // eslint-disable-line @typescript-eslint/unbound-method
+    terms: new FormControl([]), // eslint-disable-line @typescript-eslint/unbound-method
+    terminology: new FormControl([]),
+    addAllTerms: new FormControl(false)
   });
 
   get label() {
@@ -76,12 +78,24 @@ export class CodeSetMainComponent implements OnInit {
     this.classifiers.setValue(value);
   }
 
+  get addAllTerms() {
+    return this.setupForm.controls.addAllTerms;
+  }
+
   get terms() {
     return this.setupForm.controls.terms;
   }
 
+  get terminology() {
+    return this.setupForm.controls.terminology;
+  }
+
   set termsValue(value: any[]) {
     this.terms.setValue(value);
+  }
+
+  set terminologiesValue(value: any[]) {
+    this.terminology.setValue(value);
   }
 
   constructor(
@@ -127,7 +141,8 @@ export class CodeSetMainComponent implements OnInit {
       description: this.description.value,
       classifiers: this.classifiers.value,
       folder: this.parentFolderId,
-      terms: this.terms.value
+      terms: this.terms.value,
+      terminologies: this.addAllTerms? [this.terminology.value] : null
     };
 
     this.resources.codeSet

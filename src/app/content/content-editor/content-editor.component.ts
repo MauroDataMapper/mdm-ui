@@ -68,10 +68,6 @@ export class ContentEditorComponent implements OnInit {
     }
   }
 
-  isInEditMode(): boolean {
-    return this.inEditMode;
-  }
-
   onEditorDescriptionChanged(value: string) {
     this.content = value;
     this.contentChange.emit(value);

@@ -30,6 +30,7 @@ SPDX-License-Identifier: Apache-2.0
     li.breadcrumb-item {
       &::before {
         float: none;
+        margin-right: .5em;
       }
 
       padding-left: 0;
@@ -41,8 +42,9 @@ SPDX-License-Identifier: Apache-2.0
 
       .model-suffix {
         &::before {
-          padding: 0 0.2rem;
+          padding: 0 0.5rem;
           content: '|';
+          font-size: larger;
         }
 
         .fas {

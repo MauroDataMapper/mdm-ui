@@ -24,6 +24,7 @@ import {
 } from '@angular/core';
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '../path-name/path-name.service';
+import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 interface LocationPathItem {
   label: string;
@@ -31,6 +32,8 @@ interface LocationPathItem {
   branchName?: string;
   modelVersion?: string;
   modelVersionTag?: string;
+  domainType?: string;
+  icon?: string;
 }
 
 @Component({
@@ -59,7 +62,9 @@ export class LocationPathComponent implements OnInit, OnChanges {
             href: this.pathName.createHref(ancestor.path),
             branchName: ancestor.branchName,
             modelVersion: ancestor.modelVersion,
-            modelVersionTag: ancestor.modelVersionTag
+            modelVersionTag: ancestor.modelVersionTag,
+            domainType: ancestor.domainType,
+            icon: ancestor.domainType?getCatalogueItemDomainTypeIcon(ancestor.domainType):null
           };
         }) ?? [];
 

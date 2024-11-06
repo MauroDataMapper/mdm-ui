@@ -76,6 +76,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   canCreateFolder = true;
   isRootFolderRestricted = false;
   isClassifierCreateRestricted = false;
+  isLoggedIn = false;
 
   // Hard
   includeModelSuperseded = false;
@@ -234,6 +235,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.currentClassification = null;
     this.allClassifications = [];
 
+    this.isLoggedIn = this.sharedService.isLoggedIn();
+
     this.resources.apiProperties
       .listPublic()
       .pipe(
@@ -257,10 +260,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  isLoggedIn() {
-    return this.sharedService.isLoggedIn();
   }
 
   tabSelected(tabIndex: number) {

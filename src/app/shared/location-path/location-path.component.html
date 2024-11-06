@@ -34,6 +34,14 @@ SPDX-License-Identifier: Apache-2.0
     </li>
     <li class="breadcrumb-item" *ngFor="let item of items">
       <small>
+        <mat-icon
+          fontSet="fas"
+          [fontIcon]="item.icon"
+          [ngClass]="'dataModelTypeIcon'"
+          [attr.aria-label]="item.label + ' icon'"
+          [style]="'margin-right: 0'"
+        ></mat-icon>
+
         <a [href]="item.href">
           <span>{{ item.label }}</span>
           <span *ngIf="item.branchName" class="model-suffix">

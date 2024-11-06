@@ -50,7 +50,7 @@ export class CodeSetMainComponent implements OnInit {
     description: new FormControl(''),
     classifiers: new FormControl([]),
     terms: new FormControl([]), // eslint-disable-line @typescript-eslint/unbound-method
-    terminology: new FormControl([]),
+    terminology: new FormControl({ id: ''}),
     addAllTerms: new FormControl(false)
   });
 
@@ -94,7 +94,7 @@ export class CodeSetMainComponent implements OnInit {
     this.terms.setValue(value);
   }
 
-  set terminologiesValue(value: any[]) {
+  set terminologyValue(value: any) {
     this.terminology.setValue(value);
   }
 

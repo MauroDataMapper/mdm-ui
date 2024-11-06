@@ -93,7 +93,7 @@ SPDX-License-Identifier: Apache-2.0
               <button
                 type="button"
                 mat-stroked-button
-                *ngIf="isLoggedIn()"
+                *ngIf="isLoggedIn"
                 matTooltip="Reload Data Models Tree"
                 [disabled]="levels.current === 1"
                 (click)="reloadTree()"
@@ -105,7 +105,7 @@ SPDX-License-Identifier: Apache-2.0
               <button
                 type="button"
                 mat-stroked-button
-                *ngIf="isLoggedIn()"
+                *ngIf="isLoggedIn"
                 [matMenuTriggerFor]="exportMenu"
                 matTooltip="Export Models"
                 aria-label="Export Models"
@@ -143,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0
               <button
                 type="button"
                 mat-stroked-button
-                *ngIf="isLoggedIn()"
+                *ngIf="isLoggedIn"
                 [matMenuTriggerFor]="importMenu"
                 matTooltip="Import Models"
                 aria-label="Import Models"
@@ -188,7 +188,7 @@ SPDX-License-Identifier: Apache-2.0
                 type="button"
                 mat-stroked-button
                 *ngIf="
-                  isLoggedIn() &&
+                  isLoggedIn &&
                   ((isAdministrator && isRootFolderRestricted) ||
                     !isRootFolderRestricted)
                 "
@@ -266,7 +266,7 @@ SPDX-License-Identifier: Apache-2.0
               filteredModels.children.length == 0
             "
           >
-            <div *ngIf="!isLoggedIn()">
+            <div *ngIf="!isLoggedIn">
               <div class="noDataModel">
                 <div class="title">
                   There are no Data Models to display publicly.
@@ -276,7 +276,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
               </div>
             </div>
-            <div *ngIf="isLoggedIn()">
+            <div *ngIf="isLoggedIn">
               <div class="noDataModel">
                 <div class="title">There are no Data Models to display.</div>
                 <div class="content">
@@ -317,7 +317,7 @@ SPDX-License-Identifier: Apache-2.0
                     type="button"
                     mat-stroked-button
                     *ngIf="
-                      isLoggedIn() &&
+                      isLoggedIn &&
                       ((isAdministrator && isClassifierCreateRestricted) ||
                         !isClassifierCreateRestricted)
                     "
@@ -351,7 +351,7 @@ SPDX-License-Identifier: Apache-2.0
             (nodeClickEvent)="classifierTreeOnSelect($event)"
           ></mdm-folders-tree>
           <div *ngIf="allClassifiers && allClassifiers.length == 0">
-            <div *ngIf="!isLoggedIn()">
+            <div *ngIf="!isLoggedIn">
               <div class="noClassification">
                 <div class="title">
                   There are no Classifications to display publicly.
@@ -361,7 +361,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
               </div>
             </div>
-            <div *ngIf="isLoggedIn()">
+            <div *ngIf="isLoggedIn">
               <div class="noClassification">
                 <div class="title">
                   There are no Classifications to display.
@@ -376,7 +376,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </mat-tab>
 
-      <mat-tab *ngIf="isLoggedIn()">
+      <mat-tab *ngIf="isLoggedIn">
         <ng-template mat-tab-label>
           <span class="fas fa-star"></span> &nbsp; Favourites
         </ng-template>

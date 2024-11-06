@@ -44,6 +44,17 @@ export class ElementLinkComponent implements OnInit {
 
   linkUrl: string;
 
+  icon: string;
+
+  label: string;
+  versionNumber: string;
+  openLinkLocation: string;
+  elementTypeTitle: string;
+  types: CatalogueElementType[];
+
+  replaceLabelBy: any;
+  disableLink: any;
+
   @Input()
   get element() {
     return this.elementVal;
@@ -55,14 +66,6 @@ export class ElementLinkComponent implements OnInit {
     this.ngOnInit();
   }
 
-  label: string;
-  versionNumber: string;
-  openLinkLocation: string;
-  elementTypeTitle: string;
-  types: CatalogueElementType[];
-
-  replaceLabelBy: any;
-  disableLink: any;
 
   constructor(
     private elementTypes: ElementTypesService,
@@ -121,9 +124,9 @@ export class ElementLinkComponent implements OnInit {
         )
         .subscribe((fullLabel) => (this.label = fullLabel));
     }
-
     this.initTypeLabel();
     this.initLink();
+    this.icon = this.getIcon();
   }
 
   public initTypeLabel(): any {
@@ -156,10 +159,10 @@ export class ElementLinkComponent implements OnInit {
   }
 
   getIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType);
+    if(this.element) {
+      return getCatalogueItemDomainTypeIcon(this.element.domainType);
+    }
+    return null;
   }
 
-  hasIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
-  }
 }

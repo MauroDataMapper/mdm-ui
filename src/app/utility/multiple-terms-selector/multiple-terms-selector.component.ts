@@ -55,7 +55,9 @@ export class MultipleTermsSelectorComponent {
   @Input() hideAddButton = true;
 
   @Output() selectedTermsChange = new EventEmitter<any[]>();
+  @Output() selectedTerminologyChange = new EventEmitter<any[]>();
   @Output() addingTerms = new EventEmitter<Term[]>();
+  @Output() addAllTerms = false;
 
   @ViewChild('searchInputTerms', { static: true })
   dataSource = new MatTableDataSource<Term>();
@@ -79,7 +81,6 @@ export class MultipleTermsSelectorComponent {
     loading: false
   };
   loading = false;
-  addAllTerms = false;
 
   searchInputTerms: ElementRef;
   currentRecord: number;
@@ -150,6 +151,7 @@ export class MultipleTermsSelectorComponent {
       this.totalItemCount = 0;
       this.currentRecord = 0;
     }
+    this.selectedTerminologyChange.emit(this.selectorSection.selectedTerminology);
   }
 
   runTermSearch() {

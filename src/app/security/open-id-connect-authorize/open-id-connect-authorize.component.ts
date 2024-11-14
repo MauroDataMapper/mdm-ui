@@ -20,6 +20,10 @@ import { BroadcastService, MessageService, SecurityHandlerService } from '@mdm/s
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { MdmCatalogueUserResource } from '../../../../../mdm-resources';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component to authorize a user session authenticated via an OpenID Connect provider.
@@ -49,8 +53,10 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
 
   constructor(
     private securityHandler: SecurityHandlerService,
+    private resourcesService: MdmResourcesService,
     private messages: MessageService,
-    private broadcast: BroadcastService) { }
+    private broadcast: BroadcastService) {
+  }
 
   ngOnInit(): void {
     if (this.verifyLoggedIn()) {
@@ -68,38 +74,45 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
     const code = params.get('code');
 
     if (!state || !sessionState || !code) {
-      this.authorizing = false;
-      this.errorMessage = 'OpenID Connect session state has not been provided.';
-      return;
-    }
-
-    this.securityHandler
-      .authorizeOpenIdConnectSession({
-        state,
-        sessionState,
-        code
-      })
-      .pipe(
-        catchError((error: SignInError) => {
-          switch (error.type) {
-            case SignInErrorType.InvalidCredentials:
-              this.errorMessage = 'Invalid username or password!';
-              break;
-            case SignInErrorType.AlreadySignedIn:
-              this.errorMessage = 'A user is already signed in, please sign out first.';
-              break;
-            default:
-              this.errorMessage = 'Unable to sign in. Please try again later.';
-              break;
-          }
-
+      this.resourcesService.catalogueUser.get('currentUser').pipe(
+        catchError(() => {
+          this.authorizing = false;
+          this.errorMessage = 'OpenID Connect session state has not been provided, and currentUser endpoint is not avaiable.';
           return EMPTY;
-        }),
-        finalize(() => this.authorizing = false)
-      )
-      .subscribe(() => {
-        this.verifyLoggedIn();
-      });
+        })
+      ).subscribe((result: { body: UserDetailsResult }) => {
+          this.securityHandler.addToLocalStorage(result.body);
+          this.verifyLoggedIn();
+        }
+      );
+    } else {
+      this.securityHandler
+        .authorizeOpenIdConnectSession({
+          state,
+          sessionState,
+          code
+        })
+        .pipe(
+          catchError((error: SignInError) => {
+            switch (error.type) {
+              case SignInErrorType.InvalidCredentials:
+                this.errorMessage = 'Invalid username or password!';
+                break;
+              case SignInErrorType.AlreadySignedIn:
+                this.errorMessage = 'A user is already signed in, please sign out first.';
+                break;
+              default:
+                this.errorMessage = 'Unable to sign in. Please try again later.';
+                break;
+            }
+            return EMPTY;
+          }),
+          finalize(() => this.authorizing = false)
+        )
+        .subscribe(() => {
+          this.verifyLoggedIn();
+        });
+    }
   }
 
   private verifyLoggedIn() {

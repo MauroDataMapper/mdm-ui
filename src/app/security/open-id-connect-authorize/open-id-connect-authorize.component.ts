@@ -20,10 +20,8 @@ import { BroadcastService, MessageService, SecurityHandlerService } from '@mdm/s
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { MdmCatalogueUserResource } from '../../../../../mdm-resources';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component to authorize a user session authenticated via an OpenID Connect provider.
@@ -77,7 +75,7 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
       this.resourcesService.catalogueUser.get('currentUser').pipe(
         catchError(() => {
           this.authorizing = false;
-          this.errorMessage = 'OpenID Connect session state has not been provided, and currentUser endpoint is not avaiable.';
+          this.errorMessage = 'OpenID Connect session state has not been provided, and can\'t authenticate current user.';
           return EMPTY;
         })
       ).subscribe((result: { body: UserDetailsResult }) => {

@@ -53,6 +53,6 @@ SPDX-License-Identifier: Apache-2.0
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="pt-2 pb-2">
    <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">Cancel</button>
-   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk" *ngIf="!showName && showExpiryDay">Refresh Key</button>
-   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk" *ngIf="showName && showRefreshable">Create Key</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk()" *ngIf="!showName && showExpiryDay">Refresh Key</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk()" *ngIf="showName && showRefreshable">Create Key</button>
 </mat-dialog-actions>

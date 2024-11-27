@@ -52,7 +52,6 @@ export class ApiKeysModalComponent implements OnInit {
   showName: boolean;
   showExpiryDay: boolean;
   showRefreshable: boolean;
-  enableOk: boolean;
 
   constructor(
     private dialogRef: MatDialogRef<ApiKeysModalComponent, ApiKeysModalResponse>,
@@ -63,7 +62,6 @@ export class ApiKeysModalComponent implements OnInit {
     this.showName = this.data.showName ? this.data.showName : false;
     this.showExpiryDay = this.data.showExpiryDay ? this.data.showExpiryDay : false;
     this.showRefreshable = this.data.showRefreshable ? this.data.showRefreshable : false;
-    this.enableOk = this.name && this.name.trim().length !== 0 && this.expiresInDays && this.expiresInDays >= 0;
   }
 
   ok() {
@@ -84,4 +82,7 @@ export class ApiKeysModalComponent implements OnInit {
     });
   }
 
+  enableOk() {
+    return this.name && this.name.trim().length !== 0 && this.expiresInDays && this.expiresInDays >= 0;
+  }
 }

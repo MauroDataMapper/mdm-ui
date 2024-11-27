@@ -83,6 +83,6 @@ export class ApiKeysModalComponent implements OnInit {
   }
 
   enableOk() {
-    return this.name && this.name.trim().length !== 0 && this.expiresInDays && this.expiresInDays >= 0;
+    return (!this.showName || (this.name && this.name.trim().length !== 0)) && this.expiresInDays && this.expiresInDays >= 0;
   }
 }

@@ -181,7 +181,6 @@ import { DataClassComponentsListComponent } from '@mdm/shared/data-class-compone
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
 import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.component';
-import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 @NgModule({
   providers: [
@@ -346,7 +345,6 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     NewReferenceDataTypeFormComponent,
     ReferenceDataTypeSelectComponent,
     ModelHeaderComponent,
-    ContentEditorComponent,
     CopyActionComponent
   ],
   imports: [
@@ -510,7 +508,6 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
     SkeletonBadgeComponent,
     ReferenceDataModelMainComponent,
     ModelHeaderComponent,
-    ContentEditorComponent,
     CopyActionComponent
   ]
 })

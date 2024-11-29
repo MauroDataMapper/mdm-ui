@@ -1,0 +1,53 @@
+<div class="mdm-bulk-edit__select-filter">
+  <span [ngClass]="'mdm-bulk-edit__select-count--invalid'">
+    Selected {{ this.selectedItems.length }} /
+    {{ this.finishedScrolling ? items.length : '...' }}
+  </span>
+  <button
+    mat-stroked-button
+    primary="color"
+    (click)="selectAllChildItems()"
+  >
+    Select all
+  </button>
+  <button
+    mat-stroked-button
+    primary="color"
+    (click)="deselectAllChildItems()"
+  >
+    Clear all
+  </button>
+  <label for="filter-child-items" class="sr-only">Filter</label>
+  <input
+    type="search"
+    id="filter-child-items"
+    class="outlined-input"
+    placeholder="Filter..."
+    (change)="onChangeFilter()"
+  />
+  <!--  <span *ngIf="filter.value">
+            Found {{ filteredChildItems.length }} /
+      {{ availableChildItems.length }}
+          </span>
+  -->
+  <mat-selection-list
+    style="background-color: wheat; border: 1px solid black; height: 20em; overflow: scroll"
+    #selectBox
+    [(ngModel)]="selectedItems"
+    class="mdm-bulk-edit__select-list"
+    infinite-scroll
+    [infiniteScrollDistance]="1"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false"
+  >
+    <mat-list-option
+      [value]="this.getValue(item)"
+      *ngFor="let item of items"
+
+    >
+      <ng-template [ngTemplateOutlet]="listItemTemplate"
+                   [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+    </mat-list-option>
+  </mat-selection-list>
+
+</div>

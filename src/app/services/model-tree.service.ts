@@ -154,10 +154,12 @@ export class ModelTreeService implements OnDestroy {
           )
         ),
         catchError((error) => {
-          this.messageHandler.showError(
-            'There was a problem getting the Subscribed Catalogues.',
-            error
-          );
+          if(error.status !== 404) {
+            this.messageHandler.showError(
+              'There was a problem getting the Subscribed Catalogues.',
+              error
+            );
+          }
           return of([]);
         })
       );

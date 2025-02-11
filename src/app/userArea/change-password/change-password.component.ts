@@ -69,7 +69,7 @@ export class ChangePasswordComponent implements OnInit {
       newPassword: this.newPassword
     };
 
-    this.resourcesService.catalogueUser.changePassword(this.currentUser.id, body).subscribe(() => {
+    this.resourcesService.catalogueUser.changePassword(this.currentUser.id as string, body).subscribe(() => {
         this.messageHandler.showSuccess('Password updated successfully.');
         this.stateHandler.Go('appContainer.userArea.profile');
       }, error => {

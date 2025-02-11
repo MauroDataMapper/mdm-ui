@@ -35,7 +35,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataModel, DataType } from '@maurodatamapper/mdm-resources';
@@ -141,7 +141,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after each backend call
-  dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
+  dataTypesFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters: {[p: string]: any}) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);

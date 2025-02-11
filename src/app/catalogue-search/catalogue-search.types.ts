@@ -354,7 +354,7 @@ export const mapStateParamsToSearchParameters = (
   };
 
   const profileFilterDto = query?.md
-    ? deserializeProfileFiltersToDto(query.md)
+    ? deserializeProfileFiltersToDto(query.md as string)
     : undefined;
 
   return {
@@ -367,10 +367,10 @@ export const mapStateParamsToSearchParameters = (
     domainTypes,
     labelOnly: query?.l === false ? false : true,
     exactMatch: query?.e === true ? true : undefined,
-    lastUpdatedAfter: query?.lua ? new Date(query.lua) : undefined,
-    lastUpdatedBefore: query?.lub ? new Date(query.lub) : undefined,
-    createdAfter: query?.ca ? new Date(query.ca) : undefined,
-    createdBefore: query?.cb ? new Date(query.cb) : undefined,
+    lastUpdatedAfter: query?.lua ? new Date(query.lua as number | string | Date) : undefined,
+    lastUpdatedBefore: query?.lub ? new Date(query.lub as number | string | Date) : undefined,
+    createdAfter: query?.ca ? new Date(query.ca as number | string | Date) : undefined,
+    createdBefore: query?.cb ? new Date(query.cb as number | string | Date) : undefined,
     includeSuperseded: query?.is === true ? true : false,
     classifiers,
     profileFiltersDto: profileFilterDto

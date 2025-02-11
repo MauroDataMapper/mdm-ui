@@ -62,9 +62,9 @@ export class SemanticLinkHandlerService {
     };
 
     if (operation === 'POST') {
-      return this.resources.catalogueItem.saveSemanticLinks(source.domainType, source.id, resource);
+      return this.resources.catalogueItem.saveSemanticLinks(source.domainType as string, source.id as string, resource);
     } else {
-      return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, resource);
+      return this.resources.catalogueItem.updateSemanticLink(source.domainType as string, source.id as string, linkId as string, resource);
     }
 
     // if (source.domainType === 'Term') {

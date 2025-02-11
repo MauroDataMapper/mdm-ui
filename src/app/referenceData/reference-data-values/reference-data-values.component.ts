@@ -22,6 +22,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { SortDirection } from '@angular/material/sort';
 
 @Component({
    selector: 'mdm-reference-data-values',
@@ -94,9 +95,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       this.changeRef.detectChanges();
    };
 
-   listReferenceDataValues = (pageSize?, pageIndex?, sortBy?, sortType?) => {
+   listReferenceDataValues = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection) => {
       const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
-      return this.resources.referenceDataValue.list(this.parent.id, options);
+      return this.resources.referenceDataValue.list(this.parent.id as string, options);
    };
 
    toggleSearch = () => {
@@ -129,9 +130,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       }
 
       if (this.hideFilters) {
-         return this.resources.referenceDataValue.list(this.parent.id, options);
+         return this.resources.referenceDataValue.list(this.parent.id as string, options);
       } else if (!this.hideFilters) {
-         return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
+         return this.resources.referenceDataValue.search(this.parent.id as string, { search: this.searchTerm, max: pageSize, offset: pageIndex });
       }
    }
 }

@@ -27,11 +27,11 @@ export class FolderService {
   }
 
   async loadModelsToCompare(dataModel) {
-    const semanticLinks: any = await this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, { filters: 'all=true' }).toPromise();
+    const semanticLinks: any = await this.resources.catalogueItem.listSemanticLinks(dataModel.domainType as string, dataModel.id as string, { filters: 'all=true' }).toPromise();
     const compareToList = [];
     if (semanticLinks && semanticLinks.body.items) {
       semanticLinks.body.items.map(link => {
-        if (['Superseded By', 'New Version Of'].includes(link.linkType) && link.source.id === dataModel.id) {
+        if (['Superseded By', 'New Version Of'].includes(link.linkType as string) && link.source.id === dataModel.id) {
           compareToList.push(link.target);
         }
       });

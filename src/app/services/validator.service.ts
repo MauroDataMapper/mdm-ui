@@ -41,12 +41,12 @@ export class ValidatorService {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  validateEmail(email): boolean {
+  validateEmail(email:string): boolean {
     return this.emailPattern.test(email);
   }
 
   isDate(date: any): boolean {
-    if (!isNaN(date)) {
+    if (!Number.isNaN(date)) {
       return date instanceof Date;
     }
     return false;
@@ -63,7 +63,7 @@ export class ValidatorService {
     return false;
   }
 
-  validateMultiplicities(min, max) {
+  validateMultiplicities(min:string, max:string) {
     if ((min == null && max == null) ||
       (min === undefined && max === undefined)) {
       return null;
@@ -90,11 +90,11 @@ export class ValidatorService {
       max = '-1';
     }
 
-    if (min.length > 0 && (parseInt(min, 10) < -1 || isNaN(min) || min.indexOf('.') !== -1)) {
+    if (min.length > 0 && (parseInt(min, 10) < -1 || isNaN(Number(min)) || min.indexOf('.') !== -1)) {
       return 'Invalid Min Multiplicity';
     }
 
-    if (max.length > 0 && (parseInt(max, 10) < -1 || isNaN(max) || max.indexOf('.') !== -1)) {
+    if (max.length > 0 && (parseInt(max, 10) < -1 || isNaN(Number(max)) || max.indexOf('.') !== -1)) {
       return 'Invalid Max Multiplicity';
     }
 

@@ -36,7 +36,7 @@ export class BaseComponent {
 
   constructor() { }
 
-  protected isGuid = (stringToTest) => {
+  protected isGuid = (stringToTest:string) => {
     if (stringToTest && stringToTest[0] === '{') {
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }

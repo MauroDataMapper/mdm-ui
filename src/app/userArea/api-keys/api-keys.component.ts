@@ -61,7 +61,7 @@ export class ApiKeysComponent implements OnInit {
     }
 
     this.isLoadingResults = true;
-    this.resourcesService.catalogueUser.listApiKeys(currentUser?.id).subscribe((result) => {
+    this.resourcesService.catalogueUser.listApiKeys(currentUser.id as string).subscribe((result) => {
       this.records = result.body.items;
       this.totalItemCount = result.body.count;
       this.isLoadingResults = false;
@@ -74,7 +74,8 @@ export class ApiKeysComponent implements OnInit {
   }
 
   disableKey = record => {
-    this.resourcesService.catalogueUser.disableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+    if(!this.currentUser){return;}
+    this.resourcesService.catalogueUser.disableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key disabled successfully.');
       this.listApiKeys(this.currentUser);
     }, error => {
@@ -83,7 +84,8 @@ export class ApiKeysComponent implements OnInit {
   };
 
   enableKey = record => {
-    this.resourcesService.catalogueUser.enableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+    if(!this.currentUser){return;}
+    this.resourcesService.catalogueUser.enableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key enabled successfully.');
       this.listApiKeys(this.currentUser);
     }, error => {
@@ -92,6 +94,7 @@ export class ApiKeysComponent implements OnInit {
   };
 
   refreshKey = record => {
+    if(!this.currentUser){return;}
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -104,7 +107,7 @@ export class ApiKeysComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter(result => result && result.status === ModalDialogStatus.Ok),
-        mergeMap(result => this.resourcesService.catalogueUser.refreshApiKey(this.currentUser?.id, record.apiKey, result.data.expiresInDays))
+        mergeMap(result => this.resourcesService.catalogueUser.refreshApiKey(this.currentUser.id as string, record.apiKey as string, result.data.expiresInDays))
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key enabled successfully.');
@@ -115,6 +118,7 @@ export class ApiKeysComponent implements OnInit {
   };
 
   addApiKey = () => {
+    if(!this.currentUser){return;}
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -127,7 +131,7 @@ export class ApiKeysComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter(result => result && result.status === ModalDialogStatus.Ok),
-        mergeMap(result => this.resourcesService.catalogueUser.saveApiKey(this.currentUser?.id, result.data))
+        mergeMap(result => this.resourcesService.catalogueUser.saveApiKey(this.currentUser.id as string, result.data))
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key created successfully.');
@@ -138,6 +142,7 @@ export class ApiKeysComponent implements OnInit {
   };
 
   removeKey = record => {
+    if(!this.currentUser){return;}
     this.dialog.openConfirmationAsync({
       data: {
         title: 'Are you sure you want to delete this API Key?',
@@ -147,7 +152,7 @@ export class ApiKeysComponent implements OnInit {
       }
     })
     .pipe(
-      mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser?.id, record.apiKey))
+      mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser.id as string, record.apiKey as string))
     )
     .subscribe(() => {
       this.messageHandler.showSuccess('API Key removed successfully.');
@@ -158,7 +163,7 @@ export class ApiKeysComponent implements OnInit {
   };
 
   copyToClipboard = record => {
-    this.clipboardService.copyFromContent(record.apiKey);
+    this.clipboardService.copyFromContent(record.apiKey as string);
     this.messageHandler.showSuccess(`API Key (${record.name}) copied successfully!`);
   };
 }

@@ -26,7 +26,7 @@ import {
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
@@ -71,7 +71,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   applyFilter = () => { };
 
-  modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  modulesFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) {
 
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
 

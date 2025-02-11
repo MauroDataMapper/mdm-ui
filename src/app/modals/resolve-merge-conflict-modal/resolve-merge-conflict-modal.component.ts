@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { diff_match_patch } from 'diff-match-patch';
+import  {diff_match_patch}   from 'diff-match-patch';
 
 @Component({
   selector: 'mdm-resolve-merge-conflict-modal',
@@ -52,8 +52,8 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.data.diffs) {
       const diffs = this.data.diffs;
-      const diffrl = this.diffLineMode(diffs.right, diffs.left);
-      const difflr = this.diffLineMode(diffs.left, diffs.right);
+      const diffrl = this.diffLineMode(diffs.right as string, diffs.left as string);
+      const difflr = this.diffLineMode(diffs.left as string, diffs.right as string);
 
 
       this.mergeViewrl.nativeElement.innerHTML = this.diffPrettyPlain(diffrl);
@@ -75,9 +75,9 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   onMergeConflictPress(thing:any)
   {
     const item = thing.currentTarget;
-    const obj = JSON.parse(item.attributes.test.value);
+    const obj = JSON.parse(item.attributes.test.value as string);
     const id = obj.id;
-    const value = decodeURI(obj.value);
+    const value = decodeURI(obj.value as string);
 
     document.querySelector(`span#loc${id}`).innerHTML = '';
 
@@ -99,7 +99,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
       const text = data;
       switch (op) {
         case diffDelete:{
-          const encodedText = encodeURI(text);
+          const encodedText = encodeURI(text as string);
           const obj = {id: x, loc:'left', value:encodedText};
           html[x] = `<button id="${x}" test=${JSON.stringify(obj)} class="diffAdded"><ins>${text}</ins></button>`;
           break;
@@ -142,7 +142,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
   };
 
-  diffLineMode(text1, text2) {
+  diffLineMode(text1:string, text2:string) {
     const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
@@ -153,8 +153,8 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     return diffs;
   }
 
-  diffLinesToChars = (text1, text2) => {
-    const lineArray = [];  // e.g. lineArray[4] == 'Hello\n'
+  diffLinesToChars = (text1 :string, text2:string) => {
+    const lineArray : string[] = [];  // e.g. lineArray[4] == 'Hello\n'
     const lineHash = {};   // e.g. lineHash['Hello\n'] == 4
 
     // '\x00' is a valid character, but various debuggers don't like it.
@@ -179,7 +179,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     return {chars1, chars2, lineArray};
   };
 
-  diffLinesToCharsMunge = (text, lineArray, lineHash, maxLines) => {
+  diffLinesToCharsMunge = (text:string, lineArray:string[], lineHash, maxLines:number) => {
     let chars = '';
     // Walk the text, pulling out a substring for each line.
     // text.split('\n') would would temporarily double our memory footprint.
@@ -197,7 +197,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
       if (lineHash.hasOwnProperty ? lineHash.hasOwnProperty(line) :
           (lineHash[line] !== undefined)) {
-        chars += String.fromCharCode(lineHash[line]);
+        chars += String.fromCharCode(lineHash[line] as number);
       } else {
         if (lineArrayLength === maxLines) {
           // Bail out at 65535 because

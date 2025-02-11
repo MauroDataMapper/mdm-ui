@@ -43,9 +43,10 @@ import {
   ContainerDomainType,
   FolderIndexResponse,
   MdmTreeItem,
-  MdmTreeItemListResponse,
-  SearchQueryParameters
+  MdmTreeItemListResponse, RequestSettings,
+  SearchQueryParameters, TreeItemListQueryParameters
 } from '@maurodatamapper/mdm-resources';
+import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -175,7 +176,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
         this.resources.tree
-          .search(ContainerDomainType.Folders, this.searchCriteria, options)
+          .search(ContainerDomainType.Folders, this.searchCriteria as string, options)
           .subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
@@ -195,7 +196,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     if (this.showInputGroup) {
-      fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
+      fromEvent(this.searchInputTreeControl.nativeElement as HasEventTargetAddRemove<unknown> | ArrayLike<HasEventTargetAddRemove<unknown>>, 'keyup')
       .pipe(
         map((event: any) => {
           return event.target.value;
@@ -223,7 +224,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           if (this.searchCriteria.trim().length > 0) {
             this.inSearchMode = true;
             this.resources.tree
-              .search(ContainerDomainType.Folders, this.searchCriteria)
+              .search(ContainerDomainType.Folders, this.searchCriteria as string)
               .subscribe((result: MdmTreeItemListResponse) => {
                 this.filteredRootNode = {
                   children: result.body,
@@ -242,7 +243,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
   loadFolder(folder) {
-    const id = folder && folder.id ? folder.id : null;
+    const id:string = folder && folder.id ? folder.id : null;
     this.loading = true;
     if (folder?.id) {
       this.resources.folder.get(id).subscribe(
@@ -318,11 +319,11 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     let method = this.resources.tree.list(
       ContainerDomainType.Folders,
-      options.queryStringParams
+      options.queryStringParams as TreeItemListQueryParameters
     );
 
     if (id) {
-      method = this.resources.tree.get('folders', 'dataModel', id, options);
+      method = this.resources.tree.get('folders', 'dataModel', id as string, options as RequestSettings);
     }
 
     method.subscribe(

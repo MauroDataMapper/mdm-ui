@@ -112,7 +112,8 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
           if (response.ok) {
             this.dialogRef.close(response.body);
           } else {
-            this.messageHandler.showWarning(response.body);
+            /* NOTE: generic message */
+            this.messageHandler.showWarning('Unable to create update relationship type');
           }
         });
     } else {
@@ -137,7 +138,8 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
           if (response.ok) {
             this.dialogRef.close(response.body);
           } else {
-            this.messageHandler.showWarning(response.body);
+            /* NOTE: generic message */
+            this.messageHandler.showWarning('Unable to create new relationship type');
           }
         });
     }

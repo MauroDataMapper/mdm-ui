@@ -51,7 +51,7 @@ import {
   CatalogueItemDomainType,
   isContainerDomainType,
   isModelDomainType,
-  MdmTreeItem
+  MdmTreeItem, Securable, TreeItemExpandedParameters
 } from '@maurodatamapper/mdm-resources';
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 
@@ -366,7 +366,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         case CatalogueItemDomainType.VersionedFolder: {
           // VersionedFolders are treated the same as Folders
           const folderResponse = await this.resources.tree
-            .getFolder(node.id, options.queryStringParams)
+            .getFolder(node.id, options.queryStringParams as TreeItemExpandedParameters)
             .toPromise();
           return folderResponse.body;
         }
@@ -413,7 +413,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   nodeChecked(child: FlatNode) {
-    const element = this.find(this.node, null, child.node.id);
+    const element = this.find(this.node as MdmTreeItem, null, child.node.id);
 
     this.markChildren(child.node, child, child.checked);
 
@@ -730,7 +730,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     this.stateHandler.NewWindow(
       fnode.domainType.toLocaleLowerCase(),
-      parameters
+      parameters as {}
     );
   }
 
@@ -1104,7 +1104,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
     if (this.filterByDomainType?.length > 0) {
       children = children.filter((c) =>
-        this.filterByDomainType.includes(c.domainType)
+        this.filterByDomainType.includes(c.domainType as CatalogueItemDomainType)
       );
     }
 
@@ -1150,9 +1150,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
           const newNodes = fnode.children?.map((c: any) => {
             return new FlatNode(
-              c,
+              c as MdmTreeItem,
               this.treeControl.getLevel(fnode) + 1,
-              this.securityHandler.elementAccess(c)
+              this.securityHandler.elementAccess(c as Securable)
             );
           });
 

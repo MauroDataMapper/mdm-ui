@@ -29,8 +29,8 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
-import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MatSort, SortDirection } from '@angular/material/sort';
+import { CatalogueElementType, ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 
@@ -68,8 +68,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   deleteInProgress: boolean;
   domainType;
 
-  baseTypes: any;
-  classifiableBaseTypes: any;
+  baseTypes:  { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
+  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
   filterValue: any;
   filterName: any;
 
@@ -123,14 +123,14 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   }
 
   classificationFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    pageSize?:number,
+    pageIndex?:number,
+    sortBy?:string,
+    sortType?:SortDirection,
+    filters?:{[p: string]: any}
   ): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-    return this.resources.classifier.listCatalogueItemsFor(this.parent.id, options);
+    return this.resources.classifier.listCatalogueItemsFor(this.parent.id as string, options);
   }
 
   applyFilter = () => {

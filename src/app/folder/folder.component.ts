@@ -94,7 +94,7 @@ export class FolderComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id) &&
+      this.isGuid(this.uiRouterGlobals.params.id as string) &&
       !this.uiRouterGlobals.params.id
     ) {
       this.stateHandler.NotFound({ location: false });

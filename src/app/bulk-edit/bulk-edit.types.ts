@@ -47,7 +47,7 @@ export interface BulkEditProfileContext {
 }
 
 export interface BulkEditDataRow {
+  [key: string]: any;
   label: string;
   profile: NavigatableProfile;
-  [key: string]: any;
 }

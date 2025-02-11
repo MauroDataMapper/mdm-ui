@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { TransitionOptions, UIRouter } from '@uirouter/angular';
+import { UIRouter } from '@uirouter/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 
@@ -114,7 +114,7 @@ export class StateHandlerService {
     private location: Location
   ) {}
 
-  handleSimpleView(name, params) {
+  handleSimpleView(name:string, params: {[p: string]: any}) {
     // tslint:disable-next-line: deprecation
     if (
       (params && params.mode === 'advancedView') ||
@@ -167,7 +167,7 @@ export class StateHandlerService {
     return state;
   }
 
-  getStateName(name, params = {}) {
+  getStateName(name:string, params:{[p: string]: any} = {}) {
     let state = name;
     if (this.handler.states[name.toLowerCase().trim()]) {
       state = this.handler.states[name.toLowerCase().trim()];
@@ -178,13 +178,13 @@ export class StateHandlerService {
     return state;
   }
 
-  getURL(name, params = {}): string {
+  getURL(name:string, params: {[p: string]: any} = {}): string {
     const state = this.getStateName(name, params);
     // return $state.href(state, params, { absolute: false });
     return this.router.stateService.href(state, params, { absolute: false });
   }
 
-  Go(name: string, params: any = {}, option: TransitionOptions = null) {
+  Go(name: string, params: {[p: string]: any} = {}, option: {[p: string]: any} = null) {
     const state = this.getStateName(name, params);
     return this.router.stateService.go(state, params, option);
   }
@@ -197,7 +197,7 @@ export class StateHandlerService {
     this.ngToast.warning('Server connection failed');
   }
 
-  ServerError(option = null) {
+  ServerError(option: {[p: string]: any} = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.serverError',
       {},
@@ -210,21 +210,21 @@ export class StateHandlerService {
       {}
     );
   }
-  NotImplemented(option = null) {
+  NotImplemented(option: {[p: string]: any} = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notImplemented',
       {},
       option
     );
   }
-  NotAuthorized(option = null) {
+  NotAuthorized(option: {[p: string]: any} = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notAuthorized',
       {},
       option
     );
   }
-  NotFound(option = null) {
+  NotFound(option: {[p: string]: any} = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notFound',
       {},
@@ -236,7 +236,7 @@ export class StateHandlerService {
     this.location.back();
   }
 
-  NewWindow(name, params = {}, windowsOptions = null) {
+  NewWindow(name:string, params:{[p: string]: any} = {}, windowsOptions:string = null) {
     const url = this.router.stateService.href(
       this.getStateName(name, params),
       params
@@ -244,7 +244,7 @@ export class StateHandlerService {
     window.open(url, '_blank', windowsOptions);
   }
 
-  CurrentWindow(url) {
+  CurrentWindow(url:string) {
     window.location.href = url;
   }
 }

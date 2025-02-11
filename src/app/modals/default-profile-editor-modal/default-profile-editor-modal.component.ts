@@ -46,7 +46,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   dataTypeErrors: string;
   showNewInlineDataType = false;
   pagination: McSelectPagination;
-
+  newDataTypeHasErrors  = false;
   constructor(
     public dialogRef: MatDialogRef<
       DefaultProfileEditorModalComponent,
@@ -60,8 +60,9 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     protected editing: EditingService
   ) {}
 
-  newDataTypeHasErrors = false;
-
+  public get profileControlType(): typeof ProfileControlTypes {
+    return ProfileControlTypes;
+  }
   ngOnInit(): void {}
 
   save() {
@@ -102,11 +103,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     });
   }
 
-  public get profileControlType(): typeof ProfileControlTypes {
-    return ProfileControlTypes;
-  }
-
-  fetchDataTypes = (text, loadAll, offset, limit) => {
+  fetchDataTypes = (text, loadAll, offset:number, limit:number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -119,7 +116,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
       offset: options['offset']
     };
     return this.resources.dataType.list(
-      this.data.parentCatalogueItem.id,
+      this.data.parentCatalogueItem.id as string,
       options
     );
   };

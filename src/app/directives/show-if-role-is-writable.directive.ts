@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Directive, Input } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
 
 @Directive({
   selector: '[mdmShowIfRoleIsWritable]'
@@ -28,7 +29,7 @@ export class ShowIfRoleIsWritableDirective  {
     constructor(private  securityHandler: SecurityHandlerService) { }
 
     OnInit() {
-        const show = this.securityHandler.showIfRoleIsWritable(this.mdmShowIfRoleIsWritable);
+        const show = this.securityHandler.showIfRoleIsWritable(this.mdmShowIfRoleIsWritable as Securable & Finalisable);
         if (!show) {
             this.mdmShowIfRoleIsWritable.nativeElement.hidden = true;
             return;

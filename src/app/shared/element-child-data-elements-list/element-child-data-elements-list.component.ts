@@ -35,6 +35,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataElement } from '@maurodatamapper/mdm-resources';
+import { SortDirection } from '@angular/material/sort';
 
 @Component({
   selector: 'mdm-element-child-data-elements-list',
@@ -57,8 +58,8 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   isLoadingResults: boolean;
   records: any[];
   totalItemCount = 0;
@@ -77,7 +78,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
   ngAfterViewInit() {
     if (this.type === 'dynamic') {
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-      this.gridSvc.reloadEvent.subscribe(filter => (this.filter = filter));
+      this.gridSvc.reloadEvent.subscribe( (this.applyFilter) );
       merge(this.paginator.page, this.filterEvent, this.gridSvc.reloadEvent).pipe(startWith({}), switchMap(() => {
         this.isLoadingResults = true;
         return this.dataElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
@@ -101,14 +102,28 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     }
   }
 
-  dataElementsFetch(pageSize?, pageIndex?, filters?) {
+  applyFilter = () => {
+    const filter: {} = {};
+    this.filters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
+      if (value !== '') {
+        filter[name] = value;
+      }
+    });
+    this.filter = filter;
+    this.filterEvent.emit(filter);
+  };
+
+  dataElementsFetch(pageSize?:number, pageIndex?:number, filters?:{[p: string]: any}) {
     const sortBy = 'idx';
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
+    const sortDirection: SortDirection='asc';
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortDirection, filters);
 
     if (this.parentDataModel && this.parentDataClass) {
-      return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);
+      return this.resources.dataElement.list(this.parentDataModel.id as string, this.parentDataClass.id as string, options);
     } else if (this.parentDataModel && this.parentDataType) {
-      return this.resources.dataElement.listWithDataType(this.parentDataModel.id, this.parentDataType.id, options);
+      return this.resources.dataElement.listWithDataType(this.parentDataModel.id as string, this.parentDataType.id as string, options);
     }
   }
 
@@ -135,7 +150,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
       index: newPosition
     };
 
-    this.resources.dataElement.update(this.parentDataModel.id, item.data.dataClass, item.data.id, resource).subscribe(() => {
+    this.resources.dataElement.update(this.parentDataModel.id as string, item.data.dataClass as string, item.data.id as string, resource).subscribe(() => {
       this.messageHandler.showSuccess('Data Element reorderedsuccessfully.');
     }, error => {
       this.messageHandler.showError('There was a problem updating the Data Element.', error);

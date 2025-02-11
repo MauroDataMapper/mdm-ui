@@ -78,7 +78,7 @@ export class MauroProfileProviderService implements ProfileProviderService {
     const actualRootItem = this.useCorrectRootItem(rootItem);
 
     return this.resources.profile
-      .getMany(actualRootItem.domainType, actualRootItem.id, payload)
+      .getMany(actualRootItem.domainType, actualRootItem.id as string, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
           response.body.profilesProvided.map((provided) => {
@@ -108,7 +108,7 @@ export class MauroProfileProviderService implements ProfileProviderService {
     const actualRootItem = this.useCorrectRootItem(rootItem);
 
     return this.resources.profile
-      .saveMany(actualRootItem.domainType, actualRootItem.id, payload)
+      .saveMany(actualRootItem.domainType, actualRootItem.id as string, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
           response.body.profilesProvided.map((provided) => provided.profile)
@@ -133,7 +133,7 @@ export class MauroProfileProviderService implements ProfileProviderService {
     const actualRootItem = this.useCorrectRootItem(rootItem);
 
     return this.resources.profile
-      .validateMany(actualRootItem.domainType, actualRootItem.id, payload)
+      .validateMany(actualRootItem.domainType, actualRootItem.id as string, payload)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           // The HttpErrorResponse will contain the validation errors. Wrap this in a ProfileContextIndexResponse

@@ -46,7 +46,7 @@ export class TermRelationshipsComponent implements OnInit {
         parameters.type = this.type;
       }
 
-      this.resources.term.termRelationships(this.term.terminology.id, this.term.id, parameters)
+      this.resources.term.termRelationships(this.term.terminology.id as string, this.term.id, parameters)
         .subscribe(data => {
           this.totalItems = data.body.count;
           data.body.items.forEach(item => {

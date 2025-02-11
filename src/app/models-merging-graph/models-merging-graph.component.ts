@@ -48,9 +48,9 @@ export class ModelsMergingGraphComponent implements OnInit {
       return null;
     }
 
-    const response = await this.resources.dataModel.get(modelId).toPromise();
+    const response = await this.resources.dataModel.get(modelId as string).toPromise();
     const model = response.body;
-    const children = await this.resources.tree.get('dataModels', model.domainType, model.id).toPromise();
+    const children = await this.resources.tree.get('dataModels', model.domainType as string, model.id as string).toPromise();
     model.children = children.body;
     if (model.children?.length > 0) {
       model.hasChildren = true;

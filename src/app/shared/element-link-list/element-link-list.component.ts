@@ -25,11 +25,12 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MatTable } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
-import { EditingService } from '@mdm/services/editing.service';
+import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { Access } from '@mdm/model/access';
+import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -64,7 +65,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
   terminology: any;
 
-  records: any[] = [];
+  records: EditableObject[] = [];
 
   access: Access;
 
@@ -81,7 +82,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
-    this.access = this.securityHandler.elementAccess(this.parent);
+    this.access = this.securityHandler.elementAccess(this.parent as Securable | (Securable & Finalisable));
     this.semanticLinkTypes = this.elementTypes.getSemanticLinkTypes();
     this.handleShowLinkSuggestion(this.parent);
 
@@ -135,14 +136,14 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  semanticLinkFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
+  semanticLinkFetch = (pageSize:number, pageIndex:number, sortBy: string, sortType: SortDirection, filters:{[p: string]: any}) => {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
-    return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
+    return this.resources.catalogueItem.listSemanticLinks(this.domainType as string, this.parent.id as string, options);
   };
 
   handleShowLinkSuggestion = element => {
-    if (['DataModel', 'DataElement'].indexOf(element.domainType) !== -1) {
+    if (['DataModel', 'DataElement'].indexOf(element.domainType  as string) !== -1) {
       this.showLinkSuggestion = true;
     }
   };
@@ -165,12 +166,12 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.stateHandler.NewWindow('linkSuggestion', params, null);
   };
 
-  delete = (record, $index) => {
+  delete = (record, $index: number) => {
     if (this.clientSide) {
       this.records.splice($index, 0);
       return;
     }
-    this.resources.catalogueItem.removeSemanticLink(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
+    this.resources.catalogueItem.removeSemanticLink(this.parent.domainType as string, this.parent.id as string, record.id as string).subscribe(() => {
       if (this.type === 'static') {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Link deleted successfully.');
@@ -210,7 +211,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   };
 
-  cancelEdit = (record, index) => {
+  cancelEdit = (record, index:number) => {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.table.renderRows();
@@ -249,7 +250,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(response => {
+      this.resources.catalogueItem.updateSemanticLink(this.domainType as string, this.parent.id as string, record.id as string, body).subscribe(response => {
         if (this.afterSave) {
           this.afterSave(resource);
         }
@@ -277,7 +278,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.saveSemanticLinks(this.domainType, this.parent.id, body).subscribe(response => {
+      this.resources.catalogueItem.saveSemanticLinks(this.domainType as string, this.parent.id as string, body).subscribe(response => {
         record = Object.assign({}, response);
         record.status = 'source';
 

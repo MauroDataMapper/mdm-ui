@@ -60,7 +60,7 @@ export class DoiRedirectComponent implements OnInit {
   }
 
   private redirectToItem(item: DoiResolvedItem) {
-    const params: any = {
+    const params: { [p: string]: any } = {
       id: item.id
     };
 

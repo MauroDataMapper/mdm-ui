@@ -67,7 +67,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   getDataElements() {
     this.data.dataElementIdLst.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
+        this.resources.dataElement.get(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -75,7 +75,7 @@ export class BulkEditModalComponent implements AfterViewInit {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
       } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
+        this.resources.dataClass.getChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -121,7 +121,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataElement
           };
-          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, dataElement.id, dataElement).toPromise();
+          return this.resources.dataElement.update(this.parentDataModel.id as string, this.parentDataClass.id as string, dataElement.id, dataElement).toPromise();
         }
         if (item.domainType === 'DataClass') {
           const dataClass: DataClass = {
@@ -130,7 +130,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataClass
           };
-          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, dataClass.id, dataClass).toPromise();
+          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, dataClass.id, dataClass).toPromise();
         }
       }).catch(() => {
         this.failCount++;

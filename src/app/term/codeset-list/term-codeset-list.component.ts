@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { CodeSet, TermDetail } from '@maurodatamapper/mdm-resources';
+import { CodeSet, QueryParameters, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -56,7 +56,7 @@ export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChange
 
     if (changes.term) {
       // Update action functions when term changed
-      this.codesets.fetchFunction = options => {
+      this.codesets.fetchFunction = (options : QueryParameters ) => {
         return this.resources.terms.codesetsForTerm(this.term.model, this.term.id, options);
       };
 

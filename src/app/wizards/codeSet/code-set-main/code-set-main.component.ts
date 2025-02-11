@@ -94,7 +94,7 @@ export class CodeSetMainComponent implements OnInit {
     this.terms.setValue(value);
   }
 
-  set terminologyValue(value: any) {
+  set terminologyValue(value) {
     this.terminology.setValue(value);
   }
 

@@ -101,14 +101,14 @@ export class TerminologyComponent
   ) {}
 
   ngOnInit() {
-    const id = this.uiRouterGlobals.params.id;
+    const id:string = this.uiRouterGlobals.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView
+      this.uiRouterGlobals.params.tabView as string
     ).index;
     this.tabSelected(this.activeTab);
 
@@ -178,7 +178,7 @@ export class TerminologyComponent
 
   // This fetch function needs to be a property-based function because it is passed as a property to the
   // mdm-select component for searching for terms
-  fetch = (text, loadAll, offset, limit) => {
+  fetch = (text:string, loadAll, offset:number, limit:number) => {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {

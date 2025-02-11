@@ -45,7 +45,6 @@ import {
 import { MessageHandlerService } from '@mdm/services';
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
 import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
-import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -67,9 +66,9 @@ export class MultipleTermsSelectorComponent {
   displayedColumns: string[] = ['label'];
   selectorSection = {
     terminologies: [],
-    selectedTerminology: null as Terminology,
+    selectedTerminology: null,
     selectedTerms: {},
-    selectedTermsArray: [] as Term[],
+    selectedTermsArray: [],
     selectedTermsCount: 0,
     termSearchText: '',
     startFetching: 0,
@@ -103,7 +102,7 @@ export class MultipleTermsSelectorComponent {
     content: ElementRef
   ) {
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement as HasEventTargetAddRemove<unknown> | ArrayLike<HasEventTargetAddRemove<unknown>>, 'keyup')
+      fromEvent(content.nativeElement, 'keyup')
         .pipe(
           map((event: any) => {
             return event.target.value;
@@ -152,7 +151,7 @@ export class MultipleTermsSelectorComponent {
       this.totalItemCount = 0;
       this.currentRecord = 0;
     }
-    this.selectedTerminologyChange.emit([this.selectorSection.selectedTerminology]);
+    this.selectedTerminologyChange.emit(this.selectorSection.selectedTerminology);
   }
 
   runTermSearch() {
@@ -298,7 +297,7 @@ export class MultipleTermsSelectorComponent {
     }
   }
 
-  termToggle($item:Term) {
+  termToggle($item) {
     if ($item.checked) {
       this.selectorSection.selectedTerms[$item.id] = $item;
       this.selectorSection.selectedTermsArray.push($item);

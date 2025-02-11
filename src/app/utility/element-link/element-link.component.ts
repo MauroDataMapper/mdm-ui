@@ -63,7 +63,7 @@ export class ElementLinkComponent implements OnInit {
 
   set element(val) {
     this.elementVal = val;
-    this.selectedElementsChange.emit([this.elementVal]);
+    this.selectedElementsChange.emit(this.elementVal);
     this.ngOnInit();
   }
 

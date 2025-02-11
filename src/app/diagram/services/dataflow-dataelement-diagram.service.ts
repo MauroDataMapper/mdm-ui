@@ -40,7 +40,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
     this.changeComponent(null);
 
-    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId, {all:true});
+    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id as string, params.flowId as string, params.flowComponentId as string, {all:true});
     return (flowComponents).pipe(
       mergeMap(data => {
         this.dataFlows = data.body;
@@ -85,12 +85,12 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       });
       classAttributes[classId] = attributes;
       // this.addUmlClassCell(classBreadcrumb.id, classBreadcrumb.label, attributes);
-      this.addRectangleCell(classBreadcrumb.id, classBreadcrumb.label, 300, attributes.length * 25 + 31);
+      this.addRectangleCell(classBreadcrumb.id as string, classBreadcrumb.label as string, 300, attributes.length * 25 + 31);
     });
 
     this.dataFlows.items.forEach((flowComponent) => {
 
-      this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
+      this.addSmallRectangleCell(flowComponent.id as string, flowComponent.label as string);
 
       flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
@@ -143,7 +143,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       this.graph.removeCells([rectCell]);
 
       // console.log((this.graph.getCell(classId) as joint.dia.Element).position());
-      this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
+      this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text') as string, classAttributes[classId] as any[], new joint.g.Point({
         x: oldPosition.x,
         y: oldPosition.y
       }), null);
@@ -152,7 +152,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
     this.dataFlows.items.forEach((flowComponent) => {
 
-      this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
+      this.addSmallRectangleCell(flowComponent.id as string, flowComponent.label as string);
 
       flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
@@ -211,9 +211,9 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
           this.selDataElementComponentId = arrMergedId[1];
 
           const options = { sort: 'label', order: 'asc', all: true };
-          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1], options).subscribe(result => {
+          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1] as string, options).subscribe(result => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-              this.changeComponent(result.body);
+              this.changeComponent(result.body as string);
             }
           }, () => {
             console.log(`cell pointerclick ${cellView.model.id} was clicked`);
@@ -256,7 +256,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     const options = { sort: 'label', order: 'asc', all: true };
     this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
       if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-        this.changeComponent(result.body);
+        this.changeComponent(result.body as string);
       }
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Element Component.', error);

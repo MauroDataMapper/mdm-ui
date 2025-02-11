@@ -88,22 +88,22 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
     this.resourcesService.session.activeSessions({}, options).subscribe(
       (resp) => {
-        for (const [key] of Object.entries(resp.body.authorisedItems)) {
+        for (const [key] of Object.entries(resp.body.authorisedItems as { [s: string]: unknown } | ArrayLike<unknown>)) {
           resp.body.authorisedItems[key].creationDateTime = new Date(
-            resp.body.authorisedItems[key].creationDateTime
+            resp.body.authorisedItems[key].creationDateTime as string | number | Date
           );
           resp.body.authorisedItems[key].lastAccessedDateTime = new Date(
-            resp.body.authorisedItems[key].lastAccessedDateTime
+            resp.body.authorisedItems[key].lastAccessedDateTime as string | number | Date
           );
           this.records.push(resp.body.authorisedItems[key]);
         }
 
-        for (const [key] of Object.entries(resp.body.unauthorisedItems)) {
+        for (const [key] of Object.entries(resp.body.unauthorisedItems as { [s: string]: unknown } | ArrayLike<unknown>)) {
           resp.body.unauthorisedItems[key].creationDateTime = new Date(
-            resp.body.unauthorisedItems[key].creationDateTime
+            resp.body.unauthorisedItems[key].creationDateTimeas as string | number | Date
           );
           resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(
-            resp.body.unauthorisedItems[key].lastAccessedDateTime
+            resp.body.unauthorisedItems[key].lastAccessedDateTime as string | number | Date
           );
           this.unauthorised.push(resp.body.unauthorisedItems[key]);
         }
@@ -112,7 +112,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
         this.unauthorisedCount = resp.body.countUnauthorised;
         this.dataSource.data = this.records;
       },
-      (err) => {
+      (err:any) => {
         this.messageHandler.showError(
           'There was a problem loading the active sessions.',
           err
@@ -121,16 +121,11 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
     );
   }
 
-  isToday(date) {
+  isToday(date: Date) {
     const today = new Date();
-    if (
-      today.getUTCFullYear() === date.getUTCFullYear() &&
+    return today.getUTCFullYear() === date.getUTCFullYear() &&
       today.getUTCMonth() === date.getUTCMonth() &&
-      today.getUTCDate() === date.getUTCDate()
-    ) {
-      return true;
-    }
-    return false;
+      today.getUTCDate() === date.getUTCDate();
   }
 
   filterClick = () => {

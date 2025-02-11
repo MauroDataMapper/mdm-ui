@@ -76,7 +76,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'code')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.code,
+        catalogueItem.code as  string | Container[] | string[] | DataTypeReference,
         'Code',
         ProfileControlTypes.text,
         'code'
@@ -86,7 +86,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'definition')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.definition,
+        catalogueItem.definition as string | string[] | DataTypeReference | Container[],
         'Definition',
         ProfileControlTypes.text,
         'definition'
@@ -183,7 +183,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'dataType')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.dataType,
+        catalogueItem.dataType as string | string[] | DataTypeReference | Container[],
         'Data Type',
         ProfileControlTypes.dataType,
         'dataType'
@@ -194,7 +194,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'url')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.url,
+        catalogueItem.url as string | string[] | DataTypeReference | Container[],
         'URL',
         ProfileControlTypes.text,
         'url'

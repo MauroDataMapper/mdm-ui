@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import { merge, Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -133,7 +133,7 @@ export class DataElementStep2Component
     });
   }
 
-  dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
+  dataElementsFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters:{[p: string]: any}) {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -143,7 +143,7 @@ export class DataElementStep2Component
     );
     const dataClass: DataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(
-      dataClass.modelId,
+      dataClass.modelId as string,
       dataClass.id,
       options
     );
@@ -326,8 +326,8 @@ export class DataElementStep2Component
     if (newValue && ['copy', 'import'].includes(this.model.createType)) {
       // check Min/Max
       this.multiplicityError = this.validator.validateMultiplicities(
-        newValue.minMultiplicity,
-        newValue.maxMultiplicity
+        newValue.minMultiplicity as string,
+        newValue.maxMultiplicity as string
       );
 
       // Check Mandatory fields
@@ -360,7 +360,7 @@ export class DataElementStep2Component
     }
   }
 
-  fetchDataTypes = (text, loadAll, offset, limit) => {
+  fetchDataTypes = (text:string, loadAll, offset:number, limit:number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -383,7 +383,7 @@ export class DataElementStep2Component
       delete options['label'];
     }
 
-    return this.resources.dataType.list(this.model.parentDataModel.id, options);
+    return this.resources.dataType.list(this.model.parentDataModel.id as string, options);
   };
 
   onTargetSelect = (selectedValue) => {
@@ -404,7 +404,7 @@ export class DataElementStep2Component
     this.filterEvent.emit(filter);
   };
 
-  validationStatusEmitter($event) {
+  validationStatusEmitter($event:string) {
     this.step.invalid = JSON.parse($event);
   }
 
@@ -433,22 +433,22 @@ export class DataElementStep2Component
             case 'copy':
               return this.resources.dataElement
                 .copyDataElement(
-                  this.model.parentDataModel.id,
-                  this.model.parentDataClass.id,
-                  dc.model,
-                  dc.dataClass,
-                  dc.id,
+                  this.model.parentDataModel.id as string,
+                  this.model.parentDataClass.id as string,
+                  dc.model as string,
+                  dc.dataClass as string,
+                  dc.id as string,
                   null
                 )
                 .toPromise();
             case 'import':
               return this.resources.dataClass
                 .importDataElement(
-                  this.model.parentDataModel.id,
-                  this.model.parentDataClass.id,
-                  dc.model,
-                  dc.dataClass,
-                  dc.id,
+                  this.model.parentDataModel.id as string,
+                  this.model.parentDataClass.id as string,
+                  dc.model as string,
+                  dc.dataClass as string,
+                  dc.id as string,
                   null
                 )
                 .toPromise();

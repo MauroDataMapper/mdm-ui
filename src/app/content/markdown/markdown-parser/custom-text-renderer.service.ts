@@ -27,21 +27,21 @@ export class CustomTextRendererService extends marked.Renderer {
   }
 
   // render just the text of a link
-  code = (code) => {
+  code = (code:string) => {
     return code;
   };
 
-  codespan = (code) => {
+  codespan = (code:string) => {
     return code;
   };
 
   // render just the text of a link
-  strong = (text) => {
+  strong = (text:string) => {
     return text;
   };
 
   // render just the text of a link
-  link = (href, title, text) => {
+  link = (href:string, title:string, text:string) => {
     return text;
   };
 
@@ -50,12 +50,12 @@ export class CustomTextRendererService extends marked.Renderer {
   };
 
   // render just the text of a paragraph
-  paragraph = text => {
+  paragraph = (text:string) => {
     return `${this.htmlEscapeToText(text)}\\r\\n`;
   };
 
   // render just the text of a heading element, but indicate level
-  heading = (text) => {
+  heading = (text:string) => {
     return text;
   };
 
@@ -64,10 +64,10 @@ export class CustomTextRendererService extends marked.Renderer {
     return '';
   };
 
-  table = (header) => {
+  table = (header: string) => {
     let table = '<br>[';
     const reg = /<th>(.*?)<\/th>/g;
-    let match;
+    let match: RegExpExecArray;
     // tslint:disable-next-line: no-conditional-assignment
     while ((match = reg.exec(header))) {
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
@@ -78,14 +78,14 @@ export class CustomTextRendererService extends marked.Renderer {
   };
 
   // &#63; to ? helper
-  public htmlEscapeToText(text) {
+  public htmlEscapeToText(text:string) {
     // eslint-disable-next-line no-useless-escape
     return text.replace(/\&\#[0-9]*;|&amp;/g, (escapeCode) => {
       if (escapeCode.match(/amp/)) {
         return '&';
       }
 
-      return String.fromCharCode(escapeCode.match(/[0-9]+/));
+      return String.fromCharCode(parseInt(escapeCode.match(/[0-9]+/)[1],10));
     });
   }
 

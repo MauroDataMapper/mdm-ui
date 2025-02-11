@@ -49,7 +49,7 @@ import { ImageChangedEvent, ImageChangeType, ThemeImageComponent } from '../them
 export class ApiPropertyComponent implements OnInit {
 
   @ViewChild(ThemeImageComponent) themeImageComponent:ThemeImageComponent;
-
+  EditTypes  = ApiPropertyEditType;
   id: string;
   isNew: boolean;
   editExisting = false;
@@ -59,12 +59,24 @@ export class ApiPropertyComponent implements OnInit {
   imageChangeType: ImageChangeType = ImageChangeType.nochange;
   showValue = true;
 
+
   formGroup = new FormGroup({
     key: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
     category: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
     publiclyVisible: new FormControl({ value: false, disabled: false }),
     value: new FormControl('', [Validators.required]) // eslint-disable-line @typescript-eslint/unbound-method
   });
+
+  constructor(
+    private uiRouterGlobals: UIRouterGlobals,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
+    private broadcast: BroadcastService,
+    private editing: EditingService,
+    private title: Title
+  ) {}
+
 
   get key() {
     return this.formGroup.controls.key;
@@ -82,17 +94,7 @@ export class ApiPropertyComponent implements OnInit {
     return this.formGroup.controls.value;
   }
 
-  EditTypes = ApiPropertyEditType;
 
-  constructor(
-    private uiRouterGlobals: UIRouterGlobals,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateHandler: StateHandlerService,
-    private broadcast: BroadcastService,
-    private editing: EditingService,
-    private title: Title
-  ) {}
 
   ngOnInit(): void {
     this.editing.start();

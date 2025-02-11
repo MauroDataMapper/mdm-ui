@@ -181,7 +181,7 @@ export class AttachmentListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: any
+    filters?: {[p: string]: any}
   ): Observable<ReferenceFileIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -211,8 +211,8 @@ export class AttachmentListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   }
 
-  getFile(inputFileName: string) {
-    const element: any = document.getElementById(inputFileName);
+  getFile(inputFileName: string): File | string {
+    const element: HTMLInputElement = document.getElementById(inputFileName) as HTMLInputElement;
     return element && element.files ? element.files[0] : '';
   }
 
@@ -274,7 +274,10 @@ export class AttachmentListComponent implements AfterViewInit {
     index: number
   ) {
     const fileName = `File${index}`;
-    const file = this.getFile(fileName);
+    const fileOrNot = this.getFile(fileName);
+    // There might not be a file attached to save
+    if(!fileOrNot){return;}
+    const file = fileOrNot as File;
     const reader = new FileReader();
 
     reader.readAsArrayBuffer(file);

@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { DataModel } from '../../../../../../mdm-resources';
 
 @Component({
   selector: 'mdm-data-class-step1',
@@ -25,7 +26,7 @@ import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 export class DataClassStep1Component implements OnInit {
   step: any;
 
-  modelVal: any;
+  modelVal: DataModel;
 
   constructor(private changeRef: ChangeDetectorRef) {}
 
@@ -57,7 +58,7 @@ export class DataClassStep1Component implements OnInit {
       return;
     }
 
-    if (['copy', 'import', 'extend'].includes(this.model.createType) && this.model.copyFromDataModel.length === 0) {
+    if (['copy', 'import', 'extend'].includes(this.model.createType as string) && this.model.copyFromDataModel.length === 0) {
       this.step.invalid = true;
       return;
     }

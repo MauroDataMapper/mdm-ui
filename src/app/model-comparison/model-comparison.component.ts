@@ -148,11 +148,11 @@ export class ModelComparisonComponent implements OnInit {
     }
 
     if (side === 'left') {
-      this.sourceModel = await this.loadDataModelDetail(selectedId);
-      this.targetModel = await this.loadDataModelDetail(this.targetModel?.id);
+      this.sourceModel = await this.loadDataModelDetail(selectedId as string);
+      this.targetModel = await this.loadDataModelDetail(this.targetModel?.id as string);
     } else if (side === 'right') {
-      this.sourceModel = await this.loadDataModelDetail(this.sourceModel?.id);
-      this.targetModel = await this.loadDataModelDetail(selectedId);
+      this.sourceModel = await this.loadDataModelDetail(this.sourceModel?.id as string);
+      this.targetModel = await this.loadDataModelDetail(selectedId as string);
     }
 
     if (this.sourceModel && this.targetModel) {
@@ -224,7 +224,7 @@ export class ModelComparisonComponent implements OnInit {
 
     const update = {
       property: propName,
-      title: this.validator.capitalize(propName),
+      title: this.validator.capitalize(propName as string),
       left:
         !labelDiff.left || labelDiff.left === 'null' ? '\' \'' : labelDiff.left,
       right:
@@ -330,7 +330,7 @@ export class ModelComparisonComponent implements OnInit {
     this.processing = true;
 
     this.resources.dataModel
-      .diff(this.sourceModel.id, this.targetModel.id)
+      .diff(this.sourceModel.id as string, this.targetModel.id as string)
       .subscribe(
         (res) => {
           this.processing = false;
@@ -696,7 +696,7 @@ export class ModelComparisonComponent implements OnInit {
   onNodeExpand = (node) => {
     const obs = new Observable((sub) => {
       this.resources.tree
-        .get('dataModels', node.domainType, node.id)
+        .get('dataModels', node.domainType as string, node.id as string)
         .subscribe((res) => {
           const result = res.body;
           result.forEach((dc) => {

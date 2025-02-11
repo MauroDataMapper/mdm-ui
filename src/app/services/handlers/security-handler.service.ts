@@ -99,25 +99,42 @@ export class SecurityHandlerService {
     this.stateHandler.Go('appContainer.mainApp.home');
   }
 
-  addToLocalStorage(user) {
+  // Note: this can be passed either a UserDetailsResult or a UserDetails
+  addToLocalStorage(user: { [key: string]: any} ) {
     // Keep username for 100 days
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
-    localStorage.setItem('userId', user.id);
-    localStorage.setItem('token', user.token);
-    localStorage.setItem('firstName', user.firstName);
-    localStorage.setItem('lastName', user.lastName);
-    localStorage.setItem(
-      'username',
-      JSON.stringify({ username: user.username, expiry: expireDate })
-    );
-    localStorage.setItem('userId', user.id);
-    localStorage.setItem(
-      'email',
-      JSON.stringify({ email: user.username, expiry: expireDate })
-    );
-    localStorage.setItem('role', user.role);
-    localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
+    localStorage.setItem('userId', user.id as string);
+    if(user.token) {
+      localStorage.setItem('token', user.token as string);
+    }
+    localStorage.setItem('firstName', user.firstName as string);
+    localStorage.setItem('lastName', user.lastName as string);
+    if(user.userName) {
+      localStorage.setItem(
+        'username',
+        JSON.stringify({ username: user.userName, expiry: expireDate })
+      );
+    }
+    localStorage.setItem('userId', user.id as string);
+    if(user.email) {
+      localStorage.setItem(
+        'email',
+        JSON.stringify({ email: user.email, expiry: expireDate })
+      );
+    }
+    if(user.emailAddress) {
+      localStorage.setItem(
+        'email',
+        JSON.stringify({ email: user.emailAddress, expiry: expireDate })
+      );
+    }
+    if(user.role) {
+      localStorage.setItem('role', user.role as string);
+    }
+    if(user.needsToResetPassword) {
+      localStorage.setItem('needsToResetPassword', String(user.needsToResetPassword));
+    }
   }
 
   /**

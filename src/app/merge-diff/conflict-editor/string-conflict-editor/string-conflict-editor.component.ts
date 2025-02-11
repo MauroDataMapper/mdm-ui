@@ -124,7 +124,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
     view.nativeElement
       .querySelectorAll('ins')
-      .forEach(elem => this.resolveDiffConflict(elem));
+      .forEach(elem => this.resolveDiffConflict(elem as HTMLElement));
   }
 
 
@@ -134,8 +134,8 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     const diffs = this.stringConflict.getDiff(text1, text2);
     return this.stringConflict.getDiffPrettyHtml(
       diffs,
-      this.checkInsertedTextForResolve.bind(this),
-      this.checkDeletedTextForResolve.bind(this));
+      this.checkInsertedTextForResolve.bind(this) as (item: DiffTrackedItem) => string,
+      this.checkDeletedTextForResolve.bind(this) as (item: DiffTrackedItem) => string);
   }
 
   private setDiffViewEventListeners(view: ElementRef) {

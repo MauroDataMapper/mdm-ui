@@ -54,7 +54,7 @@ export class MdmRestHandlerService implements MdmRestHandler {
     // For any GET requests that return 4XX response, automatically handle them unless overridden
     const handleGetErrors: boolean = options?.handleGetErrors ?? true;
 
-    return this.http.request(options.method, url, {
+    return this.http.request(options.method as string, url, {
       body: options.body,
       headers: options.headers,
       withCredentials: options.withCredentials,

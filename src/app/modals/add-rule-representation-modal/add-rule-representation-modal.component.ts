@@ -109,13 +109,6 @@ export interface AddRuleRepresentationModalResult {
   styleUrls: ['./add-rule-representation-modal.component.scss']
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
-  @ViewChild('dmn') set content(content: ElementRef) {
-    if (content) {
-      // initially setter gets called with undefined
-      this.dmnCanvas = content;
-      this.createDMNWindow();
-    }
-  }
 
   dmnCanvas: ElementRef;
 
@@ -138,6 +131,15 @@ export class AddRuleRepresentationModalComponent implements OnInit {
     importFileName: new FormControl('')
   });
 
+  constructor(
+    private dialogRef: MatDialogRef<
+      AddRuleRepresentationModalComponent,
+      AddRuleRepresentationModalResult
+    >,
+    @Inject(MAT_DIALOG_DATA) public data: AddRuleRepresentationModalConfig,
+    private messageHandler: MessageHandlerService
+  ) {}
+
   get language() {
     return this.formGroup.controls.language;
   }
@@ -150,14 +152,27 @@ export class AddRuleRepresentationModalComponent implements OnInit {
     return this.formGroup.controls.importFileName;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<
-      AddRuleRepresentationModalComponent,
-      AddRuleRepresentationModalResult
-    >,
-    @Inject(MAT_DIALOG_DATA) public data: AddRuleRepresentationModalConfig,
-    private messageHandler: MessageHandlerService
-  ) {}
+  get selectedLanguage() {
+    if (!this.language.value) {
+      return undefined;
+    }
+
+    return this.supportedLanguages.find(
+      (lang) => lang.value === this.language.value
+    );
+  }
+
+  get showAceEditor() {
+    return !!this.selectedLanguage?.aceValue;
+  }
+
+  @ViewChild('dmn') set content(content: ElementRef) {
+    if (content) {
+      // initially setter gets called with undefined
+      this.dmnCanvas = content;
+      this.createDMNWindow();
+    }
+  }
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtnTitle ? this.data.okBtnTitle : 'Save';
@@ -180,20 +195,6 @@ export class AddRuleRepresentationModalComponent implements OnInit {
     }
   }
 
-  get selectedLanguage() {
-    if (!this.language.value) {
-      return undefined;
-    }
-
-    return this.supportedLanguages.find(
-      (lang) => lang.value === this.language.value
-    );
-  }
-
-  get showAceEditor() {
-    return !!this.selectedLanguage?.aceValue;
-  }
-
   createDMNWindow(content?: any) {
     setTimeout(() => {
       if (!this.modeler) {
@@ -214,9 +215,9 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       }
       const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
       migrateDiagram(xml).then((migratedXML) => {
-        this.modeler.importXML(migratedXML, (err) => {
+        this.modeler.importXML(migratedXML, (err: Error) => {
           if (err) {
-            this.messageHandler.showError(err);
+            this.messageHandler.showError(err.message);
             this.createDMNWindow(this.data.representation);
           } else {
             const activeEditor = this.modeler.getActiveViewer();

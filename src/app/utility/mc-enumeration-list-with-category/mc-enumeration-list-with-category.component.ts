@@ -37,7 +37,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import {
   DataClassDetail,
   DataModelDetail,
-  DataTypeDetailResponse
+  DataTypeDetailResponse, EnumerationValue
 } from '@maurodatamapper/mdm-resources';
 import { FormControl } from '@angular/forms';
 import {
@@ -52,6 +52,27 @@ import {
 } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
+type DisplayItem=
+  {
+    id?: string;
+    key?: string;
+    value?: string;
+    category?: string;
+    isCategoryRow?: boolean;
+    index?:number;
+    edit?: {
+      id?: string;
+      key?: string;
+      value?: string;
+      category?: string;
+      index?:number;
+      errors?: { message: string };
+    };
+    inEdit?: boolean;
+    inDelete?: boolean;
+    isNew?: boolean;
+  };
+
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
   templateUrl: './mc-enumeration-list-with-category.component.html',
@@ -61,7 +82,7 @@ export class McEnumerationListWithCategoryComponent
   implements OnInit, OnDestroy {
   @Input() parent: DataModelDetail | DataClassDetail;
   @Input() clientSide = false;
-  @Input() enumerationValues;
+  @Input() enumerationValues:  EnumerationValue[];
   @Input() onUpdate;
   @Input() type: any;
   @Input() isEditable = false;
@@ -77,10 +98,10 @@ export class McEnumerationListWithCategoryComponent
   dataSource: any;
   enumsCount: number;
   total: number;
-  displayItems: any[];
+  displayItems: DisplayItem[];
   categories: string[] = [];
   filteredCategories: string[] = [];
-  allRecords = [];
+  allRecords:  EnumerationValue[] = [];
   allRecordsWithGroups = [];
 
   hasCategory = false;
@@ -221,9 +242,9 @@ export class McEnumerationListWithCategoryComponent
 
     this.resourcesService.enumerationValues
       .updateInEnumeratedType(
-        this.parent.model,
-        this.parent.id,
-        movedItem.id,
+        this.parent.model as string,
+        this.parent.id as string,
+        movedItem.id as string,
         resource
       )
       .pipe(
@@ -243,7 +264,7 @@ export class McEnumerationListWithCategoryComponent
   }
 
   // Accepts the array and key
-  groupBy = (array, key) => {
+  groupBy = (array:EnumerationValue[], key:string): {[key:string] : EnumerationValue[]} => {
     // Return the end result
     return array.reduce((result, currentValue) => {
       // If an array already present for key, push it to the array. Else create an array and push the object
@@ -258,7 +279,7 @@ export class McEnumerationListWithCategoryComponent
     }, {}); // empty object is the initial value for result object
   };
 
-  showRecords(values) {
+  showRecords(values: DisplayItem[]) {
     if (!values && values.length > 0) {
       return;
     }
@@ -276,9 +297,8 @@ export class McEnumerationListWithCategoryComponent
       }
     }
 
-    let categoryNames = [];
-    let categories = [];
-    categories = this.groupBy(this.allRecords, 'category');
+    let categoryNames:string[] = [];
+    const categories=this.groupBy(this.allRecords, 'category');
 
     let hasEmptyCategory = false;
 
@@ -304,7 +324,7 @@ export class McEnumerationListWithCategoryComponent
       categoryNames = categoryNames.reverse();
     }
 
-    const allRecordsWithGroups = [];
+    const allRecordsWithGroups : DisplayItem[]= [];
     categoryNames.forEach((category) => {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
@@ -403,7 +423,7 @@ export class McEnumerationListWithCategoryComponent
         key: '',
         value: '',
         category: '',
-        errors: ''
+        errors: null
       },
       inEdit: true,
       inDelete: false,
@@ -457,20 +477,20 @@ export class McEnumerationListWithCategoryComponent
     return isValid;
   }
 
-  editClicked(record) {
+  editClicked(record: DisplayItem) {
     record.edit = Object.assign({}, record);
-    record.edit.errors = [];
+    record.edit.errors = {message: null};
     record.inEdit = true;
     this.editingService.setFromCollection(this.displayItems);
 
     this.categoryCtrl.setValue(record.edit.category);
   }
 
-  deleteClicked(record) {
+  deleteClicked(record: DisplayItem) {
     record.inDelete = true;
   }
 
-  confirmDeleteClicked(record) {
+  confirmDeleteClicked(record: DisplayItem) {
     if (this.clientSide) {
       let i = this.allRecords.length - 1;
       while (i >= 0) {
@@ -479,10 +499,10 @@ export class McEnumerationListWithCategoryComponent
         }
         i--;
       }
-      this.showRecords([].concat(this.allRecords));
+      this.showRecords(([] as EnumerationValue[]).concat(this.allRecords));
     } else {
       this.resourcesService.enumerationValues
-        .removeFromEnumeratedType(this.parent.model, this.parent.id, record.id)
+        .removeFromEnumeratedType(this.parent.model as string, this.parent.id, record.id as string)
         .subscribe(
           () => {
             this.messageHandler.showSuccess(
@@ -506,11 +526,11 @@ export class McEnumerationListWithCategoryComponent
     }
   }
 
-  cancelDeleteClicked(record) {
+  cancelDeleteClicked(record:DisplayItem) {
     record.inDelete = false;
   }
 
-  cancelEditClicked(record) {
+  cancelEditClicked(record:DisplayItem) {
     this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
@@ -524,18 +544,18 @@ export class McEnumerationListWithCategoryComponent
           }
           i--;
         }
-        this.showRecords([].concat(this.allRecords));
+        this.showRecords(([] as EnumerationValue[]).concat(this.allRecords));
       }
       record.inEdit = false;
       this.editingService.setFromCollection(this.displayItems);
     });
   }
 
-  saveClicked(record) {
+  saveClicked(record:DisplayItem) {
     if (!this.validate(record)) {
       return;
     }
-    record.edit.errors = [];
+    record.edit.errors = { message:null };
     const resource = {
       key: record.edit.key,
       value: record.edit.value,
@@ -568,12 +588,12 @@ export class McEnumerationListWithCategoryComponent
         // remove the "temp-" prefix of the id
         record.id = record.id.replace('temp-', '');
 
-        const newRecs = [].concat(this.allRecords);
+        const newRecs = ([] as DisplayItem[]).concat(this.allRecords);
         newRecs.push(record);
         this.showRecords(newRecs);
       }
 
-      const allRecs = [].concat(this.allRecords);
+      const allRecs = ([] as DisplayItem[]).concat(this.allRecords);
       this.showRecords(allRecs);
 
       if (this.onUpdate) {
@@ -586,7 +606,7 @@ export class McEnumerationListWithCategoryComponent
     if (record.id && record.id.indexOf('temp-') !== 0) {
       this.resourcesService.enumerationValues
         .updateInEnumeratedType(
-          this.parent.model,
+          this.parent.model as string,
           this.parent.id,
           record.id,
           resource
@@ -619,7 +639,7 @@ export class McEnumerationListWithCategoryComponent
         );
     } else {
       this.resourcesService.enumerationValues
-        .saveToEnumeratedType(this.parent.model, this.parent.id, resource)
+        .saveToEnumeratedType(this.parent.model as string, this.parent.id, resource)
         .subscribe(
           () => {
             this.reloadRecordsFromServer().subscribe((data) => {
@@ -637,7 +657,7 @@ export class McEnumerationListWithCategoryComponent
     }
   }
 
-  onCategorySelected(event: MatAutocompleteSelectedEvent, record: any) {
+  onCategorySelected(event: MatAutocompleteSelectedEvent, record: DisplayItem) {
     const value: string = event.option.value;
 
     if (value.startsWith('Add new \'') && value.endsWith('\'?')) {
@@ -653,7 +673,7 @@ export class McEnumerationListWithCategoryComponent
 
   reloadRecordsFromServer(): Observable<DataTypeDetailResponse> {
     return this.resourcesService.dataType.get(
-      this.parent.model,
+      this.parent.model as string,
       this.parent.id
     );
   }

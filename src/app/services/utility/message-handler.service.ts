@@ -25,8 +25,8 @@ import { ToastrService } from 'ngx-toastr';
 export class MessageHandlerService {
 
     constructor(private ngToast: ToastrService) { }
-    showError(defaultMessage, error?) {
-        let text = defaultMessage;
+    showError(defaultMessage:string, error?) {
+        let text:string = defaultMessage;
         if (error && error.status === 422) {
             const result = this.getErrorText(error);
             if (result) {
@@ -37,11 +37,11 @@ export class MessageHandlerService {
 
     }
 
-    showSuccess(message) {
+    showSuccess(message:string) {
         this.ngToast.success(message);
     }
 
-    showWarning(message) {
+    showWarning(message:string) {
         this.ngToast.warning(message);
     }
 

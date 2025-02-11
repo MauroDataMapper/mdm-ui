@@ -131,7 +131,7 @@ export class McSelectComponent implements OnInit, AfterViewInit {
 
 
   onScroll(event) {
-    if (parseInt(event.target.scrollTop, 10) + parseInt(event.target.clientHeight, 10) + 300 >= event.target.scrollHeight) {
+    if (parseInt(event.target.scrollTop as string, 10) + parseInt(event.target.clientHeight as string, 10) + 300 >= Number(event.target.scrollHeight)) {
       this.loadMore();
     }
   }
@@ -240,7 +240,7 @@ export class McSelectComponent implements OnInit, AfterViewInit {
         nextElement.nativeElement.className = 'mcSelectItem current';
 
         const elPosition = this.elementPositionInHolder(nextElement);
-        const elHeight = parseInt(nextElement.nativeElement.offsetHeight, 10);
+        const elHeight = parseInt(nextElement.nativeElement.offsetHeight as string, 10);
         const holderHeight = this.mcSelectHolder.nativeElement.offsetHeight;
         if ((elPosition + elHeight) > holderHeight) {
           this.mcSelectHolder.nativeElement.scrollTop = elPosition;
@@ -291,7 +291,7 @@ export class McSelectComponent implements OnInit, AfterViewInit {
     const indexOfElement = this.elements._results.findIndex(x => x === el);
 
     this.elements._results.slice(0, indexOfElement).forEach((prev) => {
-      fromTop += parseInt(prev.nativeElement.clientHeight, 10) + 10; // 10: [3(padding) + 2(margin)]*2(up and bottom)
+      fromTop += parseInt(prev.nativeElement.clientHeight as string, 10) + 10; // 10: [3(padding) + 2(margin)]*2(up and bottom)
     });
     return fromTop;
   }

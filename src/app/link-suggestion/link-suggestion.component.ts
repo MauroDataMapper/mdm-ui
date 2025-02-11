@@ -32,6 +32,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-link-suggestion',
@@ -94,7 +95,7 @@ export class LinkSuggestionComponent implements OnInit {
     this.targetDataModelId = this.targetDataModelId ? this.targetDataModelId : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {
-      this.setSourceDataElement(this.sourceDataModelId, this.sourceDataClassId, this.sourceDataElementId);
+      this.setSourceDataElement(this.sourceDataModelId as string, this.sourceDataClassId as string, this.sourceDataElementId as string);
     } else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
@@ -112,11 +113,11 @@ export class LinkSuggestionComponent implements OnInit {
   setSourceDataModel = (dataModels) => {
     if (dataModels && dataModels.length > 0) {
       this.model.loadingSource = true;
-      this.resources.dataModel.get(dataModels[0].id).subscribe((result) => {
+      this.resources.dataModel.get(dataModels[0].id as string).subscribe((result) => {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        const access = this.securityHandler.elementAccess(this.model.source);
+        const access = this.securityHandler.elementAccess(this.model.source as Securable | (Securable & Finalisable));
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -127,13 +128,13 @@ export class LinkSuggestionComponent implements OnInit {
     }
   };
 
-  setSourceDataElement = (sourceDMId, sourceDCId, sourceDEId) => {
+  setSourceDataElement = (sourceDMId:string, sourceDCId:string, sourceDEId:string) => {
     this.model.loadingSource = true;
     this.resources.dataElement.get(sourceDMId, sourceDCId, sourceDEId).subscribe((result) => {
       const data = result.body;
       this.model.source = data;
       this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-      const access = this.securityHandler.elementAccess(this.model.source);
+      const access = this.securityHandler.elementAccess(this.model.source as Securable | (Securable & Finalisable));
       this.model.sourceEditable = access.showEdit;
       this.model.loadingSource = false;
     });
@@ -147,7 +148,7 @@ export class LinkSuggestionComponent implements OnInit {
   setTargetDataModel = (dataModels) => {
     if (dataModels && dataModels.length > 0) {
       this.model.loadingTarget = true;
-      this.resources.dataModel.get(dataModels[0].id).subscribe((result) => {
+      this.resources.dataModel.get(dataModels[0].id as string).subscribe((result) => {
         const data = result.body;
         this.model.target = data;
         this.model.targetLink = this.elementTypes.getLinkUrl(this.model.target);
@@ -175,7 +176,7 @@ export class LinkSuggestionComponent implements OnInit {
     if (i >= 0) {
       this.model.suggestions[i].processing = true;
       // create the link and then remove it
-      this.resources.catalogueItem.saveSemanticLinks(this.model.source.domainType, this.model.source.id, resource).subscribe(() => {
+      this.resources.catalogueItem.saveSemanticLinks(this.model.source.domainType as string, this.model.source.id as string, resource).subscribe(() => {
         this.model.suggestions[i].processing = false;
         this.model.suggestions[i].success = true;
         this.model.successfullyAdded++;
@@ -217,7 +218,7 @@ export class LinkSuggestionComponent implements OnInit {
     this.model.totalIgnoredLinks = 0;
 
     if (this.model.source.domainType === 'DataModel') {
-      this.resources.dataModel.suggestLinks(this.model.source.id, this.model.target.id).subscribe((result) => {
+      this.resources.dataModel.suggestLinks(this.model.source.id as string, this.model.target.id as string).subscribe((result) => {
         const data = result.body;
         if (data.links) {
           this.model.suggestions = data.links;
@@ -234,7 +235,7 @@ export class LinkSuggestionComponent implements OnInit {
         this.model.processing = false;
       });
     } else if (this.model.source.domainType === 'DataElement') {
-      this.resources.dataElement.suggestLinks(this.model.source.model, this.model.source.dataClass, this.model.source.id, this.model.target.id).subscribe((data) => {
+      this.resources.dataElement.suggestLinks(this.model.source.model as string, this.model.source.dataClass as string, this.model.source.id as string, this.model.target.id as string).subscribe((data) => {
         if (data.body) {
           this.model.suggestions = [data.body];
           this.model.totalSuggestionLinks = 1;

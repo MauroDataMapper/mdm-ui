@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -83,7 +83,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       });
     this.changeRef.detectChanges();
   }
-  pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  pendingUsersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:{[p: string]: any}) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     options['disabled'] = false;
 
@@ -144,7 +144,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   };
 
   approveUser = (row : any) => {
-    this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
+    this.resourcesService.catalogueUser.approve(row.id as string, null).subscribe(() => {
       this.messageHandler.showSuccess('User approved successfully');
       this.broadcast.dispatch('pendingUserUpdated');
       this.pendingUsersFetch().subscribe(data => {
@@ -159,8 +159,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     });
   };
 
-  rejectUser = (row) => {
-    this.resourcesService.catalogueUser.reject(row.id, null).subscribe(() => {
+  rejectUser = (row:any) => {
+    this.resourcesService.catalogueUser.reject(row.id as string, null).subscribe(() => {
       this.messageHandler.showSuccess('User rejected successfully');
       this.broadcast.dispatch('pendingUserUpdated');
       this.pendingUsersFetch().subscribe(data => {

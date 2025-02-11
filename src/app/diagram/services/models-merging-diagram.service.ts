@@ -114,7 +114,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
     // Adding the links in a separate loop, because it won't find the target otherwise
     result.body.forEach((item: ModelVersionItem) => {
-      let link: any;
+      let link: joint.shapes.standard.Link;
       item.targets.forEach((itmTarget) => {
         link = new joint.shapes.standard.Link({
           id: `${item.id} _  ${itmTarget.id}`,

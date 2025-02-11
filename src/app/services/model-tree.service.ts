@@ -33,7 +33,7 @@ import {
   VersionedFolderDetailResponse,
   catalogueItemDomainTypeToContainerDomainType,
   catalogueItemToMultiFacetAware,
-  isContainerDomainType
+  isContainerDomainType, RequestSettings
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { FlatNode } from '@mdm/folders-tree/flat-node';
@@ -108,7 +108,7 @@ export class ModelTreeService implements OnDestroy {
     }
 
     return this.resources.tree
-      .list(ContainerDomainType.Folders, options.queryStringParams)
+      .list(ContainerDomainType.Folders, options.queryStringParams as RequestSettings)
       .pipe(map((response: MdmTreeItemListResponse) => response.body));
   }
 

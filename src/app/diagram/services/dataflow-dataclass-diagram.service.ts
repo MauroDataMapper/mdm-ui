@@ -37,8 +37,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
 
   render(data: any): void {
-    const nodes: any = {};
-    const nodesMerge: any = {};
+    const nodes: {} = {};
+    const nodesMerge: {} = {};
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
@@ -60,18 +60,18 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     });
 
     Object.keys(nodes).forEach((key) => {
-      this.addRectangleCell(key, nodes[key]);
+      this.addRectangleCell(key, nodes[key] as string);
     });
 
     Object.keys(nodesMerge).forEach((key) => {
-      this.addSmallColorfulRectangleCell(key, nodesMerge[key]);
+      this.addSmallColorfulRectangleCell(key, nodesMerge[key] as string);
     });
 
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((sourceDataClass: any) => {
         flow.targetDataClasses.forEach((targetDataClass: any) => {
 
-          let link: any;
+          let link: joint.shapes.standard.Link;
           if (flow.sourceDataClasses.length > 1) {
             // this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
             // link the sourceDataClass to the merged dataClassComponent
@@ -149,15 +149,15 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
         this.selDataClassComponentId = arrMergedId[0];
         // Check if this id is a DataClassComponent
-        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(() => {
+        foundDataClassComponents = Object.keys(this.dataClassComponents as {}).filter(() => {
           return foundDataClassComponents[arrMergedId[0]];
         });
 
         if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
           const options = { sort: 'label', order: 'asc', all: true };
-          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0] as string, options).subscribe(result => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-              this.changeComponent(result.body);
+              this.changeComponent(result.body as string);
             }
           });
         } else {
@@ -218,7 +218,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     const options = { sort: 'label', order: 'asc', all: true };
     this.resourcesService.dataFlow.dataClassComponents.update(this.parentId, this.flowId, this.selDataClassComponentId, data, options).subscribe(result => {
       if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-        this.changeComponent(result.body);
+        this.changeComponent(result.body as string);
       }
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Class Component.', error);

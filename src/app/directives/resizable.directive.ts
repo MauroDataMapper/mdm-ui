@@ -29,7 +29,7 @@ export class ResizableDirective implements OnInit {
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     const newWidth = (wid) => {
-      const newWidthCalc = Math.max(this.resizableMinWidth, wid);
+      const newWidthCalc = Math.max(this.resizableMinWidth, wid as number);
       this.renderer.setStyle(
         this.el.nativeElement,
         'width',

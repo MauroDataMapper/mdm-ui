@@ -395,7 +395,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         const semanticLinks = result.body;
         semanticLinks.items.forEach((link) => {
           if (
-            ['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 &&
+            ['Superseded By', 'New Version Of'].indexOf(link.linkType as string) !== -1 &&
             link.source.id === dataModel.id
           ) {
             compareToList.push(link.target);
@@ -499,7 +499,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.search();
           }
 
-          if (this.validator.isEmpty(this.formData.filterCriteria)) {
+          if (this.validator.isEmpty(this.formData.filterCriteria as string)) {
             this.search();
           }
         });

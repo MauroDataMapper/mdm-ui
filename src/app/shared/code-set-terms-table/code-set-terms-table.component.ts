@@ -29,8 +29,8 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
-import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MatSort, SortDirection } from '@angular/material/sort';
+import { CatalogueElementType, ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
@@ -60,8 +60,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   deleteInProgress: boolean;
   records: any[] = [];
   access: Access;
-  baseTypes: any;
-  classifiableBaseTypes: any;
+  baseTypes:  { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
+  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
   filterValue: any;
   filterName: any;
   showAddTerm: any;
@@ -112,7 +112,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.changeRef.detectChanges();
   }
 
-  termFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  termFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:{[p: string]: any}): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.codeSet.terms(this.codeSet.id, options);
@@ -145,13 +145,13 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  delete(record, $index) {
+  delete(record, $index:number) {
     if (this.clientSide) {
       this.records.splice($index, 1);
       return;
     }
 
-    this.resources.codeSet.removeTerm(this.codeSet.id, record.id).subscribe(() => {
+    this.resources.codeSet.removeTerm(this.codeSet.id, record.id as string).subscribe(() => {
       if (this.type === 'static') {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Term removed successfully.');

@@ -26,7 +26,7 @@ import {
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
 
@@ -64,11 +64,11 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   }
 
   requestDataFromMultipleSources(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    pageSize?:number,
+    pageIndex?:number,
+    sortBy?:string,
+    sortType?: SortDirection,
+    filters?:{[p: string]: any}
   ) {
 
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'displayName', 'asc', filters);

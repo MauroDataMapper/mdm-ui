@@ -65,7 +65,7 @@ export class DataElementComponent
   showEdit = false;
   showDelete = false;
   showExtraTabs = false;
-  activeTab: any;
+  activeTab: number;
   dataClass = { id: null };
   dataModel = { id: null };
   isDataLoaded = false;
@@ -111,7 +111,7 @@ export class DataElementComponent
   ) {
     super();
     if (
-      this.isGuid(this.uiRouterGlobals.params.id) &&
+      this.isGuid(this.uiRouterGlobals.params.id as string) &&
       (!this.uiRouterGlobals.params.id ||
         !this.uiRouterGlobals.params.dataModelId ||
         !this.uiRouterGlobals.params.dataClassId)
@@ -151,9 +151,9 @@ export class DataElementComponent
     this.title.setTitle('Data Element');
 
     this.dataElementDetails(
-      this.uiRouterGlobals.params.dataModelId,
-      this.dataClass.id,
-      this.uiRouterGlobals.params.id
+      this.uiRouterGlobals.params.dataModelId as string,
+      this.dataClass.id as string,
+      this.uiRouterGlobals.params.id as string
     );
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -166,7 +166,7 @@ export class DataElementComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  fetchDataTypes = (text, loadAll, offset, limit) => {
+  fetchDataTypes = (text, loadAll, offset:number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -178,7 +178,7 @@ export class DataElementComponent
       limit: options['limit'],
       offset: options['offset']
     };
-    return this.resourcesService.dataType.list(this.dataModel.id, options);
+    return this.resourcesService.dataType.list(this.dataModel.id as string, options);
   };
 
   getTabDetailByName(tabName) {
@@ -239,9 +239,9 @@ export class DataElementComponent
 
     this.resourcesService.dataElement
       .update(
-        this.dataModel.id,
-        this.dataClass.id,
-        this.dataElementOutput.id,
+        this.dataModel.id as string,
+        this.dataClass.id as string,
+        this.dataElementOutput.id as string,
         resource
       )
       .subscribe(
@@ -264,7 +264,7 @@ export class DataElementComponent
       );
   }
 
-  dataElementDetails(dataModelId: any, dataClassId, id) {
+  dataElementDetails(dataModelId: string, dataClassId:string, id:string) {
     this.resourcesService.dataElement
       .get(dataModelId, dataClassId, id)
       .subscribe((result: DataElementDetailResponse) => {

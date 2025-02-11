@@ -53,7 +53,7 @@ export class GridService {
       (prev, [key, value]) => {
         return {
           ...prev,
-          [key]: encodeURIComponent(value)
+          [key]: encodeURIComponent(value as string)
         };
       },
       {}

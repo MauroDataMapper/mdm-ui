@@ -166,8 +166,8 @@ export class DiagramComponent implements OnInit {
 
     this.paper.setInteractivity({ stopDelegation: false });
 
-    const svg: any = this.jointjsDiv.nativeElement.querySelector('svg');
-    const options: any = {
+    const svg: HTMLElement | SVGElement = this.jointjsDiv.nativeElement.querySelector('svg');
+    const options: SvgPanZoom.Options = {
       // viewportSelector: '#viewport',
       dblClickZoomEnabled: false,
       controlIconsEnabled: true,
@@ -204,7 +204,7 @@ export class DiagramComponent implements OnInit {
     this.diagramService.getClickSubject().subscribe((result) => {
       if (result.newMode) {
         this.mode = result.newMode;
-        this.initializeDiagramService(result);
+        this.initializeDiagramService(result as DiagramParameters);
         this.resetPaper();
       }
     });
@@ -212,7 +212,7 @@ export class DiagramComponent implements OnInit {
     this.diagramService.getGoUpSubject().subscribe((result) => {
       if (result.newMode) {
         this.mode = result.newMode;
-        this.initializeDiagramService(result);
+        this.initializeDiagramService(result as DiagramParameters);
         this.resetPaper();
       }
     });

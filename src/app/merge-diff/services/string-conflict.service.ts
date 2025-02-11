@@ -45,7 +45,7 @@ export class StringConflictService {
     const diffs = this.getDiff(text1 ?? '', text2 ?? '');
     return this.getDiffPrettyHtml(
       diffs,
-      this.createInsElement.bind(this),
+      this.createInsElement.bind(this) as  (item: DiffTrackedItem) => string,
       () => ''
     );
   }

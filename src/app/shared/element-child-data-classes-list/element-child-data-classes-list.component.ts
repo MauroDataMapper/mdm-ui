@@ -31,7 +31,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
@@ -136,14 +136,15 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(pageSize?, pageIndex?, filters?): Observable<any> {
+  dataClassesFetch(pageSize?:number, pageIndex?:number, filters?:{[p: string]: any}): Observable<any> {
     const sortBy = 'idx';
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
+    const sortDirection: SortDirection='asc';
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortDirection, filters);
 
     if (!this.parentDataClass.id) {
-      return this.resources.dataClass.list(this.parentDataModel.id, options);
+      return this.resources.dataClass.list(this.parentDataModel.id as string, options);
     }
-    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
+    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id as string, this.parentDataClass.id as string, options);
   }
 
   onChecked = () => {
@@ -212,13 +213,13 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       index: newPosition
     };
     if (!this.parentDataClass.id) {
-      this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(() => {
+      this.resources.dataClass.update(this.parentDataModel.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     } else {
-      this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.data.id, resource).subscribe(() => {
+      this.resources.dataClass.updateChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);

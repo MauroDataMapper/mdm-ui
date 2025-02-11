@@ -38,11 +38,12 @@ export class TextDiffComponent implements AfterViewInit {
   mergeDiffrl: any;
   mergeDifflr: any;
 
+
   constructor() {}
 
   ngAfterViewInit(): void {
     if (this.right && this.left) {
-      const diffrl = this.diffLineMode(this.right.toString(), this.left.toString());
+      const diffrl = this.diffLineMode(this.right.toString() as string, this.left.toString() as string);
       this.diff.nativeElement.innerHTML = this.diffPrettyPlain(diffrl);
     }
   }
@@ -76,7 +77,7 @@ export class TextDiffComponent implements AfterViewInit {
   };
 
 
-  diffLineMode(text1, text2) {
+  diffLineMode(text1:string, text2:string) {
     const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
@@ -88,8 +89,8 @@ export class TextDiffComponent implements AfterViewInit {
   }
 
 
-  diffLinesToChars = (text1, text2) => {
-    const lineArray = []; // e.g. lineArray[4] == 'Hello\n'
+  diffLinesToChars = (text1:string, text2:string) => {
+    const lineArray:string[] = []; // e.g. lineArray[4] == 'Hello\n'
     const lineHash = {}; // e.g. lineHash['Hello\n'] == 4
 
     // '\x00' is a valid character, but various debuggers don't like it.
@@ -124,7 +125,7 @@ export class TextDiffComponent implements AfterViewInit {
     return { chars1, chars2, lineArray };
   };
 
-  diffLinesToCharsMunge = (text, lineArray, lineHash, maxLines) => {
+  diffLinesToCharsMunge = (text:string, lineArray:string[], lineHash:{ [p:string]:number}, maxLines:number) => {
     let chars = '';
     // Walk the text, pulling out a substring for each line.
     // text.split('\n') would would temporarily double our memory footprint.

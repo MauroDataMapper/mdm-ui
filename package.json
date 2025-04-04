@@ -33,7 +33,7 @@
     "@ag-grid-community/client-side-row-model": "31.0.3",
     "@ag-grid-community/core": "31.0.3",
     "@ag-grid-community/styles": "31.0.3",
-    "@angular-builders/jest": "^16.0.1",
+    "@angular-builders/jest": "^19.0.0",
     "@angular-material-extensions/password-strength": "16.0.0",
     "@angular/animations": "16.2.12",
     "@angular/cdk": "16.2.14",
@@ -91,8 +91,8 @@
     }
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^16.0.2-beta.2",
-    "@angular-devkit/build-angular": "16.2.12",
+    "@angular-builders/custom-webpack": "^19.0.0",
+    "@angular-devkit/build-angular": "19.2.6",
     "@angular-eslint/eslint-plugin": "16.3.1",
     "@angular-eslint/eslint-plugin-template": "16.3.1",
     "@angular/cli": "^16.2.12",

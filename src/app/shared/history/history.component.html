@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
         mat-cell
         *matCellDef="let element"
       >
-        <div style="float: left; margin: 3px">
+        <div *ngIf="element && element.createdByUser && element.createdByUser.name" style="float: left; margin: 3px">
           <span [innerHTML]="element.createdByUser.name"></span>
         </div>
       </td>

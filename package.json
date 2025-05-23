@@ -45,7 +45,7 @@
     "@angular/material": "16.2.14",
     "@angular/platform-browser": "16.2.12",
     "@angular/platform-browser-dynamic": "16.2.12",
-    "@babel/runtime": "7.23.9",
+    "@babel/runtime": "7.26.10",
     "@bpmn-io/dmn-migrate": "0.4.3",
     "@ctrl/ngx-codemirror": "6.1.0",
     "@dagrejs/dagre": "^1.0.4",

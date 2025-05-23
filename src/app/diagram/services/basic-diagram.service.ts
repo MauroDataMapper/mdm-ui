@@ -214,7 +214,7 @@ export abstract class BasicDiagramService {
       position = new joint.g.Point({ x: 0, y: 0 });
     }
 
-    let classBox = null;
+    let classBox:  joint.dia.Cell = null;
     if (existingClassBox) {
       classBox = existingClassBox;
       position = existingClassBox.position();
@@ -332,8 +332,8 @@ export abstract class BasicDiagramService {
 
     // `cell` is a link
     // get its source and target model IDs
-    const sourceId = cell.get('source').id || cell.previous('source').id;
-    const targetId = cell.get('target').id || cell.previous('target').id;
+    const sourceId:  joint.dia.Cell.ID | joint.dia.Cell = cell.get('source').id || cell.previous('source').id;
+    const targetId:  joint.dia.Cell.ID | joint.dia.Cell = cell.get('target').id || cell.previous('target').id;
 
     // if one of the ends is not a model
     // (if the link is pinned to paper at a point)
@@ -434,7 +434,7 @@ export abstract class BasicDiagramService {
     return this.dataComponentSubject;
   }
 
-  changeComponent(dataClassComponent: any) {
+  changeComponent(dataClassComponent: string) {
     this.dataComponentSubject.next(dataClassComponent);
   }
 }

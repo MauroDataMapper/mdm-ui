@@ -56,7 +56,7 @@ export class ReferenceDataComponent
   subscription: Subscription;
   parentId: string;
   showExtraTabs = false;
-  activeTab: any;
+  activeTab: number;
   semanticLinks: any[] = [];
   schemaView = 'list';
   descriptionView = 'default';
@@ -108,7 +108,7 @@ export class ReferenceDataComponent
     this.title.setTitle('Reference Data Model');
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView
+      this.uiRouterGlobals.params.tabView as string
     ).index;
     this.tabSelected(this.activeTab);
 
@@ -181,7 +181,7 @@ export class ReferenceDataComponent
       });
   }
 
-  ReferenceModelPermissions(id: any) {
+  ReferenceModelPermissions(id: string) {
     this.resourcesService.security
       .permissions(SecurableDomainType.ReferenceDataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {

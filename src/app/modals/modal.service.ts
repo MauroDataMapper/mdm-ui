@@ -45,17 +45,17 @@ export class ModalService implements OnDestroy {
     this.broadcast
       .on<any>('openLoginModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.Login, options));
+      .subscribe(options => this.open(ModalType.Login, options as MatDialogConfig<any>));
 
     this.broadcast
       .on<any>('openRegisterModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.Register, options));
+      .subscribe(options => this.open(ModalType.Register, options as MatDialogConfig<any>));
 
     this.broadcast
       .on<any>('openForgotPasswordModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.ForgotPassword, options));
+      .subscribe(options => this.open(ModalType.ForgotPassword, options as MatDialogConfig<any>));
   }
 
   open(modalType: ModalType, options?: MatDialogConfig) {

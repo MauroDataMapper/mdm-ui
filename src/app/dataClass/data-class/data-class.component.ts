@@ -47,7 +47,7 @@ export class DataClassComponent
   dataClass: DataClassDetail;
   showSecuritySection: boolean;
   showExtraTabs = false;
-  activeTab: any;
+  activeTab:  number;
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
@@ -90,7 +90,7 @@ export class DataClassComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id) &&
+      this.isGuid(this.uiRouterGlobals.params.id as string) &&
       (!this.uiRouterGlobals.params.id ||
         !this.uiRouterGlobals.params.dataModelId)
     ) {
@@ -116,9 +116,9 @@ export class DataClassComponent
     this.title.setTitle('Data Class');
 
     this.dataClassDetails(
-      this.uiRouterGlobals.params.dataModelId,
-      this.uiRouterGlobals.params.id,
-      this.parentDataClass.id
+      this.uiRouterGlobals.params.dataModelId as string,
+      this.uiRouterGlobals.params.id as string,
+      this.parentDataClass.id as string
     );
   }
 
@@ -131,7 +131,7 @@ export class DataClassComponent
     }
   }
 
-  dataClassDetails(model, id, parentDataClass?) {
+  dataClassDetails(model:string, id:string, parentDataClass?:string) {
     if (!parentDataClass) {
       this.resourcesService.dataClass
         .get(model, id)

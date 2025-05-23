@@ -22,7 +22,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ByteArrayToBase64Pipe implements PipeTransform {
 
-  transform(value: any): any {
+  transform(value: Iterable<number>): any {
       let binary = '';
       const bytes = new Uint8Array(value);
       const len = bytes.byteLength;

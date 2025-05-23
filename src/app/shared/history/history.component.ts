@@ -152,12 +152,17 @@ export class HistoryComponent implements OnInit, AfterViewInit {
         this.parentId,
         options
       );
-    } else {
+    } else
+    if (this.parent?.id){
       return this.resourcesService.edit.status(
         this.domainType,
-        this.parent?.id,
+        this.parent.id as string,
         options
       );
+    }
+    else {
+      // Oh dear
+      return null;
     }
   }
 }

@@ -122,8 +122,8 @@ export class SummaryMetadataChartComponent implements OnInit {
         this.barChartOptions.scales.xAxes[0].type = 'time';
         this.barChartData = [{ data: [] }];
         this.summaryMetadataReports.forEach((report) => {
-          this.barChartData[0].data.push(report.reportValue);
-          this.barChartLabels.push(report.reportDate);
+          this.barChartData[0].data.push(report.reportValue as number);
+          this.barChartLabels.push(report.reportDate as string);
         });
       } else {
         this.displayChart = false;
@@ -136,8 +136,8 @@ export class SummaryMetadataChartComponent implements OnInit {
   drawBarChart(): void {
     this.selectedReport = this.summary.summaryMetadataReports[this.reportIndex];
     this.barChartData = [];
-    this.barChartData.push({data: Object.values(this.selectedReport.reportValue) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
-    this.barChartLabels = Object.keys(this.selectedReport.reportValue);
+    this.barChartData.push({data: Object.values(this.selectedReport.reportValue as {[p: string]: number} | ArrayLike<number>) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
+    this.barChartLabels = Object.keys(this.selectedReport.reportValue as {[p: string]: number} | ArrayLike<number>);
     this.reportDate = this.selectedReport.reportDate;
   }
 

@@ -15,16 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChild,
-  Output,
-  ElementRef,
-  EventEmitter,
-  OnDestroy
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MarkdownParserService } from '../markdown-parser/markdown-parser.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
@@ -117,9 +108,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$),
         filter((element) => !!element),
-        map((element) => {
-          const link = this.markdownParser.createMarkdownLink(element);
-          return link;
+        map((element: MauroItem & Pathable) => {
+          return this.markdownParser.createMarkdownLink(element);
         })
       )
       .subscribe((link) =>
@@ -192,7 +182,7 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.messageService.elementSelector.subscribe((data) => {
       this.selectedElement = data;
       if (this.selectedElement != null) {
-        this.createAndInsertLink(this.selectedElement);
+        this.createAndInsertLink(this.selectedElement as MauroItem & Pathable);
       }
     });
   }

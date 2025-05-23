@@ -26,7 +26,7 @@ import {
 } from '@angular/material/dialog';
 import {
   ApiProperty,
-  ApiPropertyIndexResponse,
+  ApiPropertyIndexResponse, Pathable,
   Profile,
   ProfileField,
   ProfileValidationError,
@@ -44,6 +44,7 @@ import {
   EditProfileModalResult
 } from './edit-profile-modal.model';
 import { EditingService } from '@mdm/services/editing.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
 
 @Component({
   selector: 'mdm-edit-profile-modal',
@@ -61,8 +62,6 @@ export class EditProfileModalComponent implements OnInit {
     errors: []
   };
   isValidated = false;
-  private readonly showCanEditPropertyAlertKey =
-    'ui.show_can_edit_property_alert';
 
   formOptionsMap = {
     integer: 'number',
@@ -74,6 +73,9 @@ export class EditProfileModalComponent implements OnInit {
     datetime: 'datetime',
     decimal: 'number'
   };
+
+  private readonly showCanEditPropertyAlertKey =
+    'ui.show_can_edit_property_alert';
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -227,7 +229,7 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     dg.afterClosed().subscribe((dgData) => {
-      const link = this.markdownParser.createMarkdownLink(dgData);
+      const link = this.markdownParser.createMarkdownLink(dgData as MauroItem & Pathable);
       field.currentValue = link;
     });
   }
@@ -241,12 +243,12 @@ export class EditProfileModalComponent implements OnInit {
   private validateData(): Observable<ProfileValidationErrorList> {
     return this.resources.profile
       .validateProfile(
-        this.data.profile.namespace,
-        this.data.profile.name,
+        this.data.profile.namespace as string,
+        this.data.profile.name as string,
         this.data.catalogueItem.domainType,
         this.data.catalogueItem.id,
         this.profileData,
-        this.data.profile.version
+        this.data.profile.version as string
       )
       .pipe(
         map<unknown, ProfileValidationErrorList>(() => {

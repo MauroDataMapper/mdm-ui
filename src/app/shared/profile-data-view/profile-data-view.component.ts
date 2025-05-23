@@ -342,7 +342,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   deleteCustomProfile() {
-    if (!this.currentProfile) {
+    if (!this.currentProfile || !this.currentProfile.namespace || !this.currentProfile.name) {
       return;
     }
 
@@ -360,9 +360,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           return this.resources.profile.deleteProfile(
             this.catalogueItem.domainType,
             this.catalogueItem.id,
-            this.currentProfile.namespace,
-            this.currentProfile.name,
-            this.currentProfile.version
+            this.currentProfile.namespace as string,
+            this.currentProfile.name as string,
+            this.currentProfile.version as string
           );
         }),
         catchError((error) => {
@@ -463,7 +463,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     });
   }
 
-  private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: any) {
+  private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: string) {
     this.loadProfileItems('unused', domainType, id).subscribe(
       (items) => (this.unusedProfiles = items)
     );
@@ -518,7 +518,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private loadProfileItems(
     type: 'used' | 'unused',
     domainType: CatalogueItemDomainType,
-    id: any
+    id: string
   ): Observable<ProfileSummaryListItem[]> {
     const request: Observable<ProfileSummaryIndexResponse> =
       type === 'used'
@@ -890,7 +890,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   private loadDefaultProfilePropertyValue(
     domainType: CatalogueItemDomainType,
-    id: any
+    id: string
   ) {
     const catalogueHierarchy = this.getCatalogueItemHierarchy();
 
@@ -940,8 +940,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             )
             .concat(responses);
         } else {
-          for (const property_item of defaultProfileProperties[0]) {
-            if (property_item !== undefined) {
+          for (const propertyItem of defaultProfileProperties[0]) {
+            if (propertyItem !== undefined) {
               //
               responses = this.usedProfiles
                 .filter(
@@ -949,7 +949,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
                     decodeURIComponent(usedProfile.name) +
                       '/' +
                       usedProfile.version ===
-                    property_item.value
+                    propertyItem.value
                 )
                 .concat(responses);
             }
@@ -967,8 +967,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private getPropertiesFromCatalogueItem(param) {
     const options = this.gridService.constructOptions(20, 0, null, null, null);
     const request: Observable<any> = this.resources.profile.otherMetadata(
-      param.domainType,
-      param.id,
+      param.domainType as MultiFacetAwareDomainType | CatalogueItemDomainType,
+      param.id as string,
       options
     );
 

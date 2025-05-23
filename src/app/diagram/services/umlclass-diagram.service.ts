@@ -47,13 +47,13 @@ export class UmlClassDiagramService extends BasicDiagramService {
     this.referenceLinks = [];
     this.addAllChildDataClasses(data.body);
     this.allDataClasses.forEach(dataClass => {
-      this.addRectangleCell(dataClass.id, '', 300, dataClass.attributes.length * 25 + 31);
+      this.addRectangleCell(dataClass.id as string, '', 300, dataClass.attributes.length * 25 + 31);
     });
     this.addLinks();
     super.layoutNodes('TB');
     this.allDataClasses.forEach(dataClass => {
-      const oldCell = this.graph.getCell(dataClass.id) as joint.shapes.standard.Rectangle;
-      this.addUmlClassCell(dataClass.id, dataClass.label, dataClass.attributes, null, oldCell);
+      const oldCell = this.graph.getCell(dataClass.id as string) as joint.shapes.standard.Rectangle;
+      this.addUmlClassCell(dataClass.id as string, dataClass.label as string, dataClass.attributes as any[], null, oldCell);
     });
   }
 

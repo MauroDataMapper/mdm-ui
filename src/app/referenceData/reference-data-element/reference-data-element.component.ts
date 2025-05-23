@@ -84,7 +84,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       });
   }
 
-  listDataElements = (pageSize?, pageIndex?) => {
+  listDataElements = (pageSize?:number, pageIndex?:number) => {
     const options = this.gridService.constructOptions(pageSize, pageIndex);
     return this.resources.referenceDataElement.list(this.parent?.id, options);
   };

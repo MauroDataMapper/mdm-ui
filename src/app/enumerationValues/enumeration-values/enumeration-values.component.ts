@@ -67,7 +67,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
       this.parentDataType = this.uiRouterGlobals.params.dataTypeId;
         this.id = this.uiRouterGlobals.params.id;
 
-      await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe((result: DataTypeDetailResponse) => {
+      await this.resource.dataType.get(this.parentDataModel as string, this.parentDataType as string).subscribe((result: DataTypeDetailResponse) => {
          this.breadCrumbs = result.body.breadcrumbs;
          this.dataModelId = result.body.model;
 
@@ -80,7 +80,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
          this.parent = result.body;
 
-         this.resource.enumerationValues.getFromDataType(this.parentDataModel, this.parentDataType, this.id).subscribe(res => {
+         this.resource.enumerationValues.getFromDataType(this.parentDataModel as string, this.parentDataType as string, this.id as string).subscribe(res => {
             if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {
                this.label = res.body.value;
                this.currentEnumerationValue = res.body;

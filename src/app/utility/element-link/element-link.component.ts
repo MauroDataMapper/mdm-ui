@@ -23,6 +23,7 @@ import {
   ElementTypesService
 } from '@mdm/services/element-types.service';
 import { map } from 'rxjs';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-link',
@@ -160,7 +161,7 @@ export class ElementLinkComponent implements OnInit {
 
   getIcon() {
     if(this.element) {
-      return getCatalogueItemDomainTypeIcon(this.element.domainType);
+      return getCatalogueItemDomainTypeIcon(this.element.domainType as CatalogueItemDomainType);
     }
     return null;
   }

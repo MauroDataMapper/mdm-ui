@@ -30,7 +30,7 @@ import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { EditingService } from '@mdm/services/editing.service';
+import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { GridService } from '@mdm/services';
 import {
   CatalogueItem,
@@ -57,7 +57,7 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   reloadEvent = new EventEmitter<void>();
-  records: any[];
+  records:  EditableObject[];
   canAddAnnotation = false;
 
   constructor(
@@ -196,7 +196,7 @@ export class AnnotationListComponent implements AfterViewInit {
       .saveAnnotationChildren(
         this.domainType,
         this.parent.id,
-        annotation.id,
+        annotation.id as string,
         resource
       )
       .pipe(

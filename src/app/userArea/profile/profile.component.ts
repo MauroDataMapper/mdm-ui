@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Get the user details data
   userDetails() {
-    this.resourcesService.catalogueUser.get(this.currentUser.id).subscribe((result: { body: UserDetailsResult }) => {
+    this.resourcesService.catalogueUser.get(this.currentUser.id as string).subscribe((result: { body: UserDetailsResult }) => {
       this.user = result.body;
       this.messageService.sendUserDetails(this.user);
       this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.backendUrl + '/catalogueUsers/' + this.user.id + '/image');

@@ -115,7 +115,8 @@ export class CreateTermDialogComponent implements OnInit {
         if (response.ok) {
           this.dialogRef.close(response.body);
         } else {
-          this.messageHandler.showWarning(response.body);
+          /* NOTE: Generic error message */
+          this.messageHandler.showWarning('Unable to create new term');
         }
         this.submitting = false;
       });

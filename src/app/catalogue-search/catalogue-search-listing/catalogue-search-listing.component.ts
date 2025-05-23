@@ -202,7 +202,7 @@ export class CatalogueSearchListingComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: CatalogueSearchProfileFilter[]) => {
       if (result) {
         this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
         this.updateSearch();

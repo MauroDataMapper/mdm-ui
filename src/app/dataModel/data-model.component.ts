@@ -54,7 +54,7 @@ export class DataModelComponent
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
-  activeTab: any;
+  activeTab: number;
   semanticLinks: any[] = [];
   access: Access;
   tabs = new TabCollection([
@@ -111,7 +111,7 @@ export class DataModelComponent
     this.showFinalised = this.uiRouterGlobals.params.finalised;
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView ?? 'description'
+      this.uiRouterGlobals.params.tabView as string ?? 'description'
     ).index;
     this.tabSelected(this.activeTab);
 
@@ -240,7 +240,7 @@ export class DataModelComponent
 
   async DataModelPermissions(id: any) {
     await this.resourcesService.security
-      .permissions(SecurableDomainType.DataModels, id)
+      .permissions(SecurableDomainType.DataModels, id as string)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];

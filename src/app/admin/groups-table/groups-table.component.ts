@@ -21,7 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
@@ -93,7 +93,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  groupsFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourcesService.userGroups.list(options);
@@ -116,14 +116,14 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  editUser(row) {
+  editUser(row:any) {
     if (row) {
       this.stateHandlerService.Go('admin.group', { id: row.id }, null);
     }
   }
 
-  deleteUser(row) {
-    this.resourcesService.userGroups.remove(row.id).subscribe(() => {
+  deleteUser(row:any) {
+    this.resourcesService.userGroups.remove(row.id as string).subscribe(() => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
       this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
         this.records = data.body.items;

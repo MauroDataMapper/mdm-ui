@@ -52,6 +52,7 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
 import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
+import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -76,7 +77,7 @@ export class ElementSelectorComponent implements OnInit {
     content: ElementRef
   ) {
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement, 'keyup')
+      fromEvent(content.nativeElement as HasEventTargetAddRemove<unknown> | ArrayLike<HasEventTargetAddRemove<unknown>>, 'keyup')
         .pipe(
           map((event: any) => {
             return event.target.value;
@@ -383,7 +384,7 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
 
-  loadAllDataElements(dataClass, pageSize, pageIndex) {
+  loadAllDataElements(dataClass, pageSize:number, pageIndex:number) {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -392,12 +393,12 @@ export class ElementSelectorComponent implements OnInit {
     );
 
     return this.resourceService.dataElement.list(
-      dataClass.modelId,
-      dataClass.id,
+      dataClass.modelId as string,
+      dataClass.id as string,
       options
     );
   }
-  loadAllContextElements(currentContext, selectedType, pageSize, offset) {
+  loadAllContextElements(currentContext, selectedType, pageSize:number, offset:number) {
     if (
       currentContext.domainType === 'DataClass' &&
       selectedType === 'DataElement'
@@ -495,9 +496,9 @@ export class ElementSelectorComponent implements OnInit {
       );
     }
   }
-  loadAllTerms(terminology, pageSize, pageIndex) {
+  loadAllTerms(terminology, pageSize:number, pageIndex:number) {
     const options = this.gridService.constructOptions(pageSize, pageIndex);
-    return this.resourceService.terms.list(terminology.id, options);
+    return this.resourceService.terms.list(terminology.id as string, options);
   }
   calculateDisplayedSoFar(result) {
     this.formData.searchResultTotal = result.count;
@@ -515,14 +516,14 @@ export class ElementSelectorComponent implements OnInit {
       this.formData.searchResultDisplayedSoFar = result.count;
     }
   }
-  loadAllDataTypes(dataModel, pageSize, pageIndex) {
+  loadAllDataTypes(dataModel, pageSize:number, pageIndex:number) {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
       'label',
       'asc'
     );
-    return this.resourceService.dataType.list(dataModel.id, options);
+    return this.resourceService.dataType.list(dataModel.id as string, options);
   }
   searchInTree(treeSearchDomainType) {
     if (this.formData.treeSearchText.trim().length === 0) {
@@ -564,6 +565,6 @@ export class ElementSelectorComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.configureValidTypes(this.data.validTypesToSelect);
+    this.configureValidTypes(this.data.validTypesToSelect as any[]);
   }
 }

@@ -33,7 +33,7 @@ import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { merge } from 'rxjs';
 import { GridService } from '@mdm/services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,7 +41,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'mdm-group-member-table',
   templateUrl: './group-member-table.component.html',
-  styleUrls: ['./group-member-table.component.scss'],
+  styleUrls: ['./group-member-table.component.scss']
 })
 export class GroupMemberTableComponent implements AfterViewInit {
   @Input() parent: any;
@@ -60,8 +60,8 @@ export class GroupMemberTableComponent implements AfterViewInit {
   isLoadingResults: boolean;
 
   records: any[] = [];
-  filter: any = '';
-  applyFilter : any;
+  filter: { [p: string]: any } = {};
+  // applyFilter : any;
 
   constructor(
     private roles: ROLES,
@@ -70,11 +70,11 @@ export class GroupMemberTableComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog
-  ) { }
-
+  ) {}
 
   ngAfterViewInit() {
-    this.applyFilter = this.gridService.applyFilter(this.filters);
+    // this.applyFilter =
+    this.gridService.applyFilter(this.filters);
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.gridService.reloadEvent.subscribe(
       () => (this.paginator.pageIndex = 0)
@@ -112,10 +112,22 @@ export class GroupMemberTableComponent implements AfterViewInit {
     this.changeRef.detectChanges();
   }
 
-  groupMembersFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  groupMembersFetch = (
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection,
+    filters?: { [key: string]: any }
+  ) => {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
+    );
     return this.resources.catalogueUser.listInUserGroup(
-      this.parent.id,
+      this.parent.id as string,
       options
     );
   };
@@ -141,22 +153,27 @@ export class GroupMemberTableComponent implements AfterViewInit {
       organisation: '',
       userRole: '',
       disabled: false,
-      isNew: true,
+      isNew: true
     };
     this.records = [].concat([newRecord]).concat(this.records);
   };
 
-  fetchUser = (text, offset, limit) => {
-
-    const options = this.gridService.constructOptions(limit, offset, 'emailAddress', 'asc', {searchTerm : text});
+  fetchUser = (text: any, offset: number, limit: number) => {
+    const options = this.gridService.constructOptions(
+      limit,
+      offset,
+      'emailAddress',
+      'asc',
+      { searchTerm: text }
+    );
     this.pagination = {
       limit: options['limit'],
-      offset: options['offset'],
+      offset: options['offset']
     };
     return this.resources.catalogueUser.search(options);
   };
 
-  onUserSelect = (select, record) => {
+  onUserSelect = (select: any, record: any) => {
     record.id = select.id;
     record.emailAddress = select.emailAddress;
     record.firstName = select.firstName;
@@ -166,24 +183,24 @@ export class GroupMemberTableComponent implements AfterViewInit {
     record.disabled = select.disabled;
   };
 
-  cancelEdit = (record, index) => {
+  cancelEdit = (record: any, index: number) => {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.table.renderRows();
     }
   };
 
-  confirmAddMember = (record, $index) => {
+  confirmAddMember = (record: any, $index: string | number) => {
     if (!record.id || !record.emailAddress) {
       return;
     }
     this.resources.userGroups
-      .updateUserInUserGroup(this.parent.id, record.id, record)
+      .updateUserInUserGroup(this.parent.id as string, record.id as string, record)
       .subscribe(
         () => {
           this.records[$index] = record;
           this.messageHandler.showSuccess('User added successfully.');
-          this.groupMembersFetch().subscribe((data) => {
+          this.groupMembersFetch().subscribe((data:any) => {
             this.records.push(data.body.items[data.body.count - 1]);
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
@@ -191,7 +208,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
             this.childEvent.emit(data.body.items);
           });
         },
-        (error) => {
+        (error: any) => {
           this.messageHandler.showError(
             'There was a problem adding the user to the group.',
             error
@@ -200,7 +217,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
       );
   };
 
-  removeMember = (record) => {
+  removeMember = (record: any) => {
     record.deletePending = true;
   };
 
@@ -211,25 +228,25 @@ export class GroupMemberTableComponent implements AfterViewInit {
           title: 'Are you sure?',
           okBtnTitle: 'Yes, remove',
           btnType: 'warn',
-          message: `<p class="marginless"> <strong>Note:</strong> You are removing <strong>${record.firstName} ${record.lastName}</strong> from this group`,
-        },
+          message: `<p class="marginless"> <strong>Note:</strong> You are removing <strong>${record.firstName} ${record.lastName}</strong> from this group`
+        }
       })
       .subscribe(() => this.confirmRemove(record));
   };
 
-  confirmRemove = (record) => {
+  confirmRemove = (record: any) => {
     this.resources.userGroups
-      .removeUserFromUserGroup(this.parent.id, record.id)
+      .removeUserFromUserGroup(this.parent.id as string, record.id as string)
       .subscribe(
         () => {
           this.messageHandler.showSuccess('User removed successfully.');
-          this.groupMembersFetch().subscribe((data) => {
+          this.groupMembersFetch().subscribe((data:any) => {
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
             this.table.renderRows();
           });
         },
-        (error) => {
+        (error: any) => {
           this.messageHandler.showError(
             'There was a problem removing the user from the group.',
             error

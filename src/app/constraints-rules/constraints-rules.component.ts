@@ -130,8 +130,8 @@ export class ConstraintsRulesComponent implements OnInit {
     this.resourcesService.catalogueItem
       .listRules(this.domainType, this.parent.id)
       .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(error);
+        catchError((error: Error) => {
+          this.messageHandler.showError(error.message);
           return EMPTY;
         }),
         finalize(() => (this.isLoadingResults = false))
@@ -177,7 +177,7 @@ export class ConstraintsRulesComponent implements OnInit {
             rule.id
           )
         ),
-        catchError((error) => {
+        catchError((error:Error) => {
           this.messageHandler.showError(error.message);
           return EMPTY;
         })
@@ -211,7 +211,7 @@ export class ConstraintsRulesComponent implements OnInit {
             record.id
           )
         ),
-        catchError((error) => {
+        catchError((error:Error) => {
           this.messageHandler.showError(error.message);
           return EMPTY;
         })
@@ -343,8 +343,8 @@ export class ConstraintsRulesComponent implements OnInit {
     this.resourcesService.catalogueItem
       .listRules(this.domainType, this.parent.id, query)
       .pipe(
-        catchError((error) => {
-          this.messageHandler.showError(error);
+        catchError((error: Error) => {
+          this.messageHandler.showError(error.message);
           return EMPTY;
         }),
         finalize(() => (this.isLoadingResults = false))

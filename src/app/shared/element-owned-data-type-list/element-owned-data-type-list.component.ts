@@ -33,7 +33,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatInput } from '@angular/material/input';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -72,7 +72,7 @@ export class ElementOwnedDataTypeListComponent
   totalItemCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
-  filter: any;
+  filter: { [p: string]: any };
   deleteInProgress: boolean;
   domainType;
   dataSource: MatTableDataSource<any>;
@@ -219,7 +219,7 @@ export class ElementOwnedDataTypeListComponent
     this.hideFilters = !this.hideFilters;
   };
 
-  dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
+  dataTypesFetch = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) => {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -227,7 +227,7 @@ export class ElementOwnedDataTypeListComponent
       sortType,
       filters
     );
-    return this.resources.dataType.list(this.parent.id, options);
+    return this.resources.dataType.list(this.parent.id as string, options);
   };
 
   onChecked = () => {

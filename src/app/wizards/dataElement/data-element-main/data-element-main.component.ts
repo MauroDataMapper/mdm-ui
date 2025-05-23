@@ -15,12 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit } from '@angular/core';
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -47,9 +42,9 @@ import { ElementTypesService } from '@mdm/services';
 export class DataElementMainComponent implements OnInit {
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
-  parentDataModelId: any;
-  grandParentDataClassId: any;
-  parentDataClassId: any;
+  parentDataModelId: string;
+  grandParentDataClassId: string;
+  parentDataClassId: string;
   processing: any;
   isProcessComplete: any;
   finalResult = {};
@@ -155,8 +150,8 @@ export class DataElementMainComponent implements OnInit {
     if (this.model[multiplicity] === '*') {
       this.model[multiplicity] = -1;
     }
-    if (!isNaN(this.model[multiplicity])) {
-      resource[multiplicity] = parseInt(this.model[multiplicity], 10);
+    if (!Number.isNaN(this.model[multiplicity])) {
+      resource[multiplicity] = parseInt(this.model[multiplicity] as string, 10);
     }
   };
 
@@ -179,9 +174,9 @@ export class DataElementMainComponent implements OnInit {
   };
 
   saveNewDataElement = () => {
-    let dataType;
+    let dataType: DataType;
     if (!this.model.showNewInlineDataType) {
-      dataType = { id: this.model.dataType.id };
+      dataType = { id: this.model.dataType.id as string, domainType: CatalogueItemDomainType.DataElement, label: null };
       this.saveDataElement(dataType);
     } else {
       // Some frontend's domainType are amalgamated

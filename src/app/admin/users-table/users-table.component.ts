@@ -21,7 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable, from } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
@@ -93,7 +93,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  usersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  usersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection , filters?: {[p: string]: any}): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }
@@ -114,17 +114,17 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.stateHandler.Go('admin.user', { id: null }, null);
   };
 
-  resetPassword(row) {
-    from(this.resources.catalogueUser.adminPasswordReset(row.id, null)).subscribe(() => {
+  resetPassword(row:any) {
+    from(this.resources.catalogueUser.adminPasswordReset(row.id as string, null)).subscribe(() => {
       this.messageHandler.showSuccess('Reset password request received successfully, please use the email tab to view status');
     }, error => {
       this.messageHandler.showError('There was a problem sending reset password email.', error);
     });
   }
 
-  toggleDeactivate(row) {
+  toggleDeactivate(row:any) {
     row.disabled = !row.disabled;
-    from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
+    from(this.resources.catalogueUser.update(row.id as string, row)).subscribe(() => {
       this.messageHandler.showSuccess('User details updated successfully.');
       this.broadcast.dispatch('pendingUserUpdated');
     }, error => {

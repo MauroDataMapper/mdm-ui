@@ -431,8 +431,8 @@ export class ElementTypesService {
     return array;
   }
 
-  getBaseTypesAsArray() {
-    const array = [];
+  getBaseTypesAsArray():[ CatalogueElementType? ] {
+    const array: [ CatalogueElementType? ] = [];
     for (const property in this.baseTypes) {
       if (this.baseTypes.hasOwnProperty(property)) {
         array.push(this.baseTypes[property]);
@@ -539,10 +539,10 @@ export class ElementTypesService {
   }
 
   /**
-   * Get the named link indentifier for a catalogue item. This can be used to dynamically
+   * Get the named link identifier for a catalogue item. This can be used to dynamically
    * resolve a link to another catalogue element through strings rather than unique IDs.
    *
-   * @param element Catalogue element containing the information requried to produce a named link.
+   * @param element Catalogue element containing the information required to produce a named link.
    * @returns An observable to subscribe to which will return the named link to the element.
    */
   getNamedLinkIdentifier(
@@ -556,7 +556,7 @@ export class ElementTypesService {
       }
     );
 
-    let parentId = null;
+    let parentId : string= null;
     if (element.domainType === 'DataClass') {
       parentId = element.modelId;
     }
@@ -564,7 +564,7 @@ export class ElementTypesService {
       parentId = element.breadcrumbs[0].id;
     }
 
-    let parentDataClassId = null;
+    let parentDataClassId:string = null;
     if (element.parentDataClass) {
       parentDataClassId = element.parentDataClass;
     } else if (element.dataClass) {

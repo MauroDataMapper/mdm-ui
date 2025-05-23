@@ -230,11 +230,13 @@ export class CreateTermRelationshipDialogComponent
                 if (trResponse.ok) {
                   this.dialogRef.close(trResponse.body);
                 } else {
-                  this.messageHandler.showWarning(trResponse.body);
+                  /* NOTE: Generic error message */
+                  this.messageHandler.showWarning('Unable to create new relationship between terms #1');
                 }
               });
           } else {
-            this.messageHandler.showWarning(response.body);
+            /* NOTE: Generic error message */
+            this.messageHandler.showWarning('Unable to create the new term');
           }
         });
     } else {
@@ -256,7 +258,8 @@ export class CreateTermRelationshipDialogComponent
           if (response.ok) {
             this.dialogRef.close(response.body);
           } else {
-            this.messageHandler.showWarning(response.body);
+            /* NOTE: Generic error message */
+            this.messageHandler.showWarning('Unable to create new relationship between terms #2');
           }
         });
     }

@@ -120,8 +120,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
     );
 
     return this.resources.summaryMetadata.list(
-      this.domainType,
-      this.parent.id,
+      this.domainType as string,
+      this.parent.id as string,
       options
     );
   }
@@ -133,7 +133,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
       promise = promise
         .then(async () => {
           await this.resources.summaryMetadata
-            .listReports(this.domainType, this.parent.id, item.id)
+            .listReports(this.domainType as string, this.parent.id as string, item.id as string)
             .toPromise()
             .then((response) => {
               if (
@@ -142,7 +142,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
               ) {
                 item.summaryMetadataType = 'map';
                 response.body.items.forEach((report) => {
-                  report.reportValue = JSON.parse(report.reportValue);
+                  report.reportValue = JSON.parse(report.reportValue as string);
                   report.reportDate = report.reportDate.substring(0, 10);
                 });
               } else if (
@@ -151,7 +151,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
               ) {
                 item.summaryMetadataType = 'number';
                 response.body.items.forEach((report) => {
-                  report.reportValue = parseInt(report.reportValue, 10);
+                  report.reportValue = parseInt(report.reportValue as string, 10);
                   report.reportDate = report.reportDate.substring(0, 10);
                 });
               }

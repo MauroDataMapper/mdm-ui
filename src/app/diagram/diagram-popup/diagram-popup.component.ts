@@ -67,17 +67,17 @@ export class DiagramPopupComponent implements OnInit {
     // this.diagramComponent.filter(this.data.diagramComponent.parent)
   }
 
-  onNodeChecked(node, parent, checkedList): void {
+  onNodeChecked(node, parent, checkedList: {}): void {
     this.filterList = Object.keys(checkedList);
   }
 
   filterClick(): void {
-    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList, this.data.diagramComponent.mode);
+    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList, this.data.diagramComponent.mode as string);
   }
 
   clearFilterClick(): void {
     this.loadTree();
-    this.diagramComponent.filter(this.data.diagramComponent.parent, [], this.data.diagramComponent.mode);
+    this.diagramComponent.filter(this.data.diagramComponent.parent, [], this.data.diagramComponent.mode as string);
   }
 
   toolbarClick(buttonName: string) {
@@ -95,7 +95,7 @@ export class DiagramPopupComponent implements OnInit {
 
   private loadTree() {
     this.node = null;
-    this.resourcesService.tree.get('folders', this.data.diagramComponent.parent.domainType, this.data.diagramComponent.parent.id)
+    this.resourcesService.tree.get('folders', this.data.diagramComponent.parent.domainType as string, this.data.diagramComponent.parent.id as string)
       .subscribe((result) => {
         this.node = {
           children: result.body,

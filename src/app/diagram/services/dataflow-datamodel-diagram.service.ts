@@ -47,7 +47,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
     // this.addCylinderCell('12345', 'This is a very long node name');
     Object.keys(nodes).forEach((key) => {
-      this.addCylinderCell(key, nodes[key]);
+      this.addCylinderCell(key, nodes[key] as string);
     });
 
     data.body.items.forEach((flow) => {
@@ -61,7 +61,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
       link.appendLabel({
         attrs: {
           text: {
-            text: joint.util.breakText(flow.label, { width: 150 }),
+            text: joint.util.breakText(flow.label as string, { width: 150 }),
             fill: '#222222',
             fontSize: 10,
             fontWeight: 'normal'

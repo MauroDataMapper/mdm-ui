@@ -23,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-password-modal.component';
@@ -53,6 +52,7 @@ import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 const defaultAceConfig: AceConfigInterface = {};
 
@@ -65,14 +65,14 @@ const defaultAceConfig: AceConfigInterface = {};
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatPasswordStrengthModule,
     MaterialModule,
     SharedModule,
     AceModule,
     PipesModule,
     FoldersTreeModule,
     ContentModule,
-    CatalogueModule
+    CatalogueModule,
+    PasswordStrengthMeterComponent
   ],
   declarations: [
     RegisterModalComponent,

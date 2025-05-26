@@ -29,6 +29,7 @@ import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-jo
 import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
 import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { ContentModule } from '@mdm/content/content.module';
     DomainExportsListComponent,
     DomainExportsDetailComponent
   ],
-  imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule],
+  imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule, PasswordStrengthMeterComponent],
   exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
 })
 export class UsersModule {}

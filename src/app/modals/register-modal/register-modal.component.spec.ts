@@ -19,7 +19,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RegisterModalComponent } from './register-modal.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UIRouterModule } from '@uirouter/angular';
@@ -37,7 +36,6 @@ describe('RegisterModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         MatFormFieldModule,
-        MatPasswordStrengthModule,
         MatInputModule,
         NoopAnimationsModule,
         MatDialogModule,

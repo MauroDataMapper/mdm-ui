@@ -181,6 +181,7 @@ import { DataClassComponentsListComponent } from '@mdm/shared/data-class-compone
 import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
 import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
 import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.component';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
   providers: [
@@ -371,7 +372,8 @@ import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.compone
     UsersModule,
     MatTabsModule,
     PipesModule,
-    CatalogueSearchModule
+    CatalogueSearchModule,
+    PasswordStrengthMeterComponent
   ],
   exports: [
     FolderComponent,

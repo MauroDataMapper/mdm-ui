@@ -23,7 +23,6 @@ import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-desc
 import { UIRouterModule } from '@uirouter/angular';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
 import { FooterComponent } from '@mdm/shared/footer/footer.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
@@ -100,7 +99,6 @@ import { NgxJoditComponent } from 'ngx-jodit';
     FormsModule,
     MaterialModule,
     ReactiveFormsModule,
-    MatPasswordStrengthModule,
     NgxJsonViewerModule,
     FlexLayoutModule,
     ReactiveFormsModule,
@@ -118,7 +116,6 @@ import { NgxJoditComponent } from 'ngx-jodit';
     MaterialModule,
     McSelectComponent,
     ReactiveFormsModule,
-    MatPasswordStrengthModule,
     InlineTextEditComponent,
     FooterComponent,
     MetadataCompareComponent,

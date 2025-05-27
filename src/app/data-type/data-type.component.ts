@@ -20,7 +20,7 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ElementTypesService,
@@ -37,11 +37,24 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { ElementLinkListComponent } from '../shared/element-link-list/element-link-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ElementChildDataElementsListComponent } from '../shared/element-child-data-elements-list/element-child-data-elements-list.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { McEnumerationListWithCategoryComponent } from '../utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type',
-  templateUrl: './data-type.component.html',
-  styleUrls: ['./data-type.component.scss']
+    selector: 'mdm-data-type',
+    templateUrl: './data-type.component.html',
+    styleUrls: ['./data-type.component.scss'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, McEnumerationListWithCategoryComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ElementChildDataElementsListComponent, MatTabLabel, SkeletonBadgeComponent, ConstraintsRulesComponent, AnnotationListComponent, ElementLinkListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataTypeComponent
   extends BaseComponent

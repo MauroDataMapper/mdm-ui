@@ -25,6 +25,12 @@ import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { MarkdownDirective } from '../markdown.directive';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton, MatIconButton, MatIconAnchor } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
+import { NgIf, NgClass } from '@angular/common';
 
 const macShortcuts = {
   bold: 'Bold (⌘ + B)',
@@ -53,9 +59,11 @@ const standardShortcuts = {
 };
 
 @Component({
-  selector: 'mdm-markdown-text-area',
-  templateUrl: './markdown-text-area.component.html',
-  styleUrls: ['./markdown-text-area.component.scss']
+    selector: 'mdm-markdown-text-area',
+    templateUrl: './markdown-text-area.component.html',
+    styleUrls: ['./markdown-text-area.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatToolbar, MatButton, MatIconButton, MatTooltip, MatIconAnchor, FormsModule, NgClass, MarkdownDirective]
 })
 export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   @Input() inEditMode: boolean;

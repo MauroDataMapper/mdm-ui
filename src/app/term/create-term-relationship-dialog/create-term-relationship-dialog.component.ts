@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   CatalogueItemDomainType,
@@ -33,11 +33,20 @@ import { MessageHandlerService } from '@mdm/services';
 import { BehaviorSubject, EMPTY, Observable, of, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { MatInput } from '@angular/material/input';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-create-term-relationship-dialog',
-  templateUrl: 'create-term-relationship-dialog.component.html',
-  styleUrls: ['create-term-relationship-dialog.component.scss']
+    selector: 'mdm-create-term-relationship-dialog',
+    templateUrl: 'create-term-relationship-dialog.component.html',
+    styleUrls: ['create-term-relationship-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatButton, FoldersTreeComponent, MatDialogContent, MatInput, MatError]
 })
 export class CreateTermRelationshipDialogComponent
   implements OnInit, OnDestroy {

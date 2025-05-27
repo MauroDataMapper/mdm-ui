@@ -23,8 +23,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { ApiPropertyResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { catchError } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 export enum ImageChangeType {
   uploaded,
@@ -37,9 +42,11 @@ export interface ImageChangedEvent {
 }
 
 @Component({
-  selector: 'mdm-theme-image',
-  templateUrl: './theme-image.component.html',
-  styleUrls: ['./theme-image.component.scss']
+    selector: 'mdm-theme-image',
+    templateUrl: './theme-image.component.html',
+    styleUrls: ['./theme-image.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, NgIf, MatInput, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class ThemeImageComponent implements OnInit {
   @Input() apiPropertyId: Uuid;

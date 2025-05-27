@@ -31,16 +31,25 @@ import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataElement } from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { NgIf, NgClass } from '@angular/common';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
 
 @Component({
-  selector: 'mdm-element-child-data-elements-list',
-  templateUrl: './element-child-data-elements-list.component.html',
-  styleUrls: ['./element-child-data-elements-list.component.scss']
+    selector: 'mdm-element-child-data-elements-list',
+    templateUrl: './element-child-data-elements-list.component.html',
+    styleUrls: ['./element-child-data-elements-list.component.scss'],
+    standalone: true,
+    imports: [MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, NgIf, MoreDescriptionComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent]
 })
 export class ElementChildDataElementsListComponent implements AfterViewInit {
   @Input() parentDataModel: any;

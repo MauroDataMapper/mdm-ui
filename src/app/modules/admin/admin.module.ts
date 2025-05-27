@@ -31,27 +31,24 @@ import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe
 import { ThemeImageComponent } from '@mdm/admin/theme-image/theme-image.component';
 
 @NgModule({
-  declarations: [
-    AdminAppContainerComponent,
-    EmailsComponent,
-    GroupMemberTableComponent,
-    UserComponent,
-    ProfilesDashboardComponent,
-    OpenidConnectProviderTableComponent,
-    OpenidConnectProviderComponent,
-    DoiRedirectComponent,
-    MatchThemeColorPatternPipe,
-    ThemeImageComponent,
-  ],
-  imports: [CommonModule, AdminRoutesModule, SharedModule],
-  exports: [
-    AdminAppContainerComponent,
-    EmailsComponent,
-    GroupMemberTableComponent,
-    UserComponent,
-    ProfilesDashboardComponent,
-    MatchThemeColorPatternPipe,
-    ThemeImageComponent,
-  ]
+    imports: [CommonModule, AdminRoutesModule, SharedModule, AdminAppContainerComponent,
+        EmailsComponent,
+        GroupMemberTableComponent,
+        UserComponent,
+        ProfilesDashboardComponent,
+        OpenidConnectProviderTableComponent,
+        OpenidConnectProviderComponent,
+        DoiRedirectComponent,
+        MatchThemeColorPatternPipe,
+        ThemeImageComponent],
+    exports: [
+        AdminAppContainerComponent,
+        EmailsComponent,
+        GroupMemberTableComponent,
+        UserComponent,
+        ProfilesDashboardComponent,
+        MatchThemeColorPatternPipe,
+        ThemeImageComponent,
+    ]
 })
 export class AdminModule {}

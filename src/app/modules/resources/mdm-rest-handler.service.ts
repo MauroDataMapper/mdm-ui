@@ -39,7 +39,7 @@ export class MdmRestHandlerService implements MdmRestHandler {
     if (options.withCredentials === undefined ||
       options.withCredentials === null ||
       (options.withCredentials !== undefined && options.withCredentials === false)) {
-      throw new Error('withCredentials is not provided!');
+        throw new Error('withCredentials is not provided!');
     }
 
     if (options.responseType) { } else {

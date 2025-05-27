@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
@@ -29,6 +29,11 @@ import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
 
 export class CreateTermRelationshipTypeForm {
   id?: Uuid;
@@ -53,9 +58,11 @@ export class CreateTermRelationshipTypeForm {
 }
 
 @Component({
-  selector: 'mdm-create-term-relationship-type-dialog',
-  templateUrl: 'create-term-relationship-type-dialog.component.html',
-  styleUrls: ['create-term-relationship-type-dialog.component.scss']
+    selector: 'mdm-create-term-relationship-type-dialog',
+    templateUrl: 'create-term-relationship-type-dialog.component.html',
+    styleUrls: ['create-term-relationship-type-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatCheckbox, MatButton]
 })
 export class CreateTermRelationshipTypeDialogComponent implements OnInit {
   form = new FormGroup({

@@ -55,15 +55,29 @@ import {
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
+import { MatDivider } from '@angular/material/divider';
+import { DownloadLinkComponent } from '../utility/download-link/download-link.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { CatalogueItemPropertiesComponent } from '../shared/catalogue-item-properties/catalogue-item-properties.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { FavoriteButtonComponent } from '../shared/favorite-button/favorite-button.component';
+import { ElementStatusComponent } from '../utility/element-status/element-status.component';
+import { ElementIconComponent } from '../shared/element-icon/element-icon.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgClass, NgFor } from '@angular/common';
 
 export type ModelHeaderCatalogueItem = CatalogueItemDetail &
   Securable &
   Branchable;
 
 @Component({
-  selector: 'mdm-model-header',
-  templateUrl: './model-header.component.html',
-  styleUrls: ['./model-header.component.scss']
+    selector: 'mdm-model-header',
+    templateUrl: './model-header.component.html',
+    styleUrls: ['./model-header.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgClass, ExtendedModule, ElementIconComponent, ElementStatusComponent, FavoriteButtonComponent, MatIconButton, MatTooltip, MatMenuTrigger, CatalogueItemPropertiesComponent, MatProgressBar, DownloadLinkComponent, MatMenu, MatMenuItem, MatDivider, NgFor]
 })
 export class ModelHeaderComponent implements OnInit {
   @Input() item: ModelHeaderCatalogueItem;

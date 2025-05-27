@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-table-buttons',
-  templateUrl: './table-buttons.component.html',
-  styleUrls: ['./table-buttons.component.sass']
+    selector: 'mdm-table-buttons',
+    templateUrl: './table-buttons.component.html',
+    styleUrls: ['./table-buttons.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatIconButton, MatTooltip]
 })
 export class TableButtonsComponent {
   @Input() record: any;

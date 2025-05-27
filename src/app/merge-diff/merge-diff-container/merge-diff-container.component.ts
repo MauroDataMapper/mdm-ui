@@ -45,6 +45,18 @@ import {
   MergeDiffItemModel,
   MergeItemSelection
 } from '../types/merge-item-type';
+import { MergeComparisonComponent } from '../merge-comparsion/merge-comparsion.component';
+import { MergeItemSelectorComponent } from '../merge-item-selector/merge-item-selector.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { BranchSelectorComponent } from '../../shared/branch-selector/branch-selector.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ModelIconComponent } from '../../shared/model-icon/model-icon.component';
+import { MatMenuItem } from '@angular/material/menu';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -53,9 +65,11 @@ import {
  * child components for rendering the different sections of data.
  */
 @Component({
-  selector: 'mdm-merge-diff-container',
-  templateUrl: './merge-diff-container.component.html',
-  styleUrls: ['./merge-diff-container.component.scss']
+    selector: 'mdm-merge-diff-container',
+    templateUrl: './merge-diff-container.component.html',
+    styleUrls: ['./merge-diff-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatMenuItem, ModelIconComponent, MatTooltip, BranchSelectorComponent, MatProgressBar, MatTabGroup, MatTab, MatTabLabel, MatToolbar, MatIconButton, MergeItemSelectorComponent, MergeComparisonComponent]
 })
 export class MergeDiffContainerComponent implements OnInit {
   loaded = false;

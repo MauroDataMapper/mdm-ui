@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
+import { DiagramTabComponent } from '../diagram/diagram-tab/diagram-tab.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-models-merging-graph',
-  templateUrl: './models-merging-graph.component.html',
-  styleUrls: ['./models-merging-graph.component.scss']
+    selector: 'mdm-models-merging-graph',
+    templateUrl: './models-merging-graph.component.html',
+    styleUrls: ['./models-merging-graph.component.scss'],
+    standalone: true,
+    imports: [NgIf, DiagramTabComponent]
 })
 export class ModelsMergingGraphComponent implements OnInit {
 

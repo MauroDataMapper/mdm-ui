@@ -19,7 +19,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
-import { HtmlButtonMode } from '../html/html-editor/html-editor.component';
+import { HtmlButtonMode, HtmlEditorComponent } from '../html/html-editor/html-editor.component';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
+import { MarkdownTextAreaComponent } from '../markdown/markdown-text-area/markdown-text-area.component';
+import { NgIf } from '@angular/common';
 
 export interface ContentEditorMarkdownOptions {
   showHelpText: boolean;
@@ -30,9 +34,11 @@ export interface ContentEditorHtmlOptions {
 }
 
 @Component({
-  selector: 'mdm-content-editor',
-  templateUrl: './content-editor.component.html',
-  styleUrls: ['./content-editor.component.scss']
+    selector: 'mdm-content-editor',
+    templateUrl: './content-editor.component.html',
+    styleUrls: ['./content-editor.component.scss'],
+    standalone: true,
+    imports: [NgIf, MarkdownTextAreaComponent, HtmlEditorComponent, MatButtonToggleGroup, FormsModule, MatButtonToggle]
 })
 export class ContentEditorComponent implements OnInit {
   @Input() contentFormat: ContentEditorFormat = 'markdown';

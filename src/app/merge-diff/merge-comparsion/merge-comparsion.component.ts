@@ -43,12 +43,21 @@ import {
   ConflictEditorModalResult
 } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.model';
 import { StringConflictService } from '../services/string-conflict.service';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatDivider } from '@angular/material/divider';
+import { PathNameComponent } from '../../shared/path-name/path-name.component';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatToolbar } from '@angular/material/toolbar';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-merge-comparison',
-  templateUrl: './merge-comparison.component.html',
-  styleUrls: ['./merge-comparison.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-merge-comparison',
+    templateUrl: './merge-comparison.component.html',
+    styleUrls: ['./merge-comparison.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [FlexModule, MatToolbar, NgIf, MatIconButton, PathNameComponent, MatDivider, SafePipe]
 })
 export class MergeComparisonComponent implements OnInit, OnChanges {
   @ViewChild('sourceContent') sourceContent: ElementRef;

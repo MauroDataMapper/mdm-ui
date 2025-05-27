@@ -24,8 +24,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectionListChange } from '@angular/material/list';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectionListChange, MatSelectionList, MatListOption } from '@angular/material/list';
 import {
   CatalogueItemDomainType,
   FilterQueryParameters,
@@ -48,6 +48,15 @@ import {
 } from 'rxjs/operators';
 import { BulkEditProfileService } from '../bulk-edit-profile.service';
 import { BulkEditContext } from '../bulk-edit.types';
+import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatOption, MatLine } from '@angular/material/core';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatHint, MatError } from '@angular/material/form-field';
 
 interface CatalogueItemDomainTypeOption {
   domainType: CatalogueItemDomainType;
@@ -55,9 +64,11 @@ interface CatalogueItemDomainTypeOption {
 }
 
 @Component({
-  selector: 'mdm-bulk-edit-select',
-  templateUrl: './bulk-edit-select.component.html',
-  styleUrls: ['./bulk-edit-select.component.scss']
+    selector: 'mdm-bulk-edit-select',
+    templateUrl: './bulk-edit-select.component.html',
+    styleUrls: ['./bulk-edit-select.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatHint, NgIf, MatError, MatProgressBar, NgClass, ExtendedModule, MatButton, MatSelectionList, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, MatListOption, MatLine, BreadcrumbComponent]
 })
 export class BulkEditSelectComponent implements OnInit, OnDestroy {
   @Output() cancel = new EventEmitter<void>();

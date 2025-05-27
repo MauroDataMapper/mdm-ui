@@ -28,17 +28,28 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { SummaryMetadataPopupComponent } from '../summary-metadata-popup/summary-metadata-popup.component';
 import { GridService } from '@mdm/services';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { SummaryMetadataChartComponent } from '../summary-metadata-chart/summary-metadata-chart.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-summary-metadata-table',
-  templateUrl: './summary-metadata-table.component.html',
-  styleUrls: ['./summary-metadata-table.component.sass']
+    selector: 'mdm-summary-metadata-table',
+    templateUrl: './summary-metadata-table.component.html',
+    styleUrls: ['./summary-metadata-table.component.sass'],
+    standalone: true,
+    imports: [MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, NgIf, MatButton, SummaryMetadataChartComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class SummaryMetadataTableComponent implements AfterViewInit {
   @Input() parent: any;

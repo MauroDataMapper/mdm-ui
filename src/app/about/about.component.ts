@@ -22,6 +22,9 @@ import { MessageHandlerService } from '@mdm/services';
 import { catchError } from 'rxjs/operators';
 import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 import { Title } from '@angular/platform-browser';
+import { SafePipe } from '../content/safe.pipe';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgIf } from '@angular/common';
 
 const defaultHtmlContent = [
   {
@@ -62,9 +65,11 @@ const defaultHtmlContent = [
 ];
 
 @Component({
-  selector: 'mdm-about',
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.sass']
+    selector: 'mdm-about',
+    templateUrl: './about.component.html',
+    styleUrls: ['./about.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgxSkeletonLoaderModule, SafePipe]
 })
 export class AboutComponent implements OnInit {
 

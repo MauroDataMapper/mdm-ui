@@ -21,11 +21,16 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram-toolbar',
-  templateUrl: './diagram-toolbar.component.html',
-  styleUrls: [ './diagram-toolbar.component.scss' ]
+    selector: 'mdm-diagram-toolbar',
+    templateUrl: './diagram-toolbar.component.html',
+    styleUrls: ['./diagram-toolbar.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, MatTooltip]
 })
 
 export class DiagramToolbarComponent {

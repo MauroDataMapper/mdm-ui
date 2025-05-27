@@ -21,10 +21,16 @@ import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
 import { MessageHandlerService } from '@mdm/services';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 @Component({
-  selector: 'mdm-not-authorized-error',
-  templateUrl: '../error.component.html',
-  styleUrls: []
+    selector: 'mdm-not-authorized-error',
+    templateUrl: '../error.component.html',
+    styleUrls: [],
+    standalone: true,
+    imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class NotAuthorizedComponent extends ErrorComponent implements OnInit {
 

@@ -25,13 +25,21 @@ import {
   NewFolderModalResponse
 } from './new-folder-modal.model';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-new-folder-modal',
-  templateUrl: './new-folder-modal.component.html',
-  styleUrls: ['./new-folder-modal.component.scss']
+    selector: 'mdm-new-folder-modal',
+    templateUrl: './new-folder-modal.component.html',
+    styleUrls: ['./new-folder-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, AlertComponent, MatFormField, MatLabel, MatInput, MatError, MatCheckbox, MatButton]
 })
 export class NewFolderModalComponent implements OnInit {
   okBtn: string;

@@ -31,6 +31,11 @@ import {
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { Subject } from 'rxjs';
+import { SafePipe } from '../content/safe.pipe';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgIf } from '@angular/common';
 
 const defaultHtmlContent = [
   {
@@ -89,9 +94,11 @@ const defaultHtmlContent = [
 ];
 
 @Component({
-  selector: 'mdm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+    selector: 'mdm-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgxSkeletonLoaderModule, FlexModule, MatButton, MatAnchor, SafePipe]
 })
 export class HomeComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;

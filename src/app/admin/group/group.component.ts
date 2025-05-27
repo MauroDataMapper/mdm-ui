@@ -23,11 +23,21 @@ import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { Uuid } from '@maurodatamapper/mdm-resources';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { GroupMemberTableComponent } from '../group-member-table/group-member-table.component';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-group',
-  templateUrl: './group.component.html',
-  styleUrls: ['./group.component.scss']
+    selector: 'mdm-group',
+    templateUrl: './group.component.html',
+    styleUrls: ['./group.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatLabel, MatInput, MatError, MatButton, MatTabGroup, MatTab, MatTabContent, GroupMemberTableComponent, HistoryComponent]
 })
 export class GroupComponent implements OnInit {
   errors: any;

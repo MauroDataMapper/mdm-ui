@@ -22,11 +22,30 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
+import { MatButton } from '@angular/material/button';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-model-management',
-  templateUrl: './model-management.component.html',
-  styleUrls: ['./model-management.component.sass'],
+    selector: 'mdm-model-management',
+    templateUrl: './model-management.component.html',
+    styleUrls: ['./model-management.component.sass'],
+    standalone: true,
+    imports: [
+        FlexModule,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        NgIf,
+        FoldersTreeComponent,
+        NgFor,
+        ElementLinkComponent,
+        MatButton,
+    ],
 })
 export class ModelManagementComponent implements OnInit {
   filterElement: string;

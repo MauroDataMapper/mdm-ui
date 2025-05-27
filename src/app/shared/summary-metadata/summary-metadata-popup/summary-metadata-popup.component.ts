@@ -18,11 +18,31 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SummaryMetadataChartComponent } from '../summary-metadata-chart/summary-metadata-chart.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgChartsModule } from 'ng2-charts';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-summary-metadata-popup',
-  templateUrl: './summary-metadata-popup.component.html',
-  styleUrls: ['./summary-metadata-popup.component.scss'],
+    selector: 'mdm-summary-metadata-popup',
+    templateUrl: './summary-metadata-popup.component.html',
+    styleUrls: ['./summary-metadata-popup.component.scss'],
+    standalone: true,
+    imports: [
+        MatButton,
+        NgIf,
+        NgChartsModule,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+    ],
 })
 export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent implements OnInit {
   public tableDataForTable = [];

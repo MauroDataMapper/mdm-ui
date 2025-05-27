@@ -16,11 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { GroupsTableComponent } from '../groups-table/groups-table.component';
 
 @Component({
-  selector: 'mdm-groups',
-  templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.sass']
+    selector: 'mdm-groups',
+    templateUrl: './groups.component.html',
+    styleUrls: ['./groups.component.sass'],
+    standalone: true,
+    imports: [GroupsTableComponent]
 })
 export class GroupsComponent {
   constructor() {}

@@ -16,11 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { UsersTableComponent } from '../users-table/users-table.component';
 
 @Component({
-  selector: 'mdm-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.sass']
+    selector: 'mdm-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.sass'],
+    standalone: true,
+    imports: [UsersTableComponent]
 })
 export class UsersComponent {
   constructor() {}

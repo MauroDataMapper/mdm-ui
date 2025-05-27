@@ -28,7 +28,7 @@ import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-jo
 import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
 import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
 
-export const pageRoutes = {
+export const userPageRoutes = {
   states: [
     {
       name: 'appContainer.userArea',
@@ -84,7 +84,7 @@ export const pageRoutes = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
+  imports: [UIRouterModule.forChild({ states: userPageRoutes.states })],
   providers: [
     {
       provide: LocationStrategy,

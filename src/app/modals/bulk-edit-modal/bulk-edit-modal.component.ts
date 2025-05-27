@@ -17,16 +17,34 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, Inject, AfterViewInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CatalogueItemDomainType, DataClass, DataElement } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { MatInput } from '@angular/material/input';
+import { MatFormField } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-bulk-edit',
-  templateUrl: './bulk-edit-modal.component.html',
-  styleUrls: ['./bulk-edit-modal.component.scss'],
+    selector: 'mdm-bulk-edit',
+    templateUrl: './bulk-edit-modal.component.html',
+    styleUrls: ['./bulk-edit-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatIconButton,
+        MatDialogContent,
+        NgFor,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        NgIf,
+        MatDialogActions,
+        MatButton,
+    ],
 })
 export class BulkEditModalComponent implements AfterViewInit {
   @Input() afterSave: any;

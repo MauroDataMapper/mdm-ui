@@ -23,9 +23,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import {
   AsyncJob,
@@ -48,11 +48,24 @@ import {
   tap,
   delay
 } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf, NgFor, NgClass, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-async-job-list',
-  templateUrl: './async-job-list.component.html',
-  styleUrls: ['./async-job-list.component.scss']
+    selector: 'mdm-async-job-list',
+    templateUrl: './async-job-list.component.html',
+    styleUrls: ['./async-job-list.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatProgressBar, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MatSelect, NgFor, MatOption, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1, TitleCasePipe, DatePipe]
 })
 export class AsyncJobListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;

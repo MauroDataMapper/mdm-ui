@@ -49,11 +49,17 @@ import {
   FullContentEditDialogResponse
 } from './dialogs/full-content-edit-dialog/full-content-edit-dialog.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { AgGridAngular } from '@ag-grid-community/angular';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'mdm-bulk-edit-editor',
-  templateUrl: './bulk-edit-editor.component.html',
-  styleUrls: ['./bulk-edit-editor.component.scss']
+    selector: 'mdm-bulk-edit-editor',
+    templateUrl: './bulk-edit-editor.component.html',
+    styleUrls: ['./bulk-edit-editor.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, MatButton, NgIf, AgGridAngular]
 })
 export class BulkEditEditorComponent implements OnInit {
   @Input() rootItem: MauroItem;

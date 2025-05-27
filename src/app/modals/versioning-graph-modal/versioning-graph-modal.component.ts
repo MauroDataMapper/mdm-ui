@@ -16,14 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { VersioningGraphModalConfiguration } from './versioning-graph-modal.model';
 import { MergableCatalogueItem } from '@maurodatamapper/mdm-resources';
+import { DiagramTabComponent } from '../../diagram/diagram-tab/diagram-tab.component';
+import { NgIf } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-versioning-graph-modal',
-  templateUrl: './versioning-graph-modal.component.html',
-  styleUrls: ['./versioning-graph-modal.component.scss']
+    selector: 'mdm-versioning-graph-modal',
+    templateUrl: './versioning-graph-modal.component.html',
+    styleUrls: ['./versioning-graph-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatIconButton, MatDialogClose, NgIf, MatDialogContent, DiagramTabComponent]
 })
 export class VersioningGraphModalComponent implements OnInit {
   catalogueItem: MergableCatalogueItem;

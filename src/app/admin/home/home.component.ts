@@ -20,11 +20,18 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { Title } from '@angular/platform-browser';
+import { ProfilesDashboardComponent } from '../../profiles-dashboard/profiles-dashboard.component';
+import { ModulesComponent } from './modules/modules.component';
+import { PluginsComponent } from './plugins/plugins.component';
+import { ActiveSessionsComponent } from './active-sessions/active-sessions.component';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+    selector: 'mdm-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.sass'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, MatTabLabel, ActiveSessionsComponent, PluginsComponent, ModulesComponent, ProfilesDashboardComponent]
 })
 export class DashboardComponent implements OnInit {
   activeTab: any;

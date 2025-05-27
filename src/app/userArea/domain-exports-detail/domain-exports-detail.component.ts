@@ -36,13 +36,21 @@ import {
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgIf, DatePipe } from '@angular/common';
 
 type DomainExportModelItem = Modelable & Branchable & Versionable;
 
 @Component({
-  selector: 'mdm-domain-exports-detail',
-  templateUrl: './domain-exports-detail.component.html',
-  styleUrls: ['./domain-exports-detail.component.scss']
+    selector: 'mdm-domain-exports-detail',
+    templateUrl: './domain-exports-detail.component.html',
+    styleUrls: ['./domain-exports-detail.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementIconComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatButton, DatePipe, FileSizePipe]
 })
 export class DomainExportsDetailComponent implements OnInit {
   export: DomainExport;

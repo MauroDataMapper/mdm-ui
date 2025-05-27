@@ -32,18 +32,15 @@ import { ContentModule } from '@mdm/content/content.module';
 import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
-  declarations: [
-    UsersAppContainerComponent,
-    ProfileComponent,
-    UserDetailsComponent,
-    ChangePasswordComponent,
-    ApiKeysComponent,
-    AsyncJobListComponent,
-    AsyncJobDetailComponent,
-    DomainExportsListComponent,
-    DomainExportsDetailComponent
-  ],
-  imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule, PasswordStrengthMeterComponent],
-  exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
+    imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule, PasswordStrengthMeterComponent, UsersAppContainerComponent,
+        ProfileComponent,
+        UserDetailsComponent,
+        ChangePasswordComponent,
+        ApiKeysComponent,
+        AsyncJobListComponent,
+        AsyncJobDetailComponent,
+        DomainExportsListComponent,
+        DomainExportsDetailComponent],
+    exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
 })
 export class UsersModule {}

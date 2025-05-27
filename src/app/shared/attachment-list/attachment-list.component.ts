@@ -29,11 +29,11 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   CatalogueItem,
   CatalogueItemDomainType,
@@ -47,15 +47,27 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ReferenceFileEditor {
   fileName: string;
 }
 
 @Component({
-  selector: 'mdm-attachment-list',
-  templateUrl: './attachment-list.component.html',
-  styleUrls: ['./attachment-list.component.sass']
+    selector: 'mdm-attachment-list',
+    templateUrl: './attachment-list.component.html',
+    styleUrls: ['./attachment-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, FormsModule, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent, DatePipe, FileSizePipe]
 })
 export class AttachmentListComponent implements AfterViewInit {
   @Input() parent: CatalogueItem & Securable;

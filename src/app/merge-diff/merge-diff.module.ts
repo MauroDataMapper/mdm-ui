@@ -31,22 +31,20 @@ import { NumberConflictEditorComponent } from './conflict-editor/number-conflict
 import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
-  declarations: [
-    MergeDiffContainerComponent,
-    MergeItemSelectorComponent,
-    MergeComparisonComponent,
-    MergeFilterPipe,
-    ConflictEditorModalComponent,
-    StringConflictEditorComponent,
-    NumberConflictEditorComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    CatalogueModule,
-    ContentModule
-  ],
-  exports: [MergeDiffContainerComponent]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        CatalogueModule,
+        ContentModule,
+        MergeDiffContainerComponent,
+        MergeItemSelectorComponent,
+        MergeComparisonComponent,
+        MergeFilterPipe,
+        ConflictEditorModalComponent,
+        StringConflictEditorComponent,
+        NumberConflictEditorComponent
+    ],
+    exports: [MergeDiffContainerComponent]
 })
 export class MergeDiffModule {}

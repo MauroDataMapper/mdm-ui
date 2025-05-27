@@ -17,11 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-number-conflict-editor',
-  templateUrl: './number-conflict-editor.component.html',
-  styleUrls: ['./number-conflict-editor.component.scss']
+    selector: 'mdm-number-conflict-editor',
+    templateUrl: './number-conflict-editor.component.html',
+    styleUrls: ['./number-conflict-editor.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, MatFormField, MatInput, FormsModule, MatHint]
 })
 export class NumberConflictEditorComponent implements OnInit {
   @Input() source: Branchable;

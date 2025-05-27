@@ -33,11 +33,18 @@ import {
   DataTypeDetailResponse
 } from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 @Component({
-  selector: 'mdm-data-element-main',
-  templateUrl: './data-element-main.component.html',
-  styleUrls: ['./data-element-main.component.sass']
+    selector: 'mdm-data-element-main',
+    templateUrl: './data-element-main.component.html',
+    styleUrls: ['./data-element-main.component.sass'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class DataElementMainComponent implements OnInit {
   steps: Step[] = [];

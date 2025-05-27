@@ -47,11 +47,17 @@ import {
   SearchQueryParameters, TreeItemListQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
+import { FoldersTreeComponent } from '../folders-tree/folders-tree.component';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass, NgStyle } from '@angular/common';
 
 @Component({
-  selector: 'mdm-model-selector-tree',
-  templateUrl: './model-selector-tree.component.html',
-  styleUrls: ['./model-selector-tree.component.scss']
+    selector: 'mdm-model-selector-tree',
+    templateUrl: './model-selector-tree.component.html',
+    styleUrls: ['./model-selector-tree.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, NgClass, FormsModule, MatButton, NgStyle, FoldersTreeComponent]
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() root: any;

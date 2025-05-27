@@ -28,8 +28,9 @@ import {
 
 // Helper component to add dynamic components
 @Component({
-  selector: 'mdm-dcl-wrapper',
-  template: '<div #target></div>'
+    selector: 'mdm-dcl-wrapper',
+    template: '<div #target></div>',
+    standalone: true
 })
 export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() stepChanged = new EventEmitter<any>();

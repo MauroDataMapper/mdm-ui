@@ -17,9 +17,15 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 export interface ApiKeysModalConfiguration {
   showName?: boolean;
@@ -39,9 +45,11 @@ export interface ApiKeysModalResponse {
 }
 
 @Component({
-  selector: 'mdm-api-keys-modal',
-  templateUrl: './api-keys-modal.component.html',
-  styleUrls: ['./api-keys-modal.component.scss']
+    selector: 'mdm-api-keys-modal',
+    templateUrl: './api-keys-modal.component.html',
+    styleUrls: ['./api-keys-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, NgIf, MatDialogContent, FormsModule, MatFormField, MatLabel, MatInput, MatCheckbox, MatDialogActions, MatButton]
 })
 export class ApiKeysModalComponent implements OnInit {
   name: string;

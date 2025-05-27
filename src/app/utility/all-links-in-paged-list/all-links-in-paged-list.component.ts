@@ -16,11 +16,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-all-links-in-paged-list',
-  templateUrl: './all-links-in-paged-list.component.html',
-  styleUrls: ['./all-links-in-paged-list.component.sass']
+    selector: 'mdm-all-links-in-paged-list',
+    templateUrl: './all-links-in-paged-list.component.html',
+    styleUrls: ['./all-links-in-paged-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgFor, McPagedListComponent, ElementLinkComponent, MoreDescriptionComponent]
 })
 export class AllLinksInPagedListComponent implements OnInit {
   @Input() parent: any;

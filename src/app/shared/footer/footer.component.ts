@@ -16,6 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { NgFor, NgIf } from '@angular/common';
 
 /**
  * Define the details for a link in the layout and navigation components.
@@ -47,9 +49,11 @@ export interface FooterLink {
 }
 
 @Component({
-  selector: 'mdm-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+    selector: 'mdm-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, UIRouterModule]
 })
 export class FooterComponent {
   /**

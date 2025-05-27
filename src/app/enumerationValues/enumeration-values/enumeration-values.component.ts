@@ -19,15 +19,23 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { UIRouterGlobals } from '@uirouter/core';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { McDataSetMetadataComponent } from '../../shared/mc-data-set-metadata/mc-data-set-metadata.component';
+import { EnumerationValuesDetailsComponent } from '../enumeration-values-details/enumeration-values-details.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-   selector: 'mdm-enumeration-values',
-   templateUrl: './enumeration-values.component.html',
-   styleUrls: ['./enumeration-values.component.scss']
+    selector: 'mdm-enumeration-values',
+    templateUrl: './enumeration-values.component.html',
+    styleUrls: ['./enumeration-values.component.scss'],
+    standalone: true,
+    imports: [NgIf, EnumerationValuesDetailsComponent, MatTabGroup, MatTab, MatTabContent, McDataSetMetadataComponent, AnnotationListComponent, ElementLinkListComponent, AttachmentListComponent]
 })
 export class EnumerationValuesComponent implements OnInit, AfterViewInit {
    @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;

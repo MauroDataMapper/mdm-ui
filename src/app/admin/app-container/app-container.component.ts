@@ -21,11 +21,17 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { UIRouterModule } from '@uirouter/angular';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-app-container',
-  templateUrl: './app-container.component.html',
-  styleUrls: ['./app-container.component.sass']
+    selector: 'mdm-app-container',
+    templateUrl: './app-container.component.html',
+    styleUrls: ['./app-container.component.sass'],
+    standalone: true,
+    imports: [FlexModule, ExtendedModule, UIRouterModule, NgIf]
 })
 export class AdminAppContainerComponent implements OnInit, OnDestroy {
   isAdministrator = false;

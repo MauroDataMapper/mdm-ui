@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'capitalize'
+    name: 'capitalize',
+    standalone: true
 })
 export class CapitalizePipe implements PipeTransform {
 

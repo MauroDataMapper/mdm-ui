@@ -17,11 +17,17 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { ProfileFilterCardComponent } from '../profile-filter-card/profile-filter-card.component';
+import { NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
-  selector: 'mdm-profile-filters',
-  templateUrl: './profile-filters.component.html',
-  styleUrls: ['./profile-filters.component.scss']
+    selector: 'mdm-profile-filters',
+    templateUrl: './profile-filters.component.html',
+    styleUrls: ['./profile-filters.component.scss'],
+    standalone: true,
+    imports: [MatDivider, MatButton, NgFor, ProfileFilterCardComponent]
 })
 export class ProfileFiltersComponent implements OnInit {
   @Input() profileFilters: CatalogueSearchProfileFilter[] = [];

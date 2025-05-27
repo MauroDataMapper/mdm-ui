@@ -16,14 +16,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CatalogueSearchProfileFilterListComponent } from '../catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-profile-filter-dialog-component',
-  templateUrl: './profile-filter-dialog-component.component.html',
-  styleUrls: ['./profile-filter-dialog-component.component.scss']
+    selector: 'mdm-profile-filter-dialog-component',
+    templateUrl: './profile-filter-dialog-component.component.html',
+    styleUrls: ['./profile-filter-dialog-component.component.scss'],
+    standalone: true,
+    imports: [MatDialogContent, CatalogueSearchProfileFilterListComponent, MatDialogActions, MatButton]
 })
 export class ProfileFilterDialogComponent {
   @ViewChild(CatalogueSearchProfileFilterListComponent)

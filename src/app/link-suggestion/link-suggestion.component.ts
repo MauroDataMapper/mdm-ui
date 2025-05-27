@@ -29,15 +29,52 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { Title } from '@angular/platform-browser';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../shared/mdm-paginator/mdm-paginator';
+import { McSelectComponent } from '../utility/mc-select/mc-select.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ModelPathComponent } from '../utility/model-path/model-path.component';
+import { ElementLinkComponent } from '../utility/element-link/element-link.component';
+import { FormsModule } from '@angular/forms';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-link-suggestion',
-  templateUrl: './link-suggestion.component.html',
-  styleUrls: ['./link-suggestion.component.scss'],
+    selector: 'mdm-link-suggestion',
+    templateUrl: './link-suggestion.component.html',
+    styleUrls: ['./link-suggestion.component.scss'],
+    standalone: true,
+    imports: [
+        NgIf,
+        ModelSelectorTreeComponent,
+        FormsModule,
+        ElementLinkComponent,
+        ModelPathComponent,
+        MatCheckbox,
+        MatButton,
+        MatProgressBar,
+        MatTooltip,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        McSelectComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MdmPaginatorComponent_1,
+    ],
 })
 export class LinkSuggestionComponent implements OnInit {
   @Input() sourceDataElementId: any;

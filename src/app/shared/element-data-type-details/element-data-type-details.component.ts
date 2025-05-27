@@ -21,11 +21,15 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { Observable } from 'rxjs';
 import { CatalogueItem, CatalogueItemDomainType, DataType, MdmResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-data-type-details',
-  templateUrl: './element-data-type-details.component.html',
-  styleUrls: ['./element-data-type-details.component.sass']
+    selector: 'mdm-element-data-type-details',
+    templateUrl: './element-data-type-details.component.html',
+    styleUrls: ['./element-data-type-details.component.sass'],
+    standalone: true,
+    imports: [NgIf, ElementLinkComponent]
 })
 export class ElementDataTypeDetailsComponent implements OnInit {
   @Input() elementDataType: DataType;

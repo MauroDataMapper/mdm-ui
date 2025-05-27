@@ -23,7 +23,7 @@ import {
   EventEmitter,
   Input
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   ProfileDefinition,
   ProfileDefinitionResponse,
@@ -34,11 +34,20 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatOptgroup } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-catalogue-search-profile-filter-list',
-  templateUrl: './catalogue-search-profile-filter-list.component.html',
-  styleUrls: ['./catalogue-search-profile-filter-list.component.scss']
+    selector: 'mdm-catalogue-search-profile-filter-list',
+    templateUrl: './catalogue-search-profile-filter-list.component.html',
+    styleUrls: ['./catalogue-search-profile-filter-list.component.scss'],
+    standalone: true,
+    imports: [MatButton, NgIf, FormsModule, ReactiveFormsModule, NgFor, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatOptgroup, MatInput, MatTooltip]
 })
 export class CatalogueSearchProfileFilterListComponent
   implements OnInit, OnDestroy {

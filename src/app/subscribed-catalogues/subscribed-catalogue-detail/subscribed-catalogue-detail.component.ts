@@ -18,11 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-subscribed-catalogue-detail',
-  templateUrl: './subscribed-catalogue-detail.component.html',
-  styleUrls: ['./subscribed-catalogue-detail.component.scss']
+    selector: 'mdm-subscribed-catalogue-detail',
+    templateUrl: './subscribed-catalogue-detail.component.html',
+    styleUrls: ['./subscribed-catalogue-detail.component.scss'],
+    standalone: true,
+    imports: [FormsModule, MatTooltip, InlineTextEditComponent, ContentEditorComponent]
 })
 export class SubscribedCatalogueDetailComponent implements OnInit {
 

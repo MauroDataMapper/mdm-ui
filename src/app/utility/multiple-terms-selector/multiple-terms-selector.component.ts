@@ -33,7 +33,7 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderRow, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
 import {
   CatalogueItemDomainType,
@@ -45,11 +45,21 @@ import {
 import { MessageHandlerService } from '@mdm/services';
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
 import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
+import { MatButton } from '@angular/material/button';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ElementLabelComponent } from '../../shared/element-label/element-label.component';
+import { McSelectComponent } from '../mc-select/mc-select.component';
 
 @Component({
-  selector: 'mdm-multiple-terms-selector',
-  templateUrl: './multiple-terms-selector.component.html',
-  styleUrls: ['./multiple-terms-selector.component.scss']
+    selector: 'mdm-multiple-terms-selector',
+    templateUrl: './multiple-terms-selector.component.html',
+    styleUrls: ['./multiple-terms-selector.component.scss'],
+    standalone: true,
+    imports: [McSelectComponent, ElementLabelComponent, MatCheckbox, FormsModule, NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderRow, MatCellDef, MatCell, ElementLinkComponent, MatRowDef, MatRow, McPagedListComponent, MatButton]
 })
 export class MultipleTermsSelectorComponent {
   @Input() hideAddButton = true;

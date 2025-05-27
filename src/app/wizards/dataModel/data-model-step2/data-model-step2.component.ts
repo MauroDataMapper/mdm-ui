@@ -21,11 +21,16 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
+import { ElementOwnedDataTypeListComponent } from '../../../shared/element-owned-data-type-list/element-owned-data-type-list.component';
+import { NgIf } from '@angular/common';
+import { McSelectComponent } from '../../../utility/mc-select/mc-select.component';
 
 @Component({
-  selector: 'mdm-data-model-step2',
-  templateUrl: './data-model-step2.component.html',
-  styleUrls: ['./data-model-step2.component.sass']
+    selector: 'mdm-data-model-step2',
+    templateUrl: './data-model-step2.component.html',
+    styleUrls: ['./data-model-step2.component.sass'],
+    standalone: true,
+    imports: [McSelectComponent, NgIf, ElementOwnedDataTypeListComponent]
 })
 export class DataModelStep2Component implements OnInit {
   loadingData: any;

@@ -21,6 +21,7 @@ import {
   CatalogueItemDomainType,
   Uuid
 } from '@maurodatamapper/mdm-resources';
+import { NgIf, NgFor } from '@angular/common';
 
 export interface TrailableItem {
   id?: Uuid;
@@ -30,9 +31,11 @@ export interface TrailableItem {
 }
 
 @Component({
-  selector: 'mdm-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+    selector: 'mdm-breadcrumb',
+    templateUrl: './breadcrumb.component.html',
+    styleUrls: ['./breadcrumb.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor]
 })
 export class BreadcrumbComponent {
   @Input() item?: TrailableItem;

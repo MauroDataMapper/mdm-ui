@@ -17,7 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'joinArray'})
+@Pipe({
+    name: 'joinArray',
+    standalone: true
+})
 export class JoinArrayPipe implements PipeTransform {
   transform(values: any[], delimiter = '', propertyName?: string) {
     if (!values || values.length === 0) {

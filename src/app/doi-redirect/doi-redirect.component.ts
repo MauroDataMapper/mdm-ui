@@ -22,11 +22,17 @@ import { StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { UIRouterModule } from '@uirouter/angular';
+import { AlertComponent } from '../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-doi-redirect',
-  templateUrl: './doi-redirect.component.html',
-  styleUrls: ['./doi-redirect.component.scss']
+    selector: 'mdm-doi-redirect',
+    templateUrl: './doi-redirect.component.html',
+    styleUrls: ['./doi-redirect.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner, AlertComponent, UIRouterModule]
 })
 export class DoiRedirectComponent implements OnInit {
   identifier: string;

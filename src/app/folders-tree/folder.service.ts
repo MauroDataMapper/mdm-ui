@@ -20,7 +20,9 @@ import { CatalogueItemDomainType, FolderDetailResponse, Uuid, VersionedFolderDet
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FolderService {
 
   constructor(private resources: MdmResourcesService) {

@@ -30,7 +30,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MatInput } from '@angular/material/input';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
@@ -42,6 +42,19 @@ import {
   MultiFacetAwareDomainType,
   Securable
 } from '@maurodatamapper/mdm-resources';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 type Record= (EditableObject &
   {
@@ -67,9 +80,40 @@ type Record= (EditableObject &
   );
 
 @Component({
-  selector: 'mdm-data-set-metadata',
-  templateUrl: './mc-data-set-metadata.component.html',
-  styleUrls: ['./mc-data-set-metadata.component.scss'],
+    selector: 'mdm-data-set-metadata',
+    templateUrl: './mc-data-set-metadata.component.html',
+    styleUrls: ['./mc-data-set-metadata.component.scss'],
+    standalone: true,
+    imports: [
+        FlexModule,
+        NgIf,
+        SkeletonBadgeComponent,
+        MatTooltip,
+        MatButton,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatCellDef,
+        MatCell,
+        McSelectComponent,
+        MoreDescriptionComponent,
+        NgClass,
+        ExtendedModule,
+        ContentEditorComponent,
+        TableButtonsComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        NgxSkeletonLoaderModule,
+        MdmPaginatorComponent,
+    ],
 })
 export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() parent: any;

@@ -30,13 +30,18 @@ import {
   ChangeDetectorRef, HostListener
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgIf, NgFor, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ExtendedModule } from '@angular/flex-layout/extended';
 
 @Component({
-  selector: 'mdm-select',
-  templateUrl: './mc-select.component.html',
-  styleUrls: ['./mc-select.component.sass'],
-  host: { '(click)': 'onClick($event)' } // TODO - check if this is needed
+    selector: 'mdm-select',
+    templateUrl: './mc-select.component.html',
+    styleUrls: ['./mc-select.component.sass'],
+    host: { '(click)': 'onClick($event)' } // TODO - check if this is needed
+    ,
+    standalone: true,
+    imports: [NgIf, NgFor, NgClass, ExtendedModule, FormsModule, NgStyle, NgTemplateOutlet]
 })
 export class McSelectComponent implements OnInit, AfterViewInit {
   @Output() paginationChanged = new EventEmitter<any>();

@@ -27,9 +27,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   CatalogueItem,
   ReferenceDataType,
@@ -46,11 +46,22 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatOption } from '@angular/material/core';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-reference-data-type-select',
-  templateUrl: './reference-data-type-select.component.html',
-  styleUrls: ['./reference-data-type-select.component.scss']
+    selector: 'mdm-reference-data-type-select',
+    templateUrl: './reference-data-type-select.component.html',
+    styleUrls: ['./reference-data-type-select.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatProgressBar, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgSwitch, NgSwitchCase, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataTypeSelectComponent
   implements OnChanges, AfterViewInit, OnDestroy {

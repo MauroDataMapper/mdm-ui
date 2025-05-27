@@ -17,11 +17,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
 import { DataModelDetail } from '@maurodatamapper/mdm-resources';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-status',
-  templateUrl: './element-status.component.html',
-  styleUrls: ['./element-status.component.sass']
+    selector: 'mdm-element-status',
+    templateUrl: './element-status.component.html',
+    styleUrls: ['./element-status.component.sass'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class ElementStatusComponent {
 

@@ -23,11 +23,22 @@ import {
   MergeConflictResolution
 } from '@maurodatamapper/mdm-resources';
 import { MergeDiffItemModel } from '../types/merge-item-type';
+import { MergeFilterPipe } from '../pipes/merge-filter.pipe';
+import { PathNameComponent } from '../../shared/path-name/path-name.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass, UpperCasePipe } from '@angular/common';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { MatSelectionList, MatListOption } from '@angular/material/list';
+import { MatInput } from '@angular/material/input';
+import { MatFormField } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-merge-item-selector',
-  templateUrl: './merge-item-selector.component.html',
-  styleUrls: ['./merge-item-selector.component.scss']
+    selector: 'mdm-merge-item-selector',
+    templateUrl: './merge-item-selector.component.html',
+    styleUrls: ['./merge-item-selector.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatInput, MatSelectionList, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, MatListOption, NgClass, ExtendedModule, MatTooltip, PathNameComponent, UpperCasePipe, MergeFilterPipe]
 })
 export class MergeItemSelectorComponent implements OnInit {
   @Output() selectedMergeItemChanged = new EventEmitter<MergeDiffItem>();

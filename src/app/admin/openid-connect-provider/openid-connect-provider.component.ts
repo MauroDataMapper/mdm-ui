@@ -25,11 +25,24 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OpenIdConnectProviderForm } from './openid-connect-provider.model';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-openid-connect-provider',
-  templateUrl: './openid-connect-provider.component.html',
-  styleUrls: ['./openid-connect-provider.component.scss']
+    selector: 'mdm-openid-connect-provider',
+    templateUrl: './openid-connect-provider.component.html',
+    styleUrls: ['./openid-connect-provider.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, AlertComponent, MatFormField, MatLabel, MatInput, MatHint, MatError, MatButton, MatTooltip, MatCheckbox, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatSelect, MatOption]
 })
 export class OpenidConnectProviderComponent implements OnInit {
   id: Uuid;

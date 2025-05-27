@@ -18,9 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'mdm-enumeration-compare',
-  templateUrl: './enumeration-compare.component.html',
-  styleUrls: ['./enumeration-compare.component.scss']
+    selector: 'mdm-enumeration-compare',
+    templateUrl: './enumeration-compare.component.html',
+    styleUrls: ['./enumeration-compare.component.scss'],
+    standalone: true
 })
 export class EnumerationCompareComponent {
   @Input() diffs: any;

@@ -88,11 +88,27 @@ import {
   ProfileSummaryListItem
 } from './profile-data-view.model';
 import { GridService } from '@mdm/services/grid.service';
+import { DefaultProfileComponent } from '../default-profile/default-profile.component';
+import { McDataSetMetadataComponent } from '../mc-data-set-metadata/mc-data-set-metadata.component';
+import { ProfileDetailsComponent } from '../profile-details/profile-details.component';
+import { AlertComponent } from '../alert/alert.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgFor, NgIf } from '@angular/common';
+import { MatDivider } from '@angular/material/divider';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-profile-data-view',
-  templateUrl: './profile-data-view.component.html',
-  styleUrls: ['./profile-data-view.component.scss']
+    selector: 'mdm-profile-data-view',
+    templateUrl: './profile-data-view.component.html',
+    styleUrls: ['./profile-data-view.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatFormField, MatSelect, FormsModule, MatOption, MatDivider, NgFor, NgIf, MatButton, MatMenuTrigger, MatIconButton, MatMenu, MatMenuItem, MatTooltip, AlertComponent, ProfileDetailsComponent, McDataSetMetadataComponent, DefaultProfileComponent]
 })
 export class ProfileDataViewComponent implements OnInit, OnChanges {
   @Input() catalogueItem: Modelable &

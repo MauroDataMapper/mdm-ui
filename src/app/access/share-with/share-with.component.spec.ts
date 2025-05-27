@@ -35,11 +35,6 @@ describe('ShareWithComponent', () => {
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
       ],
-      providers: [
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
       declarations: [
         ShareWithComponent
       ]

@@ -36,24 +36,22 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 @NgModule({
-  declarations: [
-    BulkEditEditorComponent,
-    BulkEditContainerComponent,
-    CheckboxCellRendererComponent,
-    DateCellEditorComponent,
-    BulkEditSelectComponent,
-    BulkEditEditorGroupComponent,
-    TextAreaCellEditorComponent,
-    FullContentEditDialogComponent
-  ],
-  imports: [
-    CommonModule,
-    MaterialModule,
-    FormsModule,
-    SharedModule,
-    AgGridModule,
-    ContentModule
-  ],
-  exports: [BulkEditEditorComponent, BulkEditContainerComponent]
+    imports: [
+        CommonModule,
+        MaterialModule,
+        FormsModule,
+        SharedModule,
+        AgGridModule,
+        ContentModule,
+        BulkEditEditorComponent,
+        BulkEditContainerComponent,
+        CheckboxCellRendererComponent,
+        DateCellEditorComponent,
+        BulkEditSelectComponent,
+        BulkEditEditorGroupComponent,
+        TextAreaCellEditorComponent,
+        FullContentEditDialogComponent
+    ],
+    exports: [BulkEditEditorComponent, BulkEditContainerComponent]
 })
 export class BulkEditModule {}

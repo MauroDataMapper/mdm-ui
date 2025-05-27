@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PathElement } from './path-name.model';
 import { PathNameService } from './path-name.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'mdm-path-name',
-  templateUrl: './path-name.component.html',
-  styleUrls: ['./path-name.component.scss']
+    selector: 'mdm-path-name',
+    templateUrl: './path-name.component.html',
+    styleUrls: ['./path-name.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, MatTooltip, UpperCasePipe]
 })
 export class PathNameComponent implements OnInit, OnChanges {
   @Input() path: string;

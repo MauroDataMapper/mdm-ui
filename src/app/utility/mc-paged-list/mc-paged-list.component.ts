@@ -16,11 +16,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, ViewChild, ElementRef, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgFor, NgTemplateOutlet, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-paged-list',
-  templateUrl: './mc-paged-list.component.html',
-  styleUrls: ['./mc-paged-list.component.sass']
+    selector: 'mdm-paged-list',
+    templateUrl: './mc-paged-list.component.html',
+    styleUrls: ['./mc-paged-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgFor, NgTemplateOutlet, NgClass, ExtendedModule]
 })
 export class McPagedListComponent implements OnInit {
   fetchMethod: any; // when it's 'type=dynamic'

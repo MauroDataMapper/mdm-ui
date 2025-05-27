@@ -29,15 +29,34 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { CatalogueElementType, ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ElementDataTypeComponent } from '../element-data-type/element-data-type.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ModelPathComponent } from '../../utility/model-path/model-path.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgClass, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-classified-elements-list',
-  templateUrl: './classified-elements-list.component.html',
-  styleUrls: ['./classified-elements-list.component.sass']
+    selector: 'mdm-classified-elements-list',
+    templateUrl: './classified-elements-list.component.html',
+    styleUrls: ['./classified-elements-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, SkeletonBadgeComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, ModelPathComponent, NgClass, ExtendedModule, MoreDescriptionComponent, AllLinksInPagedListComponent, MatSelect, FormsModule, NgFor, MatOption, ElementDataTypeComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   @Input() parent: any;

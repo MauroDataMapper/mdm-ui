@@ -31,11 +31,19 @@ import {
 
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-branch-selector',
-  templateUrl: './branch-selector.component.html',
-  styleUrls: ['./branch-selector.component.scss']
+    selector: 'mdm-branch-selector',
+    templateUrl: './branch-selector.component.html',
+    styleUrls: ['./branch-selector.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatSelect, MatTooltip, FormsModule, NgIf, MatOptgroup, NgFor, MatOption]
 })
 export class BranchSelectorComponent implements OnInit {
   @Input() sourceCatalogueItem: CatalogueItem;

@@ -25,11 +25,21 @@ import { ClipboardService } from 'ngx-clipboard';
 import { filter, mergeMap } from 'rxjs/operators';
 import { EditingService } from '@mdm/services/editing.service';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-api-keys',
-  templateUrl: './api-keys.component.html',
-  styleUrls: ['./api-keys.component.scss']
+    selector: 'mdm-api-keys',
+    templateUrl: './api-keys.component.html',
+    styleUrls: ['./api-keys.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule]
 })
 export class ApiKeysComponent implements OnInit {
   records: any[] = [];

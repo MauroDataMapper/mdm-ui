@@ -22,11 +22,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
 import { DiagramCatalogueItem, DiagramMode } from '../diagram/diagram.model';
+import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
 
 @Component({
-  selector: 'mdm-diagram-tab',
-  templateUrl: './diagram-tab.component.html',
-  styleUrls: ['./diagram-tab.component.scss']
+    selector: 'mdm-diagram-tab',
+    templateUrl: './diagram-tab.component.html',
+    styleUrls: ['./diagram-tab.component.scss'],
+    standalone: true,
+    imports: [DiagramToolbarComponent, DiagramComponent]
 })
 
 export class DiagramTabComponent {

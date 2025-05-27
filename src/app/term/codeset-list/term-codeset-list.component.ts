@@ -17,17 +17,24 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CodeSet, QueryParameters, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmTableDataSource } from '@mdm/utility/table-data-source';
 import { merge } from 'rxjs';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-term-codeset-list',
-  templateUrl: './term-codeset-list.component.html',
-  styleUrls: ['./term-codeset-list.component.scss']
+    selector: 'mdm-term-codeset-list',
+    templateUrl: './term-codeset-list.component.html',
+    styleUrls: ['./term-codeset-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChanges {
 

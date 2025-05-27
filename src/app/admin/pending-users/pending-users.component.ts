@@ -16,11 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { PendingUsersTableComponent } from '../pending-users-table/pending-users-table.component';
 
 @Component({
-  selector: 'mdm-pending-users',
-  templateUrl: './pending-users.component.html',
-  styleUrls: ['./pending-users.component.sass']
+    selector: 'mdm-pending-users',
+    templateUrl: './pending-users.component.html',
+    styleUrls: ['./pending-users.component.sass'],
+    standalone: true,
+    imports: [PendingUsersTableComponent]
 })
 export class PendingUsersComponent {
   constructor() {}

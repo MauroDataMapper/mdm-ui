@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   CatalogueItemDomainType,
@@ -39,11 +39,26 @@ import {
   Terminology,
   TerminologyIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { ElementLabelComponent } from '../../shared/element-label/element-label.component';
+import { McSelectComponent } from '../mc-select/mc-select.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { ModelPathComponent } from '../model-path/model-path.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-inline',
-  templateUrl: './new-data-type-inline.component.html',
-  styleUrls: ['./new-data-type-inline.component.sass']
+    selector: 'mdm-data-type-inline',
+    templateUrl: './new-data-type-inline.component.html',
+    styleUrls: ['./new-data-type-inline.component.sass'],
+    standalone: true,
+    imports: [FormsModule, NgIf, ModelPathComponent, MatFormField, MatSelect, NgFor, MatOption, McSelectComponent, ElementLabelComponent, ModelSelectorTreeComponent, McEnumerationListWithCategoryComponent, MatSlideToggle, MatInput, ContentEditorComponent, ElementClassificationsComponent]
 })
 export class NewDataTypeInlineComponent
   implements OnInit, AfterViewInit, OnDestroy {

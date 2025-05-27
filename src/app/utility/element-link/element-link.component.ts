@@ -24,10 +24,16 @@ import {
 } from '@mdm/services/element-types.service';
 import { map } from 'rxjs';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-link',
-  templateUrl: './element-link.component.html'
+    selector: 'mdm-element-link',
+    templateUrl: './element-link.component.html',
+    standalone: true,
+    imports: [NgIf, MatIcon, NgClass, ExtendedModule, MatTooltip]
 })
 export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;

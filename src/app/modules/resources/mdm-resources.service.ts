@@ -76,7 +76,9 @@ import { MdmRestHandlerService } from './mdm-rest-handler.service';
 /**
  * Make @mdm-api/resources available through Angular service.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MdmResourcesService {
   /**
    * @param resourcesConfig Customize apiEndpoint.

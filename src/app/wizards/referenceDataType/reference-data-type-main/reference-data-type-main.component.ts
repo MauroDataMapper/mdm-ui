@@ -36,6 +36,12 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { NewReferenceDataTypeState } from '../new-reference-data-type-form/new-reference-data-type-form.component';
 import { ReferenceDataTypeStep1Component } from '../reference-data-type-step1/reference-data-type-step1.component';
 import { ReferenceDataTypeStep2Component } from '../reference-data-type-step2/reference-data-type-step2.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 export interface ReferenceDataTypeCreateState {
   createType: CreateType;
@@ -45,9 +51,11 @@ export interface ReferenceDataTypeCreateState {
 }
 
 @Component({
-  selector: 'mdm-reference-data-type-main',
-  templateUrl: './reference-data-type-main.component.html',
-  styleUrls: ['./reference-data-type-main.component.scss']
+    selector: 'mdm-reference-data-type-main',
+    templateUrl: './reference-data-type-main.component.html',
+    styleUrls: ['./reference-data-type-main.component.scss'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext, MatProgressBar]
 })
 export class ReferenceDataTypeMainComponent implements OnInit {
   parentModelId: Uuid;

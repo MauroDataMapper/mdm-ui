@@ -26,11 +26,24 @@ import {
   MdmTreeItemListResponse,
   Uuid
 } from '@maurodatamapper/mdm-resources';
+import { EnumerationCompareComponent } from '../shared/enumeration-compare/enumeration-compare.component';
+import { ElementLinkComponent } from '../utility/element-link/element-link.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MetadataCompareComponent } from '../shared/metadata-compare/metadata-compare.component';
+import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { FoldersTreeComponent } from '../folders-tree/folders-tree.component';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
 
 @Component({
-  selector: 'mdm-model-comparison',
-  templateUrl: './model-comparison.component.html',
-  styleUrls: ['./model-comparison.component.scss']
+    selector: 'mdm-model-comparison',
+    templateUrl: './model-comparison.component.html',
+    styleUrls: ['./model-comparison.component.scss'],
+    standalone: true,
+    imports: [ModelSelectorTreeComponent, FormsModule, NgIf, FoldersTreeComponent, MatButton, MatProgressBar, MatTabGroup, MatTab, MatTabLabel, MatTabContent, NgFor, MetadataCompareComponent, NgClass, ExtendedModule, ElementLinkComponent, EnumerationCompareComponent]
 })
 export class ModelComparisonComponent implements OnInit {
   diffMap = {};

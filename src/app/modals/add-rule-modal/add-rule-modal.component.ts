@@ -17,9 +17,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
 
 export interface AddRuleModalConfig {
   name: string;
@@ -39,9 +43,11 @@ export interface AddRuleModalResult {
 }
 
 @Component({
-  selector: 'mdm-add-rule-modal',
-  templateUrl: './add-rule-modal.component.html',
-  styleUrls: ['./add-rule-modal.component.scss']
+    selector: 'mdm-add-rule-modal',
+    templateUrl: './add-rule-modal.component.html',
+    styleUrls: ['./add-rule-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatButton]
 })
 export class AddRuleModalComponent implements OnInit {
   okBtn: string;

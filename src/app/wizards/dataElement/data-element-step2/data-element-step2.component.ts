@@ -28,24 +28,44 @@ import {
   OnDestroy
 } from '@angular/core';
 import { merge, Subscription } from 'rxjs';
-import { NgForm } from '@angular/forms';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { NgForm, FormsModule } from '@angular/forms';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MoreDescriptionComponent } from '../../../shared/more-description/more-description.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { NewDataTypeInlineComponent } from '../../../utility/new-data-type-inline/new-data-type-inline.component';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { McSelectComponent } from '../../../utility/mc-select/mc-select.component';
+import { MatButton } from '@angular/material/button';
+import { ElementDataTypeComponent } from '../../../shared/element-data-type/element-data-type.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element-step2',
-  templateUrl: './data-element-step2.component.html',
-  styleUrls: ['./data-element-step2.component.sass']
+    selector: 'mdm-data-element-step2',
+    templateUrl: './data-element-step2.component.html',
+    styleUrls: ['./data-element-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar, HighlighterPipe]
 })
 export class DataElementStep2Component
   implements OnInit, AfterViewInit, OnDestroy {

@@ -33,7 +33,7 @@ import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/su
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 
-export const pageRoutes: { states: Ng2StateDeclaration[] } = {
+export const adminPageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
       name: 'appContainer.adminArea',
@@ -129,6 +129,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })]
+  imports: [UIRouterModule.forChild({ states: adminPageRoutes.states })]
 })
 export class AdminRoutesModule { }

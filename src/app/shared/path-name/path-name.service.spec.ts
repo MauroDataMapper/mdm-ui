@@ -40,12 +40,6 @@ describe('PathNameService', () => {
     // so that the UIRouterModule is not imported, will override the UIRouter service
     // so it can be mocked
     TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: UIRouter,
-          useValue: routerStub
-        }
-      ]
     });
 
     service = TestBed.inject(PathNameService);

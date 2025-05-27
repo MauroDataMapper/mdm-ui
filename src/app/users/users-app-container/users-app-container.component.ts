@@ -20,11 +20,17 @@ import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { UIRouterModule } from '@uirouter/angular';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-users-app-container',
-  templateUrl: './users-app-container.component.html',
-  styleUrls: ['./users-app-container.component.sass']
+    selector: 'mdm-users-app-container',
+    templateUrl: './users-app-container.component.html',
+    styleUrls: ['./users-app-container.component.sass'],
+    standalone: true,
+    imports: [FlexModule, ExtendedModule, UIRouterModule, NgIf]
 })
 export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;

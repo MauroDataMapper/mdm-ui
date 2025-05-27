@@ -56,24 +56,34 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { EMPTY } from 'rxjs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MoreDescriptionComponent } from '../shared/more-description/more-description.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
 
 @Component({
-  selector: 'mdm-constraints-rules',
-  templateUrl: './constraints-rules.component.html',
-  styleUrls: ['./constraints-rules.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state(
-        'collapsed',
-        style({ height: '0px', minHeight: '0', display: 'none' })
-      ),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
-    ])
-  ]
+    selector: 'mdm-constraints-rules',
+    templateUrl: './constraints-rules.component.html',
+    styleUrls: ['./constraints-rules.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+        ])
+    ],
+    standalone: true,
+    imports: [MatExpansionPanel, MatExpansionPanelHeader, FlexModule, MatTooltip, NgIf, MatButton, MatFormField, MatLabel, MatSelect, FormsModule, NgFor, MatOption, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, ExtendedModule, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class ConstraintsRulesComponent implements OnInit {
   @Input() parent: Modelable & Finalisable;

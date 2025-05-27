@@ -17,11 +17,17 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { EditingService } from '@mdm/services/editing.service';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-editable-form-buttons',
-  templateUrl: './editable-form-buttons.component.html',
-   styleUrls: ['./editable-form-buttons.component.scss']
+    selector: 'mdm-editable-form-buttons',
+    templateUrl: './editable-form-buttons.component.html',
+    styleUrls: ['./editable-form-buttons.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, MatTooltip, NgClass, ExtendedModule]
 })
 export class EditableFormButtonsComponent implements OnInit {
   @Input() deleteIcon = null;

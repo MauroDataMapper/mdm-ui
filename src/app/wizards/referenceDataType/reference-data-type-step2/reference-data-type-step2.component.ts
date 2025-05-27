@@ -18,13 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { ReferenceDataType } from '@maurodatamapper/mdm-resources';
 import { WizardStep } from '@mdm/wizards/wizards.model';
-import { NewReferenceDataTypeState } from '../new-reference-data-type-form/new-reference-data-type-form.component';
+import { NewReferenceDataTypeState, NewReferenceDataTypeFormComponent } from '../new-reference-data-type-form/new-reference-data-type-form.component';
 import { ReferenceDataTypeMainComponent } from '../reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeSelectComponent } from '../reference-data-type-select/reference-data-type-select.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-reference-data-type-step2',
-  templateUrl: './reference-data-type-step2.component.html',
-  styleUrls: ['./reference-data-type-step2.component.scss']
+    selector: 'mdm-reference-data-type-step2',
+    templateUrl: './reference-data-type-step2.component.html',
+    styleUrls: ['./reference-data-type-step2.component.scss'],
+    standalone: true,
+    imports: [NgIf, NewReferenceDataTypeFormComponent, ReferenceDataTypeSelectComponent]
 })
 export class ReferenceDataTypeStep2Component implements OnInit {
   step: WizardStep<ReferenceDataTypeMainComponent>;

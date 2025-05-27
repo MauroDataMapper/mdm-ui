@@ -25,6 +25,10 @@ import {
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '../path-name/path-name.service';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 interface LocationPathItem {
   label: string;
@@ -37,9 +41,11 @@ interface LocationPathItem {
 }
 
 @Component({
-  selector: 'mdm-location-path',
-  templateUrl: './location-path.component.html',
-  styleUrls: ['./location-path.component.scss']
+    selector: 'mdm-location-path',
+    templateUrl: './location-path.component.html',
+    styleUrls: ['./location-path.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, NgFor, MatIcon, NgClass, ExtendedModule]
 })
 export class LocationPathComponent implements OnInit, OnChanges {
   @Input() ancestorTreeItems: MdmTreeItem[] = [];

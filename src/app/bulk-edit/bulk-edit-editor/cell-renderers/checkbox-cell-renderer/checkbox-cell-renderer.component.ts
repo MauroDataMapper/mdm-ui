@@ -16,14 +16,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { ICellRendererAngularComp } from '@ag-grid-community/angular';
 import { ICellRendererParams } from '@ag-grid-community/core';
 
 @Component({
-  selector: 'mdm-checkbox-cell-renderer',
-  templateUrl: './checkbox-cell-renderer.component.html',
-  styleUrls: ['./checkbox-cell-renderer.component.scss']
+    selector: 'mdm-checkbox-cell-renderer',
+    templateUrl: './checkbox-cell-renderer.component.html',
+    styleUrls: ['./checkbox-cell-renderer.component.scss'],
+    standalone: true,
+    imports: [MatCheckbox]
 })
 export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
   params: ICellRendererParams;

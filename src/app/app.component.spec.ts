@@ -52,16 +52,6 @@ describe('AppComponent', () => {
           UIRouterModule.forRoot({ useHash: true }),
           ToastrModule.forRoot()
         ],
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: {}
-          },
-          {
-            provide: FeaturesService,
-            useValue: jest.fn()
-          }
-        ],
         declarations: [
           ProfilePictureComponent,
           ByteArrayToBase64Pipe,

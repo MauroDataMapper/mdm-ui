@@ -48,46 +48,47 @@ import { BulkEditModule } from './bulk-edit/bulk-edit.module';
 import { CatalogueSearchModule } from './catalogue-search/catalogue-search.module';
 import { NgxJoditComponent } from 'ngx-jodit';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    BulkEditModule,
-    CatalogueModule,
-    AdminModule,
-    UsersModule,
-    SharedModule,
-    AppRoutingModule,
-    ModalModule,
-    UIRouterModule.forRoot({ useHash: true }),
-    HttpClientModule,
-    MdmResourcesModule.forRoot({
-      defaultHttpRequestOptions: { withCredentials: true },
-      apiEndpoint: environment.apiEndpoint
-    }),
-    MergeDiffModule,
-    CatalogueSearchModule,
-    NgxJoditComponent
-  ],
-  providers: [
-    { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
-    { provide: ROLES, useClass: ROLES },
-    { provide: LOCALE_ID, useValue: 'en-GB' },
-    { provide: APP_BASE_HREF, useValue: '/' },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: MatDialogRef, useValue: {} },
-    {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS,
-      useValue: { hasBackdrop: true, autoFocus: false }
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpRequestProgressInterceptor,
-      multi: true
-    }
-  ],
-  bootstrap: [UiViewComponent]
-})
+@NgModule(/* TODO(standalone-migration): clean up removed NgModule class manually. 
+{
+    imports: [
+        BrowserModule,
+        BulkEditModule,
+        CatalogueModule,
+        AdminModule,
+        UsersModule,
+        SharedModule,
+        AppRoutingModule,
+        ModalModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        HttpClientModule,
+        MdmResourcesModule.forRoot({
+            defaultHttpRequestOptions: { withCredentials: true },
+            apiEndpoint: environment.apiEndpoint
+        }),
+        MergeDiffModule,
+        CatalogueSearchModule,
+        NgxJoditComponent,
+        AppComponent
+    ],
+    providers: [
+        { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
+        { provide: ROLES, useClass: ROLES },
+        { provide: LOCALE_ID, useValue: 'en-GB' },
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: MatDialogRef, useValue: {} },
+        {
+            provide: MAT_DIALOG_DEFAULT_OPTIONS,
+            useValue: { hasBackdrop: true, autoFocus: false }
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpRequestProgressInterceptor,
+            multi: true
+        }
+    ],
+    bootstrap: [UiViewComponent]
+} */)
 export class AppModule {
   latestError: any;
 

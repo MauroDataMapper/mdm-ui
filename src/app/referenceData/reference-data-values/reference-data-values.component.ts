@@ -21,13 +21,23 @@ import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { SortDirection } from '@angular/material/sort';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-   selector: 'mdm-reference-data-values',
-   templateUrl: './reference-data-values.component.html',
-   styleUrls: ['./reference-data-values.component.scss']
+    selector: 'mdm-reference-data-values',
+    templateUrl: './reference-data-values.component.html',
+    styleUrls: ['./reference-data-values.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, SkeletonBadgeComponent, MatTooltip, FormsModule, MatTable, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
    @Input() parent: any;

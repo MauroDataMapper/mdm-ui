@@ -20,11 +20,18 @@ import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.se
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {MatDialogRef} from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-forgot-password-modal',
-  templateUrl: './forgot-password-modal.component.html',
-  styleUrls: ['./forgot-password-modal.component.sass']
+    selector: 'mdm-forgot-password-modal',
+    templateUrl: './forgot-password-modal.component.html',
+    styleUrls: ['./forgot-password-modal.component.sass'],
+    standalone: true,
+    imports: [FormsModule, MatIconButton, MatFormField, MatLabel, MatInput, MatButton, NgIf]
 })
 export class ForgotPasswordModalComponent implements OnInit {
   username: string;

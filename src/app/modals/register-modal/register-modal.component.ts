@@ -20,11 +20,19 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-register-modal',
-  templateUrl: './register-modal.component.html',
-  styleUrls: ['./register-modal.component.sass']
+    selector: 'mdm-register-modal',
+    templateUrl: './register-modal.component.html',
+    styleUrls: ['./register-modal.component.sass'],
+    standalone: true,
+    imports: [FormsModule, MatIconButton, NgIf, MatFormField, MatLabel, MatInput, MatSuffix, PasswordStrengthMeterComponent, MatButton]
 })
 export class RegisterModalComponent implements OnInit {
   email: any;

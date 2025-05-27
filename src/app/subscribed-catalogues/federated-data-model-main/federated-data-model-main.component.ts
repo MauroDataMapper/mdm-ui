@@ -23,11 +23,17 @@ import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
+import { NewerVersionsComponent } from '../newer-versions/newer-versions.component';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
+import { FederatedDataModelDetailComponent } from '../federated-data-model-detail/federated-data-model-detail.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-federated-data-model-main',
-  templateUrl: './federated-data-model-main.component.html',
-  styleUrls: ['./federated-data-model-main.component.scss']
+    selector: 'mdm-federated-data-model-main',
+    templateUrl: './federated-data-model-main.component.html',
+    styleUrls: ['./federated-data-model-main.component.scss'],
+    standalone: true,
+    imports: [NgIf, FederatedDataModelDetailComponent, MatTabGroup, MatTab, MatTabContent, NewerVersionsComponent]
 })
 export class FederatedDataModelMainComponent
   extends BaseComponent

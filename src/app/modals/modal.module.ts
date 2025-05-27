@@ -45,7 +45,7 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
-import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+
 import { ChangeBranchNameModalComponent } from './change-branch-name-modal/change-branch-name-modal.component';
 import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
@@ -57,7 +57,7 @@ import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter'
 const defaultAceConfig: AceConfigInterface = {};
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     MatDialogModule,
@@ -68,13 +68,10 @@ const defaultAceConfig: AceConfigInterface = {};
     MaterialModule,
     SharedModule,
     AceModule,
-    PipesModule,
     FoldersTreeModule,
     ContentModule,
     CatalogueModule,
-    PasswordStrengthMeterComponent
-  ],
-  declarations: [
+    PasswordStrengthMeterComponent,
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
@@ -100,22 +97,15 @@ const defaultAceConfig: AceConfigInterface = {};
     CatalogueItemSelectModalComponent,
     ExportModelDialogComponent,
     ChangeLabelModalComponent
-  ],
-  providers: [
-    ModalService,
-    {
-      provide: ACE_CONFIG,
-      useValue: defaultAceConfig
-    }
-  ],
-  exports: [
-    RegisterModalComponent,
-    LoginModalComponent,
-    ForgotPasswordModalComponent,
-    ConfirmationModalComponent,
-    ChangeBranchNameModalComponent,
-    ExportModelDialogComponent
-  ]
+],
+    exports: [
+        RegisterModalComponent,
+        LoginModalComponent,
+        ForgotPasswordModalComponent,
+        ConfirmationModalComponent,
+        ChangeBranchNameModalComponent,
+        ExportModelDialogComponent
+    ]
 })
 export class ModalModule {
   constructor(private modalService: ModalService) {

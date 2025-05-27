@@ -39,15 +39,6 @@ describe('ApiPropertyTableComponent', () => {
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
       ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {
-            apiProperties: {
-            }
-          }
-        }
-      ],
       declarations: [
         ApiPropertyTableComponent,
         DataTypeListButtonsComponent]

@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { NgChartsModule } from 'ng2-charts';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-summary-metadata-chart',
-  templateUrl: './summary-metadata-chart.component.html',
-  styleUrls: ['./summary-metadata-chart.component.scss']
+    selector: 'mdm-summary-metadata-chart',
+    templateUrl: './summary-metadata-chart.component.html',
+    styleUrls: ['./summary-metadata-chart.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgChartsModule]
 })
 export class SummaryMetadataChartComponent implements OnInit {
   @Input() summary: any;

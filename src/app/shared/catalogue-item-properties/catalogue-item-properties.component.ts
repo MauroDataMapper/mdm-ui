@@ -28,6 +28,10 @@ import {
   SecurableModel,
   Versionable
 } from '@maurodatamapper/mdm-resources';
+import { BranchSelectorComponent } from '../branch-selector/branch-selector.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { LocationPathComponent } from '../location-path/location-path.component';
+import { NgIf, DatePipe } from '@angular/common';
 
 export type CatalogueItemPropertiesType = CatalogueItem &
   Partial<ModelableDetail> &
@@ -38,9 +42,11 @@ export type CatalogueItemPropertiesType = CatalogueItem &
   Partial<Historical>;
 
 @Component({
-  selector: 'mdm-catalogue-item-properties',
-  templateUrl: './catalogue-item-properties.component.html',
-  styleUrls: ['./catalogue-item-properties.component.scss']
+    selector: 'mdm-catalogue-item-properties',
+    templateUrl: './catalogue-item-properties.component.html',
+    styleUrls: ['./catalogue-item-properties.component.scss'],
+    standalone: true,
+    imports: [NgIf, LocationPathComponent, MatTooltip, BranchSelectorComponent, DatePipe]
 })
 export class CatalogueItemPropertiesComponent implements OnChanges {
   @Input() item: CatalogueItemPropertiesType;

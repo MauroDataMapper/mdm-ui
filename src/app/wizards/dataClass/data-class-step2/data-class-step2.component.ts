@@ -27,19 +27,33 @@ import {
   QueryList
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataClass } from '../../../../../../mdm-resources';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MoreDescriptionComponent } from '../../../shared/more-description/more-description.component';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { NgIf, NgClass } from '@angular/common';
 @Component({
-  selector: 'mdm-data-class-step2',
-  templateUrl: './data-class-step2.component.html',
-  styleUrls: ['./data-class-step2.component.sass']
+    selector: 'mdm-data-class-step2',
+    templateUrl: './data-class-step2.component.html',
+    styleUrls: ['./data-class-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatLabel, MatInput, ContentEditorComponent, FlexModule, MatHint, ElementClassificationsComponent, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
 })
 export class DataClassStep2Component
   implements OnInit, AfterViewInit, OnDestroy {

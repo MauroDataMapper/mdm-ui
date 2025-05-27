@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DataElementBulkEditDialogService } from '@mdm/services/data-element-bulk-edit-dialog.service';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-list-buttons',
-  templateUrl: './data-type-list-buttons.component.html',
-  styleUrls: ['./data-type-list-buttons.component.sass']
+    selector: 'mdm-data-type-list-buttons',
+    templateUrl: './data-type-list-buttons.component.html',
+    styleUrls: ['./data-type-list-buttons.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class DataTypeListButtonsComponent implements OnInit {
 

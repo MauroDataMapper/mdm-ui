@@ -31,11 +31,19 @@ import {
   MauroItemTreeFlatNode,
   MauroTreeViewDataSource
 } from './mauro-item-tree.types';
+import { ElementLabelComponent } from '../element-label/element-label.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgTemplateOutlet, NgClass, NgIf } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatTreeNodeToggle } from '@angular/material/tree';
 
 @Component({
-  selector: 'mdm-mauro-item-tree',
-  templateUrl: './mauro-item-tree.component.html',
-  styleUrls: ['./mauro-item-tree.component.scss']
+    selector: 'mdm-mauro-item-tree',
+    templateUrl: './mauro-item-tree.component.html',
+    styleUrls: ['./mauro-item-tree.component.scss'],
+    standalone: true,
+    imports: [MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatIconButton, NgTemplateOutlet, MatTreeNodeToggle, MatIcon, NgClass, ExtendedModule, NgIf, ElementLabelComponent]
 })
 export class MauroItemTreeComponent implements OnChanges {
   /**

@@ -36,11 +36,15 @@ import {
   isDomainExpandable,
   MauroItemTreeFlatNode
 } from '../mauro-item-tree/mauro-item-tree.types';
+import { NgIf } from '@angular/common';
+import { MauroItemTreeComponent } from '../mauro-item-tree/mauro-item-tree.component';
 
 @Component({
-  selector: 'mdm-favourites',
-  templateUrl: './favourites.component.html',
-  styleUrls: ['./favourites.component.sass']
+    selector: 'mdm-favourites',
+    templateUrl: './favourites.component.html',
+    styleUrls: ['./favourites.component.sass'],
+    standalone: true,
+    imports: [MauroItemTreeComponent, NgIf]
 })
 export class FavouritesComponent implements OnInit, OnDestroy {
   @Output() selectionChange = new EventEmitter<MauroItemTreeFlatNode>();

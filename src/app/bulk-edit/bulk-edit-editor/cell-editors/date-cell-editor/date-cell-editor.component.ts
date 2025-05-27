@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component } from '@angular/core';
 import { ICellEditorAngularComp } from '@ag-grid-community/angular';
 import { ICellEditorParams } from '@ag-grid-community/core';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'mdm-date-cell-editor',
-  templateUrl: './date-cell-editor.component.html',
-  styleUrls: ['./date-cell-editor.component.scss']
+    selector: 'mdm-date-cell-editor',
+    templateUrl: './date-cell-editor.component.html',
+    styleUrls: ['./date-cell-editor.component.scss'],
+    standalone: true,
+    imports: [MatInput, FormsModule]
 })
 export class DateCellEditorComponent implements ICellEditorAngularComp {
   params: ICellEditorParams;

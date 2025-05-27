@@ -25,11 +25,19 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { UserDetailsComponent } from '../user-details/user-details.component';
+import { ImgCroppieComponent } from '../../shared/img-croppie/img-croppie.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+    selector: 'mdm-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, ImgCroppieComponent, UserDetailsComponent]
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('imgCropperComp', { static: true }) imgCropperComp;

@@ -34,6 +34,10 @@ import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter } from 'rxjs/operators';
 import { HtmlParserService } from '../html-parser/html-parser.service';
+import { SafePipe } from '../../safe.pipe';
+import { FormsModule } from '@angular/forms';
+import { NgxJoditComponent } from 'ngx-jodit';
+import { NgIf } from '@angular/common';
 
 const basicButtons = [
   'bold',
@@ -93,8 +97,10 @@ export enum HtmlButtonMode {
 }
 
 @Component({
-  selector: 'mdm-html-editor',
-  templateUrl: './html-editor.component.html'
+    selector: 'mdm-html-editor',
+    templateUrl: './html-editor.component.html',
+    standalone: true,
+    imports: [NgIf, NgxJoditComponent, FormsModule, SafePipe]
 })
 export class HtmlEditorComponent implements OnInit, OnChanges {
   /* Inputs for manual properties */

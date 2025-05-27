@@ -33,11 +33,22 @@ import {
   DiagramMode,
   DiagramParameters
 } from './diagram.model';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelActionRow } from '@angular/material/expansion';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram',
-  templateUrl: './diagram.component.html',
-  styleUrls: ['./diagram.component.scss']
+    selector: 'mdm-diagram',
+    templateUrl: './diagram.component.html',
+    styleUrls: ['./diagram.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, FormsModule, CodemirrorModule, MatExpansionPanelActionRow, MatButton, MatCard, MatProgressSpinner]
 })
 export class DiagramComponent implements OnInit {
   @Input() mode: DiagramMode;

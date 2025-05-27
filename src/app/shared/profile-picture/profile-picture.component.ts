@@ -16,11 +16,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-profile-picture',
-  templateUrl: './profile-picture.component.html',
-  styleUrls: ['./profile-picture.component.sass']
+    selector: 'mdm-profile-picture',
+    templateUrl: './profile-picture.component.html',
+    styleUrls: ['./profile-picture.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, ByteArrayToBase64Pipe]
 })
 export class ProfilePictureComponent implements OnInit {
   @Input() user: any;

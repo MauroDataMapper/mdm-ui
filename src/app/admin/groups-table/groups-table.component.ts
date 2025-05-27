@@ -21,16 +21,26 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-groups-table',
-  templateUrl: './groups-table.component.html',
-  styleUrls: ['./groups-table.component.sass']
+    selector: 'mdm-groups-table',
+    templateUrl: './groups-table.component.html',
+    styleUrls: ['./groups-table.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent_1]
 })
 export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

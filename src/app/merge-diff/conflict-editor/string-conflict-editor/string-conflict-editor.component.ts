@@ -19,6 +19,11 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEnc
 import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
 import { StringConflictService } from '@mdm/merge-diff/services/string-conflict.service';
 import { Diff } from 'diff-match-patch';
+import { SafePipe } from '../../../content/safe.pipe';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf } from '@angular/common';
 
 const diffType = 0;
 const deletedType = -1;
@@ -33,10 +38,12 @@ interface DiffTrackedItem {
 
 
 @Component({
-  selector: 'mdm-string-conflict-editor',
-  templateUrl: './string-conflict-editor.component.html',
-  styleUrls: ['./string-conflict-editor.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-string-conflict-editor',
+    templateUrl: './string-conflict-editor.component.html',
+    styleUrls: ['./string-conflict-editor.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [NgIf, MatTooltip, MatButton, ContentEditorComponent, SafePipe]
 })
 export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   @Input() source: Branchable;

@@ -18,6 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ICellEditorAngularComp } from '@ag-grid-community/angular';
 import { ICellEditorParams } from '@ag-grid-community/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface TextAreaCellEditorParams {
   rows?: number;
@@ -28,9 +32,11 @@ interface TextAreaCellEditorParams {
 export type PopupPosition = 'under' | 'over';
 
 @Component({
-  selector: 'mdm-text-area-cell-editor',
-  templateUrl: './text-area-cell-editor.component.html',
-  styleUrls: ['./text-area-cell-editor.component.scss']
+    selector: 'mdm-text-area-cell-editor',
+    templateUrl: './text-area-cell-editor.component.html',
+    styleUrls: ['./text-area-cell-editor.component.scss'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatButton, MatTooltip]
 })
 export class TextAreaCellEditorComponent implements ICellEditorAngularComp {
   @ViewChild('valueInput') textArea: ElementRef<HTMLTextAreaElement>;

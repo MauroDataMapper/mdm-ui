@@ -17,7 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'stringify'})
+@Pipe({
+    name: 'stringify',
+    standalone: true
+})
 export class StringifyPipe implements PipeTransform {
   transform(value: object, padding: number = 4) {
     if (value) {

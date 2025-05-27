@@ -23,11 +23,17 @@ import { groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { Categories } from '@mdm/model/model-types.model';
 import { CatalogueItem, CatalogueItemDomainType, DataType, MdmResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-data-type',
-  templateUrl: './element-data-type.component.html',
-  styleUrls: ['./element-data-type.component.sass']
+    selector: 'mdm-element-data-type',
+    templateUrl: './element-data-type.component.html',
+    styleUrls: ['./element-data-type.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, NgFor, NgClass, ExtendedModule, ElementLinkComponent]
 })
 export class ElementDataTypeComponent implements OnInit {
   @Input() elementDataType: DataType;

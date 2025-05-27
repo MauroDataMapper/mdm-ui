@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
 import {
   ApiProperty,
@@ -40,11 +40,21 @@ import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { catchError, map } from 'rxjs/operators';
 import { ImageChangedEvent, ImageChangeType, ThemeImageComponent } from '../theme-image/theme-image.component';
+import { MatchThemeColorPatternPipe } from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { MatButton } from '@angular/material/button';
+import { HtmlEditorComponent } from '../../content/html/html-editor/html-editor.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-api-property',
-  templateUrl: './api-property.component.html',
-  styleUrls: ['./api-property.component.scss']
+    selector: 'mdm-api-property',
+    templateUrl: './api-property.component.html',
+    styleUrls: ['./api-property.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, NgFor, MatLabel, MatInput, MatError, MatCheckbox, HtmlEditorComponent, ThemeImageComponent, MatButton, MatchThemeColorPatternPipe]
 })
 export class ApiPropertyComponent implements OnInit {
 

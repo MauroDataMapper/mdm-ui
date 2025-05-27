@@ -16,9 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
 
 @Component({
-  selector: 'mdm-ui-view',
-  template: '<div ui-view id="mdm-ui" class="mdm-ui-view"></div>'
+    selector: 'mdm-ui-view',
+    template: '<div ui-view id="mdm-ui" class="mdm-ui-view"></div>',
+    standalone: true,
+    imports: [UIRouterModule]
 })
 export class UiViewComponent {}

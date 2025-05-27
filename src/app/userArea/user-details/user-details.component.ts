@@ -30,12 +30,19 @@ import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-user-details',
-  templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.sass'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-user-details',
+    templateUrl: './user-details.component.html',
+    styleUrls: ['./user-details.component.sass'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatLabel, MatInput, MatButton]
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
   @Input() afterSave: any;

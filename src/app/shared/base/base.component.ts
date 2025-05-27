@@ -19,9 +19,10 @@ import { Component } from '@angular/core';
 import { CodeSetDetail, DataElementDetail, DataModelDetail, FolderDetail, TermDetail, TerminologyDetail, VersionedFolderDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
-  selector: 'mdm-base',
-  templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+    selector: 'mdm-base',
+    templateUrl: './base.component.html',
+    styleUrls: ['./base.component.scss'],
+    standalone: true
 })
 export class BaseComponent {
 

@@ -17,11 +17,19 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgClass, NgFor } from '@angular/common';
 
-@
-Component({
+@Component({
     selector: 'mdm-model-path',
     templateUrl: './model-path.component.html',
+    standalone: true,
+    imports: [
+        NgIf,
+        NgClass,
+        ExtendedModule,
+        NgFor,
+    ],
 })
 
 export class ModelPathComponent implements OnInit {

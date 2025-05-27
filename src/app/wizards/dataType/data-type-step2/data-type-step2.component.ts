@@ -27,23 +27,34 @@ import {
   ChangeDetectorRef,
   AfterViewInit, OnDestroy
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription, merge } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataModel, DataType } from '@maurodatamapper/mdm-resources';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NewDataTypeInlineComponent } from '../../../utility/new-data-type-inline/new-data-type-inline.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-step2',
-  templateUrl: './data-type-step2.component.html',
-  styleUrls: ['./data-type-step2.component.sass']
+    selector: 'mdm-data-type-step2',
+    templateUrl: './data-type-step2.component.html',
+    styleUrls: ['./data-type-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, NewDataTypeInlineComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
   @Input() parent;

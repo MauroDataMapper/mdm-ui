@@ -15,15 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode, LOCALE_ID, importProvidersFrom } from '@angular/core';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments//environment';
+import { environment } from '@env/environment';
+import { UIRouterModule } from '@uirouter/angular';
+import { bootstrapApplication } from '@angular/platform-browser';
 
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/markdown/markdown';
-import 'codemirror/mode/sql/sql.js';
+import { AppComponent } from '@mdm/app.component';
+import { MdmResourcesConfiguration } from '@maurodatamapper/mdm-resources';
+import { MdmResourcesModule, MdmRestHandlerService } from '@mdm/modules/resources';
+import { provideHttpClient } from '@angular/common/http';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
+import { pageRoutes, routerConfigFn } from '@mdm/app-routing.module';
+import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
+import { UIRouter } from '@uirouter/core';
+import { userPageRoutes } from '@mdm/modules/users-routes/users-routes.module'
+import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
 
 if (environment.production) {
   enableProdMode();
@@ -32,4 +41,36 @@ if (environment.production) {
   }
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.error(err));
+
+bootstrapApplication(UiViewComponent, {
+  providers: [
+    MdmResourcesConfiguration,
+    MdmRestHandlerService,
+    provideAnimations(), // enables full animation support
+    provideToastr(),
+    provideHttpClient(),
+    importProvidersFrom(
+      MdmResourcesModule.forRoot({
+        defaultHttpRequestOptions: {withCredentials: true},
+        apiEndpoint: environment.apiEndpoint
+      }),
+      UIRouterModule.forRoot({
+        useHash: true,
+        states: [
+          ... pageRoutes.states,
+          ... userPageRoutes.states,
+          ... adminPageRoutes.states
+        ],
+        config: routerConfigFn
+      })
+    ),
+    {
+      provide: 'traceRouter',
+      useFactory: (router: UIRouter) => {
+        router.trace.enable(1);  // Shows transitions in console
+      },
+      deps: [UIRouter]
+    },
+    provideZxvbnServiceForPSM()
+  ]
+});

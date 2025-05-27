@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input } from '@angular/core';
+import { ModelPathComponent } from '../../utility/model-path/model-path.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-enumeration-values-details',
-  templateUrl: './enumeration-values-details.component.html',
-  styleUrls: ['./enumeration-values-details.component.scss']
+    selector: 'mdm-enumeration-values-details',
+    templateUrl: './enumeration-values-details.component.html',
+    styleUrls: ['./enumeration-values-details.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, ElementLinkComponent, ModelPathComponent]
 })
 export class EnumerationValuesDetailsComponent {
 

@@ -19,8 +19,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'matchThemeColorPattern',
-  pure: true
+    name: 'matchThemeColorPattern',
+    pure: true,
+    standalone: true
 })
 export class MatchThemeColorPatternPipe implements PipeTransform {
   constructor() {}

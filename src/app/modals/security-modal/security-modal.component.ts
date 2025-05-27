@@ -20,11 +20,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CatalogueItem, SecurableModel } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { SecurityAccessResource, SecurityModalConfiguration } from './security-modal.model';
+import { GroupAccessNewComponent } from '../../access/group-access-new/group-access-new.component';
+import { ShareWithComponent } from '../../access/share-with/share-with.component';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-security-modal',
-  templateUrl: './security-modal.component.html',
-  styleUrls: ['./security-modal.component.scss']
+    selector: 'mdm-security-modal',
+    templateUrl: './security-modal.component.html',
+    styleUrls: ['./security-modal.component.scss'],
+    standalone: true,
+    imports: [MatIconButton, ShareWithComponent, GroupAccessNewComponent]
 })
 export class SecurityModalComponent implements OnInit {
   element: CatalogueItem & SecurableModel;

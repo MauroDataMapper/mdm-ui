@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -26,11 +26,47 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass, NgIf } from '@angular/common';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-pending-users-table',
-  templateUrl: './pending-users-table.component.html',
-  styleUrls: ['./pending-users-table.component.sass'],
+    selector: 'mdm-pending-users-table',
+    templateUrl: './pending-users-table.component.html',
+    styleUrls: ['./pending-users-table.component.sass'],
+    standalone: true,
+    imports: [
+        MatTooltip,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatCellDef,
+        MatCell,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        NgClass,
+        ExtendedModule,
+        NgIf,
+        MdmPaginatorComponent_1,
+    ],
 })
 export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

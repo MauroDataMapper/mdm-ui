@@ -20,7 +20,8 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
 
 @Directive({
-  selector: '[mdmShowIfRoleIsWritable]'
+    selector: '[mdmShowIfRoleIsWritable]',
+    standalone: true
 })
 export class ShowIfRoleIsWritableDirective  {
 

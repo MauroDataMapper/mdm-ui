@@ -36,11 +36,20 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { Observable, of } from 'rxjs';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { NgIf, DatePipe } from '@angular/common';
+import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-federated-data-model-detail',
-  templateUrl: './federated-data-model-detail.component.html',
-  styleUrls: ['./federated-data-model-detail.component.scss']
+    selector: 'mdm-federated-data-model-detail',
+    templateUrl: './federated-data-model-detail.component.html',
+    styleUrls: ['./federated-data-model-detail.component.scss'],
+    standalone: true,
+    imports: [FormsModule, MatTooltip, InlineTextEditComponent, NgIf, ContentEditorComponent, MatButton, MatProgressBar, DatePipe]
 })
 export class FederatedDataModelDetailComponent implements OnInit {
   @Input() dataModel: FederatedDataModel;

@@ -31,12 +31,22 @@ import {
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MultipleTermsSelectorComponent } from '../../../utility/multiple-terms-selector/multiple-terms-selector.component';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
 
 @Component({
-  selector: 'mdm-code-set-main',
-  templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss']
+    selector: 'mdm-code-set-main',
+    templateUrl: './code-set-main.component.html',
+    styleUrls: ['./code-set-main.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, ElementLinkComponent, MatFormField, MatLabel, MatInput, NgIf, MatError, ContentEditorComponent, ElementClassificationsComponent, MultipleTermsSelectorComponent, MatButton]
 })
 export class CodeSetMainComponent implements OnInit {
   parentFolderId: Uuid;

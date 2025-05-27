@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 export interface ConfirmationModalConfig {
   title?: string;
@@ -33,9 +36,11 @@ export interface ConfirmationModalResult {
 }
 
 @Component({
-  selector: 'mdm-confirmation-modal',
-  templateUrl: './confirmation-modal.component.html',
-  styleUrls: ['./confirmation-modal.component.sass']
+    selector: 'mdm-confirmation-modal',
+    templateUrl: './confirmation-modal.component.html',
+    styleUrls: ['./confirmation-modal.component.sass'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatButton]
 })
 export class ConfirmationModalComponent implements OnInit {
   title: string;

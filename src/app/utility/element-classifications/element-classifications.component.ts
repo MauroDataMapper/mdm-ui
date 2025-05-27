@@ -23,11 +23,19 @@ import {
   ClassifierIndexResponse,
   DataModelDetail
 } from '@maurodatamapper/mdm-resources';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { PropertiesDirective } from '../../directives/properties.directive';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-classifications',
-  templateUrl: './element-classifications.component.html',
-  styleUrls: ['./element-classifications.component.sass']
+    selector: 'mdm-element-classifications',
+    templateUrl: './element-classifications.component.html',
+    styleUrls: ['./element-classifications.component.sass'],
+    standalone: true,
+    imports: [NgIf, PropertiesDirective, NgFor, MatFormField, MatSelect, FormsModule, MatOption]
 })
 export class ElementClassificationsComponent implements OnInit {
   @Input() readOnly = true;

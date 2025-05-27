@@ -16,7 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import { NgFor } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 export interface SortByOption {
   value: string;
@@ -26,9 +29,17 @@ export interface SortByOption {
 export type SortOrder = 'asc' | 'desc';
 
 @Component({
-  selector: 'mdm-sort-by',
-  templateUrl: './sort-by.component.html',
-  styleUrls: ['./sort-by.component.scss'],
+    selector: 'mdm-sort-by',
+    templateUrl: './sort-by.component.html',
+    styleUrls: ['./sort-by.component.scss'],
+    standalone: true,
+    imports: [
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        NgFor,
+        MatOption,
+    ],
 })
 export class SortByComponent {
   @Input() value?: SortByOption;

@@ -17,11 +17,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertStyle, AlertStyleMetadata } from './alert.model';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-alert',
-  templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+    selector: 'mdm-alert',
+    templateUrl: './alert.component.html',
+    styleUrls: ['./alert.component.scss'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class AlertComponent implements OnInit {
 

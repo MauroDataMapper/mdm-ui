@@ -17,9 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { FinalisePayload } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass, NgIf } from '@angular/common';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 export interface FinaliseModalResponse {
   status: ModalDialogStatus;
@@ -27,9 +34,11 @@ export interface FinaliseModalResponse {
 }
 
 @Component({
-  selector: 'mdm-finalise-modal',
-  templateUrl: './finalise-modal.component.html',
-  styleUrls: ['./finalise-modal.component.scss']
+    selector: 'mdm-finalise-modal',
+    templateUrl: './finalise-modal.component.html',
+    styleUrls: ['./finalise-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatRadioGroup, MatRadioButton, NgClass, ExtendedModule, MatFormField, MatLabel, MatInput, MatDialogActions, NgIf, MatButton]
 })
 export class FinaliseModalComponent implements OnInit {
   title: string;

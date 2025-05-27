@@ -19,11 +19,16 @@ import { Component, OnInit, Input } from '@angular/core';
 import { QueryParameters, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Subscription } from 'rxjs';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-term-relationships',
-  templateUrl: './term-relationships.component.html',
-  styleUrls: ['./term-relationships.component.scss']
+    selector: 'mdm-term-relationships',
+    templateUrl: './term-relationships.component.html',
+    styleUrls: ['./term-relationships.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, McPagedListComponent, ElementLinkComponent]
 })
 export class TermRelationshipsComponent implements OnInit {
   @Input() term: TermDetail;

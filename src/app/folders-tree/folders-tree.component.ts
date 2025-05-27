@@ -26,11 +26,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener
-} from '@angular/material/tree';
+import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatTreeNodeToggle } from '@angular/material/tree';
 import { EMPTY, of, Subject, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -54,6 +51,12 @@ import {
   MdmTreeItem, Securable, TreeItemExpandedParameters
 } from '@maurodatamapper/mdm-resources';
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf, NgTemplateOutlet, NgFor, NgClass } from '@angular/common';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -70,9 +73,11 @@ export class NodeConfirmClickEvent {
 }
 
 @Component({
-  selector: 'mdm-folders-tree',
-  templateUrl: './folders-tree.component.html',
-  styleUrls: ['./folders-tree.component.scss']
+    selector: 'mdm-folders-tree',
+    templateUrl: './folders-tree.component.html',
+    styleUrls: ['./folders-tree.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatIconButton, MatIcon, NgTemplateOutlet, MatTreeNodeToggle, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, NgFor, NgClass, MatCheckbox, FormsModule, HighlighterPipe]
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Input() node: any;

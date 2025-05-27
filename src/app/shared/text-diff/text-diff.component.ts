@@ -20,9 +20,10 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { diff_match_patch } from 'diff-match-patch';
 
 @Component({
-  selector: 'mdm-text-diff',
-  templateUrl: './text-diff.component.html',
-  styleUrls: ['./text-diff.component.scss']
+    selector: 'mdm-text-diff',
+    templateUrl: './text-diff.component.html',
+    styleUrls: ['./text-diff.component.scss'],
+    standalone: true
 })
 export class TextDiffComponent implements AfterViewInit {
   @Input() left : any;

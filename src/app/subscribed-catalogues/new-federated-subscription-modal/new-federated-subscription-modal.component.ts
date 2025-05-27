@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   FolderDetail,
@@ -25,6 +25,12 @@ import {
   PublishedDataModelLink
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
 
 export interface NewFederatedSubscriptionModalConfig {
   contentLinks: PublishedDataModelLink[];
@@ -39,9 +45,11 @@ export interface NewFederatedSubscriptionModalResponse {
 }
 
 @Component({
-  selector: 'mdm-new-federated-subscription-modal',
-  templateUrl: './new-federated-subscription-modal.component.html',
-  styleUrls: ['./new-federated-subscription-modal.component.scss']
+    selector: 'mdm-new-federated-subscription-modal',
+    templateUrl: './new-federated-subscription-modal.component.html',
+    styleUrls: ['./new-federated-subscription-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, ModelSelectorTreeComponent, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatHint, MatButton]
 })
 export class NewFederatedSubscriptionModalComponent implements OnInit {
   contentLinks: PublishedDataModelLink[];

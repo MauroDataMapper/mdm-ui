@@ -16,11 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-multiplicity',
-  templateUrl: './multiplicity.component.html',
-  styleUrls: ['./multiplicity.component.sass']
+    selector: 'mdm-multiplicity',
+    templateUrl: './multiplicity.component.html',
+    styleUrls: ['./multiplicity.component.sass'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class MultiplicityComponent {
   @Input() min: number | string;

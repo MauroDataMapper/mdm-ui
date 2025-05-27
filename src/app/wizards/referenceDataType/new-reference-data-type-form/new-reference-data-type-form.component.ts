@@ -23,14 +23,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   CatalogueItemDomainType,
   ReferenceDataEnumerationValueCreatePayload,
@@ -38,6 +31,14 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { McEnumerationListWithCategoryComponent } from '../../../utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { NgIf } from '@angular/common';
 
 export interface NewReferenceDataTypeState {
   valid: boolean;
@@ -67,9 +68,11 @@ export const referenceDataEnumerationValuesListValidator = (): ValidatorFn => {
 };
 
 @Component({
-  selector: 'mdm-new-reference-data-type-form',
-  templateUrl: './new-reference-data-type-form.component.html',
-  styleUrls: ['./new-reference-data-type-form.component.scss']
+    selector: 'mdm-new-reference-data-type-form',
+    templateUrl: './new-reference-data-type-form.component.html',
+    styleUrls: ['./new-reference-data-type-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, ModelPathComponent, MatFormField, MatSelect, MatOption, MatError, MatInput, McEnumerationListWithCategoryComponent, ContentEditorComponent]
 })
 export class NewReferenceDataTypeFormComponent implements OnInit, OnDestroy {
   @Input() parent?: ReferenceDataModel;

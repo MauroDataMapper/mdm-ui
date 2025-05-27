@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { DataClassDetail } from '@maurodatamapper/mdm-resources';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-alias',
-  templateUrl: './element-alias.component.html',
-  styleUrls: ['./element-alias.component.sass']
+    selector: 'mdm-element-alias',
+    templateUrl: './element-alias.component.html',
+    styleUrls: ['./element-alias.component.sass'],
+    standalone: true,
+    imports: [NgFor, NgIf, FormsModule, MatButton]
 })
 export class ElementAliasComponent {
   @Input() aliases: any[] = [];

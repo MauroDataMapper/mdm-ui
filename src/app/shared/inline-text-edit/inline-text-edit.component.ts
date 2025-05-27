@@ -16,20 +16,25 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-inline-text-edit',
-  templateUrl: './inline-text-edit.component.html',
-  styleUrls: ['./inline-text-edit.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      useExisting: forwardRef(() => InlineTextEditComponent),
-      multi: true
-    }
-  ]
+    selector: 'mdm-inline-text-edit',
+    templateUrl: './inline-text-edit.component.html',
+    styleUrls: ['./inline-text-edit.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgClass, ExtendedModule, FormsModule, MatIconButton, MatTooltip],
+    providers: [
+      {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => InlineTextEditComponent),
+        multi: true
+      }
+    ]
 })
 export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Output() saveClicked = new EventEmitter();

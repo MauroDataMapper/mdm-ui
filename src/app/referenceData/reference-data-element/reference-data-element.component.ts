@@ -30,11 +30,22 @@ import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ElementDataTypeComponent } from '../../shared/element-data-type/element-data-type.component';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-reference-data-element',
-  templateUrl: './reference-data-element.component.html',
-  styleUrls: ['./reference-data-element.component.scss']
+    selector: 'mdm-reference-data-element',
+    templateUrl: './reference-data-element.component.html',
+    styleUrls: ['./reference-data-element.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, SkeletonBadgeComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MoreDescriptionComponent, ElementDataTypeComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataElementComponent implements AfterViewInit {
   @Input() parent: CatalogueItem;

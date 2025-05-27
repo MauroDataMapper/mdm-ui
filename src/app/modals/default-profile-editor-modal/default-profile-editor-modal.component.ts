@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 // TODO update to use reactive forms
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   CatalogueItemDomainType,
   DataType
@@ -35,11 +35,26 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { ElementClassificationsComponent } from '../../utility/element-classifications/element-classifications.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { NewDataTypeInlineComponent } from '../../utility/new-data-type-inline/new-data-type-inline.component';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-default-profile-editor-modal',
-  templateUrl: './default-profile-editor-modal.component.html',
-  styleUrls: ['./default-profile-editor-modal.component.sass']
+    selector: 'mdm-default-profile-editor-modal',
+    templateUrl: './default-profile-editor-modal.component.html',
+    styleUrls: ['./default-profile-editor-modal.component.sass'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;

@@ -35,13 +35,24 @@ import { GridService } from '@mdm/services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { NgIf } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-group-member-table',
-  templateUrl: './group-member-table.component.html',
-  styleUrls: ['./group-member-table.component.scss']
+    selector: 'mdm-group-member-table',
+    templateUrl: './group-member-table.component.html',
+    styleUrls: ['./group-member-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, UIRouterModule, McSelectComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, MdmPaginatorComponent_1]
 })
 export class GroupMemberTableComponent implements AfterViewInit {
   @Input() parent: any;

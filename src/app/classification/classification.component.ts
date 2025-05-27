@@ -30,7 +30,7 @@ import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -43,11 +43,25 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ClassifiedElementsListComponent } from '../shared/classified-elements-list/classified-elements-list.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-classification',
-  templateUrl: './classification.component.html',
-  styleUrls: ['./classification.component.sass']
+    selector: 'mdm-classification',
+    templateUrl: './classification.component.html',
+    styleUrls: ['./classification.component.sass'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ClassifiedElementsListComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class ClassificationComponent
   extends BaseComponent

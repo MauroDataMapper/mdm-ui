@@ -29,14 +29,14 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDropList } from '@angular/cdk/drag-drop';
 import {
   DataClass,
   DataClassDetail,
@@ -48,11 +48,31 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { ElementDataTypeComponent } from '../element-data-type/element-data-type.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-class-components-list',
-  templateUrl: './data-class-components-list.component.html',
-  styleUrls: ['./data-class-components-list.component.scss']
+    selector: 'mdm-data-class-components-list',
+    templateUrl: './data-class-components-list.component.html',
+    styleUrls: ['./data-class-components-list.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, FlexModule, SkeletonBadgeComponent, MatTooltip, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatTable, MatSort, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, ElementDataTypeComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatCheckbox, FormsModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, MdmPaginatorComponent, JoinArrayPipe]
 })
 export class DataClassComponentsListComponent implements AfterViewInit {
   @ViewChildren('classFilters', { read: ElementRef })

@@ -28,14 +28,21 @@ import {
 } from '@mdm/model/api-properties';
 import { catchError, map } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
-import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
+import { ApiPropertyTableViewChange, ApiPropertyTableComponent } from '../api-property-table/api-property-table.component';
 import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss']
+    selector: 'mdm-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, ApiPropertyTableComponent, FlexModule, MatButton, NgIf, MatProgressSpinner]
 })
 export class ConfigurationComponent implements OnInit {
   activeTab: any;

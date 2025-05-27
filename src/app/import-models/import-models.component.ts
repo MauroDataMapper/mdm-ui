@@ -43,11 +43,25 @@ import {
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY, timer } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ElementLinkComponent } from '../utility/element-link/element-link.component';
+import { MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
+import { FormsModule } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-import',
-  templateUrl: './import-models.component.html',
-  styleUrls: ['./import-models.component.sass']
+    selector: 'mdm-import',
+    templateUrl: './import-models.component.html',
+    styleUrls: ['./import-models.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, MatFormField, MatLabel, MatSelect, NgFor, MatOption, FormsModule, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatCheckbox, MatProgressBar, MatButton, ElementLinkComponent]
 })
 export class ImportModelsComponent implements OnInit {
   importers: Importer[];

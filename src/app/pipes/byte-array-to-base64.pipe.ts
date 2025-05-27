@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'byteArrayToBase64'
+    name: 'byteArrayToBase64',
+    standalone: true
 })
 export class ByteArrayToBase64Pipe implements PipeTransform {
 

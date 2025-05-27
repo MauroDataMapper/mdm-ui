@@ -34,26 +34,24 @@ import { ProfileFiltersComponent } from './profile-filters/profile-filters.compo
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/profile-filter-dialog-component';
 
 @NgModule({
-  declarations: [
-    CatalogueSearchComponent,
-    CatalogueSearchFormComponent,
-    CatalogueSearchListingComponent,
-    CatalogueItemSearchResultComponent,
-    CatalogueSearchAdvancedFormComponent,
-    SearchFiltersComponent,
-    CatalogueItemSearchComponent,
-    CatalogueSearchProfileFilterListComponent,
-    ProfileFilterCardComponent,
-    ProfileFiltersComponent,
-    ProfileFilterDialogComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    FoldersTreeModule,
-    ContentModule
-  ],
-  exports: [CatalogueItemSearchComponent]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        FoldersTreeModule,
+        ContentModule,
+        CatalogueSearchComponent,
+        CatalogueSearchFormComponent,
+        CatalogueSearchListingComponent,
+        CatalogueItemSearchResultComponent,
+        CatalogueSearchAdvancedFormComponent,
+        SearchFiltersComponent,
+        CatalogueItemSearchComponent,
+        CatalogueSearchProfileFilterListComponent,
+        ProfileFilterCardComponent,
+        ProfileFiltersComponent,
+        ProfileFilterDialogComponent
+    ],
+    exports: [CatalogueItemSearchComponent]
 })
 export class CatalogueSearchModule {}

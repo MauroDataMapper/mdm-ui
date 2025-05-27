@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'filter'
+    name: 'filter',
+    standalone: true
 })
 export class FilterPipe implements PipeTransform {
 

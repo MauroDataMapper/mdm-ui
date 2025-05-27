@@ -24,7 +24,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MessageService } from '../services/message.service';
 import {
   animate,
@@ -41,7 +41,7 @@ import {
   filter,
   distinctUntilChanged
 } from 'rxjs/operators';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
 import {
   ContainerDomainType,
@@ -53,24 +53,27 @@ import {
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
 import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
 import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
+import { MatButton } from '@angular/material/button';
+import { MatRipple } from '@angular/material/core';
+import { ModelPathComponent } from './model-path/model-path.component';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
+import { FoldersTreeComponent } from '../folders-tree/folders-tree.component';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-selector',
-  templateUrl: './element-selector.component.html',
-  animations: [
-    trigger('detailExpand', [
-      state(
-        'collapsed',
-        style({ height: '0px', minHeight: '0', visibility: 'hidden' })
-      ),
-      state('expanded', style({ height: '*', visibility: 'visible' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
-    ])
-  ],
-  styleUrls: ['./element-selector.component.sass']
+    selector: 'mdm-element-selector',
+    templateUrl: './element-selector.component.html',
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+            state('expanded', style({ height: '*', visibility: 'visible' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+        ])
+    ],
+    styleUrls: ['./element-selector.component.sass'],
+    standalone: true,
+    imports: [MatDialogContent, NgIf, FormsModule, FoldersTreeComponent, ModelSelectorTreeComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ModelPathComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatDialogActions, MatButton]
 })
 export class ElementSelectorComponent implements OnInit {
   @ViewChild('searchInputControl', { static: false }) set content(

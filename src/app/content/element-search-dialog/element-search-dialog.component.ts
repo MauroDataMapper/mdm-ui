@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
 import {
   CatalogueItem,
   CatalogueItemSearchResponse,
@@ -37,6 +37,11 @@ import {
   switchMap,
   tap
 } from 'rxjs/operators';
+import { MatOption } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatHint, MatError } from '@angular/material/form-field';
 
 const defaultMinSearchTermLength = 3;
 
@@ -51,9 +56,11 @@ export interface ElementSearchDialogResponse {
 }
 
 @Component({
-  selector: 'mdm-element-search-dialog',
-  templateUrl: './element-search-dialog.component.html',
-  styleUrls: ['./element-search-dialog.component.scss']
+    selector: 'mdm-element-search-dialog',
+    templateUrl: './element-search-dialog.component.html',
+    styleUrls: ['./element-search-dialog.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, MatFormField, MatInput, MatAutocompleteTrigger, FormsModule, ReactiveFormsModule, NgIf, MatHint, MatError, MatProgressSpinner, MatAutocomplete, NgFor, MatOption]
 })
 export class ElementSearchDialogComponent implements OnInit {
   searchTerm = new FormControl();

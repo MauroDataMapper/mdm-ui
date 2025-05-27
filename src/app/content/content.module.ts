@@ -39,14 +39,14 @@ const components = [
 ];
 
 @NgModule({
-  declarations: components,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    NgxJoditComponent
-  ],
-  exports: components
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        NgxJoditComponent,
+        ...components
+    ],
+    exports: components
 })
 export class ContentModule {}

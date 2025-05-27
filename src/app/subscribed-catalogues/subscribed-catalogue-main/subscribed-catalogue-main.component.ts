@@ -22,11 +22,15 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/core';
+import { SubscribedCatalogueDetailComponent } from '../subscribed-catalogue-detail/subscribed-catalogue-detail.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-subscribed-catalogue-main',
-  templateUrl: './subscribed-catalogue-main.component.html',
-  styleUrls: ['./subscribed-catalogue-main.component.scss']
+    selector: 'mdm-subscribed-catalogue-main',
+    templateUrl: './subscribed-catalogue-main.component.html',
+    styleUrls: ['./subscribed-catalogue-main.component.scss'],
+    standalone: true,
+    imports: [NgIf, SubscribedCatalogueDetailComponent]
 })
 export class SubscribedCatalogueMainComponent extends BaseComponent implements OnInit {
 

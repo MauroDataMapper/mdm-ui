@@ -22,7 +22,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,
@@ -31,11 +31,22 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Subject, takeUntil } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { MatDatepickerInput, MatDatepickerToggleIcon, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatInput } from '@angular/material/input';
+import { NgFor } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'mdm-catalogue-search-advanced-form',
-  templateUrl: './catalogue-search-advanced-form.component.html',
-  styleUrls: ['./catalogue-search-advanced-form.component.scss']
+    selector: 'mdm-catalogue-search-advanced-form',
+    templateUrl: './catalogue-search-advanced-form.component.html',
+    styleUrls: ['./catalogue-search-advanced-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatCheckbox, ModelSelectorTreeComponent, MatFormField, MatLabel, MatSelect, MatOption, NgFor, MatInput, MatDatepickerInput, MatIcon, MatDatepickerToggleIcon, MatDatepickerToggle, MatSuffix, MatDatepicker]
 })
 export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
   @Output() valueChange = new EventEmitter<void>();

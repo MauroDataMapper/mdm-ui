@@ -558,7 +558,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-const editingViewTransitionHooks = (
+export const editingViewTransitionHooks = (
   transitions: TransitionService,
   editing: EditingService
 ) => {
@@ -589,7 +589,7 @@ const editingViewTransitionHooks = (
  *
  * @see {@link StateRoleAccessService}
  */
-const roleTransitionHooks = (transitions: TransitionService) => {
+export const roleTransitionHooks = (transitions: TransitionService) => {
   /**
    * Before starting a transition, check if the user/role has access to this route.
    */
@@ -634,7 +634,7 @@ const roleTransitionHooks = (transitions: TransitionService) => {
 /**
  * Configuration of the `UIRouter`.
  */
-const routerConfigFn = (router: UIRouter, injector: Injector) => {
+export const routerConfigFn = (router: UIRouter, injector: Injector) => {
   const transitions = router.transitionService;
 
   const editing = injector.get<EditingService>(EditingService);
@@ -645,17 +645,11 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
 
 @NgModule({
   imports: [
-    UIRouterModule.forChild({
+    UIRouterModule.forRoot({
       states: pageRoutes.states,
       config: routerConfigFn
     })
   ],
-  providers: [
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }
-  ]
 })
 export class AppRoutingModule {
   constructor() {}

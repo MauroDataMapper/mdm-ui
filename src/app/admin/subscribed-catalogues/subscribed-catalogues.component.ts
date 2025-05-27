@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
 import { MdmHttpHandlerOptions, MdmResourcesService } from '@mdm/modules/resources';
@@ -26,11 +26,21 @@ import { GridService, MessageHandlerService, SharedService, StateHandlerService 
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-subscribed-catalogues',
-  templateUrl: './subscribed-catalogues.component.html',
-  styleUrls: ['./subscribed-catalogues.component.scss']
+    selector: 'mdm-subscribed-catalogues',
+    templateUrl: './subscribed-catalogues.component.html',
+    styleUrls: ['./subscribed-catalogues.component.scss'],
+    standalone: true,
+    imports: [FlexModule, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatTooltip, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;

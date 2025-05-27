@@ -35,15 +35,21 @@ import { EditingService } from './services/editing.service';
 import { FeaturesService } from './services/features.service';
 import { SharedService } from './services/shared.service';
 import { ThemingService } from './services/theming.service';
-import { FooterLink } from './shared/footer/footer.component';
+import { FooterLink, FooterComponent } from './shared/footer/footer.component';
+import { LoadingIndicatorComponent } from './utility/loading-indicator/loading-indicator.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { NavbarComponent } from './navbar/navbar.component';
+import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 
 const defaultCopyright =
   'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
-  selector: 'mdm-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'mdm-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+  imports: [NavbarComponent, UIRouterModule, LoadingIndicatorComponent, FooterComponent, UiViewComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'mdm-ui';

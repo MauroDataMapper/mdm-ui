@@ -23,9 +23,10 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldAppearance, MatFormField, MatLabel } from '@angular/material/form-field';
 import { Subject, takeUntil } from 'rxjs';
+import { MatInput } from '@angular/material/input';
 
 /**
  * Top-level component that represents the overall Catalogue Search page.
@@ -34,9 +35,11 @@ import { Subject, takeUntil } from 'rxjs';
  * entering search criteria.
  */
 @Component({
-  selector: 'mdm-catalogue-search-form',
-  templateUrl: './catalogue-search-form.component.html',
-  styleUrls: ['./catalogue-search-form.component.scss']
+    selector: 'mdm-catalogue-search-form',
+    templateUrl: './catalogue-search-form.component.html',
+    styleUrls: ['./catalogue-search-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput]
 })
 export class CatalogueSearchFormComponent implements OnInit, OnDestroy {
   @Input() appearance: MatFormFieldAppearance = 'outline';

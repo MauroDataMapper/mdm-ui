@@ -25,11 +25,17 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, of } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
+import { BulkEditEditorGroupComponent } from '../bulk-edit-editor-group/bulk-edit-editor-group.component';
+import { BulkEditSelectComponent } from '../bulk-edit-select/bulk-edit-select.component';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-bulk-edit-container',
-  templateUrl: './bulk-edit-container.component.html',
-  styleUrls: ['./bulk-edit-container.component.scss']
+    selector: 'mdm-bulk-edit-container',
+    templateUrl: './bulk-edit-container.component.html',
+    styleUrls: ['./bulk-edit-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, ElementIconComponent, BulkEditSelectComponent, BulkEditEditorGroupComponent]
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;

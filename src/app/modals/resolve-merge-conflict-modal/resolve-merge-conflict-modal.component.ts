@@ -17,13 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import  {diff_match_patch}   from 'diff-match-patch';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-resolve-merge-conflict-modal',
-  templateUrl: './resolve-merge-conflict-modal.component.html',
-  styleUrls: ['./resolve-merge-conflict-modal.component.scss']
+    selector: 'mdm-resolve-merge-conflict-modal',
+    templateUrl: './resolve-merge-conflict-modal.component.html',
+    styleUrls: ['./resolve-merge-conflict-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatDialogActions, MatButton, MatDialogClose, SafePipe]
 })
 export class ResolveMergeConflictModalComponent implements AfterViewInit {
 

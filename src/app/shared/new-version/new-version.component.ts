@@ -16,14 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItem,
@@ -52,6 +45,15 @@ import {
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../alert/alert.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 interface NewVersionAction {
   name: string;
@@ -65,9 +67,11 @@ interface NewVersionAction {
 }
 
 @Component({
-  selector: 'mdm-new-version',
-  templateUrl: './new-version.component.html',
-  styleUrls: ['./new-version.component.scss']
+    selector: 'mdm-new-version',
+    templateUrl: './new-version.component.html',
+    styleUrls: ['./new-version.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatSelectTrigger, NgFor, MatOption, MatError, MatInput, MatHint, MatCheckbox, AlertComponent, MatButton, MatProgressBar]
 })
 export class NewVersionComponent implements OnInit {
   catalogueItem: CatalogueItem & Modelable;

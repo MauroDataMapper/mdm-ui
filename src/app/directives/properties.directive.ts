@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import {Directive, Input} from '@angular/core';
 
 @Directive({
-  selector: '[mdmProperties]'
+    selector: '[mdmProperties]',
+    standalone: true
 })
 export class PropertiesDirective {
   @Input() aliases: any;

@@ -24,11 +24,17 @@ import { MessageHandlerService, SecurityHandlerService, StateHandlerService } fr
 import {
   AuthenticatedResponse
 } from '@maurodatamapper/mdm-resources';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-not-found-error',
-  templateUrl: '../error.component.html',
-  styleUrls: []
+    selector: 'mdm-not-found-error',
+    templateUrl: '../error.component.html',
+    styleUrls: [],
+    standalone: true,
+    imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class NotFoundComponent extends ErrorComponent implements OnInit {
   constructor(

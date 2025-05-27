@@ -17,12 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-download-link',
-  templateUrl: './download-link.component.html',
-  styleUrls: ['./download-link.component.scss']
+    selector: 'mdm-download-link',
+    templateUrl: './download-link.component.html',
+    styleUrls: ['./download-link.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, SafePipe]
 })
 export class DownloadLinkComponent implements OnChanges{
 

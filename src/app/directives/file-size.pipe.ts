@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'fileSize'
+    name: 'fileSize',
+    standalone: true
 })
 export class FileSizePipe implements PipeTransform {
   transform(bytes : string | number, precision? : number): string {

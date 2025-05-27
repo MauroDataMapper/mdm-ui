@@ -56,11 +56,23 @@ import {
   MdmTreeLevelManager
 } from './models.model';
 import { MauroItemTreeFlatNode } from '../mauro-item-tree/mauro-item-tree.types';
+import { FavouritesComponent } from '../favourites/favourites.component';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-models',
-  templateUrl: './models.component.html',
-  styleUrls: ['./models.component.scss']
+    selector: 'mdm-models',
+    templateUrl: './models.component.html',
+    styleUrls: ['./models.component.scss'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, MatTabLabel, NgIf, FormsModule, MatButton, MatTooltip, MatMenuTrigger, NgClass, ExtendedModule, MatMenu, MatMenuItem, MatCheckbox, FoldersTreeComponent, FavouritesComponent]
 })
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};

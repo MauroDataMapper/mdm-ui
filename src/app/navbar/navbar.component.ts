@@ -32,11 +32,21 @@ import {
   ApiProperty,
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { MatBadge } from '@angular/material/badge';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { UIRouterModule } from '@uirouter/angular';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'mdm-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+    selector: 'mdm-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, FlexModule, UIRouterModule, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatBadge, MatSidenavContainer, MatSidenav, MatSidenavContent]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;

@@ -34,7 +34,7 @@ import {
   MessageService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,
@@ -46,11 +46,29 @@ import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
 
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { TermRelationshipTypeListComponent } from './term-relationship-type-list/term-relationship-type-list.component';
+import { TermListComponent } from './term-list/term-list.component';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-terminology',
-  templateUrl: './terminology.component.html',
-  styleUrls: ['./terminology.component.sass']
+    selector: 'mdm-terminology',
+    templateUrl: './terminology.component.html',
+    styleUrls: ['./terminology.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, SkeletonBadgeComponent, TermListComponent, TermRelationshipTypeListComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class TerminologyComponent
   implements OnInit, OnDestroy, AfterViewChecked {

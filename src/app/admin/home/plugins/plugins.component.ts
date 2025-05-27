@@ -26,14 +26,20 @@ import {
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-plugins',
-  templateUrl: './plugins.component.html',
-  styleUrls: ['./plugins.component.sass']
+    selector: 'mdm-plugins',
+    templateUrl: './plugins.component.html',
+    styleUrls: ['./plugins.component.sass'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, NgClass, ExtendedModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class PluginsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

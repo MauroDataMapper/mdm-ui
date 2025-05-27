@@ -29,16 +29,23 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass, NgIf, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'mdm-history',
-  templateUrl: './history.component.html',
-  styleUrls: ['./history.component.scss']
+    selector: 'mdm-history',
+    templateUrl: './history.component.html',
+    styleUrls: ['./history.component.scss'],
+    standalone: true,
+    imports: [NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, DatePipe]
 })
 export class HistoryComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

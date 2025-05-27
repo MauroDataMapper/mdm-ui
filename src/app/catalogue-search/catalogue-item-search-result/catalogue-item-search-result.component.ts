@@ -18,11 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CatalogueItemSearchResult } from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-catalogue-item-search-result',
-  templateUrl: './catalogue-item-search-result.component.html',
-  styleUrls: ['./catalogue-item-search-result.component.scss']
+    selector: 'mdm-catalogue-item-search-result',
+    templateUrl: './catalogue-item-search-result.component.html',
+    styleUrls: ['./catalogue-item-search-result.component.scss'],
+    standalone: true,
+    imports: [NgIf, BreadcrumbComponent, MoreDescriptionComponent]
 })
 export class CatalogueItemSearchResultComponent implements OnChanges {
   @Input() item?: CatalogueItemSearchResult;

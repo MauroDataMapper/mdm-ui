@@ -27,11 +27,15 @@ import {
   mapProfileFiltersToDto,
   mapSearchParametersToRawParams
 } from '../catalogue-search.types';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-catalogue-search',
-  templateUrl: './catalogue-search.component.html',
-  styleUrls: ['./catalogue-search.component.scss']
+    selector: 'mdm-catalogue-search',
+    templateUrl: './catalogue-search.component.html',
+    styleUrls: ['./catalogue-search.component.scss'],
+    standalone: true,
+    imports: [CatalogueSearchFormComponent, MatButton, NgIf, CatalogueSearchAdvancedFormComponent, CatalogueSearchProfileFilterListComponent]
 })
 export class CatalogueSearchComponent implements AfterViewInit {
   constructor(private stateHandler: StateHandlerService) {}

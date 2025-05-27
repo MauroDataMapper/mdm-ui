@@ -23,7 +23,10 @@ import * as marked from 'marked';
  *
  * Usage: <span [innerHTML]="value | marked:<options>"></span>
  */
-@Pipe({ name: 'marked' })
+@Pipe({
+    name: 'marked',
+    standalone: true
+})
 export class MarkedPipe implements PipeTransform {
   transform(value: string, options = {}) {
     if (value) {

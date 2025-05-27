@@ -40,24 +40,6 @@ describe('ApiPropertyComponent', () => {
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
       ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {
-            apiProperties: {
-              list: jest.fn(() => of())
-            }
-          }
-        },
-        {
-          provide: UIRouterGlobals,
-          useValue: {
-            params: {
-              key: 'site.url'
-            }
-          }
-        }
-      ],
       declarations: [ ApiPropertyComponent ]
     })
       .compileComponents();

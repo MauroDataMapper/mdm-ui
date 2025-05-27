@@ -19,11 +19,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoadingService } from '@mdm/services/loading.service';
 import { Subject } from 'rxjs';
 import { delay, map, startWith, takeUntil } from 'rxjs/operators';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-loading-indicator',
-  templateUrl: './loading-indicator.component.html',
-  styleUrls: ['./loading-indicator.component.scss']
+    selector: 'mdm-loading-indicator',
+    templateUrl: './loading-indicator.component.html',
+    styleUrls: ['./loading-indicator.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner]
 })
 export class LoadingIndicatorComponent implements OnInit, OnDestroy {
   visible = false;

@@ -25,18 +25,29 @@ import {
   AfterViewInit,
   ChangeDetectorRef
 } from '@angular/core';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-app-emails',
-  templateUrl: './emails.component.html',
-  styleUrls: ['./emails.component.sass']
+    selector: 'mdm-app-emails',
+    templateUrl: './emails.component.html',
+    styleUrls: ['./emails.component.sass'],
+    standalone: true,
+    imports: [MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MoreDescriptionComponent, NgIf, MatButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1, DatePipe]
 })
 export class EmailsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

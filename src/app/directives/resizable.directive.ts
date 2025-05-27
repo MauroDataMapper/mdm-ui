@@ -19,7 +19,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Directive, ElementRef, OnInit, Input, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[mdmResizable]' // Attribute selector
+    selector: '[mdmResizable]' // Attribute selector
+    ,
+    standalone: true
 })
 export class ResizableDirective implements OnInit {
   @Input() resizableGrabWidth = 4;

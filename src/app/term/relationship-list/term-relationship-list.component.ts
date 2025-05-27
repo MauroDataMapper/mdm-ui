@@ -36,6 +36,10 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { BehaviorSubject } from 'rxjs';
 import { CreateTermRelationshipDialogComponent } from '../create-term-relationship-dialog/create-term-relationship-dialog.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 class CreateTermRelationshipForm {
   targetTerm: TermDetail;
@@ -48,9 +52,11 @@ class CreateTermRelationshipForm {
 }
 
 @Component({
-  selector: 'mdm-term-relationship-list',
-  templateUrl: './term-relationship-list.component.html',
-  styleUrls: ['./term-relationship-list.component.scss']
+    selector: 'mdm-term-relationship-list',
+    templateUrl: './term-relationship-list.component.html',
+    styleUrls: ['./term-relationship-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, NgIf, NgFor, MatIconButton, MatTooltip]
 })
 export class TermRelationshipListComponent implements OnInit, OnChanges {
   @Input() term: TermDetail;

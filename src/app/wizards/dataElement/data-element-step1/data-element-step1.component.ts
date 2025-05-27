@@ -18,11 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 import {Component,  OnInit} from '@angular/core';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { FormsModule } from '@angular/forms';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element-step1',
-  templateUrl: './data-element-step1.component.html',
-  styleUrls: ['./data-element-step1.component.sass']
+    selector: 'mdm-data-element-step1',
+    templateUrl: './data-element-step1.component.html',
+    styleUrls: ['./data-element-step1.component.sass'],
+    standalone: true,
+    imports: [NgIf, ElementLinkComponent, MatRadioGroup, FormsModule, MatRadioButton, ModelSelectorTreeComponent]
 })
 export class DataElementStep1Component implements OnInit {
   step = {

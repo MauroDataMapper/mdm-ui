@@ -26,11 +26,20 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { GridService } from '@mdm/services/grid.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { Uuid } from '@maurodatamapper/mdm-resources';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+    selector: 'mdm-user',
+    templateUrl: './user.component.html',
+    styleUrls: ['./user.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatLabel, MatInput, MatError, MatSelect, NgFor, MatOption, MatButton]
 })
 export class UserComponent implements OnInit {
   id: Uuid;

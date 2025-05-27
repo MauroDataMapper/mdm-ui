@@ -27,7 +27,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
   FilterQueryParameters,
   TerminologyDetail,
@@ -43,11 +43,20 @@ import {
 } from './create-term-relationship-type-dialog/create-term-relationship-type-dialog.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-term-relationship-type-list',
-  templateUrl: './term-relationship-type-list.component.html',
-  styleUrls: ['./term-relationship-type-list.component.scss']
+    selector: 'mdm-term-relationship-type-list',
+    templateUrl: './term-relationship-type-list.component.html',
+    styleUrls: ['./term-relationship-type-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class TermRelationshipTypeListComponent
   implements OnInit, OnChanges, AfterViewInit {

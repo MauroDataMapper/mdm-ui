@@ -24,18 +24,33 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { MatTable } from '@angular/material/table';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { Access } from '@mdm/model/access';
 import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass, KeyValuePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-element-link-list',
-  templateUrl: './element-link-list.component.html',
-  styleUrls: ['./element-link-list.component.sass']
+    selector: 'mdm-element-link-list',
+    templateUrl: './element-link-list.component.html',
+    styleUrls: ['./element-link-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MatSortHeader, MatFormField, MatLabel, MatInput, FormsModule, NgFor, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, KeyValuePipe, HighlighterPipe]
 })
 export class ElementLinkListComponent implements AfterViewInit {
   @Input() parent: any;

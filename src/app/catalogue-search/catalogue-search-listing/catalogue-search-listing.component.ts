@@ -36,14 +36,30 @@ import {
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
-import { SearchFilterChange } from '../search-filters/search-filters.component';
+import { SearchFilterChange, SearchFiltersComponent } from '../search-filters/search-filters.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
+import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { CatalogueItemSearchResultComponent } from '../catalogue-item-search-result/catalogue-item-search-result.component';
+import { ProfileFiltersComponent } from '../profile-filters/profile-filters.component';
+import { MatDivider } from '@angular/material/divider';
+import { SortByComponent } from '../../shared/sort-by/sort-by.component';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-catalogue-search-listing',
-  templateUrl: './catalogue-search-listing.component.html',
-  styleUrls: ['./catalogue-search-listing.component.scss']
+    selector: 'mdm-catalogue-search-listing',
+    templateUrl: './catalogue-search-listing.component.html',
+    styleUrls: ['./catalogue-search-listing.component.scss'],
+    standalone: true,
+    imports: [FormsModule, MatFormField, MatInput, MatIconButton, MatSuffix, MatIcon, NgIf, MatProgressSpinner, AlertComponent, SortByComponent, SearchFiltersComponent, MatDivider, ProfileFiltersComponent, NgFor, CatalogueItemSearchResultComponent, NgClass, ExtendedModule, MdmPaginatorComponent]
 })
 export class CatalogueSearchListingComponent implements OnInit {
   status: SearchListingStatus = 'init';

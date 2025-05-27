@@ -36,15 +36,31 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
 import { DataClass } from '@maurodatamapper/mdm-resources';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-child-data-classes-list',
-  templateUrl: './element-child-data-classes-list.component.html',
-  styleUrls: ['./element-child-data-classes-list.component.sass']
+    selector: 'mdm-element-child-data-classes-list',
+    templateUrl: './element-child-data-classes-list.component.html',
+    styleUrls: ['./element-child-data-classes-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, FormsModule, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent, JoinArrayPipe]
 })
 export class ElementChildDataClassesListComponent implements AfterViewInit, OnInit {
   @Input() parentDataModel: any;

@@ -19,7 +19,10 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 import { MergeDiffItemModel } from '../types/merge-item-type';
 
-@Pipe({ name: 'mergeFilter' })
+@Pipe({
+    name: 'mergeFilter',
+    standalone: true
+})
 export class MergeFilterPipe implements PipeTransform {
   public transform(items: MergeDiffItemModel[], searchText: string): MergeDiffItemModel[] {
     if (searchText === '') {

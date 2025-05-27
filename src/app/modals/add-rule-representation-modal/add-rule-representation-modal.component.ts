@@ -36,9 +36,16 @@ import 'brace/mode/csharp';
 import 'brace/mode/text';
 import 'brace/theme/github';
 import { MessageHandlerService } from '@mdm/services';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { AceConfigInterface } from 'ngx-ace-wrapper';
+import { AceConfigInterface, AceModule } from 'ngx-ace-wrapper';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export class RuleLanguage {
   displayName: string;
@@ -104,9 +111,11 @@ export interface AddRuleRepresentationModalResult {
 }
 
 @Component({
-  selector: 'mdm-add-rule-representation-modal',
-  templateUrl: './add-rule-representation-modal.component.html',
-  styleUrls: ['./add-rule-representation-modal.component.scss']
+    selector: 'mdm-add-rule-representation-modal',
+    templateUrl: './add-rule-representation-modal.component.html',
+    styleUrls: ['./add-rule-representation-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatToolbar, MatInput, MatButton, AceModule]
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
 

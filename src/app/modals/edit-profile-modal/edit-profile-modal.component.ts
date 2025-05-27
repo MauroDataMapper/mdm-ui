@@ -19,11 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 /* eslint-disable id-blacklist */
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   ApiProperty,
   ApiPropertyIndexResponse, Pathable,
@@ -45,11 +41,25 @@ import {
 } from './edit-profile-modal.model';
 import { EditingService } from '@mdm/services/editing.service';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatInput } from '@angular/material/input';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-edit-profile-modal',
-  templateUrl: './edit-profile-modal.component.html',
-  styleUrls: ['./edit-profile-modal.component.scss']
+    selector: 'mdm-edit-profile-modal',
+    templateUrl: './edit-profile-modal.component.html',
+    styleUrls: ['./edit-profile-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, NgIf, MatDialogContent, FormsModule, AlertComponent, NgFor, MatTooltip, ContentEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError, MatDialogActions]
 })
 export class EditProfileModalComponent implements OnInit {
   profileData: Profile;

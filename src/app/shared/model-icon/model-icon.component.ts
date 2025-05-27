@@ -18,11 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Input, OnInit } from '@angular/core';
 import {  ModelDomainType } from '@maurodatamapper/mdm-resources';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-model-icon',
-  templateUrl: './model-icon.component.html',
-  styleUrls: ['./model-icon.component.scss']
+    selector: 'mdm-model-icon',
+    templateUrl: './model-icon.component.html',
+    styleUrls: ['./model-icon.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgClass, ExtendedModule]
 })
 export class ModelIconComponent implements OnInit {
   @Input() domainType: ModelDomainType;

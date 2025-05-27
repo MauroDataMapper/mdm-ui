@@ -25,14 +25,20 @@ import {
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgIf, DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-active-sessions',
-  templateUrl: './active-sessions.component.html',
-  styleUrls: ['./active-sessions.component.sass']
+    selector: 'mdm-active-sessions',
+    templateUrl: './active-sessions.component.html',
+    styleUrls: ['./active-sessions.component.sass'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MatTooltip, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, DatePipe]
 })
 export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

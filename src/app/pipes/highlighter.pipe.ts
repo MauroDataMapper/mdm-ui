@@ -17,7 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'mchighlighter'})
+@Pipe({
+    name: 'mchighlighter',
+    standalone: true
+})
 export class HighlighterPipe implements PipeTransform {
 
   transform(value: string, phrase: string, wildcardMatch?: boolean) {

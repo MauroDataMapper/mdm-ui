@@ -31,11 +31,25 @@ import {
 } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { MatButton } from '@angular/material/button';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram-popup',
-  templateUrl: './diagram-popup.component.html',
+    selector: 'mdm-diagram-popup',
+    templateUrl: './diagram-popup.component.html',
+    standalone: true,
+    imports: [
+        DiagramToolbarComponent,
+        MatSidenavContainer,
+        MatSidenav,
+        NgIf,
+        FoldersTreeComponent,
+        MatButton,
+        MatSidenavContent,
+        DiagramComponent,
+    ],
 })
 export class DiagramPopupComponent implements OnInit {
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;

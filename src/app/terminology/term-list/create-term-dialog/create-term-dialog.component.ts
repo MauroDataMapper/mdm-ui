@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
@@ -28,6 +28,11 @@ import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export class CreateTermForm {
   terminology: TerminologyDetail;
@@ -41,9 +46,11 @@ export class CreateTermForm {
 }
 
 @Component({
-  selector: 'mdm-create-term-dialog',
-  templateUrl: 'create-term-dialog.component.html',
-  styleUrls: ['create-term-dialog.component.scss']
+    selector: 'mdm-create-term-dialog',
+    templateUrl: 'create-term-dialog.component.html',
+    styleUrls: ['create-term-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, ContentEditorComponent, MatButton]
 })
 export class CreateTermDialogComponent implements OnInit {
   form = new FormGroup({

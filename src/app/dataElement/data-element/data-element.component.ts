@@ -22,7 +22,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Subscription } from 'rxjs';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -45,11 +45,28 @@ import {
 } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { SummaryMetadataTableComponent } from '../../shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
+import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element',
-  templateUrl: './data-element.component.html',
-  styleUrls: ['./data-element.component.sass']
+    selector: 'mdm-data-element',
+    templateUrl: './data-element.component.html',
+    styleUrls: ['./data-element.component.sass'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ElementLinkListComponent, SummaryMetadataTableComponent, MatTabLabel, SkeletonBadgeComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataElementComponent
   extends BaseComponent

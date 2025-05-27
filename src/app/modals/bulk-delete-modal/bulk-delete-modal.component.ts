@@ -18,13 +18,28 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogClose, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 @Component({
-  selector: 'mdm-bulk-delete',
-  templateUrl: './bulk-delete-modal.component.html',
-  styleUrls: ['./bulk-delete-modal.component.scss'],
+    selector: 'mdm-bulk-delete',
+    templateUrl: './bulk-delete-modal.component.html',
+    styleUrls: ['./bulk-delete-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        NgIf,
+        MatIconButton,
+        MatDialogClose,
+        MatDialogContent,
+        NgFor,
+        MatDialogActions,
+        MatButton,
+        JoinArrayPipe,
+    ],
 })
 export class BulkDeleteModalComponent implements AfterViewInit {
   parentDataModel: any;

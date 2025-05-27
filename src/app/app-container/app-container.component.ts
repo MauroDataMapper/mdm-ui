@@ -16,10 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
 
 @Component({
-  selector: 'mdm-app-container',
-  templateUrl: './app-container.component.html',
-  styleUrls: ['./app-container.component.scss']
+    selector: 'mdm-app-container',
+    templateUrl: './app-container.component.html',
+    styleUrls: ['./app-container.component.scss'],
+    standalone: true,
+    imports: [UIRouterModule]
 })
 export class AppContainerComponent { }

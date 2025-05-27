@@ -16,10 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'mdm-skeleton-badge',
-  templateUrl: './skeleton-badge.component.html',
-  styleUrls: ['./skeleton-badge.component.scss']
+    selector: 'mdm-skeleton-badge',
+    templateUrl: './skeleton-badge.component.html',
+    styleUrls: ['./skeleton-badge.component.scss'],
+    standalone: true,
+    imports: [NgxSkeletonLoaderModule]
 })
 export class SkeletonBadgeComponent { }

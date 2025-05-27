@@ -35,11 +35,18 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { WizardStep } from '@mdm/wizards/wizards.model';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 @Component({
-  selector: 'mdm-data-model-main',
-  templateUrl: './data-model-main.component.html',
-  styleUrls: ['./data-model-main.component.sass']
+    selector: 'mdm-data-model-main',
+    templateUrl: './data-model-main.component.html',
+    styleUrls: ['./data-model-main.component.sass'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class DataModelMainComponent implements OnInit {
   isLinear = false;

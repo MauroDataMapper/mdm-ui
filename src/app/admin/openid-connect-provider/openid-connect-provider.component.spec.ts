@@ -26,12 +26,6 @@ describe('OpenidConnectProviderComponent', () => {
     harness = await setupTestModuleForComponent(
       OpenidConnectProviderComponent,
       {
-        providers: [
-          {
-            provide: FeaturesService,
-            useValue: jest.fn()
-          }
-        ]
       });
   });
 

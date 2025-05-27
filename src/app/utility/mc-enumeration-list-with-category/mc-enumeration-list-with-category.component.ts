@@ -29,8 +29,8 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDragHandle, CdkDrag } from '@angular/cdk/drag-drop';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -39,7 +39,7 @@ import {
   DataModelDetail,
   DataTypeDetailResponse, EnumerationValue
 } from '@maurodatamapper/mdm-resources';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   catchError,
   EMPTY,
@@ -50,7 +50,14 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MatOption } from '@angular/material/core';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgClass, NgFor } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 type DisplayItem=
   {
@@ -74,9 +81,11 @@ type DisplayItem=
   };
 
 @Component({
-  selector: 'mdm-mc-enumeration-list-with-category',
-  templateUrl: './mc-enumeration-list-with-category.component.html',
-  styleUrls: ['./mc-enumeration-list-with-category.component.sass']
+    selector: 'mdm-mc-enumeration-list-with-category',
+    templateUrl: './mc-enumeration-list-with-category.component.html',
+    styleUrls: ['./mc-enumeration-list-with-category.component.sass'],
+    standalone: true,
+    imports: [FlexModule, NgIf, MatButton, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIcon, CdkDragHandle, NgClass, ExtendedModule, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, NgFor, MatOption, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, MdmPaginatorComponent_1]
 })
 export class McEnumerationListWithCategoryComponent
   implements OnInit, OnDestroy {

@@ -20,7 +20,8 @@ import { Securable, Finalisable } from '@maurodatamapper/mdm-resources';
 import {SecurityHandlerService} from '../services/handlers/security-handler.service';
 
 @Directive({
-  selector: '[mdmShowIfRolesWritable]'
+    selector: '[mdmShowIfRolesWritable]',
+    standalone: true
 })
 export class ShowIfRolesWritableDirective implements OnInit {
 @Input() result: Securable & Finalisable;

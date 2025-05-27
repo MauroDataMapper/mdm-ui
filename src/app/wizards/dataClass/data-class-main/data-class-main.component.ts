@@ -33,6 +33,11 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { CatalogueItemDomainType, DataClass, DataClassDetailResponse, DataModel } from '@maurodatamapper/mdm-resources';
 import { Observable } from 'rxjs';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 type Classifier=
   {
@@ -68,9 +73,11 @@ type Model=
   };
 
 @Component({
-  selector: 'mdm-data-class-main',
-  templateUrl: './data-class-main.component.html',
-  styleUrls: ['./data-class-main.component.sass']
+    selector: 'mdm-data-class-main',
+    templateUrl: './data-class-main.component.html',
+    styleUrls: ['./data-class-main.component.sass'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class DataClassMainComponent implements AfterViewInit {
   steps: Step[] = [];

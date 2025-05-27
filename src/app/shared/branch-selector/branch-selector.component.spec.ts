@@ -43,12 +43,6 @@ describe('BranchSelectorComponent', () => {
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(BranchSelectorComponent, {
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: mdmResourcesStub
-        }
-      ]
     });
 
     harness.detectChanges((component) => {

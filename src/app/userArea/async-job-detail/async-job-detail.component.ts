@@ -29,11 +29,17 @@ import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { MarkedPipe } from '../../content/markdown/marked.pipe';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatButton } from '@angular/material/button';
+import { NgIf, TitleCasePipe, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'mdm-async-job-detail',
-  templateUrl: './async-job-detail.component.html',
-  styleUrls: ['./async-job-detail.component.scss']
+    selector: 'mdm-async-job-detail',
+    templateUrl: './async-job-detail.component.html',
+    styleUrls: ['./async-job-detail.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, TitleCasePipe, DatePipe, SafePipe, MarkedPipe]
 })
 export class AsyncJobDetailComponent implements OnInit {
   job: AsyncJob;

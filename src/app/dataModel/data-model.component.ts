@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
@@ -34,11 +34,35 @@ import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { AllLinksInPagedListComponent } from '../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { ElementLinkListComponent } from '../shared/element-link-list/element-link-list.component';
+import { ElementOwnedDataTypeListComponent } from '../shared/element-owned-data-type-list/element-owned-data-type-list.component';
+import { FlattenedDataClassesComponent } from '../shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
+import { DiagramTabComponent } from '../diagram/diagram-tab/diagram-tab.component';
+import { ElementChildDataClassesListComponent } from '../shared/element-child-data-classes-list/element-child-data-classes-list.component';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { CatalogueItemSearchComponent } from '../catalogue-search/catalogue-item-search/catalogue-item-search.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-model',
-  templateUrl: './data-model.component.html',
-  styleUrls: ['./data-model.component.scss']
+    selector: 'mdm-data-model',
+    templateUrl: './data-model.component.html',
+    styleUrls: ['./data-model.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabLabel, CatalogueItemSearchComponent, MatTabContent, ProfileDataViewComponent, SkeletonBadgeComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, MatButton, ElementChildDataClassesListComponent, DiagramTabComponent, FlattenedDataClassesComponent, ElementOwnedDataTypeListComponent, ElementLinkListComponent, AllLinksInPagedListComponent, ConstraintsRulesComponent, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataModelComponent
   extends BaseComponent

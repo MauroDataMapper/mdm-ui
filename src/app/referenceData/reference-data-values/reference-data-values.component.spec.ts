@@ -38,7 +38,10 @@ describe('ReferenceDataValuesComponent', () => {
         NgxSkeletonLoaderModule,
         MatTableModule,
         NoopAnimationsModule,
-        FormsModule
+        FormsModule,
+        ReferenceDataValuesComponent,
+        MdmPaginatorComponent,
+        SkeletonBadgeComponent
       ],
       providers: [
         {
@@ -52,8 +55,7 @@ describe('ReferenceDataValuesComponent', () => {
             }
           }
         }
-      ],
-      declarations: [ReferenceDataValuesComponent, MdmPaginatorComponent, SkeletonBadgeComponent]
+      ]
     }).compileComponents();
   }));
 

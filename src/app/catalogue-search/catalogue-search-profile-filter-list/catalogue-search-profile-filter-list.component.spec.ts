@@ -35,6 +35,9 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
   let harness: ComponentHarness<CatalogueSearchProfileFilterListComponent>;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     profile: {
       definition: jest.fn() as jest.MockedFunction<
         (
@@ -47,6 +50,8 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
+
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(

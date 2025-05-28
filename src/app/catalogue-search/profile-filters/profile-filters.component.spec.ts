@@ -27,7 +27,7 @@ describe('ProfileFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileFiltersComponent, MockComponent(MatDivider)]
+      imports: [ProfileFiltersComponent, MockComponent(MatDivider)]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileFiltersComponent);

@@ -16,89 +16,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { DataClassComponentsListComponent } from './data-class-components-list.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { MatDialogModule } from '@angular/material/dialog';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormsModule } from '@angular/forms';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
-import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
-import { MoreDescriptionComponent } from '../more-description/more-description.component';
-import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
-import { ElementDataTypeComponent } from '../element-data-type/element-data-type.component';
-import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('DataClassesListComponent', () => {
-   let component: DataClassComponentsListComponent;
-   let fixture: ComponentFixture<DataClassComponentsListComponent>;
+   let harness: ComponentHarness<DataClassComponentsListComponent>;
 
-   beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-         imports: [
-            NgxSkeletonLoaderModule,
-            MatTooltipModule,
-            MatMenuModule,
-            MatDividerModule,
-            MatCheckboxModule,
-            MatTableModule,
-            MatCheckboxModule,
-            MatDialogModule,
-            NoopAnimationsModule,
-            MatInputModule,
-            MatFormFieldModule,
-            MatSortModule,
-            MatPaginatorModule,
-            FormsModule,
-            UIRouterModule.forRoot({ useHash: true }),
-            ToastrModule.forRoot()
-         ],
-         providers: [
-            {
-               provide: MdmResourcesService, useValue: {}
-            }
-         ],
-         declarations: [
-            ProfilePictureComponent,
-            ElementLinkComponent,
-            MoreDescriptionComponent,
-            McPagedListComponent,
-            ElementDataTypeComponent,
-            AllLinksInPagedListComponent,
-            MdmPaginatorComponent,
-            MultiplicityComponent,
-            ByteArrayToBase64Pipe,
-            DataClassComponentsListComponent,
-            SkeletonBadgeComponent
-         ]
-      })
-         .compileComponents();
-   }));
-
-   beforeEach(() => {
-      fixture = TestBed.createComponent(DataClassComponentsListComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-   });
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(DataClassComponentsListComponent)
+  });
 
    it('should create', () => {
-      expect(component).toBeTruthy();
+     expect(harness.isComponentCreated).toBeTruthy();
    });
 });

@@ -82,7 +82,7 @@ describe('TerminologyMainComponent', () => {
     );
 
     harness = await setupTestModuleForComponent(TerminologyMainComponent, {
-      declarations: [
+      imports: [
         MockComponent(ElementClassificationsComponent),
         ContentEditorComponent],
       providers: [

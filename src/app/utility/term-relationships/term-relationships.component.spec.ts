@@ -22,38 +22,18 @@ import { ElementLinkComponent } from '../element-link/element-link.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';
 
 describe('TermRelationshipsComponent', () => {
-  let component: TermRelationshipsComponent;
-  let fixture: ComponentFixture<TermRelationshipsComponent>;
+  let harness: ComponentHarness<TermRelationshipsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        MatTooltipModule
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
-      declarations: [
-        McPagedListComponent,
-        ElementLinkComponent,
-        TermRelationshipsComponent
-      ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TermRelationshipsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(TermRelationshipsComponent)
   });
 
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

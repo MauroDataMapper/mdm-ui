@@ -24,7 +24,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MauroItemProviderService } from './mauro-item-provider.service';
 import {
   MauroIdentifier,
@@ -36,6 +36,9 @@ describe('MauroItemProviderService', () => {
   let service: MauroItemProviderService;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     dataModel: {
       get: jest.fn() as jest.MockedFunction<
         (id: Uuid) => Observable<MauroItemResponse>
@@ -115,6 +118,8 @@ describe('MauroItemProviderService', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
+
 
   const constructMauroItemFromIdentifier = (
     identifier: MauroIdentifier

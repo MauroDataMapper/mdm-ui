@@ -39,10 +39,10 @@ describe('FinaliseModalComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
         FormsModule,
-        MatButtonModule
+        MatButtonModule,
+        FinaliseModalComponent
       ],
-      providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }],
-      declarations: [ FinaliseModalComponent ]
+      providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }]
     }).compileComponents();
   }));
 

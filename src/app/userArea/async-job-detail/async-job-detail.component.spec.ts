@@ -31,7 +31,7 @@ describe('AsyncJobDetailComponent', () => {
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(AsyncJobDetailComponent, {
-      declarations: [AsyncJobDetailComponent],
+      imports: [AsyncJobDetailComponent],
       providers: [
         {
           provide: MdmResourcesService,

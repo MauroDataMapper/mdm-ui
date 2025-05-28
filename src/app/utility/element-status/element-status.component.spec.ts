@@ -25,7 +25,7 @@ describe('ElementStatusComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ElementStatusComponent ]
+      imports: [ ElementStatusComponent ]
     })
     .compileComponents();
   }));

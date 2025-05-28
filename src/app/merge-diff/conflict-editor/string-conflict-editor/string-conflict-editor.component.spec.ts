@@ -27,7 +27,7 @@ describe('StringConflictEditorComponent', () => {
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(StringConflictEditorComponent, {
-      declarations: [SafePipe]
+      imports: [SafePipe]
     });
   });
 

@@ -28,14 +28,12 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedModule } from '@mdm/shared/shared.module';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     NoopAnimationsModule,
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    UIRouterModule.forRoot({ useHash: true }),
     ToastrModule.forRoot(),
     MdmResourcesModule.forRoot({}),
     HttpClientTestingModule,
@@ -43,11 +41,7 @@ import { SharedModule } from '@mdm/shared/shared.module';
     SharedModule
   ],
   exports: [
-    MaterialModule,
-    UIRouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule
+
   ]
 })
 export class TestingModule {}

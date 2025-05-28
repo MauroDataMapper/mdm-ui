@@ -15,18 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
-
 import { SecurityHandlerService } from './security-handler.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SignInError, UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginPayload, Securable } from '@maurodatamapper/mdm-resources';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { of } from 'rxjs';
 
 interface MdmSecurityResourceStub {
   login: jest.Mock;
@@ -38,41 +34,45 @@ interface MdmSessionResourceStub {
   isAuthenticated: jest.Mock;
 }
 
+interface MdmApiPropertiesStub {
+  listPublic: jest.Mock;
+}
+
 interface MdmResourcesServiceStub {
   security: MdmSecurityResourceStub;
   session: MdmSessionResourceStub;
+  apiProperties: MdmApiPropertiesStub;
 }
+
+const resourcesStub: MdmResourcesServiceStub = {
+  security: {
+    login: jest.fn(),
+    logout: jest.fn()
+  },
+  session: {
+    isApplicationAdministration: jest.fn(),
+    isAuthenticated: jest.fn()
+  },
+  apiProperties: {
+    listPublic: jest.fn()
+  }
+};
+
+resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
 describe('SecurityHandlerService', () => {
   let service: SecurityHandlerService;
-  const resourcesStub: MdmResourcesServiceStub = {
-    security: {
-      login: jest.fn(),
-      logout: jest.fn()
-    },
-    session: {
-      isApplicationAdministration: jest.fn(),
-      isAuthenticated: jest.fn()
-    }
-  };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
+  beforeEach( async() => {
+
+    service = setupTestModuleForService(SecurityHandlerService,
+      {
+        providers: [{
           provide: MdmResourcesService, useValue: resourcesStub
-        },
-        ElementTypesService
-      ]
-    });
-
-    service = TestBed.inject(SecurityHandlerService);
+        }]
+      });
   });
+
 
   it('should be created', () => {
     expect(service).toBeTruthy();

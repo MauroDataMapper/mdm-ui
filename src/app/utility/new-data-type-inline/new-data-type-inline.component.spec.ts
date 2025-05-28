@@ -15,51 +15,34 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NewDataTypeInlineComponent } from './new-data-type-inline.component';
-import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
-import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
-import { McSelectComponent } from '../mc-select/mc-select.component';
-import { MatOptionModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
-import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { ModelPathComponent } from '../model-path/model-path.component';
-import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatSortModule } from '@angular/material/sort';
-import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
-import { PropertiesDirective } from '@mdm/directives/properties.directive';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('NewDataTypeInlineComponent', () => {
-  let component: NewDataTypeInlineComponent;
-  let fixture: ComponentFixture<NewDataTypeInlineComponent>;
+  let harness: ComponentHarness<NewDataTypeInlineComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatOptionModule,
-        MatSelectModule,
-        MatTableModule,
-        MatIconModule,
-        MatSortModule,
-        DragDropModule,
-        MatPaginatorModule,
-        MatFormFieldModule,
-        FoldersTreeModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
+  interface MdmApiPropertiesStub {
+    listPublic: jest.Mock;
+  }
+
+  interface MdmResourcesServiceStub {
+    apiProperties: MdmApiPropertiesStub;
+  }
+
+  const resourcesStub: MdmResourcesServiceStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    }
+  };
+
+  resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
+
+
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(NewDataTypeInlineComponent, {
       providers: [
         {
           provide: MdmResourcesService,
@@ -68,35 +51,21 @@ describe('NewDataTypeInlineComponent', () => {
               list: () => EMPTY
             },
             codeSet: {
-               list: () => EMPTY
-             },
-             referenceDataModel: {
-               list: () => EMPTY
-             }
+              list: () => EMPTY
+            },
+            referenceDataModel: {
+              list: () => EMPTY
+            },
+            apiProperties: {
+              listPublic: () => EMPTY
+            }
           }
         }
-      ],
-      declarations: [
-        McEnumerationListWithCategoryComponent,
-        ModelSelectorTreeComponent,
-        McSelectComponent,
-        ModelPathComponent,
-        ElementClassificationsComponent,
-        PropertiesDirective,
-        MdmPaginatorComponent,
-        NewDataTypeInlineComponent
       ]
     })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NewDataTypeInlineComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

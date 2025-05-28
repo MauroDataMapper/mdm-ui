@@ -43,5 +43,10 @@ module.exports = {
                 themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
             }
         })
-    ]
+    ],
+    resolve: {
+        alias: {
+            'inferno':  'inferno/dist/index.esm.js',
+        },
+    }
 };

@@ -273,6 +273,6 @@ export class NewDataTypeInlineComponent
   };
 
   ngOnDestroy(): void {
-    this.formDataTypeChangesSubscription.unsubscribe();
+    this.formDataTypeChangesSubscription?.unsubscribe();
   }
 }

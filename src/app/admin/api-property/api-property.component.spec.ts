@@ -15,43 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@mdm/modules/material/material.module';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { UIRouterGlobals } from '@uirouter/core';
-import { ToastrModule } from 'ngx-toastr';
-import { of } from 'rxjs';
-
 import { ApiPropertyComponent } from './api-property.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('ApiPropertyComponent', () => {
-  let component: ApiPropertyComponent;
-  let fixture: ComponentFixture<ApiPropertyComponent>;
+  let harness: ComponentHarness<ApiPropertyComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MaterialModule,
-        NoopAnimationsModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      declarations: [ ApiPropertyComponent ]
-    })
-      .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ApiPropertyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(ApiPropertyComponent)
   });
 
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

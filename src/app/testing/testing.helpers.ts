@@ -20,6 +20,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponent } from 'ng-mocks';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 import { TestingModule } from './testing.module';
+import { UIRouterModule } from '@uirouter/angular';
+import { pageRoutes, routerConfigFn } from '@mdm/app-routing.module';
+import { userPageRoutes } from '@mdm/modules/users-routes/users-routes.module';
+import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
+import { BaseChartDirective } from 'ng2-charts';
+import { MdmResourcesModule, MdmResourcesService } from '@mdm/modules/resources';
+import { environment } from '@env/environment';
+import { of } from 'rxjs';
+import { SecurityHandlerService } from '@mdm/services';
+import { FavouriteHandlerService } from '@mdm/services';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { IPasswordStrengthMeterService } from 'angular-password-strength-meter';
 
 /**
  * Represents additional configuration to use when setting up the test module.
@@ -65,6 +78,23 @@ export class ComponentHarness<T> {
   }
 }
 
+interface MdmApiPropertiesStub {
+  listPublic: jest.Mock;
+}
+
+interface MdmResourcesServiceStub {
+  apiProperties: MdmApiPropertiesStub;
+}
+
+const resourcesStub: MdmResourcesServiceStub = {
+  apiProperties: {
+    listPublic: jest.fn()
+  }
+};
+
+resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
+
+
 /**
  * Setup the test module for working with a service.
  *
@@ -74,9 +104,47 @@ export class ComponentHarness<T> {
  * @returns A new instance of the service under test.
  */
 export const setupTestModuleForService = <T>(service: Type<T>, configuration?: TestModuleConfiguration): T => {
+
+  const hasCustomResourcesProvider = configuration?.providers?.some(
+    p => (p as any)?.provide === MdmResourcesService
+  )|| service === MdmResourcesService;
+
+  const hasCustomSecurityHandlerService = configuration?.providers?.some(
+    p => (p as any)?.provide === SecurityHandlerService
+  ) || service === SecurityHandlerService;
+
+
   TestBed.configureTestingModule({
-    imports: [TestingModule, ...configuration?.imports ?? []],
-    providers: configuration?.providers ?? []
+    imports: [
+      TestingModule,
+      ...configuration?.imports ?? [],
+      UIRouterModule.forRoot({
+        useHash: true,
+        states: [
+          ... pageRoutes.states,
+          ... userPageRoutes.states,
+          ... adminPageRoutes.states
+        ],
+        config: routerConfigFn
+      }),
+
+    ],
+    providers: [
+    ... configuration?.providers ?? [],
+    ...(!hasCustomResourcesProvider
+      ? [{
+        provide: MdmResourcesService,
+        useValue: resourcesStub
+      }]
+      : []),
+      ...(!hasCustomSecurityHandlerService
+        ? [{
+          provide: SecurityHandlerService,
+          useValue: { }
+        }]
+        : [])
+    ],
+
   });
   return TestBed.inject(service);
 };
@@ -94,14 +162,62 @@ export const setupTestModuleForComponent = async <T>(
   componentType: Type<T>,
   moduleConfig?: TestModuleConfiguration,
   componentConfig?: TestComponentConfiguration) => {
+
+  const isStandalone = (componentType as any).ɵcmp?.standalone === true;
+
+  if (!(componentType as any).ɵcmp) {
+    throw new Error('setupTestModuleForComponent was passed a non-component');
+  }
+
+  const hasCustomResourcesProvider = moduleConfig?.providers?.some(
+    p => (p as any)?.provide === MdmResourcesService
+  );
+
   await TestBed
     .configureTestingModule({
-      imports: [TestingModule, ...moduleConfig?.imports ?? []],
+      imports: [
+        MdmResourcesModule.forRoot({
+          defaultHttpRequestOptions: {withCredentials: true},
+          apiEndpoint: environment.apiEndpoint
+        }),
+        UIRouterModule.forRoot({
+          useHash: true,
+          states: [
+            ... pageRoutes.states,
+            ... userPageRoutes.states,
+            ... adminPageRoutes.states
+          ],
+          config: routerConfigFn
+        }),
+        TestingModule,
+        BaseChartDirective,
+        ...moduleConfig?.imports ?? [],
+        ...(isStandalone ? [componentType] : []),
+        MatDialogModule
+      ],
+      providers: [
+        ... moduleConfig?.providers ?? [],
+        ...(!hasCustomResourcesProvider
+          ? [{
+            provide: MdmResourcesService,
+            useValue: resourcesStub
+          }]
+          : []),
+        {
+          provide: SecurityHandlerService, useValue: {}
+        },
+        {
+          provide: MatDialogRef, useValue: {}
+        },
+        IPasswordStrengthMeterService
+
+      ],
       declarations: [
-        componentType,
         MockComponent(NgxSkeletonLoaderComponent),
-        ...moduleConfig?.declarations ?? []],
-      providers: moduleConfig?.providers ?? []
+        ...(isStandalone ? [] : [componentType]),
+        ...moduleConfig?.declarations ?? []
+      ]
+
     })
     .compileComponents();
 

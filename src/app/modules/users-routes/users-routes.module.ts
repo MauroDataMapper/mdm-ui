@@ -83,7 +83,6 @@ export const userPageRoutes = {
 };
 
 @NgModule({
-  declarations: [],
   imports: [UIRouterModule.forChild({ states: userPageRoutes.states })],
   providers: [
     {

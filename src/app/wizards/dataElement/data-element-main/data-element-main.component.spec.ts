@@ -15,61 +15,19 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataElementMainComponent } from './data-element-main.component';
-import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatStepperModule } from '@angular/material/stepper';
-import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
-import { StateService } from '@uirouter/core';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('DataElementMainComponent', () => {
-  let component: DataElementMainComponent;
-  let fixture: ComponentFixture<DataElementMainComponent>;
+  let harness: ComponentHarness<DataElementMainComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatTooltipModule,
-        MatStepperModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: StateService,
-          useValue: {
-            params: {}
-          }
-        },
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
-      declarations: [
-        ProfilePictureComponent,
-        DclWrapperComponent,
-        ByteArrayToBase64Pipe,
-        DataElementMainComponent
-      ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DataElementMainComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(DataElementMainComponent)
   });
 
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

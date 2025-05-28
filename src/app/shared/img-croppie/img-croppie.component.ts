@@ -16,14 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ImageCroppedEvent, ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 
 @Component({
     selector: 'mdm-img-croppie',
     templateUrl: './img-croppie.component.html',
     styleUrls: ['./img-croppie.component.scss'],
     standalone: true,
-    imports: [ImageCropperModule]
+    imports: [ImageCropperComponent]
 })
 export class ImgCroppieComponent {
   @Output() cropImage: EventEmitter<any> = new EventEmitter();

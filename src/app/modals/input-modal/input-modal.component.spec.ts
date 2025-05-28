@@ -36,7 +36,8 @@ describe('InputModalComponent', () => {
         MatInputModule,
         MatDialogModule,
         NoopAnimationsModule,
-        FormsModule
+        FormsModule,
+        InputModalComponent
       ],
       providers: [
         {
@@ -46,7 +47,6 @@ describe('InputModalComponent', () => {
           provide: MAT_DIALOG_DATA, useValue: {}
         }
       ],
-      declarations: [ InputModalComponent ]
     })
     .compileComponents();
   }));

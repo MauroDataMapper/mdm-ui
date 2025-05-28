@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   ComponentHarness,
   setupTestModuleForComponent
@@ -27,16 +26,9 @@ describe('AsyncJobListComponent', () => {
   let harness: ComponentHarness<AsyncJobListComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(AsyncJobListComponent, {
-      declarations: [AsyncJobListComponent],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: jest.fn()
-        }
-      ]
-    });
+    harness = await setupTestModuleForComponent(AsyncJobListComponent)
   });
+
 
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();

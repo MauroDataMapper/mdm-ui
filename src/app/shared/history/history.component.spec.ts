@@ -43,19 +43,16 @@ describe('HistoryComponent', () => {
        MatPaginatorModule,
        NoopAnimationsModule,
        MatTableModule,
-       UIRouterModule.forRoot({ useHash: true }),
-       ToastrModule.forRoot()
+       ToastrModule.forRoot(),
+       ProfilePictureComponent,
+       ByteArrayToBase64Pipe,
+       MdmPaginatorComponent,
+       HistoryComponent
      ],
      providers: [
        {
          provide: MdmResourcesService, useValue: {}
        }
-     ],
-     declarations: [
-       ProfilePictureComponent,
-       ByteArrayToBase64Pipe,
-       MdmPaginatorComponent,
-       HistoryComponent
      ]
    }).compileComponents();
  }));

@@ -52,8 +52,11 @@ describe('ModelSelectorTreeComponent', () => {
         FormsModule,
         FoldersTreeModule,
         MatTooltipModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        ByteArrayToBase64Pipe,
+        ProfilePictureComponent,
+        ModelSelectorTreeComponent
+
       ],
       providers: [
         {
@@ -72,11 +75,6 @@ describe('ModelSelectorTreeComponent', () => {
           useValue: securityHandler
         },
         ElementTypesService
-      ],
-      declarations: [
-        ByteArrayToBase64Pipe,
-        ProfilePictureComponent,
-        ModelSelectorTreeComponent
       ]
     })
     .compileComponents();

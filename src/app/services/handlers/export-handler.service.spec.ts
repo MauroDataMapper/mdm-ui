@@ -30,17 +30,14 @@ describe('ExportHandlerService', () => {
     imports: [
       NgxSkeletonLoaderModule,
       MatTooltipModule,
-      UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()
+      ToastrModule.forRoot(),
+      ProfilePictureComponent,
+      ByteArrayToBase64Pipe
     ],
     providers: [
       {
         provide: MdmResourcesService, useValue: {}
       }
-    ],
-    declarations: [
-      ProfilePictureComponent,
-      ByteArrayToBase64Pipe
     ]
   }));
 

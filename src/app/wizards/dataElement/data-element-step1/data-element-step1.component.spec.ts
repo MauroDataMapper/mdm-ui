@@ -35,9 +35,7 @@ describe('DataElementStep1Component', () => {
         MatRadioModule,
         MatTooltipModule,
         FoldersTreeModule,
-        FormsModule
-      ],
-      declarations: [
+        FormsModule,
         ElementLinkComponent,
         ModelSelectorTreeComponent,
         DataElementStep1Component

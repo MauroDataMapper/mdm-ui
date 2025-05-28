@@ -29,7 +29,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   MauroIdentifier,
   MauroItem,
@@ -42,6 +42,9 @@ describe('MauroProfileProviderService', () => {
   let service: MauroProfileProviderService;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     profile: {
       usedProfiles: jest.fn() as jest.MockedFunction<
         (
@@ -78,6 +81,7 @@ describe('MauroProfileProviderService', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   /**
    * Maps domains types for it.each() tests below.

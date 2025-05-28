@@ -30,9 +30,7 @@ describe('ElementAliasComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        MatInputModule
-      ],
-      declarations: [
+        MatInputModule,
         PropertiesDirective,
         ElementAliasComponent
       ]

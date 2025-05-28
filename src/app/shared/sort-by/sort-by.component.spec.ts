@@ -28,14 +28,14 @@ describe('SortByComponent', () => {
   let harness: ComponentHarness<SortByComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(SortByComponent, {
-      declarations: [
+    harness = await setupTestModuleForComponent(SortByComponent /*, {
+      imports: [
         MockComponent(MatFormField),
         MockDirective(MatLabel),
         MockComponent(MatSelect),
       ],
       providers: [],
-    });
+    }*/);
   });
 
   it('should create', () => {

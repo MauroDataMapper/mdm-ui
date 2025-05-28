@@ -23,8 +23,10 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { PathElement, PathElementType } from './path-name.model';
 import { PathNameService } from './path-name.service';
-import { UIRouter } from '@uirouter/core';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { FavouriteHandlerService } from '@mdm/services';
 import { TestBed } from '@angular/core/testing';
+import { UIRouter } from '@uirouter/core';
 
 describe('PathNameService', () => {
   let service: PathNameService;
@@ -32,18 +34,27 @@ describe('PathNameService', () => {
   const routerStub = {
     stateService: {
       href: jest.fn()
+    },
+    urlRouter: jest.fn(),
+    urlService: {
+      listen: jest.fn(),
+      sync: jest.fn()
     }
+
   };
 
-  beforeEach(() => {
-    // Setup the test bed manually instead of using setupTestModuleForService()
-    // so that the UIRouterModule is not imported, will override the UIRouter service
-    // so it can be mocked
-    TestBed.configureTestingModule({
+  beforeEach( async () => {
+    service = setupTestModuleForService(PathNameService, {
+      providers: [
+        {
+          provide: UIRouter,
+          useValue: routerStub
+        }
+      ]
     });
 
-    service = TestBed.inject(PathNameService);
-  });
+    }
+  );
 
   it('should be created', () => {
     expect(service).toBeTruthy();

@@ -15,32 +15,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
-
 import { UserSettingsHandlerService } from './user-settings-handler.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('UserSettingsHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [
-      HttpClientTestingModule,
-      UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()
-    ],
-    providers: [
-      {
-        provide: MdmResourcesService, useValue: {}
-      },
-      ElementTypesService
-    ]
-  }));
+
+  let service: UserSettingsHandlerService;
+
+  beforeEach( async() => {
+
+    service = setupTestModuleForService(UserSettingsHandlerService);
+  });
 
   it('should be created', () => {
-    const service: UserSettingsHandlerService = TestBed.inject(UserSettingsHandlerService);
     expect(service).toBeTruthy();
   });
+
 });

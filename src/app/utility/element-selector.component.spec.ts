@@ -46,15 +46,7 @@ describe('ElementSelectorComponent', () => {
         MatTooltipModule,
         MatDialogModule,
         MatTableModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MdmResourcesService, useValue: {} }
-      ],
-      declarations: [
+        ToastrModule.forRoot(),
         ProfilePictureComponent,
         ByteArrayToBase64Pipe,
         McSelectComponent,
@@ -62,6 +54,11 @@ describe('ElementSelectorComponent', () => {
         ModelSelectorTreeComponent,
         ModelPathComponent,
         ElementSelectorComponent
+      ],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MdmResourcesService, useValue: {} }
       ]
     })
     .compileComponents();

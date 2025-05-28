@@ -41,8 +41,11 @@ describe('MultipleTermsSelectorComponent', () => {
         MatCheckboxModule,
         MatTooltipModule,
         FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        McPagedListComponent,
+        ElementLinkComponent,
+        McSelectComponent,
+        MultipleTermsSelectorComponent
       ],
       providers: [
         {
@@ -54,12 +57,6 @@ describe('MultipleTermsSelectorComponent', () => {
             }
           }
         }
-      ],
-      declarations: [
-        McPagedListComponent,
-        ElementLinkComponent,
-        McSelectComponent,
-        MultipleTermsSelectorComponent
       ]
     })
     .compileComponents();

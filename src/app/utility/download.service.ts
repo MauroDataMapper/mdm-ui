@@ -63,7 +63,7 @@ export class DownloadService {
     let svgString = new XMLSerializer().serializeToString(svg);
     svgString = svgString.replace(/&nbsp;/g, ' ');
 
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;
 
     canvas.width = width * scale + 10;
     canvas.height = height * scale + 10;

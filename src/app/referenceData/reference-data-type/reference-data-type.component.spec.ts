@@ -38,7 +38,9 @@ describe('ReferenceDataTypeComponent', () => {
         NgxSkeletonLoaderModule,
         MatPaginatorModule,
         MatTableModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        ReferenceDataTypeComponent,
+        MdmPaginatorComponent
       ],
       providers: [
         {
@@ -53,8 +55,7 @@ describe('ReferenceDataTypeComponent', () => {
           provide: StateHandlerService,
           useValue: jest.fn()
         }
-      ],
-      declarations: [ReferenceDataTypeComponent, MdmPaginatorComponent]
+      ]
     });
   });
 

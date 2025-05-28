@@ -84,9 +84,10 @@ describe('ReferenceDataModelMainComponent', () => {
     harness = await setupTestModuleForComponent(
       ReferenceDataModelMainComponent,
       {
-        declarations: [
+        imports: [
           MockComponent(ElementClassificationsComponent),
-          ContentEditorComponent],
+          ContentEditorComponent
+        ],
         providers: [
           {
             provide: FolderService,

@@ -40,10 +40,10 @@ describe('ApiKeysModalComponent', () => {
          MatInputModule,
          BrowserAnimationsModule,
          FormsModule,
-         MatButtonModule
+         MatButtonModule,
+         ApiKeysModalComponent
        ],
-       providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }],
-      declarations: [ ApiKeysModalComponent ]
+       providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }]
     })
     .compileComponents();
   }));

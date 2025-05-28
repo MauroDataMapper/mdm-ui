@@ -15,51 +15,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { of } from 'rxjs';
-import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
 
 import { FederatedDataModelMainComponent } from './federated-data-model-main.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('FederatedDataModelMainComponent', () => {
-  let component: FederatedDataModelMainComponent;
-  let fixture: ComponentFixture<FederatedDataModelMainComponent>;
+  let harness: ComponentHarness<FederatedDataModelMainComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: { }
-        },
-        {
-          provide: SubscribedCataloguesService,
-          useValue: {
-            getFederatedDataModels: (_: string) => {
-              return of();
-            }
-          }
-        }
-      ],
-      declarations: [ FederatedDataModelMainComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FederatedDataModelMainComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(FederatedDataModelMainComponent)
   });
+
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });
+

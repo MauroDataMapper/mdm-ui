@@ -23,7 +23,8 @@ import { ICellRendererParams } from '@ag-grid-community/core';
 @Component({
   selector: 'mdm-path-cell-renderer',
   templateUrl: './path-cell-renderer.component.html',
-  styleUrls: ['./path-cell-renderer.component.scss']
+  styleUrls: ['./path-cell-renderer.component.scss'],
+  standalone: true
 })
 export class PathCellRendererComponent implements ICellRendererAngularComp {
   public profile: NavigatableProfile;

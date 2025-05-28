@@ -30,9 +30,7 @@ describe('AllLinksInPagedListComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatTooltipModule
-      ],
-      declarations: [
+        MatTooltipModule,
         McPagedListComponent,
         ElementLinkComponent,
         MoreDescriptionComponent,

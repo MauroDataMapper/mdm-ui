@@ -40,6 +40,9 @@ describe('ReferenceDataElementComponent', () => {
         NgxSkeletonLoaderModule,
         MatTableModule,
         NoopAnimationsModule,
+        ReferenceDataElementComponent,
+        MdmPaginatorComponent,
+        SkeletonBadgeComponent
       ],
       providers: [
         {
@@ -51,11 +54,6 @@ describe('ReferenceDataElementComponent', () => {
             }
           }
         }
-      ],
-      declarations: [
-        ReferenceDataElementComponent,
-        MdmPaginatorComponent,
-        SkeletonBadgeComponent
       ]
     }).compileComponents();
   }));

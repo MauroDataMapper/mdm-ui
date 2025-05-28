@@ -25,7 +25,7 @@ describe('DataModelDefaultComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataModelDefaultComponent ]
+      imports: [ DataModelDefaultComponent ]
     })
     .compileComponents();
   }));

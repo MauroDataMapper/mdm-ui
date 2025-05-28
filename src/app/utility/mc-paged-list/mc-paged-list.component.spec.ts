@@ -25,7 +25,7 @@ describe('McPagedListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ McPagedListComponent ]
+      imports: [ McPagedListComponent ]
     })
     .compileComponents();
   }));

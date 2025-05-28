@@ -26,7 +26,7 @@ describe('AlertComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AlertComponent ]
+      imports: [ AlertComponent ]
     })
     .compileComponents();
   }));

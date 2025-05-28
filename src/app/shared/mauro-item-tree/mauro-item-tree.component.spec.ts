@@ -30,10 +30,6 @@ describe('MauroItemTreeComponent', () => {
     harness = await setupTestModuleForComponent(MauroItemTreeComponent, {
       providers: [
         {
-          provide: MdmResourcesService,
-          useValue: jest.fn()
-        },
-        {
           provide: ModelTreeService,
           useValue: jest.fn()
         }

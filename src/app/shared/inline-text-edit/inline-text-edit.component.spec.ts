@@ -29,9 +29,9 @@ describe('InlineTextEditComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CommonModule,
-        FormsModule
-      ],
-      declarations: [ InlineTextEditComponent ]
+        FormsModule,
+        InlineTextEditComponent
+      ]
     })
     .compileComponents();
   }));

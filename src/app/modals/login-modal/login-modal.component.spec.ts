@@ -75,8 +75,9 @@ describe('LoginModalComponent', () => {
         MatFormFieldModule,
         FormsModule,
         ReactiveFormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        LoginModalComponent,
+        MockDirective(MatDialogContent)
       ],
       providers: [
         {
@@ -95,8 +96,7 @@ describe('LoginModalComponent', () => {
           provide: FeaturesService,
           useValue: features
         }
-      ],
-      declarations: [LoginModalComponent, MockDirective(MatDialogContent)]
+      ]
     }).compileComponents();
   });
 

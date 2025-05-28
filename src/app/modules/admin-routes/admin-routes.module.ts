@@ -128,7 +128,6 @@ export const adminPageRoutes: { states: Ng2StateDeclaration[] } = {
 };
 
 @NgModule({
-  declarations: [],
   imports: [UIRouterModule.forChild({ states: adminPageRoutes.states })]
 })
 export class AdminRoutesModule { }

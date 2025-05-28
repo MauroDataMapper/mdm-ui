@@ -23,13 +23,16 @@ import { MockComponent, MockDirective } from 'ng-mocks';
 import { CatalogueSearchProfileFilterListComponent } from '@mdm/catalogue-search/catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ClassifierIndexResponse, FilterQueryParameters, ProfileSummaryIndexResponse } from '../../../../../mdm-resources';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 describe('ProfileFilterDialogComponent', () => {
   let component: ProfileFilterDialogComponent;
   let fixture: ComponentFixture<ProfileFilterDialogComponent>;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     classifier: {
       list: jest.fn() as jest.MockedFunction<
         (query?: FilterQueryParameters) => Observable<ClassifierIndexResponse>
@@ -41,10 +44,12 @@ describe('ProfileFilterDialogComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+      imports: [
         ProfileFilterDialogComponent,
         MockComponent(CatalogueSearchProfileFilterListComponent),
         MockDirective(MatDialogContent),

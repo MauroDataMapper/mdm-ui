@@ -47,6 +47,9 @@ describe('CatalogueSearchComponent', () => {
   };
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     classifier: {
       list: jest.fn() as jest.MockedFunction<
         (query?: FilterQueryParameters) => Observable<ClassifierIndexResponse>
@@ -58,10 +61,11 @@ describe('CatalogueSearchComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(CatalogueSearchComponent, {
-      declarations: [
+      imports: [
         CatalogueSearchFormComponent,
         CatalogueSearchAdvancedFormComponent,
         CatalogueSearchProfileFilterListComponent,

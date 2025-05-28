@@ -35,7 +35,7 @@ describe('FullContentEditDialogComponent', () => {
           { provide: MatDialogRef, useValue: {} },
           { provide: MAT_DIALOG_DATA, useValue: {} }
         ],
-        declarations: [ContentEditorComponent]
+        imports: [ContentEditorComponent]
       }
     );
   });

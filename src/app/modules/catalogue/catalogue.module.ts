@@ -119,8 +119,8 @@ import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-se
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { NgChartsModule } from 'ng2-charts';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import { BaseChartDirective } from 'ng2-charts';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
 import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
 import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
@@ -200,14 +200,14 @@ import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter'
     BulkEditModule,
     BrowserModule,
     BrowserAnimationsModule,
-    NgChartsModule,
+    BaseChartDirective,
     CommonModule,
     ContentModule,
     DragDropModule,
     FoldersTreeModule,
     FormsModule,
     HttpClientModule,
-    ImageCropperModule,
+    ImageCropperComponent,
     ReactiveFormsModule,
     SharedModule,
     ToastrModule.forRoot({

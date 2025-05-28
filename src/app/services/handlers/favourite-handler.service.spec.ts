@@ -15,39 +15,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
 import { FavouriteHandlerService } from './favourite-handler.service';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('FavouriteHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [
-      NgxSkeletonLoaderModule,
-      MatTooltipModule,
-      UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()
-    ],
-    providers: [
-      {
-        provide: MdmResourcesService, useValue: {}
-      }
-    ],
-    declarations: [
-      ProfilePictureComponent,
-      ByteArrayToBase64Pipe
-    ]
-  }));
+
+  let service: FavouriteHandlerService;
+
+  beforeEach( async() => {
+
+    service = setupTestModuleForService(FavouriteHandlerService);
+  });
 
   it('should be created', () => {
-    const service: FavouriteHandlerService = TestBed.inject(
-      FavouriteHandlerService
-    );
     expect(service).toBeTruthy();
   });
+
 });

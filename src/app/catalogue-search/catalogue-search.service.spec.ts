@@ -26,7 +26,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { CatalogueSearchService } from './catalogue-search.service';
 
@@ -34,6 +34,9 @@ describe('CatalogueSearchService', () => {
   let service: CatalogueSearchService;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     profile: {
       provider: jest.fn() as jest.MockedFunction<
         (
@@ -50,6 +53,7 @@ describe('CatalogueSearchService', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   beforeEach(() => {
     service = setupTestModuleForService(CatalogueSearchService, {

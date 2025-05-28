@@ -56,7 +56,7 @@ import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.compon
 import { ElementLabelComponent } from './element-label/element-label.component';
 import { ContentModule } from '@mdm/content/content.module';
 import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { LocationPathComponent } from './location-path/location-path.component';
 import { NgxJoditComponent } from 'ngx-jodit';
 
@@ -72,7 +72,7 @@ import { NgxJoditComponent } from 'ngx-jodit';
         NgxSkeletonLoaderModule,
         CodemirrorModule,
         UIRouterModule,
-        ImageCropperModule,
+        ImageCropperComponent,
         NgxJoditComponent,
         ContentModule,
         EditableFormButtonsComponent,

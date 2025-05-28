@@ -28,9 +28,7 @@ describe('ElementSelectorDialogueService', () => {
     imports: [
       NgxSkeletonLoaderModule,
       MatTooltipModule,
-      MatDialogModule
-    ],
-    declarations: [
+      MatDialogModule,
       ProfilePictureComponent,
       ByteArrayToBase64Pipe
     ]

@@ -48,6 +48,9 @@ describe('CatalogueSearchListingComponent', () => {
   };
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     catalogueItem: {
       search: jest.fn()
     },
@@ -67,6 +70,7 @@ describe('CatalogueSearchListingComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   const setupComponentTest = async (parameters: CatalogueSearchParameters) => {
     const params = mapSearchParametersToRawParams(parameters);

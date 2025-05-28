@@ -28,51 +28,18 @@ import { FormsModule } from '@angular/forms';
 import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MarkdownTextAreaComponent } from '@mdm/content/markdown/markdown-text-area/markdown-text-area.component';
 import { MarkdownDirective } from '@mdm/content/markdown/markdown.directive';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
+import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';
 
 describe('SubscribedCatalogueDetailComponent', () => {
-  let component: SubscribedCatalogueDetailComponent;
-  let fixture: ComponentFixture<SubscribedCatalogueDetailComponent>;
+  let harness: ComponentHarness<SubscribedCatalogueDetailComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatDialogModule,
-          FormsModule,
-          UIRouterModule.forRoot({ useHash: true }),
-          ToastrModule.forRoot()
-        ],
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: {}
-          }
-        ],
-        declarations: [
-          SubscribedCatalogueDetailComponent,
-          NgxSkeletonLoaderComponent,
-          ContentEditorComponent,
-          MarkdownTextAreaComponent,
-          MarkdownDirective,
-          InlineTextEditComponent
-        ]
-      }).compileComponents();
-    })
-  );
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SubscribedCatalogueDetailComponent);
-    component = fixture.componentInstance;
-    component.subscribedCatalogue = {
-      url: '',
-      label: '',
-      subscribedCatalogueType: 'test',
-      subscribedCatalogueAuthenticationType: 'test'
-    };
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(SubscribedCatalogueDetailComponent)
   });
 
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

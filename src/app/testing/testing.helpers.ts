@@ -92,7 +92,7 @@ const resourcesStub: MdmResourcesServiceStub = {
   }
 };
 
-resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
+resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
 
 /**

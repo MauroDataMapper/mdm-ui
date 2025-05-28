@@ -46,7 +46,7 @@ export class DataElementStep1Component implements OnInit {
     parent:DataModel;
     copyFromDataModel: Array<DataModel>;
     copyFromDataClass: Array<DataClass>;
-  };;
+  };
 
   constructor() { }
 

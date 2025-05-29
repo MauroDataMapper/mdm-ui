@@ -34,13 +34,18 @@ jobs:
         run: |
           node --version
           npm --version
-          npx tsc --version
 
 
       - name: Clean install dependencies
         run: |
           npm config set registry https://registry.npmjs.org/
           npm install
+
+      - name: Check tool versions
+        run: |
+          node --version
+          npm --version
+          npx tsc --version
 
 
       #########

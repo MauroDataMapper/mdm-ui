@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: MauroDataMapper/mdm-resources
-          ref: refs/heads/develop # change this to test against another branch
+          ref: refs/heads/feature/update-node # changed this... change back to develop before merge
           path: ./mdm-resources
 
       - name: Build mdm-resources

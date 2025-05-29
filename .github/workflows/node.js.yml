@@ -34,6 +34,7 @@ jobs:
         run: |
           node --version
           npm --version
+          npx tsc --version
 
 
       - name: Clean install dependencies

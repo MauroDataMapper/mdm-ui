@@ -102,7 +102,7 @@
     "@types/jest": "27.0.2",
     "@types/lodash": "^4.14.161",
     "@types/marked": "^4.0.1",
-    "@types/node": "12.12.64",
+    "@types/node": "18.19.105",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
     "angular-password-strength-meter": "11.0.0",

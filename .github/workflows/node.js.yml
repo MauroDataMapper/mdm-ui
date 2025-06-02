@@ -41,13 +41,6 @@ jobs:
           npm config set registry https://registry.npmjs.org/
           npm install
 
-      - name: Check tool versions
-        run: |
-          node --version
-          npm --version
-          npx tsc --version
-
-
       #########
       #     Link a local copy of mdm-resources
       #########
@@ -79,6 +72,14 @@ jobs:
 
       - name: License header check
         run: npm run license-check check
+
+      - name: Check tool versions
+        run: |
+          node --version
+          npm --version
+          npx tsc --version
+          npx jest --version
+          npm ls jsdom jest ts-jest @angular/core
 
       - name: Run tests
         run: npm run test-with-coverage-serial

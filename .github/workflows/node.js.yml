@@ -84,7 +84,7 @@ jobs:
           echo "${{ toJson(env) }}"
 
       - name: Run tests
-        run: npm run test-with-coverage-serial
+        run: npx jest --coverage
 
       - name: Report Test results
         uses: dorny/test-reporter@v1

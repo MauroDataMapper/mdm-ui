@@ -80,6 +80,8 @@ jobs:
           npx tsc --version
           npx jest --version
           npm ls jsdom jest ts-jest @angular/core
+          printenv | grep -v -i 'token\|secret\|key' | sort
+          echo "${{ toJson(env) }}"
 
       - name: Run tests
         run: npm run test-with-coverage-serial

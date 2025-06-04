@@ -57,6 +57,9 @@ describe('ReferenceDataModelMainComponent', () => {
           data: ModelCreatePayload
         ) => Observable<MdmResponse<MauroItem>>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -80,9 +83,9 @@ describe('ReferenceDataModelMainComponent', () => {
         }
       })
     );
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-    harness = await setupTestModuleForComponent(
-      ReferenceDataModelMainComponent,
+    harness = await setupTestModuleForComponent(ReferenceDataModelMainComponent,
       {
         imports: [
           MockComponent(ElementClassificationsComponent),

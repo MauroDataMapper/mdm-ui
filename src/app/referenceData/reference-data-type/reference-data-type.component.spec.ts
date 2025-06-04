@@ -16,47 +16,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { ReferenceDataTypeComponent } from './reference-data-type.component';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { EMPTY } from 'rxjs';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
-import { StateHandlerService } from '@mdm/services';
 
 describe('ReferenceDataTypeComponent', () => {
   let harness: ComponentHarness<ReferenceDataTypeComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(ReferenceDataTypeComponent, {
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatPaginatorModule,
-        MatTableModule,
-        NoopAnimationsModule,
-        ReferenceDataTypeComponent,
-        MdmPaginatorComponent
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {
-            referenceDataType: {
-              list: () => EMPTY
-            }
-          }
-        },
-        {
-          provide: StateHandlerService,
-          useValue: jest.fn()
-        }
-      ]
-    });
+    harness = await setupTestModuleForComponent(ReferenceDataTypeComponent);
   });
 
   it('should create', () => {

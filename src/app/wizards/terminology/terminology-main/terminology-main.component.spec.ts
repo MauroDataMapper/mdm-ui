@@ -57,6 +57,9 @@ describe('TerminologyMainComponent', () => {
           data: ModelCreatePayload
         ) => Observable<MdmResponse<MauroItem>>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -80,6 +83,7 @@ describe('TerminologyMainComponent', () => {
         }
       })
     );
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
     harness = await setupTestModuleForComponent(TerminologyMainComponent, {
       imports: [

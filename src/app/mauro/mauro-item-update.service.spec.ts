@@ -19,7 +19,7 @@ import { CatalogueItemDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MauroItemUpdateService } from './mauro-item-update.service';
 import {
   MauroIdentifier,
@@ -110,6 +110,9 @@ describe('MauroItemUpdateService', () => {
       update: jest.fn() as jest.MockedFunction<
         (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -158,6 +161,7 @@ describe('MauroItemUpdateService', () => {
   };
 
   beforeEach(() => {
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
     service = setupTestModuleForService(MauroItemUpdateService, {
       providers: [
         {

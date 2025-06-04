@@ -57,6 +57,7 @@
     "@joint/core": "^4.0.1",
     "@joint/layout-directed-graph": "^4.0.1",
     "@maurodatamapper/mdm-resources": "5.3.0",
+    "@microsoft/eslint-formatter-sarif": "3.1.0",
     "@uirouter/angular": "13.0.0",
     "@uirouter/core": "6.1.0",
     "@uirouter/rx": "1.0.0",

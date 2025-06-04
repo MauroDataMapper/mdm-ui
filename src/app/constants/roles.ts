@@ -34,5 +34,4 @@ export class ROLES {
     { value: 'ADMINISTRATOR', text: 'Administrator' },
     { value: 'EDITOR', text: 'Editor' }
   ];
-  constructor() {}
 }

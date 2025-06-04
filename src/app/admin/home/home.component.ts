@@ -20,7 +20,7 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { Title } from '@angular/platform-browser';
-import { ProfilesDashboardComponent } from '../../profiles-dashboard/profiles-dashboard.component';
+import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
 import { ModulesComponent } from './modules/modules.component';
 import { PluginsComponent } from './plugins/plugins.component';
 import { ActiveSessionsComponent } from './active-sessions/active-sessions.component';
@@ -45,7 +45,6 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView as string);
     this.appVersion = this.shared.appVersion;
     this.title.setTitle('Dashboard');

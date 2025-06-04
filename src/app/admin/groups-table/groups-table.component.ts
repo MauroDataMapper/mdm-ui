@@ -26,12 +26,12 @@ import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeader
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
-import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIconButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FlexModule } from '@angular/flex-layout/flex';
 
@@ -48,7 +48,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
   isLoadingResults: boolean;
   totalItemCount = 0;
   hideFilters = true;
@@ -103,7 +103,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  groupsFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}): Observable<any> {
+  groupsFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourcesService.userGroups.list(options);

@@ -75,13 +75,6 @@ export abstract class BasicDiagramService {
   }
 
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
-    let nodeSep = 100;
-    let rankSep = 400;
-
-    if (rankDir === 'TB') {
-      nodeSep = 100;
-      rankSep = 250;
-    }
 
     DirectedGraph.layout(this.graph, {
       setLabels: true,
@@ -116,7 +109,7 @@ export abstract class BasicDiagramService {
     return cylinder;
   }
 
-  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+  protected addRectangleCell(id: string, label: string, width = 120, height = 80, textWidth = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
       size: { width, height }
@@ -135,7 +128,7 @@ export abstract class BasicDiagramService {
     return rectangle;
   }
 
-  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width = 120, height = 80, textWidth = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
       size: { width, height }
@@ -206,10 +199,10 @@ export abstract class BasicDiagramService {
 
   }
 
-  protected addUmlClassCell(id: string, label: string, attributes: Array<any>,
+  protected addUmlClassCell(id: string, label: string, attributes: any[],
     @Optional() position: joint.g.Point = null,
     @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
-    const cells: Array<joint.dia.Cell> = [];
+    const cells: joint.dia.Cell[] = [];
     if (!position) {
       position = new joint.g.Point({ x: 0, y: 0 });
     }

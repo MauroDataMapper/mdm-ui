@@ -25,10 +25,10 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageService } from '../services/message.service';
-import { SharedService } from '../services/shared.service';
+import { MessageService } from '@mdm/services';
+import { SharedService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
@@ -79,12 +79,7 @@ export class ClassificationComponent
   subscription: Subscription;
   parentId: string;
   activeTab: number;
-  catalogueItemsCount: any;
-  terminologiesCount: any;
-  termsCount: any;
-  codeSetsCount: any;
   loading = false;
-  catalogueItems: any;
   tabs = new TabCollection([
     'description',
     'classifiedElements',
@@ -171,7 +166,7 @@ export class ClassificationComponent
   classifierPermissions(id: Uuid) {
     this.resourcesService.security
       .permissions(SecurableDomainType.Classifiers, id)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.result[attrname] = permissions.body[attrname];
         });
@@ -197,7 +192,7 @@ export class ClassificationComponent
     );
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource = {
       id: this.result.id
     };

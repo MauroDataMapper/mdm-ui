@@ -26,7 +26,7 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
-import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIconButton } from '@angular/material/button';
@@ -34,7 +34,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
-import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FlexModule } from '@angular/flex-layout/flex';
 
@@ -51,7 +51,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
@@ -93,7 +93,6 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       this.isLoadingResults = false;
       return [];
     })).subscribe((data) => {
-      // tslint:disable-next-line: forin
       for (const val in data) {
         if (data[val].availableActions.includes('update')) {
           data[val].showEdit = true;
@@ -106,7 +105,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  usersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection , filters?: {[p: string]: any}): Observable<any> {
+  usersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection , filters?: Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }

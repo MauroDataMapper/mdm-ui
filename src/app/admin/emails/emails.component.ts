@@ -36,7 +36,7 @@ import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/m
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatButton } from '@angular/material/button';
 import { NgIf, NgClass, DatePipe } from '@angular/common';
-import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -58,7 +58,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   isLoadingResults: boolean;
   totalItemCount = 0;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
 
   records: any[] = [];
   displayedColumns = [
@@ -120,7 +120,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: Record<string, any>
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,

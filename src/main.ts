@@ -15,13 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { enableProdMode, LOCALE_ID, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 
 import { environment } from '@env/environment';
 import { UIRouterModule } from '@uirouter/angular';
 import { bootstrapApplication } from '@angular/platform-browser';
 
-import { AppComponent } from '@mdm/app.component';
 import { MdmResourcesConfiguration } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesModule, MdmRestHandlerService } from '@mdm/modules/resources';
 import { provideHttpClient } from '@angular/common/http';

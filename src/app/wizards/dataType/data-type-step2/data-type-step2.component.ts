@@ -46,7 +46,7 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTooltip } from '@angular/material/tooltip';
-import { NewDataTypeInlineComponent } from '../../../utility/new-data-type-inline/new-data-type-inline.component';
+import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/new-data-type-inline.component';
 import { NgIf, NgFor } from '@angular/common';
 
 @Component({
@@ -57,7 +57,7 @@ import { NgIf, NgFor } from '@angular/common';
     imports: [NgIf, FormsModule, NewDataTypeInlineComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
-  @Input() parent;
+  @Input() parent: any;
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
@@ -75,18 +75,18 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
        model: {
         [key: string]: any;
         createType: CreateType;
-        selectedDataTypes: Array<any>;
+        selectedDataTypes: any[];
         parent:DataModel;
-        copyFromDataModel: Array<DataModel>;
+        copyFromDataModel: DataModel[];
       };
     };
   };
   model: {
     [key: string]: any;
     createType: CreateType;
-    selectedDataTypes: Array<any>;
+    selectedDataTypes: any[];
     parent:DataModel;
-    copyFromDataModel: Array<DataModel>;
+    copyFromDataModel: DataModel[];
   };
   scope: any;
   defaultCheckedMap: any;
@@ -152,7 +152,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after each backend call
-  dataTypesFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters: {[p: string]: any}) {
+  dataTypesFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
@@ -232,7 +232,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   createSelectedArray = () => {
     this.model.selectedDataTypes = [];
     for (const id in this.model.selectedDataTypesMap) {
-      if (this.model.selectedDataTypesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataTypesMap, id)) {
         const element = this.model.selectedDataTypesMap[id];
         this.model.selectedDataTypes.push(element.node);
       }

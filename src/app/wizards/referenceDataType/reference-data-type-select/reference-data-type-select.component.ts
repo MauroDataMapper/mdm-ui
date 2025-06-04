@@ -46,7 +46,7 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
-import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatOption } from '@angular/material/core';
 import { MatInput } from '@angular/material/input';
@@ -206,7 +206,7 @@ export class ReferenceDataTypeSelectComponent
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ): Observable<ReferenceDataTypeIndexResponse> {
     const options = this.grid.constructOptions(
       pageSize,

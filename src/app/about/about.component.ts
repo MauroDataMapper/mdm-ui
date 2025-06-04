@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../services/shared.service';
+import { SharedService } from '@mdm/services';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import { catchError } from 'rxjs/operators';
@@ -49,7 +49,7 @@ const defaultHtmlContent = [
           model of the same artefact, reflecting different perspectives and/or purposes: for example, a link indicating
           semantic interoperability might be valid for some purposes but not for others.  The catalogue supports
           contextualised (even apparently inconsistent) and evolving viewpoints.   </p>
-       <p><img style="float: left; width: 40%; margin-right: 1em;" src="assets/images/UMLChart.png" alt=""Example UML diagram></p>
+       <p><img style="float: left; width: 40%; margin-right: 1em;" src="assets/images/UMLChart.png" alt="Example UML diagram"></p>
        <p>This support for multiple perspectives adds to the scalability of the approach: descriptions and definitions can be
           contributed by many parties, without the need for prior reconciliation.  Users of the catalogue can choose which
           models, and which descriptions and links, to build upon.  In most cases, they will make this choice based upon

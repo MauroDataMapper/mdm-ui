@@ -26,5 +26,4 @@ import { PendingUsersTableComponent } from '../pending-users-table/pending-users
     imports: [PendingUsersTableComponent]
 })
 export class PendingUsersComponent {
-  constructor() {}
 }

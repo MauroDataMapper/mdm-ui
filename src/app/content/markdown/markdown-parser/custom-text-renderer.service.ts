@@ -68,9 +68,7 @@ export class CustomTextRendererService extends marked.Renderer {
     let table = '<br>[';
     const reg = /<th>(.*?)<\/th>/g;
     let match: RegExpExecArray;
-    // tslint:disable-next-line: no-conditional-assignment
     while ((match = reg.exec(header))) {
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       table += (match[1] ? match[1] : '...') + ', ';
     }
     table += '...]';

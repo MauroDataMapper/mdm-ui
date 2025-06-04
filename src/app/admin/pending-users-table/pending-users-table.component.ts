@@ -77,7 +77,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   isLoadingResults: boolean;
   totalItemCount = 0;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
 
   records: any[] = [];
   displayedColumns = ['fullName', 'emailAddress', 'organisation', 'actions'];
@@ -119,7 +119,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       });
     this.changeRef.detectChanges();
   }
-  pendingUsersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:{[p: string]: any}) {
+  pendingUsersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     options['disabled'] = false;
 

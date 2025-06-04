@@ -31,7 +31,6 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
 import { DataModelComponent } from './dataModel/data-model.component';
@@ -587,7 +586,6 @@ export const editingViewTransitionHooks = (
 /**
  * Router transition hooks for checking role access before switching views.
  *
- * @see {@link StateRoleAccessService}
  */
 export const roleTransitionHooks = (transitions: TransitionService) => {
   /**
@@ -652,5 +650,4 @@ export const routerConfigFn = (router: UIRouter, injector: Injector) => {
   ],
 })
 export class AppRoutingModule {
-  constructor() {}
 }

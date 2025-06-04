@@ -17,9 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SharedService } from '../services/shared.service';
+import { SharedService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services';
 import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -70,7 +70,6 @@ export class DataModelComponent
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
   showFinalised: boolean;
-  downloadLinks: HTMLAnchorElement[] = [];
   compareToList: any[] = []; // TODO: define better type
 
   dataModel: DataModelDetail;
@@ -144,7 +143,7 @@ export class DataModelComponent
     this.dataModelDetails(this.parentId, this.showFinalised);
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: ModelUpdatePayload = {
       id: this.dataModel.id,
       domainType: this.dataModel.domainType
@@ -265,7 +264,7 @@ export class DataModelComponent
   async DataModelPermissions(id: any) {
     await this.resourcesService.security
       .permissions(SecurableDomainType.DataModels, id as string)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];
         });

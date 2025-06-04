@@ -19,7 +19,8 @@ export const isUrl = (href: string): boolean => {
   let url: URL;
   try {
     url = new URL(href);
-  } catch (_) {
+  } catch (e) {
+    console.info('Cannot convert to url: ' + e);
     return false;
   }
 

@@ -33,8 +33,6 @@ export class ProfileFilterCardComponent implements OnInit {
   @Input() profileFilter: CatalogueSearchProfileFilter;
   @Output() delete = new EventEmitter<CatalogueSearchProfileFilter>();
 
-  constructor() {}
-
   ngOnInit(): void {}
 
   onDelete() {

@@ -15,12 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  CatalogueItemDomainType,
-  CatalogueItemSearchResult,
-  ProfileField,
-  ProfileSummary
-} from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, CatalogueItemSearchResult, ProfileField, ProfileSummary } from '@maurodatamapper/mdm-resources';
 import { RawParams, StateParams } from '@uirouter/core';
 
 export type SortOrder = 'asc' | 'desc';
@@ -45,9 +40,7 @@ export const getOrderFromSortByOptionString = (sortBy: string) => {
 
 export type SearchListingStatus = 'init' | 'loading' | 'ready' | 'error';
 
-export type CatalogueSearchFilters = {
-  [key: string]: string | undefined;
-};
+export type CatalogueSearchFilters = Record<string, string | undefined>;
 
 /**
  * Represents a single element within which a search should occur.
@@ -81,11 +74,7 @@ export interface CatalogueSearchProfileFilter {
  *
  * @see mapProfileFiltersToDto
  */
-export interface CatalogueSearchProfileFilterDto {
-  [ns: string]: {
-    [key: string]: string;
-  };
-}
+export type CatalogueSearchProfileFilterDto = Record<string, Record<string, string>>;
 
 /**
  * Maps a list of {@link CatalogueSearchProfileFilter} objects into a compressed data transfer object (DTO)
@@ -136,7 +125,7 @@ export interface CatalogueSearchProfileFilterDto {
 export const mapProfileFiltersToDto = (
   filters: CatalogueSearchProfileFilter[]
 ): CatalogueSearchProfileFilterDto => {
-  const grouped = filters.reduce((result, item) => {
+  return filters.reduce((result, item) => {
     // Must combine all profile provider information into one parsable string
     const providerFullName = `${item.provider.namespace}|${item.provider.name}|${item.provider.version}`;
 
@@ -148,8 +137,6 @@ export const mapProfileFiltersToDto = (
       }
     };
   }, {});
-
-  return grouped;
 };
 
 /**
@@ -181,11 +168,11 @@ export const ungroupProfileFiltersDto = (
 /**
  * Serializes the provided {@link CatalogueSearchProfileFilter} objects into a compressed, encoded string.
  *
- * @param filters The profile filter(s) to serialize
  * @returns A Base64 encoded string of the information.
  *
  * This function is required to transform this large list/object structure into something that can be transferred
  * via URL query parameters.
+ * @param dto
  */
 export const serializeProfileFiltersDto = (
   dto: CatalogueSearchProfileFilterDto
@@ -195,8 +182,8 @@ export const serializeProfileFiltersDto = (
   }
 
   const json = JSON.stringify(dto);
-  const base64 = btoa(json); // Base64 encoded string
-  return base64;
+   // Base64 encoded string
+  return btoa(json);
 };
 
 /**
@@ -212,8 +199,7 @@ export const serializeProfileFiltersDto = (
  */
 export const deserializeProfileFiltersToDto = (base64String: string) => {
   const decoded = atob(base64String); // Base64 decoded string
-  const dto = JSON.parse(decoded) as CatalogueSearchProfileFilterDto;
-  return dto;
+  return JSON.parse(decoded) as CatalogueSearchProfileFilterDto;
 };
 
 /**
@@ -308,9 +294,9 @@ export const serializeDate = (date: Date) => {
   }
 
   // Remember: getMonth() is zero based
-  const yyyy: String = date.getFullYear().toString();
-  const mm: String = (date.getMonth() + 1).toString().padStart(2, '0');
-  const dd: String = date.getDate().toString().padStart(2, '0');
+  const yyyy: string = date.getFullYear().toString();
+  const mm: string = (date.getMonth() + 1).toString().padStart(2, '0');
+  const dd: string = date.getDate().toString().padStart(2, '0');
 
   return `${yyyy}-${mm}-${dd}`;
 };
@@ -365,13 +351,13 @@ export const mapStateParamsToSearchParameters = (
     order: query?.order ?? undefined,
     pageSize: query?.pageSize ?? undefined,
     domainTypes,
-    labelOnly: query?.l === false ? false : true,
+    labelOnly: query?.l !== false,
     exactMatch: query?.e === true ? true : undefined,
     lastUpdatedAfter: query?.lua ? new Date(query.lua as number | string | Date) : undefined,
     lastUpdatedBefore: query?.lub ? new Date(query.lub as number | string | Date) : undefined,
     createdAfter: query?.ca ? new Date(query.ca as number | string | Date) : undefined,
     createdBefore: query?.cb ? new Date(query.cb as number | string | Date) : undefined,
-    includeSuperseded: query?.is === true ? true : false,
+    includeSuperseded: query?.is === true,
     classifiers,
     profileFiltersDto: profileFilterDto
   };

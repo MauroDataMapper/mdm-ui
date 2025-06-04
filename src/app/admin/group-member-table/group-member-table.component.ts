@@ -37,11 +37,11 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatCard } from '@angular/material/card';
 import { MatTooltip } from '@angular/material/tooltip';
-import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { NgIf } from '@angular/common';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -71,7 +71,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
   isLoadingResults: boolean;
 
   records: any[] = [];
-  filter: { [p: string]: any } = {};
+  filter: Record<string, any> = {};
   // applyFilter : any;
 
   constructor(
@@ -128,7 +128,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: { [key: string]: any }
+    filters?: Record<string, any>
   ) => {
     const options = this.gridService.constructOptions(
       pageSize,

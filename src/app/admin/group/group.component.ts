@@ -59,7 +59,6 @@ export class GroupComponent implements OnInit {
 
   ngOnInit() {
     this.editingService.start();
-    // tslint:disable-next-line: deprecation
     this.groupId = this.stateService.params.id;
     if (this.groupId) {
       this.title.setTitle('Group - Edit Group');

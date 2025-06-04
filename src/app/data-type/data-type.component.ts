@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
@@ -37,16 +37,16 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { HistoryComponent } from '../shared/history/history.component';
-import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
-import { ElementLinkListComponent } from '../shared/element-link-list/element-link-list.component';
-import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
-import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
-import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
-import { ElementChildDataElementsListComponent } from '../shared/element-child-data-elements-list/element-child-data-elements-list.component';
-import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
-import { McEnumerationListWithCategoryComponent } from '../utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
-import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ElementChildDataElementsListComponent } from '@mdm/shared/element-child-data-elements-list/element-child-data-elements-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -66,19 +66,15 @@ export class DataTypeComponent
   dataModel: DataModel;
   id: Uuid;
   activeTab: number;
-  showEditForm = false;
 
   loadingData = false;
 
-  schemaView = 'list';
   descriptionView = 'default';
-  contextView = 'default';
   rulesItemCount = 0;
   isLoadingRules = true;
   historyItemCount = 0;
   isLoadingHistory = true;
   errorMessage: any;
-  elementType: any;
   showEdit: boolean;
   showEditDescription = false;
   access: any;
@@ -94,7 +90,6 @@ export class DataTypeComponent
   ]);
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
-  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
 
   constructor(
     private title: Title,
@@ -173,7 +168,7 @@ export class DataTypeComponent
     this.stateHandler.Go('dataType', { tabView: tab.name }, { notify: false });
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: DataType = {
       id: this.dataType.id,
       domainType: this.dataType.domainType,

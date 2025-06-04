@@ -77,7 +77,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   applyFilter = () => { };
 
-  modulesFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) {
+  modulesFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:Record<string, any>) {
 
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
 

@@ -17,11 +17,11 @@
     "test-with-coverage": "ng test --coverage",
     "test-with-coverage-serial": "ng test --coverage --run-in-band",
     "lint": "ng lint",
-    "eslint": "tsc --noEmit && eslint . --ext ts --fix",
-    "eslint-nofix": "tsc --noEmit && eslint . --ext ts",
-    "eslint-nofix-quiet": "tsc --noEmit && eslint . --ext ts --quiet",
-    "eslint-report": "eslint . --ext ts --format checkstyle -o eslint/eslint_report.xml",
-    "eslint-junit": "eslint . --ext ts -f ./node_modules/eslint-junit/index.js",
+    "eslint": "eslint . --fix",
+    "eslint-sarif": "eslint . -f @microsoft/eslint-formatter-sarif -o eslint/eslint_report.sarif",
+    "eslint-junit": "eslint . -f ./node_modules/eslint-junit/index.js -o eslint/eslint_junit.xml",
+    "eslint-nofix": "eslint .",
+    "eslint-report": "eslint . --format checkstyle -o eslint_report.json",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version",
     "license-check": "license-check-and-add -f license-check-and-add-config.json",
@@ -103,7 +103,7 @@
     "@angular/cli": "^17.3.17",
     "@angular/compiler-cli": "17.3.12",
     "@types/diff-match-patch": "^1.0.32",
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.5.2",
     "@types/lodash": "^4.14.161",
     "@types/marked": "^4.0.1",
     "@types/node": "18.19.105",
@@ -130,6 +130,8 @@
     "sonarqube-scanner": "^2.9.1",
     "ts-jest": "^29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "typescript-eslint": "^8.32.1"
+
   }
 }

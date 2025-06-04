@@ -34,20 +34,20 @@ import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { HistoryComponent } from '../../shared/history/history.component';
-import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
-import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
 import { MatOption } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField } from '@angular/material/form-field';
 import { FlexModule } from '@angular/flex-layout/flex';
-import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
-import { SummaryMetadataTableComponent } from '../../shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
-import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
-import { DataClassComponentsListComponent } from '../../shared/data-class-components-list/data-class-components-list.component';
-import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
-import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
 
@@ -83,9 +83,6 @@ export class DataClassComponent
     'annotations',
     'history'
   ]);
-
-  newMinText: any;
-  newMaxText: any;
 
   descriptionView = 'default';
   annotationsView = 'default';
@@ -206,7 +203,7 @@ export class DataClassComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     this.error = '';
 
     const resource: DataClass = {

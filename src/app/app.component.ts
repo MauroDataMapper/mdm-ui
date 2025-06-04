@@ -21,25 +21,24 @@ import {
   ApiProperty,
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
-import { UserIdleService } from './external/user-idle/user-idle.service';
+import { UserIdleService } from '@mdm/external/user-idle/user-idle.service';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
-import { MdmResourcesService } from './modules/resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   BroadcastService,
   StateHandlerService,
   UserSettingsHandlerService
-} from './services';
-import { EditingService } from './services/editing.service';
-import { FeaturesService } from './services/features.service';
-import { SharedService } from './services/shared.service';
-import { ThemingService } from './services/theming.service';
-import { FooterLink, FooterComponent } from './shared/footer/footer.component';
-import { LoadingIndicatorComponent } from './utility/loading-indicator/loading-indicator.component';
+} from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
+import { FeaturesService } from '@mdm/services/features.service';
+import { SharedService } from '@mdm/services';
+import { ThemingService } from '@mdm/services/theming.service';
+import { FooterLink, FooterComponent } from '@mdm/shared/footer/footer.component';
+import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 import { UIRouterModule } from '@uirouter/angular';
-import { NavbarComponent } from './navbar/navbar.component';
-import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
+import { NavbarComponent } from '@mdm/navbar/navbar.component';
 
 const defaultCopyright =
   'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
@@ -49,7 +48,7 @@ const defaultCopyright =
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-  imports: [NavbarComponent, UIRouterModule, LoadingIndicatorComponent, FooterComponent, UiViewComponent]
+  imports: [NavbarComponent, UIRouterModule, LoadingIndicatorComponent, FooterComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'mdm-ui';
@@ -110,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
           return forkJoin([of(args), settings$]);
         })
       )
-      .subscribe(([args, _]) => {
+      .subscribe(([args]) => {
         // To remove any ngToast messages specifically sessionExpiry,...
         this.toastr.toasts.forEach((x) => this.toastr.clear(x.toastId));
         if (args && args.nextRoute) {
@@ -178,7 +177,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userIdle
       .onTimerStart()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {});
+      .subscribe();
 
     this.userIdle
       .onTimeout()

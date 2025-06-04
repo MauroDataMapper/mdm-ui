@@ -120,19 +120,25 @@ jobs:
       #    sarif_file: 'megalinter-reports/megalinter-report.sarif'
 
       - name: Run ESLint
-        run: npm run eslint-junit || true # Always succeed, even with linting errors
-
+        run: npx eslint . -f ./node_modules/eslint-junit/index.js -o eslint/eslint_junit.xml || true # Always succeed, even with linting errors
 
       - name: Report ESLint results
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          working-directory: ./mdm-ui
           name: ESLint Results
-          path: 'eslint/eslint-junit.xml'
+          path: "eslint/eslint-junit.xml"
           reporter: java-junit
           fail-on-error: false
 
+      - name: Run ESLint
+        run: npm run eslint-sarif || true # Always succeed, even with linting errors
+
+      - name: Upload EsLint scan results to GitHub Security tab
+        if: success() || failure()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'eslint/eslint_report.sarif'
 
       - name: Build distribution with original theme
         run: npm run dist

@@ -17,10 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { SecurityHandlerService } from '@mdm/services';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/forgot-password-modal.component';
-import { BroadcastService } from '../services/broadcast.service';
+import { BroadcastService } from '@mdm/services';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -101,7 +101,6 @@ const defaultHtmlContent = [
     imports: [NgIf, NgxSkeletonLoaderModule, FlexModule, MatButton, MatAnchor, SafePipe]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  profilePictureReloadIndex = 0;
   profile: any;
   isLoggedIn = false;
   isLoadingContent = false;

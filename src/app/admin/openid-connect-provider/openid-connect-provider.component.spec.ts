@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FeaturesService } from '@mdm/services/features.service';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { OpenidConnectProviderComponent } from './openid-connect-provider.component';
 

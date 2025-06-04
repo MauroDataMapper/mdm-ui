@@ -43,20 +43,20 @@ import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { catchError } from 'rxjs/operators';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { HistoryComponent } from '../../shared/history/history.component';
-import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
-import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
 import { MatOption } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField } from '@angular/material/form-field';
 import { FlexModule } from '@angular/flex-layout/flex';
-import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
-import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
-import { CodeSetTermsTableComponent } from '../../shared/code-set-terms-table/code-set-terms-table.component';
-import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
-import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
-import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -78,13 +78,9 @@ export class CodeSetComponent
   editMode = false;
   showExtraTabs = false;
   activeTab: number;
-  dataModel4Diagram: any;
-  cells: any;
-  rootCell: any;
   semanticLinks: any[] = [];
   descriptionView = 'default';
   annotationsView = 'default';
-  compareToList = [];
   rulesItemCount = 0;
   isLoadingRules = true;
   termsItemCount = 0;
@@ -189,7 +185,7 @@ export class CodeSetComponent
   CodeSetPermissions() {
     this.resourcesService.security
       .permissions(SecurableDomainType.CodeSets, this.codeSetModel.id)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.codeSetModel[attrname] = permissions.body[attrname];
         });
@@ -233,7 +229,7 @@ export class CodeSetComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: ModelUpdatePayload = {
       id: this.codeSetModel.id,
       domainType: this.codeSetModel.domainType

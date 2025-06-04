@@ -22,43 +22,29 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Subscription } from 'rxjs';
-import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
+import { MatTab, MatTabContent, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import {
-  ElementTypesService,
-  GridService,
-  MessageHandlerService,
-  SecurityHandlerService
-} from '@mdm/services';
+import { ElementTypesService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import {
-  CatalogueItemDomainType,
-  DataElement,
-  DataElementDetail,
-  DataElementDetailResponse,
-  DataType
-} from '@maurodatamapper/mdm-resources';
-import {
-  DefaultProfileItem,
-  ProfileControlTypes
-} from '@mdm/model/defaultProfileModel';
+import { CatalogueItemDomainType, DataElement, DataElementDetail, DataElementDetailResponse, DataType } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
-import { HistoryComponent } from '../../shared/history/history.component';
-import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
-import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
 import { MatOption } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField } from '@angular/material/form-field';
 import { FlexModule } from '@angular/flex-layout/flex';
-import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
-import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
-import { SummaryMetadataTableComponent } from '../../shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
-import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
-import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
-import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -90,8 +76,6 @@ export class DataElementComponent
   max: any;
   min: any;
   error: any;
-  newMinText: any;
-  newMaxText: any;
   pagination: McSelectPagination;
   descriptionView = 'default';
   annotationsView = 'default';
@@ -215,7 +199,7 @@ export class DataElementComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: DataElement = {
       id: this.dataElementOutput.id,
       label: this.dataElementOutput.label,
@@ -240,13 +224,11 @@ export class DataElementComponent
         // Backend dataType groups several frontend types into one
         // (i.e. frontend's referenceType and dataModelReferenceType
         // both map to backend's ModelDataType)
-        const dataTypeDomainType = this.elementTypes.isModelDataType(
+        dataType.domainType = this.elementTypes.isModelDataType(
           dataType.domainType
         )
           ? CatalogueItemDomainType.ModelDataType
           : dataType.domainType;
-
-        dataType.domainType = dataTypeDomainType;
 
         resource.dataType = dataType;
       } else {
@@ -297,7 +279,6 @@ export class DataElementComponent
         this.messageService.dataChanged(this.dataElementOutput);
 
         if (this.dataElementOutput) {
-          // tslint:disable-next-line: deprecation
           this.activeTab = this.getTabDetailByName(
             this.uiRouterGlobals.params.tabView as string
           ).index;

@@ -37,8 +37,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
 
   render(data: any): void {
-    const nodes: {} = {};
-    const nodesMerge: {} = {};
+    const nodes: object = {};
+    const nodesMerge: object = {};
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
@@ -149,7 +149,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
         this.selDataClassComponentId = arrMergedId[0];
         // Check if this id is a DataClassComponent
-        foundDataClassComponents = Object.keys(this.dataClassComponents as {}).filter(() => {
+        foundDataClassComponents = Object.keys(this.dataClassComponents as object).filter(() => {
           return foundDataClassComponents[arrMergedId[0]];
         });
 

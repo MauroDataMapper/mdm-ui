@@ -74,7 +74,7 @@ export class PluginsComponent implements OnInit, AfterViewInit {
     pageIndex?:number,
     sortBy?:string,
     sortType?: SortDirection,
-    filters?:{[p: string]: any}
+    filters?:Record<string, any>
   ) {
 
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'displayName', 'asc', filters);

@@ -26,5 +26,5 @@ import { GroupsTableComponent } from '../groups-table/groups-table.component';
     imports: [GroupsTableComponent]
 })
 export class GroupsComponent {
-  constructor() {}
+
 }

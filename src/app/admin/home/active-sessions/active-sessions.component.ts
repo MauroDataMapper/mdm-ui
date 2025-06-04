@@ -94,7 +94,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
     this.resourcesService.session.activeSessions({}, options).subscribe(
       (resp) => {
-        for (const [key] of Object.entries(resp.body.authorisedItems as { [s: string]: unknown } | ArrayLike<unknown>)) {
+        for (const [key] of Object.entries(resp.body.authorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
           resp.body.authorisedItems[key].creationDateTime = new Date(
             resp.body.authorisedItems[key].creationDateTime as string | number | Date
           );
@@ -104,7 +104,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
           this.records.push(resp.body.authorisedItems[key]);
         }
 
-        for (const [key] of Object.entries(resp.body.unauthorisedItems as { [s: string]: unknown } | ArrayLike<unknown>)) {
+        for (const [key] of Object.entries(resp.body.unauthorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
           resp.body.unauthorisedItems[key].creationDateTime = new Date(
             resp.body.unauthorisedItems[key].creationDateTimeas as string | number | Date
           );

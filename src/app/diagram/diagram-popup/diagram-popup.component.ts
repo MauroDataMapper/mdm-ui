@@ -33,7 +33,7 @@ import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { MatButton } from '@angular/material/button';
-import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { FoldersTreeComponent } from '@mdm/folders-tree/folders-tree.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -57,7 +57,7 @@ export class DiagramPopupComponent implements OnInit {
   @ViewChild(MatSidenav) drawer: MatSidenav;
 
   node: any;
-  filterList: Array<any> = [];
+  filterList: any[] = [];
 
   constructor(
     protected resourcesService: MdmResourcesService,
@@ -81,7 +81,7 @@ export class DiagramPopupComponent implements OnInit {
     // this.diagramComponent.filter(this.data.diagramComponent.parent)
   }
 
-  onNodeChecked(node, parent, checkedList: {}): void {
+  onNodeChecked(node, parent, checkedList: object): void {
     this.filterList = Object.keys(checkedList);
   }
 

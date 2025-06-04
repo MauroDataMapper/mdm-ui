@@ -19,7 +19,7 @@
     "lint": "ng lint",
     "eslint": "eslint . --fix",
     "eslint-sarif": "eslint . -f @microsoft/eslint-formatter-sarif -o eslint/eslint_report.sarif",
-    "eslint-junit": "eslint . -f ./node_modules/eslint-junit/index.js -o eslint/eslint_junit.xml",
+    "eslint-junit": "eslint . -f ./node_modules/eslint-junit/index.js -o eslint/eslint-junit.xml",
     "eslint-nofix": "eslint .",
     "eslint-report": "eslint . --format checkstyle -o eslint_report.json",
     "e2e": "ng e2e",

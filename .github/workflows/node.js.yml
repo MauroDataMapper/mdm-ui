@@ -139,8 +139,7 @@ jobs:
         if: success() || failure()
         uses: github/codeql-action/upload-sarif@v3
         with:
-          checkout_path: ./mdm-ui
-          sarif_file: 'eslint/eslint_report.sarif'
+          sarif_file: './mdm-ui/eslint/eslint_report.sarif'
 
       - name: Build distribution with original theme
         run: npm run dist

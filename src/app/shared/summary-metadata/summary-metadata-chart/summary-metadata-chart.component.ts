@@ -17,9 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
 import { NgIf } from '@angular/common';
+import { Chart, registerables } from 'chart.js';
 
 @Component({
     selector: 'mdm-summary-metadata-chart',
@@ -29,6 +29,10 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, BaseChartDirective]
 })
 export class SummaryMetadataChartComponent implements OnInit {
+  constructor() {
+    Chart.register(...registerables);
+  }
+
   @Input() summary: any;
 
   public displayChart: boolean;
@@ -75,35 +79,27 @@ export class SummaryMetadataChartComponent implements OnInit {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
     scales: {
-      xAxis: {
-        ticks: {
-          callback: (value, index): string => {
-            let shortLabel = this.barChartLabels[index].toString();
-            if(shortLabel == null){
-              return '';
+        x: {
+          ticks: {
+            callback: (value, index): string => {
+              let shortLabel = this.barChartLabels[index].toString();
+              if(shortLabel == null){
+                return '';
+              }
+              if (shortLabel.length > 14) {
+                shortLabel = shortLabel.substring(0, 15);
+                shortLabel += '...';
+              }
+              return shortLabel;
             }
-            if (shortLabel.length > 15) {
-              shortLabel = shortLabel.substring(0, 15);
-              shortLabel += '...';
-            }
-            return shortLabel;
           }
         }
-      }, yAxis: { min: 0 } },
-
-
-    plugins: {
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-      }
     },
     maintainAspectRatio: false
   };
-  public barChartLabels: String[] = [];
+  public barChartLabels: string[] = [];
   public barChartType: ChartType;
   public barChartLegend = false;
-  public barChartPlugins = [ChartDataLabels];
 
   public summaryMetadataReports: any[];
 
@@ -123,7 +119,7 @@ export class SummaryMetadataChartComponent implements OnInit {
         this.drawBarChart();
       } else if (this.summary.summaryMetadataType === 'number') {
         this.barChartType = 'line';
-        this.barChartOptions.scales.xAxes[0].type = 'time';
+        this.barChartOptions.scales.xAxis.type = 'time';
         this.barChartData = [{ data: [] }];
         this.summaryMetadataReports.forEach((report) => {
           this.barChartData[0].data.push(report.reportValue as number);
@@ -140,8 +136,8 @@ export class SummaryMetadataChartComponent implements OnInit {
   drawBarChart(): void {
     this.selectedReport = this.summary.summaryMetadataReports[this.reportIndex];
     this.barChartData = [];
-    this.barChartData.push({data: Object.values(this.selectedReport.reportValue as {[p: string]: number} | ArrayLike<number>) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
-    this.barChartLabels = Object.keys(this.selectedReport.reportValue as {[p: string]: number} | ArrayLike<number>);
+    this.barChartData.push({data: Object.values(this.selectedReport.reportValue as Record<string, number> | ArrayLike<number>) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
+    this.barChartLabels = Object.keys(this.selectedReport.reportValue as Record<string, number> | ArrayLike<number>);
     this.reportDate = this.selectedReport.reportDate;
   }
 

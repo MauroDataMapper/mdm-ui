@@ -15,7 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-console.log('ENV:', JSON.stringify(process.env, null, 2));
+
+// Enable this line to view the systems environment
+// console.log('ENV:', JSON.stringify(process.env, null, 2));
 
 module.exports = {
   preset: 'jest-preset-angular',

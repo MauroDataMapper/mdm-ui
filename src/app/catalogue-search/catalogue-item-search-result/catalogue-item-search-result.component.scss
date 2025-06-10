@@ -20,8 +20,8 @@ SPDX-License-Identifier: Apache-2.0
 @mixin mdm-catalogue-item-search-result-theme($theme) {
   $primary: map-get($theme, primary);
 
-  $search-result-heading-background-color: mat.get-color-from-palette($primary);
-  $search-result-heading-color: mat.get-color-from-palette(
+  $search-result-heading-background-color: mat.m2-get-color-from-palette($primary);
+  $search-result-heading-color: mat.m2-get-color-from-palette(
     $primary,
     '500-contrast'
   );

@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0
   $primary: map-get($theme, primary);
 
   .mdm-footer {
-    background-color: mat.get-color-from-palette($primary);
+    background-color: mat.m2-get-color-from-palette($primary);
   }
 }
 

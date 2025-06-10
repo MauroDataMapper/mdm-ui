@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-const webpack = require("webpack");
+const webpack = require('webpack');
 
 module.exports = {
   module: {

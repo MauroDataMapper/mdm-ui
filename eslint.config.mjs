@@ -15,19 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import tseslint from "typescript-eslint";
+import * as angular from "typescript-eslint";
+import stylistic from "@stylistic/eslint-plugin";
 
 export default tseslint.config(
   {
-    ignores: ['dist/*', 'lib/*', 'node_modules/*', 'jest.config.js']
+    "ignores": [
+      "dist/*",
+      "lib/*",
+      "node_modules/*",
+      "jest.config.js"
+    ]
   },
-  eslint.configs.recommended,
-  tseslint.configs.recommended,
-  tseslint.configs.stylistic,
+  stylistic.configs.recommended,
+  angular.configs.recommended,
   {
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off'
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off"
     }
   }
 );

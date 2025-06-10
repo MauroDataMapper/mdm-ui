@@ -32,12 +32,17 @@ module.exports = {
     '.html'
   ],
   transform: {
-    '^.+\\.(ts|html)$': 'ts-jest'
+    '^.+\\.(ts|js|mjs|html|svg)$': [
+      'jest-preset-angular',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
+    ],
   },
   globals: {
     'ts - jest': {
       tsconfig: 'tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.html'
     }
   },
   moduleNameMapper: {

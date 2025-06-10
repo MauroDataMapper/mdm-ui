@@ -25,7 +25,6 @@ describe('SubscribedCatalogueMainComponent', () => {
     harness = await setupTestModuleForComponent(SubscribedCatalogueMainComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

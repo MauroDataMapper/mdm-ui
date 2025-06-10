@@ -75,6 +75,7 @@ export class CopyActionComponent implements OnInit {
     | 'terminologies'
     | 'dataclasses'
     | 'datamodels' = 'folders';
+
   copying = false;
 
   constructor(
@@ -94,7 +95,7 @@ export class CopyActionComponent implements OnInit {
     this.title.setTitle('Copy Item');
 
     this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+      label: new FormControl('', Validators.required)
     });
 
     const identifier = this.getMauroIdentifier(this.uiRouterGlobals.params);
@@ -173,8 +174,8 @@ export class CopyActionComponent implements OnInit {
     }
 
     if (
-      this.domainType === CatalogueItemDomainType.DataElement &&
-      !this.subTargetDestinationId
+      this.domainType === CatalogueItemDomainType.DataElement
+      && !this.subTargetDestinationId
     ) {
       this.messageHandler.showError(
         `Please select a target data class to copy the ${this.domainType} to.`
@@ -430,7 +431,8 @@ export class CopyActionComponent implements OnInit {
             ].includes(this.domainType)
           ) {
             // TODO: clean this condition up
-          } else {
+          }
+ else {
             // remove node if it has no children in the case of data element and data class
             if (!node.hasChildren ?? false) {
               removedNodes = [...removedNodes, node];
@@ -442,7 +444,7 @@ export class CopyActionComponent implements OnInit {
         });
 
         this.tree.children = this.tree.children.filter(
-          (node) => !removedNodes.includes(node)
+          node => !removedNodes.includes(node)
         );
 
         this.loaded = true;

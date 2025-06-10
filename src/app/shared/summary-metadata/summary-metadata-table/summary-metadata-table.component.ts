@@ -57,6 +57,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChildren('filters') filters: QueryList<MatInput>;
 
   hideFilters = true;
@@ -64,7 +65,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   records: any[] = [];
 
   result: any;
@@ -120,7 +121,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ) {
     const options = this.grid.constructOptions(
       pageSize,
@@ -148,17 +149,18 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
             .toPromise()
             .then((response) => {
               if (
-                item.summaryMetadataType &&
-                item.summaryMetadataType.toLowerCase() === 'map'
+                item.summaryMetadataType
+                && item.summaryMetadataType.toLowerCase() === 'map'
               ) {
                 item.summaryMetadataType = 'map';
                 response.body.items.forEach((report) => {
                   report.reportValue = JSON.parse(report.reportValue as string);
                   report.reportDate = report.reportDate.substring(0, 10);
                 });
-              } else if (
-                item.summaryMetadataType &&
-                item.summaryMetadataType.toLowerCase() === 'number'
+              }
+ else if (
+                item.summaryMetadataType
+                && item.summaryMetadataType.toLowerCase() === 'number'
               ) {
                 item.summaryMetadataType = 'number';
                 response.body.items.forEach((report) => {

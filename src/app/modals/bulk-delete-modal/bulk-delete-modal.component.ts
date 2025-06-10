@@ -51,7 +51,6 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   isProcessComplete = false;
   finalResult = {};
 
-
   constructor(
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -93,17 +92,21 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           case CatalogueItemDomainType.DataClass:
             if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
               return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id as string, item.model as string, item.id as string).toPromise();
-            } else if (item.imported && this.parentDataClass?.id !== null) {
+            }
+ else if (item.imported && this.parentDataClass?.id !== null) {
               return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
-            } else if (item.extended && this.parentDataClass) {
+            }
+ else if (item.extended && this.parentDataClass) {
               return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
-            } else {
+            }
+ else {
               return this.resources.dataClass.removeChildDataClass(item.model as string, item.parentDataClass as string, item.id as string).toPromise();
             }
           case CatalogueItemDomainType.DataElement:
             if (item.imported) {
               return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.dataClass as string, item.id as string).toPromise();
-            } else {
+            }
+ else {
               return this.resources.dataElement.remove(item.model as string, item.dataClass as string, item.id as string).toPromise();
             }
           case CatalogueItemDomainType.PrimitiveType:
@@ -115,7 +118,8 @@ export class BulkDeleteModalComponent implements AfterViewInit {
           case CatalogueItemDomainType.EnumerationType:
             if (item.imported) {
               return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id as string, item.model as string, item.id as string).toPromise();
-            } else {
+            }
+ else {
               return this.resources.dataType.remove(item.model as string, item.id as string).toPromise();
             }
         }

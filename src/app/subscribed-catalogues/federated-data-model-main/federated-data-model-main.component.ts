@@ -97,14 +97,14 @@ export class FederatedDataModelMainComponent
       .subscribe(
         (models) => {
           this.dataModel = models.find(
-            (model) => model.modelId === this.modelId
+            model => model.modelId === this.modelId
           );
 
           if (reloadView) {
             this.reloadView();
           }
         },
-        (errors) =>
+        errors =>
           this.messageHandler.showError(
             'There was a problem getting the Federated Data Model',
             errors

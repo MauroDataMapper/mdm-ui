@@ -57,19 +57,18 @@ export class McPagedListComponent implements OnInit {
   get items() {
     return this.itemValues;
   }
+
   set items(val) {
     this.itemValues = val;
     if (val === null || val === undefined) {
       this.itemValues = null;
-    } else {
+    }
+ else {
       this.itemValues = val;
     }
     this.itemsChange.emit(this.itemValues);
     this.ngOnInit();
   }
-
-
-
 
   ngOnInit() {
     if (this.type === 'static') {
@@ -98,7 +97,8 @@ export class McPagedListComponent implements OnInit {
         tempValues.push(this.displayItems[i]);
       }
       this.displayValues = tempValues;
-    } else {
+    }
+ else {
       const tempValues = [];
       for (let i = 0; this.displayItems && i < this.displayItems.length; i++) {
         tempValues.push(this.displayItems[i]);
@@ -121,7 +121,7 @@ export class McPagedListComponent implements OnInit {
 
   fetchData = () => {
     const offset = this.currentPage * this.pageSize;
-    this.fetchMethod(offset, this.pageSize).subscribe(result => {
+    this.fetchMethod(offset, this.pageSize).subscribe((result) => {
       this.total = result.count;
       this.displayItems = Object.assign([], result.items);
       if (this.total < this.pageSize) {
@@ -143,7 +143,8 @@ export class McPagedListComponent implements OnInit {
 
     if (this.type === 'static') {
       this.addToUI();
-    } else {
+    }
+ else {
       this.fetchData();
     }
   };
@@ -156,7 +157,8 @@ export class McPagedListComponent implements OnInit {
 
     if (this.type === 'static') {
       this.addToUI();
-    } else {
+    }
+ else {
       this.fetchData();
     }
   };

@@ -89,7 +89,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
     return this.mergeItem.targetValue !== undefined || this.mergeItem.targetValue !== null;
   }
 
-  constructor(private dialog: MatDialog, private stringConflict : StringConflictService) {}
+  constructor(private dialog: MatDialog, private stringConflict: StringConflictService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
@@ -147,7 +147,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
         }
       })
       .afterClosed()
-      .pipe(filter((result) => result.status === ModalDialogStatus.Ok))
+      .pipe(filter(result => result.status === ModalDialogStatus.Ok))
       .subscribe((result: ConflictEditorModalResult) => {
           this.mergeItem.mixedContent = result.resolvedContent;
           this.mergeItem.branchSelected = MergeConflictResolution.Mixed;
@@ -167,7 +167,8 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
     if (this.linkScroll) {
       if (this.currentElement === 'targetContent') {
         this.sourceContent.nativeElement.scrollTop = event.target.scrollTop;
-      } else if (this.currentElement === 'sourceContent') {
+      }
+ else if (this.currentElement === 'sourceContent') {
         this.targetContent.nativeElement.scrollTop = event.target.scrollTop;
       }
     }

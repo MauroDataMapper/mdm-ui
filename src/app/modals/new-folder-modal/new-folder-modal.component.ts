@@ -52,7 +52,7 @@ export class NewFolderModalComponent implements OnInit {
   useVersionedFolders = false;
 
   folderForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
     isVersioned: new FormControl(false)
   });
 
@@ -82,8 +82,8 @@ export class NewFolderModalComponent implements OnInit {
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
     this.createRootFolder = this.data.createRootFolder;
-    this.useVersionedFolders =
-      this.data.canVersion && this.shared.features.useVersionedFolders;
+    this.useVersionedFolders
+      = this.data.canVersion && this.shared.features.useVersionedFolders;
   }
 
   cancel() {

@@ -195,7 +195,7 @@ describe('MauroProfileProviderService', () => {
         testReturnedProfileSummaries(
           domainType,
           resourcesStub.profile.usedProfiles,
-          (item) => service.usedProfiles(item)
+          item => service.usedProfiles(item)
         );
       }
     );
@@ -206,7 +206,7 @@ describe('MauroProfileProviderService', () => {
         testReturnedProfileSummaries(
           domainType,
           resourcesStub.profile.unusedProfiles,
-          (item) => service.unusedProfiles(item)
+          item => service.unusedProfiles(item)
         );
       }
     );
@@ -249,7 +249,7 @@ describe('MauroProfileProviderService', () => {
           profileProviderServices: [testProfileProvider]
         };
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
 
         resourcesStub.profile.getMany.mockImplementationOnce((dt, id, pl) => {
           expect(dt).toBe(rootItem.domainType);
@@ -305,9 +305,9 @@ describe('MauroProfileProviderService', () => {
         // Mock collections of items and identifiers to simulate multiple objects
         const items = [item, item];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const profilePayloads: MauroProfileUpdatePayload[] = profiles.map(
-          (profile) => ({ identifier, profile })
+          profile => ({ identifier, profile })
         );
 
         const expectedPayload: ProfileContextPayload = {
@@ -367,7 +367,7 @@ describe('MauroProfileProviderService', () => {
         // Mock collections of items to simulate multiple objects
         const items = [item, item];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const validations: MauroProfileValidationResult[] = profiles.map(
           (profile) => {
             return {
@@ -440,7 +440,7 @@ describe('MauroProfileProviderService', () => {
           }
         ];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const validations: MauroProfileValidationResult[] = profiles.map(
           (profile) => {
             return {

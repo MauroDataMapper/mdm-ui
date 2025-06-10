@@ -37,7 +37,8 @@ export class LoadingService {
     if (loading === true) {
       this.loadingMap.set(url, loading);
       this.loadingSubject.next(true);
-    } else if (loading === false && this.loadingMap.has(url)) {
+    }
+ else if (loading === false && this.loadingMap.has(url)) {
       this.loadingMap.delete(url);
     }
 

@@ -40,12 +40,12 @@ const defaultBranchNameValidator = (): ValidatorFn => {
 };
 
 export interface ChangeBranchNameModalData {
-  model: Modelable & Branchable;
+  model: Modelable & Branchable
 }
 
 export interface ChangeBranchNameModalResult {
-  status: ModalDialogStatus;
-  branchName?: string;
+  status: ModalDialogStatus
+  branchName?: string
 }
 
 @Component({
@@ -60,7 +60,7 @@ export class ChangeBranchNameModalComponent implements OnInit {
   newBranchName: string;
   formGroup = new FormGroup({
     branchName: new FormControl('', [
-      Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required,
       defaultBranchNameValidator()
     ])
   });

@@ -77,11 +77,10 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   applyFilter = () => { };
 
-  modulesFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:Record<string, any>) {
-
+  modulesFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
 
-    this.resourcesService.admin.modules(options).subscribe(resp => {
+    this.resourcesService.admin.modules(options).subscribe((resp) => {
       this.records = resp.body;
       this.records.push({
         id: '0',
@@ -91,7 +90,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
       });
       this.totalItemCount = this.records.length;
       this.dataSource.data = this.records;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the modules.', err);
     }
     );

@@ -132,20 +132,22 @@ export class NewDataTypeInlineComponent
 
   onTypeSelect() {
     if (
-      this.model.domainType !== CatalogueItemDomainType.EnumerationType &&
-      this.model.enumerationValues &&
-      this.model.enumerationValues.length > 0
+      this.model.domainType !== CatalogueItemDomainType.EnumerationType
+      && this.model.enumerationValues
+      && this.model.enumerationValues.length > 0
     ) {
       this.model.enumerationValues = [];
-    } else if (
-      this.model.domainType !== CatalogueItemDomainType.ReferenceType &&
-      this.model.referenceClass
+    }
+ else if (
+      this.model.domainType !== CatalogueItemDomainType.ReferenceType
+      && this.model.referenceClass
     ) {
       this.model.referenceClass = null;
     }
     this.advanced = false;
     this.validate();
   }
+
   validate(newValue?) {
     let isValid = true;
     if (newValue !== undefined) {
@@ -154,46 +156,46 @@ export class NewDataTypeInlineComponent
     }
 
     if (
-      (!this.model.label || this.model.label.trim().length === 0) &&
-      (this.model.domainType === CatalogueItemDomainType.PrimitiveType ||
-        this.model.domainType === CatalogueItemDomainType.EnumerationType)
+      (!this.model.label || this.model.label.trim().length === 0)
+      && (this.model.domainType === CatalogueItemDomainType.PrimitiveType
+        || this.model.domainType === CatalogueItemDomainType.EnumerationType)
     ) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
     if (
-      this.model.domainType === CatalogueItemDomainType.EnumerationType &&
-      (!this.model.enumerationValues ||
-        this.model.enumerationValues.length === 0)
+      this.model.domainType === CatalogueItemDomainType.EnumerationType
+      && (!this.model.enumerationValues
+        || this.model.enumerationValues.length === 0)
     ) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
     if (
-      this.model.domainType === CatalogueItemDomainType.ReferenceType &&
-      (!this.model.referenceClass || this.model.referenceClass.id === '')
+      this.model.domainType === CatalogueItemDomainType.ReferenceType
+      && (!this.model.referenceClass || this.model.referenceClass.id === '')
     ) {
       isValid = false;
     }
     // Check if for TerminologyType, the terminology is selected
     if (
-      this.model.domainType === CatalogueItemDomainType.TerminologyType &&
-      !this.model.modelResourceId
+      this.model.domainType === CatalogueItemDomainType.TerminologyType
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
 
     if (
-      this.model.domainType === CatalogueItemDomainType.CodeSet &&
-      !this.model.modelResourceId
+      this.model.domainType === CatalogueItemDomainType.CodeSet
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
 
     if (
-      this.model.domainType ===
-        CatalogueItemDomainType.ReferenceDataModelType &&
-      !this.model.modelResourceId
+      this.model.domainType
+      === CatalogueItemDomainType.ReferenceDataModelType
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
@@ -205,7 +207,8 @@ export class NewDataTypeInlineComponent
   onDataClassSelect = (dataClasses) => {
     if (dataClasses && dataClasses.length > 0) {
       this.model.referenceClass = dataClasses[0];
-    } else {
+    }
+ else {
       this.model.referenceClass = null;
     }
 

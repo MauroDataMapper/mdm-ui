@@ -21,7 +21,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DownloadService {
-
   constructor() {}
 
   /* Canvas Download */
@@ -79,7 +78,7 @@ export class DownloadService {
     img.width = width * (scale + 1);
     img.height = height * (scale + 1);
 
-    const blob = new Blob([svgString], {type: 'image/svg+xml'});
+    const blob = new Blob([svgString], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     img.addEventListener('load', () => {
       URL.revokeObjectURL(url);
@@ -88,7 +87,7 @@ export class DownloadService {
       this.downloadCanvas(canvas, filename);
       canvas.remove();
       img.remove();
-    }, {once: true});
+    }, { once: true });
     img.src = url;
 
     // var img1 = new Image(); // Image constructor
@@ -101,5 +100,4 @@ export class DownloadService {
     // img2.alt = 'alt text';
     // document.body.appendChild(img2);
   }
-
 }

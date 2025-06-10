@@ -49,7 +49,7 @@ export class LoadingIndicatorComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         startWith(false),
         delay(0),
-        map((value) => (this.visible = value))
+        map(value => (this.visible = value))
       )
       .subscribe();
   }

@@ -101,29 +101,29 @@ export class CreateTermRelationshipDialogComponent
 
     this.resources.termRelationshipTypes
       .list(this.terminology.id)
-      .subscribe((data) => (this.relationshipTypes = data.body.items));
+      .subscribe(data => (this.relationshipTypes = data.body.items));
 
     this.sourceTerm = this.data.sourceTerm;
     this.targetTerm = this.data.targetTerm;
 
     this.formWithExistingTerm = this.formBuilder.group({
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       sourceTerm: [this.data.sourceTerm.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       relationshipType: [this.data.relationshipType?.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       targetTerm: [this.data.targetTerm?.id, Validators.required]
     });
 
     this.formWithNewTerm = this.formBuilder.group({
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       sourceTerm: [this.data.sourceTerm.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       relationshipType: [this.data.relationshipType?.id, Validators.required],
       targetTerm: this.formBuilder.group({
-        // eslint-disable-next-line @typescript-eslint/unbound-method
+
         code: [this.data.code, Validators.required],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
+
         definition: [this.data.definition, Validators.required],
         description: [this.data.description]
       })
@@ -153,7 +153,8 @@ export class CreateTermRelationshipDialogComponent
       this._useExistingTerms.subscribe((useExistingTerms) => {
         if (useExistingTerms) {
           this.form = this.formWithExistingTerm;
-        } else {
+        }
+ else {
           this.form = this.formWithNewTerm;
         }
       })
@@ -162,8 +163,8 @@ export class CreateTermRelationshipDialogComponent
     this.subscriptions.add(
       this.formWithNewTerm.valueChanges.subscribe(() => {
         if (
-          this.form.value.targetTerm?.code &&
-          this.form.value.targetTerm?.definition
+          this.form.value.targetTerm?.code
+          && this.form.value.targetTerm?.definition
         ) {
           this.targetTerm = this.form.value.targetTerm;
         }
@@ -173,8 +174,8 @@ export class CreateTermRelationshipDialogComponent
 
   selectedTerm(term: TermDetail | TerminologyDetail) {
     if (
-      term.domainType === CatalogueItemDomainType.Term &&
-      this.sourceTerm.id !== term.id
+      term.domainType === CatalogueItemDomainType.Term
+      && this.sourceTerm.id !== term.id
     ) {
       this.targetTerm = term as TermDetail;
     }
@@ -238,17 +239,20 @@ export class CreateTermRelationshipDialogComponent
               .subscribe((trResponse: HttpResponse<TermRelationship>) => {
                 if (trResponse.ok) {
                   this.dialogRef.close(trResponse.body);
-                } else {
+                }
+ else {
                   /* NOTE: Generic error message */
                   this.messageHandler.showWarning('Unable to create new relationship between terms #1');
                 }
               });
-          } else {
+          }
+ else {
             /* NOTE: Generic error message */
             this.messageHandler.showWarning('Unable to create the new term');
           }
         });
-    } else {
+    }
+ else {
       this.resources.terms
         .addTermRelationships(this.terminology.id, this.sourceTerm.id, {
           sourceTerm: this.sourceTerm.id,
@@ -266,7 +270,8 @@ export class CreateTermRelationshipDialogComponent
         .subscribe((response: HttpResponse<TermRelationship>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
-          } else {
+          }
+ else {
             /* NOTE: Generic error message */
             this.messageHandler.showWarning('Unable to create new relationship between terms #2');
           }
@@ -286,7 +291,7 @@ export class CreateTermRelationshipDialogComponent
       }),
       map((response: CatalogueItemSearchResponse) =>
         response.body.items.some(
-          (e) => e.code === this.form.value.targetTerm.code
+          e => e.code === this.form.value.targetTerm.code
         )
       )
     );

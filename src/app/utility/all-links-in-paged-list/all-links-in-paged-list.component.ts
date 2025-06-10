@@ -42,6 +42,7 @@ export class AllLinksInPagedListComponent implements OnInit {
     from: [],
     total: 0
   };
+
   linkTypes = [];
   allLinksMap: any;
   total: any;
@@ -69,7 +70,7 @@ export class AllLinksInPagedListComponent implements OnInit {
       return;
     }
 
-    this.parent.forEach(link => {
+    this.parent.forEach((link) => {
       if (!this.allLinksMap[link.linkType]) {
         this.allLinksMap[link.linkType] = {
           linkType: link.linkType,

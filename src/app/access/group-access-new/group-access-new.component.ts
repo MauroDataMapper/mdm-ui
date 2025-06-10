@@ -85,8 +85,8 @@ export class GroupAccessNewComponent
   state: 'view' | 'add' = 'view';
   dataSource: MatTableDataSource<SecurableResourceGroupRole>;
   formGroup = new FormGroup({
-    userGroup: new FormControl<UserGroup>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    groupRole: new FormControl<GroupRole>(null, Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+    userGroup: new FormControl<UserGroup>(null, Validators.required),
+    groupRole: new FormControl<GroupRole>(null, Validators.required)
   });
 
   private unsubscribe$ = new Subject<void>();
@@ -117,7 +117,7 @@ export class GroupAccessNewComponent
     this.securityHandler
       .isAuthenticated()
       .pipe(
-        filter((authenticated) => authenticated.body.authenticatedSession),
+        filter(authenticated => authenticated.body.authenticatedSession),
         switchMap(() => {
           this.loading = true;
 

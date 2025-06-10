@@ -21,11 +21,11 @@ import { of } from 'rxjs';
 import { FeaturesService } from './features.service';
 
 interface MdmApiPropertiesStub {
-  listPublic: jest.Mock;
+  listPublic: jest.Mock
 }
 
 interface MdmResourcesServiceStub {
-  apiProperties: MdmApiPropertiesStub;
+  apiProperties: MdmApiPropertiesStub
 }
 
 describe('FeaturesService', () => {

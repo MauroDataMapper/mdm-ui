@@ -31,11 +31,10 @@ const insertedType = 1;
 const conflictText = '---';
 
 interface DiffTrackedItem {
-  diffs: Diff[];
-  index: number;
-  value: string;
+  diffs: Diff[]
+  index: number
+  value: string
 }
-
 
 @Component({
     selector: 'mdm-string-conflict-editor',
@@ -57,7 +56,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   targetText: string;
   resolvedText: string;
 
-  constructor(private stringConflict : StringConflictService) { }
+  constructor(private stringConflict: StringConflictService) { }
 
   ngOnInit(): void {
     this.sourceText = this.stringConflict.getDiffViewHtml(
@@ -93,7 +92,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
     resolvedDocument.body
       .querySelectorAll(`span.diff-marker[data-diff-id="${id}"`)
-      .forEach(element => {
+      .forEach((element) => {
         element.innerHTML = value;
         element.setAttribute('title', 'resolved');
         element.classList.replace('conflict', 'resolved');
@@ -118,7 +117,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
     resolvedDocument.body
       .querySelectorAll('span.diff-marker')
-      .forEach(element => {
+      .forEach((element) => {
         const newElement = resolvedDocument.createTextNode(element.innerHTML);
         element.parentNode.replaceChild(newElement, element);
       });
@@ -133,7 +132,6 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .querySelectorAll('ins')
       .forEach(elem => this.resolveDiffConflict(elem as HTMLElement));
   }
-
 
   private initialiseResolvedDiffHtml(
     text1: string,
@@ -189,6 +187,4 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     // correctly (the click handler will swap this to as appropriate).
     return `<span class="diff-marker ${markerType}" data-diff-id="${id}" title="${markerType}">${markerType === 'conflict' ? conflictText : value}</span>`;
   }
-
-
 }

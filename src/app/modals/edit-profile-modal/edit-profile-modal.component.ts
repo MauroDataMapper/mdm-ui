@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-/* eslint-disable id-blacklist */
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
@@ -71,6 +70,7 @@ export class EditProfileModalComponent implements OnInit {
     fieldTotal: 0,
     errors: []
   };
+
   isValidated = false;
 
   formOptionsMap = {
@@ -84,8 +84,8 @@ export class EditProfileModalComponent implements OnInit {
     decimal: 'number'
   };
 
-  private readonly showCanEditPropertyAlertKey =
-    'ui.show_can_edit_property_alert';
+  private readonly showCanEditPropertyAlertKey
+    = 'ui.show_can_edit_property_alert';
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -104,19 +104,20 @@ export class EditProfileModalComponent implements OnInit {
         if (data.isNew && field.defaultValue) {
           field.currentValue = field.defaultValue;
         }
-        if(field.dataType === 'boolean') {
-          if(field.currentValue !== 'true') {
+        if (field.dataType === 'boolean') {
+          if (field.currentValue !== 'true') {
             field.currentValue = 'false';
           }
         }
         if (field.dataType === 'folder') {
           if (
-            field.currentValue === '[]' ||
-            field.currentValue === '""' ||
-            field.currentValue === ''
+            field.currentValue === '[]'
+            || field.currentValue === '""'
+            || field.currentValue === ''
           ) {
             field.currentValue = null;
-          } else {
+          }
+ else {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
@@ -186,9 +187,9 @@ export class EditProfileModalComponent implements OnInit {
         returnData.sections.forEach((section) => {
           section.fields.forEach((field) => {
             if (
-              field.dataType === 'folder' &&
-              field.currentValue &&
-              field.currentValue.length > 0
+              field.dataType === 'folder'
+              && field.currentValue
+              && field.currentValue.length > 0
             ) {
               field.currentValue = JSON.stringify(field.currentValue);
             }
@@ -212,7 +213,7 @@ export class EditProfileModalComponent implements OnInit {
 
   validate() {
     this.validateData().subscribe(
-      (errorList) => (this.validationErrors = errorList)
+      errorList => (this.validationErrors = errorList)
     );
   }
 
@@ -224,7 +225,7 @@ export class EditProfileModalComponent implements OnInit {
     }
 
     return this.validationErrors.errors.find(
-      (e) => e.metadataPropertyName === metadataPropertyName
+      e => e.metadataPropertyName === metadataPropertyName
     );
   }
 
@@ -245,9 +246,9 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   private attachReadOnlyPropertyToField(field: ProfileField) {
-    field.readOnly =
-      field.uneditable ||
-      (this.data.finalised && !field.editableAfterFinalisation);
+    field.readOnly
+      = field.uneditable
+        || (this.data.finalised && !field.editableAfterFinalisation);
   }
 
   private validateData(): Observable<ProfileValidationErrorList> {
@@ -282,6 +283,6 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find((p) => p.key === key)?.value;
+    return properties?.find(p => p.key === key)?.value;
   }
 }

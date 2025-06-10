@@ -31,5 +31,4 @@ export class MetadataCompareComponent {
   @Input() diffColumnWidth: any;
 
   constructor() {}
-
 }

@@ -64,7 +64,7 @@ export class MauroModelVersioningService {
       return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   finalise(
@@ -97,7 +97,7 @@ export class MauroModelVersioningService {
       return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   private getLatestDataModelVersion(

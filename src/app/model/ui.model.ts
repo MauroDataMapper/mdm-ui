@@ -23,12 +23,12 @@ export interface TabDescriptor {
   /**
    * The index number of the tab.
    */
-  index: number;
+  index: number
 
   /**
    * The name of the tab.
    */
-  name: string;
+  name: string
 }
 
 /**

@@ -54,13 +54,13 @@ export class CodeSetMainComponent implements OnInit {
   parentFolder: Container;
   savingInProgress = false;
   setupForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
+    author: new FormControl(''),
+    organisation: new FormControl(''),
     description: new FormControl(''),
     classifiers: new FormControl([]),
-    terms: new FormControl([]), // eslint-disable-line @typescript-eslint/unbound-method
-    terminology: new FormControl({ id: ''}),
+    terms: new FormControl([]),
+    terminology: new FormControl({ id: '' }),
     addAllTerms: new FormControl(false)
   });
 
@@ -152,7 +152,7 @@ export class CodeSetMainComponent implements OnInit {
       classifiers: this.classifiers.value,
       folder: this.parentFolderId,
       terms: this.terms.value,
-      terminologies: this.addAllTerms? [this.terminology.value] : null
+      terminologies: this.addAllTerms ? [this.terminology.value] : null
     };
 
     this.resources.codeSet

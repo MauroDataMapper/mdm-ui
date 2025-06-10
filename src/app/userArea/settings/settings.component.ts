@@ -59,7 +59,7 @@ export class SettingsComponent implements OnInit {
     this.title.setTitle('Preferences');
 
     this.securityHandler.isAdministrator()
-      .subscribe(state => {
+      .subscribe((state) => {
         this.isAdministrator = state;
         this.loadSettings();
       });
@@ -88,11 +88,12 @@ export class SettingsComponent implements OnInit {
 
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('User preferences saved successfully.');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('Failed to save user preferences.', error);
     }
     );
   };
+
   loadHelp = () => {
     this.helpDialogueService.open('Preferences');
   };

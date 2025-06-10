@@ -39,7 +39,7 @@ export interface ProfileProviderService {
    * @param item The catalogue item to check.
    * @returns An array of {@link ProfileSummary} objects detailing the profiles applied to this item.
    */
-  usedProfiles(item: MauroItem): Observable<ProfileSummary[]>;
+  usedProfiles(item: MauroItem): Observable<ProfileSummary[]>
 
   /**
    * Identify which profiles from this profile provider have _not_ been applied to a Mauro catalogue item.
@@ -47,7 +47,7 @@ export interface ProfileProviderService {
    * @param item The catalogue item to check.
    * @returns An array of {@link ProfileSummary} objects detailing the profiles _not_ applied to this item.
    */
-  unusedProfiles(item: MauroItem): Observable<ProfileSummary[]>;
+  unusedProfiles(item: MauroItem): Observable<ProfileSummary[]>
 
   /**
    * Get multiple profiles based on the given Mauro catalogue item identifiers and profile provider.
@@ -63,7 +63,7 @@ export interface ProfileProviderService {
     rootItem: MauroItem,
     identifiers: MauroIdentifier[],
     provider: ProfileProvider
-  ): Observable<NavigatableProfile[]>;
+  ): Observable<NavigatableProfile[]>
 
   /**
    * Validates multiple profiles based on the given profile provider.
@@ -77,7 +77,7 @@ export interface ProfileProviderService {
     rootItem: MauroItem,
     provider: ProfileProvider,
     profiles: Profile[]
-  ): Observable<MauroProfileValidationResult[]>;
+  ): Observable<MauroProfileValidationResult[]>
 
   /**
    * Save multiple profiles based on the given profile provider and profile and identifers pairs.
@@ -91,5 +91,5 @@ export interface ProfileProviderService {
     rootItem: MauroItem,
     provider: ProfileProvider,
     payloads: MauroProfileUpdatePayload[]
-  ): Observable<Profile[]>;
+  ): Observable<Profile[]>
 }

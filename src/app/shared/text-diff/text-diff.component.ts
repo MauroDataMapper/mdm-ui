@@ -26,8 +26,8 @@ import { diff_match_patch } from 'diff-match-patch';
     standalone: true
 })
 export class TextDiffComponent implements AfterViewInit {
-  @Input() left : any;
-  @Input() right : any;
+  @Input() left: any;
+  @Input() right: any;
 
   // This is new
   @ViewChild('diff', { static: false }) set diffCon(content: ElementRef) {
@@ -38,7 +38,6 @@ export class TextDiffComponent implements AfterViewInit {
   mergeString: any;
   mergeDiffrl: any;
   mergeDifflr: any;
-
 
   constructor() {}
 
@@ -77,8 +76,7 @@ export class TextDiffComponent implements AfterViewInit {
     return html.join('');
   };
 
-
-  diffLineMode(text1:string, text2:string) {
+  diffLineMode(text1: string, text2: string) {
     const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
@@ -89,9 +87,8 @@ export class TextDiffComponent implements AfterViewInit {
     return diffs;
   }
 
-
-  diffLinesToChars = (text1:string, text2:string) => {
-    const lineArray:string[] = []; // e.g. lineArray[4] == 'Hello\n'
+  diffLinesToChars = (text1: string, text2: string) => {
+    const lineArray: string[] = []; // e.g. lineArray[4] == 'Hello\n'
     const lineHash = {}; // e.g. lineHash['Hello\n'] == 4
 
     // '\x00' is a valid character, but various debuggers don't like it.
@@ -126,7 +123,7 @@ export class TextDiffComponent implements AfterViewInit {
     return { chars1, chars2, lineArray };
   };
 
-  diffLinesToCharsMunge = (text:string, lineArray:string[], lineHash:{ [p:string]:number}, maxLines:number) => {
+  diffLinesToCharsMunge = (text: string, lineArray: string[], lineHash: { [p: string]: number }, maxLines: number) => {
     let chars = '';
     // Walk the text, pulling out a substring for each line.
     // text.split('\n') would would temporarily double our memory footprint.
@@ -148,7 +145,8 @@ export class TextDiffComponent implements AfterViewInit {
           : lineHash[line] !== undefined
       ) {
         chars += String.fromCharCode(lineHash[line]);
-      } else {
+      }
+ else {
         if (lineArrayLength === maxLines) {
           // Bail out at 65535 because
           // String.fromCharCode(65536) == String.fromCharCode(0)

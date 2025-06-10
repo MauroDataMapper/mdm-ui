@@ -35,27 +35,27 @@ export const FLAT_TREE_LEVEL_START = 0;
 
 export const isDomainExpandable = (domain: CatalogueItemDomainType) => {
   return (
-    domain === CatalogueItemDomainType.Folder ||
-    domain === CatalogueItemDomainType.VersionedFolder ||
-    domain === CatalogueItemDomainType.DataModel ||
-    domain === CatalogueItemDomainType.DataClass ||
-    domain === CatalogueItemDomainType.Terminology ||
-    domain === CatalogueItemDomainType.Term
+    domain === CatalogueItemDomainType.Folder
+    || domain === CatalogueItemDomainType.VersionedFolder
+    || domain === CatalogueItemDomainType.DataModel
+    || domain === CatalogueItemDomainType.DataClass
+    || domain === CatalogueItemDomainType.Terminology
+    || domain === CatalogueItemDomainType.Term
   );
 };
 
 export interface MauroItemTreeFlatNode {
-  id: Uuid;
-  domainType: CatalogueItemDomainType;
-  label: string;
-  level: number;
-  expandable: boolean;
-  isLoading?: boolean;
-  modelId?: Uuid;
-  parentId?: Uuid;
-  finalised?: boolean;
-  branchName?: string;
-  modelVersion?: string;
+  id: Uuid
+  domainType: CatalogueItemDomainType
+  label: string
+  level: number
+  expandable: boolean
+  isLoading?: boolean
+  modelId?: Uuid
+  parentId?: Uuid
+  finalised?: boolean
+  branchName?: string
+  modelVersion?: string
 }
 
 export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
@@ -66,6 +66,7 @@ export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
   get data(): MauroItemTreeFlatNode[] {
     return this.dataChange.value;
   }
+
   set data(value: MauroItemTreeFlatNode[]) {
     this.treeControl.dataNodes = value;
     this.dataChange.next(value);
@@ -104,14 +105,14 @@ export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
 
   handleExpandCollapse(change: SelectionChange<MauroItemTreeFlatNode>) {
     if (change.added) {
-      change.added.forEach((node) => this.expandNode(node));
+      change.added.forEach(node => this.expandNode(node));
     }
 
     if (change.removed) {
       change.removed
         .slice()
         .reverse()
-        .forEach((node) => this.collapseNode(node));
+        .forEach(node => this.collapseNode(node));
     }
   }
 
@@ -127,7 +128,7 @@ export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
 
     request$
       .pipe(
-        map((response) =>
+        map(response =>
           response.body.map<MauroItemTreeFlatNode>((treeItem) => {
             return {
               ...treeItem,

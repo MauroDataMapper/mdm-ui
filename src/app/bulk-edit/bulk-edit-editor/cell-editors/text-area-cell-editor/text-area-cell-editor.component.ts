@@ -24,9 +24,9 @@ import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface TextAreaCellEditorParams {
-  rows?: number;
-  cols?: number;
-  onEditClick?: (value: string, params: ICellEditorParams) => void;
+  rows?: number
+  cols?: number
+  onEditClick?: (value: string, params: ICellEditorParams) => void
 }
 
 export type PopupPosition = 'under' | 'over';

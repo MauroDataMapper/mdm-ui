@@ -25,23 +25,23 @@ import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { of } from 'rxjs';
 
 interface MdmSecurityResourceStub {
-  login: jest.Mock;
-  logout: jest.Mock;
+  login: jest.Mock
+  logout: jest.Mock
 }
 
 interface MdmSessionResourceStub {
-  isApplicationAdministration: jest.Mock;
-  isAuthenticated: jest.Mock;
+  isApplicationAdministration: jest.Mock
+  isAuthenticated: jest.Mock
 }
 
 interface MdmApiPropertiesStub {
-  listPublic: jest.Mock;
+  listPublic: jest.Mock
 }
 
 interface MdmResourcesServiceStub {
-  security: MdmSecurityResourceStub;
-  session: MdmSessionResourceStub;
-  apiProperties: MdmApiPropertiesStub;
+  security: MdmSecurityResourceStub
+  session: MdmSessionResourceStub
+  apiProperties: MdmApiPropertiesStub
 }
 
 const resourcesStub: MdmResourcesServiceStub = {
@@ -63,8 +63,7 @@ resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 describe('SecurityHandlerService', () => {
   let service: SecurityHandlerService;
 
-  beforeEach( async() => {
-
+  beforeEach(async () => {
     service = setupTestModuleForService(SecurityHandlerService,
       {
         providers: [{
@@ -72,7 +71,6 @@ describe('SecurityHandlerService', () => {
         }]
       });
   });
-
 
   it('should be created', () => {
     expect(service).toBeTruthy();

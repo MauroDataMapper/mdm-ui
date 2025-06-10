@@ -32,20 +32,20 @@ import { FeaturesService } from '@mdm/services/features.service';
 import { MockDirective } from 'ng-mocks';
 
 interface SecurityHandlerServiceStub {
-  signIn: jest.Mock;
-  isAdmin: jest.Mock;
+  signIn: jest.Mock
+  isAdmin: jest.Mock
 }
 
 interface PluginOpenIdConnectServiceStub {
-  listPublic: jest.Mock;
+  listPublic: jest.Mock
 }
 
 interface MdmResourcesServiceStub {
-  pluginOpenIdConnect: PluginOpenIdConnectServiceStub;
+  pluginOpenIdConnect: PluginOpenIdConnectServiceStub
 }
 
 interface FeaturesServiceStub {
-  useOpenIdConnect: boolean;
+  useOpenIdConnect: boolean
 }
 
 describe('LoginModalComponent', () => {

@@ -114,12 +114,13 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       catchError(() => {
         this.isLoadingResults = false;
         return [];
-      })).subscribe(data => {
+      })).subscribe((data) => {
         this.records = data;
       });
     this.changeRef.detectChanges();
   }
-  pendingUsersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:Record<string, any>) {
+
+  pendingUsersFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     options['disabled'] = false;
 
@@ -147,7 +148,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  askForSoftApproval = (row: { firstName: string; lastName: string }) => {
+  askForSoftApproval = (row: { firstName: string, lastName: string }) => {
     const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
 
     this.dialog
@@ -162,7 +163,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       .subscribe(() => this.approveUser(row));
   };
 
-  askForSoftRejection = (row: { firstName: string; lastName: string }) => {
+  askForSoftRejection = (row: { firstName: string, lastName: string }) => {
     const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
                       <br> <strong>Note:</strong> Rejected users will not be removed;
                       <br> Instead they will be <span class='warning'>disabled</span>`;
@@ -179,15 +180,15 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       .subscribe(() => this.rejectUser(row));
   };
 
-  approveUser = (row : any) => {
+  approveUser = (row: any) => {
     this.resourcesService.catalogueUser.approve(row.id as string, null).subscribe(() => {
       this.messageHandler.showSuccess('User approved successfully');
       this.broadcast.dispatch('pendingUserUpdated');
-      this.pendingUsersFetch().subscribe(data => {
+      this.pendingUsersFetch().subscribe((data) => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
-      }, err => {
+      }, (err) => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
     }, (error) => {
@@ -195,15 +196,15 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     });
   };
 
-  rejectUser = (row:any) => {
+  rejectUser = (row: any) => {
     this.resourcesService.catalogueUser.reject(row.id as string, null).subscribe(() => {
       this.messageHandler.showSuccess('User rejected successfully');
       this.broadcast.dispatch('pendingUserUpdated');
-      this.pendingUsersFetch().subscribe(data => {
+      this.pendingUsersFetch().subscribe((data) => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
-      }, err => {
+      }, (err) => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
     }, (error) => {

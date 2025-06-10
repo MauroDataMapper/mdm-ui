@@ -66,6 +66,7 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   registerOnChange(fn: any): void {
     this.propChange = fn;
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   registerOnTouched(fn: any): void { }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,15 +78,11 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-
-
-  save()
-  {
+  save() {
     this.saveClicked.emit();
   }
 
-  cancel()
-  {
+  cancel() {
     this.cancelClicked.emit();
   }
 

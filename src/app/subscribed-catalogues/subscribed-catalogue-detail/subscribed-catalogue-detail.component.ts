@@ -31,9 +31,7 @@ import { FormsModule } from '@angular/forms';
     imports: [FormsModule, MatTooltip, InlineTextEditComponent, ContentEditorComponent]
 })
 export class SubscribedCatalogueDetailComponent implements OnInit {
-
   @Input() subscribedCatalogue: SubscribedCatalogue;
-
 
   processing = false;
 

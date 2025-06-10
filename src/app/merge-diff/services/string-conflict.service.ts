@@ -20,9 +20,9 @@ import { Injectable } from '@angular/core';
 import { Diff, diff_match_patch } from 'diff-match-patch';
 
 interface DiffTrackedItem {
-  diffs: Diff[];
-  index: number;
-  value: string;
+  diffs: Diff[]
+  index: number
+  value: string
 }
 
 type DiffHtmlTransformFunction = (item: DiffTrackedItem) => string;
@@ -45,7 +45,7 @@ export class StringConflictService {
     const diffs = this.getDiff(text1 ?? '', text2 ?? '');
     return this.getDiffPrettyHtml(
       diffs,
-      this.createInsElement.bind(this) as  (item: DiffTrackedItem) => string,
+      this.createInsElement.bind(this) as (item: DiffTrackedItem) => string,
       () => ''
     );
   }

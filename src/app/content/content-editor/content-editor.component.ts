@@ -26,11 +26,11 @@ import { MarkdownTextAreaComponent } from '../markdown/markdown-text-area/markdo
 import { NgIf } from '@angular/common';
 
 export interface ContentEditorMarkdownOptions {
-  showHelpText: boolean;
+  showHelpText: boolean
 }
 
 export interface ContentEditorHtmlOptions {
-  useBasicButtons: boolean;
+  useBasicButtons: boolean
 }
 
 @Component({
@@ -63,13 +63,14 @@ export class ContentEditorComponent implements OnInit {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
     this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
 
-    const formatPreference =
-      this.userSettings.get<ContentEditorFormat>('editorFormat') ??
-      this.userSettings.defaultSettings.editorFormat;
+    const formatPreference
+      = this.userSettings.get<ContentEditorFormat>('editorFormat')
+        ?? this.userSettings.defaultSettings.editorFormat;
 
     if (this.isEmptyContent()) {
       this.contentFormat = formatPreference;
-    } else {
+    }
+ else {
       this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
   }

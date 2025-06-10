@@ -56,6 +56,7 @@ export class UserComponent implements OnInit {
     userRole: 'EDITOR',
     groups: []
   };
+
   user = {
     id: null,
     emailAddress: '',
@@ -89,7 +90,7 @@ export class UserComponent implements OnInit {
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
-      this.resourcesService.catalogueUser.get(this.id).subscribe(res => {
+      this.resourcesService.catalogueUser.get(this.id).subscribe((res) => {
         const user = res.body;
         this.user = user;
         this.title.setTitle('Admin - Edit User');
@@ -102,17 +103,17 @@ export class UserComponent implements OnInit {
       });
     }
 
-
     const options = this.gridService.constructOptions(null, null, 'name', 'asc');
     options['all'] = true;
 
-    this.resourcesService.userGroups.list(options).subscribe(res => {
+    this.resourcesService.userGroups.list(options).subscribe((res) => {
       this.allGroups = res.body.items;
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem getting the group list', error);
     }
     );
   }
+
   validateEmail = () => {
     let isValid = true;
     if (!this.user.emailAddress.trim().length) {
@@ -145,7 +146,6 @@ export class UserComponent implements OnInit {
       this.user.firstName = fname;
     }
   };
-
 
   validate = () => {
     let isValid = true;
@@ -189,16 +189,17 @@ export class UserComponent implements OnInit {
         this.resourcesService.catalogueUser.update(this.user.id as Uuid, resource).subscribe(() => {
         this.messageHandler.showSuccess('User updated successfully.');
         this.navigateToParent();
-        }, error => {
+        }, (error) => {
         this.messageHandler.showError('There was a problem updating the user.', error);
       });
-    } else {
+    }
+ else {
       // it's in new mode (create)
         this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
           this.messageHandler.showSuccess('User saved successfully.');
           this.navigateToParent();
         },
-          error => {
+          (error) => {
             this.messageHandler.showError('There was a problem saving the user.', error);
           });
       }
@@ -206,7 +207,7 @@ export class UserComponent implements OnInit {
   };
 
   cancel = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }

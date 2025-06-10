@@ -75,6 +75,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     { value: 'label-asc', displayName: 'Label (a-z)' },
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
+
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
   profileFilters?: CatalogueSearchProfileFilter[];
 
@@ -205,7 +206,8 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.parameters.profileFiltersDto = mapProfileFiltersToDto(
         profileFilters
       );
-    } else {
+    }
+ else {
       this.parameters.profileFiltersDto = null;
     }
     this.updateSearch();
@@ -225,6 +227,7 @@ export class CatalogueSearchListingComponent implements OnInit {
       }
     });
   }
+
   /**
    * Match route params sort and order to sortBy option or return the default value if not set.
    *

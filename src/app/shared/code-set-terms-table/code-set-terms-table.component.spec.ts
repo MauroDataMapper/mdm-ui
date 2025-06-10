@@ -25,7 +25,6 @@ describe('CodeSetTermsTableComponent', () => {
     harness = await setupTestModuleForComponent(CodeSetTermsTableComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

@@ -19,8 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Directive, ElementRef, OnInit, Input, Renderer2 } from '@angular/core';
 
 @Directive({
-    selector: '[mdmResizable]' // Attribute selector
-    ,
+    selector: '[mdmResizable]', // Attribute selector
     standalone: true
 })
 export class ResizableDirective implements OnInit {
@@ -67,7 +66,8 @@ export class ResizableDirective implements OnInit {
     const mouseMove = (evt) => {
       if (this.inDragRegion(evt) || this.dragging) {
         el.nativeElement.style.cursor = 'col-resize';
-      } else {
+      }
+ else {
         el.nativeElement.style.cursor = 'default';
       }
     };

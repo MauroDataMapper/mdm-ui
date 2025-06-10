@@ -62,6 +62,6 @@ export class DefaultProfileComponent implements OnInit {
   }
 
   isInControlList(control: string): boolean {
-    return this.controls.findIndex((x) => x === control) !== -1;
+    return this.controls.findIndex(x => x === control) !== -1;
   }
 }

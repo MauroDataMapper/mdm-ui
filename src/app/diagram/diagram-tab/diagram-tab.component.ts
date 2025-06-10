@@ -33,7 +33,6 @@ import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.comp
 })
 
 export class DiagramTabComponent {
-
   @Input() mode: DiagramMode;
   @Input() parent: DiagramCatalogueItem;
   @Input() isPopup: boolean;
@@ -54,7 +53,7 @@ export class DiagramTabComponent {
         diagramComponent: this.diagramComponent
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.diagramComponent.diagramComponent = result.diagramComponent;
       this.diagramComponent.diagramService = result.diagramComponent.diagramService;
       this.diagramComponent.resetPaper();
@@ -70,6 +69,4 @@ export class DiagramTabComponent {
         this.diagramComponent.toolbarClick(buttonName);
     }
   }
-
 }
-

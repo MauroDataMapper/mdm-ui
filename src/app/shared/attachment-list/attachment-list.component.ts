@@ -59,7 +59,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ReferenceFileEditor {
-  fileName: string;
+  fileName: string
 }
 
 @Component({
@@ -84,12 +84,13 @@ export class AttachmentListComponent implements AfterViewInit {
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: {};
+  filter: object;
   canEdit: boolean;
   records: EditableRecord<ReferenceFile, ReferenceFileEditor>[] = [];
   dataSource = new MatTableDataSource<
     EditableRecord<ReferenceFile, ReferenceFileEditor>
   >();
+
   apiEndpoint: string;
   attachmentFileSizeLimit = 0;
 
@@ -142,7 +143,7 @@ export class AttachmentListComponent implements AfterViewInit {
       )
       .subscribe((data: ReferenceFile[]) => {
         this.records = data.map(
-          (item) =>
+          item =>
             new EditableRecord<ReferenceFile, ReferenceFileEditor>(
               item,
               {
@@ -161,7 +162,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
+        catchError((errors) => {
           this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
           return [];
         })
@@ -193,7 +194,7 @@ export class AttachmentListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {[p: string]: any}
+    filters?: { [p: string]: any }
   ): Observable<ReferenceFileIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -288,7 +289,9 @@ export class AttachmentListComponent implements AfterViewInit {
     const fileName = `File${index}`;
     const fileOrNot = this.getFile(fileName);
     // There might not be a file attached to save
-    if(!fileOrNot){return;}
+    if (!fileOrNot) {
+      return;
+    }
     const file = fileOrNot as File;
     const reader = new FileReader();
 
@@ -304,7 +307,7 @@ export class AttachmentListComponent implements AfterViewInit {
         fileContents: Array.from(fileBytes)
       };
 
-      if (this.attachmentFileSizeLimit > 0 && +file.size/1000000 > this.attachmentFileSizeLimit) {
+      if (this.attachmentFileSizeLimit > 0 && +file.size / 1000000 > this.attachmentFileSizeLimit) {
         this.messageHandler.showError(`There was a problem saving the attachment. Files cannot be larger than ${this.attachmentFileSizeLimit}mb.`);
         return EMPTY;
       }
@@ -332,7 +335,7 @@ export class AttachmentListComponent implements AfterViewInit {
   }
 
   private loadAttachmentFileSizeLimit(properties: ApiProperty[]) {
-    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey)??'0');
+    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey) ?? '0');
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

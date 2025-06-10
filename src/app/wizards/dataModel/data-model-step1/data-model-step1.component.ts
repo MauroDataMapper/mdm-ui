@@ -46,11 +46,11 @@ export class DataModelStep1Component implements OnInit, OnDestroy {
   allDataModelTypes: any;
   step: WizardStep<DataModelMainComponent>;
   setupForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
     author: new FormControl(''),
     organisation: new FormControl(''),
     description: new FormControl(''),
-    dataModelType: new FormControl<DataModelType>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    dataModelType: new FormControl<DataModelType>(null, Validators.required),
     classifiers: new FormControl([])
   });
 

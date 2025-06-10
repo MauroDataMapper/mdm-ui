@@ -47,6 +47,7 @@ export class GroupComponent implements OnInit {
     groupMembers: [],
     id: ''
   };
+
   groupId: Uuid;
 
   constructor(
@@ -62,18 +63,19 @@ export class GroupComponent implements OnInit {
     this.groupId = this.stateService.params.id;
     if (this.groupId) {
       this.title.setTitle('Group - Edit Group');
-      this.resources.userGroups.get(this.groupId).subscribe(result => {
+      this.resources.userGroups.get(this.groupId).subscribe((result) => {
         this.group = result.body;
       });
-      this.resources.catalogueUser.listInUserGroup(this.groupId).subscribe(result => {
+      this.resources.catalogueUser.listInUserGroup(this.groupId).subscribe((result) => {
         this.group.groupMembers = result.body.items || [];
       });
-    } else {
+    }
+ else {
       this.title.setTitle('Group - Add Group');
     }
   }
 
-  onUpdateGroupMembers = groupMembers => { // triggered when the Members table is updated
+  onUpdateGroupMembers = (groupMembers) => { // triggered when the Members table is updated
     this.group.groupMembers = groupMembers;
   };
 
@@ -99,21 +101,22 @@ export class GroupComponent implements OnInit {
       this.resources.userGroups.update(this.group.id, this.group).subscribe(() => {
         this.messageHandler.showSuccess('Group updated successfully.');
         this.navigateToParent();
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the group.', error);
       });
-    } else { // it's in new mode (create)
+    }
+ else { // it's in new mode (create)
       this.resources.userGroups.save(this.group).subscribe(() => {
         this.messageHandler.showSuccess('Group saved successfully.');
         this.navigateToParent();
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem saving the group.', error);
       });
     }
   };
 
   cancel = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }

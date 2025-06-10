@@ -52,7 +52,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
    hideFilters = true;
    searchTerm = '';
    filterEvent = new EventEmitter<any>();
-   filter: {};
+   filter: object;
 
    constructor(
       private changeRef: ChangeDetectorRef,
@@ -82,9 +82,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          return [];
       })).subscribe((values: any[]) => {
          // Flatten the endpoint response to make the table rows tabular and not an object hierarchy
-         this.records = values.map(row => {
+         this.records = values.map((row) => {
             const flattened = { };
-            row.columns.forEach(column => {
+            row.columns.forEach((column) => {
                flattened[column.referenceDataElement.label] = column.value;
             });
             return flattened;
@@ -105,7 +105,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       this.changeRef.detectChanges();
    };
 
-   listReferenceDataValues = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection) => {
+   listReferenceDataValues = (pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection) => {
       const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
       return this.resources.referenceDataValue.list(this.parent.id as string, options);
    };
@@ -141,7 +141,8 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
 
       if (this.hideFilters) {
          return this.resources.referenceDataValue.list(this.parent.id as string, options);
-      } else if (!this.hideFilters) {
+      }
+ else if (!this.hideFilters) {
          return this.resources.referenceDataValue.search(this.parent.id as string, { search: this.searchTerm, max: pageSize, offset: pageIndex });
       }
    }

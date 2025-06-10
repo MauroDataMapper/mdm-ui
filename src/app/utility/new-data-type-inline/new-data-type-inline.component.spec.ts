@@ -25,11 +25,11 @@ describe('NewDataTypeInlineComponent', () => {
   let harness: ComponentHarness<NewDataTypeInlineComponent>;
 
   interface MdmApiPropertiesStub {
-    listPublic: jest.Mock;
+    listPublic: jest.Mock
   }
 
   interface MdmResourcesServiceStub {
-    apiProperties: MdmApiPropertiesStub;
+    apiProperties: MdmApiPropertiesStub
   }
 
   const resourcesStub: MdmResourcesServiceStub = {
@@ -39,7 +39,6 @@ describe('NewDataTypeInlineComponent', () => {
   };
 
   resourcesStub.apiProperties.listPublic.mockImplementationOnce(() => of([]));
-
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(NewDataTypeInlineComponent, {

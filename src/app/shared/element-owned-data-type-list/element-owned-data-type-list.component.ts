@@ -78,6 +78,7 @@ export class ElementOwnedDataTypeListComponent
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @Output() totalCount = new EventEmitter<string>();
 
   allDataTypes: any;
@@ -116,7 +117,8 @@ export class ElementOwnedDataTypeListComponent
     }
     if (this.isEditable && !this.parent.finalised) {
       this.displayedColumns = ['name', 'description', 'domainType', 'checkbox'];
-    } else {
+    }
+ else {
       this.displayedColumns = ['name', 'description', 'domainType'];
     }
   }
@@ -159,14 +161,14 @@ export class ElementOwnedDataTypeListComponent
         .subscribe((data) => {
           this.records = data;
           data.forEach((x: any) => {
-            if(x.domainType === 'ModelDataType') {
-              if(x.modelResourceDomainType === 'Terminology') {
+            if (x.domainType === 'ModelDataType') {
+              if (x.modelResourceDomainType === 'Terminology') {
                 x.domainType = 'TerminologyType';
               }
-              if(x.modelResourceDomainType === 'CodeSet') {
+              if (x.modelResourceDomainType === 'CodeSet') {
                 x.domainType = 'CodeSetType';
               }
-              if(x.modelResourceDomainType === 'ReferenceDataModel') {
+              if (x.modelResourceDomainType === 'ReferenceDataModel') {
                 x.domainType = 'ReferenceDataModelType';
               }
             }
@@ -239,7 +241,7 @@ export class ElementOwnedDataTypeListComponent
     this.hideFilters = !this.hideFilters;
   };
 
-  dataTypesFetch = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) => {
+  dataTypesFetch = (pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: { [p: string]: any }) => {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -251,9 +253,10 @@ export class ElementOwnedDataTypeListComponent
   };
 
   onChecked = () => {
-    this.records.forEach((x) => (x.checked = this.checkAllCheckbox));
+    this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
   };
+
   listChecked = () => {
     let count = 0;
     for (const value of Object.values(this.records)) {
@@ -263,15 +266,16 @@ export class ElementOwnedDataTypeListComponent
     }
     this.bulkActionsVisible = count;
   };
+
   toggleCheckbox = (record) => {
-    this.records.forEach((x) => (x.checked = false));
+    this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = this.records.filter((record) => record.checked);
+    const dataElementIdLst = this.records.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },
@@ -281,14 +285,15 @@ export class ElementOwnedDataTypeListComponent
       dialog.afterClosed().subscribe((result) => {
         if (result != null && result.status === 'ok') {
           resolve();
-        } else {
+        }
+ else {
           reject();
         }
       });
     });
     promise
       .then(() => {
-        this.records.forEach((x) => (x.checked = false));
+        this.records.forEach(x => (x.checked = false));
         // this.records = this.records;
         this.checkAllCheckbox = false;
         this.bulkActionsVisible = 0;

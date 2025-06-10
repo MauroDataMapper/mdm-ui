@@ -72,7 +72,7 @@ export class FolderHandlerService {
       .remove(id, { permanent })
       .pipe(
         map(() => this.messageHandler.showSuccess('Successfully Deleted Folder')),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem deleting the Folder.', error);
           return of();
         })

@@ -50,8 +50,8 @@ export class CreateTermRelationshipTypeForm {
       this.id = relationshipType.id || null;
       this.label = relationshipType.label;
       this.displayLabel = relationshipType.displayLabel;
-      this.parentalRelationship =
-        relationshipType.parentalRelationship || false;
+      this.parentalRelationship
+        = relationshipType.parentalRelationship || false;
       this.childRelationship = relationshipType.childRelationship || false;
     }
   }
@@ -66,7 +66,7 @@ export class CreateTermRelationshipTypeForm {
 })
 export class CreateTermRelationshipTypeDialogComponent implements OnInit {
   form = new FormGroup({
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     label: new FormControl('', Validators.required),
     displayLabel: new FormControl(''),
     parentalRelationship: new FormControl(false),
@@ -118,12 +118,14 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
         .subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
-          } else {
+          }
+ else {
             /* NOTE: generic message */
             this.messageHandler.showWarning('Unable to create update relationship type');
           }
         });
-    } else {
+    }
+ else {
       this.resources.termRelationshipTypes
         .save(this.data.terminology.id, {
           label: this.form.value.label,
@@ -144,7 +146,8 @@ export class CreateTermRelationshipTypeDialogComponent implements OnInit {
         .subscribe((response: HttpResponse<TermRelationshipTypeDetail>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
-          } else {
+          }
+ else {
             /* NOTE: generic message */
             this.messageHandler.showWarning('Unable to create new relationship type');
           }

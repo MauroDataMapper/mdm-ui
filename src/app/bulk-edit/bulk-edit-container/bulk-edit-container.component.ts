@@ -85,12 +85,12 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    const confirm$ =
-      this.currentStep === BulkEditStep.Editor && this.hasChanged
+    const confirm$
+      = this.currentStep === BulkEditStep.Editor && this.hasChanged
         ? this.editing.confirmCancelAsync()
         : of(true);
 
-    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
       this.editing.stop();
       this.stateHandler.GoPrevious();
     });
@@ -106,7 +106,7 @@ export class BulkEditContainerComponent implements OnInit {
       ? this.editing.confirmCancelAsync()
       : of(true);
 
-    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
       this.currentStep = this.currentStep - 1;
       this.hasChanged = false;
     });

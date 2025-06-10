@@ -83,12 +83,12 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   deleteInProgress: boolean;
   domainType;
 
-  baseTypes:  { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
-  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
+  baseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
+  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
   filterValue: any;
   filterName: any;
 
@@ -98,6 +98,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private gridService: GridService
   ) { }
+
   ngOnInit(): void {
     this.displayedColumns = ['label', 'description', 'domainType'];
     this.isLoadingResults = false;
@@ -135,18 +136,18 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
+    ).subscribe((data) => {
       this.records = data;
     });
     this.changeRef.detectChanges();
   }
 
   classificationFetch(
-    pageSize?:number,
-    pageIndex?:number,
-    sortBy?:string,
-    sortType?:SortDirection,
-    filters?:{[p: string]: any}
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: SortDirection,
+    filters?: { [p: string]: any }
   ): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.classifier.listCatalogueItemsFor(this.parent.id as string, options);

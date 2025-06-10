@@ -65,7 +65,7 @@ export class DataClassComponent
   dataClass: DataClassDetail;
   showSecuritySection: boolean;
   showExtraTabs = false;
-  activeTab:  number;
+  activeTab: number;
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
@@ -105,18 +105,18 @@ export class DataClassComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id as string) &&
-      (!this.uiRouterGlobals.params.id ||
-        !this.uiRouterGlobals.params.dataModelId)
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && (!this.uiRouterGlobals.params.id
+        || !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataClassId &&
-      this.uiRouterGlobals.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataClassId
+      && this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
       this.parentDataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
@@ -139,14 +139,14 @@ export class DataClassComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
 
-  dataClassDetails(model:string, id:string, parentDataClass?:string) {
+  dataClassDetails(model: string, id: string, parentDataClass?: string) {
     if (!parentDataClass) {
       this.resourcesService.dataClass
         .get(model, id)
@@ -167,24 +167,27 @@ export class DataClassComponent
           this.messageService.dataChanged(this.dataClass);
 
           if (
-            this.dataClass.minMultiplicity &&
-            this.dataClass.minMultiplicity === -1
+            this.dataClass.minMultiplicity
+            && this.dataClass.minMultiplicity === -1
           ) {
             this.min = '*';
-          } else {
+          }
+ else {
             this.min = this.dataClass.minMultiplicity;
           }
 
           if (
-            this.dataClass.maxMultiplicity &&
-            this.dataClass.maxMultiplicity === -1
+            this.dataClass.maxMultiplicity
+            && this.dataClass.maxMultiplicity === -1
           ) {
             this.max = '*';
-          } else {
+          }
+ else {
             this.max = this.dataClass.maxMultiplicity;
           }
         });
-    } else {
+    }
+ else {
       this.resourcesService.dataClass
         .getChildDataClass(model, parentDataClass, id)
         .subscribe((result: DataClassDetailResponse) => {
@@ -224,7 +227,8 @@ export class DataClassComponent
 
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
-      } else {
+      }
+ else {
         resource[item.propertyName] = item.value;
       }
     });
@@ -247,7 +251,8 @@ export class DataClassComponent
             );
           }
         );
-    } else {
+    }
+ else {
       this.resourcesService.dataClass
         .updateChildDataClass(
           this.dataClass.model,

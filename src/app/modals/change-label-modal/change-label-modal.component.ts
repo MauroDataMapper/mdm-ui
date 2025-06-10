@@ -27,12 +27,12 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
 
 export interface ChangeLabelModalData {
-  item: CatalogueItemDetail;
+  item: CatalogueItemDetail
 }
 
 export interface ChangeLabelModalResult {
-  status: ModalDialogStatus;
-  label?: string;
+  status: ModalDialogStatus
+  label?: string
 }
 
 @Component({
@@ -46,7 +46,7 @@ export class ChangeLabelModalComponent implements OnInit {
   item: CatalogueItemDetail;
   formGroup = new FormGroup({
     label: new FormControl('', [
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required
     ])
   });
 

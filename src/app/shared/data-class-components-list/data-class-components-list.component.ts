@@ -77,6 +77,7 @@ import { NgIf, NgClass } from '@angular/common';
 export class DataClassComponentsListComponent implements AfterViewInit {
   @ViewChildren('classFilters', { read: ElementRef })
   classFilters: ElementRef[];
+
   @ViewChildren('elementFilters', { read: ElementRef })
   elementFilters: ElementRef[];
 
@@ -85,6 +86,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   @ViewChild('classPaginator', { static: true })
   classPaginator: MdmPaginatorComponent;
+
   @ViewChild('elementPaginator', { static: true })
   elementPaginator: MdmPaginatorComponent;
 
@@ -116,8 +118,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   filterClassEvent = new EventEmitter<any>();
   filterElementEvent = new EventEmitter<any>();
-  classFilter: {};
-  elementFilter: {};
+  classFilter: object;
+  elementFilter: object;
 
   bulkClassActionsVisible = 0;
   bulkElementActionsVisible = 0;
@@ -149,7 +151,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         'multiplicity',
         'checkbox'
       ];
-    } else {
+    }
+ else {
       this.displayedClassColumns = ['name', 'description', 'multiplicity'];
       this.displayedElementColumns = ['name', 'description', 'multiplicity'];
     }
@@ -192,10 +195,11 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         }),
         map((data: DataClassIndexResponse) => {
           if (this.parentDataClass.extendsDataClasses) {
-            this.totalDataClassCount =
-              data.body.count +
-              (this.parentDataClass.extendsDataClasses.length as number);
-          } else {
+            this.totalDataClassCount
+              = data.body.count
+                + (this.parentDataClass.extendsDataClasses.length as number);
+          }
+ else {
             this.totalDataClassCount = data.body.count;
           }
           this.isLoadingClassResults = false;
@@ -215,11 +219,13 @@ export class DataClassComponentsListComponent implements AfterViewInit {
             }
           );
           this.dataClassRecords = [...data, ...extendedDC];
-        } else {
+        }
+ else {
           this.dataClassRecords = data;
         }
       });
   }
+
   loadDataElements() {
     merge(
       this.elementSort?.sortChange,
@@ -331,7 +337,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: object
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -353,7 +359,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: object
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -372,14 +378,14 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   onClassChecked() {
     this.dataClassRecords.forEach(
-      (x) => (x.checked = this.checkAllClassCheckbox)
+      x => (x.checked = this.checkAllClassCheckbox)
     );
     this.classListChecked();
   }
 
   onElementChecked() {
     this.dataElementRecords.forEach(
-      (x) => (x.checked = this.checkAllElementCheckbox)
+      x => (x.checked = this.checkAllElementCheckbox)
     );
     this.elementListChecked();
   }
@@ -455,7 +461,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
             );
           }
         );
-    } else {
+    }
+ else {
       this.resources.dataClass
         .updateChildDataClass(
           this.parentDataModel.id,
@@ -511,7 +518,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkEditClass() {
     const dataClassIds = this.dataClassRecords
-      .filter((record) => record.checked)
+      .filter(record => record.checked)
       .map((record) => {
         return {
           id: record.id,
@@ -531,7 +538,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataClassRecords.forEach((x) => (x.checked = false));
+          this.dataClassRecords.forEach(x => (x.checked = false));
           this.checkAllClassCheckbox = false;
           this.bulkClassActionsVisible = 0;
           this.filterClassEvent.emit();
@@ -541,7 +548,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkEditElement() {
     const dataElementIds = this.dataElementRecords
-      .filter((record) => record.checked)
+      .filter(record => record.checked)
       .map((record) => {
         return {
           id: record.id,
@@ -561,7 +568,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.dataElementRecords.forEach(x => (x.checked = false));
           this.checkAllElementCheckbox = false;
           this.bulkElementActionsVisible = 0;
           this.filterElementEvent.emit();
@@ -571,7 +578,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkClassDelete() {
     const dataClassIdList = this.dataClassRecords.filter(
-      (record) => record.checked
+      record => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
@@ -585,7 +592,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result != null && result.status === 'ok') {
-          this.dataClassRecords.forEach((x) => (x.checked = false));
+          this.dataClassRecords.forEach(x => (x.checked = false));
           this.checkAllClassCheckbox = false;
           this.bulkClassActionsVisible = 0;
           this.filterClassEvent.emit();
@@ -595,7 +602,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkDelete() {
     const dataElementIdList = this.dataElementRecords.filter(
-      (record) => record.checked
+      record => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
@@ -609,7 +616,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.dataElementRecords.forEach(x => (x.checked = false));
           this.checkAllElementCheckbox = false;
           this.bulkElementActionsVisible = 0;
           this.filterElementEvent.emit();

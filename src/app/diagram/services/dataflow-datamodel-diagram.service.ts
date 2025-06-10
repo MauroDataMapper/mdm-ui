@@ -21,9 +21,7 @@ import * as joint from '@joint/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
-
 export class DataflowDatamodelDiagramService extends BasicDiagramService {
-
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
@@ -33,7 +31,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataFlow.list(this.parentId, {all:true});
+    return this.resourcesService.dataFlow.list(this.parentId, { all: true });
   }
 
   render(data: any): void {
@@ -95,14 +93,12 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
       // console.log('next clicked: service');
     });
   }
+
   canGoUp(): boolean {
     return false;
   }
 
   goUp(): void {
 
-
   }
-
-
 }

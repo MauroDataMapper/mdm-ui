@@ -33,7 +33,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
     imports: [MatCheckbox, FormsModule],
 })
 export class ShareWithComponent implements OnInit {
-
   @Input() catalogueItemId: Uuid;
   @Input() readableByEveryone = false;
   @Input() readableByAuthenticatedUsers = false;
@@ -59,7 +58,7 @@ export class ShareWithComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
           return EMPTY;
         })
@@ -77,7 +76,7 @@ export class ShareWithComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
           return EMPTY;
         })

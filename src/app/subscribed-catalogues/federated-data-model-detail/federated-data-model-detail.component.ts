@@ -103,7 +103,7 @@ export class FederatedDataModelDetailComponent implements OnInit {
             })
             .afterClosed();
         }),
-        filter((response) => response?.status === ModalDialogStatus.Ok),
+        filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap((response) => {
           this.processing = true;
 
@@ -178,7 +178,7 @@ export class FederatedDataModelDetailComponent implements OnInit {
           this.messageHandler.showSuccess(
             'Successfully unsubscribed from data model.'
           ),
-        (error) =>
+        error =>
           this.messageHandler.showError(
             'There was a problem unsubscribing from the data model.',
             error

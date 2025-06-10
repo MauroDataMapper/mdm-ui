@@ -27,7 +27,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf]
 })
 export class ElementStatusComponent {
-
   @Input() result: DataModelDetail;
 
   constructor() { }

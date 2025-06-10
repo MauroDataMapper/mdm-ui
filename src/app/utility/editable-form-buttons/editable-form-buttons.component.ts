@@ -31,7 +31,7 @@ import { NgIf, NgClass } from '@angular/common';
 })
 export class EditableFormButtonsComponent implements OnInit {
   @Input() deleteIcon = null;
-  @Input() deleteTitle  = '';
+  @Input() deleteTitle = '';
   @Input() editTitle = '';
   @Input() processing: any;
   @Input() editable: any;
@@ -98,6 +98,7 @@ export class EditableFormButtonsComponent implements OnInit {
       this.editable.show();
     }
   }
+
   /// Delete ----------------------------------------
   deleteClicked() {
     this.editable.deletePending = true;
@@ -127,10 +128,10 @@ export class EditableFormButtonsComponent implements OnInit {
       this.delete.emit();
     }
   }
-  /// 	----------------------------------------
+  ///   ----------------------------------------
 
   cancelEditClicked() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }

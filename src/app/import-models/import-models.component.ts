@@ -80,16 +80,17 @@ export class ImportModelsComponent implements OnInit {
 
   formOptionsMap = {
     Integer: 'number',
-    // eslint-disable-next-line id-blacklist
+
     String: 'text',
     Password: 'password',
-    // eslint-disable-next-line id-blacklist
+
     Boolean: 'checkbox',
-    // eslint-disable-next-line id-blacklist
+
     boolean: 'checkbox',
     int: 'number',
     File: 'file'
   };
+
   importType: ModelDomain;
 
   allowedFolderTreeDomainTypes = [
@@ -177,9 +178,9 @@ export class ImportModelsComponent implements OnInit {
 
             // If the model tree currently has a folder selected, default to that one initially
             if (
-              option.type === 'Folder' &&
-              this.modelTree.currentNode &&
-              this.modelTree.currentNode.domainType === 'Folder'
+              option.type === 'Folder'
+              && this.modelTree.currentNode
+              && this.modelTree.currentNode.domainType === 'Folder'
             ) {
               option.value = [this.modelTree.currentNode];
             }
@@ -248,12 +249,15 @@ export class ImportModelsComponent implements OnInit {
       parameters.forEach((param) => {
         if (param.type === 'File') {
           formData.append(param.name, this.getFile(param.name));
-        } else if (param.type === 'DataModel') {
-          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
-        } else if (param.type === 'Folder' && param.value && param.value[0]) {
-          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
-        } else {
-          formData.append(param.name, param.value); // eslint-disable-line @typescript-eslint/no-unsafe-argument
+        }
+ else if (param.type === 'DataModel') {
+          formData.append(param.name, param.value[0].id);
+        }
+ else if (param.type === 'Folder' && param.value && param.value[0]) {
+          formData.append(param.name, param.value[0].id);
+        }
+ else {
+          formData.append(param.name, param.value);
         }
       });
     });
@@ -271,7 +275,8 @@ export class ImportModelsComponent implements OnInit {
       this.importHasError = true;
       if (error.error.validationErrors) {
         this.importErrors = error.error.validationErrors.errors;
-      } else if (error.error.errors) {
+      }
+ else if (error.error.errors) {
         this.importErrors = error.error.errors;
       }
     }

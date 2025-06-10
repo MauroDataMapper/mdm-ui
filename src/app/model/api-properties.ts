@@ -22,22 +22,22 @@ export enum ApiPropertyEditType {
   Value,
   Text,
   Html,
-  Boolean, // eslint-disable-line id-blacklist
+  Boolean,
   Image
 }
 
 export interface ApiPropertyMetadata {
-  key: string;
-  category: string;
-  editType: ApiPropertyEditType;
-  publiclyVisible?: boolean;
-  isSystem: boolean;
-  requiresReload?: boolean;
+  key: string
+  category: string
+  editType: ApiPropertyEditType
+  publiclyVisible?: boolean
+  isSystem: boolean
+  requiresReload?: boolean
 }
 
 export interface ApiPropertyEditableState {
-  metadata: ApiPropertyMetadata;
-  original?: ApiProperty;
+  metadata: ApiPropertyMetadata
+  original?: ApiProperty
 }
 
 /**

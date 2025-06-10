@@ -120,7 +120,7 @@ export class ReferenceDataTypeSelectComponent
 
     this.selection.changed
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((changes) =>
+      .subscribe(changes =>
         this.selectionChange.emit(changes.source.selected)
       );
 
@@ -158,8 +158,9 @@ export class ReferenceDataTypeSelectComponent
   selectAllItems() {
     if (this.allSelected) {
       this.selection.clear();
-    } else {
-      this.dataSource.data.forEach((item) => this.selection.select(item));
+    }
+ else {
+      this.dataSource.data.forEach(item => this.selection.select(item));
     }
   }
 
@@ -225,7 +226,7 @@ export class ReferenceDataTypeSelectComponent
     // references
     const itemsToSelect = items.filter((item) => {
       const selected = this.selection.selected.find(
-        (selItem) => selItem.id === item.id
+        selItem => selItem.id === item.id
       );
       if (!selected) {
         return;

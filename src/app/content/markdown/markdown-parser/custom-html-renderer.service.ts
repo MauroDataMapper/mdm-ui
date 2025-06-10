@@ -48,7 +48,6 @@ export class CustomHtmlRendererService extends marked.Renderer {
 
   // just reduce header tags for one level
   heading = (text, level) => {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     const l = level + 1;
     return `<h${l}>${text}</h${l}>`;
   };

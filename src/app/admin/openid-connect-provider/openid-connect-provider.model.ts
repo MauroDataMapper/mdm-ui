@@ -23,7 +23,6 @@ import { MdmValidators } from '@mdm/utility/mdm-validators';
 export class OpenIdConnectProviderForm {
   group: FormGroup;
 
-  /* eslint-disable @typescript-eslint/unbound-method */
   constructor(provider?: OpenIdConnectProviderDetail) {
     this.group = new FormGroup({
       label: new FormControl(provider?.label, [
@@ -93,7 +92,6 @@ export class OpenIdConnectProviderForm {
       this.jwksUri.updateValueAndValidity();
     });
   }
-  /* eslint-enable @typescript-eslint/unbound-method */
 
   get label() {
     return this.group.get('label');
@@ -181,7 +179,7 @@ export class OpenIdConnectProviderForm {
 
   private createAuthorizationEndpointParametersPayload(): OpenIdAuthorizationEndpointParametersPayload {
     return {
-      scope: this.group.get('authorizationEndpointParams.scope').value ,
+      scope: this.group.get('authorizationEndpointParams.scope').value,
       responseType: this.group.get('authorizationEndpointParams.responseType').value,
       responseMode: this.group.get('authorizationEndpointParams.responseMode').value,
       display: this.group.get('authorizationEndpointParams.display').value === undefined ? null : this.group.get('authorizationEndpointParams.display').value,
@@ -194,10 +192,8 @@ export class OpenIdConnectProviderForm {
     };
   }
 
-  private handleDropdownValue(value: string)
-  {
-     if(value !== undefined)
-     {
+  private handleDropdownValue(value: string) {
+     if (value !== undefined) {
        return value.toUpperCase();
      }
      return value;

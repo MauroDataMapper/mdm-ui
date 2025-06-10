@@ -51,6 +51,7 @@ export class FlatNode {
   get children() {
     return this.node?.children;
   }
+
   set children(nodes) {
     this.node.children = nodes;
   }
@@ -58,6 +59,7 @@ export class FlatNode {
   get checked() {
     return this.node?.checked;
   }
+
   set checked(c: boolean) {
     this.node.checked = c;
   }
@@ -69,6 +71,7 @@ export class FlatNode {
   get deleted() {
     return this.node?.deleted;
   }
+
   set deleted(d: boolean) {
     this.node.deleted = d;
   }
@@ -76,6 +79,7 @@ export class FlatNode {
   get finalised() {
     return this.node?.finalised;
   }
+
   set finalised(d: boolean) {
     this.node.finalised = d;
   }
@@ -126,7 +130,7 @@ export class FlatNode {
 }
 
 export interface FlatNodeType {
-  [key: string]: any;
+  [key: string]: any
 }
 
 type FlatNodeIconCallback = (

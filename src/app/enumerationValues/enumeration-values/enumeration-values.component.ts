@@ -88,14 +88,13 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
          this.parent = result.body;
 
-         this.resource.enumerationValues.getFromDataType(this.parentDataModel as string, this.parentDataType as string, this.id as string).subscribe(res => {
+         this.resource.enumerationValues.getFromDataType(this.parentDataModel as string, this.parentDataType as string, this.id as string).subscribe((res) => {
             if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {
                this.label = res.body.value;
                this.currentEnumerationValue = res.body;
                this.parent = result.body;
                this.parent.id = res.body.id;
                this.title.setTitle(`Enumeration Value - ${this.label}`);
-
             }
          });
       });
@@ -140,5 +139,4 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
           return { index: 0, name: 'properties' };
       }
     }
-
 }

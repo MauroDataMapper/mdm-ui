@@ -28,7 +28,6 @@ import { ApiPropertyUpdatedBroadcastData, BroadcastEvent, BroadcastMessage, Cata
   providedIn: 'root'
 })
 export class BroadcastService {
-
   private handler = new Subject<BroadcastMessage<any>>();
 
   /**

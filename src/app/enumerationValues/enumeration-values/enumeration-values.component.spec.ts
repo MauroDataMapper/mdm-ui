@@ -26,7 +26,6 @@ describe('EnumerationValuesComponent', () => {
     harness = await setupTestModuleForComponent(EnumerationValuesComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

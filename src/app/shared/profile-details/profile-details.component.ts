@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* eslint-disable id-blacklist */
+
 import { Component, Input } from '@angular/core';
 import { Profile } from '@maurodatamapper/mdm-resources';
 import { MoreDescriptionComponent } from '../more-description/more-description.component';

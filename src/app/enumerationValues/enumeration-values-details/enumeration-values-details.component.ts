@@ -29,7 +29,6 @@ import { MatTooltip } from '@angular/material/tooltip';
     imports: [MatTooltip, ElementLinkComponent, ModelPathComponent]
 })
 export class EnumerationValuesDetailsComponent {
-
   @Input() enumerationValues: any;
   @Input() label: any;
   @Input() breadcrumbs: any;

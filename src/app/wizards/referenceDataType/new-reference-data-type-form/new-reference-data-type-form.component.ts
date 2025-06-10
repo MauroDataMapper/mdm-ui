@@ -41,13 +41,13 @@ import { ModelPathComponent } from '../../../utility/model-path/model-path.compo
 import { NgIf } from '@angular/common';
 
 export interface NewReferenceDataTypeState {
-  valid: boolean;
+  valid: boolean
   type?:
     | CatalogueItemDomainType.ReferencePrimitiveType
-    | CatalogueItemDomainType.ReferenceEnumerationType;
-  label?: string;
-  description?: string;
-  enumerationValues?: ReferenceDataEnumerationValueCreatePayload[];
+    | CatalogueItemDomainType.ReferenceEnumerationType
+  label?: string
+  description?: string
+  enumerationValues?: ReferenceDataEnumerationValueCreatePayload[]
 }
 
 export const referenceDataEnumerationValuesListValidator = (): ValidatorFn => {
@@ -83,8 +83,8 @@ export class NewReferenceDataTypeFormComponent implements OnInit, OnDestroy {
     type: new FormControl<
       | CatalogueItemDomainType.ReferencePrimitiveType
       | CatalogueItemDomainType.ReferenceEnumerationType
-    >(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    >(null, Validators.required),
+    label: new FormControl('', Validators.required),
     description: new FormControl(''),
     enumerationValues: new FormControl<
       ReferenceDataEnumerationValueCreatePayload[]

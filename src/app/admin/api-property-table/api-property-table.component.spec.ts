@@ -25,7 +25,6 @@ describe('ApiPropertyTableComponent', () => {
     harness = await setupTestModuleForComponent(ApiPropertyTableComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

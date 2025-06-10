@@ -25,7 +25,6 @@ describe('mdm-folders-tree', () => {
     harness = await setupTestModuleForComponent(FoldersTreeComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

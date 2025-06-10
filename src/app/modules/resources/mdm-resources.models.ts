@@ -32,7 +32,7 @@ export interface MdmHttpHandlerOptions {
    *
    * If no value is provided or is undefined, the default value is considered to be `true`.
    */
-  handleGetErrors?: boolean;
+  handleGetErrors?: boolean
 }
 
 export type MdmRestHandlerOptions = RequestSettings & MdmHttpHandlerOptions;

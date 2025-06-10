@@ -25,7 +25,7 @@ describe('ProfileFilterCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ ProfileFilterCardComponent ]
+      imports: [ProfileFilterCardComponent]
     })
     .compileComponents();
 

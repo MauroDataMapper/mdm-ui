@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-export enum  ModelDomainRequestType {
+export enum ModelDomainRequestType {
     folders = 'folder',
     dataModels = 'dataModel',
     dataClasses = 'dataClass',

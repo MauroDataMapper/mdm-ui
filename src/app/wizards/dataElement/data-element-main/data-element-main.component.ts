@@ -148,7 +148,8 @@ export class DataElementMainComponent implements OnInit {
   save = () => {
     if (this.model.createType === 'new') {
       this.saveNewDataElement();
-    } else {
+    }
+ else {
       this.saveCopiedDataClasses();
     }
   };
@@ -173,7 +174,8 @@ export class DataElementMainComponent implements OnInit {
           step.active = true;
           this.changeRef.detectChanges();
         }
-      } else {
+      }
+ else {
         step.active = false;
       }
     }
@@ -185,7 +187,8 @@ export class DataElementMainComponent implements OnInit {
     if (!this.model.showNewInlineDataType) {
       dataType = { id: this.model.dataType.id as string, domainType: CatalogueItemDomainType.DataElement, label: null };
       this.saveDataElement(dataType);
-    } else {
+    }
+ else {
       // Some frontend's domainType are amalgamated
       // in ModelDataType backend's domain state
       // (i.e. terminologyReference and CodeSets both translate
@@ -222,7 +225,7 @@ export class DataElementMainComponent implements OnInit {
             ? this.model.newlyAddedDataType.modelResourceId
             : null,
 
-        classifiers: this.model.classifiers.map((cls) => ({ id: cls.id })),
+        classifiers: this.model.classifiers.map(cls => ({ id: cls.id })),
 
         enumerationValues:
           domainType === CatalogueItemDomainType.EnumerationType

@@ -90,6 +90,7 @@ export class MultipleTermsSelectorComponent {
     searchResultTotal: 0,
     loading: false
   };
+
   loading = false;
 
   searchInputTerms: ElementRef;
@@ -117,7 +118,7 @@ export class MultipleTermsSelectorComponent {
           map((event: any) => {
             return event.target.value;
           }),
-          filter((res) => res.length >= 0),
+          filter(res => res.length >= 0),
           debounceTime(500),
           distinctUntilChanged()
         )
@@ -157,7 +158,8 @@ export class MultipleTermsSelectorComponent {
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
       this.fetch(40, 0);
-    } else {
+    }
+ else {
       this.totalItemCount = 0;
       this.currentRecord = 0;
     }
@@ -193,7 +195,8 @@ export class MultipleTermsSelectorComponent {
           this.currentRecord = this.dataSource.data.length;
           this.loading = false;
           this.isProcessing = false;
-        } else {
+        }
+ else {
           this.dataSource.data = this.selectorSection.searchResult;
           this.currentRecord = this.dataSource.data.length;
           this.isProcessing = false;
@@ -204,8 +207,8 @@ export class MultipleTermsSelectorComponent {
 
   fetch(pageSize: number, offset: number) {
     if (
-      this.selectorSection.termSearchText.length === 0 &&
-      this.selectorSection.selectedTerminology
+      this.selectorSection.termSearchText.length === 0
+      && this.selectorSection.selectedTerminology
     ) {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
       return this.loadAllTerms(
@@ -213,7 +216,8 @@ export class MultipleTermsSelectorComponent {
         pageSize,
         offset
       );
-    } else {
+    }
+ else {
       this.selectorSection.searchResultOffset = offset;
 
       const parameters: CatalogueSearchParameters = {
@@ -256,7 +260,8 @@ export class MultipleTermsSelectorComponent {
             this.currentRecord = this.dataSource.data.length;
             this.loading = false;
             this.isProcessing = false;
-          } else {
+          }
+ else {
             this.dataSource.data = this.selectorSection.searchResult;
             this.currentRecord = this.dataSource.data.length;
             this.isProcessing = false;
@@ -282,8 +287,8 @@ export class MultipleTermsSelectorComponent {
     if (scrollLocation > limit && limit > 0) {
       const requiredNum = this.dataSource.data.length + this.pageSize;
       if (
-        this.totalItemCount + this.pageSize > requiredNum &&
-        !this.isProcessing
+        this.totalItemCount + this.pageSize > requiredNum
+        && !this.isProcessing
       ) {
         this.isProcessing = true;
         this.fetch(this.pageSize, this.dataSource.data.length);
@@ -294,15 +299,17 @@ export class MultipleTermsSelectorComponent {
   calculateDisplayedSoFar(resultTotal: number) {
     this.selectorSection.searchResultTotal = resultTotal;
     if (resultTotal >= this.selectorSection.searchResultPageSize) {
-      const total =
-        (this.selectorSection.searchResultOffset + 1) *
-        this.selectorSection.searchResultPageSize;
+      const total
+        = (this.selectorSection.searchResultOffset + 1)
+          * this.selectorSection.searchResultPageSize;
       if (total >= resultTotal) {
         this.selectorSection.searchResultDisplayedSoFar = resultTotal;
-      } else {
+      }
+ else {
         this.selectorSection.searchResultDisplayedSoFar = total;
       }
-    } else {
+    }
+ else {
       this.selectorSection.searchResultDisplayedSoFar = resultTotal;
     }
   }
@@ -315,7 +322,8 @@ export class MultipleTermsSelectorComponent {
       this.selectorSection.selectedTermsArray = [];
       this.selectorSection.selectedTermsArray = Object.assign([], local);
       this.selectorSection.selectedTermsCount++;
-    } else {
+    }
+ else {
       let i = this.selectorSection.selectedTermsArray.length - 1;
       while (i >= 0) {
         if (this.selectorSection.selectedTermsArray[i].id === $item.id) {

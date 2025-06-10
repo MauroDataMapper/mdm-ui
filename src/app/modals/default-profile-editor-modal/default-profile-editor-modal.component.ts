@@ -61,7 +61,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   dataTypeErrors: string;
   showNewInlineDataType = false;
   pagination: McSelectPagination;
-  newDataTypeHasErrors  = false;
+  newDataTypeHasErrors = false;
   constructor(
     public dialogRef: MatDialogRef<
       DefaultProfileEditorModalComponent,
@@ -78,6 +78,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
   }
+
   ngOnInit(): void {}
 
   save() {
@@ -97,7 +98,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
           this.multiplicityError = valResult;
           hasError = true;
         }
-      } else if (item.controlType === ProfileControlTypes.dataType) {
+      }
+ else if (item.controlType === ProfileControlTypes.dataType) {
         hasError = this.newDataTypeHasErrors;
       }
     });
@@ -118,7 +120,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     });
   }
 
-  fetchDataTypes = (text, loadAll, offset:number, limit:number) => {
+  fetchDataTypes = (text, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -161,8 +163,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
     if (this.newDataTypeHasErrors) {
       this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
+      this.dataTypeErrors
+        = 'Please fill in all required values for the new Data Type';
     }
   }
 

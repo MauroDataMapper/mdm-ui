@@ -26,20 +26,20 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { NgIf } from '@angular/common';
 
 export interface AddRuleModalConfig {
-  name: string;
-  description?: string;
-  title?: string;
-  message?: string;
-  okBtnTitle?: string;
-  cancelBtnTitle?: string;
-  cancelShown?: boolean;
-  btnType?: string;
+  name: string
+  description?: string
+  title?: string
+  message?: string
+  okBtnTitle?: string
+  cancelBtnTitle?: string
+  cancelShown?: boolean
+  btnType?: string
 }
 
 export interface AddRuleModalResult {
-  status: ModalDialogStatus;
-  name?: string;
-  description?: string;
+  status: ModalDialogStatus
+  name?: string
+  description?: string
 }
 
 @Component({
@@ -57,7 +57,7 @@ export class AddRuleModalComponent implements OnInit {
   message: string;
 
   formGroup = new FormGroup({
-    name: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    name: new FormControl('', Validators.required),
     description: new FormControl('')
   });
 

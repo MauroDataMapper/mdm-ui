@@ -19,6 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 export type AlertStyle = 'none' | 'success' | 'info' | 'warning' | 'error';
 
 export interface AlertStyleMetadata {
-  icon: string;
-  cssModifier: string;
+  icon: string
+  cssModifier: string
 }

@@ -69,25 +69,27 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   totalSelectedItemsCount: number;
   filter: object;
   step: {
-    invalid : boolean;
-    isProcessComplete : boolean;
-    scope : {
+    invalid: boolean
+    isProcessComplete: boolean
+    scope: {
        model: {
-        [key: string]: any;
-        createType: CreateType;
-        selectedDataTypes: any[];
-        parent:DataModel;
-        copyFromDataModel: DataModel[];
-      };
-    };
+        [key: string]: any
+        createType: CreateType
+        selectedDataTypes: any[]
+        parent: DataModel
+        copyFromDataModel: DataModel[]
+      }
+    }
   };
+
   model: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: any[];
-    parent:DataModel;
-    copyFromDataModel: DataModel[];
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: any[]
+    parent: DataModel
+    copyFromDataModel: DataModel[]
   };
+
   scope: any;
   defaultCheckedMap: any;
   loaded = false;
@@ -140,19 +142,19 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
-  validationStatusEmitter($event : string) {
+  validationStatusEmitter($event: string) {
     this.step.invalid = JSON.parse($event);
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe((x) => {
       this.validate(x);
     });
   }
 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after each backend call
-  dataTypesFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters: Record<string, any>) {
+  dataTypesFetch(pageSize: number, pageIndex: number, sortBy: string, sortType: SortDirection, filters: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
@@ -190,7 +192,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
             this.isLoadingResults = false;
             return [];
           })
-        ).subscribe(data => {
+        ).subscribe((data) => {
           this.recordsDataTypes = data;
           this.dataSourceDataTypes.data = this.recordsDataTypes;
 
@@ -224,7 +226,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     // If all the records on the current page are selected, check the "Check All" checkbox
     if (currentPageSelectedItemsNum === this.paginator.toArray()[0].pageSize) {
       this.isAllChecked = true;
-    } else {
+    }
+ else {
       this.isAllChecked = false;
     }
   }
@@ -240,12 +243,13 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   };
 
   onCheckAll = () => {
-    this.recordsDataTypes.forEach(element => {
+    this.recordsDataTypes.forEach((element) => {
       element.checked = this.checkAllCheckbox;
 
       if (this.checkAllCheckbox) {
         this.model.selectedDataTypes.push(element);
-      } else {
+      }
+ else {
         const currentId = element.id;
         const index = this.model.selectedDataTypes.findIndex(r => r.id === currentId);
         if (index !== -1) {
@@ -263,7 +267,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   onCheck(record) {
     if (record.checked) {
       this.model.selectedDataTypes.push(record);
-    } else {
+    }
+ else {
       const index = this.model.selectedDataTypes.findIndex((r) => {
         return r.id === record.id;
       });
@@ -343,11 +348,11 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        switch(this.model.createType) {
+        switch (this.model.createType) {
           case 'copy': return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
           case 'import': return this.resourceService.dataModel.importDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
         }
-      }).catch(error => {
+      }).catch((error) => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);
         this.finalResult[dc.id] = { result: errorText, hasError: true };

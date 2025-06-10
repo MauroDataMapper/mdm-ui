@@ -41,21 +41,21 @@ export interface TestModuleConfiguration {
   /**
    * Provide an optional list of additional component declarations.
    */
-  declarations?: any[];
+  declarations?: any[]
 
   /**
    * Provide an optional list of additional component/module imports.
    */
-  imports?: any[];
+  imports?: any[]
 
   /**
    * Provide an optional list of additional providers to use for dependency injection.
    */
-  providers?: any[];
+  providers?: any[]
 }
 
 export interface TestComponentConfiguration {
-  detectChangesOnCreation?: boolean;
+  detectChangesOnCreation?: boolean
 }
 
 /**
@@ -79,11 +79,11 @@ export class ComponentHarness<T> {
 }
 
 interface MdmApiPropertiesStub {
-  listPublic: jest.Mock;
+  listPublic: jest.Mock
 }
 
 interface MdmResourcesServiceStub {
-  apiProperties: MdmApiPropertiesStub;
+  apiProperties: MdmApiPropertiesStub
 }
 
 const resourcesStub: MdmResourcesServiceStub = {
@@ -94,7 +94,6 @@ const resourcesStub: MdmResourcesServiceStub = {
 
 resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-
 /**
  * Setup the test module for working with a service.
  *
@@ -104,15 +103,13 @@ resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
  * @returns A new instance of the service under test.
  */
 export const setupTestModuleForService = <T>(service: Type<T>, configuration?: TestModuleConfiguration): T => {
-
   const hasCustomResourcesProvider = configuration?.providers?.some(
     p => (p as any)?.provide === MdmResourcesService
-  )|| service === MdmResourcesService;
+  ) || service === MdmResourcesService;
 
   const hasCustomSecurityHandlerService = configuration?.providers?.some(
     p => (p as any)?.provide === SecurityHandlerService
   ) || service === SecurityHandlerService;
-
 
   TestBed.configureTestingModule({
     imports: [
@@ -121,16 +118,16 @@ export const setupTestModuleForService = <T>(service: Type<T>, configuration?: T
       UIRouterModule.forRoot({
         useHash: true,
         states: [
-          ... pageRoutes.states,
-          ... userPageRoutes.states,
-          ... adminPageRoutes.states
+          ...pageRoutes.states,
+          ...userPageRoutes.states,
+          ...adminPageRoutes.states
         ],
         config: routerConfigFn
       }),
 
     ],
     providers: [
-    ... configuration?.providers ?? [],
+    ...configuration?.providers ?? [],
     ...(!hasCustomResourcesProvider
       ? [{
         provide: MdmResourcesService,
@@ -162,7 +159,6 @@ export const setupTestModuleForComponent = async <T>(
   componentType: Type<T>,
   moduleConfig?: TestModuleConfiguration,
   componentConfig?: TestComponentConfiguration) => {
-
   const isStandalone = (componentType as any).ɵcmp?.standalone === true;
 
   if (!(componentType as any).ɵcmp) {
@@ -177,15 +173,15 @@ export const setupTestModuleForComponent = async <T>(
     .configureTestingModule({
       imports: [
         MdmResourcesModule.forRoot({
-          defaultHttpRequestOptions: {withCredentials: true},
+          defaultHttpRequestOptions: { withCredentials: true },
           apiEndpoint: environment.apiEndpoint
         }),
         UIRouterModule.forRoot({
           useHash: true,
           states: [
-            ... pageRoutes.states,
-            ... userPageRoutes.states,
-            ... adminPageRoutes.states
+            ...pageRoutes.states,
+            ...userPageRoutes.states,
+            ...adminPageRoutes.states
           ],
           config: routerConfigFn
         }),
@@ -196,7 +192,7 @@ export const setupTestModuleForComponent = async <T>(
         MatDialogModule
       ],
       providers: [
-        ... moduleConfig?.providers ?? [],
+        ...moduleConfig?.providers ?? [],
         ...(!hasCustomResourcesProvider
           ? [{
             provide: MdmResourcesService,

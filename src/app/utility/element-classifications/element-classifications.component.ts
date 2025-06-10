@@ -69,6 +69,7 @@ export class ElementClassificationsComponent implements OnInit {
       });
     }
   }
+
   getAllClassifications() {
     this.resourceService.classifier
       .list({ all: true })
@@ -78,7 +79,7 @@ export class ElementClassificationsComponent implements OnInit {
         if (this.classifications !== undefined) {
           this.classifications.forEach((classification) => {
             const selected = this.allClassifications.find(
-              (c) => c.id === classification.id
+              c => c.id === classification.id
             );
             selectedList.push(selected);
           });
@@ -86,6 +87,7 @@ export class ElementClassificationsComponent implements OnInit {
         }
       });
   }
+
   onModelChanged() {
     this.classificationsChanged.emit(this.selectedClassification);
   }

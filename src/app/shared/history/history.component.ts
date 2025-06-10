@@ -51,6 +51,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @Input() parent: any;
   @Input() parentType: string;
   @Input() parentId: string;
@@ -66,6 +67,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     'title',
     'description'
   ];
+
   totalItemCount = 0;
   parentVal;
   parentTypeVal;
@@ -86,7 +88,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   public getSortedData(
     pageSize?: number,
     pageIndex?: number,
-    filters?: {},
+    filters?: object,
     sortBy?: string,
     sortType?: SortDirection
   ) {
@@ -143,7 +145,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     pageOffset: number,
     sortBy: string,
     sortType: SortDirection,
-    filters?: {}
+    filters?: object
   ): any {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -159,8 +161,9 @@ export class HistoryComponent implements OnInit, AfterViewInit {
         this.parentId,
         options
       );
-    } else
-    if (this.parent?.id){
+    }
+ else
+    if (this.parent?.id) {
       return this.resourcesService.edit.status(
         this.domainType,
         this.parent.id as string,

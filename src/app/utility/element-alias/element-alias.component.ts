@@ -38,7 +38,6 @@ export class ElementAliasComponent {
 
   constructor() { }
 
-
   remove(element) {
     const index = this.aliases.findIndex(alias => alias === element);
     if (index !== -1) {
@@ -56,7 +55,8 @@ export class ElementAliasComponent {
           return;
         }
       }
-    } else {
+    }
+ else {
       this.aliases = [];
     }
     this.aliases.push(this.typedAlias);

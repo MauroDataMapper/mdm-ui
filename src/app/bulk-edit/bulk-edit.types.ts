@@ -33,21 +33,21 @@ export enum BulkEditStep {
 }
 
 export class BulkEditContext {
-  rootItem: MauroIdentifier;
-  childDomainType?: CatalogueItemDomainType;
-  childItems: MauroItem[];
-  profiles: ProfileSummary[];
+  rootItem: MauroIdentifier
+  childDomainType?: CatalogueItemDomainType
+  childItems: MauroItem[]
+  profiles: ProfileSummary[]
 }
 
 export interface BulkEditProfileContext {
-  displayName: string;
-  profileProvider: ProfileProvider;
-  identifiers: MauroIdentifier[];
-  editedProfiles: Profile[];
+  displayName: string
+  profileProvider: ProfileProvider
+  identifiers: MauroIdentifier[]
+  editedProfiles: Profile[]
 }
 
 export interface BulkEditDataRow {
-  [key: string]: any;
-  label: string;
-  profile: NavigatableProfile;
+  [key: string]: any
+  label: string
+  profile: NavigatableProfile
 }

@@ -32,7 +32,7 @@ export class SharedService {
   appVersion = environment.version;
   appTitle = environment.appTitle;
   issueReporting = environment.issueReporting;
-  documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
+  documentation: { url: string, pages: { [key: string]: string }, importers: { [key: string]: string } } = environment.documentation;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
   // isAdmin;
@@ -54,8 +54,7 @@ export class SharedService {
     this.securityHandler.logout();
   }
 
-  handleRequiredToLogin()
-  {
+  handleRequiredToLogin() {
     this.securityHandler.loginRequired();
     this.toaster.info('Please log in to continue.');
   }

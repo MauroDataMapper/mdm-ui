@@ -31,20 +31,20 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, ElementLinkComponent, MatRadioGroup, FormsModule, MatRadioButton, ModelSelectorTreeComponent]
 })
 export class DataTypeStep1Component implements OnInit {
-
   step: {
-    invalid : boolean;
-    isProcessComplete : boolean;
-    scope : {
+    invalid: boolean
+    isProcessComplete: boolean
+    scope: {
        model: {
-        [key: string]: any;
-        createType: CreateType;
-      };
-    };
+        [key: string]: any
+        createType: CreateType
+      }
+    }
   };
+
   modelVal: {
-    [key: string]: any;
-    createType: CreateType;
+    [key: string]: any
+    createType: CreateType
   };
 
   constructor() { }
@@ -76,7 +76,7 @@ export class DataTypeStep1Component implements OnInit {
     this.step.invalid = false;
   };
 
-  selectCreateType = createType => {
+  selectCreateType = (createType) => {
     this.model.createType = createType;
     this.validate();
   };
@@ -86,5 +86,4 @@ export class DataTypeStep1Component implements OnInit {
     this.model.copyFromDataModel = dataType;
     this.validate();
   };
-
 }

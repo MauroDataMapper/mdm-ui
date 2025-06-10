@@ -133,8 +133,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
 
   get allowAutocompleteSearch() {
     return (
-      this.rootElement &&
-      this.resources.getSearchableResource(this.rootElement.domainType)
+      this.rootElement
+      && this.resources.getSearchableResource(this.rootElement.domainType)
     );
   }
 
@@ -174,7 +174,6 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   }
 
   onHtmlEditorKeydown(event: KeyboardEvent) {
-
     if (this.rootElement && event.ctrlKey && event.code === 'Space') {
       event.stopPropagation();
       this.onElementSearch(this, event.target);
@@ -218,7 +217,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     component.dialog
       .openElementSearch(component.rootElement)
       .afterClosed()
-      .pipe(filter((response) => !!response?.selected))
+      .pipe(filter(response => !!response?.selected))
       .subscribe((response) => {
         component.createAndInsertLink(
           component,
@@ -235,8 +234,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     focusNode: any,
     element: MauroItem & Pathable
   ) {
-    const path =
-      element.path ?? component.pathNames.createFromBreadcrumbs(element);
+    const path
+      = element.path ?? component.pathNames.createFromBreadcrumbs(element);
 
     // Need to do this for NHS England, local paths should be used so that links can be maintained within the context of the branches
     // they live under
@@ -282,15 +281,15 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
 
     if (!this.allowAutocompleteSearch) {
       // Remove toolbar option for autocomplete search if no root element is available
-      buttons = buttons.filter((b) => b !== 'component:searchelement');
+      buttons = buttons.filter(b => b !== 'component:searchelement');
     }
 
     // Map all button names in array except for custom buttons - identified by "component:[name]" syntax
     // These will then reference functions/properties from this component object
     return buttons.map(
-      (button) =>
-        customButtons.find((custom) => `component:${custom.name}` === button) ||
-        button
+      button =>
+        customButtons.find(custom => `component:${custom.name}` === button)
+        || button
     );
   }
 

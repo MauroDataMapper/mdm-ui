@@ -21,27 +21,26 @@ import * as marked from 'marked';
   providedIn: 'root'
 })
 export class CustomTextRendererService extends marked.Renderer {
-
   constructor() {
     super();
   }
 
   // render just the text of a link
-  code = (code:string) => {
+  code = (code: string) => {
     return code;
   };
 
-  codespan = (code:string) => {
+  codespan = (code: string) => {
     return code;
   };
 
   // render just the text of a link
-  strong = (text:string) => {
+  strong = (text: string) => {
     return text;
   };
 
   // render just the text of a link
-  link = (href:string, title:string, text:string) => {
+  link = (href: string, title: string, text: string) => {
     return text;
   };
 
@@ -50,12 +49,12 @@ export class CustomTextRendererService extends marked.Renderer {
   };
 
   // render just the text of a paragraph
-  paragraph = (text:string) => {
+  paragraph = (text: string) => {
     return `${this.htmlEscapeToText(text)}\\r\\n`;
   };
 
   // render just the text of a heading element, but indicate level
-  heading = (text:string) => {
+  heading = (text: string) => {
     return text;
   };
 
@@ -76,15 +75,13 @@ export class CustomTextRendererService extends marked.Renderer {
   };
 
   // &#63; to ? helper
-  public htmlEscapeToText(text:string) {
-    // eslint-disable-next-line no-useless-escape
+  public htmlEscapeToText(text: string) {
     return text.replace(/\&\#[0-9]*;|&amp;/g, (escapeCode) => {
       if (escapeCode.match(/amp/)) {
         return '&';
       }
 
-      return String.fromCharCode(parseInt(escapeCode.match(/[0-9]+/)[1],10));
+      return String.fromCharCode(parseInt(escapeCode.match(/[0-9]+/)[1], 10));
     });
   }
-
 }

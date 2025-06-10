@@ -43,7 +43,7 @@ describe('ApiKeysModalComponent', () => {
          MatButtonModule,
          ApiKeysModalComponent
        ],
-       providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }]
+       providers: [{ provide: MatDialogRef, useValue: {} }, { provide: MAT_DIALOG_DATA, useValue: {} }]
     })
     .compileComponents();
   }));

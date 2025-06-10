@@ -73,7 +73,6 @@ export class ElementLinkComponent implements OnInit {
     this.ngOnInit();
   }
 
-
   constructor(
     private elementTypes: ElementTypesService,
     private itemProvider: MauroItemProviderService
@@ -104,13 +103,13 @@ export class ElementLinkComponent implements OnInit {
     }
 
     if (
-      this.showParentDataModelName &&
-      this.element?.domainType !== 'DataModel' &&
-      this.element?.domainType !== 'Term' &&
-      this.element?.domainType !== 'Terminology'
+      this.showParentDataModelName
+      && this.element?.domainType !== 'DataModel'
+      && this.element?.domainType !== 'Term'
+      && this.element?.domainType !== 'Terminology'
     ) {
-      const parentDM =
-        this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
+      const parentDM
+        = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
 
@@ -129,7 +128,7 @@ export class ElementLinkComponent implements OnInit {
             }`;
           })
         )
-        .subscribe((fullLabel) => (this.label = fullLabel));
+        .subscribe(fullLabel => (this.label = fullLabel));
     }
     this.initTypeLabel();
     this.initLink();
@@ -140,12 +139,12 @@ export class ElementLinkComponent implements OnInit {
     this.elementTypeTitle = '';
     this.types = this.elementTypes.getTypes();
     if (
-      this.element &&
-      this.element.domainType &&
-      this.types.filter((x) => x.id === this.element.domainType)
+      this.element
+      && this.element.domainType
+      && this.types.filter(x => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        (x) => x.id === this.element.domainType
+        x => x.id === this.element.domainType
       )[0].title;
     }
   }
@@ -157,19 +156,18 @@ export class ElementLinkComponent implements OnInit {
     }
     // if it's true or it's NOT mentioned then make it true
     if (
-      this.showLink === true ||
-      this.showLink ||
-      this.showLink === undefined
+      this.showLink === true
+      || this.showLink
+      || this.showLink === undefined
     ) {
       this.showLink = true;
     }
   }
 
   getIcon() {
-    if(this.element) {
+    if (this.element) {
       return getCatalogueItemDomainTypeIcon(this.element.domainType as CatalogueItemDomainType);
     }
     return null;
   }
-
 }

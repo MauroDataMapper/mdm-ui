@@ -40,8 +40,8 @@ import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loadin
 import { UIRouterModule } from '@uirouter/angular';
 import { NavbarComponent } from '@mdm/navbar/navbar.component';
 
-const defaultCopyright =
-  'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
+const defaultCopyright
+  = 'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
     selector: 'mdm-root',
@@ -111,7 +111,7 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe(([args]) => {
         // To remove any ngToast messages specifically sessionExpiry,...
-        this.toastr.toasts.forEach((x) => this.toastr.clear(x.toastId));
+        this.toastr.toasts.forEach(x => this.toastr.clear(x.toastId));
         if (args && args.nextRoute) {
           this.stateHandler.Go(
             args.nextRoute,
@@ -141,12 +141,12 @@ export class AppComponent implements OnInit, OnDestroy {
         map((apiProperties: ApiProperty[]) => {
           return {
             copyright: apiProperties.find(
-              (p) => p.key === 'content.footer.copyright'
+              p => p.key === 'content.footer.copyright'
             ),
             documentationUrl: this.shared.documentation?.url,
             issueReportingUrl:
-              this.features.useIssueReporting &&
-              this.shared.issueReporting?.defaultUrl
+              this.features.useIssueReporting
+              && this.shared.issueReporting?.defaultUrl
           };
         })
       )
@@ -186,8 +186,8 @@ export class AppComponent implements OnInit, OnDestroy {
         const now = new Date();
 
         if (
-          now.valueOf() - this.lastUserIdleCheck.valueOf() >
-          this.shared.checkSessionExpiryTimeout
+          now.valueOf() - this.lastUserIdleCheck.valueOf()
+          > this.shared.checkSessionExpiryTimeout
         ) {
           this.shared.handleExpiredSession();
           this.userIdle.resetTimer();

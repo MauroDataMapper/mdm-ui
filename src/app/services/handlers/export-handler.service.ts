@@ -71,7 +71,7 @@ export class ExportHandlerService {
     type: ModelDomain,
     options?: ExportQueryParameters
   ): Observable<HttpResponse<ArrayBuffer>> {
-    const ids = models.map((model) => model.id);
+    const ids = models.map(model => model.id);
     const resource = this.resources.getExportableResource(type);
     const requestSettings = { responseType: 'arraybuffer' };
 

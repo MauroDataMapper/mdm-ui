@@ -22,7 +22,6 @@ import { environment } from '@env/environment';
   providedIn: 'root'
 })
 export class EnvironmentService {
-
   readonly themeName?: string = environment?.themeName;
 
   constructor() { }

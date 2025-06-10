@@ -25,7 +25,6 @@ describe('McDataSetMetadataComponent', () => {
     harness = await setupTestModuleForComponent(McDataSetMetadataComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

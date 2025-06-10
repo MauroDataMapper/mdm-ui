@@ -84,7 +84,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.isLoggedIn = true;
         this.securityHandler
           .isAdministrator()
-          .subscribe((state) => (this.isAdministrator = state));
+          .subscribe(state => (this.isAdministrator = state));
       });
 
     this.broadcast
@@ -98,7 +98,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.securityHandler
       .isAdministrator()
-      .subscribe((state) => (this.isAdministrator = state));
+      .subscribe(state => (this.isAdministrator = state));
 
     if (this.isLoggedIn) {
       this.profile = this.securityHandler.getCurrentUser();
@@ -140,13 +140,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .listPublic()
       .pipe(
         map((response: ApiPropertyIndexResponse) =>
-          response.body.items.filter((p) => p.key.startsWith('theme.logo.'))
+          response.body.items.filter(p => p.key.startsWith('theme.logo.'))
         ),
         catchError(() => [])
       )
       .subscribe((properties: ApiProperty[]) => {
-        const logoUrl = properties.find((p) => p.key === 'theme.logo.url');
-        const logoWidth = properties.find((p) => p.key === 'theme.logo.width');
+        const logoUrl = properties.find(p => p.key === 'theme.logo.url');
+        const logoWidth = properties.find(p => p.key === 'theme.logo.width');
 
         if (logoUrl) {
           this.logoUrl = logoUrl.value;
@@ -192,6 +192,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   forgottenPassword = () => {
     this.dialog.open(ForgotPasswordModalComponent, {});
   };
+
   register = () => {
     const dialog = this.dialog.open(RegisterModalComponent, {
       panelClass: 'register-modal'

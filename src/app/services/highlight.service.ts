@@ -38,7 +38,6 @@ declare let prism: any;
 
 @Injectable()
 export class HighlightService {
-
     constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
     highlightAll() {

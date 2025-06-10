@@ -45,7 +45,7 @@ const editableRouteNames = [
 ];
 
 export interface EditableObject {
-  inEdit?: boolean;
+  inEdit?: boolean
 }
 
 /**
@@ -97,7 +97,7 @@ export class EditingService {
       return;
     }
 
-    this._isEditing = items.some((item) => item.inEdit);
+    this._isEditing = items.some(item => item.inEdit);
   }
 
   /**
@@ -255,6 +255,6 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-      .pipe(map((result) => result.status === ModalDialogStatus.Ok));
+      .pipe(map(result => result.status === ModalDialogStatus.Ok));
   }
 }

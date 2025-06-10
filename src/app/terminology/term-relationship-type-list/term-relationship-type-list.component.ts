@@ -74,6 +74,7 @@ export class TermRelationshipTypeListComponent
   relationshipTypes: MdmTableDataSource<
     TermRelationshipType
   > = new MdmTableDataSource();
+
   isLoadingResults = false;
   reloadEvent = new EventEmitter<string>();
   totalItemCount = 0;

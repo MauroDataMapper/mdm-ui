@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import {setupZoneTestEnv} from 'jest-preset-angular/setup-env/zone';
+import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 
 setupZoneTestEnv();
 global.URL.createObjectURL = jest.fn();

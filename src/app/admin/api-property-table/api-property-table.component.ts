@@ -51,9 +51,9 @@ import { MatOption } from '@angular/material/core';
 import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ApiPropertyTableViewChange {
-  category?: string;
-  sortBy?: string;
-  sortType?: SortDirection;
+  category?: string
+  sortBy?: string
+  sortType?: SortDirection
 }
 
 @Component({
@@ -171,7 +171,8 @@ export class ApiPropertyTableComponent
 
         if (record.metadata.requiresReload) {
           this.stateHandler.reload();
-        } else {
+        }
+ else {
           this.viewChange.emit({
             category: this.selectedCategory,
             sortBy: this.sort.active,

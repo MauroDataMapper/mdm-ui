@@ -57,7 +57,7 @@ export class DataTypeMainComponent implements OnInit {
     },
     parentDataModel: { id: '' },
     dataType: {
-      label : '',
+      label: '',
       description: '',
       organisation: '',
       domainType: CatalogueItemDomainType.PrimitiveType,
@@ -71,6 +71,7 @@ export class DataTypeMainComponent implements OnInit {
     } as DataType,
     isProcessComplete: false
   };
+
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
@@ -125,7 +126,8 @@ export class DataTypeMainComponent implements OnInit {
   save = () => {
     if (this.model.createType === 'new') {
       this.saveNewDataType();
-    } else {
+    }
+ else {
       this.saveCopiedDataTypes();
     }
   };
@@ -140,7 +142,8 @@ export class DataTypeMainComponent implements OnInit {
           }
           step.active = true;
         }
-      } else {
+      }
+ else {
         step.active = false;
       }
     }
@@ -162,8 +165,8 @@ export class DataTypeMainComponent implements OnInit {
     if (domainType === CatalogueItemDomainType.ModelDataType) {
       resource.modelResourceDomainType = this.model.dataType.modelResourceDomainType;
       resource.modelResourceId = this.model.dataType.modelResourceId;
-
-    } else {
+    }
+ else {
       /*
       resource.id = this.model.dataType.referencedDataType
         ? this.model.dataType.referencedDataType.id

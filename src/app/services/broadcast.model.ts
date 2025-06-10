@@ -57,7 +57,7 @@ export interface UserLoggedInBroadcastData {
   /**
    * The next UI route to navigate to after logging in.
    */
-  nextRoute: string;
+  nextRoute: string
 }
 
 /**
@@ -67,7 +67,7 @@ export interface CatalogueTreeNodeSelectedBroadcastData {
   /**
    * The node that was selected.
    */
-  node: FlatNode;
+  node: FlatNode
 }
 
 /**
@@ -77,20 +77,20 @@ export interface ApiPropertyUpdatedBroadcastData {
   /**
    * The key of the property updated.
    */
-  key: string;
+  key: string
 
   /**
    * The value of the property updated.
    */
-  value: string;
+  value: string
 
   /**
    * State if the update involved deleting the API property.
    */
-  deleted?: boolean;
+  deleted?: boolean
 }
 
 export interface FavouritesUpdatedBroadcastData {
-  name: 'add' | 'remove';
-  element: CatalogueItem;
+  name: 'add' | 'remove'
+  element: CatalogueItem
 }

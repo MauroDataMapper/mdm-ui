@@ -97,13 +97,13 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
+    ).subscribe((data) => {
       this.records = data;
       this.dataSource.data = this.records;
     });
   }
 
-  groupsFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:Record<string, any>): Observable<any> {
+  groupsFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourcesService.userGroups.list(options);
@@ -126,23 +126,23 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  editUser(row:any) {
+  editUser(row: any) {
     if (row) {
       this.stateHandlerService.Go('admin.group', { id: row.id }, null);
     }
   }
 
-  deleteUser(row:any) {
+  deleteUser(row: any) {
     this.resourcesService.userGroups.remove(row.id as string).subscribe(() => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
-      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
+      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe((data) => {
         this.records = data.body.items;
         this.totalItemCount = data.body.count;
         this.dataSource.data = this.records;
-      }, err => {
+      }, (err) => {
         this.messageHandlerService.showError('There was a problem loading the groups.', err);
       });
-    }, err => {
+    }, (err) => {
       this.messageHandlerService.showError('There was a problem deleting the group.', err);
     });
   }

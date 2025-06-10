@@ -93,8 +93,8 @@ export class FavouritesComponent implements OnInit, OnDestroy {
     this.itemProvider
       .getMany(identifiers)
       .pipe(
-        map((items) => this.cleanUnusedFavourites(items)),
-        map((items) => items.sort((a, b) => a.label.localeCompare(b.label))),
+        map(items => this.cleanUnusedFavourites(items)),
+        map(items => items.sort((a, b) => a.label.localeCompare(b.label))),
         finalize(() => (this.reloading = false))
       )
       .subscribe((items) => {
@@ -117,9 +117,9 @@ export class FavouritesComponent implements OnInit, OnDestroy {
     // Identify catalogue items that were favourites but have been removed from the catalogue
     // Then clear them from the user favourites to not be issues anymore
     items
-      .filter((item) => item.error)
-      .forEach((item) => this.favouriteHandler.remove(item));
+      .filter(item => item.error)
+      .forEach(item => this.favouriteHandler.remove(item));
 
-    return items.filter((item) => !item.error);
+    return items.filter(item => !item.error);
   }
 }

@@ -31,13 +31,13 @@ import { NgIf, NgFor, NgClass } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 
 interface LocationPathItem {
-  label: string;
-  href: string;
-  branchName?: string;
-  modelVersion?: string;
-  modelVersionTag?: string;
-  domainType?: string;
-  icon?: string;
+  label: string
+  href: string
+  branchName?: string
+  modelVersion?: string
+  modelVersionTag?: string
+  domainType?: string
+  icon?: string
 }
 
 @Component({
@@ -61,8 +61,8 @@ export class LocationPathComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.ancestorTreeItems) {
-      this.items =
-        this.ancestorTreeItems?.map((ancestor) => {
+      this.items
+        = this.ancestorTreeItems?.map((ancestor) => {
           return {
             label: ancestor.label,
             href: this.pathName.createHref(ancestor.path),
@@ -70,7 +70,7 @@ export class LocationPathComponent implements OnInit, OnChanges {
             modelVersion: ancestor.modelVersion,
             modelVersionTag: ancestor.modelVersionTag,
             domainType: ancestor.domainType,
-            icon: ancestor.domainType?getCatalogueItemDomainTypeIcon(ancestor.domainType):null
+            icon: ancestor.domainType ? getCatalogueItemDomainTypeIcon(ancestor.domainType) : null
           };
         }) ?? [];
 

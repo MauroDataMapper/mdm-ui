@@ -26,7 +26,6 @@ describe('ApiKeysComponent', () => {
     harness = await setupTestModuleForComponent(ApiKeysComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

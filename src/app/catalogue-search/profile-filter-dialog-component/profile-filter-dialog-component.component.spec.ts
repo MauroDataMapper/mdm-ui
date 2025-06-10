@@ -46,7 +46,6 @@ describe('ProfileFilterDialogComponent', () => {
   };
   resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [

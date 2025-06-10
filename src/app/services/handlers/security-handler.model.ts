@@ -29,7 +29,6 @@ export enum SignInErrorType {
  * Represents an error that occurred during sign-in.
  */
 export class SignInError extends MdmResourcesError {
-
   /**
    * The type of sign-in error that occurered, represented by the `SignInErrorType` enum constants.
    */
@@ -55,7 +54,6 @@ export class SignInError extends MdmResourcesError {
  * Represents an error that occurred during a check for an authenticated session.
  */
  export class AuthenticatedSessionError extends MdmResourcesError {
-
   readonly invalidated: boolean;
 
   constructor(response: HttpErrorResponse) {
@@ -69,12 +67,12 @@ export class SignInError extends MdmResourcesError {
  * Represents the common details of a signed in user.
  */
 export interface UserDetails {
-  id: string;
-  token?: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  role?: string;
-  needsToResetPassword?: boolean;
+  id: string
+  token?: string
+  firstName: string
+  lastName: string
+  userName: string
+  email: string
+  role?: string
+  needsToResetPassword?: boolean
 }

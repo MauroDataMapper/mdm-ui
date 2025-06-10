@@ -110,7 +110,7 @@ export class MauroItemRemoveService {
       return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   private removeDataModel(

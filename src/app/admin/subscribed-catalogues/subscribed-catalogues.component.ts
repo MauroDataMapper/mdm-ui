@@ -99,7 +99,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = false;
           return data.body.items;
         }),
-        catchError(error => {
+        catchError((error) => {
           this.isLoadingResults = false;
           this.messageHandler.showError('There was a problem loading the subscribed catalogues.', error);
           return [];

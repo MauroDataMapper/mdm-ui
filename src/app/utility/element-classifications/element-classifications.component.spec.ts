@@ -25,7 +25,6 @@ describe('ElementClassificationsComponent', () => {
     harness = await setupTestModuleForComponent(ElementClassificationsComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

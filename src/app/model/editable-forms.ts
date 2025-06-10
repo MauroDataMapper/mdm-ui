@@ -26,18 +26,17 @@ export interface Resetable<T> {
   /**
    * Resets this object using the original object provided.
    */
-  reset(original: T): void;
+  reset(original: T): void
 }
 
 export class EditableRecord<T, E> implements EditableObject {
-
   isNew: boolean;
   inEdit: boolean;
 
   constructor(
     public source: T,
     public edit: E,
-    settings: { isNew: boolean; inEdit: boolean }) {
+    settings: { isNew: boolean, inEdit: boolean }) {
     this.isNew = settings.isNew;
     this.inEdit = settings.inEdit;
   }

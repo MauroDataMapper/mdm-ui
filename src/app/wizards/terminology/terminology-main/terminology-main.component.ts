@@ -53,9 +53,9 @@ export class TerminologyMainComponent implements OnInit {
   parentFolder: Container;
   savingInProgress = false;
   setupForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
+    author: new FormControl(''),
+    organisation: new FormControl(''),
     description: new FormControl(''),
     classifiers: new FormControl([])
   });

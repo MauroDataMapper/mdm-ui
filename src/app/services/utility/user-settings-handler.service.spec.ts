@@ -19,16 +19,13 @@ import { UserSettingsHandlerService } from './user-settings-handler.service';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('UserSettingsHandlerService', () => {
-
   let service: UserSettingsHandlerService;
 
-  beforeEach( async() => {
-
+  beforeEach(async () => {
     service = setupTestModuleForService(UserSettingsHandlerService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

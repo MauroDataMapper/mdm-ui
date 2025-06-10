@@ -118,7 +118,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
         this.unauthorisedCount = resp.body.countUnauthorised;
         this.dataSource.data = this.records;
       },
-      (err:any) => {
+      (err: any) => {
         this.messageHandler.showError(
           'There was a problem loading the active sessions.',
           err
@@ -129,9 +129,9 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
   isToday(date: Date) {
     const today = new Date();
-    return today.getUTCFullYear() === date.getUTCFullYear() &&
-      today.getUTCMonth() === date.getUTCMonth() &&
-      today.getUTCDate() === date.getUTCDate();
+    return today.getUTCFullYear() === date.getUTCFullYear()
+      && today.getUTCMonth() === date.getUTCMonth()
+      && today.getUTCDate() === date.getUTCDate();
   }
 
   filterClick = () => {

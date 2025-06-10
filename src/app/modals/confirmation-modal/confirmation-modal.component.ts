@@ -23,16 +23,16 @@ import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export interface ConfirmationModalConfig {
-  title?: string;
-  message: string;
-  okBtnTitle?: string;
-  cancelBtnTitle?: string;
-  cancelShown?: boolean;
-  btnType?: string;
+  title?: string
+  message: string
+  okBtnTitle?: string
+  cancelBtnTitle?: string
+  cancelShown?: boolean
+  btnType?: string
 }
 
 export interface ConfirmationModalResult {
-  status: ModalDialogStatus;
+  status: ModalDialogStatus
 }
 
 @Component({

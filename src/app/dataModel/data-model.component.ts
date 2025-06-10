@@ -172,8 +172,8 @@ export class DataModelComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -183,8 +183,8 @@ export class DataModelComponent
     this.access = this.securityHandler.elementAccess(this.catalogueItem);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
@@ -201,11 +201,11 @@ export class DataModelComponent
           if (this.dataModel.semanticLinks) {
             this.compareToList = this.dataModel.semanticLinks
               .filter(
-                (link) =>
-                  link.linkType === 'New Version Of' ||
-                  link.linkType === 'Superseded By'
+                link =>
+                  link.linkType === 'New Version Of'
+                  || link.linkType === 'Superseded By'
               )
-              .map((link) => link.target);
+              .map(link => link.target);
           }
 
           this.watchDataModelObject();
@@ -228,7 +228,8 @@ export class DataModelComponent
             this.DataModelPermissions(this.catalogueItem.id);
           }
         });
-    } else {
+    }
+ else {
       const data = {
         finalised: this.showFinalised
       };

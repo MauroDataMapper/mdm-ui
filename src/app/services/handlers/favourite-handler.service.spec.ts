@@ -19,16 +19,13 @@ import { FavouriteHandlerService } from './favourite-handler.service';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('FavouriteHandlerService', () => {
-
   let service: FavouriteHandlerService;
 
-  beforeEach( async() => {
-
+  beforeEach(async () => {
     service = setupTestModuleForService(FavouriteHandlerService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

@@ -26,7 +26,6 @@ describe('RegisterModalComponent', () => {
     harness = await setupTestModuleForComponent(RegisterModalComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

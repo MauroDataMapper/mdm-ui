@@ -20,9 +20,7 @@ import { Observable, forkJoin } from 'rxjs';
 import * as joint from '@joint/core';
 import { mergeMap } from 'rxjs/operators';
 
-
 export class DataflowDataelementDiagramService extends BasicDiagramService {
-
   classes: object = {};
   dataFlows: any = {};
 
@@ -32,7 +30,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   flowComponentId: string;
 
   getDiagramContent(params: any): Observable<any> {
-
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
     this.flowComponentId = params.flowComponentId;
@@ -40,9 +37,9 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
     this.changeComponent(null);
 
-    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id as string, params.flowId as string, params.flowComponentId as string, {all:true});
+    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id as string, params.flowId as string, params.flowComponentId as string, { all: true });
     return (flowComponents).pipe(
-      mergeMap(data => {
+      mergeMap((data) => {
         this.dataFlows = data.body;
         data.body.items.forEach((dataFlowComponent) => {
           dataFlowComponent.sourceDataElements.forEach((element) => {
@@ -69,7 +66,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   render(result: any): void {
-
     this.changeComponent(null);
 
     const classAttributes: object = {};
@@ -89,7 +85,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     });
 
     this.dataFlows.items.forEach((flowComponent) => {
-
       this.addSmallRectangleCell(flowComponent.id as string, flowComponent.label as string);
 
       flowComponent.sourceDataElements.forEach((sourceElement) => {
@@ -101,13 +96,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             id: sourceElement.dataClass,
             /* anchor: {
               name: 'right'
-            }*/
+            } */
           },
           target: {
             id: flowComponent.id,
             /* anchor: {
               name: 'left'
-            }*/
+            } */
           }
         });
         link1.connector('rounded', { radius: 40 });
@@ -120,13 +115,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             id: flowComponent.id,
             /* anchor: {
               name: 'right'
-            }*/
+            } */
           },
           target: {
             id: targetElement.dataClass,
             /* anchor: {
               name: 'left'
-            }*/
+            } */
           }
         });
         link2.connector('rounded', { radius: 40 });
@@ -151,7 +146,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     });
 
     this.dataFlows.items.forEach((flowComponent) => {
-
       this.addSmallRectangleCell(flowComponent.id as string, flowComponent.label as string);
 
       flowComponent.sourceDataElements.forEach((sourceElement) => {
@@ -199,19 +193,15 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   configurePaper(paper: joint.dia.Paper): void {
-
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
-
       if (cellView.model.id !== undefined && cellView.model.id !== null) {
-
         const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
         if (arrMergedId.length > 1) {
-
           this.selDataElementComponentId = arrMergedId[1];
 
           const options = { sort: 'label', order: 'asc', all: true };
-          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1] as string, options).subscribe(result => {
+          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1] as string, options).subscribe((result) => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
               this.changeComponent(result.body as string);
             }
@@ -228,7 +218,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       // console.log(cellView.model.attributes.source.id as string);
       // console.log(this);
     });
-
   }
 
   layoutNodes(): void {
@@ -254,7 +243,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   updateDataElementLevel = (data) => {
     const options = { sort: 'label', order: 'asc', all: true };
-    this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
+    this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe((result) => {
       if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
         this.changeComponent(result.body as string);
       }

@@ -65,7 +65,7 @@ export class TableButtonsComponent {
   }
 
   editCancelled(record, index) {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }

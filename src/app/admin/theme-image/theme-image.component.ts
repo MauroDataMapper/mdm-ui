@@ -38,7 +38,7 @@ export enum ImageChangeType {
 }
 
 export interface ImageChangedEvent {
-  changeEvent: ImageChangeType;
+  changeEvent: ImageChangeType
 }
 
 @Component({
@@ -64,7 +64,7 @@ export class ThemeImageComponent implements OnInit {
   DefaultImageMessage = 'Use default image';
 
   formGroup = new FormGroup({
-    value: new FormControl('', [Validators.required]) // eslint-disable-line @typescript-eslint/unbound-method
+    value: new FormControl('', [Validators.required])
   });
 
   get value() {
@@ -100,8 +100,8 @@ export class ThemeImageComponent implements OnInit {
       .subscribe((data: ApiPropertyResponse) => {
         this.showImage = this.isUUID(data.body.value);
         this.showDefaultMessageIfRequired();
-        this.originalValueWasDefault =
-          this.value?.value === this.DefaultImageMessage;
+        this.originalValueWasDefault
+          = this.value?.value === this.DefaultImageMessage;
       });
   }
 
@@ -190,7 +190,8 @@ export class ThemeImageComponent implements OnInit {
     if (this.showImage) {
       // This is required to avoid a mat-form-field must contain a MatFormFieldControl error
       this.value.setValue(' ');
-    } else {
+    }
+ else {
       this.value.setValue(this.DefaultImageMessage);
     }
   }
@@ -203,7 +204,8 @@ export class ThemeImageComponent implements OnInit {
       if (fileType) {
         if (fileType === 'image/jpg') {
           return 'image/jpeg';
-        } else {
+        }
+ else {
           return fileType;
         }
       }

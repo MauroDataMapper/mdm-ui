@@ -72,7 +72,6 @@ const defaultHtmlContent = [
     imports: [NgIf, NgxSkeletonLoaderModule, SafePipe]
 })
 export class AboutComponent implements OnInit {
-
   isLoadingContent = false;
 
   applicationName: string;
@@ -94,7 +93,7 @@ export class AboutComponent implements OnInit {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
+        catchError((errors) => {
           this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
           this.loadContent(null);
           this.isLoadingContent = false;

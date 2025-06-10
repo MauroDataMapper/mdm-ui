@@ -38,9 +38,8 @@ export class CatalogueItemSelectModalComponent implements OnInit {
 
   isOkDisabled = true;
 
-  constructor( private dialogRef: MatDialogRef<CatalogueItemSelectModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any)
- { }
+  constructor(private dialogRef: MatDialogRef<CatalogueItemSelectModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
 

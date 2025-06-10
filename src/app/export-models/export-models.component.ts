@@ -109,7 +109,8 @@ export class ExportModelsComponent implements OnInit {
     if (items && items.length > 0) {
       this.step = 2;
       this.changeDedRef.detectChanges();
-    } else {
+    }
+ else {
       this.step = 1;
     }
   };
@@ -192,8 +193,8 @@ export class ExportModelsComponent implements OnInit {
 
   private handleStandardExporterResponse(response: HttpResponse<ArrayBuffer>) {
     this.exportedFileIsReady = true;
-    const label =
-      this.selectedDataModels.length === 1
+    const label
+      = this.selectedDataModels.length === 1
         ? this.selectedDataModels[0].label
         : this.exportType;
 

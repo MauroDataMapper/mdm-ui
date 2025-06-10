@@ -27,5 +27,4 @@ export class EnumerationCompareComponent {
   @Input() diffs: any;
 
   constructor() { }
-
 }

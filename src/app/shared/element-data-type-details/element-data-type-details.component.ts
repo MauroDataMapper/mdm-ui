@@ -43,12 +43,10 @@ export class ElementDataTypeDetailsComponent implements OnInit {
     private resources: MdmResourcesService
   ) {}
 
-
   ngOnInit() {
     if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType) {
       this.loadModelResource();
     }
-
   }
 
   private loadModelResource() {

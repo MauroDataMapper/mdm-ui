@@ -72,7 +72,7 @@ export class FeaturesService implements OnDestroy {
       )
       .subscribe((response: ApiPropertyIndexResponse) => {
         const featureFlags = response.body.items.filter(
-          (prop) => prop.category === 'Features'
+          prop => prop.category === 'Features'
         );
         this.setFeatures(featureFlags);
       });
@@ -115,7 +115,7 @@ export class FeaturesService implements OnDestroy {
     key: string,
     defaultValue: boolean
   ): boolean {
-    const feature = properties.find((prop) => prop.key === key);
+    const feature = properties.find(prop => prop.key === key);
     return feature ? feature.value === 'true' : defaultValue;
   }
 }

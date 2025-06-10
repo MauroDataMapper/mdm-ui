@@ -20,16 +20,16 @@ import { CatalogueItem, Profile } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface EditProfileModalConfiguration {
-  profile: Profile;
-  profileName: string;
-  catalogueItem: CatalogueItem;
-  isNew: boolean;
-  description?: string;
-  okBtn?: string;
-  finalised?: boolean;
+  profile: Profile
+  profileName: string
+  catalogueItem: CatalogueItem
+  isNew: boolean
+  description?: string
+  okBtn?: string
+  finalised?: boolean
 }
 
 export interface EditProfileModalResult {
-  status: ModalDialogStatus;
-  profile?: Profile;
+  status: ModalDialogStatus
+  profile?: Profile
 }

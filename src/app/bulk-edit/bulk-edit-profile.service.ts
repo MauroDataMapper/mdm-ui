@@ -146,8 +146,8 @@ export class BulkEditProfileService {
 
   private isCorrectDomainType(domainType: CatalogueItemDomainType) {
     return (
-      isModelDomainType(domainType) ||
-      domainType === CatalogueItemDomainType.DataClass
+      isModelDomainType(domainType)
+      || domainType === CatalogueItemDomainType.DataClass
     );
   }
 

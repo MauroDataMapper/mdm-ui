@@ -71,7 +71,6 @@ export class BulkEditModalComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private editingService: EditingService) { }
 
-
   ngAfterViewInit() {
     this.parentDataModel = this.data.parentDataModel;
     this.parentDataClass = this.data.parentDataClass;
@@ -89,15 +88,16 @@ export class BulkEditModalComponent implements AfterViewInit {
           if (result !== undefined) {
             this.records.push(result.body);
           }
-        }, err => {
+        }, (err) => {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
-      } else if (item.domainType === 'DataClass') {
+      }
+ else if (item.domainType === 'DataClass') {
         this.resources.dataClass.getChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
-        }, err => {
+        }, (err) => {
           this.messageHandler.showError('There was a problem getting the Data Classes.', err);
         });
       }
@@ -105,7 +105,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   }
 
   cancel = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close();
       }
@@ -113,7 +113,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   };
 
   closeAndRefresh = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close({ status: 'ok' });
       }

@@ -25,7 +25,7 @@ describe('TextDiffComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ TextDiffComponent ]
+      imports: [TextDiffComponent]
     })
     .compileComponents();
   }));

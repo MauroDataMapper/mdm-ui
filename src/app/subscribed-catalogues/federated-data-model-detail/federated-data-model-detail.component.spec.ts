@@ -25,7 +25,6 @@ describe('FederatedDataModelDetailComponent', () => {
     harness = await setupTestModuleForComponent(FederatedDataModelDetailComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

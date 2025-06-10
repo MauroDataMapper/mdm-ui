@@ -87,7 +87,7 @@ export class ConfigurationComponent implements OnInit {
       .pipe(
         map((response: ApiPropertyIndexResponse) => {
           return response.body.items.map<ApiPropertyEditableState>((item) => {
-            let metadata = propertyMetadata.find((m) => m.key === item.key);
+            let metadata = propertyMetadata.find(m => m.key === item.key);
             if (!metadata) {
               metadata = {
                 key: item.key,
@@ -115,7 +115,7 @@ export class ConfigurationComponent implements OnInit {
       .subscribe((data: ApiPropertyEditableState[]) => {
         if (category) {
           this.apiProperties = data.filter(
-            (p) => p.metadata.category === category
+            p => p.metadata.category === category
           );
           return;
         }
@@ -123,10 +123,10 @@ export class ConfigurationComponent implements OnInit {
         this.apiProperties = data;
 
         const backendCategories = data
-          .map((prop) => prop.metadata.category)
-          .filter((cat) => cat && cat.length > 0);
+          .map(prop => prop.metadata.category)
+          .filter(cat => cat && cat.length > 0);
 
-        const knownCategories = propertyMetadata.map((prop) => prop.category);
+        const knownCategories = propertyMetadata.map(prop => prop.category);
 
         this.apiPropertyCategories = [
           ...new Set(backendCategories.concat(knownCategories).sort())
@@ -182,7 +182,8 @@ export class ConfigurationComponent implements OnInit {
           if (error.error && error.error.timeTaken) {
             this.indexingTime = `in ${error.error.timeTaken}`;
           }
-        } else {
+        }
+ else {
           this.indexingStatus = 'error';
         }
       }

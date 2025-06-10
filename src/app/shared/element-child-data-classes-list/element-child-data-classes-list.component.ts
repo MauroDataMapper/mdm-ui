@@ -88,7 +88,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   totalItemCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   deleteInProgress: boolean;
   checkAllCheckbox = false;
   bulkActionsVisible = 0;
@@ -105,7 +105,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   ngOnInit(): void {
     if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
-    } else {
+    }
+ else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];
     }
   }
@@ -126,7 +127,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
       return [];
-    })).subscribe(data => {
+    })).subscribe((data) => {
       this.records = data;
     });
   }
@@ -152,9 +153,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(pageSize?:number, pageIndex?:number, filters?:{[p: string]: any}): Observable<any> {
+  dataClassesFetch(pageSize?: number, pageIndex?: number, filters?: { [p: string]: any }): Observable<any> {
     const sortBy = 'idx';
-    const sortDirection: SortDirection='asc';
+    const sortDirection: SortDirection = 'asc';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortDirection, filters);
 
     if (!this.parentDataClass.id) {
@@ -197,7 +198,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       dialog.afterClosed().subscribe((result) => {
         if (result != null && result.status === 'ok') {
           resolve();
-        } else {
+        }
+ else {
           reject();
         }
       });
@@ -231,13 +233,14 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     if (!this.parentDataClass.id) {
       this.resources.dataClass.update(this.parentDataModel.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
-    } else {
+    }
+ else {
       this.resources.dataClass.updateChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     }

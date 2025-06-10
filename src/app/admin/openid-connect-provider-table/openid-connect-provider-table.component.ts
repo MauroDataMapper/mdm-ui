@@ -81,7 +81,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
     this.resources.admin
       .modules()
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem getting the installed modules.', error);
           return EMPTY;
         }),
@@ -119,7 +119,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
       })
       .pipe(
         switchMap(() => this.resources.pluginOpenIdConnect.remove(record.id)),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem deleting the OpenID Connect provider.', error);
           return EMPTY;
         })
@@ -153,7 +153,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
           this.totalItemCount = response.body.count;
           return response.body.items;
         }),
-        catchError(error => {
+        catchError((error) => {
           this.loading = false;
           this.messageHandler.showError('There was a problem getting the list of OpenID Connect providers.', error);
           return EMPTY;

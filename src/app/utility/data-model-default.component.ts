@@ -25,11 +25,9 @@ import { Title } from '@angular/platform-browser';
     standalone: true
 })
 export class DataModelDefaultComponent implements OnInit {
-
   constructor(private title: Title) { }
 
   ngOnInit() {
     this.title.setTitle('Browse models');
   }
-
 }

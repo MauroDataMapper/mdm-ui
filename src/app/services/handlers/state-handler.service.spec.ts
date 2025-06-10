@@ -21,8 +21,6 @@ import { StateHandlerService } from './state-handler.service';
 import { UIRouter, StateService, StateDeclaration } from '@uirouter/core';
 import { ToastrModule } from 'ngx-toastr';
 
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
 describe('StateHandlerService', () => {
   let spyRouter: UIRouter;
 
@@ -42,7 +40,7 @@ describe('StateHandlerService', () => {
       } as StateService
     } as UIRouter;
 
-    jest.spyOn(spyRouter.stateService, 'reload');  // To verify if reload() is called.
+    jest.spyOn(spyRouter.stateService, 'reload'); // To verify if reload() is called.
 
     /**
      * Calls to the routers href() always return the value of the stateOrName

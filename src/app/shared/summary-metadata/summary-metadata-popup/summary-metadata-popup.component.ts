@@ -57,7 +57,6 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     this.summary = data;
   }
 
-
   ngOnInit(): void {
     super.ngOnInit();
     if (this.summary.summaryMetadataType.toLowerCase() === 'number') {
@@ -75,7 +74,7 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     super.drawBarChart();
     if (this.summary.summaryMetadataType.toLowerCase() === 'map') {
       this.tableDataForTable = [];
-      Object.keys(this.selectedReport.reportValue as {[p: string]: number} | ArrayLike<number>).forEach((x, idx) => {
+      Object.keys(this.selectedReport.reportValue as { [p: string]: number } | ArrayLike<number>).forEach((x, idx) => {
         this.tableDataForTable.push({
           keyColor: this.chartBackgroundColors[idx],
           keyBorderColor: this.chartBorderColors[idx],
@@ -91,18 +90,21 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
       this.drawBarChart();
     }
   }
+
   datePrev() {
     if (this.reportIndex > 0) {
       this.reportIndex = this.reportIndex - 1;
       this.drawBarChart();
     }
   }
+
   dateNext() {
     if (this.reportIndex < this.data.summaryMetadataReports.length - 1) {
       this.reportIndex = this.reportIndex + 1;
       this.drawBarChart();
     }
   }
+
   dateLast() {
     if (this.reportIndex !== this.data.summaryMetadataReports.length - 1) {
       this.reportIndex = this.data.summaryMetadataReports.length - 1;

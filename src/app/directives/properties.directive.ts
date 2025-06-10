@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Directive, Input} from '@angular/core';
+import { Directive, Input } from '@angular/core';
 
 @Directive({
     selector: '[mdmProperties]',
@@ -25,5 +25,4 @@ export class PropertiesDirective {
   @Input() aliases: any;
   @Input() classifiers: any;
   @Input() multiplicity: any;
-
 }

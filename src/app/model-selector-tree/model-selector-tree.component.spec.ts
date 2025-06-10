@@ -32,7 +32,7 @@ import { EMPTY } from 'rxjs';
 import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 interface SecurityHandlerServiceStub {
-  isLoggedIn: jest.Mock;
+  isLoggedIn: jest.Mock
 }
 
 describe('ModelSelectorTreeComponent', () => {
@@ -85,7 +85,7 @@ describe('ModelSelectorTreeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    treeSpy =  jest.spyOn(component['resources'].tree, 'list');
+    treeSpy = jest.spyOn(component['resources'].tree, 'list');
   });
 
   it('should create', () => {

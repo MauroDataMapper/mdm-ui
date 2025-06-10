@@ -115,8 +115,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     ModelableDetail &
     SecurableModel &
     Finalisable & {
-      [key: string]: any;
-      model?: Uuid;
+      [key: string]: any
+      model?: Uuid
     };
 
   @Output() savingDefault = new EventEmitter<DefaultProfileItem[]>();
@@ -138,24 +138,26 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   useDefaultProfileSimplifiedEntry = false;
   showCanEditPropertyAlert = true;
 
-  private readonly defaultProfileNamespacePropertyKey =
-    'ui.default.profile.namespace';
-  private readonly useDefaultProfileSimplifiedEntryPropertyKey =
-    'ui.default.profile.simplified_entry';
-  private readonly showCanEditPropertyAlertKey =
-    'ui.show_can_edit_property_alert';
+  private readonly defaultProfileNamespacePropertyKey
+    = 'ui.default.profile.namespace';
+
+  private readonly useDefaultProfileSimplifiedEntryPropertyKey
+    = 'ui.default.profile.simplified_entry';
+
+  private readonly showCanEditPropertyAlertKey
+    = 'ui.show_can_edit_property_alert';
 
   get canEditCustomProfile() {
     if (
-      this.currentView === 'default' ||
-      this.currentView === 'other' ||
-      this.currentView === 'addnew'
+      this.currentView === 'default'
+      || this.currentView === 'other'
+      || this.currentView === 'addnew'
     ) {
       return false;
     }
 
     const profileSummary = this.usedProfiles.find(
-      (summary) => summary.value === this.currentView
+      summary => summary.value === this.currentView
     );
 
     return this.canEdit || profileSummary?.editableAfterFinalisation;
@@ -167,39 +169,39 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     }
 
     return this.unusedProfiles.some(
-      (profile) => profile.editableAfterFinalisation
+      profile => profile.editableAfterFinalisation
     );
   }
 
   get isCurrentViewCustomProfile() {
     return (
-      this.currentView !== 'default' &&
-      this.currentView !== 'other' &&
-      this.currentView !== 'addnew'
+      this.currentView !== 'default'
+      && this.currentView !== 'other'
+      && this.currentView !== 'addnew'
     );
   }
 
   get isDoiProfile() {
     return (
-      this.shared.features.useDigitalObjectIdentifiers &&
-      this.currentProfile?.namespace === doiProfileNamespace
+      this.shared.features.useDigitalObjectIdentifiers
+      && this.currentProfile?.namespace === doiProfileNamespace
     );
   }
 
   get canSubmitForDoi() {
     // DOI profiles can only be submitted for finalised, public items
     return (
-      this.shared.features.useDigitalObjectIdentifiers &&
-      this.isEditablePostFinalise &&
-      this.isReadableByEveryone &&
-      this.doiState !== 'retired'
+      this.shared.features.useDigitalObjectIdentifiers
+      && this.isEditablePostFinalise
+      && this.isReadableByEveryone
+      && this.doiState !== 'retired'
     );
   }
 
   get showAdditionalActions() {
     const showDoiSubmitAction = this.canSubmitForDoi;
-    const showRemoveAction =
-      this.isCurrentViewCustomProfile && this.canDeleteProfile;
+    const showRemoveAction
+      = this.isCurrentViewCustomProfile && this.canDeleteProfile;
     return showRemoveAction || showDoiSubmitAction;
   }
 
@@ -238,8 +240,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     if (changes.catalogueItem && this.catalogueItem) {
       this.setAccess();
       if (!this.catalogueItem.domainType) {
-        this.catalogueItem.domainType =
-          changes.catalogueItem.previousValue.domainType;
+        this.catalogueItem.domainType
+          = changes.catalogueItem.previousValue.domainType;
       }
       this.loadUsedProfiles(
         this.catalogueItem.domainType,
@@ -286,7 +288,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   editCustomProfile(isNew?: boolean) {
     const selected = this.usedProfiles
       .concat(this.unusedProfiles)
-      .find((item) => item.value === this.currentView);
+      .find(item => item.value === this.currentView);
 
     const oldProfile: Profile = JSON.parse(JSON.stringify(this.currentProfile));
 
@@ -317,7 +319,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             this.currentProfile = oldProfile;
           }
         }),
-        filter((result) => result.status === ModalDialogStatus.Ok),
+        filter(result => result.status === ModalDialogStatus.Ok),
         switchMap((result) => {
           return this.resources.profile.saveProfile(
             this.catalogueItem.domainType,
@@ -351,7 +353,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
             this.catalogueItem.domainType,
             this.catalogueItem.id
           );
-        } else {
+        }
+ else {
           this.messageHandler.showSuccess('Profile edited successfully.');
         }
       });
@@ -389,24 +392,24 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       .subscribe(() => {
         let notCurrentOtherDefaultProfileView: string;
         if (
-          this.otherDefaultProfileView !== undefined &&
-          this.currentView !== this.otherDefaultProfileView
+          this.otherDefaultProfileView !== undefined
+          && this.currentView !== this.otherDefaultProfileView
         ) {
           notCurrentOtherDefaultProfileView = this.otherDefaultProfileView;
         }
         this.messageHandler.showSuccess('Profile removed successfully');
-        this.currentView =
-          this.usedProfiles.find(
-            (e) =>
-              e.value === this.defaultProfileView &&
-              !(
-                e.namespace === this.currentProfile.namespace &&
-                e.name === this.currentProfile.name &&
-                e.version === this.currentProfile.version
+        this.currentView
+          = this.usedProfiles.find(
+            e =>
+              e.value === this.defaultProfileView
+              && !(
+                e.namespace === this.currentProfile.namespace
+                && e.name === this.currentProfile.name
+                && e.version === this.currentProfile.version
               )
-          )?.value ??
-          notCurrentOtherDefaultProfileView ??
-          'default';
+          )?.value
+          ?? notCurrentOtherDefaultProfileView
+          ?? 'default';
         this.loadUsedProfiles(
           this.catalogueItem.domainType,
           this.catalogueItem.id
@@ -453,23 +456,26 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
               this.defaultProfileView = defaultValues[0].value;
               if (defaultValues.length > 1) {
                 this.otherDefaultProfileView = defaultValues[1].value;
-              } else {
+              }
+ else {
                 this.otherDefaultProfileView = undefined;
               }
             }
             if (!this.currentView && this.defaultProfileView) {
               // Get the item in usedProfiles that matches the otherProperties value
-              this.currentView =
-                this.usedProfiles.find(
-                  (e) => e.value === this.defaultProfileView
+              this.currentView
+                = this.usedProfiles.find(
+                  e => e.value === this.defaultProfileView
                 )?.value ?? 'default';
-            } else if (!this.currentView) {
+            }
+ else if (!this.currentView) {
               this.currentView = 'default';
             }
             this.changeProfile();
           }
         );
-      } else {
+      }
+ else {
         this.usedProfiles = items;
         if (!this.currentView) {
           this.currentView = 'default';
@@ -481,7 +487,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
 
   private loadUnusedProfiles(domainType: CatalogueItemDomainType, id: string) {
     this.loadProfileItems('unused', domainType, id).subscribe(
-      (items) => (this.unusedProfiles = items)
+      items => (this.unusedProfiles = items)
     );
   }
 
@@ -517,9 +523,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     | Observable<MdmResponse<CatalogueItem & SecurableModel & Finalisable>>
     | undefined {
     if (
-      isDataType(this.catalogueItem.domainType) ||
-      this.catalogueItem.domainType === CatalogueItemDomainType.DataClass ||
-      this.catalogueItem.domainType === CatalogueItemDomainType.DataElement
+      isDataType(this.catalogueItem.domainType)
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataClass
+      || this.catalogueItem.domainType === CatalogueItemDomainType.DataElement
     ) {
       return this.resources.dataModel.get(this.catalogueItem.model);
     }
@@ -536,8 +542,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     domainType: CatalogueItemDomainType,
     id: string
   ): Observable<ProfileSummaryListItem[]> {
-    const request: Observable<ProfileSummaryIndexResponse> =
-      type === 'used'
+    const request: Observable<ProfileSummaryIndexResponse>
+      = type === 'used'
         ? this.resources.profile.usedProfiles(domainType, id)
         : this.resources.profile.unusedProfiles(domainType, id);
 
@@ -580,7 +586,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         panelClass: 'full-width-dialog'
       })
       .afterClosed()
-      .pipe(filter((result) => result.status === ModalDialogStatus.Ok))
+      .pipe(filter(result => result.status === ModalDialogStatus.Ok))
       .subscribe((result) => {
         this.savingDefault.emit(result.items);
       });
@@ -667,7 +673,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
               this.currentProfile.name = name;
               this.editCustomProfile(true);
             });
-        } else {
+        }
+ else {
           this.currentView = this.lastView;
           this.changeProfile();
         }
@@ -707,7 +714,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   private submitCatalogueItemForDoi(state: DoiSubmissionState) {
     const doiProfileSummary = this.usedProfiles
       .concat(this.unusedProfiles)
-      .find((item) => item.namespace === doiProfileNamespace);
+      .find(item => item.namespace === doiProfileNamespace);
 
     if (!doiProfileSummary) {
       this.messageHandler.showWarning(
@@ -717,7 +724,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     }
 
     const doiProfileInUse = this.usedProfiles.find(
-      (item) => item.value === doiProfileSummary.value
+      item => item.value === doiProfileSummary.value
     );
 
     const description = doiProfileInUse
@@ -869,8 +876,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       properties,
       this.defaultProfileNamespacePropertyKey
     );
-    this.useDefaultProfileSimplifiedEntry =
-      this.getContentProperty(
+    this.useDefaultProfileSimplifiedEntry
+      = this.getContentProperty(
         properties,
         this.useDefaultProfileSimplifiedEntryPropertyKey
       ) === 'true';
@@ -884,7 +891,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find((p) => p.key === key)?.value;
+    return properties?.find(p => p.key === key)?.value;
   }
 
   private getCatalogueItemHierarchy() {
@@ -923,7 +930,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
         );
         return EMPTY;
       }),
-      mergeMap((param) => this.getPropertiesFromCatalogueItem(param))
+      mergeMap(param => this.getPropertiesFromCatalogueItem(param))
     );
 
     const observable = zip(properties);
@@ -933,39 +940,40 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
     observable.subscribe({
       next: (defaultProfileProperties) => {
         const namespace = defaultProfileProperties[0].find(
-          (property) => property.key === 'namespace'
+          property => property.key === 'namespace'
         );
         const name = defaultProfileProperties[0].find(
-          (property) => property.key === 'name'
+          property => property.key === 'name'
         );
         const version = defaultProfileProperties[0].find(
-          (property) => property.key === 'version'
+          property => property.key === 'version'
         );
         if (
-          !this.useDefaultProfileSimplifiedEntry &&
-          namespace !== undefined &&
-          name !== undefined &&
-          version !== undefined
+          !this.useDefaultProfileSimplifiedEntry
+          && namespace !== undefined
+          && name !== undefined
+          && version !== undefined
         ) {
           responses = this.usedProfiles
             .filter(
-              (usedProfile) =>
-                usedProfile.namespace === namespace.value &&
-                usedProfile.name === name.value &&
-                usedProfile.version === version.value
+              usedProfile =>
+                usedProfile.namespace === namespace.value
+                && usedProfile.name === name.value
+                && usedProfile.version === version.value
             )
             .concat(responses);
-        } else {
+        }
+ else {
           for (const propertyItem of defaultProfileProperties[0]) {
             if (propertyItem !== undefined) {
               //
               responses = this.usedProfiles
                 .filter(
-                  (usedProfile) =>
-                    decodeURIComponent(usedProfile.name) +
-                      '/' +
-                      usedProfile.version ===
-                    propertyItem.value
+                  usedProfile =>
+                    decodeURIComponent(usedProfile.name)
+                    + '/'
+                    + usedProfile.version
+                    === propertyItem.value
                 )
                 .concat(responses);
             }
@@ -999,7 +1007,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       map((data: any) => {
         const tempItems = data.body.items;
         const items = tempItems.filter(
-          (o) => o.namespace === this.defaultProfileMetadataNamespace
+          o => o.namespace === this.defaultProfileMetadataNamespace
         );
         return items;
       })

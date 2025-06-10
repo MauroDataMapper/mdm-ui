@@ -81,7 +81,6 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     this._relationships.next(relationships);
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   get relationshipTypes() {
     return this._relationshipTypes.value;
   }
@@ -108,15 +107,15 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
         .subscribe(
           (data) => {
             this.relationships = data.body.items.filter(
-              (i) =>
-                i.sourceTerm.id === this.term.id &&
-                i.targetTerm.domainType !== CatalogueItemDomainType.Terminology
+              i =>
+                i.sourceTerm.id === this.term.id
+                && i.targetTerm.domainType !== CatalogueItemDomainType.Terminology
             );
             const relationshipTypes = [];
             this.relationships.forEach((r) => {
               if (
                 !relationshipTypes
-                  .map((rt) => rt.id)
+                  .map(rt => rt.id)
                   .includes(r.relationshipType.id)
               ) {
                 relationshipTypes.push(r.relationshipType);
@@ -126,14 +125,14 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
             this.totalItemCount = this.relationships.length;
             this.totalCount.emit(this.totalItemCount);
           },
-          (error) => console.error(error)
+          error => console.error(error)
         );
     }
   }
 
   filterByRelationshipType(relationshipType: TermRelationshipType) {
     return this.relationships
-      .filter((r) => r.relationshipType.id === relationshipType.id)
+      .filter(r => r.relationshipType.id === relationshipType.id)
       .sort((first, second) => {
         if (first.targetTerm.code < second.targetTerm.code) {
           return -1;

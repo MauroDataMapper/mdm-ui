@@ -18,13 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { ComponentRef } from '@angular/core';
 
 export interface WizardStep<T> {
-  scope: T;
-  component: any;
-  title: any;
-  hasForm?: boolean;
-  invalid?: boolean;
-  compRef?: ComponentRef<any>;
-  active?: boolean;
+  scope: T
+  component: any
+  title: any
+  hasForm?: boolean
+  invalid?: boolean
+  compRef?: ComponentRef<any>
+  active?: boolean
 }
 
 export type CreateType = 'new' | 'copy' | 'import' | 'extend';

@@ -33,7 +33,6 @@ import { NgIf, NgClass, NgFor } from '@angular/common';
 })
 
 export class ModelPathComponent implements OnInit {
-
     @Input() path: any[];
     @Input() newWindow: boolean;
     @Input() doNotDisplayStatus: boolean;
@@ -51,18 +50,20 @@ export class ModelPathComponent implements OnInit {
         this.updatedPath = [];
         if (this.path) {
         this.path.forEach((p, index) => {
-            if(p.domainType === 'ReferenceDataModel') {
+            if (p.domainType === 'ReferenceDataModel') {
                 p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'ReferenceDataModel' });
             }
-            else if(p.domainType === 'Terminology'){
+            else if (p.domainType === 'Terminology') {
                 p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'Terminology' });
             }
             else {
               if (index === 0) {
                   p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'DataModel' });
-              } else if (index === 1) {
+              }
+ else if (index === 1) {
                   p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, domainType: 'DataClass' });
-              } else {
+              }
+ else {
                   p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, parentDataClass: this.path[index - 1].id, domainType: 'DataClass' });
               }
             }

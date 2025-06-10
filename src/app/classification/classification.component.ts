@@ -156,7 +156,8 @@ export class ClassificationComponent
 
         if (this.sharedService.isLoggedIn(true)) {
           this.classifierPermissions(id);
-        } else {
+        }
+ else {
           this.messageService.FolderSendMessage(this.result);
           this.messageService.dataChanged(this.result);
         }

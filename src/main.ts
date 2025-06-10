@@ -40,7 +40,6 @@ if (environment.production) {
   }
 }
 
-
 bootstrapApplication(UiViewComponent, {
   providers: [
     MdmResourcesConfiguration,
@@ -50,15 +49,15 @@ bootstrapApplication(UiViewComponent, {
     provideHttpClient(),
     importProvidersFrom(
       MdmResourcesModule.forRoot({
-        defaultHttpRequestOptions: {withCredentials: true},
+        defaultHttpRequestOptions: { withCredentials: true },
         apiEndpoint: environment.apiEndpoint
       }),
       UIRouterModule.forRoot({
         useHash: true,
         states: [
-          ... pageRoutes.states,
-          ... userPageRoutes.states,
-          ... adminPageRoutes.states
+          ...pageRoutes.states,
+          ...userPageRoutes.states,
+          ...adminPageRoutes.states
         ],
         config: routerConfigFn
       })
@@ -66,7 +65,7 @@ bootstrapApplication(UiViewComponent, {
     {
       provide: 'traceRouter',
       useFactory: (router: UIRouter) => {
-        router.trace.enable(1);  // Shows transitions in console
+        router.trace.enable(1); // Shows transitions in console
       },
       deps: [UIRouter]
     },

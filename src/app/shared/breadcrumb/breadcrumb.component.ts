@@ -24,10 +24,10 @@ import {
 import { NgIf, NgFor } from '@angular/common';
 
 export interface TrailableItem {
-  id?: Uuid;
-  label: string;
-  domainType?: CatalogueItemDomainType;
-  breadcrumbs?: Breadcrumb[];
+  id?: Uuid
+  label: string
+  domainType?: CatalogueItemDomainType
+  breadcrumbs?: Breadcrumb[]
 }
 
 @Component({

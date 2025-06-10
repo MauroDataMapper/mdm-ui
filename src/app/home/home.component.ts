@@ -239,8 +239,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
     return (
-      properties?.find((p) => p.key === key)?.value ??
-      defaultHtmlContent.find((p) => p.key === key).value
+      properties?.find(p => p.key === key)?.value
+      ?? defaultHtmlContent.find(p => p.key === key).value
     );
   }
 }

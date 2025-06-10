@@ -54,7 +54,7 @@ export class DoiRedirectComponent implements OnInit {
     this.resources.pluginDoi
       .resolve(this.identifier)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.errorMessage = error;
           return EMPTY;
         }),
@@ -94,9 +94,8 @@ export class DoiRedirectComponent implements OnInit {
 
     this.stateHandler
       .Go(state, params)
-      .catch(error => {
+      .catch((error) => {
         this.errorMessage = `Unable to redirect to ${item.domainType} ${item.id}. ${error}`;
       });
   }
-
 }

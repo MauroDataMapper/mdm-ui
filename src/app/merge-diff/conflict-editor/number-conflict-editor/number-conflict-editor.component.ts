@@ -46,5 +46,4 @@ export class NumberConflictEditorComponent implements OnInit {
   getFinalResolvedValue() {
     return this.resolvedValue;
   }
-
 }

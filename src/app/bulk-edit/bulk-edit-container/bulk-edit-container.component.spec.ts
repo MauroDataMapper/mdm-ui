@@ -31,25 +31,25 @@ import { BulkEditStep } from '../bulk-edit.types';
 import { BulkEditContainerComponent } from './bulk-edit-container.component';
 
 interface UIRouterGlobalsStub {
-  params: StateParams;
+  params: StateParams
 }
 
 interface TitleStub {
-  setTitle: jest.Mock;
+  setTitle: jest.Mock
 }
 
 interface EditingStub {
-  start: jest.Mock;
-  stop: jest.Mock;
-  confirmCancelAsync: jest.Mock;
+  start: jest.Mock
+  stop: jest.Mock
+  confirmCancelAsync: jest.Mock
 }
 
 interface MessageHandlerStub {
-  showSuccess: jest.Mock;
+  showSuccess: jest.Mock
 }
 
 interface StateHandlerStub {
-  GoPrevious: jest.Mock;
+  GoPrevious: jest.Mock
 }
 
 describe('BulkEditBaseComponent', () => {

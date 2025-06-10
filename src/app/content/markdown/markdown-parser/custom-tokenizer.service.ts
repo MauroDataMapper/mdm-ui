@@ -23,7 +23,7 @@ import { Injectable } from '@angular/core';
 export class CustomTokenizerService {
   // to stop the IDE complaining about unknown variable
   rules: any;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   constructor() { }
 
   html(html) {

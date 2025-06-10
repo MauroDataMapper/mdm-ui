@@ -20,16 +20,13 @@ import { SubscribedCataloguesService } from './subscribed-catalogues.service';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('SubscribedCataloguesService', () => {
-
   let service: SubscribedCataloguesService;
 
-  beforeEach( async() => {
-
+  beforeEach(async () => {
     service = setupTestModuleForService(SubscribedCataloguesService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

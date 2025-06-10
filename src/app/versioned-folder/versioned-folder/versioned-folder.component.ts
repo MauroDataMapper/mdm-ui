@@ -158,6 +158,7 @@ export class VersionedFolderComponent
   toggleShowSearch() {
     this.messages.toggleSearch();
   }
+
   save(saveItems: Array<DefaultProfileItem>) {
     const resource = {
       id: this.detail.id,

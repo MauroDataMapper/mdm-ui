@@ -15,10 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { Component, OnInit } from '@angular/core';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {MatDialogRef} from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { NgIf } from '@angular/common';
 import { MatInput } from '@angular/material/input';
@@ -60,6 +60,7 @@ export class ForgotPasswordModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcast.dispatch('openLoginModalDialog');
   }
+
   close = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();

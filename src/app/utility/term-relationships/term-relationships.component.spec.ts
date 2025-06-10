@@ -32,7 +32,6 @@ describe('TermRelationshipsComponent', () => {
     harness = await setupTestModuleForComponent(TermRelationshipsComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

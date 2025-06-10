@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* eslint-disable id-blacklist */
+
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle } from '@angular/material/dialog';
 import {
@@ -35,10 +35,10 @@ import { AlertComponent } from '../../shared/alert/alert.component';
 import { NgIf, NgFor } from '@angular/common';
 
 export interface AddProfileModalConfiguration {
-  domainId: Uuid;
-  domainType: CatalogueItemDomainType;
-  finalised?: boolean;
-  selectedProfile?: ProfileSummary;
+  domainId: Uuid
+  domainType: CatalogueItemDomainType
+  finalised?: boolean
+  selectedProfile?: ProfileSummary
 }
 
 @Component({
@@ -66,7 +66,7 @@ export class AddProfileModalComponent implements OnInit {
             // If the catalogue item is finalised, only allow profiles that are allowed
             // to be edited
             return response.body.filter(
-              (profile) => profile.editableAfterFinalisation
+              profile => profile.editableAfterFinalisation
             );
           }
 

@@ -23,14 +23,14 @@ import { ContentEditorComponent } from '../../../../content/content-editor/conte
 import { NgIf } from '@angular/common';
 
 export interface FullContentEditDialogData {
-  value?: string;
-  title?: string;
-  subTitle?: string;
+  value?: string
+  title?: string
+  subTitle?: string
 }
 
 export interface FullContentEditDialogResponse {
-  status: ModalDialogStatus;
-  value?: string;
+  status: ModalDialogStatus
+  value?: string
 }
 
 @Component({

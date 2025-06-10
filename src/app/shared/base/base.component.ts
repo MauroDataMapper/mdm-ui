@@ -25,7 +25,6 @@ import { CodeSetDetail, DataElementDetail, DataModelDetail, FolderDetail, TermDe
     standalone: true
 })
 export class BaseComponent {
-
   catalogueItem:
     | DataModelDetail
     | TermDetail
@@ -37,11 +36,11 @@ export class BaseComponent {
 
   constructor() { }
 
-  protected isGuid = (stringToTest:string) => {
+  protected isGuid = (stringToTest: string) => {
     if (stringToTest && stringToTest[0] === '{') {
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }
-    // eslint-disable-next-line
+
     const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/gi;
     return regexGuid.test(stringToTest);
   };

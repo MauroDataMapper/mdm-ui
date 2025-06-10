@@ -54,7 +54,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   afterSave: (result: { body: { id: any } }) => void;
   backendUrl: string = environment.apiEndpoint;
 
-
   constructor(
     private resourcesService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
@@ -77,7 +76,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.user = result.body;
       this.messageService.sendUserDetails(this.user);
       this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.backendUrl + '/catalogueUsers/' + this.user.id + '/image');
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading user details.', err);
     });
   }
@@ -99,7 +98,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Saves the selected profile picture
   public savePicture() {
-
     this.resourcesService.userImage.update(this.user.id, { image: this.imageThumb, type: 'image/png' }).subscribe(() => {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
@@ -107,7 +105,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.isChangingProfileImage = false;
       this.broadcast.dispatch('profileImageUpdated');
       this.userDetails();
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
     });
   }
@@ -139,7 +137,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.userDetails();
       this.broadcast.dispatch('profileImageUpdated');
     },
-      error => {
+      (error) => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);
       }
     );

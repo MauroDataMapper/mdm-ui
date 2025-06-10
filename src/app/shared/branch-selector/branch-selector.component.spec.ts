@@ -28,7 +28,6 @@ describe('BranchSelectorComponent', () => {
     harness = await setupTestModuleForComponent(BranchSelectorComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

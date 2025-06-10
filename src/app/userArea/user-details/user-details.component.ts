@@ -77,7 +77,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     return this.resourcesService.catalogueUser.exists(data);
   }
 
-  formBeforeSave =  () => {
+  formBeforeSave = () => {
     this.errorMessage = '';
     this.checkEmailExists(this.user.emailAddress).subscribe(() => {
       const userDetails = {
@@ -87,12 +87,12 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         jobTitle: this.user.jobTitle || '',
       };
       if (this.validateInput(this.user.firstName) && this.validateInput(this.user.lastName) && this.validateInput(this.user.organisation)) {
-        this.resourcesService.catalogueUser.update(this.user.id, userDetails).subscribe(result => {
+        this.resourcesService.catalogueUser.update(this.user.id, userDetails).subscribe((result) => {
           if (this.afterSave) {
             this.afterSave(result);
           }
           this.messageHandler.showSuccess('User details updated successfully.');
-        }, error => {
+        }, (error) => {
           this.messageHandler.showError('There was a problem updating the User Details.', error);
         }
         );
@@ -103,7 +103,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   validateInput(value): any {
     if (value != null && value.trim().length === 0) {
       return false;
-    } else {
+    }
+ else {
       return true;
     }
   }

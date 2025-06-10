@@ -70,42 +70,41 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   }
 
   requestDataFromMultipleSources(
-    pageSize?:number,
-    pageIndex?:number,
-    sortBy?:string,
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
     sortType?: SortDirection,
-    filters?:Record<string, any>
+    filters?: Record<string, any>
   ) {
-
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'displayName', 'asc', filters);
 
-    this.resourcesService.provider.importers(options).subscribe(resp => {
+    this.resourcesService.provider.importers(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the importers.', err);
     }
     );
 
-    this.resourcesService.provider.emailers(options).subscribe(resp => {
+    this.resourcesService.provider.emailers(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the emailers.', err);
     }
     );
 
-    this.resourcesService.provider.dataLoaders(options).subscribe(resp => {
+    this.resourcesService.provider.dataLoaders(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the dataLoaders.', err);
     }
     );
 
-    this.resourcesService.provider.exporters(options).subscribe(resp => {
+    this.resourcesService.provider.exporters(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;

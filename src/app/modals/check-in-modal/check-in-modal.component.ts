@@ -42,7 +42,6 @@ import { ModelIconComponent } from '../../shared/model-icon/model-icon.component
     imports: [MatDialogContent, ModelIconComponent, NgIf, MatTooltip, MatList, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, MatListItem, NgClass, ExtendedModule, PathNameComponent, MatFormField, MatLabel, MatInput, FormsModule, MatCheckbox, MatHint, MatDialogActions, MatButton, UpperCasePipe]
 })
 export class CheckInModalComponent implements OnInit {
-
   commitComment: string;
   deleteSourceBranch: boolean;
   items: MergeDiffItemModel[];
@@ -51,7 +50,6 @@ export class CheckInModalComponent implements OnInit {
   isDataAsset: boolean;
   source: Branchable;
   target: Branchable;
-
 
   constructor(
     private dialogRef: MatDialogRef<CheckInModalComponent, CheckinModelResult>,
@@ -106,9 +104,7 @@ export class CheckInModalComponent implements OnInit {
     }
   }
 
-  public get mergeType()
-  {
+  public get mergeType() {
     return MergeDiffType;
   }
-
 }

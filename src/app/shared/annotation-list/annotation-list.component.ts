@@ -69,7 +69,7 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   reloadEvent = new EventEmitter<void>();
-  records:  EditableObject[];
+  records: EditableObject[];
   canAddAnnotation = false;
 
   constructor(
@@ -231,7 +231,8 @@ export class AnnotationListComponent implements AfterViewInit {
   showChildren(annotation: any) {
     if (annotation.show) {
       annotation.show = false;
-    } else {
+    }
+ else {
       annotation.newChildText = '';
       annotation.show = true;
     }

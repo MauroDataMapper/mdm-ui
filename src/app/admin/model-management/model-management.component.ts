@@ -97,11 +97,14 @@ export class ModelManagementComponent implements OnInit {
 
     if (this.filterStatus === 'all') {
       url = this.resourcesService.tree.list(ContainerDomainType.Folders, options.queryStringParams);
-    } else if (this.filterStatus === 'includeDeleted') {
+    }
+ else if (this.filterStatus === 'includeDeleted') {
       url = this.resourcesService.admin.deletedModels('folders', 'dataModels');
-    } else if (this.filterStatus === 'includeDocumentSuperseded') {
+    }
+ else if (this.filterStatus === 'includeDocumentSuperseded') {
       url = this.resourcesService.admin.documentationSupersededModels('folders', 'dataModels');
-    } else if (this.filterStatus === 'includeModelSuperseded') {
+    }
+ else if (this.filterStatus === 'includeModelSuperseded') {
       url = this.resourcesService.admin.modelSupersededModels('folders', 'dataModels');
     }
 
@@ -137,13 +140,14 @@ export class ModelManagementComponent implements OnInit {
 
   onNodeChecked = (node) => {
     const currentIdx = this.selectedElements.findIndex(
-      (x) => x.node.id === node.node.id
+      x => x.node.id === node.node.id
     );
     if (currentIdx === -1) {
       this.selectedElements.push(node);
       this.selectedElementsCount++;
       this.removeChildren(node);
-    } else {
+    }
+ else {
       this.selectedElements.splice(currentIdx, 1);
       this.selectedElementsCount--;
       this.removeChildren(node);
@@ -215,7 +219,8 @@ export class ModelManagementComponent implements OnInit {
         setTimeout(() => {
           this.resetSettings();
         }, 2000);
-      } else {
+      }
+ else {
         this.deleteSuccessMessage = `${this.selectedElementsCount} Data Model(s) marked as deleted successfully.`;
         this.deleteInProgress = false;
 
@@ -260,7 +265,7 @@ export class ModelManagementComponent implements OnInit {
     if (node.hasChildren && node.children) {
       let i = 0;
       while (i < node.children.length) {
-        const childIdx = this.selectedElements.findIndex((y) => y.node.id === node.children[i].id);
+        const childIdx = this.selectedElements.findIndex(y => y.node.id === node.children[i].id);
         if (childIdx >= 0) {
           this.selectedElements.splice(childIdx, 1);
           this.selectedElementsCount--;

@@ -62,7 +62,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         filter(data => data.element.id === this.catalogueItem.id)
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.isFavorite = data.name === 'add';
       });
   }
@@ -81,5 +81,4 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
       this.isFavorite = this.favorites.isAdded(this.catalogueItem);
     }
   }
-
 }

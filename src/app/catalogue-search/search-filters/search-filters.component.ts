@@ -37,31 +37,31 @@ import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 
 export interface SearchFilterField {
-  name: string;
-  label: string;
-  dataType: 'enumeration';
-  allowedValues?: string[];
-  currentValue?: string;
+  name: string
+  label: string
+  dataType: 'enumeration'
+  allowedValues?: string[]
+  currentValue?: string
 }
 
 export interface SearchFilterChange {
-  name: string;
-  value?: any;
+  name: string
+  value?: any
 }
 
 export interface SearchFilterDomainType {
-  name: string;
-  domainType: string;
+  name: string
+  domainType: string
 }
 
 export interface SearchFilterCheckbox {
-  name: string;
-  checked: boolean;
+  name: string
+  checked: boolean
 }
 
 export interface SearchFilterDate {
-  name: string;
-  value?: string;
+  name: string
+  value?: string
 }
 
 @Component({
@@ -179,7 +179,7 @@ export class SearchFiltersComponent implements OnInit {
   }
 
   get hasValues() {
-    return this.fields.some((field) => field.currentValue);
+    return this.fields.some(field => field.currentValue);
   }
 
   selectionChanged(name: string, event: MatSelectChange) {
@@ -220,9 +220,7 @@ export class SearchFiltersComponent implements OnInit {
 
   onIncludeSupersededChange(event: MatCheckboxChange) {
     this.includeSupersededFilter.checked = event.checked;
-
     this.filterChange.emit({ name: 'includeSuperseded', value: event.checked });
-
   }
 
   onClassifiersChange(event: MatSelectChange) {

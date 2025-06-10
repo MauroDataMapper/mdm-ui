@@ -77,6 +77,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
     'exportedBy',
     'actions'
   ];
+
   showFilters = false;
 
   constructor(
@@ -178,7 +179,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
           return response.body.items;
         })
       )
-      .subscribe((data) => (this.dataSource.data = data));
+      .subscribe(data => (this.dataSource.data = data));
   }
 
   private fetch(
@@ -186,7 +187,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ): Observable<DomainExportIndexResponse> {
     const options = this.grid.constructOptions(
       pageSize,

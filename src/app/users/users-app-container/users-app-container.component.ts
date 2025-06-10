@@ -44,7 +44,7 @@ export class UsersAppContainerComponent implements OnInit {
     this.securityHandler
       .isAdministrator()
       .pipe(
-        switchMap(isAdministrator => {
+        switchMap((isAdministrator) => {
           this.isAdministrator = isAdministrator;
 
           if (!isAdministrator) {

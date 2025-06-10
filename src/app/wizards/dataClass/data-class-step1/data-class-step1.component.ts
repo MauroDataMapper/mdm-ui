@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DataModel } from '../../../../../../mdm-resources';
 import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
 import { NgIf } from '@angular/common';
@@ -40,26 +40,24 @@ export class DataClassStep1Component implements OnInit {
   get model() {
     return this.modelVal;
   }
+
   set model(val) {
     this.modelVal = val;
     this.validate();
   }
 
-
-
   ngOnInit() {
     this.model = this.step.scope.model;
   }
-  onSelect = dataModel => {
+
+  onSelect = (dataModel) => {
     this.model.copyFromDataModel = dataModel;
     this.model.selectedDataTypes = [];
     this.model.selectedDataClassesMap = [];
     this.validate();
   };
 
-
   validate = () => {
-
     if (!this.model.createType) {
       this.step.invalid = true;
       return;
@@ -73,7 +71,7 @@ export class DataClassStep1Component implements OnInit {
     this.step.invalid = false;
   };
 
-  selectCreateType = createType => {
+  selectCreateType = (createType) => {
     this.model.createType = createType;
     this.validate();
   };

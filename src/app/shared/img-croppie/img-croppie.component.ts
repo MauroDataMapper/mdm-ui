@@ -33,7 +33,6 @@ export class ImgCroppieComponent {
 
   constructor() {}
 
-
   imageCropped(event: ImageCroppedEvent) {
     this.imageBase64 = event.base64;
     this.cropImage.emit(event.base64);

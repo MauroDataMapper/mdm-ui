@@ -28,5 +28,5 @@ export type DiagramMode =
 export type DiagramCatalogueItem = CatalogueItem & { [key: string]: any };
 
 export interface DiagramParameters {
-  parent: DiagramCatalogueItem;
+  parent: DiagramCatalogueItem
 }

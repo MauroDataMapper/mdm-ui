@@ -52,7 +52,6 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
   };
   resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(
       CatalogueSearchProfileFilterListComponent,
@@ -67,7 +66,7 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
     );
   });
 
-  const providers: ProfileSummary[] = [...Array(2).keys()].map((i) => ({
+  const providers: ProfileSummary[] = [...Array(2).keys()].map(i => ({
     name: `profile${i}`,
     namespace: 'uk.ac.mauro.test',
     metadataNamespace: 'uk.ac.mauro.test.profile',
@@ -187,7 +186,6 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
     });
 
     it('should have form fields setup correctly', () => {
-      /* eslint-disable @typescript-eslint/unbound-method */
       expect(formGroup.controls.provider).toBeDefined();
       expect(formGroup.controls.provider.value).toBe(null);
       expect(
@@ -208,7 +206,6 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
 
       expect(formGroup.controls.definition).toBeDefined();
       expect(formGroup.controls.key.value).toBe(null);
-      /* eslint-enable @typescript-eslint/unbound-method */
     });
 
     it('should fetch a profile definition when a provider is selected', () => {

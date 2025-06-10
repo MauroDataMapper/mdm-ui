@@ -23,11 +23,10 @@ import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
     selector: '[mdmShowIfRoleIsWritable]',
     standalone: true
 })
-export class ShowIfRoleIsWritableDirective  {
-
+export class ShowIfRoleIsWritableDirective {
     @Input() mdmShowIfRoleIsWritable: any;
 
-    constructor(private  securityHandler: SecurityHandlerService) { }
+    constructor(private securityHandler: SecurityHandlerService) { }
 
     OnInit() {
         const show = this.securityHandler.showIfRoleIsWritable(this.mdmShowIfRoleIsWritable as Securable & Finalisable);
@@ -36,5 +35,4 @@ export class ShowIfRoleIsWritableDirective  {
             return;
         }
     }
-
 }

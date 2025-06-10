@@ -82,7 +82,7 @@ export class FavouriteHandlerService {
 
   remove(element: CatalogueItem) {
     const favorites = this.get();
-    const index = favorites.findIndex((favorite) => favorite.id === element.id);
+    const index = favorites.findIndex(favorite => favorite.id === element.id);
     if (index === -1) {
       return;
     }
@@ -116,7 +116,8 @@ export class FavouriteHandlerService {
     if (!fvt) {
       this.add(element);
       processFinish = true;
-    } else {
+    }
+ else {
       this.remove(element);
       processFinish = true;
     }

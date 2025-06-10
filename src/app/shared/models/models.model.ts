@@ -19,11 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 import { CatalogueItemDomainType, MdmTreeItem, ModelDomainType } from '@maurodatamapper/mdm-resources';
 
 export interface MdmTreeLevelManager {
-  current: number;
-  currentFocusedElement?: MdmTreeItem;
+  current: number
+  currentFocusedElement?: MdmTreeItem
 
-  backToTree: () => void;
-  focusTreeItem: (node: MdmTreeItem) => void;
+  backToTree: () => void
+  focusTreeItem: (node: MdmTreeItem) => void
 }
 
 export const mapCatalogueDomainTypeToContainer = (domain: CatalogueItemDomainType): ModelDomainType | undefined => {

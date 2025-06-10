@@ -83,7 +83,7 @@ export class SummaryMetadataChartComponent implements OnInit {
           ticks: {
             callback: (value, index): string => {
               let shortLabel = this.barChartLabels[index].toString();
-              if(shortLabel == null){
+              if (shortLabel == null) {
                 return '';
               }
               if (shortLabel.length > 14) {
@@ -97,6 +97,7 @@ export class SummaryMetadataChartComponent implements OnInit {
     },
     maintainAspectRatio: false
   };
+
   public barChartLabels: string[] = [];
   public barChartType: ChartType;
   public barChartLegend = false;
@@ -117,7 +118,8 @@ export class SummaryMetadataChartComponent implements OnInit {
         this.barChartType = 'bar';
         this.reportIndex = this.summary.summaryMetadataReports.length - 1;
         this.drawBarChart();
-      } else if (this.summary.summaryMetadataType === 'number') {
+      }
+ else if (this.summary.summaryMetadataType === 'number') {
         this.barChartType = 'line';
         this.barChartOptions.scales.xAxis.type = 'time';
         this.barChartData = [{ data: [] }];
@@ -125,10 +127,12 @@ export class SummaryMetadataChartComponent implements OnInit {
           this.barChartData[0].data.push(report.reportValue as number);
           this.barChartLabels.push(report.reportDate as string);
         });
-      } else {
+      }
+ else {
         this.displayChart = false;
       }
-    } else {
+    }
+ else {
       this.displayChart = false;
     }
   }
@@ -136,7 +140,7 @@ export class SummaryMetadataChartComponent implements OnInit {
   drawBarChart(): void {
     this.selectedReport = this.summary.summaryMetadataReports[this.reportIndex];
     this.barChartData = [];
-    this.barChartData.push({data: Object.values(this.selectedReport.reportValue as Record<string, number> | ArrayLike<number>) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3});
+    this.barChartData.push({ data: Object.values(this.selectedReport.reportValue as Record<string, number> | ArrayLike<number>) as number[], backgroundColor: this.chartBackgroundColors, borderColor: this.chartBorderColors, borderWidth: 1, borderRadius: 3 });
     this.barChartLabels = Object.keys(this.selectedReport.reportValue as Record<string, number> | ArrayLike<number>);
     this.reportDate = this.selectedReport.reportDate;
   }

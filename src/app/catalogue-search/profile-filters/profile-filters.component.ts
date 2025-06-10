@@ -34,6 +34,7 @@ export class ProfileFiltersComponent implements OnInit {
   @Output() updateProfileFilters = new EventEmitter<
     CatalogueSearchProfileFilter[]
   >();
+
   @Output() resetProfileFilters = new EventEmitter<void>();
   @Output() addProfileFilters = new EventEmitter<void>();
   constructor() {}

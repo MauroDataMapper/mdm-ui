@@ -200,16 +200,16 @@ export const branchablePathTypes = [
 ];
 
 export interface PathProperty {
-  name: string;
-  qualifiedName: string[];
+  name: string
+  qualifiedName: string[]
 }
 
 export interface PathElement {
-  type: PathElementType;
-  typeName: string;
-  label: string;
-  version?: string;
-  property?: PathProperty;
+  type: PathElementType
+  typeName: string
+  label: string
+  version?: string
+  property?: PathProperty
 }
 
 export const isPathElementBranchable = (pathElement: PathElement): boolean => {

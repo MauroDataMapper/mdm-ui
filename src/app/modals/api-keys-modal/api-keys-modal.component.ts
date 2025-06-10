@@ -28,20 +28,20 @@ import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 export interface ApiKeysModalConfiguration {
-  showName?: boolean;
-  showExpiryDay?: boolean;
-  showRefreshable?: boolean;
+  showName?: boolean
+  showExpiryDay?: boolean
+  showRefreshable?: boolean
 }
 
 export interface ApiKeysModalResponseData {
-  name: string;
-  expiresInDays: number;
-  refreshable: boolean;
+  name: string
+  expiresInDays: number
+  refreshable: boolean
 }
 
 export interface ApiKeysModalResponse {
-  status: ModalDialogStatus;
-  data?: ApiKeysModalResponseData;
+  status: ModalDialogStatus
+  data?: ApiKeysModalResponseData
 }
 
 @Component({
@@ -83,7 +83,7 @@ export class ApiKeysModalComponent implements OnInit {
   }
 
   cancel() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close({ status: ModalDialogStatus.Cancel });
       }

@@ -30,20 +30,18 @@ import { NgIf } from '@angular/common';
     standalone: true,
     imports: [NgIf, FlexModule, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, SafePipe]
 })
-export class DownloadLinkComponent implements OnChanges{
-
+export class DownloadLinkComponent implements OnChanges {
   @Input() links: Array<HTMLAnchorElement>;
   @Output() readonly linksChange = new EventEmitter<Array<HTMLAnchorElement>>();
 
-  displayedColumns: string[] = ['link','delete'];
+  displayedColumns: string[] = ['link', 'delete'];
   dataSource = new MatTableDataSource<HTMLAnchorElement>();
 
   constructor() { }
 
-  deleteLink(link : HTMLAnchorElement)
-  {
+  deleteLink(link: HTMLAnchorElement) {
     const index = this.dataSource.data.indexOf(link);
-    this.dataSource.data.splice(index,1);
+    this.dataSource.data.splice(index, 1);
     this.dataSource._updateChangeSubscription();
     this.linksChange.emit(this.dataSource.data);
   }
@@ -52,5 +50,3 @@ export class DownloadLinkComponent implements OnChanges{
     this.dataSource = new MatTableDataSource<HTMLAnchorElement>(this.links);
   }
 }
-
-

@@ -26,7 +26,6 @@ describe('DataElementStep2Component', () => {
     harness = await setupTestModuleForComponent(DataElementStep2Component)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

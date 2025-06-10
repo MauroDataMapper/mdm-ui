@@ -22,7 +22,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
   providedIn: 'root'
 })
 export class SemanticLinkHandlerService {
-
   constructor(private resources: MdmResourcesService) { }
 
   post = (source, target, linkType) => {
@@ -38,15 +37,18 @@ export class SemanticLinkHandlerService {
       if (target.domainType === 'Term') {
         // Term->Term
         return 'TermSemanticLink';
-      } else {
+      }
+ else {
         // Term->CI
         return 'TermCatalogueSemanticLink';
       }
-    } else {
+    }
+ else {
       if (source.domainType !== 'Term' && target.domainType === 'Term') {
         // CI->Term
         return 'CatalogueTermSemanticLink';
-      } else {
+      }
+ else {
         // CI->CI
         return 'CatalogueSemanticLink';
       }
@@ -54,7 +56,6 @@ export class SemanticLinkHandlerService {
   }
 
   private action(source, target, linkId, linkType, operation) {
-
     const resource = {
       target: { id: target.id },
       linkType,
@@ -63,7 +64,8 @@ export class SemanticLinkHandlerService {
 
     if (operation === 'POST') {
       return this.resources.catalogueItem.saveSemanticLinks(source.domainType as string, source.id as string, resource);
-    } else {
+    }
+ else {
       return this.resources.catalogueItem.updateSemanticLink(source.domainType as string, source.id as string, linkId as string, resource);
     }
 

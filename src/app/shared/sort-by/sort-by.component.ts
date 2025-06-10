@@ -22,8 +22,8 @@ import { NgFor } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 export interface SortByOption {
-  value: string;
-  displayName: string;
+  value: string
+  displayName: string
 }
 
 export type SortOrder = 'asc' | 'desc';

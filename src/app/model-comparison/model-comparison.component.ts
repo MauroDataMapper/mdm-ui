@@ -73,7 +73,6 @@ export class ModelComparisonComponent implements OnInit {
     private routerGlobals: UIRouterGlobals
   ) {}
 
-  /* eslint-disable no-shadow */
   async ngOnInit() {
     const sourceId: Uuid = this.routerGlobals.params.sourceId;
     const targetId: Uuid = this.routerGlobals.params.targetId;
@@ -100,28 +99,28 @@ export class ModelComparisonComponent implements OnInit {
     let swapNeeded = false;
     for (
       let i = 0;
-      this.sourceModel.semanticLinks &&
-      i < this.sourceModel.semanticLinks.length;
+      this.sourceModel.semanticLinks
+      && i < this.sourceModel.semanticLinks.length;
       i++
     ) {
       const link = this.sourceModel.semanticLinks[i];
       if (
-        link.linkType === 'New Version Of' &&
-        link.target.id === this.targetModel.id
+        link.linkType === 'New Version Of'
+        && link.target.id === this.targetModel.id
       ) {
         swapNeeded = true;
       }
     }
     for (
       let i = 0;
-      this.targetModel.semanticLinks &&
-      i < this.targetModel.semanticLinks.length;
+      this.targetModel.semanticLinks
+      && i < this.targetModel.semanticLinks.length;
       i++
     ) {
       const link = this.targetModel.semanticLinks[i];
       if (
-        link.linkType === 'Superseded By' &&
-        link.target.id === this.sourceModel.id
+        link.linkType === 'Superseded By'
+        && link.target.id === this.sourceModel.id
       ) {
         swapNeeded = true;
       }
@@ -153,7 +152,8 @@ export class ModelComparisonComponent implements OnInit {
     if (!selectedId) {
       if (side === 'left') {
         this.sourceModel = null;
-      } else if (side === 'right') {
+      }
+ else if (side === 'right') {
         this.targetModel = null;
       }
       this.diffs = [];
@@ -163,7 +163,8 @@ export class ModelComparisonComponent implements OnInit {
     if (side === 'left') {
       this.sourceModel = await this.loadDataModelDetail(selectedId as string);
       this.targetModel = await this.loadDataModelDetail(this.targetModel?.id as string);
-    } else if (side === 'right') {
+    }
+ else if (side === 'right') {
       this.sourceModel = await this.loadDataModelDetail(this.sourceModel?.id as string);
       this.targetModel = await this.loadDataModelDetail(selectedId as string);
     }
@@ -195,6 +196,7 @@ export class ModelComparisonComponent implements OnInit {
       }
     });
   };
+
   initDiff = (id, diffMap) => {
     if (diffMap[id]) {
       return;
@@ -524,8 +526,8 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.leftBreadcrumbs) {
                   this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-                  const parentDC =
-                    el.leftBreadcrumbs[el.leftBreadcrumbs.length - 1];
+                  const parentDC
+                    = el.leftBreadcrumbs[el.leftBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
                   el.created = false;
@@ -537,8 +539,8 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.rightBreadcrumbs) {
                   this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-                  const parentDC =
-                    el.rightBreadcrumbs[el.rightBreadcrumbs.length - 1];
+                  const parentDC
+                    = el.rightBreadcrumbs[el.rightBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
                   el.created = false;
@@ -639,8 +641,8 @@ export class ModelComparisonComponent implements OnInit {
                   }
 
                   if (
-                    diffElement === 'dataTypes' &&
-                    elemDiff.enumerationValues
+                    diffElement === 'dataTypes'
+                    && elemDiff.enumerationValues
                   ) {
                     this.findDiffEnumerationValues(
                       el.leftId,
@@ -651,8 +653,8 @@ export class ModelComparisonComponent implements OnInit {
                   }
 
                   if (
-                    diffElement === 'dataElements' &&
-                    elemDiff['dataType.label']
+                    diffElement === 'dataElements'
+                    && elemDiff['dataType.label']
                   ) {
                     this.findDiffDataTypeChanges(
                       el.leftId,
@@ -780,11 +782,14 @@ export class ModelComparisonComponent implements OnInit {
 
     if (this.diffs.properties.length > 0) {
       this.activeTab.index = 0;
-    } else if (this.diffs.metadata.length > 0) {
+    }
+ else if (this.diffs.metadata.length > 0) {
       this.activeTab.index = 1;
-    } else if (this.diffs.dataTypes.length > 0) {
+    }
+ else if (this.diffs.dataTypes.length > 0) {
       this.activeTab.index = 2;
-    } else if (this.diffs.dataElements.length > 0) {
+    }
+ else if (this.diffs.dataElements.length > 0) {
       this.activeTab.index = 3;
     }
   };
@@ -802,9 +807,9 @@ export class ModelComparisonComponent implements OnInit {
       this.diffs.filteredDataElements = this.diffs.dataElements.filter(
         (dataType) => {
           return (
-            (this.form.dataElementFilter === 'deleted' && dataType.deleted) ||
-            (this.form.dataElementFilter === 'created' && dataType.created) ||
-            (this.form.dataElementFilter === 'modified' && dataType.modified)
+            (this.form.dataElementFilter === 'deleted' && dataType.deleted)
+            || (this.form.dataElementFilter === 'created' && dataType.created)
+            || (this.form.dataElementFilter === 'modified' && dataType.modified)
           );
         }
       );
@@ -820,9 +825,9 @@ export class ModelComparisonComponent implements OnInit {
 
       this.diffs.filteredDataTypes = this.diffs.dataTypes.filter((dataType) => {
         return (
-          (this.form.dataTypeFilter === 'deleted' && dataType.deleted) ||
-          (this.form.dataTypeFilter === 'created' && dataType.created) ||
-          (this.form.dataTypeFilter === 'modified' && dataType.modified)
+          (this.form.dataTypeFilter === 'deleted' && dataType.deleted)
+          || (this.form.dataTypeFilter === 'created' && dataType.created)
+          || (this.form.dataTypeFilter === 'modified' && dataType.modified)
         );
       });
     }

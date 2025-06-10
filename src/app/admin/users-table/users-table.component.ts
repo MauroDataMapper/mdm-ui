@@ -62,7 +62,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   showDisable = false;
   showEdit = false;
 
-  displayedColumns: string[] = ['firstName','lastName', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(
@@ -105,7 +105,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  usersFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection , filters?: Record<string, any>): Observable<any> {
+  usersFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }
@@ -126,20 +126,20 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.stateHandler.Go('admin.user', { id: null }, null);
   };
 
-  resetPassword(row:any) {
+  resetPassword(row: any) {
     from(this.resources.catalogueUser.adminPasswordReset(row.id as string, null)).subscribe(() => {
       this.messageHandler.showSuccess('Reset password request received successfully, please use the email tab to view status');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem sending reset password email.', error);
     });
   }
 
-  toggleDeactivate(row:any) {
+  toggleDeactivate(row: any) {
     row.disabled = !row.disabled;
     from(this.resources.catalogueUser.update(row.id as string, row)).subscribe(() => {
       this.messageHandler.showSuccess('User details updated successfully.');
       this.broadcast.dispatch('pendingUserUpdated');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the user.', error);
     });
   }

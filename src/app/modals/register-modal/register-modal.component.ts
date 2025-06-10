@@ -76,7 +76,7 @@ export class RegisterModalComponent implements OnInit {
         this.dialogRef.close();
         this.registerSuccess();
       },
-      error => {
+      (error) => {
         let firstError: string = error.error.errors[0].message;
 
         if (firstError.indexOf('Property [emailAddress] of class [class ox.softeng.metadatacatalogue.core.user.CatalogueUser] with value') >= 0 && firstError.indexOf('must be unique') >= 0) {
@@ -109,7 +109,7 @@ export class RegisterModalComponent implements OnInit {
   }
 
   close() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close();
       }

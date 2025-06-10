@@ -38,13 +38,13 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export interface ExportModelDialogOptions {
-  domain: ModelDomain;
+  domain: ModelDomain
 }
 
 export interface ExportModelDialogResponse {
-  status: ModalDialogStatus;
-  exporter?: Exporter;
-  parameters?: ExportQueryParameters;
+  status: ModalDialogStatus
+  exporter?: Exporter
+  parameters?: ExportQueryParameters
 }
 
 @Component({
@@ -57,7 +57,7 @@ export interface ExportModelDialogResponse {
 export class ExportModelDialogComponent implements OnInit {
   exporters: Exporter[];
   formGroup = new FormGroup({
-    exporter: new FormControl<Exporter>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    exporter: new FormControl<Exporter>(null, Validators.required),
     asynchronous: new FormControl(false)
   });
 

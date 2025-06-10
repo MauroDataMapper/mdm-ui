@@ -129,7 +129,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         allowAnonymous: true
       },
       views: {
-        left: {
+        'left': {
           component: ModelsComponent
         },
         '': {

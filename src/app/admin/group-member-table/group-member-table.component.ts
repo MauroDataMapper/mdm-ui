@@ -61,6 +61,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   ROLES = this.roles.map;
@@ -211,7 +212,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
         () => {
           this.records[$index] = record;
           this.messageHandler.showSuccess('User added successfully.');
-          this.groupMembersFetch().subscribe((data:any) => {
+          this.groupMembersFetch().subscribe((data: any) => {
             this.records.push(data.body.items[data.body.count - 1]);
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
@@ -232,7 +233,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
     record.deletePending = true;
   };
 
-  askForDelete = (record: { firstName: string; lastName: string }) => {
+  askForDelete = (record: { firstName: string, lastName: string }) => {
     this.dialog
       .openConfirmationAsync({
         data: {
@@ -251,7 +252,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
       .subscribe(
         () => {
           this.messageHandler.showSuccess('User removed successfully.');
-          this.groupMembersFetch().subscribe((data:any) => {
+          this.groupMembersFetch().subscribe((data: any) => {
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
             this.table.renderRows();

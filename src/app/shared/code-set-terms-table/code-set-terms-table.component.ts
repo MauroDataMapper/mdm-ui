@@ -71,12 +71,12 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = false;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   deleteInProgress: boolean;
   records: any[] = [];
   access: Access;
-  baseTypes:  { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
-  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id:string; title: string; classifiable?: boolean}[];
+  baseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
+  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
   filterValue: any;
   filterName: any;
   showAddTerm: any;
@@ -113,21 +113,20 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
-
+    ).subscribe((data) => {
       this.records = data;
       this.access = this.securityHandler.elementAccess(this.codeSet);
       if (this.codeSet.availableActions.includes('update') && !this.codeSet.finalised) {
         this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
-      } else {
+      }
+ else {
         this.displayedColumns = ['terminology', 'term', 'definition'];
       }
-
     });
     this.changeRef.detectChanges();
   }
 
-  termFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection, filters?:{[p: string]: any}): Observable<any> {
+  termFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: { [p: string]: any }): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.codeSet.terms(this.codeSet.id, options);
@@ -150,7 +149,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.filterValue = filterValue;
     if (this.filterValue !== '') {
       this.filterName = filterName;
-    } else {
+    }
+ else {
       this.filterName = '';
     }
     this.applyFilter();
@@ -160,7 +160,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  delete(record, $index:number) {
+  delete(record, $index: number) {
     if (this.clientSide) {
       this.records.splice($index, 1);
       return;
@@ -170,7 +170,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       if (this.type === 'static') {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Term removed successfully.');
-      } else {
+      }
+ else {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Term removed successfully.');
         this.filterEvent.emit();
@@ -207,13 +208,13 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('Terms added successfully.');
       const options = this.gridService.constructOptions(40, 0);
 
-      this.resources.codeSet.terms(this.codeSet.id, options).subscribe(data => {
+      this.resources.codeSet.terms(this.codeSet.id, options).subscribe((data) => {
         this.records = data.body.items;
       });
       setTimeout(() => {
         this.toggleAddTermsSection();
       }, 500);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem adding the Terms.', error);
     });
   }

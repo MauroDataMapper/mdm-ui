@@ -27,10 +27,9 @@ import { MatButton } from '@angular/material/button';
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton]
 })
 export class MarkupDisplayModalComponent implements OnInit {
+  title: string;
 
-  title :string;
-
-  constructor(    public dialogRef: MatDialogRef<MarkupDisplayModalComponent>,
+  constructor(public dialogRef: MatDialogRef<MarkupDisplayModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MarkDisplayModalData
   ) { }
 
@@ -41,11 +40,9 @@ export class MarkupDisplayModalComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
-
 }
 
-export class MarkDisplayModalData
-{
-  content:any;
-  title:string;
+export class MarkDisplayModalData {
+  content: any;
+  title: string;
 }

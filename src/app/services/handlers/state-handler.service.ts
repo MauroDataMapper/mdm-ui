@@ -26,57 +26,57 @@ import { Location } from '@angular/common';
 export class StateHandlerService {
   handler: Handler = {
     states: {
-      home: 'appContainer.mainApp.home',
-      alldatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
-      datamodel: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
-      referencedatamodel:
+      'home': 'appContainer.mainApp.home',
+      'alldatamodel': 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
+      'datamodel': 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
+      'referencedatamodel':
         'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
-      codeset: 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
-      dataclass: 'appContainer.mainApp.twoSidePanel.catalogue.dataClass',
-      datatype: 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
-      enumerationvalues:
+      'codeset': 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
+      'dataclass': 'appContainer.mainApp.twoSidePanel.catalogue.dataClass',
+      'datatype': 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
+      'enumerationvalues':
         'appContainer.mainApp.twoSidePanel.catalogue.enumerationValues',
-      dataelement: 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
-      folder: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
-      versionedfolder:
+      'dataelement': 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
+      'folder': 'appContainer.mainApp.twoSidePanel.catalogue.folder',
+      'versionedfolder':
         'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
-      classification:
+      'classification':
         'appContainer.mainApp.twoSidePanel.catalogue.classification',
-      diagram: 'appContainer.mainApp.diagram',
+      'diagram': 'appContainer.mainApp.diagram',
 
-      terminology: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
-      term: 'appContainer.mainApp.twoSidePanel.catalogue.term',
+      'terminology': 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
+      'term': 'appContainer.mainApp.twoSidePanel.catalogue.term',
 
-      subscribedcatalogue:
+      'subscribedcatalogue':
         'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
-      federateddatamodel:
+      'federateddatamodel':
         'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
 
-      newterminology:
+      'newterminology':
         'appContainer.mainApp.twoSidePanel.catalogue.NewTerminology',
-      newcodeset: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
-      newdatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
-      newdataclass: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',
-      newdataelement:
+      'newcodeset': 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
+      'newdatamodel': 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
+      'newdataclass': 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',
+      'newdataelement':
         'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
-      newdatatype: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataType',
-      newreferencedatamodel:
+      'newdatatype': 'appContainer.mainApp.twoSidePanel.catalogue.NewDataType',
+      'newreferencedatamodel':
         'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataModel',
-      newclassification:
+      'newclassification':
         'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
-      newrefdatatype:
+      'newrefdatatype':
         'appContainer.mainApp.twoSidePanel.catalogue.NewReferenceDataType',
-      newversiondatamodel:
+      'newversiondatamodel':
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
-      newversionreferencedatamodel:
+      'newversionreferencedatamodel':
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
-      newversionmodel:
+      'newversionmodel':
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
-      newversionterminology:
+      'newversionterminology':
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
-      newversioncodeset:
+      'newversioncodeset':
         'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
-      modelsmerginggraph:
+      'modelsmerginggraph':
         'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
       'admin.user': 'appContainer.adminArea.user',
       'admin.users': 'appContainer.adminArea.users',
@@ -86,39 +86,40 @@ export class StateHandlerService {
       'admin.group': 'appContainer.adminArea.group',
       'admin.groups': 'appContainer.adminArea.groups',
 
-      dataflowtransformation: 'appContainer.mainApp.dataFlowTransformation',
-      dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
-      dataflowchain: 'appContainer.mainApp.dataFlowChain',
-      modelscomparison: 'appContainer.mainApp.modelsComparison',
-      mergediff: 'appContainer.mainApp.mergeDiff',
-      linksuggestion: 'appContainer.mainApp.linkSuggestion',
-      export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
-      import: 'appContainer.mainApp.twoSidePanel.catalogue.import',
+      'dataflowtransformation': 'appContainer.mainApp.dataFlowTransformation',
+      'dataflowdm2dm': 'appContainer.mainApp.dataFlowDM2DM',
+      'dataflowchain': 'appContainer.mainApp.dataFlowChain',
+      'modelscomparison': 'appContainer.mainApp.modelsComparison',
+      'mergediff': 'appContainer.mainApp.mergeDiff',
+      'linksuggestion': 'appContainer.mainApp.linkSuggestion',
+      'export': 'appContainer.mainApp.twoSidePanel.catalogue.export',
+      'import': 'appContainer.mainApp.twoSidePanel.catalogue.import',
 
-      simpleviewhome: 'appContainer.simpleApp.home',
-      simpleviewresult: 'appContainer.simpleApp.result',
-      simpleviewelement: 'appContainer.simpleApp.element',
-      about: 'appContainer.mainApp.about',
-      containercopy:
+      'simpleviewhome': 'appContainer.simpleApp.home',
+      'simpleviewresult': 'appContainer.simpleApp.result',
+      'simpleviewelement': 'appContainer.simpleApp.element',
+      'about': 'appContainer.mainApp.about',
+      'containercopy':
         'appContainer.mainApp.twoSidePanel.catalogue.containerCopy',
-      dataclasscopy:
+      'dataclasscopy':
         'appContainer.mainApp.twoSidePanel.catalogue.dataClassCopy',
-      dataelementcopy:
+      'dataelementcopy':
         'appContainer.mainApp.twoSidePanel.catalogue.dataElementCopy',
-      termcopy: 'appContainer.mainApp.twoSidePanel.catalogue.termCopy'
+      'termcopy': 'appContainer.mainApp.twoSidePanel.catalogue.termCopy'
     }
   };
+
   constructor(
     private router: UIRouter,
     private ngToast: ToastrService,
     private location: Location
   ) {}
 
-  handleSimpleView(name:string, params: {[p: string]: any}) {
+  handleSimpleView(name: string, params: { [p: string]: any }) {
     // tslint:disable-next-line: deprecation
     if (
-      (params && params.mode === 'advancedView') ||
-      [
+      (params && params.mode === 'advancedView')
+      || [
         'appContainer.simpleApp.result',
         'appContainer.simpleApp.element'
       ].indexOf(this.router.stateService.current.toString()) === -1
@@ -167,7 +168,7 @@ export class StateHandlerService {
     return state;
   }
 
-  getStateName(name:string, params:{[p: string]: any} = {}) {
+  getStateName(name: string, params: { [p: string]: any } = {}) {
     let state = name;
     if (this.handler.states[name.toLowerCase().trim()]) {
       state = this.handler.states[name.toLowerCase().trim()];
@@ -178,13 +179,13 @@ export class StateHandlerService {
     return state;
   }
 
-  getURL(name:string, params: {[p: string]: any} = {}): string {
+  getURL(name: string, params: { [p: string]: any } = {}): string {
     const state = this.getStateName(name, params);
     // return $state.href(state, params, { absolute: false });
     return this.router.stateService.href(state, params, { absolute: false });
   }
 
-  Go(name: string, params: {[p: string]: any} = {}, option: {[p: string]: any} = null) {
+  Go(name: string, params: { [p: string]: any } = {}, option: { [p: string]: any } = null) {
     const state = this.getStateName(name, params);
     return this.router.stateService.go(state, params, option);
   }
@@ -197,34 +198,38 @@ export class StateHandlerService {
     this.ngToast.warning('Server connection failed');
   }
 
-  ServerError(option: {[p: string]: any} = null) {
+  ServerError(option: { [p: string]: any } = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.serverError',
       {},
       option
     );
   }
+
   ServerTimeout() {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.serverTimeout',
       {}
     );
   }
-  NotImplemented(option: {[p: string]: any} = null) {
+
+  NotImplemented(option: { [p: string]: any } = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notImplemented',
       {},
       option
     );
   }
-  NotAuthorized(option: {[p: string]: any} = null) {
+
+  NotAuthorized(option: { [p: string]: any } = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notAuthorized',
       {},
       option
     );
   }
-  NotFound(option: {[p: string]: any} = null) {
+
+  NotFound(option: { [p: string]: any } = null) {
     return this.router.stateService.go(
       'appContainer.mainApp.twoSidePanel.catalogue.notFound',
       {},
@@ -236,7 +241,7 @@ export class StateHandlerService {
     this.location.back();
   }
 
-  NewWindow(name:string, params:{[p: string]: any} = {}, windowsOptions:string = null) {
+  NewWindow(name: string, params: { [p: string]: any } = {}, windowsOptions: string = null) {
     const url = this.router.stateService.href(
       this.getStateName(name, params),
       params
@@ -244,7 +249,7 @@ export class StateHandlerService {
     window.open(url, '_blank', windowsOptions);
   }
 
-  CurrentWindow(url:string) {
+  CurrentWindow(url: string) {
     window.location.href = url;
   }
 }

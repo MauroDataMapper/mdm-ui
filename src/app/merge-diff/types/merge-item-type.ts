@@ -22,14 +22,14 @@ export const branchNameField = 'branchName';
 export type MergeItemValueType = 'undefined' | 'string' | 'number';
 
 export interface MergeItemSelection {
-  mergeItem: MergeDiffItem;
-  isCommitting: boolean;
+  mergeItem: MergeDiffItem
+  isCommitting: boolean
 }
 
 export interface CommittingMergeDiffItem {
-  branchSelected: MergeConflictResolution;
-  branchNameSelected?: string;
-  mixedContent?: string;
+  branchSelected: MergeConflictResolution
+  branchNameSelected?: string
+  mixedContent?: string
 }
 
 /**

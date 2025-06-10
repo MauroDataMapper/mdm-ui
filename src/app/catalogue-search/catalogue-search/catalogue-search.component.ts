@@ -127,9 +127,9 @@ export class CatalogueSearchComponent implements AfterViewInit {
   }
 
   private setValid() {
-    this.valid =
-      this.searchForm.formGroup.valid &&
-      (this.advancedForm?.formGroup?.valid ?? true) &&
-      (this.profileFiltersForm?.formGroup?.valid ?? true);
+    this.valid
+      = this.searchForm.formGroup.valid
+        && (this.advancedForm?.formGroup?.valid ?? true)
+        && (this.profileFiltersForm?.formGroup?.valid ?? true);
   }
 }

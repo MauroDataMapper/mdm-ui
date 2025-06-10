@@ -25,7 +25,7 @@ describe('LoadingIndicatorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ LoadingIndicatorComponent ]
+      imports: [LoadingIndicatorComponent]
     })
     .compileComponents();
   }));

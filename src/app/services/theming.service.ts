@@ -28,7 +28,6 @@ const allowedThemeNames = [
   providedIn: 'root'
 })
 export class ThemingService {
-
   readonly themeName: string;
   readonly themeCssSelector: string;
 

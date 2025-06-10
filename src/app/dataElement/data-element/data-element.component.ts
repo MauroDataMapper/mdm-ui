@@ -112,27 +112,27 @@ export class DataElementComponent
   ) {
     super();
     if (
-      this.isGuid(this.uiRouterGlobals.params.id as string) &&
-      (!this.uiRouterGlobals.params.id ||
-        !this.uiRouterGlobals.params.dataModelId ||
-        !this.uiRouterGlobals.params.dataClassId)
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && (!this.uiRouterGlobals.params.id
+        || !this.uiRouterGlobals.params.dataModelId
+        || !this.uiRouterGlobals.params.dataClassId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataModelId &&
-      this.uiRouterGlobals.params.dataModelId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataModelId
+      && this.uiRouterGlobals.params.dataModelId.trim() !== ''
     ) {
       this.dataModel = { id: this.uiRouterGlobals.params.dataModelId };
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataClassId &&
-      this.uiRouterGlobals.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataClassId
+      && this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
       this.dataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
@@ -167,7 +167,7 @@ export class DataElementComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  fetchDataTypes = (text, loadAll, offset:number, limit: number) => {
+  fetchDataTypes = (text, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -218,7 +218,8 @@ export class DataElementComponent
 
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
-      } else if (item.controlType === ProfileControlTypes.dataType) {
+      }
+ else if (item.controlType === ProfileControlTypes.dataType) {
         const dataType = item.value as DataType;
 
         // Backend dataType groups several frontend types into one
@@ -231,7 +232,8 @@ export class DataElementComponent
           : dataType.domainType;
 
         resource.dataType = dataType;
-      } else {
+      }
+ else {
         resource[item.propertyName] = item.value;
       }
     });
@@ -263,7 +265,7 @@ export class DataElementComponent
       );
   }
 
-  dataElementDetails(dataModelId: string, dataClassId:string, id:string) {
+  dataElementDetails(dataModelId: string, dataClassId: string, id: string) {
     this.resourcesService.dataElement
       .get(dataModelId, dataClassId, id)
       .subscribe((result: DataElementDetailResponse) => {
@@ -321,8 +323,8 @@ export class DataElementComponent
     this.access = this.securityHandler.elementAccess(this.dataElementOutput);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 }

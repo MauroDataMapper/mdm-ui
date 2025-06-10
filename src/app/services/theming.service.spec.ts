@@ -20,7 +20,7 @@ import { EnvironmentService } from './environment.service';
 import { ThemingService } from './theming.service';
 
 interface EnvironmentStub {
-  themeName?: string;
+  themeName?: string
 }
 
 describe('ThemingService', () => {
@@ -82,4 +82,3 @@ describe('ThemingService', () => {
     expect(service.themeCssSelector).toBe('default-theme');
   });
 });
-

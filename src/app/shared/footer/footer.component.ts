@@ -26,26 +26,26 @@ export interface FooterLink {
   /**
    * The display label to apply to the link.
    */
-  label: string;
+  label: string
 
   /**
    * If this is a hyperlink, provide the href for the anchor tag.
    *
    * @see {@link routerLink}
    */
-  href?: string;
+  href?: string
 
   /**
    * If this is a router link to another component, provide the route name to transition to.
    *
    * @see {@link href}
    */
-  routerLink?: string;
+  routerLink?: string
 
   /**
    * State the target to use on the anchor tag.
    */
-  target?: '_blank' | '_self';
+  target?: '_blank' | '_self'
 }
 
 @Component({

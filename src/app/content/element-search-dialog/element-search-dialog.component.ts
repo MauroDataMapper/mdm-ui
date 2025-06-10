@@ -46,13 +46,13 @@ import { MatFormField, MatHint, MatError } from '@angular/material/form-field';
 const defaultMinSearchTermLength = 3;
 
 export interface ElementSearchDialogData {
-  root: CatalogueItem;
-  searchTerm?: string;
-  minSearchTermLength?: number;
+  root: CatalogueItem
+  searchTerm?: string
+  minSearchTermLength?: number
 }
 
 export interface ElementSearchDialogResponse {
-  selected?: MauroItem & Pathable;
+  selected?: MauroItem & Pathable
 }
 
 @Component({
@@ -81,14 +81,14 @@ export class ElementSearchDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.minSearchTermLength =
-      this.data.minSearchTermLength ?? defaultMinSearchTermLength;
+    this.minSearchTermLength
+      = this.data.minSearchTermLength ?? defaultMinSearchTermLength;
     this.searchTerm.setValue(this.data.searchTerm);
 
     this.searchTerm.valueChanges
       .pipe(
         filter(
-          (value) => value !== null && value.length >= this.minSearchTermLength
+          value => value !== null && value.length >= this.minSearchTermLength
         ),
         distinctUntilChanged(),
         debounceTime(500),

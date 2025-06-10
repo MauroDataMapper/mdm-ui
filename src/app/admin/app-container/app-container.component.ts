@@ -48,7 +48,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.securityHandler
       .isAdministrator()
-      .subscribe(isAdministrator => {
+      .subscribe((isAdministrator) => {
         this.isAdministrator = isAdministrator;
 
         if (!isAdministrator) {
@@ -69,7 +69,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
   }
 
   getPendingUsers = () => {
-    this.sharedService.pendingUsersCount().subscribe(data => {
+    this.sharedService.pendingUsersCount().subscribe((data) => {
       this.pendingUsersCount = data.body.count;
     });
   };

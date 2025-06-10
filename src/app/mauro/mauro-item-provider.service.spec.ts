@@ -120,7 +120,6 @@ describe('MauroItemProviderService', () => {
   };
   resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-
   const constructMauroItemFromIdentifier = (
     identifier: MauroIdentifier
   ): MauroItem => {

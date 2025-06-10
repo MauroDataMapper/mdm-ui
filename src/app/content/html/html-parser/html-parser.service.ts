@@ -20,7 +20,7 @@ import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 
 export interface HtmlParserContext {
-  versionOrBranchOverride?: string;
+  versionOrBranchOverride?: string
 }
 
 @Injectable({

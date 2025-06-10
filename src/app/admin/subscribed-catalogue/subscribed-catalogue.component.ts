@@ -55,8 +55,9 @@ import { NgIf, NgFor } from '@angular/common';
 export class SubscribedCatalogueComponent implements OnInit {
   readonly noAuthAuthenticationType: string = 'No Authentication';
   readonly apiKeyAuthenticationType: string = 'API Key';
-  readonly oAuthClientCredentialsAuthenticationType: string =
-    'OAuth (Client Credentials)';
+  readonly oAuthClientCredentialsAuthenticationType: string
+    = 'OAuth (Client Credentials)';
+
   readonly supportedAuthenticationTypes: string[] = [
     this.noAuthAuthenticationType,
     this.apiKeyAuthenticationType,
@@ -69,7 +70,6 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   isCreating: boolean;
 
-  /* eslint-disable @typescript-eslint/unbound-method */
   formGroup = new FormGroup({
     label: new FormControl('', [Validators.required]),
     description: new FormControl(''),
@@ -94,7 +94,6 @@ export class SubscribedCatalogueComponent implements OnInit {
       MdmValidators.requiredConditional(() => this.useOauthAuthentication)
     )
   });
-  /* eslint-enable @typescript-eslint/unbound-method */
 
   constructor(
     private resources: MdmResourcesService,
@@ -149,16 +148,16 @@ export class SubscribedCatalogueComponent implements OnInit {
   get useApiKeyAuthentication() {
     // formGroup may not exist yet so use null conditionals
     return (
-      this.formGroup?.controls?.authenticationType?.value ===
-      this.apiKeyAuthenticationType
+      this.formGroup?.controls?.authenticationType?.value
+      === this.apiKeyAuthenticationType
     );
   }
 
   get useOauthAuthentication() {
     // formGroup may not exist yet so use null conditionals
     return (
-      this.formGroup?.controls?.authenticationType?.value ===
-      this.oAuthClientCredentialsAuthenticationType
+      this.formGroup?.controls?.authenticationType?.value
+      === this.oAuthClientCredentialsAuthenticationType
     );
   }
 
@@ -182,7 +181,7 @@ export class SubscribedCatalogueComponent implements OnInit {
           >[]) => {
             this.connectionTypes = typesResponse.body;
             this.authenticationTypes = this.supportedAuthenticationTypes.filter(
-              (authType) => authenticationTypesResponse.body.includes(authType)
+              authType => authenticationTypesResponse.body.includes(authType)
             );
 
             if (this.catalogueId) {

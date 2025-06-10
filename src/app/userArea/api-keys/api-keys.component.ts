@@ -75,7 +75,7 @@ export class ApiKeysComponent implements OnInit {
       this.records = result.body.items;
       this.totalItemCount = result.body.count;
       this.isLoadingResults = false;
-    }, error => {
+    }, (error) => {
       this.records = [];
       this.totalItemCount = 0;
       this.messageHandler.showError('There was a problem loading the API Keys', error);
@@ -83,28 +83,34 @@ export class ApiKeysComponent implements OnInit {
     });
   }
 
-  disableKey = record => {
-    if(!this.currentUser){return;}
+  disableKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.resourcesService.catalogueUser.disableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key disabled successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the API Key.', error);
     });
   };
 
-  enableKey = record => {
-    if(!this.currentUser){return;}
+  enableKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.resourcesService.catalogueUser.enableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key enabled successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the API Key.', error);
     });
   };
 
-  refreshKey = record => {
-    if(!this.currentUser){return;}
+  refreshKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -122,13 +128,15 @@ export class ApiKeysComponent implements OnInit {
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key enabled successfully.');
         this.listApiKeys(this.currentUser);
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the API Key.', error);
       });
   };
 
   addApiKey = () => {
-    if(!this.currentUser){return;}
+    if (!this.currentUser) {
+      return;
+    }
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -146,13 +154,15 @@ export class ApiKeysComponent implements OnInit {
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key created successfully.');
         this.listApiKeys(this.currentUser);
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem creating this API Key.', error);
       });
   };
 
-  removeKey = record => {
-    if(!this.currentUser){return;}
+  removeKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.dialog.openConfirmationAsync({
       data: {
         title: 'Are you sure you want to delete this API Key?',
@@ -167,12 +177,12 @@ export class ApiKeysComponent implements OnInit {
     .subscribe(() => {
       this.messageHandler.showSuccess('API Key removed successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem removing this API Key.', error);
     });
   };
 
-  copyToClipboard = record => {
+  copyToClipboard = (record) => {
     this.clipboardService.copyFromContent(record.apiKey as string);
     this.messageHandler.showSuccess(`API Key (${record.name}) copied successfully!`);
   };

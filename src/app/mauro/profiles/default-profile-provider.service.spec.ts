@@ -461,7 +461,7 @@ describe('DefaultProfileProviderService', () => {
 
         mockItemProviderGetMany(identifiers, items);
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
 
         const expected$ = cold('a|', { a: profiles });
         const actual$ = service.getMany(
@@ -528,14 +528,14 @@ describe('DefaultProfileProviderService', () => {
 
         // Mock collections of items and identifiers to simulate multiple objects
         const items = [item, item];
-        const payloads: MauroUpdatePayload[] = items.map((it) => ({
+        const payloads: MauroUpdatePayload[] = items.map(it => ({
           identifier,
           item: it
         }));
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const profilePayloads: MauroProfileUpdatePayload[] = profiles.map(
-          (profile) => ({ identifier, profile })
+          profile => ({ identifier, profile })
         );
 
         mockItemUpdaterSaveMany(payloads, items);
@@ -589,9 +589,9 @@ describe('DefaultProfileProviderService', () => {
 
       // Manually create bad string format
       profile.sections
-        .find((s) => s.name === 'Default')
+        .find(s => s.name === 'Default')
         .fields.find(
-          (f) => f.metadataPropertyName === 'multiplicity'
+          f => f.metadataPropertyName === 'multiplicity'
         ).currentValue = 'bad format';
 
       const validation: MauroProfileValidationResult = {
@@ -627,7 +627,7 @@ describe('DefaultProfileProviderService', () => {
         // Mock collections of items to simulate multiple objects
         const items = [item, item];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const validations: MauroProfileValidationResult[] = profiles.map(
           (profile) => {
             return {

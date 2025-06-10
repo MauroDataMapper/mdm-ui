@@ -52,9 +52,9 @@ export class TermRelationshipsComponent implements OnInit {
       }
 
       this.resources.term.termRelationships(this.term.terminology.id as string, this.term.id, parameters)
-        .subscribe(data => {
+        .subscribe((data) => {
           this.totalItems = data.body.count;
-          data.body.items.forEach(item => {
+          data.body.items.forEach((item) => {
             if (!this.relations[item.relationshipType.displayLabel]) {
               this.relationshipTypes.push(item.relationshipType.displayLabel);
               this.relations[item.relationshipType.displayLabel] = [];

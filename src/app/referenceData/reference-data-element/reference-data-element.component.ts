@@ -51,6 +51,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   @Input() parent: CatalogueItem;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @Output() totalCount = new EventEmitter<string>();
 
   records: any[] = [];
@@ -95,7 +96,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       });
   }
 
-  listDataElements = (pageSize?:number, pageIndex?:number) => {
+  listDataElements = (pageSize?: number, pageIndex?: number) => {
     const options = this.gridService.constructOptions(pageSize, pageIndex);
     return this.resources.referenceDataElement.list(this.parent?.id, options);
   };

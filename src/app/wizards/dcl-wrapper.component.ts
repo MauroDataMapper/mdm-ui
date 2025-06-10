@@ -35,7 +35,7 @@ import {
 export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() stepChanged = new EventEmitter<any>();
   @ViewChild('target', { read: ViewContainerRef, static: false }) target;
-  @Input() type : Type<unknown>;
+  @Input() type: Type<unknown>;
   stepVal: any;
 
   private isViewInitialized = false;
@@ -46,6 +46,7 @@ export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy 
   get step(): any {
     return this.stepVal;
   }
+
   set step(val) {
     this.stepVal = val;
     this.stepChanged.emit();
@@ -71,7 +72,6 @@ export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
-
     this.isViewInitialized = true;
     this.updateComponent();
   }

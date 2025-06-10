@@ -99,7 +99,7 @@ export class MauroItemUpdateService {
       return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   /**
@@ -109,7 +109,7 @@ export class MauroItemUpdateService {
    * @returns An array of the updated catalogue items passed through an observable stream, if successful.
    */
   saveMany(payloads: MauroUpdatePayload[]): Observable<MauroItem[]> {
-    const requests$ = payloads.map((payload) =>
+    const requests$ = payloads.map(payload =>
       this.save(payload.identifier, payload.item)
     );
 

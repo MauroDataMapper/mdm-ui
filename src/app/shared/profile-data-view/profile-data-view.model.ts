@@ -31,23 +31,23 @@ import {
 
 export type ProfileDataViewType = 'default' | 'other' | 'addnew';
 
-export const doiProfileNamespace =
-  'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
+export const doiProfileNamespace
+  = 'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
 
 export interface ProfileSummaryListItem {
-  display: string;
-  value: string;
-  namespace: string;
-  name: string;
-  version: Version;
-  editableAfterFinalisation?: boolean;
+  display: string
+  value: string
+  namespace: string
+  name: string
+  version: Version
+  editableAfterFinalisation?: boolean
 }
 
 export const showControl = (
   controls: string[],
   controlName: string
 ): boolean => {
-  return controls.findIndex((x) => x === controlName) !== -1;
+  return controls.findIndex(x => x === controlName) !== -1;
 };
 
 export const createDefaultProfileItem = (
@@ -76,7 +76,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'code')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.code as  string | Container[] | string[] | DataTypeReference,
+        catalogueItem.code as string | Container[] | string[] | DataTypeReference,
         'Code',
         ProfileControlTypes.text,
         'code'
@@ -119,8 +119,8 @@ export const getDefaultProfileData = (
   }
 
   if (
-    'organisation' in catalogueItem &&
-    showControl(controls, 'organisation')
+    'organisation' in catalogueItem
+    && showControl(controls, 'organisation')
   ) {
     items.push(
       createDefaultProfileItem(

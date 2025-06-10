@@ -94,7 +94,8 @@ export class DomainExportsDetailComponent implements OnInit {
             requests$ = this.export.exported.domainIds.map((modelId) => {
               return resource.get(modelId);
             });
-          } else {
+          }
+ else {
             requests$ = [resource.get(this.export.exported.domainId)];
           }
 
@@ -102,7 +103,7 @@ export class DomainExportsDetailComponent implements OnInit {
         })
       )
       .subscribe((responses: MdmResponse<DomainExportModelItem>[]) => {
-        this.models = responses.map((response) => response.body);
+        this.models = responses.map(response => response.body);
       });
   }
 

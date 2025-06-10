@@ -165,10 +165,10 @@ export class CodeSetComponent
             }
           });
 
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() ||
-          !this.codeSetModel.editable ||
-          this.codeSetModel.finalised;
+        this.showExtraTabs
+          = !this.sharedService.isLoggedIn()
+            || !this.codeSetModel.editable
+            || this.codeSetModel.finalised;
 
         if (this.sharedService.isLoggedIn(true)) {
           this.CodeSetPermissions();

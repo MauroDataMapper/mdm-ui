@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component,  OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
@@ -33,21 +33,21 @@ import { NgIf } from '@angular/common';
 })
 export class DataElementStep1Component implements OnInit {
   step = {
-    invalid : true,
-    isProcessComplete : false,
-    scope : {
+    invalid: true,
+    isProcessComplete: false,
+    scope: {
        model: null
       }
   };
-  modelVal: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: any[];
-    parent:DataModel;
-    copyFromDataModel: DataModel[];
-    copyFromDataClass: DataClass[];
-  };
 
+  modelVal: {
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: any[]
+    parent: DataModel
+    copyFromDataModel: DataModel[]
+    copyFromDataClass: DataClass[]
+  };
 
   get model() {
     return this.modelVal;
@@ -57,7 +57,6 @@ export class DataElementStep1Component implements OnInit {
     this.modelVal = val;
     this.validate();
   }
-
 
   validate = () => {
     if (!this.model?.createType) {
@@ -77,14 +76,14 @@ export class DataElementStep1Component implements OnInit {
     this.model = this.step?.scope.model;
   }
 
-  onSelect = dataClass => {
+  onSelect = (dataClass) => {
     // TODO: Work out why [(ngModel)] is not working here!
     this.model.copyFromDataClass = dataClass;
     this.model.selectedDataElements = [];
     this.validate();
   };
 
-  selectCreateType = createType => {
+  selectCreateType = (createType) => {
     this.model.createType = createType;
     this.validate();
   };

@@ -71,6 +71,7 @@ export class CatalogueItemSearchComponent {
     { value: 'label-asc', displayName: 'Label (a-z)' },
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
+
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
   routeParams?: RawParams;

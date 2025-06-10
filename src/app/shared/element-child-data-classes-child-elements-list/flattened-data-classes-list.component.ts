@@ -80,6 +80,7 @@ export class FlattenedDataClassesComponent
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   total: number;
@@ -91,7 +92,7 @@ export class FlattenedDataClassesComponent
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
   filterSubject = new Subject<any>();
-  filter: {};
+  filter: object;
 
   /**
    * Signal to attach to subscriptions to trigger when they should be unsubscribed.
@@ -121,7 +122,7 @@ export class FlattenedDataClassesComponent
     // Set a debounce time so that HTTP requests are not constantly happening on each filter key press
     this.filterSubject
       .pipe(takeUntil(this.unsubscribe$), debounceTime(300))
-      .subscribe((event) => this.filterEvent.emit(event));
+      .subscribe(event => this.filterEvent.emit(event));
 
     merge(this.paginator.page, this.filterEvent, this.sort.sortChange)
       .pipe(
@@ -176,7 +177,7 @@ export class FlattenedDataClassesComponent
   flattenedElementsFetch(
     pageSize?: number,
     pageIndex?: number,
-    filters?: {},
+    filters?: object,
     sortBy?: string,
     sortType?: SortDirection
   ): Observable<any> {
@@ -199,7 +200,7 @@ export class FlattenedDataClassesComponent
                 const updatedDataElements = dataElements.body.items.map(
                   (de) => {
                     const dataClass = dataClasses.body.items.find(
-                      (dc) => dc.id === de.dataClass
+                      dc => dc.id === de.dataClass
                     );
                     if (dataClass) {
                       de.dataClassObject = dataClass;

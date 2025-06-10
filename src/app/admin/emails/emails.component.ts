@@ -54,6 +54,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;

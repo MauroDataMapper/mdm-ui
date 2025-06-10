@@ -81,7 +81,7 @@ export class TermListComponent implements AfterViewInit {
 
   hideFilters = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   codeFilter?: string;
   definitionFilter?: string;
   descriptionFilter?: string;
@@ -132,12 +132,12 @@ export class TermListComponent implements AfterViewInit {
 
   applyFilter() {
     this.filter = {
-      ...(this.codeFilter &&
-        this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter &&
-        this.definitionFilter !== '' && { definition: this.definitionFilter }),
-      ...(this.descriptionFilter &&
-        this.descriptionFilter !== '' && {
+      ...(this.codeFilter
+        && this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter
+        && this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter
+        && this.descriptionFilter !== '' && {
           description: this.descriptionFilter
         })
     };
@@ -156,7 +156,7 @@ export class TermListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: object
   ): Observable<TermIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,

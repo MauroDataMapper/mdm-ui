@@ -111,7 +111,7 @@ export class MauroProfileProviderService implements ProfileProviderService {
       .saveMany(actualRootItem.domainType, actualRootItem.id as string, payload)
       .pipe(
         map((response: ProfileContextIndexResponse) =>
-          response.body.profilesProvided.map((provided) => provided.profile)
+          response.body.profilesProvided.map(provided => provided.profile)
         )
       );
   }

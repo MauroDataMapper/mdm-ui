@@ -183,7 +183,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on getMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.getMany(item, [], {} as ProfileProvider)
         );
       }
@@ -192,7 +192,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on saveMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.saveMany(item, {} as ProfileProvider, [])
         );
       }
@@ -201,7 +201,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on validateMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.validateMany(item, {} as ProfileProvider, [])
         );
       }

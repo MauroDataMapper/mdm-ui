@@ -78,7 +78,7 @@ declare module '@angular/material/dialog' {
      */
     openConfirmation(
       config: MatDialogConfig<ConfirmationModalConfig>
-    ): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>;
+    ): MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>
 
     /**
      * Extension method to open a modal dialog containing the `ConfirmationModalComponent` and asynchronously
@@ -104,7 +104,7 @@ declare module '@angular/material/dialog' {
      */
     openConfirmationAsync(
       config: MatDialogConfig<ConfirmationModalConfig>
-    ): Observable<void>;
+    ): Observable<void>
 
     /**
      * Extension method to open two modal dialogs in succession containing the `ConfirmationModalComponent` and asynchronously
@@ -133,7 +133,7 @@ declare module '@angular/material/dialog' {
     openDoubleConfirmationAsync(
       firstConfig: MatDialogConfig<ConfirmationModalConfig>,
       finalConfig: MatDialogConfig<ConfirmationModalConfig>
-    ): Observable<void>;
+    ): Observable<void>
 
     /**
      * Extension method to open the user/group access security dialog and control read access for a catalogue item.
@@ -146,7 +146,7 @@ declare module '@angular/material/dialog' {
     openSecurityAccess(
       element: CatalogueItem & SecurableModel,
       resource: SecurityAccessResource
-    ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>;
+    ): MatDialogRef<SecurityModalComponent, ModalDialogStatus>
 
     /**
      * Extension method to open a modal dialog containing the `ChangeLabelModalComponent`.
@@ -160,7 +160,7 @@ declare module '@angular/material/dialog' {
      */
     openChangeLabel(
       item: CatalogueItemDetail
-    ): Observable<ChangeLabelModalResult>;
+    ): Observable<ChangeLabelModalResult>
 
     /**
      * Extension method to open a modal dialog containing the `ChangeBranchNameModalComponent`.
@@ -174,16 +174,16 @@ declare module '@angular/material/dialog' {
      */
     openChangeBranchName(
       model: Modelable & Branchable
-    ): Observable<ChangeBranchNameModalResult>;
+    ): Observable<ChangeBranchNameModalResult>
 
     openExportModel(
       data: ExportModelDialogOptions
-    ): Observable<ExportModelDialogResponse>;
+    ): Observable<ExportModelDialogResponse>
 
     openElementSearch(
       root: CatalogueItem,
       searchTerm?: string
-    ): MatDialogRef<ElementSearchDialogComponent, ElementSearchDialogResponse>;
+    ): MatDialogRef<ElementSearchDialogComponent, ElementSearchDialogResponse>
   }
 }
 
@@ -206,7 +206,7 @@ MatDialog.prototype.openConfirmationAsync = function (
     .afterClosed()
     .pipe(
       filter(
-        (result) =>
+        result =>
           (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
       ),
       map(() => {})
@@ -222,14 +222,14 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
     .afterClosed()
     .pipe(
       filter(
-        (result) =>
+        result =>
           (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
       ),
       mergeMap(() => {
         return this.openConfirmation(finalConfig)
           .afterClosed()
           .pipe(
-            filter((result2) => result2.status === ModalDialogStatus.Ok),
+            filter(result2 => result2.status === ModalDialogStatus.Ok),
             map(() => {})
           );
       })
@@ -270,7 +270,7 @@ MatDialog.prototype.openChangeLabel = function (
     .afterClosed()
     .pipe(
       filter(
-        (result) =>
+        result =>
           (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
       )
     );
@@ -292,7 +292,7 @@ MatDialog.prototype.openChangeBranchName = function (
     .afterClosed()
     .pipe(
       filter(
-        (result) =>
+        result =>
           (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok
       )
     );
@@ -311,7 +311,7 @@ MatDialog.prototype.openExportModel = function (
     maxWidth: 600
   })
     .afterClosed()
-    .pipe(filter((response) => response.status === ModalDialogStatus.Ok));
+    .pipe(filter(response => response.status === ModalDialogStatus.Ok));
 };
 
 MatDialog.prototype.openElementSearch = function (

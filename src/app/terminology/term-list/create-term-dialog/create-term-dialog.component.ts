@@ -54,7 +54,7 @@ export class CreateTermForm {
 })
 export class CreateTermDialogComponent implements OnInit {
   form = new FormGroup({
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     code: new FormControl('', Validators.required),
     definition: new FormControl(''),
     description: new FormControl('')
@@ -98,8 +98,8 @@ export class CreateTermDialogComponent implements OnInit {
     }
 
     // If no definition provided, default to using the code
-    const definition =
-      this.definition.value && this.definition.value.length > 0
+    const definition
+      = this.definition.value && this.definition.value.length > 0
         ? this.definition.value
         : this.code.value;
 
@@ -121,7 +121,8 @@ export class CreateTermDialogComponent implements OnInit {
       .subscribe((response: HttpResponse<TermDetail>) => {
         if (response.ok) {
           this.dialogRef.close(response.body);
-        } else {
+        }
+ else {
           /* NOTE: Generic error message */
           this.messageHandler.showWarning('Unable to create new term');
         }

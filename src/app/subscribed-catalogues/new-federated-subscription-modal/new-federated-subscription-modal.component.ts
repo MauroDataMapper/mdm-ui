@@ -33,15 +33,15 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
 
 export interface NewFederatedSubscriptionModalConfig {
-  contentLinks: PublishedDataModelLink[];
-  importers: Importer[];
+  contentLinks: PublishedDataModelLink[]
+  importers: Importer[]
 }
 
 export interface NewFederatedSubscriptionModalResponse {
-  status: ModalDialogStatus;
-  folder?: FolderDetail;
-  contentLink?: PublishedDataModelLink;
-  importer?: Importer;
+  status: ModalDialogStatus
+  folder?: FolderDetail
+  contentLink?: PublishedDataModelLink
+  importer?: Importer
 }
 
 @Component({
@@ -56,7 +56,7 @@ export class NewFederatedSubscriptionModalComponent implements OnInit {
   importers: Importer[];
 
   formGroup = new FormGroup({
-    folder: new FormControl<MdmTreeItem[]>(null, [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    folder: new FormControl<MdmTreeItem[]>(null, [Validators.required]),
     format: new FormControl<PublishedDataModelLink>(null),
     importer: new FormControl<Importer>(null)
   });

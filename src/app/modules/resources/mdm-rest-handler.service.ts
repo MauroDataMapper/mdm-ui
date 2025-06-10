@@ -36,13 +36,14 @@ export class MdmRestHandlerService implements MdmRestHandler {
     private stateHandler: StateHandlerService) { }
 
   process(url: string, options: RequestSettings) {
-    if (options.withCredentials === undefined ||
-      options.withCredentials === null ||
-      (options.withCredentials !== undefined && options.withCredentials === false)) {
+    if (options.withCredentials === undefined
+      || options.withCredentials === null
+      || (options.withCredentials !== undefined && options.withCredentials === false)) {
         throw new Error('withCredentials is not provided!');
     }
 
-    if (options.responseType) { } else {
+    if (options.responseType) { }
+ else {
       options.responseType = undefined;
     }
 

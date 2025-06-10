@@ -63,11 +63,12 @@ export class DataClassStep2Component
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataClasses: DataClass[];
-    selectedDataClassesMap: {[p:string]:any}; // Selected by the mat-table
+    [key: string]: any
+    createType: CreateType
+    selectedDataClasses: DataClass[]
+    selectedDataClassesMap: { [p: string]: any } // Selected by the mat-table
   };
+
   scope: any;
   multiplicityError: any;
   selectedDataClassesStr = '';
@@ -119,12 +120,12 @@ export class DataClassStep2Component
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
     if (
-      this.sort !== null &&
-      this.sort !== undefined &&
-      this.sort.toArray().length > 0 &&
-      this.paginator !== null &&
-      this.paginator !== undefined &&
-      this.paginator.toArray().length > 0
+      this.sort !== null
+      && this.sort !== undefined
+      && this.sort.toArray().length > 0
+      && this.paginator !== null
+      && this.paginator !== undefined
+      && this.paginator.toArray().length > 0
     ) {
       this.sort
         .toArray()[0]
@@ -178,7 +179,7 @@ export class DataClassStep2Component
     this.model.selectedDataClassesMap = checkedMap;
     this.createSelectedArray();
     this.dataSource.data = this.model.selectedDataClasses;
-    // eslint-disable-next-line no-underscore-dangle
+
     this.dataSource._updateChangeSubscription();
     this.validate();
     this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
@@ -197,9 +198,9 @@ export class DataClassStep2Component
 
         // Check Mandatory fields
         if (
-          !newValue.label ||
-          newValue.label.trim().length === 0 ||
-          this.multiplicityError
+          !newValue.label
+          || newValue.label.trim().length === 0
+          || this.multiplicityError
         ) {
           this.step.invalid = true;
           return;
@@ -210,9 +211,12 @@ export class DataClassStep2Component
     }
     if (['copy', 'import', 'extend'].includes(this.model.createType)) {
       switch (this.model.createType) {
-        case 'copy': this.copyMessage = 'copy'; break;
-        case 'import': this.copyMessage = 'import'; break;
-        case 'extend': this.copyMessage = 'extend with'; break;
+        case 'copy': this.copyMessage = 'copy';
+        break;
+        case 'import': this.copyMessage = 'import';
+        break;
+        case 'extend': this.copyMessage = 'extend with';
+        break;
         default: this.copyMessage = '';
       }
 
@@ -250,12 +254,16 @@ export class DataClassStep2Component
               case 'import': return this.resources.dataClass.importDataClass(this.model.parent.model as string, this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
               case 'extend': return this.resources.dataClass.addExtendDataClass(this.model.parent.model as string, this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
             }
-          } if (this.model.parent.domainType === 'DataModel') {
+          }
+          if (this.model.parent.domainType === 'DataModel') {
             switch (this.model.createType) {
-              case 'copy': return this.resources.dataClass.copyDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
-              case 'import': return this.resources.dataModel.importDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
+              case 'copy':
+                return this.resources.dataClass.copyDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
+              case 'import':
+                return this.resources.dataModel.importDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
             }
-          } else {
+          }
+          else {
             return this.resources.dataClass.copyDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
           }
         })

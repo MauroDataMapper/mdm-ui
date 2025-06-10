@@ -59,25 +59,25 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { NgIf, NgClass, NgFor } from '@angular/common';
 import { FlexModule } from '@angular/flex-layout/flex';
 
-type DisplayItem=
+type DisplayItem =
   {
-    id?: string;
-    key?: string;
-    value?: string;
-    category?: string;
-    isCategoryRow?: boolean;
-    index?:number;
+    id?: string
+    key?: string
+    value?: string
+    category?: string
+    isCategoryRow?: boolean
+    index?: number
     edit?: {
-      id?: string;
-      key?: string;
-      value?: string;
-      category?: string;
-      index?:number;
-      errors?: { message: string };
-    };
-    inEdit?: boolean;
-    inDelete?: boolean;
-    isNew?: boolean;
+      id?: string
+      key?: string
+      value?: string
+      category?: string
+      index?: number
+      errors?: { message: string }
+    }
+    inEdit?: boolean
+    inDelete?: boolean
+    isNew?: boolean
   };
 
 @Component({
@@ -91,7 +91,7 @@ export class McEnumerationListWithCategoryComponent
   implements OnInit, OnDestroy {
   @Input() parent: DataModelDetail | DataClassDetail;
   @Input() clientSide = false;
-  @Input() enumerationValues:  EnumerationValue[];
+  @Input() enumerationValues: EnumerationValue[];
   @Input() onUpdate;
   @Input() type: any;
   @Input() isEditable = false;
@@ -110,7 +110,7 @@ export class McEnumerationListWithCategoryComponent
   displayItems: DisplayItem[];
   categories: string[] = [];
   filteredCategories: string[] = [];
-  allRecords:  EnumerationValue[] = [];
+  allRecords: EnumerationValue[] = [];
   allRecordsWithGroups = [];
 
   hasCategory = false;
@@ -142,7 +142,8 @@ export class McEnumerationListWithCategoryComponent
   ngOnInit() {
     if (!this.clientSide) {
       this.displayedColumnsEnums = ['group', 'key', 'value', 'more', 'buttons'];
-    } else {
+    }
+ else {
       this.displayedColumnsEnums = ['group', 'key', 'value', 'buttons'];
     }
 
@@ -151,15 +152,15 @@ export class McEnumerationListWithCategoryComponent
       .pipe(
         takeUntil(this.unsubscribe$),
         startWith(''),
-        map((value) => this.filterCategories(value))
+        map(value => this.filterCategories(value))
       )
       .subscribe(
-        (filteredCategories) => (this.filteredCategories = filteredCategories)
+        filteredCategories => (this.filteredCategories = filteredCategories)
       );
 
     if (
-      this.enumerationValues !== null &&
-      this.enumerationValues !== undefined
+      this.enumerationValues !== null
+      && this.enumerationValues !== undefined
     ) {
       this.showRecords(this.enumerationValues);
 
@@ -199,7 +200,8 @@ export class McEnumerationListWithCategoryComponent
     let nextIndex = null;
     if (prevRec.isCategoryRow) {
       newCategory = prevRec.category;
-    } else {
+    }
+ else {
       while (!newCategory && prevRec) {
         nextIndex = this.displayItems.indexOf(prevRec) - 1;
         prevRec = this.displayItems[nextIndex];
@@ -212,7 +214,8 @@ export class McEnumerationListWithCategoryComponent
 
     if (this.clientSide) {
       this.showRecords(this.allRecords);
-    } else {
+    }
+ else {
       this.updateOrderServer(newCategory, movedItem);
     }
 
@@ -226,9 +229,9 @@ export class McEnumerationListWithCategoryComponent
     // then perform the same array move operation as on displayItems array to keep
     // both arrays in sync correctly.
     const foundSwappedItemIndex = sorted.findIndex(
-      (r) => r.id === swappedItem.id
+      r => r.id === swappedItem.id
     );
-    const foundMovedItemIndex = sorted.findIndex((r) => r.id === movedItem.id);
+    const foundMovedItemIndex = sorted.findIndex(r => r.id === movedItem.id);
 
     moveItemInArray(sorted, foundMovedItemIndex, foundSwappedItemIndex);
 
@@ -241,7 +244,7 @@ export class McEnumerationListWithCategoryComponent
   updateOrderServer(newCategory, movedItem) {
     // Find the correct updated index of the moved item
     const foundMovedItemIndex = this.allRecords.findIndex(
-      (r) => r.id === movedItem.id
+      r => r.id === movedItem.id
     );
 
     const resource = {
@@ -273,7 +276,7 @@ export class McEnumerationListWithCategoryComponent
   }
 
   // Accepts the array and key
-  groupBy = (array:EnumerationValue[], key:string): {[key:string] : EnumerationValue[]} => {
+  groupBy = (array: EnumerationValue[], key: string): { [key: string]: EnumerationValue[] } => {
     // Return the end result
     return array.reduce((result, currentValue) => {
       // If an array already present for key, push it to the array. Else create an array and push the object
@@ -306,19 +309,20 @@ export class McEnumerationListWithCategoryComponent
       }
     }
 
-    let categoryNames:string[] = [];
-    const categories=this.groupBy(this.allRecords, 'category');
+    let categoryNames: string[] = [];
+    const categories = this.groupBy(this.allRecords, 'category');
 
     let hasEmptyCategory = false;
 
     for (const category in categories) {
       if (
-        category !== null &&
-        category !== 'null' &&
-        !categoryNames.includes(category)
+        category !== null
+        && category !== 'null'
+        && !categoryNames.includes(category)
       ) {
         categoryNames.push(category);
-      } else {
+      }
+ else {
         hasEmptyCategory = true;
       }
     }
@@ -329,11 +333,12 @@ export class McEnumerationListWithCategoryComponent
 
     if (this.sortType === 'asc') {
       categoryNames = categoryNames.sort((a, b) => a[0].localeCompare(b[0]));
-    } else if (this.sortType === 'desc') {
+    }
+ else if (this.sortType === 'desc') {
       categoryNames = categoryNames.reverse();
     }
 
-    const allRecordsWithGroups : DisplayItem[]= [];
+    const allRecordsWithGroups: DisplayItem[] = [];
     categoryNames.forEach((category) => {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
@@ -375,26 +380,27 @@ export class McEnumerationListWithCategoryComponent
       if (e < this.pageSize) {
         this.displayItems.push(allRecordsWithGroups[i]);
         e++;
-      } else {
+      }
+ else {
         break;
       }
     }
     // If the current page ends with a category, don't display it
     if (
-      this.displayItems[this.displayItems.length - 1] !== undefined &&
-      this.displayItems[this.displayItems.length - 1].isCategoryRow
+      this.displayItems[this.displayItems.length - 1] !== undefined
+      && this.displayItems[this.displayItems.length - 1].isCategoryRow
     ) {
       this.displayItems.splice(-1, 1);
     }
 
     // If the current page doesn't start with a category, check if the first item has a category and add it to the list
     if (
-      this.displayItems[0] !== undefined &&
-      !this.displayItems[0].isCategoryRow
+      this.displayItems[0] !== undefined
+      && !this.displayItems[0].isCategoryRow
     ) {
       if (
-        this.displayItems[0].category !== '' ||
-        this.displayItems[0].category !== undefined
+        this.displayItems[0].category !== ''
+        || this.displayItems[0].category !== undefined
       ) {
         this.displayItems = [
           {
@@ -461,8 +467,8 @@ export class McEnumerationListWithCategoryComponent
     }
 
     if (
-      this.allRecordsWithGroups !== null &&
-      this.allRecordsWithGroups !== undefined
+      this.allRecordsWithGroups !== null
+      && this.allRecordsWithGroups !== undefined
     ) {
       for (const recordWithGroup of this.allRecordsWithGroups) {
         if (!recordWithGroup) {
@@ -472,8 +478,8 @@ export class McEnumerationListWithCategoryComponent
           continue;
         }
         if (
-          recordWithGroup.key.toLowerCase().trim() ===
-          record.edit.key.toLowerCase().trim()
+          recordWithGroup.key.toLowerCase().trim()
+          === record.edit.key.toLowerCase().trim()
         ) {
           record.edit.errors.key = 'Key already exists';
           isValid = false;
@@ -488,7 +494,7 @@ export class McEnumerationListWithCategoryComponent
 
   editClicked(record: DisplayItem) {
     record.edit = Object.assign({}, record);
-    record.edit.errors = {message: null};
+    record.edit.errors = { message: null };
     record.inEdit = true;
     this.editingService.setFromCollection(this.displayItems);
 
@@ -509,7 +515,8 @@ export class McEnumerationListWithCategoryComponent
         i--;
       }
       this.showRecords(([] as EnumerationValue[]).concat(this.allRecords));
-    } else {
+    }
+ else {
       this.resourcesService.enumerationValues
         .removeFromEnumeratedType(this.parent.model as string, this.parent.id, record.id as string)
         .subscribe(
@@ -535,11 +542,11 @@ export class McEnumerationListWithCategoryComponent
     }
   }
 
-  cancelDeleteClicked(record:DisplayItem) {
+  cancelDeleteClicked(record: DisplayItem) {
     record.inDelete = false;
   }
 
-  cancelEditClicked(record:DisplayItem) {
+  cancelEditClicked(record: DisplayItem) {
     this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
@@ -560,11 +567,11 @@ export class McEnumerationListWithCategoryComponent
     });
   }
 
-  saveClicked(record:DisplayItem) {
+  saveClicked(record: DisplayItem) {
     if (!this.validate(record)) {
       return;
     }
-    record.edit.errors = { message:null };
+    record.edit.errors = { message: null };
     const resource = {
       key: record.edit.key,
       value: record.edit.value,
@@ -646,7 +653,8 @@ export class McEnumerationListWithCategoryComponent
             );
           }
         );
-    } else {
+    }
+ else {
       this.resourcesService.enumerationValues
         .saveToEnumeratedType(this.parent.model as string, this.parent.id, resource)
         .subscribe(
@@ -694,7 +702,7 @@ export class McEnumerationListWithCategoryComponent
   }
 
   private filterCategories(value: string) {
-    const filtered = this.categories.filter((category) =>
+    const filtered = this.categories.filter(category =>
       category.toLowerCase().includes(value)
     );
 

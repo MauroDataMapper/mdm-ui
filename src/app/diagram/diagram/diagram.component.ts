@@ -90,7 +90,8 @@ export class DiagramComponent implements OnInit {
   public ngOnInit(): void {
     if (this.diagramComponent) {
       this.diagramService = this.diagramComponent.diagramService;
-    } else {
+    }
+ else {
       // we're loading from scratch
       this.initializeDiagramService({ parent: this.parent });
     }
@@ -138,7 +139,8 @@ export class DiagramComponent implements OnInit {
         if (this.mode === 'model-merging-graph') {
           // Bottom-to-top layout
           this.diagramService.layoutNodes('BT');
-        } else {
+        }
+ else {
           this.diagramService.layoutNodes();
         }
       },
@@ -172,7 +174,7 @@ export class DiagramComponent implements OnInit {
       This doesn't yet work with the typescript definition...
       interactive: {
         stopDelegation: false
-      }*/
+      } */
     });
 
     this.paper.setInteractivity({ stopDelegation: false });
@@ -229,7 +231,7 @@ export class DiagramComponent implements OnInit {
     });
 
     this.diagramService.currentComponent.subscribe(
-      (data) => (this.dataClassComponent = data)
+      data => (this.dataClassComponent = data)
     );
   }
 
@@ -268,7 +270,7 @@ export class DiagramComponent implements OnInit {
     this.diagramService.getDiagramContent(params).subscribe((data) => {
       const filteredClasses: Array<any> = [];
       filterList.forEach((x) => {
-        const index = data.body.childDataClasses.findIndex((y) => y.id === x);
+        const index = data.body.childDataClasses.findIndex(y => y.id === x);
         if (index !== -1) {
           filteredClasses.push(data.body.childDataClasses[index]);
         }
@@ -281,7 +283,8 @@ export class DiagramComponent implements OnInit {
       if (mode === 'model-merging-graph') {
         // Bottom-to-top layout
         this.diagramService.layoutNodes('BT');
-      } else {
+      }
+ else {
         this.diagramService.layoutNodes();
       }
 

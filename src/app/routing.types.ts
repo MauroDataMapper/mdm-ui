@@ -90,14 +90,14 @@ export const redirectUsingPath = async (
         dataClassId: item.parentDataClass ?? ''
       }),
       // DataElement cases: data class is required
-      ...(item.domainType === CatalogueItemDomainType.DataElement &&
-        item.dataClass && { dataClassId: item.dataClass }),
+      ...(item.domainType === CatalogueItemDomainType.DataElement
+        && item.dataClass && { dataClassId: item.dataClass }),
       // DataType cases: ModelDataType returns a `dataModel.id` property
-      ...(item.domainType === CatalogueItemDomainType.ModelDataType &&
-        item.dataModel?.id && { dataModelId: item.dataModel.id }),
+      ...(item.domainType === CatalogueItemDomainType.ModelDataType
+        && item.dataModel?.id && { dataModelId: item.dataModel.id }),
       // Term cases: terminologyId is required
-      ...(item.domainType === CatalogueItemDomainType.Term &&
-        item.model && { terminologyId: item.model })
+      ...(item.domainType === CatalogueItemDomainType.Term
+        && item.model && { terminologyId: item.model })
     }
   };
 };

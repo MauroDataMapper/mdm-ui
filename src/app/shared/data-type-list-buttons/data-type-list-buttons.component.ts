@@ -29,7 +29,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class DataTypeListButtonsComponent implements OnInit {
-
   @Output() deleteRows = new EventEmitter<any>();
   @Input() add: any;
   @Input() displayRecords: any[];
@@ -48,7 +47,6 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
-
   ngOnInit() {
     this.textLocation = 'left';
     this.deletePending = false;
@@ -65,14 +63,15 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   onAskDelete = () => {
     let showDelete = false;
-    this.displayRecords.forEach(record => {
+    this.displayRecords.forEach((record) => {
       if (record.checked === true) {
         showDelete = true;
       }
     });
     if (showDelete) {
       this.deletePending = true;
-    } else {
+    }
+ else {
       this.deleteWarning = 'Please select one or more elements.';
     }
   };

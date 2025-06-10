@@ -115,7 +115,7 @@ export class ConstraintsRulesComponent implements OnInit {
     this.languages.sort((a, b) => a.displayName.localeCompare(b.displayName));
     this.languages.push({ displayName: 'All', value: 'all' });
     this.isLoadingResults = true;
-    this.selectedLanguage = this.languages.find((x) => x.value === 'all');
+    this.selectedLanguage = this.languages.find(x => x.value === 'all');
   }
 
   ngOnInit(): void {
@@ -187,7 +187,7 @@ export class ConstraintsRulesComponent implements OnInit {
             rule.id
           )
         ),
-        catchError((error:Error) => {
+        catchError((error: Error) => {
           this.messageHandler.showError(error.message);
           return EMPTY;
         })
@@ -221,7 +221,7 @@ export class ConstraintsRulesComponent implements OnInit {
             record.id
           )
         ),
-        catchError((error:Error) => {
+        catchError((error: Error) => {
           this.messageHandler.showError(error.message);
           return EMPTY;
         })
@@ -243,7 +243,8 @@ export class ConstraintsRulesComponent implements OnInit {
       const myFilename = `${rule.name}.${this.getFileExtension(rep.language)}`;
       const content = new Blob([rep.representation as BlobPart]);
       FileSaver.saveAs(content, myFilename);
-    } catch (error) {
+    }
+ catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
   }
@@ -256,8 +257,8 @@ export class ConstraintsRulesComponent implements OnInit {
     try {
       rule.ruleRepresentations.forEach((ruleRep: RuleRepresentation) => {
         if (
-          this.selectedLanguage.value === ruleRep.language ||
-          this.selectedLanguage.value === 'all'
+          this.selectedLanguage.value === ruleRep.language
+          || this.selectedLanguage.value === 'all'
         ) {
           let myFilename = `${rule.name}`;
 
@@ -284,7 +285,8 @@ export class ConstraintsRulesComponent implements OnInit {
           }
         }
       });
-    } catch (error) {
+    }
+ catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
   }
@@ -299,8 +301,8 @@ export class ConstraintsRulesComponent implements OnInit {
         if (rule.ruleRepresentations) {
           rule.ruleRepresentations.forEach((ruleRep) => {
             if (
-              this.selectedLanguage.value === ruleRep.language ||
-              this.selectedLanguage.value === 'all'
+              this.selectedLanguage.value === ruleRep.language
+              || this.selectedLanguage.value === 'all'
             ) {
               let myFilename = `${rule.name}`;
 
@@ -335,7 +337,8 @@ export class ConstraintsRulesComponent implements OnInit {
           });
         }
       });
-    } catch (error) {
+    }
+ catch (error) {
       this.messageHandler.showError('Error Exporting', error);
     }
   }
@@ -366,7 +369,7 @@ export class ConstraintsRulesComponent implements OnInit {
   }
 
   private getFileExtension(language: string) {
-    const lang = supportedLanguages.find((l) => l.value === language);
+    const lang = supportedLanguages.find(l => l.value === language);
     return lang?.fileExt;
   }
 
@@ -389,7 +392,7 @@ export class ConstraintsRulesComponent implements OnInit {
       })
       .afterClosed()
       .pipe(
-        filter((result) => result.status === ModalDialogStatus.Ok),
+        filter(result => result.status === ModalDialogStatus.Ok),
         switchMap((result) => {
           if (mode === 'edit' && current) {
             return this.resourcesService.catalogueItem.updateRule(
@@ -450,7 +453,7 @@ export class ConstraintsRulesComponent implements OnInit {
       })
       .afterClosed()
       .pipe(
-        filter((result) => result.status === ModalDialogStatus.Ok),
+        filter(result => result.status === ModalDialogStatus.Ok),
         switchMap((result) => {
           if (mode === 'edit' && current) {
             return this.resourcesService.catalogueItem.updateRuleRepresentation(

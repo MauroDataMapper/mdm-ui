@@ -22,12 +22,16 @@ import { Pipe, PipeTransform } from '@angular/core';
     standalone: true
 })
 export class FileSizePipe implements PipeTransform {
-  transform(bytes : string | number, precision? : number): string {
-    if (isNaN(parseFloat(bytes as string)) || !isFinite(bytes as number)) { return '-'; }
-    if (typeof precision === 'undefined') { precision = 1; }
+  transform(bytes: string | number, precision?: number): string {
+    if (isNaN(parseFloat(bytes as string)) || !isFinite(bytes as number)) {
+      return '-';
+    }
+    if (typeof precision === 'undefined') {
+      precision = 1;
+    }
     const units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
     const num = Math.floor(Math.log(bytes as number) / Math.log(1024));
 
-    return ((bytes as number/ Math.pow(1024, Math.floor(num))).toFixed(precision) + ' ' + units[num]);
+    return ((bytes as number / Math.pow(1024, Math.floor(num))).toFixed(precision) + ' ' + units[num]);
   }
 }

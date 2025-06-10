@@ -32,7 +32,6 @@ describe('AppComponent', () => {
       })
   });
 
-
   it('should create the app', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

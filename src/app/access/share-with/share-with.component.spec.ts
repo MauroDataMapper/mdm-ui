@@ -25,7 +25,6 @@ describe('ShareWithComponent', () => {
     harness = await setupTestModuleForComponent(ShareWithComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

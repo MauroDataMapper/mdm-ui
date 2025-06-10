@@ -29,7 +29,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, DiagramTabComponent]
 })
 export class ModelsMergingGraphComponent implements OnInit {
-
   isDataLoaded: boolean;
 
   sourceModel: any;

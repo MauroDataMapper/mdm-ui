@@ -50,12 +50,13 @@ export class ProfilesDashboardComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   filterEvent = new EventEmitter<any>();
 
   isLoadingResults: boolean;
   totalProfileCount: number;
-  filter: {};
+  filter: object;
   dynamicProfileRecords: any[] = [];
   hideFilters = true;
   displayedColumns = ['displayName', 'metadataNamespace', 'version'];
@@ -91,7 +92,7 @@ export class ProfilesDashboardComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => {
-        data.forEach((res) => res.dataModel['domainType'] = 'DataModel');
+        data.forEach(res => res.dataModel['domainType'] = 'DataModel');
         this.dynamicProfileRecords = data;
       });
   }

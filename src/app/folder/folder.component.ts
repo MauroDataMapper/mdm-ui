@@ -111,8 +111,8 @@ export class FolderComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id as string) &&
-      !this.uiRouterGlobals.params.id
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && !this.uiRouterGlobals.params.id
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -148,8 +148,8 @@ export class FolderComponent
 
       this.access = this.securityHandler.elementAccess(this.folder);
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
 
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);

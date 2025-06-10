@@ -53,7 +53,7 @@ export class PathNameService {
     return elements.map((element) => {
       const parts = element
         .split(this.partSeparator)
-        .filter((p) => p && p.length > 0);
+        .filter(p => p && p.length > 0);
       if (parts.length < 2) {
         throw new Error(
           `Path element '${element}' should be in the format 'prefix:label(@version)'`
@@ -69,8 +69,8 @@ export class PathNameService {
 
       const type = parts[0] as PathElementType;
       const label = labelAndVersion[0];
-      const version =
-        labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;
+      const version
+        = labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;
       const typeName = pathElementTypeNames.get(type);
 
       if (parts.length > 2) {
@@ -108,7 +108,7 @@ export class PathNameService {
     }
 
     pathElements
-      .filter((pathElement) => isPathElementBranchable(pathElement))
+      .filter(pathElement => isPathElementBranchable(pathElement))
       .forEach((pathElement) => {
         pathElement.version = versionOrBranch;
       });
@@ -173,7 +173,7 @@ export class PathNameService {
     }
 
     const matching = pathElements.find(
-      (pathElement) =>
+      pathElement =>
         isPathElementBranchable(pathElement) && !!pathElement.version
     );
     if (!matching) {
@@ -188,7 +188,7 @@ export class PathNameService {
       return [];
     }
 
-    pathElements.forEach((pathElement) => (pathElement.version = ''));
+    pathElements.forEach(pathElement => (pathElement.version = ''));
     return pathElements;
   }
 

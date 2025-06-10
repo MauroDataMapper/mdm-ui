@@ -20,19 +20,19 @@ import { ThemePalette } from '@angular/material/core';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface NewFolderModalConfiguration {
-  okBtn?: string;
-  cancelBtn?: string;
-  btnType?: ThemePalette;
-  modalTitle?: string;
-  message?: string;
-  inputLabel?: string;
-  createRootFolder?: boolean;
-  canVersion?: boolean;
+  okBtn?: string
+  cancelBtn?: string
+  btnType?: ThemePalette
+  modalTitle?: string
+  message?: string
+  inputLabel?: string
+  createRootFolder?: boolean
+  canVersion?: boolean
 }
 
 export interface NewFolderModalResponse {
-  status: ModalDialogStatus;
-  label?: string;
-  useVersionedFolders?: boolean;
-  isVersioned?: boolean;
+  status: ModalDialogStatus
+  label?: string
+  useVersionedFolders?: boolean
+  isVersioned?: boolean
 }

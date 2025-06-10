@@ -19,5 +19,5 @@ SPDX-License-Identifier: Apache-2.0
 import { MergableCatalogueItem } from '@maurodatamapper/mdm-resources';
 
 export interface VersioningGraphModalConfiguration {
-  catalogueItem: MergableCatalogueItem;
+  catalogueItem: MergableCatalogueItem
 }

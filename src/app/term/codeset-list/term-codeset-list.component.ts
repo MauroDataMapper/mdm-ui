@@ -37,7 +37,6 @@ import { FlexModule } from '@angular/flex-layout/flex';
     imports: [FlexModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChanges {
-
   @Input() term: TermDetail;
   @Input() pageSize = 10;
   @Input() canEdit = false;
@@ -63,7 +62,7 @@ export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChange
 
     if (changes.term) {
       // Update action functions when term changed
-      this.codesets.fetchFunction = (options : QueryParameters ) => {
+      this.codesets.fetchFunction = (options: QueryParameters) => {
         return this.resources.terms.codesetsForTerm(this.term.model, this.term.id, options);
       };
 
@@ -73,7 +72,7 @@ export class TermCodeSetListComponent implements OnInit, AfterViewInit, OnChange
 
   ngOnInit() {
     // Keep track of item count
-    this.codesets.count.subscribe(c => {
+    this.codesets.count.subscribe((c) => {
       this.totalItemCount = c;
       this.totalCount.emit(this.totalItemCount);
     });

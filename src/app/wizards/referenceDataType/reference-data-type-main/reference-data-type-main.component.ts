@@ -44,10 +44,10 @@ import { NgFor, NgIf } from '@angular/common';
 import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 export interface ReferenceDataTypeCreateState {
-  createType: CreateType;
-  copyFromModel?: CatalogueItem[];
-  newDataTypeDetails?: NewReferenceDataTypeState;
-  dataTypesForCopy?: ReferenceDataType[];
+  createType: CreateType
+  copyFromModel?: CatalogueItem[]
+  newDataTypeDetails?: NewReferenceDataTypeState
+  dataTypesForCopy?: ReferenceDataType[]
 }
 
 @Component({
@@ -64,6 +64,7 @@ export class ReferenceDataTypeMainComponent implements OnInit {
   state: ReferenceDataTypeCreateState = {
     createType: 'new'
   };
+
   processing = false;
   progressValue = 0;
 
@@ -188,12 +189,13 @@ export class ReferenceDataTypeMainComponent implements OnInit {
     forkJoin(requests$)
       .pipe(finalize(() => (this.processing = false)))
       .subscribe((results) => {
-        const errorCount = results.filter((r) => r.error).length;
+        const errorCount = results.filter(r => r.error).length;
         if (errorCount > 0) {
           this.messageHandler.showWarning(
             `${errorCount} Reference Data Type(s) were not copied due to errors.`
           );
-        } else {
+        }
+ else {
           this.messageHandler.showSuccess(
             'All Reference Data Type(s) copied successfully.'
           );

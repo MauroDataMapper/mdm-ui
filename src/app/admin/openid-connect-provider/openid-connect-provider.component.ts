@@ -89,7 +89,7 @@ export class OpenidConnectProviderComponent implements OnInit {
   }
 
   cancel() {
-    this.editing.confirmCancelAsync().subscribe(confirm => {
+    this.editing.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }
@@ -108,7 +108,7 @@ export class OpenidConnectProviderComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem saving the OpenID Connect provider.', error);
           return EMPTY;
         })
@@ -128,7 +128,7 @@ export class OpenidConnectProviderComponent implements OnInit {
     this.resources.pluginOpenIdConnect
       .get(this.id)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem getting the OpenID Connect provider.', error);
           return EMPTY;
         })

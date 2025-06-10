@@ -75,13 +75,14 @@ export class DataElementStep2Component
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: Array<any>;
-    parent: DataModel;
-    copyFromDataModel: Array<DataModel>;
-    copyFromDataClass: Array<DataClass>;
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: Array<any>
+    parent: DataModel
+    copyFromDataModel: Array<DataModel>
+    copyFromDataClass: Array<DataClass>
   };
+
   multiplicityError: any;
   selectedDataClassesStr = '';
   defaultCheckedMap: any;
@@ -102,7 +103,7 @@ export class DataElementStep2Component
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
   pagination: McSelectPagination;
@@ -153,7 +154,7 @@ export class DataElementStep2Component
     });
   }
 
-  dataElementsFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters:{[p: string]: any}) {
+  dataElementsFetch(pageSize: number, pageIndex: number, sortBy: string, sortType: SortDirection, filters: { [p: string]: any }) {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -192,12 +193,12 @@ export class DataElementStep2Component
     ];
 
     if (
-      this.sort !== null &&
-      this.sort !== undefined &&
-      this.sort.toArray().length > 0 &&
-      this.paginator !== null &&
-      this.paginator !== undefined &&
-      this.paginator.toArray().length > 0
+      this.sort !== null
+      && this.sort !== undefined
+      && this.sort.toArray().length > 0
+      && this.paginator !== null
+      && this.paginator !== undefined
+      && this.paginator.toArray().length > 0
     ) {
       this.sort
         .toArray()[0]
@@ -211,12 +212,12 @@ export class DataElementStep2Component
       this.dataSourceSelectedDataElements.paginator = this.paginator.toArray()[1];
 
       if (
-        this.sort != null &&
-        this.sort !== undefined &&
-        this.sort.length > 0 &&
-        this.paginator != null &&
-        this.paginator !== undefined &&
-        this.paginator.length > 0
+        this.sort != null
+        && this.sort !== undefined
+        && this.sort.length > 0
+        && this.paginator != null
+        && this.paginator !== undefined
+        && this.paginator.length > 0
       ) {
         merge(
           this.sort.toArray()[0].sortChange,
@@ -229,8 +230,8 @@ export class DataElementStep2Component
               this.isLoadingResults = true;
               return this.dataElementsFetch(
                 this.paginator.toArray()[0].pageSize,
-                this.paginator.toArray()[0].pageIndex *
-                  this.paginator.toArray()[0].pageSize,
+                this.paginator.toArray()[0].pageIndex
+                * this.paginator.toArray()[0].pageSize,
                 this.sort.toArray()[0].active,
                 this.sort.toArray()[0].direction,
                 this.filter
@@ -252,8 +253,8 @@ export class DataElementStep2Component
 
             // Sorting/paging is making a backend call and looses the checked checkboxes
             if (
-              this.model.selectedDataElements != null &&
-              this.model.selectedDataElements.length > 0
+              this.model.selectedDataElements != null
+              && this.model.selectedDataElements.length > 0
             ) {
               this.reCheckSelectedDataElements();
             }
@@ -269,7 +270,7 @@ export class DataElementStep2Component
     let currentPageSelectedItemsNum = 0;
     this.model.selectedDataElements.forEach((sdt: any) => {
       const currentId = sdt.id;
-      const item = this.recordsDataElements.find((r) => r.id === currentId);
+      const item = this.recordsDataElements.find(r => r.id === currentId);
       if (item !== null && item !== undefined) {
         item.checked = true;
       }
@@ -283,7 +284,8 @@ export class DataElementStep2Component
     // If all the records on the current page are selected, check the "Check All" checkbox
     if (currentPageSelectedItemsNum === this.paginator.toArray()[0].pageSize) {
       this.isAllChecked = true;
-    } else {
+    }
+ else {
       this.isAllChecked = false;
     }
   }
@@ -293,7 +295,8 @@ export class DataElementStep2Component
       element.checked = this.checkAllCheckbox;
       if (this.checkAllCheckbox) {
         this.model.selectedDataElements.push(element);
-      } else {
+      }
+ else {
         this.model.selectedDataElements = [];
       }
     });
@@ -306,9 +309,10 @@ export class DataElementStep2Component
   onCheck(record) {
     if (record.checked) {
       this.model.selectedDataElements.push(record);
-    } else {
+    }
+ else {
       const index = this.model.selectedDataElements.findIndex(
-        (r) => r.id === record.id
+        r => r.id === record.id
       );
       if (index !== -1) {
         this.model.selectedDataElements.splice(index, 1);
@@ -352,9 +356,9 @@ export class DataElementStep2Component
 
       // Check Mandatory fields
       if (
-        !newValue.label ||
-        newValue.label.trim().length === 0 ||
-        this.multiplicityError
+        !newValue.label
+        || newValue.label.trim().length === 0
+        || this.multiplicityError
       ) {
         this.step.invalid = true;
         return;
@@ -380,7 +384,7 @@ export class DataElementStep2Component
     }
   }
 
-  fetchDataTypes = (text:string, loadAll, offset:number, limit:number) => {
+  fetchDataTypes = (text: string, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -424,7 +428,7 @@ export class DataElementStep2Component
     this.filterEvent.emit(filter);
   };
 
-  validationStatusEmitter($event:string) {
+  validationStatusEmitter($event: string) {
     this.step.invalid = JSON.parse($event);
   }
 

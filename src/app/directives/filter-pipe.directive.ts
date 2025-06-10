@@ -22,10 +22,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     standalone: true
 })
 export class FilterPipe implements PipeTransform {
-
   transform(value: any) {
-
   return value.filter(val => val.canExportMultipleDomains === true);
   }
-
 }

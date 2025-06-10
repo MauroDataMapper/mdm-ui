@@ -216,7 +216,7 @@ describe('MauroItemUpdateService', () => {
       return { identifier, item };
     });
 
-    const expected$ = cold('---(a|)', { a: payloads.map((p) => p.item) });
+    const expected$ = cold('---(a|)', { a: payloads.map(p => p.item) });
     const actual$ = service.saveMany(payloads);
     expect(actual$).toBeObservable(expected$);
   };

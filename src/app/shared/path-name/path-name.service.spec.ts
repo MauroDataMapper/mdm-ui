@@ -43,7 +43,7 @@ describe('PathNameService', () => {
 
   };
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     service = setupTestModuleForService(PathNameService, {
       providers: [
         {
@@ -52,7 +52,6 @@ describe('PathNameService', () => {
         }
       ]
     });
-
     }
   );
 
@@ -435,7 +434,7 @@ describe('PathNameService', () => {
         // Encode the path using RFC3986 URL specification
         const encodedPath = encodeURIComponent(args.path).replace(
           /['()*]/g,
-          (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
+          c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
         );
 
         return `http://localhost:4200/#/catalogue/item/${args.domain}/${encodedPath}`;

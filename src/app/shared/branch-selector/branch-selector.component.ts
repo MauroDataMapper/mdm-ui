@@ -73,7 +73,7 @@ export class BranchSelectorComponent implements OnInit {
     );
 
     this.resources[domainElementType.resourceName]
-      .simpleModelVersionTree(this.sourceCatalogueItem.id,{branchesOnly : this.forMerge})
+      .simpleModelVersionTree(this.sourceCatalogueItem.id, { branchesOnly: this.forMerge })
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -96,7 +96,8 @@ export class BranchSelectorComponent implements OnInit {
   currentVersionIdChanged() {
     if (this.forMerge) {
       this.selectedCatalogueItemChanged.emit(this.currentVersionId);
-    } else {
+    }
+ else {
       this.stateHandler.Go(
         this.sourceCatalogueItem.domainType,
         {
@@ -112,8 +113,8 @@ export class BranchSelectorComponent implements OnInit {
 
   setBranches() {
     this.branches = this.versionList
-      .filter((x) => x.modelVersion === null)
-      .filter((x) =>
+      .filter(x => x.modelVersion === null)
+      .filter(x =>
         this.forMerge ? x.id !== this.sourceCatalogueItem.id : true
       );
   }

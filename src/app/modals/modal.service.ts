@@ -24,7 +24,6 @@ import { BroadcastService } from '../services/broadcast.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-// eslint-disable-next-line no-shadow
 export enum ModalType {
   Login,
   Register,
@@ -61,11 +60,14 @@ export class ModalService implements OnDestroy {
   open(modalType: ModalType, options?: MatDialogConfig) {
     switch (modalType) {
       case ModalType.Login:
-        this.dialog.open(LoginModalComponent, options); break;
+        this.dialog.open(LoginModalComponent, options);
+        break;
       case ModalType.Register:
-        this.dialog.open(RegisterModalComponent, options); break;
+        this.dialog.open(RegisterModalComponent, options);
+        break;
       case ModalType.ForgotPassword:
-        this.dialog.open(ForgotPasswordModalComponent, options); break;
+        this.dialog.open(ForgotPasswordModalComponent, options);
+        break;
       default:
         throw new Error('Modal not found');
     }

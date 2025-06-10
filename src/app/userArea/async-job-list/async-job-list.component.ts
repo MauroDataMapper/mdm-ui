@@ -85,6 +85,7 @@ export class AsyncJobListComponent implements OnInit, AfterViewInit {
     'status',
     'actions'
   ];
+
   showFilters = false;
   statusOptions = [
     null,
@@ -228,7 +229,7 @@ export class AsyncJobListComponent implements OnInit, AfterViewInit {
           return response.body.items;
         })
       )
-      .subscribe((data) => (this.dataSource.data = data));
+      .subscribe(data => (this.dataSource.data = data));
   }
 
   private fetch(
@@ -236,7 +237,7 @@ export class AsyncJobListComponent implements OnInit, AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ): Observable<AsyncJobIndexResponse> {
     const options = this.grid.constructOptions(
       pageSize,

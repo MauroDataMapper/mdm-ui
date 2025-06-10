@@ -29,7 +29,6 @@ describe('AsyncJobListComponent', () => {
     harness = await setupTestModuleForComponent(AsyncJobListComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

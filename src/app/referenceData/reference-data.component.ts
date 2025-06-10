@@ -232,8 +232,8 @@ export class ReferenceDataComponent
     this.access = this.securityHandler.elementAccess(this.referenceModel);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 }

@@ -31,7 +31,7 @@ import { StateHandlerService } from './handlers/state-handler.service';
 @Injectable({ providedIn: 'root' })
 export class ElementTypesService {
   private semanticLinkTypes: any = {
-    Refines: { title: 'Refines', editable: true },
+    'Refines': { title: 'Refines', editable: true },
     'Does Not Refine': { title: 'Does Not Refine', editable: true },
 
     'Is From': { title: 'Is From', editable: false },
@@ -377,7 +377,7 @@ export class ElementTypesService {
     }
   };
 
-  private userTypes: {} = {
+  private userTypes: object = {
     UserGroup: {
       id: 'UserGroup',
       link: 'userGroup',
@@ -402,7 +402,7 @@ export class ElementTypesService {
 
   getAllDataTypesArray() {
     return this.allTypes.filter(
-      (f) => f.baseTitle === 'DataType' && f.title !== 'DataType'
+      f => f.baseTitle === 'DataType' && f.title !== 'DataType'
     );
   }
 
@@ -420,9 +420,9 @@ export class ElementTypesService {
     for (const property in this.allTypes) {
       if (this.allTypes.hasOwnProperty(property)) {
         if (
-          !this.allTypes[property].isBase &&
-          this.allTypes[property].baseTitle.toLowerCase() ===
-            baseType.toLowerCase()
+          !this.allTypes[property].isBase
+          && this.allTypes[property].baseTitle.toLowerCase()
+          === baseType.toLowerCase()
         ) {
           array.push(this.allTypes[property]);
         }
@@ -431,7 +431,7 @@ export class ElementTypesService {
     return array;
   }
 
-  getBaseTypesAsArray():[ CatalogueElementType? ] {
+  getBaseTypesAsArray(): [ CatalogueElementType? ] {
     const array: [ CatalogueElementType? ] = [];
     for (const property in this.baseTypes) {
       if (this.baseTypes.hasOwnProperty(property)) {
@@ -443,8 +443,8 @@ export class ElementTypesService {
 
   getBaseWithUserTypes() {
     const array = [
-      ...Object.keys(this.baseTypes).map((p) => this.baseTypes[p]),
-      ...Object.keys(this.userTypes).map((p) => this.userTypes[p])
+      ...Object.keys(this.baseTypes).map(p => this.baseTypes[p]),
+      ...Object.keys(this.userTypes).map(p => this.userTypes[p])
     ];
     return array;
   }
@@ -478,17 +478,20 @@ export class ElementTypesService {
     let terminologyId = null;
     if (element.model) {
       parentDataModel = element.model;
-    } else if (element.breadcrumbs) {
+    }
+ else if (element.breadcrumbs) {
       parentDataModel = element.breadcrumbs[0].id;
     }
 
     if (element.domainType === 'DataClass') {
       if (element.parentDataClass) {
         parentDataClass = element.parentDataClass;
-      } else if (element.breadcrumbs && element.breadcrumbs.length >= 2) {
-        parentDataClass =
-          element.breadcrumbs[element.breadcrumbs.length - 1].id;
-      } else if (element.modelId) {
+      }
+ else if (element.breadcrumbs && element.breadcrumbs.length >= 2) {
+        parentDataClass
+          = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+      }
+ else if (element.modelId) {
         parentDataModel = element.modelId;
       }
     }
@@ -496,16 +499,18 @@ export class ElementTypesService {
     if (element.domainType === 'DataElement') {
       if (element.dataClass) {
         parentDataClass = element.dataClass;
-      } else if (element.breadcrumbs) {
-        parentDataClass =
-          element.breadcrumbs[element.breadcrumbs.length - 1].id;
+      }
+ else if (element.breadcrumbs) {
+        parentDataClass
+          = element.breadcrumbs[element.breadcrumbs.length - 1].id;
       }
     }
 
     if (element.domainType === 'Term') {
       if (element.terminology) {
         terminologyId = element.terminology;
-      } else if (element.breadcrumbs) {
+      }
+ else if (element.breadcrumbs) {
         terminologyId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
       }
     }
@@ -516,8 +521,8 @@ export class ElementTypesService {
         dataTypeId = element.breadcrumbs[1].id;
       }
       return this.stateHandler.getURL(
-        'appContainer.mainApp.twoSidePanel.catalogue.' +
-          types.find((x) => x.id === element.domainType).link,
+        'appContainer.mainApp.twoSidePanel.catalogue.'
+        + types.find(x => x.id === element.domainType).link,
         {
           id: dataTypeId,
           dataModelId: parentDataModel
@@ -525,8 +530,8 @@ export class ElementTypesService {
       );
     }
     return this.stateHandler.getURL(
-      'appContainer.mainApp.twoSidePanel.catalogue.' +
-        types.find((x) => x.id === element.domainType).link,
+      'appContainer.mainApp.twoSidePanel.catalogue.'
+      + types.find(x => x.id === element.domainType).link,
       {
         id: element.id,
         dataModelId: parentDataModel,
@@ -556,7 +561,7 @@ export class ElementTypesService {
       }
     );
 
-    let parentId : string= null;
+    let parentId: string = null;
     if (element.domainType === 'DataClass') {
       parentId = element.modelId;
     }
@@ -564,22 +569,24 @@ export class ElementTypesService {
       parentId = element.breadcrumbs[0].id;
     }
 
-    let parentDataClassId:string = null;
+    let parentDataClassId: string = null;
     if (element.parentDataClass) {
       parentDataClassId = element.parentDataClass;
-    } else if (element.dataClass) {
+    }
+ else if (element.dataClass) {
       parentDataClassId = element.dataClass;
-    } else if (element.breadcrumbs) {
-      parentDataClassId =
-        element.breadcrumbs[element.breadcrumbs.length - 1].id;
+    }
+ else if (element.breadcrumbs) {
+      parentDataClassId
+        = element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
     if (element.domainType === 'DataClass') {
       return this.getDataModelName(parentId).pipe(
         map(
-          (dataModelName) =>
+          dataModelName =>
             `dm:${dataModelName}|${
-              baseTypes.find((x) => x.id === element.domainType).markdown
+              baseTypes.find(x => x.id === element.domainType).markdown
             }:${element.label}`
         )
       );
@@ -587,15 +594,15 @@ export class ElementTypesService {
 
     if (element.domainType === 'DataModel') {
       return of(
-        `${baseTypes.find((x) => x.id === element.domainType).markdown}:${
+        `${baseTypes.find(x => x.id === element.domainType).markdown}:${
           element.label
         }`
       );
     }
 
     if (
-      (element.domainType as string) === 'DataType' ||
-      dataTypeNames.includes(element.element?.domainType)
+      (element.domainType as string) === 'DataType'
+      || dataTypeNames.includes(element.element?.domainType)
     ) {
       let isHierarchical = false;
 
@@ -608,12 +615,13 @@ export class ElementTypesService {
         map((dataModelName) => {
           if (isHierarchical) {
             return `dm:${dataModelName}|${
-              baseTypes.find((x) => x.id === element.element.domainType)
+              baseTypes.find(x => x.id === element.element.domainType)
                 .markdown
             }:${element.element.label}`;
-          } else {
+          }
+ else {
             return `dm:${dataModelName}|${
-              baseTypes.find((x) => x.id === element.domainType).markdown
+              baseTypes.find(x => x.id === element.domainType).markdown
             }:${element.label}`;
           }
         })
@@ -621,8 +629,8 @@ export class ElementTypesService {
     }
 
     if (
-      element.domainType === 'DataElement' ||
-      element.element?.domainType === 'DataElement'
+      element.domainType === 'DataElement'
+      || element.element?.domainType === 'DataElement'
     ) {
       let isHierarchical = false;
 
@@ -639,12 +647,13 @@ export class ElementTypesService {
         map(([dataModelName, dataClassName]) => {
           if (isHierarchical) {
             return `dm:${dataModelName}|dc:${dataClassName}|${
-              baseTypes.find((x) => x.id === element.element.domainType)
+              baseTypes.find(x => x.id === element.element.domainType)
                 .markdown
             }:${element.element.label}`;
-          } else {
+          }
+ else {
             return `dm:${dataModelName}|dc:${dataClassName}|${
-              baseTypes.find((x) => x.id === element.domainType).markdown
+              baseTypes.find(x => x.id === element.domainType).markdown
             }:${element.label}`;
           }
         })
@@ -654,9 +663,9 @@ export class ElementTypesService {
     if (element.domainType === 'Term') {
       return this.getTerminologyName(parentId).pipe(
         map(
-          (terminologyName) =>
+          terminologyName =>
             `te:${terminologyName}|${
-              baseTypes.find((x) => x.id === element.domainType).markdown
+              baseTypes.find(x => x.id === element.domainType).markdown
             }:${element.label}`
         )
       );
@@ -664,7 +673,7 @@ export class ElementTypesService {
 
     if (element.domainType === 'CodeSet') {
       return of(
-        `${baseTypes.find((x) => x.id === element.domainType).markdown}:${
+        `${baseTypes.find(x => x.id === element.domainType).markdown}:${
           element.label
         }`
       );
@@ -675,9 +684,9 @@ export class ElementTypesService {
 
   isModelDataType(domainType: CatalogueItemDomainType) {
     return (
-      domainType === CatalogueItemDomainType.CodeSetType ||
-      domainType === CatalogueItemDomainType.TerminologyType ||
-      domainType === CatalogueItemDomainType.ReferenceDataModelType
+      domainType === CatalogueItemDomainType.CodeSetType
+      || domainType === CatalogueItemDomainType.TerminologyType
+      || domainType === CatalogueItemDomainType.ReferenceDataModelType
     );
   }
 
@@ -701,14 +710,14 @@ export class ElementTypesService {
 }
 
 export interface CatalogueElementType {
-  id: string;
-  link: string;
-  title: string;
-  markdown: string;
-  isBase?: boolean;
-  baseTitle?: string;
-  classifiable?: boolean;
-  displayLabel?: string;
-  resourceName?: string;
-  domainName: string;
+  id: string
+  link: string
+  title: string
+  markdown: string
+  isBase?: boolean
+  baseTitle?: string
+  classifiable?: boolean
+  displayLabel?: string
+  resourceName?: string
+  domainName: string
 }

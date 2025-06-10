@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit } from '@angular/core';
-import {  ModelDomainType } from '@maurodatamapper/mdm-resources';
+import { ModelDomainType } from '@maurodatamapper/mdm-resources';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgClass } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -41,7 +41,8 @@ export class ModelIconComponent implements OnInit {
       case ModelDomainType.DataModels:
         if (this.isDataAsset) {
           this.style = 'fa-database';
-        } else {
+        }
+ else {
           this.style = 'fa-file-alt';
         }
         break;

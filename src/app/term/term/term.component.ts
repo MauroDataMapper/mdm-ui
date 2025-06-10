@@ -144,8 +144,8 @@ export class TermComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -198,8 +198,8 @@ export class TermComponent implements OnInit, AfterViewChecked {
     this.access = this.securityHandler.elementAccess(this.term);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 

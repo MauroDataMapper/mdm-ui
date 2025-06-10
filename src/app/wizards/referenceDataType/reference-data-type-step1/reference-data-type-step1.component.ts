@@ -56,8 +56,8 @@ export class ReferenceDataTypeStep1Component implements OnInit {
     }
 
     if (
-      ['copy'].includes(this.state.createType) &&
-      !this.state.copyFromModel?.length
+      ['copy'].includes(this.state.createType)
+      && !this.state.copyFromModel?.length
     ) {
       this.step.invalid = true;
       return;

@@ -20,13 +20,13 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeItemValueType } from '@mdm/merge-diff/types/merge-item-type';
 
 export interface ConflictEditorModalData {
-  source: Branchable;
-  target: Branchable;
-  item: MergeDiffItem;
-  valueType: MergeItemValueType;
+  source: Branchable
+  target: Branchable
+  item: MergeDiffItem
+  valueType: MergeItemValueType
 }
 
 export interface ConflictEditorModalResult {
-  status: ModalDialogStatus;
-  resolvedContent?: string;
+  status: ModalDialogStatus
+  resolvedContent?: string
 }

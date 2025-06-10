@@ -31,6 +31,6 @@ export const securityAccessResourceDisplayNames = {
 };
 
 export interface SecurityModalConfiguration {
-  element: CatalogueItem & SecurableModel;
-  resource: SecurityAccessResource;
+  element: CatalogueItem & SecurableModel
+  resource: SecurityAccessResource
 }

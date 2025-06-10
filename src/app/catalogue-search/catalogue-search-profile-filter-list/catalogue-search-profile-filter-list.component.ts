@@ -124,9 +124,9 @@ export class CatalogueSearchProfileFilterListComponent
     return this.filters.controls.map(
       (
         row: FormGroup<{
-          provider: FormControl<ProfileSummary>;
-          key: FormControl<ProfileField>;
-          value: FormControl<string>;
+          provider: FormControl<ProfileSummary>
+          key: FormControl<ProfileField>
+          value: FormControl<string>
         }>
       ) => {
         return {
@@ -153,14 +153,12 @@ export class CatalogueSearchProfileFilterListComponent
 
   compareKeys(a: ProfileSummary, b: ProfileSummary) {
     return (
-      a.metadataPropertyName === b.metadataPropertyName &&
-      a.description === b.description
+      a.metadataPropertyName === b.metadataPropertyName
+      && a.description === b.description
     );
   }
 
   private createFilter(profileFilter?: CatalogueSearchProfileFilter) {
-    /* eslint-disable @typescript-eslint/unbound-method */
-
     const filter = new FormGroup({
       // Important fields required for search filters
       provider: new FormControl<ProfileSummary>(
@@ -177,8 +175,6 @@ export class CatalogueSearchProfileFilterListComponent
       definition: new FormControl<ProfileDefinition>(null)
     });
 
-    /* eslint-enable @typescript-eslint/unbound-method */
-
     // Track when the "provider" field changes, then fetch that profile definition
     // to be able to select from the list of known fields. Set the definition to a
     // special "backing" field for this form group, this will be used to render the key
@@ -190,12 +186,12 @@ export class CatalogueSearchProfileFilterListComponent
     filter.controls.provider.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),
-        switchMap((provider) =>
+        switchMap(provider =>
           this.resources.profile.definition(provider.namespace, provider.name)
         ),
         map((response: ProfileDefinitionResponse) => response.body)
       )
-      .subscribe((definition) =>
+      .subscribe(definition =>
         filter.controls.definition.setValue(definition)
       );
 

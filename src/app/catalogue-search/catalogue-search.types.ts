@@ -46,11 +46,11 @@ export type CatalogueSearchFilters = Record<string, string | undefined>;
  * Represents a single element within which a search should occur.
  */
 export interface CatalogueSearchContext {
-  domainType: CatalogueItemDomainType;
-  id: string;
-  label: string;
-  parentId?: string;
-  dataModelId?: string;
+  domainType: CatalogueItemDomainType
+  id: string
+  label: string
+  parentId?: string
+  dataModelId?: string
 }
 
 /**
@@ -63,9 +63,9 @@ export interface CatalogueSearchContext {
  * 3. The value to search for on this key
  */
 export interface CatalogueSearchProfileFilter {
-  provider: ProfileSummary;
-  key: ProfileField;
-  value: string;
+  provider: ProfileSummary
+  key: ProfileField
+  value: string
 }
 
 /**
@@ -210,29 +210,29 @@ export interface CatalogueSearchParameters {
    * If provided, a search context element i.e. the catalogue item within
    * which searching should be restricted to.
    */
-  context?: CatalogueSearchContext;
+  context?: CatalogueSearchContext
 
   /**
    * If provided, provides the search terms for full text search.
    */
-  search?: string;
+  search?: string
 
   /**
    * If provided, state which page of results to fetch. If not provided, the first page
    * is assumed.
    */
-  page?: number;
+  page?: number
 
   /**
    * If provided, state how many results to return per page. If not provided, the default
    * value is assumed.
    */
-  pageSize?: number;
+  pageSize?: number
 
   /**
    * The field/property name to sort by.
    */
-  sort?: string;
+  sort?: string
 
   /**
    * State what sort order to use. If supplied, must be either:
@@ -242,50 +242,50 @@ export interface CatalogueSearchParameters {
    *
    * If not supplied, the default value used will depend on the resource requested.
    */
-  order?: SortOrder;
+  order?: SortOrder
 
   /**
    * Optionally provide filter values to control what search results are returned.
    */
-  filters?: CatalogueSearchFilters;
+  filters?: CatalogueSearchFilters
 
   /**
    * Optionally filter by domain type(s)
    */
-  domainTypes?: string[];
+  domainTypes?: string[]
 
   /**
    * Optionally match on label only
    */
-  labelOnly?: boolean;
+  labelOnly?: boolean
 
   /**
    * Optionally do an exact match on the search term
    */
-  exactMatch?: boolean;
+  exactMatch?: boolean
 
   /**
    * Optionally filter on dates, as yyyy-MM-dd
    */
-  lastUpdatedAfter?: Date;
-  lastUpdatedBefore?: Date;
-  createdAfter?: Date;
-  createdBefore?: Date;
+  lastUpdatedAfter?: Date
+  lastUpdatedBefore?: Date
+  createdAfter?: Date
+  createdBefore?: Date
 
   /**
    * Optionally return documents that were superceded
    */
-  includeSuperseded?: boolean;
+  includeSuperseded?: boolean
 
   /**
    * AND matching on classifiers
    */
-  classifiers?: string[];
+  classifiers?: string[]
 
   /**
    * Optional DTO containing filters for profiles and metadata search
    */
-  profileFiltersDto?: CatalogueSearchProfileFilterDto;
+  profileFiltersDto?: CatalogueSearchProfileFilterDto
 }
 
 export const serializeDate = (date: Date) => {
@@ -320,13 +320,15 @@ export const mapStateParamsToSearchParameters = (
   // Here we make sure that we always end up with an array.
   if (typeof query?.dt === 'string') {
     domainTypes = [query?.dt];
-  } else if (query?.dt instanceof Array) {
+  }
+ else if (query?.dt instanceof Array) {
     domainTypes = query?.dt;
   }
 
   if (typeof query?.cls === 'string') {
     classifiers = [query?.cls];
-  } else if (query?.cls instanceof Array) {
+  }
+ else if (query?.cls instanceof Array) {
     classifiers = query?.cls;
   }
 
@@ -409,8 +411,8 @@ export const mapSearchParametersToRawParams = (
 };
 
 export interface CatalogueSearchResultSet {
-  count: number;
-  pageSize: number;
-  page: number;
-  items: CatalogueItemSearchResult[];
+  count: number
+  pageSize: number
+  page: number
+  items: CatalogueItemSearchResult[]
 }

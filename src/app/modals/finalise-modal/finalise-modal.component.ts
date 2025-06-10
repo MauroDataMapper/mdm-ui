@@ -29,8 +29,8 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 
 export interface FinaliseModalResponse {
-  status: ModalDialogStatus;
-  request?: FinalisePayload;
+  status: ModalDialogStatus
+  request?: FinalisePayload
 }
 
 @Component({
@@ -83,7 +83,8 @@ export class FinaliseModalComponent implements OnInit {
       this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0], 10) + 1}</strong>.0.0`;
       this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.<strong>${parseInt(nameSplit[1], 10) + 1}</strong>.0`;
       this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.${parseInt(nameSplit[1], 10)}.<strong>${parseInt(nameSplit[2], 10) + 1}</strong>`;
-    } else {
+    }
+ else {
       this.data.versionList = 'Custom';
       this.showCustomVersion = true;
       this.versionMajor = 'Example: 1.0.0  <span class="fas fa-long-arrow-alt-right"></span> <strong>  2</strong>.0.0';
@@ -95,7 +96,8 @@ export class FinaliseModalComponent implements OnInit {
   onVersionChange() {
     if (this.data.versionList === 'Custom') {
       this.showCustomVersion = !this.showCustomVersion;
-    } else {
+    }
+ else {
       this.showCustomVersion = false;
     }
   }
@@ -113,9 +115,11 @@ export class FinaliseModalComponent implements OnInit {
       request
     });
   }
+
   cancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
   }
+
   close() {
     this.dialogRef.close({ status: ModalDialogStatus.Close });
   }

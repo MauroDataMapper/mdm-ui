@@ -33,7 +33,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf, SubscribedCatalogueDetailComponent]
 })
 export class SubscribedCatalogueMainComponent extends BaseComponent implements OnInit {
-
   subscribedCatalogue: SubscribedCatalogue;
 
   constructor(

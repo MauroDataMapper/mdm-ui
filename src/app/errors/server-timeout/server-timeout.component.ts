@@ -33,7 +33,6 @@ import { NgIf, NgFor } from '@angular/common';
     imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
-
   constructor(
     protected messages: MessageService,
     protected messageHandler: MessageHandlerService,
@@ -50,4 +49,3 @@ export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
     this.dataSource.push({ field: 'Error Code', value: '504', code: false });
   }
 }
-

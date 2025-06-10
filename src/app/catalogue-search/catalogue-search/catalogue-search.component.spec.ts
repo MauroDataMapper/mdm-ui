@@ -200,8 +200,8 @@ describe('CatalogueSearchComponent', () => {
         value
       });
 
-      const expectedMdBase64 =
-        'eyJ0ZXN0Lm5hbWVzcGFjZXxUZXN0UHJvZmlsZXwxLjAuMCI6eyJ0ZXN0S2V5IjoidGVzdFZhbHVlIn19';
+      const expectedMdBase64
+        = 'eyJ0ZXN0Lm5hbWVzcGFjZXxUZXN0UHJvZmlsZXwxLjAuMCI6eyJ0ZXN0S2V5IjoidGVzdFZhbHVlIn19';
 
       harness.component.search();
 

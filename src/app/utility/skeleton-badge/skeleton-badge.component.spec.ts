@@ -25,7 +25,6 @@ describe('SkeletonBadgeComponent', () => {
     harness = await setupTestModuleForComponent(SkeletonBadgeComponent)
   });
 
-
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });

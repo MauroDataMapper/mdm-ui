@@ -101,6 +101,7 @@ export class TerminologyComponent
     'annotations',
     'history'
   ]);
+
   isLoadingTerms = true;
   termsItemCount = 0;
   isLoadingRelationshipTypes = true;
@@ -119,7 +120,7 @@ export class TerminologyComponent
   ) {}
 
   ngOnInit() {
-    const id:string = this.uiRouterGlobals.params.id;
+    const id: string = this.uiRouterGlobals.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -140,8 +141,8 @@ export class TerminologyComponent
 
         this.access = this.securityHandler.elementAccess(data);
         this.showEdit = this.access.showEdit;
-        this.showDelete =
-          this.access.showPermanentDelete || this.access.showSoftDelete;
+        this.showDelete
+          = this.access.showPermanentDelete || this.access.showSoftDelete;
         this.terminology = data;
         this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
@@ -150,8 +151,8 @@ export class TerminologyComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -196,7 +197,7 @@ export class TerminologyComponent
 
   // This fetch function needs to be a property-based function because it is passed as a property to the
   // mdm-select component for searching for terms
-  fetch = (text:string, loadAll, offset:number, limit:number) => {
+  fetch = (text: string, loadAll, offset: number, limit: number) => {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {

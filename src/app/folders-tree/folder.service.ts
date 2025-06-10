@@ -24,7 +24,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FolderService {
-
   constructor(private resources: MdmResourcesService) {
   }
 
@@ -32,7 +31,7 @@ export class FolderService {
     const semanticLinks: any = await this.resources.catalogueItem.listSemanticLinks(dataModel.domainType as string, dataModel.id as string, { filters: 'all=true' }).toPromise();
     const compareToList = [];
     if (semanticLinks && semanticLinks.body.items) {
-      semanticLinks.body.items.map(link => {
+      semanticLinks.body.items.map((link) => {
         if (['Superseded By', 'New Version Of'].includes(link.linkType as string) && link.source.id === dataModel.id) {
           compareToList.push(link.target);
         }
@@ -53,5 +52,4 @@ export class FolderService {
 
     return this.resources.folder.get(id);
   }
-
 }

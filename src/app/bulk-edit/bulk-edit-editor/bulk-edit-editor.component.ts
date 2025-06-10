@@ -89,10 +89,10 @@ export class BulkEditEditorComponent implements OnInit {
   columns: ColGroupDef[] = [];
   rows: BulkEditDataRow[] = [];
   cellRules: CellClassRules = {
-    'mdm-bulk-editor__invalid': (params) => this.showValidationError(params),
-    'mdm-bulk-editor__readonly': (params) =>
-      !params.colDef.editable &&
-      params.colDef.cellRenderer !== 'checkboxCellRenderer'
+    'mdm-bulk-editor__invalid': params => this.showValidationError(params),
+    'mdm-bulk-editor__readonly': params =>
+      !params.colDef.editable
+      && params.colDef.cellRenderer !== 'checkboxCellRenderer'
   };
 
   defaultColDef: ColDef = {
@@ -133,7 +133,7 @@ export class BulkEditEditorComponent implements OnInit {
       .subscribe((profiles) => {
         this.tab.editedProfiles = profiles;
         this.columns = this.getColumnsForProfile(profiles[0]);
-        this.rows = profiles.map((profile) => this.mapProfileToRow(profile));
+        this.rows = profiles.map(profile => this.mapProfileToRow(profile));
 
         this.validate();
         this.loaded = true;
@@ -187,7 +187,7 @@ export class BulkEditEditorComponent implements OnInit {
         return {
           profile,
           identifier: this.tab.identifiers.find(
-            (identifier) => identifier.id === profile.id
+            identifier => identifier.id === profile.id
           )
         };
       }
@@ -222,8 +222,8 @@ export class BulkEditEditorComponent implements OnInit {
 
     this.validated.forEach((validationResult) => {
       if (
-        validationResult.profile.label === data.label &&
-        validationResult.errors
+        validationResult.profile.label === data.label
+        && validationResult.errors
       ) {
         validationResult.errors.forEach((error) => {
           if (error.metadataPropertyName === params.colDef.field) {
@@ -237,12 +237,12 @@ export class BulkEditEditorComponent implements OnInit {
   }
 
   private screenResize() {
-    const nonStandardFields = this.nonStandardColWidths.map((c) => c.field);
+    const nonStandardFields = this.nonStandardColWidths.map(c => c.field);
 
     const columnIds = this.gridApi
       .getColumns()
-      .filter((col) => !nonStandardFields.includes(col.getColDef().field))
-      .map((col) => col.getColId());
+      .filter(col => !nonStandardFields.includes(col.getColDef().field))
+      .map(col => col.getColId());
 
     this.excludeAutoResizeColumns(columnIds);
     this.gridApi.autoSizeColumns(columnIds);
@@ -251,7 +251,7 @@ export class BulkEditEditorComponent implements OnInit {
       .map((nscw) => {
         const column = this.gridApi
           .getColumns()
-          .find((col) => col.getColDef().field === nscw.field);
+          .find(col => col.getColDef().field === nscw.field);
         return {
           column,
           width: nscw.width
@@ -293,7 +293,7 @@ export class BulkEditEditorComponent implements OnInit {
     const profileGroups = profile.sections.map((section) => {
       return {
         headerName: section.name,
-        children: section.fields.map((field) =>
+        children: section.fields.map(field =>
           this.getColumnForProfileField(field)
         )
       };
@@ -330,7 +330,7 @@ export class BulkEditEditorComponent implements OnInit {
 
     if (field.dataType === 'model') {
       column.editable = false;
-      column.valueGetter = (params) =>
+      column.valueGetter = params =>
         params.data[field.metadataPropertyName].label;
     }
 
@@ -352,8 +352,8 @@ export class BulkEditEditorComponent implements OnInit {
     const data = {};
     profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
-        if(field.dataType === 'boolean') {
-          if(field.currentValue !== 'true') {
+        if (field.dataType === 'boolean') {
+          if (field.currentValue !== 'true') {
             field.currentValue = 'false';
           }
         }
@@ -388,7 +388,7 @@ export class BulkEditEditorComponent implements OnInit {
         maxHeight: 600
       })
       .afterClosed()
-      .pipe(filter((response) => response.status === ModalDialogStatus.Ok))
+      .pipe(filter(response => response.status === ModalDialogStatus.Ok))
       .subscribe((response) => {
         const node = params.node;
         const column = params.column;

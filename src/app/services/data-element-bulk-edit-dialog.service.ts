@@ -25,7 +25,6 @@ import { EditingService } from './editing.service';
   providedIn: 'root'
 })
 export class DataElementBulkEditDialogService {
-
   messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
 

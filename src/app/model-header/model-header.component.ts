@@ -109,8 +109,8 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
     return (
-      isModelDomainType(this.item.domainType) ||
-      this.item.domainType === CatalogueItemDomainType.VersionedFolder
+      isModelDomainType(this.item.domainType)
+      || this.item.domainType === CatalogueItemDomainType.VersionedFolder
     );
   }
 
@@ -134,11 +134,11 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
     return (
-      this.access.showEdit &&
-      (this.item.domainType === CatalogueItemDomainType.DataModel ||
-        this.item.domainType === CatalogueItemDomainType.DataClass ||
-        this.item.domainType === CatalogueItemDomainType.CodeSet ||
-        this.item.domainType === CatalogueItemDomainType.Terminology)
+      this.access.showEdit
+      && (this.item.domainType === CatalogueItemDomainType.DataModel
+        || this.item.domainType === CatalogueItemDomainType.DataClass
+        || this.item.domainType === CatalogueItemDomainType.CodeSet
+        || this.item.domainType === CatalogueItemDomainType.Terminology)
     );
   }
 
@@ -148,8 +148,8 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.isLoggedIn &&
-      this.item.domainType === CatalogueItemDomainType.DataModel
+      this.isLoggedIn
+      && this.item.domainType === CatalogueItemDomainType.DataModel
     );
   }
 
@@ -159,9 +159,9 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.isLoggedIn &&
-      (this.item.domainType === CatalogueItemDomainType.DataModel ||
-        this.item.domainType === CatalogueItemDomainType.VersionedFolder)
+      this.isLoggedIn
+      && (this.item.domainType === CatalogueItemDomainType.DataModel
+        || this.item.domainType === CatalogueItemDomainType.VersionedFolder)
     );
   }
 
@@ -172,8 +172,8 @@ export class ModelHeaderComponent implements OnInit {
 
     if (
       !(
-        isModelDomainType(this.item.domainType) ||
-        this.item.domainType === CatalogueItemDomainType.VersionedFolder
+        isModelDomainType(this.item.domainType)
+        || this.item.domainType === CatalogueItemDomainType.VersionedFolder
       )
     ) {
       return false;
@@ -189,9 +189,9 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.item.deleted &&
-      this.isAdministrator &&
-      isModelDomainType(this.item.domainType)
+      this.item.deleted
+      && this.isAdministrator
+      && isModelDomainType(this.item.domainType)
     );
   }
 
@@ -231,7 +231,7 @@ export class ModelHeaderComponent implements OnInit {
       // need to check it is in a versionedfolder
       // has a ancestor with a domaintype.versionedfolder property
       return this.ancestorTreeItems.some(
-        (item) => item.domainType === CatalogueItemDomainType.VersionedFolder
+        item => item.domainType === CatalogueItemDomainType.VersionedFolder
       );
     }
 
@@ -244,11 +244,11 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.canChangeBranchName ||
-      this.canBulkEdit ||
-      this.canCompareModels ||
-      this.access.showDelete ||
-      this.canRestore
+      this.canChangeBranchName
+      || this.canBulkEdit
+      || this.canCompareModels
+      || this.access.showDelete
+      || this.canRestore
     );
   }
 
@@ -257,7 +257,7 @@ export class ModelHeaderComponent implements OnInit {
     this.access = this.security.elementAccess(this.item);
     this.security
       .isAdministrator()
-      .subscribe((state) => (this.isAdministrator = state));
+      .subscribe(state => (this.isAdministrator = state));
 
     if (this.item) {
       this.modelTree
@@ -272,7 +272,7 @@ export class ModelHeaderComponent implements OnInit {
         .subscribe((ancestorTreeItems) => {
           // Exclude the item being shown (not relevant to display twice)
           this.ancestorTreeItems = ancestorTreeItems.filter(
-            (treeItem) => treeItem.id !== this.item.id
+            treeItem => treeItem.id !== this.item.id
           );
         });
     }
@@ -289,8 +289,8 @@ export class ModelHeaderComponent implements OnInit {
   }
 
   bulkEdit() {
-    const stateName =
-      this.item.domainType === CatalogueItemDomainType.DataClass
+    const stateName
+      = this.item.domainType === CatalogueItemDomainType.DataClass
         ? 'appContainer.mainApp.bulkEditDataClass'
         : 'appContainer.mainApp.bulkEdit';
 
@@ -493,7 +493,7 @@ export class ModelHeaderComponent implements OnInit {
             .afterClosed();
         }),
         filter(
-          (dialogResponse) => dialogResponse?.status === ModalDialogStatus.Ok
+          dialogResponse => dialogResponse?.status === ModalDialogStatus.Ok
         ),
         switchMap((dialogResponse) => {
           this.busy = true;
@@ -658,7 +658,8 @@ export class ModelHeaderComponent implements OnInit {
           this.stateHandler.Go(
             'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
           );
-        } else {
+        }
+ else {
           this.stateHandler.reload();
         }
       });

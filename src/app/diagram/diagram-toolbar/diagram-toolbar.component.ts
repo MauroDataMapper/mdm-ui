@@ -34,7 +34,6 @@ import { NgIf } from '@angular/common';
 })
 
 export class DiagramToolbarComponent {
-
   @Output() toolbarClick = new EventEmitter<string>();
 
   @Input() isPopup: boolean;
@@ -46,6 +45,4 @@ export class DiagramToolbarComponent {
   click(buttonName: string): void {
     this.toolbarClick.emit(buttonName);
   }
-
 }
-

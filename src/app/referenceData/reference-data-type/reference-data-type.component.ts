@@ -65,6 +65,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
 
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   records: ReferenceDataType[] = [];
   totalItemCount = 0;
   loading = true;

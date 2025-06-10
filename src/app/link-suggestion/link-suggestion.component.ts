@@ -76,6 +76,7 @@ export class LinkSuggestionComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable) table: MatTable<any>;
@@ -120,7 +121,8 @@ export class LinkSuggestionComponent implements OnInit {
 
     if (this.sourceDataElementId) {
       this.setSourceDataElement(this.sourceDataModelId as string, this.sourceDataClassId as string, this.sourceDataElementId as string);
-    } else if (this.sourceDataModelId) {
+    }
+ else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
 
@@ -144,14 +146,15 @@ export class LinkSuggestionComponent implements OnInit {
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
-    } else {
+    }
+ else {
       this.model.sourceLink = null;
       this.model.source = null;
       this.model.sourceEditable = true;
     }
   };
 
-  setSourceDataElement = (sourceDMId:string, sourceDCId:string, sourceDEId:string) => {
+  setSourceDataElement = (sourceDMId: string, sourceDCId: string, sourceDEId: string) => {
     this.model.loadingSource = true;
     this.resources.dataElement.get(sourceDMId, sourceDCId, sourceDEId).subscribe((result) => {
       this.model.source = result.body;
@@ -175,7 +178,8 @@ export class LinkSuggestionComponent implements OnInit {
         this.model.targetLink = this.elementTypes.getLinkUrl(this.model.target);
         this.model.loadingTarget = false;
       });
-    } else {
+    }
+ else {
       this.model.targetLink = null;
       this.model.target = null;
     }
@@ -214,7 +218,6 @@ export class LinkSuggestionComponent implements OnInit {
   };
 
   ignoreSuggestion = (record) => {
-
     const index = this.model.suggestions.indexOf(record);
 
     if (index >= 0) {
@@ -255,7 +258,8 @@ export class LinkSuggestionComponent implements OnInit {
       }, () => {
         this.model.processing = false;
       });
-    } else if (this.model.source.domainType === 'DataElement') {
+    }
+ else if (this.model.source.domainType === 'DataElement') {
       this.resources.dataElement.suggestLinks(this.model.source.model as string, this.model.source.dataClass as string, this.model.source.id as string, this.model.target.id as string).subscribe((data) => {
         if (data.body) {
           this.model.suggestions = [data.body];

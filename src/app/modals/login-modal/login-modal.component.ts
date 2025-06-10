@@ -56,11 +56,11 @@ export class LoginModalComponent implements OnInit {
 
   signInForm = new FormGroup({
     userName: new FormControl('', [
-      Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required,
       Validators.pattern(this.validator.emailPattern)
     ]),
     password: new FormControl('', [
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required
     ])
   });
 
@@ -123,8 +123,8 @@ export class LoginModalComponent implements OnInit {
               this.message = 'Invalid username or password!';
               break;
             case SignInErrorType.AlreadySignedIn:
-              this.message =
-                'A user is already signed in, please sign out first.';
+              this.message
+                = 'A user is already signed in, please sign out first.';
               break;
             default:
               this.message = 'Unable to sign in. Please try again later.';

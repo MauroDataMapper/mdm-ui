@@ -33,7 +33,6 @@ import { NgIf, NgFor } from '@angular/common';
     imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class ServerErrorComponent extends ErrorComponent implements OnInit {
-
   constructor(
     protected messages: MessageService,
     protected messageHandler: MessageHandlerService,
@@ -52,7 +51,5 @@ export class ServerErrorComponent extends ErrorComponent implements OnInit {
     if (this.lastError.error?.devMode) this.dataSource.push({ field: 'Dev Mode', value: this.lastError.error?.devMode, code: false });
     if (this.lastError.error?.message) this.dataSource.push({ field: 'Message', value: this.lastError.error?.message, code: false });
     if (this.lastError.error?.exception) this.dataSource.push({ field: 'Exception', value: this.lastError.error?.exception, code: true });
-
   }
 }
-

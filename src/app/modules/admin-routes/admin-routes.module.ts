@@ -63,7 +63,7 @@ export const adminPageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.adminArea.subscribedCatalogue',
       url: '/subscribedCatalogue/{id}',
-      params: { id: { value: null, squash: true} },
+      params: { id: { value: null, squash: true } },
       component: SubscribedCatalogueComponent
     },
     {
@@ -111,7 +111,7 @@ export const adminPageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/configuration/{tabView:string}',
       component: ConfigurationComponent,
       params: {
-        tabView: { dynamic: true, value: null, squash: true}
+        tabView: { dynamic: true, value: null, squash: true }
       }
     },
     {

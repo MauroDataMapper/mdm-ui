@@ -27,7 +27,6 @@ import { NgIf } from '@angular/common';
     imports: [NgIf]
 })
 export class AlertComponent implements OnInit {
-
   @Input()
   alertStyle: AlertStyle = 'none';
 
@@ -35,7 +34,7 @@ export class AlertComponent implements OnInit {
   showIcon = false;
 
   private readonly styleMetadata = new Map<AlertStyle, AlertStyleMetadata>([
-    ['none', { icon: '', cssModifier: ''}],
+    ['none', { icon: '', cssModifier: '' }],
     ['success', { icon: 'fa-check-circle', cssModifier: 'mdm-alert--success' }],
     ['info', { icon: 'fa-info-circle', cssModifier: 'mdm-alert--info' }],
     ['warning', { icon: 'fa-exclamation-triangle', cssModifier: 'mdm-alert--warning' }],
@@ -58,5 +57,4 @@ export class AlertComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

@@ -33,7 +33,6 @@ import { NgIf, NgFor } from '@angular/common';
     imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class NotImplementedComponent extends ErrorComponent implements OnInit {
-
   constructor(
     protected messages: MessageService,
     protected messageHandler: MessageHandlerService,

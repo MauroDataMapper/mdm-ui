@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,19 +20,19 @@ import { ThemePalette } from '@angular/material/core';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface NewFolderModalConfiguration {
-  okBtn?: string;
-  cancelBtn?: string;
-  btnType?: ThemePalette;
-  modalTitle?: string;
-  message?: string;
-  inputLabel?: string;
-  createRootFolder?: boolean;
-  canVersion?: boolean;
+  okBtn?: string
+  cancelBtn?: string
+  btnType?: ThemePalette
+  modalTitle?: string
+  message?: string
+  inputLabel?: string
+  createRootFolder?: boolean
+  canVersion?: boolean
 }
 
 export interface NewFolderModalResponse {
-  status: ModalDialogStatus;
-  label?: string;
-  useVersionedFolders?: boolean;
-  isVersioned?: boolean;
+  status: ModalDialogStatus
+  label?: string
+  useVersionedFolders?: boolean
+  isVersioned?: boolean
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,18 @@ import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { MarkdownDirective } from '../markdown.directive';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton, MatIconButton, MatIconAnchor } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
+import { NgIf, NgClass } from '@angular/common';
 
 const macShortcuts = {
   bold: 'Bold (⌘ + B)',
   italic: 'Italic (⌘ + I)',
   heading: 'Heading (⌘ + H)',
-  // eslint-disable-next-line @typescript-eslint/quotes
-  quote: "Quote (⌘ + ')",
+  quote: 'Quote (⌘ + \')',
   numberList: 'Numbered list (⌘ + Shift + L)',
   bulletList: 'Bullet list (⌘ + L)',
   urlLink: 'Link to URL (⌘ + K)',
@@ -43,8 +48,7 @@ const standardShortcuts = {
   bold: 'Bold (Ctrl + B)',
   italic: 'Italic (Ctrl + I)',
   heading: 'Heading (Ctrl + H)',
-  // eslint-disable-next-line @typescript-eslint/quotes
-  quote: "Quote (Ctrl + ')",
+  quote: 'Quote (Ctrl + \')',
   numberList: 'Numbered list (Ctrl + Shift + L)',
   bulletList: 'Bullet list (Ctrl + L)',
   urlLink: 'Link to URL (Ctrl + K)',
@@ -53,9 +57,11 @@ const standardShortcuts = {
 };
 
 @Component({
-  selector: 'mdm-markdown-text-area',
-  templateUrl: './markdown-text-area.component.html',
-  styleUrls: ['./markdown-text-area.component.scss']
+    selector: 'mdm-markdown-text-area',
+    templateUrl: './markdown-text-area.component.html',
+    styleUrls: ['./markdown-text-area.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatToolbar, MatButton, MatIconButton, MatTooltip, MatIconAnchor, FormsModule, NgClass, MarkdownDirective]
 })
 export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   @Input() inEditMode: boolean;
@@ -91,8 +97,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   get allowAutocompleteSearch() {
     return (
-      this.rootElement &&
-      this.resources.getSearchableResource(this.rootElement.domainType)
+      this.rootElement
+      && this.resources.getSearchableResource(this.rootElement.domainType)
     );
   }
 
@@ -107,12 +113,12 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.messageService.elementSelector
       .pipe(
         takeUntil(this.unsubscribe$),
-        filter((element) => !!element),
+        filter(element => !!element),
         map((element: MauroItem & Pathable) => {
           return this.markdownParser.createMarkdownLink(element);
         })
       )
-      .subscribe((link) =>
+      .subscribe(link =>
         this.insertText({ type: 'inline', replacement: link })
       );
   }
@@ -135,24 +141,32 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
     if (usingModifier && event.code === 'KeyB') {
       action = this.insertBold.bind(this);
-    } else if (usingModifier && event.code === 'KeyI') {
+    }
+ else if (usingModifier && event.code === 'KeyI') {
       action = this.insertItalic.bind(this);
-    } else if (usingModifier && event.code === 'KeyH') {
+    }
+ else if (usingModifier && event.code === 'KeyH') {
       action = this.insertHeading.bind(this);
-    } else if (usingModifier && event.code === 'Quote') {
+    }
+ else if (usingModifier && event.code === 'Quote') {
       action = this.insertQuote.bind(this);
-    } else if (usingModifier && event.shiftKey && event.code === 'KeyL') {
+    }
+ else if (usingModifier && event.shiftKey && event.code === 'KeyL') {
       action = this.insertNumberList.bind(this);
-    } else if (usingModifier && event.code === 'KeyL') {
+    }
+ else if (usingModifier && event.code === 'KeyL') {
       action = this.insertBulletList.bind(this);
-    } else if (usingModifier && event.shiftKey && event.code === 'KeyK') {
+    }
+ else if (usingModifier && event.shiftKey && event.code === 'KeyK') {
       action = this.showAddElementToMarkdown.bind(this);
-    } else if (usingModifier && event.code === 'KeyK') {
+    }
+ else if (usingModifier && event.code === 'KeyK') {
       action = this.insertLink.bind(this);
-    } else if (
-      usingModifier &&
-      event.code === 'Space' &&
-      this.allowAutocompleteSearch
+    }
+ else if (
+      usingModifier
+      && event.code === 'Space'
+      && this.allowAutocompleteSearch
     ) {
       action = this.onElementSearch.bind(this);
     }
@@ -195,7 +209,7 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.dialog
       .openElementSearch(this.rootElement)
       .afterClosed()
-      .pipe(filter((response) => !!response?.selected))
+      .pipe(filter(response => !!response?.selected))
       .subscribe((response) => {
         this.createAndInsertLink(response.selected);
       });
@@ -234,10 +248,10 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   }
 
   private insertText(options: {
-    type: 'inline' | 'block';
-    replacement?: string;
-    prefix?: string;
-    suffix?: string;
+    type: 'inline' | 'block'
+    replacement?: string
+    prefix?: string
+    suffix?: string
   }) {
     if (!this.textArea) {
       return;
@@ -250,8 +264,8 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     }
 
     // Track current selection if there is one
-    const selection =
-      el.selectionStart !== el.selectionEnd
+    const selection
+      = el.selectionStart !== el.selectionEnd
         ? el.value.substring(el.selectionStart, el.selectionEnd)
         : undefined;
 

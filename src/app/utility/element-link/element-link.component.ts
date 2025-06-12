@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,10 +24,16 @@ import {
 } from '@mdm/services/element-types.service';
 import { map } from 'rxjs';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-link',
-  templateUrl: './element-link.component.html'
+    selector: 'mdm-element-link',
+    templateUrl: './element-link.component.html',
+    standalone: true,
+    imports: [NgIf, MatIcon, NgClass, ExtendedModule, MatTooltip]
 })
 export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
@@ -67,7 +73,6 @@ export class ElementLinkComponent implements OnInit {
     this.ngOnInit();
   }
 
-
   constructor(
     private elementTypes: ElementTypesService,
     private itemProvider: MauroItemProviderService
@@ -98,13 +103,13 @@ export class ElementLinkComponent implements OnInit {
     }
 
     if (
-      this.showParentDataModelName &&
-      this.element?.domainType !== 'DataModel' &&
-      this.element?.domainType !== 'Term' &&
-      this.element?.domainType !== 'Terminology'
+      this.showParentDataModelName
+      && this.element?.domainType !== 'DataModel'
+      && this.element?.domainType !== 'Term'
+      && this.element?.domainType !== 'Terminology'
     ) {
-      const parentDM =
-        this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
+      const parentDM
+        = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
 
@@ -123,7 +128,7 @@ export class ElementLinkComponent implements OnInit {
             }`;
           })
         )
-        .subscribe((fullLabel) => (this.label = fullLabel));
+        .subscribe(fullLabel => (this.label = fullLabel));
     }
     this.initTypeLabel();
     this.initLink();
@@ -134,12 +139,12 @@ export class ElementLinkComponent implements OnInit {
     this.elementTypeTitle = '';
     this.types = this.elementTypes.getTypes();
     if (
-      this.element &&
-      this.element.domainType &&
-      this.types.filter((x) => x.id === this.element.domainType)
+      this.element
+      && this.element.domainType
+      && this.types.filter(x => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        (x) => x.id === this.element.domainType
+        x => x.id === this.element.domainType
       )[0].title;
     }
   }
@@ -151,19 +156,18 @@ export class ElementLinkComponent implements OnInit {
     }
     // if it's true or it's NOT mentioned then make it true
     if (
-      this.showLink === true ||
-      this.showLink ||
-      this.showLink === undefined
+      this.showLink === true
+      || this.showLink
+      || this.showLink === undefined
     ) {
       this.showLink = true;
     }
   }
 
   getIcon() {
-    if(this.element) {
+    if (this.element) {
       return getCatalogueItemDomainTypeIcon(this.element.domainType as CatalogueItemDomainType);
     }
     return null;
   }
-
 }

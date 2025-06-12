@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import { EMPTY } from 'rxjs';
 import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 interface SecurityHandlerServiceStub {
-  isLoggedIn: jest.Mock;
+  isLoggedIn: jest.Mock
 }
 
 describe('ModelSelectorTreeComponent', () => {
@@ -52,8 +52,11 @@ describe('ModelSelectorTreeComponent', () => {
         FormsModule,
         FoldersTreeModule,
         MatTooltipModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        ByteArrayToBase64Pipe,
+        ProfilePictureComponent,
+        ModelSelectorTreeComponent
+
       ],
       providers: [
         {
@@ -72,11 +75,6 @@ describe('ModelSelectorTreeComponent', () => {
           useValue: securityHandler
         },
         ElementTypesService
-      ],
-      declarations: [
-        ByteArrayToBase64Pipe,
-        ProfilePictureComponent,
-        ModelSelectorTreeComponent
       ]
     })
     .compileComponents();
@@ -87,7 +85,7 @@ describe('ModelSelectorTreeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    treeSpy =  jest.spyOn(component['resources'].tree, 'list');
+    treeSpy = jest.spyOn(component['resources'].tree, 'list');
   });
 
   it('should create', () => {

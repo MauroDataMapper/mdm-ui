@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-table-buttons',
-  templateUrl: './table-buttons.component.html',
-  styleUrls: ['./table-buttons.component.sass']
+    selector: 'mdm-table-buttons',
+    templateUrl: './table-buttons.component.html',
+    styleUrls: ['./table-buttons.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatIconButton, MatTooltip]
 })
 export class TableButtonsComponent {
   @Input() record: any;
@@ -60,7 +65,7 @@ export class TableButtonsComponent {
   }
 
   editCancelled(record, index) {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,14 +28,12 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedModule } from '@mdm/shared/shared.module';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     NoopAnimationsModule,
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    UIRouterModule.forRoot({ useHash: true }),
     ToastrModule.forRoot(),
     MdmResourcesModule.forRoot({}),
     HttpClientTestingModule,
@@ -43,11 +41,7 @@ import { SharedModule } from '@mdm/shared/shared.module';
     SharedModule
   ],
   exports: [
-    MaterialModule,
-    UIRouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule
+
   ]
 })
 export class TestingModule {}

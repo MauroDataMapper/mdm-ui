@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,16 +15,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { Component, OnInit } from '@angular/core';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {MatDialogRef} from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-forgot-password-modal',
-  templateUrl: './forgot-password-modal.component.html',
-  styleUrls: ['./forgot-password-modal.component.sass']
+    selector: 'mdm-forgot-password-modal',
+    templateUrl: './forgot-password-modal.component.html',
+    styleUrls: ['./forgot-password-modal.component.sass'],
+    standalone: true,
+    imports: [FormsModule, MatIconButton, MatFormField, MatLabel, MatInput, MatButton, NgIf]
 })
 export class ForgotPasswordModalComponent implements OnInit {
   username: string;
@@ -53,6 +60,7 @@ export class ForgotPasswordModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcast.dispatch('openLoginModalDialog');
   }
+
   close = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();

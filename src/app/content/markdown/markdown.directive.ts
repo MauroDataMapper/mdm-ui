@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { MarkdownParserService } from './markdown-parser/markdown-parser.service';
 
 @Directive({
-  selector: '[mdmMarkdown]'
+    selector: '[mdmMarkdown]',
+    standalone: true
 })
 export class MarkdownDirective implements OnInit {
   @Input() renderType: string;
 
-  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('markdown')
   set markdown(markdown: string) {
     if (this.markdownInternal === markdown) {
@@ -34,9 +34,11 @@ export class MarkdownDirective implements OnInit {
     this.markdownInternal = markdown;
     this.renderMarkdown();
   }
+
   get markdown(): string {
     return this.markdownInternal;
   }
+
   private markdownInternal: string;
   constructor(
     private markdownParser: MarkdownParserService,

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MessageService } from '@mdm/services/message.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import {
   SignInError,
@@ -37,11 +37,18 @@ import {
   PublicOpenIdConnectProvidersIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService, SharedService } from '@mdm/services';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatIconButton, MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-login-modal',
-  templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.scss']
+    selector: 'mdm-login-modal',
+    templateUrl: './login-modal.component.html',
+    styleUrls: ['./login-modal.component.scss'],
+    standalone: true,
+    imports: [MatIconButton, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatButton, MatProgressBar, NgFor]
 })
 export class LoginModalComponent implements OnInit {
   message = '';
@@ -49,11 +56,11 @@ export class LoginModalComponent implements OnInit {
 
   signInForm = new FormGroup({
     userName: new FormControl('', [
-      Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required,
       Validators.pattern(this.validator.emailPattern)
     ]),
     password: new FormControl('', [
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required
     ])
   });
 
@@ -116,8 +123,8 @@ export class LoginModalComponent implements OnInit {
               this.message = 'Invalid username or password!';
               break;
             case SignInErrorType.AlreadySignedIn:
-              this.message =
-                'A user is already signed in, please sign out first.';
+              this.message
+                = 'A user is already signed in, please sign out first.';
               break;
             default:
               this.message = 'Unable to sign in. Please try again later.';

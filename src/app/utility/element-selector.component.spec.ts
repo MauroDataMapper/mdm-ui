@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,15 +46,7 @@ describe('ElementSelectorComponent', () => {
         MatTooltipModule,
         MatDialogModule,
         MatTableModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MdmResourcesService, useValue: {} }
-      ],
-      declarations: [
+        ToastrModule.forRoot(),
         ProfilePictureComponent,
         ByteArrayToBase64Pipe,
         McSelectComponent,
@@ -62,6 +54,11 @@ describe('ElementSelectorComponent', () => {
         ModelSelectorTreeComponent,
         ModelPathComponent,
         ElementSelectorComponent
+      ],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MdmResourcesService, useValue: {} }
       ]
     })
     .compileComponents();

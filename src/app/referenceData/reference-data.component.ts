@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { SharedService } from '@mdm/services/shared.service';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';
@@ -42,11 +42,29 @@ import {
 import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { ReferenceDataValuesComponent } from './reference-data-values/reference-data-values.component';
+import { ReferenceDataTypeComponent } from './reference-data-type/reference-data-type.component';
+import { ReferenceDataElementComponent } from './reference-data-element/reference-data-element.component';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-reference-data',
-  templateUrl: './reference-data.component.html',
-  styleUrls: ['./reference-data.component.scss']
+    selector: 'mdm-reference-data',
+    templateUrl: './reference-data.component.html',
+    styleUrls: ['./reference-data.component.scss'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, SkeletonBadgeComponent, ReferenceDataElementComponent, ReferenceDataTypeComponent, ReferenceDataValuesComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class ReferenceDataComponent
   implements OnInit, AfterViewInit, OnDestroy {
@@ -214,8 +232,8 @@ export class ReferenceDataComponent
     this.access = this.securityHandler.elementAccess(this.referenceModel);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 }

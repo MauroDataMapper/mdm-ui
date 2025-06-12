@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,21 @@ import {
   NewFolderModalResponse
 } from './new-folder-modal.model';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-new-folder-modal',
-  templateUrl: './new-folder-modal.component.html',
-  styleUrls: ['./new-folder-modal.component.scss']
+    selector: 'mdm-new-folder-modal',
+    templateUrl: './new-folder-modal.component.html',
+    styleUrls: ['./new-folder-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, AlertComponent, MatFormField, MatLabel, MatInput, MatError, MatCheckbox, MatButton]
 })
 export class NewFolderModalComponent implements OnInit {
   okBtn: string;
@@ -44,7 +52,7 @@ export class NewFolderModalComponent implements OnInit {
   useVersionedFolders = false;
 
   folderForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
     isVersioned: new FormControl(false)
   });
 
@@ -74,8 +82,8 @@ export class NewFolderModalComponent implements OnInit {
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
     this.createRootFolder = this.data.createRootFolder;
-    this.useVersionedFolders =
-      this.data.canVersion && this.shared.features.useVersionedFolders;
+    this.useVersionedFolders
+      = this.data.canVersion && this.shared.features.useVersionedFolders;
   }
 
   cancel() {

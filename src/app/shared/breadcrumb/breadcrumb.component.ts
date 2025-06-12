@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,18 +21,21 @@ import {
   CatalogueItemDomainType,
   Uuid
 } from '@maurodatamapper/mdm-resources';
+import { NgIf, NgFor } from '@angular/common';
 
 export interface TrailableItem {
-  id?: Uuid;
-  label: string;
-  domainType?: CatalogueItemDomainType;
-  breadcrumbs?: Breadcrumb[];
+  id?: Uuid
+  label: string
+  domainType?: CatalogueItemDomainType
+  breadcrumbs?: Breadcrumb[]
 }
 
 @Component({
-  selector: 'mdm-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+    selector: 'mdm-breadcrumb',
+    templateUrl: './breadcrumb.component.html',
+    styleUrls: ['./breadcrumb.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor]
 })
 export class BreadcrumbComponent {
   @Input() item?: TrailableItem;

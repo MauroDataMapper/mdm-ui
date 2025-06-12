@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
 import { DataModelComponent } from './dataModel/data-model.component';
@@ -130,7 +129,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         allowAnonymous: true
       },
       views: {
-        left: {
+        'left': {
           component: ModelsComponent
         },
         '': {
@@ -558,7 +557,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-const editingViewTransitionHooks = (
+export const editingViewTransitionHooks = (
   transitions: TransitionService,
   editing: EditingService
 ) => {
@@ -587,9 +586,8 @@ const editingViewTransitionHooks = (
 /**
  * Router transition hooks for checking role access before switching views.
  *
- * @see {@link StateRoleAccessService}
  */
-const roleTransitionHooks = (transitions: TransitionService) => {
+export const roleTransitionHooks = (transitions: TransitionService) => {
   /**
    * Before starting a transition, check if the user/role has access to this route.
    */
@@ -634,7 +632,7 @@ const roleTransitionHooks = (transitions: TransitionService) => {
 /**
  * Configuration of the `UIRouter`.
  */
-const routerConfigFn = (router: UIRouter, injector: Injector) => {
+export const routerConfigFn = (router: UIRouter, injector: Injector) => {
   const transitions = router.transitionService;
 
   const editing = injector.get<EditingService>(EditingService);
@@ -645,18 +643,11 @@ const routerConfigFn = (router: UIRouter, injector: Injector) => {
 
 @NgModule({
   imports: [
-    UIRouterModule.forChild({
+    UIRouterModule.forRoot({
       states: pageRoutes.states,
       config: routerConfigFn
     })
   ],
-  providers: [
-    {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }
-  ]
 })
 export class AppRoutingModule {
-  constructor() {}
 }

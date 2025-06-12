@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,31 +17,37 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
 
 export interface AddRuleModalConfig {
-  name: string;
-  description?: string;
-  title?: string;
-  message?: string;
-  okBtnTitle?: string;
-  cancelBtnTitle?: string;
-  cancelShown?: boolean;
-  btnType?: string;
+  name: string
+  description?: string
+  title?: string
+  message?: string
+  okBtnTitle?: string
+  cancelBtnTitle?: string
+  cancelShown?: boolean
+  btnType?: string
 }
 
 export interface AddRuleModalResult {
-  status: ModalDialogStatus;
-  name?: string;
-  description?: string;
+  status: ModalDialogStatus
+  name?: string
+  description?: string
 }
 
 @Component({
-  selector: 'mdm-add-rule-modal',
-  templateUrl: './add-rule-modal.component.html',
-  styleUrls: ['./add-rule-modal.component.scss']
+    selector: 'mdm-add-rule-modal',
+    templateUrl: './add-rule-modal.component.html',
+    styleUrls: ['./add-rule-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatButton]
 })
 export class AddRuleModalComponent implements OnInit {
   okBtn: string;
@@ -51,7 +57,7 @@ export class AddRuleModalComponent implements OnInit {
   message: string;
 
   formGroup = new FormGroup({
-    name: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    name: new FormControl('', Validators.required),
     description: new FormControl('')
   });
 

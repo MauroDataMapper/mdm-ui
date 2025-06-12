@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,17 @@ import { MessageService } from '../services/message.service';
 import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '../services/shared.service';
 import { MessageHandlerService } from '@mdm/services';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+    selector: 'mdm-error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class ErrorComponent implements OnInit {
   features = this.shared.features;

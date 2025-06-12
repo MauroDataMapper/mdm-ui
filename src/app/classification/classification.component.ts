@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageService } from '../services/message.service';
-import { SharedService } from '../services/shared.service';
+import { MessageService } from '@mdm/services';
+import { SharedService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { TabCollection } from '@mdm/model/ui.model';
@@ -43,11 +43,25 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ClassifiedElementsListComponent } from '../shared/classified-elements-list/classified-elements-list.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-classification',
-  templateUrl: './classification.component.html',
-  styleUrls: ['./classification.component.sass']
+    selector: 'mdm-classification',
+    templateUrl: './classification.component.html',
+    styleUrls: ['./classification.component.sass'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ClassifiedElementsListComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class ClassificationComponent
   extends BaseComponent
@@ -65,12 +79,7 @@ export class ClassificationComponent
   subscription: Subscription;
   parentId: string;
   activeTab: number;
-  catalogueItemsCount: any;
-  terminologiesCount: any;
-  termsCount: any;
-  codeSetsCount: any;
   loading = false;
-  catalogueItems: any;
   tabs = new TabCollection([
     'description',
     'classifiedElements',
@@ -147,7 +156,8 @@ export class ClassificationComponent
 
         if (this.sharedService.isLoggedIn(true)) {
           this.classifierPermissions(id);
-        } else {
+        }
+ else {
           this.messageService.FolderSendMessage(this.result);
           this.messageService.dataChanged(this.result);
         }
@@ -157,7 +167,7 @@ export class ClassificationComponent
   classifierPermissions(id: Uuid) {
     this.resourcesService.security
       .permissions(SecurableDomainType.Classifiers, id)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.result[attrname] = permissions.body[attrname];
         });
@@ -183,7 +193,7 @@ export class ClassificationComponent
     );
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource = {
       id: this.result.id
     };

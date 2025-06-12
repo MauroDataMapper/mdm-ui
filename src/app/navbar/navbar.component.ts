@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,11 +32,21 @@ import {
   ApiProperty,
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { MatBadge } from '@angular/material/badge';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { UIRouterModule } from '@uirouter/angular';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'mdm-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+    selector: 'mdm-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    standalone: true,
+    imports: [MatToolbar, FlexModule, UIRouterModule, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatBadge, MatSidenavContainer, MatSidenav, MatSidenavContent]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   profilePictureReloadIndex = 0;
@@ -74,7 +84,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.isLoggedIn = true;
         this.securityHandler
           .isAdministrator()
-          .subscribe((state) => (this.isAdministrator = state));
+          .subscribe(state => (this.isAdministrator = state));
       });
 
     this.broadcast
@@ -88,7 +98,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.securityHandler
       .isAdministrator()
-      .subscribe((state) => (this.isAdministrator = state));
+      .subscribe(state => (this.isAdministrator = state));
 
     if (this.isLoggedIn) {
       this.profile = this.securityHandler.getCurrentUser();
@@ -130,13 +140,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .listPublic()
       .pipe(
         map((response: ApiPropertyIndexResponse) =>
-          response.body.items.filter((p) => p.key.startsWith('theme.logo.'))
+          response.body.items.filter(p => p.key.startsWith('theme.logo.'))
         ),
         catchError(() => [])
       )
       .subscribe((properties: ApiProperty[]) => {
-        const logoUrl = properties.find((p) => p.key === 'theme.logo.url');
-        const logoWidth = properties.find((p) => p.key === 'theme.logo.width');
+        const logoUrl = properties.find(p => p.key === 'theme.logo.url');
+        const logoWidth = properties.find(p => p.key === 'theme.logo.width');
 
         if (logoUrl) {
           this.logoUrl = logoUrl.value;
@@ -182,6 +192,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   forgottenPassword = () => {
     this.dialog.open(ForgotPasswordModalComponent, {});
   };
+
   register = () => {
     const dialog = this.dialog.open(RegisterModalComponent, {
       panelClass: 'register-modal'

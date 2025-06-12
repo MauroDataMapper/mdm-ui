@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DataElementBulkEditDialogService } from '@mdm/services/data-element-bulk-edit-dialog.service';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-list-buttons',
-  templateUrl: './data-type-list-buttons.component.html',
-  styleUrls: ['./data-type-list-buttons.component.sass']
+    selector: 'mdm-data-type-list-buttons',
+    templateUrl: './data-type-list-buttons.component.html',
+    styleUrls: ['./data-type-list-buttons.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class DataTypeListButtonsComponent implements OnInit {
-
   @Output() deleteRows = new EventEmitter<any>();
   @Input() add: any;
   @Input() displayRecords: any[];
@@ -43,7 +47,6 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
-
   ngOnInit() {
     this.textLocation = 'left';
     this.deletePending = false;
@@ -60,14 +63,15 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   onAskDelete = () => {
     let showDelete = false;
-    this.displayRecords.forEach(record => {
+    this.displayRecords.forEach((record) => {
       if (record.checked === true) {
         showDelete = true;
       }
     });
     if (showDelete) {
       this.deletePending = true;
-    } else {
+    }
+ else {
       this.deleteWarning = 'Please select one or more elements.';
     }
   };

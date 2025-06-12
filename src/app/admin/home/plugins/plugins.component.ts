@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,14 +26,20 @@ import {
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-plugins',
-  templateUrl: './plugins.component.html',
-  styleUrls: ['./plugins.component.sass']
+    selector: 'mdm-plugins',
+    templateUrl: './plugins.component.html',
+    styleUrls: ['./plugins.component.sass'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, NgClass, ExtendedModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class PluginsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -64,42 +70,41 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   }
 
   requestDataFromMultipleSources(
-    pageSize?:number,
-    pageIndex?:number,
-    sortBy?:string,
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
     sortType?: SortDirection,
-    filters?:{[p: string]: any}
+    filters?: Record<string, any>
   ) {
-
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'displayName', 'asc', filters);
 
-    this.resourcesService.provider.importers(options).subscribe(resp => {
+    this.resourcesService.provider.importers(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the importers.', err);
     }
     );
 
-    this.resourcesService.provider.emailers(options).subscribe(resp => {
+    this.resourcesService.provider.emailers(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the emailers.', err);
     }
     );
 
-    this.resourcesService.provider.dataLoaders(options).subscribe(resp => {
+    this.resourcesService.provider.dataLoaders(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the dataLoaders.', err);
     }
     );
 
-    this.resourcesService.provider.exporters(options).subscribe(resp => {
+    this.resourcesService.provider.exporters(options).subscribe((resp) => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;

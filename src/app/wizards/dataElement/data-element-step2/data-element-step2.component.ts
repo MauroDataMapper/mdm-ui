@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,24 +28,44 @@ import {
   OnDestroy
 } from '@angular/core';
 import { merge, Subscription } from 'rxjs';
-import { NgForm } from '@angular/forms';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { NgForm, FormsModule } from '@angular/forms';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MoreDescriptionComponent } from '../../../shared/more-description/more-description.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { NewDataTypeInlineComponent } from '../../../utility/new-data-type-inline/new-data-type-inline.component';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { McSelectComponent } from '../../../utility/mc-select/mc-select.component';
+import { MatButton } from '@angular/material/button';
+import { ElementDataTypeComponent } from '../../../shared/element-data-type/element-data-type.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element-step2',
-  templateUrl: './data-element-step2.component.html',
-  styleUrls: ['./data-element-step2.component.sass']
+    selector: 'mdm-data-element-step2',
+    templateUrl: './data-element-step2.component.html',
+    styleUrls: ['./data-element-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar, HighlighterPipe]
 })
 export class DataElementStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
@@ -55,13 +75,14 @@ export class DataElementStep2Component
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: Array<any>;
-    parent: DataModel;
-    copyFromDataModel: Array<DataModel>;
-    copyFromDataClass: Array<DataClass>;
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: Array<any>
+    parent: DataModel
+    copyFromDataModel: Array<DataModel>
+    copyFromDataClass: Array<DataClass>
   };
+
   multiplicityError: any;
   selectedDataClassesStr = '';
   defaultCheckedMap: any;
@@ -82,7 +103,7 @@ export class DataElementStep2Component
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
   pagination: McSelectPagination;
@@ -133,7 +154,7 @@ export class DataElementStep2Component
     });
   }
 
-  dataElementsFetch(pageSize:number, pageIndex:number, sortBy:string, sortType:SortDirection, filters:{[p: string]: any}) {
+  dataElementsFetch(pageSize: number, pageIndex: number, sortBy: string, sortType: SortDirection, filters: { [p: string]: any }) {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -172,12 +193,12 @@ export class DataElementStep2Component
     ];
 
     if (
-      this.sort !== null &&
-      this.sort !== undefined &&
-      this.sort.toArray().length > 0 &&
-      this.paginator !== null &&
-      this.paginator !== undefined &&
-      this.paginator.toArray().length > 0
+      this.sort !== null
+      && this.sort !== undefined
+      && this.sort.toArray().length > 0
+      && this.paginator !== null
+      && this.paginator !== undefined
+      && this.paginator.toArray().length > 0
     ) {
       this.sort
         .toArray()[0]
@@ -191,12 +212,12 @@ export class DataElementStep2Component
       this.dataSourceSelectedDataElements.paginator = this.paginator.toArray()[1];
 
       if (
-        this.sort != null &&
-        this.sort !== undefined &&
-        this.sort.length > 0 &&
-        this.paginator != null &&
-        this.paginator !== undefined &&
-        this.paginator.length > 0
+        this.sort != null
+        && this.sort !== undefined
+        && this.sort.length > 0
+        && this.paginator != null
+        && this.paginator !== undefined
+        && this.paginator.length > 0
       ) {
         merge(
           this.sort.toArray()[0].sortChange,
@@ -209,8 +230,8 @@ export class DataElementStep2Component
               this.isLoadingResults = true;
               return this.dataElementsFetch(
                 this.paginator.toArray()[0].pageSize,
-                this.paginator.toArray()[0].pageIndex *
-                  this.paginator.toArray()[0].pageSize,
+                this.paginator.toArray()[0].pageIndex
+                * this.paginator.toArray()[0].pageSize,
                 this.sort.toArray()[0].active,
                 this.sort.toArray()[0].direction,
                 this.filter
@@ -232,8 +253,8 @@ export class DataElementStep2Component
 
             // Sorting/paging is making a backend call and looses the checked checkboxes
             if (
-              this.model.selectedDataElements != null &&
-              this.model.selectedDataElements.length > 0
+              this.model.selectedDataElements != null
+              && this.model.selectedDataElements.length > 0
             ) {
               this.reCheckSelectedDataElements();
             }
@@ -249,7 +270,7 @@ export class DataElementStep2Component
     let currentPageSelectedItemsNum = 0;
     this.model.selectedDataElements.forEach((sdt: any) => {
       const currentId = sdt.id;
-      const item = this.recordsDataElements.find((r) => r.id === currentId);
+      const item = this.recordsDataElements.find(r => r.id === currentId);
       if (item !== null && item !== undefined) {
         item.checked = true;
       }
@@ -263,7 +284,8 @@ export class DataElementStep2Component
     // If all the records on the current page are selected, check the "Check All" checkbox
     if (currentPageSelectedItemsNum === this.paginator.toArray()[0].pageSize) {
       this.isAllChecked = true;
-    } else {
+    }
+ else {
       this.isAllChecked = false;
     }
   }
@@ -273,7 +295,8 @@ export class DataElementStep2Component
       element.checked = this.checkAllCheckbox;
       if (this.checkAllCheckbox) {
         this.model.selectedDataElements.push(element);
-      } else {
+      }
+ else {
         this.model.selectedDataElements = [];
       }
     });
@@ -286,9 +309,10 @@ export class DataElementStep2Component
   onCheck(record) {
     if (record.checked) {
       this.model.selectedDataElements.push(record);
-    } else {
+    }
+ else {
       const index = this.model.selectedDataElements.findIndex(
-        (r) => r.id === record.id
+        r => r.id === record.id
       );
       if (index !== -1) {
         this.model.selectedDataElements.splice(index, 1);
@@ -332,9 +356,9 @@ export class DataElementStep2Component
 
       // Check Mandatory fields
       if (
-        !newValue.label ||
-        newValue.label.trim().length === 0 ||
-        this.multiplicityError
+        !newValue.label
+        || newValue.label.trim().length === 0
+        || this.multiplicityError
       ) {
         this.step.invalid = true;
         return;
@@ -360,7 +384,7 @@ export class DataElementStep2Component
     }
   }
 
-  fetchDataTypes = (text:string, loadAll, offset:number, limit:number) => {
+  fetchDataTypes = (text: string, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -404,7 +428,7 @@ export class DataElementStep2Component
     this.filterEvent.emit(filter);
   };
 
-  validationStatusEmitter($event:string) {
+  validationStatusEmitter($event: string) {
     this.step.invalid = JSON.parse($event);
   }
 

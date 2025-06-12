@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import * as joint from '@joint/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
-
 export class UmlClassDiagramService extends BasicDiagramService {
-
   private modelId: string;
   private allDataClasses: Array<any> = [];
   private subClassLinks: Array<any> = [];
@@ -39,19 +37,18 @@ export class UmlClassDiagramService extends BasicDiagramService {
     return this.resourcesService.dataModel.hierarchy(this.modelId);
   }
 
-
   render(data: any): void {
     this.graph.clear();
     this.allDataClasses = [];
     this.subClassLinks = [];
     this.referenceLinks = [];
     this.addAllChildDataClasses(data.body);
-    this.allDataClasses.forEach(dataClass => {
+    this.allDataClasses.forEach((dataClass) => {
       this.addRectangleCell(dataClass.id as string, '', 300, dataClass.attributes.length * 25 + 31);
     });
     this.addLinks();
     super.layoutNodes('TB');
-    this.allDataClasses.forEach(dataClass => {
+    this.allDataClasses.forEach((dataClass) => {
       const oldCell = this.graph.getCell(dataClass.id as string) as joint.shapes.standard.Rectangle;
       this.addUmlClassCell(dataClass.id as string, dataClass.label as string, dataClass.attributes as any[], null, oldCell);
     });
@@ -59,7 +56,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
 
   addLinks(): void {
     const filledDiamond = 'M 40 0 L 20 10 L 0 0 L 20 -10 z';
-    this.subClassLinks.forEach(subClassLink => {
+    this.subClassLinks.forEach((subClassLink) => {
       const link = new joint.shapes.standard.Link({
         id: `${subClassLink.source}-${subClassLink.target}`,
         source: { id: subClassLink.source },
@@ -77,7 +74,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
       link.toBack();
       this.graph.addCell(link);
     });
-    this.referenceLinks.forEach(subClassLink => {
+    this.referenceLinks.forEach((subClassLink) => {
       const link = new joint.shapes.standard.Link({
         id: `${subClassLink.source}-${subClassLink.name}`,
         source: { id: subClassLink.source },
@@ -94,16 +91,15 @@ export class UmlClassDiagramService extends BasicDiagramService {
       link.toBack();
       this.graph.addCell(link);
     });
-
   }
 
   addAllChildDataClasses(container: any): void {
     if (container.dataClasses) {
-      container.dataClasses.forEach(childDataClass => {
+      container.dataClasses.forEach((childDataClass) => {
         this.allDataClasses.push({
           id: childDataClass.id,
           label: childDataClass.label,
-          attributes: childDataClass.dataElements.filter(attribute => {
+          attributes: childDataClass.dataElements.filter((attribute) => {
             return attribute.dataType.domainType !== 'ReferenceType';
           })
         });
@@ -114,9 +110,9 @@ export class UmlClassDiagramService extends BasicDiagramService {
           });
         }
         this.addAllChildDataClasses(childDataClass);
-        childDataClass.dataElements.filter(attribute => {
+        childDataClass.dataElements.filter((attribute) => {
           return attribute.dataType.domainType === 'ReferenceType';
-        }).forEach(attribute => {
+        }).forEach((attribute) => {
           this.referenceLinks.push({
             source: childDataClass.id,
             target: attribute.dataType.referenceClass.id,
@@ -124,12 +120,13 @@ export class UmlClassDiagramService extends BasicDiagramService {
           });
         });
       });
-    } else if (container.childDataClasses) {
-      container.childDataClasses.forEach(childDataClass => {
+    }
+ else if (container.childDataClasses) {
+      container.childDataClasses.forEach((childDataClass) => {
         this.allDataClasses.push({
           id: childDataClass.id,
           label: childDataClass.label,
-          attributes: childDataClass.dataElements.filter(attribute => {
+          attributes: childDataClass.dataElements.filter((attribute) => {
             return attribute.dataType.domainType !== 'ReferenceType';
           })
         });
@@ -140,9 +137,9 @@ export class UmlClassDiagramService extends BasicDiagramService {
           });
         }
         this.addAllChildDataClasses(childDataClass);
-        childDataClass.dataElements.filter(attribute => {
+        childDataClass.dataElements.filter((attribute) => {
           return attribute.dataType.domainType === 'ReferenceType';
-        }).forEach(attribute => {
+        }).forEach((attribute) => {
           this.referenceLinks.push({
             source: childDataClass.id,
             target: attribute.dataType.referenceClass.id,
@@ -157,10 +154,10 @@ export class UmlClassDiagramService extends BasicDiagramService {
     // console.log('not calling super');
   }
 
-
   configurePaper(): void {
 
   }
+
   canGoUp(): boolean {
     return false;
   }

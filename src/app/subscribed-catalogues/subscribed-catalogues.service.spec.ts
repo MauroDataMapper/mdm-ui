@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,24 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
-import { MdmResourcesService } from '@mdm/modules/resources';
 
 import { SubscribedCataloguesService } from './subscribed-catalogues.service';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 
 describe('SubscribedCataloguesService', () => {
   let service: SubscribedCataloguesService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: {}
-        }
-      ]
-    });
-    service = TestBed.inject(SubscribedCataloguesService);
+  beforeEach(async () => {
+    service = setupTestModuleForService(SubscribedCataloguesService);
   });
 
   it('should be created', () => {

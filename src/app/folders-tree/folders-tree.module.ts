@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './folder.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     MatTreeModule,
@@ -46,20 +46,17 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    PipesModule
-  ],
-  declarations: [
     FoldersTreeComponent,
     StringifyPipe,
     ModelSelectorTreeComponent
-  ],
-  exports: [
-    FoldersTreeComponent,
-    StringifyPipe,
-    MatFormFieldModule,
-    MatInputModule,
-    ModelSelectorTreeComponent
-  ],
-  providers: [FolderService]
+],
+    exports: [
+        FoldersTreeComponent,
+        StringifyPipe,
+        MatFormFieldModule,
+        MatInputModule,
+        ModelSelectorTreeComponent
+    ],
+    providers: [FolderService]
 })
 export class FoldersTreeModule {}

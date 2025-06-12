@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,24 +16,29 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { ContentEditorComponent } from '../../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
 
 export interface FullContentEditDialogData {
-  value?: string;
-  title?: string;
-  subTitle?: string;
+  value?: string
+  title?: string
+  subTitle?: string
 }
 
 export interface FullContentEditDialogResponse {
-  status: ModalDialogStatus;
-  value?: string;
+  status: ModalDialogStatus
+  value?: string
 }
 
 @Component({
-  selector: 'mdm-full-content-edit-dialog',
-  templateUrl: './full-content-edit-dialog.component.html',
-  styleUrls: ['./full-content-edit-dialog.component.scss']
+    selector: 'mdm-full-content-edit-dialog',
+    templateUrl: './full-content-edit-dialog.component.html',
+    styleUrls: ['./full-content-edit-dialog.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatDialogTitle, MatDialogContent, ContentEditorComponent, MatDialogActions, MatButton]
 })
 export class FullContentEditDialogComponent implements OnInit {
   value: string;

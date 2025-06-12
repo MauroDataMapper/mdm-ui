@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-password-modal.component';
@@ -46,18 +45,19 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 import { DefaultProfileEditorModalComponent } from './default-profile-editor-modal/default-profile-editor-modal.component';
-import { PipesModule } from '@mdm/modules/pipes/pipes.module';
+
 import { ChangeBranchNameModalComponent } from './change-branch-name-modal/change-branch-name-modal.component';
 import { CatalogueItemSelectModalComponent } from './catalogue-item-select-modal/catalogue-item-select-modal.component';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { ExportModelDialogComponent } from './export-model-dialog/export-model-dialog.component';
 import { ChangeLabelModalComponent } from './change-label-modal/change-label-modal.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 const defaultAceConfig: AceConfigInterface = {};
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     MatDialogModule,
@@ -65,16 +65,13 @@ const defaultAceConfig: AceConfigInterface = {};
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatPasswordStrengthModule,
     MaterialModule,
     SharedModule,
     AceModule,
-    PipesModule,
     FoldersTreeModule,
     ContentModule,
-    CatalogueModule
-  ],
-  declarations: [
+    CatalogueModule,
+    PasswordStrengthMeterComponent,
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
@@ -100,22 +97,15 @@ const defaultAceConfig: AceConfigInterface = {};
     CatalogueItemSelectModalComponent,
     ExportModelDialogComponent,
     ChangeLabelModalComponent
-  ],
-  providers: [
-    ModalService,
-    {
-      provide: ACE_CONFIG,
-      useValue: defaultAceConfig
-    }
-  ],
-  exports: [
-    RegisterModalComponent,
-    LoginModalComponent,
-    ForgotPasswordModalComponent,
-    ConfirmationModalComponent,
-    ChangeBranchNameModalComponent,
-    ExportModelDialogComponent
-  ]
+],
+    exports: [
+        RegisterModalComponent,
+        LoginModalComponent,
+        ForgotPasswordModalComponent,
+        ConfirmationModalComponent,
+        ChangeBranchNameModalComponent,
+        ExportModelDialogComponent
+    ]
 })
 export class ModalModule {
   constructor(private modalService: ModalService) {

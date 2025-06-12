@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   MauroIdentifier,
   MauroItem,
@@ -42,6 +42,9 @@ describe('MauroProfileProviderService', () => {
   let service: MauroProfileProviderService;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     profile: {
       usedProfiles: jest.fn() as jest.MockedFunction<
         (
@@ -78,6 +81,7 @@ describe('MauroProfileProviderService', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   /**
    * Maps domains types for it.each() tests below.
@@ -191,7 +195,7 @@ describe('MauroProfileProviderService', () => {
         testReturnedProfileSummaries(
           domainType,
           resourcesStub.profile.usedProfiles,
-          (item) => service.usedProfiles(item)
+          item => service.usedProfiles(item)
         );
       }
     );
@@ -202,7 +206,7 @@ describe('MauroProfileProviderService', () => {
         testReturnedProfileSummaries(
           domainType,
           resourcesStub.profile.unusedProfiles,
-          (item) => service.unusedProfiles(item)
+          item => service.unusedProfiles(item)
         );
       }
     );
@@ -245,7 +249,7 @@ describe('MauroProfileProviderService', () => {
           profileProviderServices: [testProfileProvider]
         };
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
 
         resourcesStub.profile.getMany.mockImplementationOnce((dt, id, pl) => {
           expect(dt).toBe(rootItem.domainType);
@@ -301,9 +305,9 @@ describe('MauroProfileProviderService', () => {
         // Mock collections of items and identifiers to simulate multiple objects
         const items = [item, item];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const profilePayloads: MauroProfileUpdatePayload[] = profiles.map(
-          (profile) => ({ identifier, profile })
+          profile => ({ identifier, profile })
         );
 
         const expectedPayload: ProfileContextPayload = {
@@ -363,7 +367,7 @@ describe('MauroProfileProviderService', () => {
         // Mock collections of items to simulate multiple objects
         const items = [item, item];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const validations: MauroProfileValidationResult[] = profiles.map(
           (profile) => {
             return {
@@ -436,7 +440,7 @@ describe('MauroProfileProviderService', () => {
           }
         ];
 
-        const profiles = items.map((it) => constructProfile(it));
+        const profiles = items.map(it => constructProfile(it));
         const validations: MauroProfileValidationResult[] = profiles.map(
           (profile) => {
             return {

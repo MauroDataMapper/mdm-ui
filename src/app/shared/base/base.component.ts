@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import { Component } from '@angular/core';
 import { CodeSetDetail, DataElementDetail, DataModelDetail, FolderDetail, TermDetail, TerminologyDetail, VersionedFolderDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
-  selector: 'mdm-base',
-  templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+    selector: 'mdm-base',
+    templateUrl: './base.component.html',
+    styleUrls: ['./base.component.scss'],
+    standalone: true
 })
 export class BaseComponent {
-
   catalogueItem:
     | DataModelDetail
     | TermDetail
@@ -36,11 +36,11 @@ export class BaseComponent {
 
   constructor() { }
 
-  protected isGuid = (stringToTest:string) => {
+  protected isGuid = (stringToTest: string) => {
     if (stringToTest && stringToTest[0] === '{') {
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }
-    // eslint-disable-next-line
+
     const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/gi;
     return regexGuid.test(stringToTest);
   };

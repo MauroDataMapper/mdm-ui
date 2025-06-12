@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -200,16 +200,16 @@ export const branchablePathTypes = [
 ];
 
 export interface PathProperty {
-  name: string;
-  qualifiedName: string[];
+  name: string
+  qualifiedName: string[]
 }
 
 export interface PathElement {
-  type: PathElementType;
-  typeName: string;
-  label: string;
-  version?: string;
-  property?: PathProperty;
+  type: PathElementType
+  typeName: string
+  label: string
+  version?: string
+  property?: PathProperty
 }
 
 export const isPathElementBranchable = (pathElement: PathElement): boolean => {

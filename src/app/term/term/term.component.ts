@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
@@ -43,11 +43,30 @@ import {
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
+import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
+import { TermCodeSetListComponent } from '../codeset-list/term-codeset-list.component';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { TermRelationshipListComponent } from '../relationship-list/term-relationship-list.component';
+import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-term',
-  templateUrl: './term.component.html',
-  styleUrls: ['./term.component.scss']
+    selector: 'mdm-term',
+    templateUrl: './term.component.html',
+    styleUrls: ['./term.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, TermRelationshipListComponent, SkeletonBadgeComponent, TermCodeSetListComponent, ElementLinkListComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class TermComponent implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -125,8 +144,8 @@ export class TermComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -179,8 +198,8 @@ export class TermComponent implements OnInit, AfterViewChecked {
     this.access = this.securityHandler.elementAccess(this.term);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 

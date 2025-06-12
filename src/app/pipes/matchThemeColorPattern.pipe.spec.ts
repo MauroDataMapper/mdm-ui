@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import {MatchThemeColorPatternPipe} from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { MatchThemeColorPatternPipe } from '@mdm/pipes/matchThemeColorPattern.pipe';
 
 describe('MatchThemeColorPatternPipe', () => {
     // This pipe is a pure, stateless function so no need for BeforeEach
@@ -25,11 +25,11 @@ describe('MatchThemeColorPatternPipe', () => {
     it('should detect theme color pattern names', () => {
         // Arrange
         interface TestData {
-          stringToTest: string;
-          expectedOutcome:  boolean;
+          stringToTest: string
+          expectedOutcome: boolean
         }
 
-        const testingCases : TestData[]= [
+        const testingCases: TestData[] = [
           {
             stringToTest: '',
             expectedOutcome: false,
@@ -146,5 +146,4 @@ describe('MatchThemeColorPatternPipe', () => {
           expect(result).toBe(testCase.expectedOutcome);
         });
       });
-
   });

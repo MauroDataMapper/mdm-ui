@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,19 @@ import {
   ClassifierIndexResponse,
   DataModelDetail
 } from '@maurodatamapper/mdm-resources';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { PropertiesDirective } from '../../directives/properties.directive';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-classifications',
-  templateUrl: './element-classifications.component.html',
-  styleUrls: ['./element-classifications.component.sass']
+    selector: 'mdm-element-classifications',
+    templateUrl: './element-classifications.component.html',
+    styleUrls: ['./element-classifications.component.sass'],
+    standalone: true,
+    imports: [NgIf, PropertiesDirective, NgFor, MatFormField, MatSelect, FormsModule, MatOption]
 })
 export class ElementClassificationsComponent implements OnInit {
   @Input() readOnly = true;
@@ -61,6 +69,7 @@ export class ElementClassificationsComponent implements OnInit {
       });
     }
   }
+
   getAllClassifications() {
     this.resourceService.classifier
       .list({ all: true })
@@ -70,7 +79,7 @@ export class ElementClassificationsComponent implements OnInit {
         if (this.classifications !== undefined) {
           this.classifications.forEach((classification) => {
             const selected = this.allClassifications.find(
-              (c) => c.id === classification.id
+              c => c.id === classification.id
             );
             selectedList.push(selected);
           });
@@ -78,6 +87,7 @@ export class ElementClassificationsComponent implements OnInit {
         }
       });
   }
+
   onModelChanged() {
     this.classificationsChanged.emit(this.selectedClassification);
   }

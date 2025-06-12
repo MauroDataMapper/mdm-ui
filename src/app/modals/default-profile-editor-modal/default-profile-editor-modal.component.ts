@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 // TODO update to use reactive forms
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   CatalogueItemDomainType,
   DataType
@@ -35,18 +35,33 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { ElementClassificationsComponent } from '../../utility/element-classifications/element-classifications.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { NewDataTypeInlineComponent } from '../../utility/new-data-type-inline/new-data-type-inline.component';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-default-profile-editor-modal',
-  templateUrl: './default-profile-editor-modal.component.html',
-  styleUrls: ['./default-profile-editor-modal.component.sass']
+    selector: 'mdm-default-profile-editor-modal',
+    templateUrl: './default-profile-editor-modal.component.html',
+    styleUrls: ['./default-profile-editor-modal.component.sass'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;
   dataTypeErrors: string;
   showNewInlineDataType = false;
   pagination: McSelectPagination;
-  newDataTypeHasErrors  = false;
+  newDataTypeHasErrors = false;
   constructor(
     public dialogRef: MatDialogRef<
       DefaultProfileEditorModalComponent,
@@ -63,6 +78,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
   }
+
   ngOnInit(): void {}
 
   save() {
@@ -82,7 +98,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
           this.multiplicityError = valResult;
           hasError = true;
         }
-      } else if (item.controlType === ProfileControlTypes.dataType) {
+      }
+ else if (item.controlType === ProfileControlTypes.dataType) {
         hasError = this.newDataTypeHasErrors;
       }
     });
@@ -103,7 +120,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     });
   }
 
-  fetchDataTypes = (text, loadAll, offset:number, limit:number) => {
+  fetchDataTypes = (text, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -146,8 +163,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
     if (this.newDataTypeHasErrors) {
       this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
+      this.dataTypeErrors
+        = 'Please fill in all required values for the new Data Type';
     }
   }
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +17,24 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { ProfileFilterCardComponent } from '../profile-filter-card/profile-filter-card.component';
+import { NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
-  selector: 'mdm-profile-filters',
-  templateUrl: './profile-filters.component.html',
-  styleUrls: ['./profile-filters.component.scss']
+    selector: 'mdm-profile-filters',
+    templateUrl: './profile-filters.component.html',
+    styleUrls: ['./profile-filters.component.scss'],
+    standalone: true,
+    imports: [MatDivider, MatButton, NgFor, ProfileFilterCardComponent]
 })
 export class ProfileFiltersComponent implements OnInit {
   @Input() profileFilters: CatalogueSearchProfileFilter[] = [];
   @Output() updateProfileFilters = new EventEmitter<
     CatalogueSearchProfileFilter[]
   >();
+
   @Output() resetProfileFilters = new EventEmitter<void>();
   @Output() addProfileFilters = new EventEmitter<void>();
   constructor() {}

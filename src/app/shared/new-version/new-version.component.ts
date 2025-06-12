@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItem,
@@ -52,22 +45,33 @@ import {
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../alert/alert.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 interface NewVersionAction {
-  name: string;
-  value: 'Fork' | 'Branch' | 'Version';
-  selectedName: string;
-  icon: string;
+  name: string
+  value: 'Fork' | 'Branch' | 'Version'
+  selectedName: string
+  icon: string
   getDescription(
     domainType: CatalogueItemDomainType,
     item: CatalogueItem & Modelable
-  ): string;
+  ): string
 }
 
 @Component({
-  selector: 'mdm-new-version',
-  templateUrl: './new-version.component.html',
-  styleUrls: ['./new-version.component.scss']
+    selector: 'mdm-new-version',
+    templateUrl: './new-version.component.html',
+    styleUrls: ['./new-version.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatSelectTrigger, NgFor, MatOption, MatError, MatInput, MatHint, MatCheckbox, AlertComponent, MatButton, MatProgressBar]
 })
 export class NewVersionComponent implements OnInit {
   catalogueItem: CatalogueItem & Modelable;
@@ -140,7 +144,7 @@ export class NewVersionComponent implements OnInit {
   }
 
   get actionSelectedName() {
-    return this.availableActions.find((a) => a.value === this.actionValue)
+    return this.availableActions.find(a => a.value === this.actionValue)
       ?.selectedName;
   }
 
@@ -176,7 +180,7 @@ export class NewVersionComponent implements OnInit {
 
     // Setup first key field in form first, remaining form fields depend on the type selected
     this.setupForm = new FormGroup({
-      action: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+      action: new FormControl('', Validators.required),
       asynchronous: new FormControl(false)
     });
 
@@ -200,7 +204,7 @@ export class NewVersionComponent implements OnInit {
       this.setupForm.addControl(
         'label',
         new FormControl('', [
-          Validators.required, // eslint-disable-line @typescript-eslint/unbound-method
+          Validators.required,
           this.forbiddenName(this.catalogueItem.label)
         ])
       );
@@ -209,7 +213,7 @@ export class NewVersionComponent implements OnInit {
     if (this.actionValue === 'Branch') {
       this.setupForm.addControl(
         'branchName',
-        new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+        new FormControl('', Validators.required)
       );
     }
   }
@@ -256,7 +260,8 @@ export class NewVersionComponent implements OnInit {
         'There was a problem creating the new forked version.',
         'A new background task to create the new fork has started. You can continue working whilst it is being created.'
       );
-    } else if (this.actionValue === 'Version') {
+    }
+ else if (this.actionValue === 'Version') {
       const payload: VersionModelPayload = {
         asynchronous: this.asynchronous.value
       };
@@ -273,7 +278,8 @@ export class NewVersionComponent implements OnInit {
         'There was a problem creating the new version.',
         'A new background task to create the new version has started. You can continue working whilst it is being created.'
       );
-    } else if (this.actionValue === 'Branch') {
+    }
+ else if (this.actionValue === 'Branch') {
       const payload: BranchModelPayload = {
         branchName: this.branchName.value,
         asynchronous: this.asynchronous.value
@@ -324,7 +330,8 @@ export class NewVersionComponent implements OnInit {
           // Async job started, return to original catalogue item
           modelId = this.catalogueItem.id;
           this.messageHandler.showInfo(asyncMessage);
-        } else {
+        }
+ else {
           const nextModel = response.body as ModelDomainDetail;
           modelId = nextModel.id;
           this.messageHandler.showSuccess(successMessage);

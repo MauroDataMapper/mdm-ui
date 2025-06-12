@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,11 +43,25 @@ import {
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY, timer } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ElementLinkComponent } from '../utility/element-link/element-link.component';
+import { MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
+import { FormsModule } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-import',
-  templateUrl: './import-models.component.html',
-  styleUrls: ['./import-models.component.sass']
+    selector: 'mdm-import',
+    templateUrl: './import-models.component.html',
+    styleUrls: ['./import-models.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, MatFormField, MatLabel, MatSelect, NgFor, MatOption, FormsModule, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatCheckbox, MatProgressBar, MatButton, ElementLinkComponent]
 })
 export class ImportModelsComponent implements OnInit {
   importers: Importer[];
@@ -66,16 +80,17 @@ export class ImportModelsComponent implements OnInit {
 
   formOptionsMap = {
     Integer: 'number',
-    // eslint-disable-next-line id-blacklist
+
     String: 'text',
     Password: 'password',
-    // eslint-disable-next-line id-blacklist
+
     Boolean: 'checkbox',
-    // eslint-disable-next-line id-blacklist
+
     boolean: 'checkbox',
     int: 'number',
     File: 'file'
   };
+
   importType: ModelDomain;
 
   allowedFolderTreeDomainTypes = [
@@ -163,9 +178,9 @@ export class ImportModelsComponent implements OnInit {
 
             // If the model tree currently has a folder selected, default to that one initially
             if (
-              option.type === 'Folder' &&
-              this.modelTree.currentNode &&
-              this.modelTree.currentNode.domainType === 'Folder'
+              option.type === 'Folder'
+              && this.modelTree.currentNode
+              && this.modelTree.currentNode.domainType === 'Folder'
             ) {
               option.value = [this.modelTree.currentNode];
             }
@@ -234,12 +249,15 @@ export class ImportModelsComponent implements OnInit {
       parameters.forEach((param) => {
         if (param.type === 'File') {
           formData.append(param.name, this.getFile(param.name));
-        } else if (param.type === 'DataModel') {
-          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
-        } else if (param.type === 'Folder' && param.value && param.value[0]) {
-          formData.append(param.name, param.value[0].id); // eslint-disable-line @typescript-eslint/no-unsafe-argument
-        } else {
-          formData.append(param.name, param.value); // eslint-disable-line @typescript-eslint/no-unsafe-argument
+        }
+ else if (param.type === 'DataModel') {
+          formData.append(param.name, param.value[0].id);
+        }
+ else if (param.type === 'Folder' && param.value && param.value[0]) {
+          formData.append(param.name, param.value[0].id);
+        }
+ else {
+          formData.append(param.name, param.value);
         }
       });
     });
@@ -257,7 +275,8 @@ export class ImportModelsComponent implements OnInit {
       this.importHasError = true;
       if (error.error.validationErrors) {
         this.importErrors = error.error.validationErrors.errors;
-      } else if (error.error.errors) {
+      }
+ else if (error.error.errors) {
         this.importErrors = error.error.errors;
       }
     }

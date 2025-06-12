@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,17 +33,37 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatInput } from '@angular/material/input';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ElementDataTypeComponent } from '../element-data-type/element-data-type.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-element-owned-data-type-list',
-  templateUrl: './element-owned-data-type-list.component.html',
-  styleUrls: ['./element-owned-data-type-list.component.sass']
+    selector: 'mdm-element-owned-data-type-list',
+    templateUrl: './element-owned-data-type-list.component.html',
+    styleUrls: ['./element-owned-data-type-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, NgIf, SkeletonBadgeComponent, MatTooltip, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, MatSelect, FormsModule, NgFor, MatOption, ElementDataTypeComponent, MatCheckbox, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, JoinArrayPipe]
 })
 export class ElementOwnedDataTypeListComponent
   implements AfterViewInit, OnInit {
@@ -58,6 +78,7 @@ export class ElementOwnedDataTypeListComponent
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @Output() totalCount = new EventEmitter<string>();
 
   allDataTypes: any;
@@ -96,7 +117,8 @@ export class ElementOwnedDataTypeListComponent
     }
     if (this.isEditable && !this.parent.finalised) {
       this.displayedColumns = ['name', 'description', 'domainType', 'checkbox'];
-    } else {
+    }
+ else {
       this.displayedColumns = ['name', 'description', 'domainType'];
     }
   }
@@ -139,14 +161,14 @@ export class ElementOwnedDataTypeListComponent
         .subscribe((data) => {
           this.records = data;
           data.forEach((x: any) => {
-            if(x.domainType === 'ModelDataType') {
-              if(x.modelResourceDomainType === 'Terminology') {
+            if (x.domainType === 'ModelDataType') {
+              if (x.modelResourceDomainType === 'Terminology') {
                 x.domainType = 'TerminologyType';
               }
-              if(x.modelResourceDomainType === 'CodeSet') {
+              if (x.modelResourceDomainType === 'CodeSet') {
                 x.domainType = 'CodeSetType';
               }
-              if(x.modelResourceDomainType === 'ReferenceDataModel') {
+              if (x.modelResourceDomainType === 'ReferenceDataModel') {
                 x.domainType = 'ReferenceDataModelType';
               }
             }
@@ -219,7 +241,7 @@ export class ElementOwnedDataTypeListComponent
     this.hideFilters = !this.hideFilters;
   };
 
-  dataTypesFetch = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) => {
+  dataTypesFetch = (pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: { [p: string]: any }) => {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
@@ -231,9 +253,10 @@ export class ElementOwnedDataTypeListComponent
   };
 
   onChecked = () => {
-    this.records.forEach((x) => (x.checked = this.checkAllCheckbox));
+    this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
   };
+
   listChecked = () => {
     let count = 0;
     for (const value of Object.values(this.records)) {
@@ -243,15 +266,16 @@ export class ElementOwnedDataTypeListComponent
     }
     this.bulkActionsVisible = count;
   };
+
   toggleCheckbox = (record) => {
-    this.records.forEach((x) => (x.checked = false));
+    this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = this.records.filter((record) => record.checked);
+    const dataElementIdLst = this.records.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },
@@ -261,14 +285,15 @@ export class ElementOwnedDataTypeListComponent
       dialog.afterClosed().subscribe((result) => {
         if (result != null && result.status === 'ok') {
           resolve();
-        } else {
+        }
+ else {
           reject();
         }
       });
     });
     promise
       .then(() => {
-        this.records.forEach((x) => (x.checked = false));
+        this.records.forEach(x => (x.checked = false));
         // this.records = this.records;
         this.checkAllCheckbox = false;
         this.bulkActionsVisible = 0;

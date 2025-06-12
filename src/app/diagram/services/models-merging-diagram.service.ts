@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,7 +69,8 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
           100,
           288
         );
-      } else if (item.isNewFork) {
+      }
+ else if (item.isNewFork) {
         this.addRectangleCell(
           item.id,
           `Fork \n\n ${item.label} \n\n  ${item.branch} branch`,
@@ -77,7 +78,8 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
           100,
           288
         );
-      } else if (item.isNewDocumentationVersion) {
+      }
+ else if (item.isNewDocumentationVersion) {
         this.addColoredRectangleCell(
           this.fontColorBlack,
           this.shadedOrange,
@@ -87,7 +89,8 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
           100,
           288
         );
-      } else {
+      }
+ else {
         if (item.modelVersion) {
           this.addColoredRectangleCell(
             this.fontColorBlack,
@@ -98,7 +101,8 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
             100,
             288
           );
-        } else {
+        }
+ else {
           this.addColoredRectangleCell(
             this.fontColorBlack,
             this.shadedOrange,

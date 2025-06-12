@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ describe('CatalogueSearchListingComponent', () => {
   };
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     catalogueItem: {
       search: jest.fn()
     },
@@ -67,6 +70,7 @@ describe('CatalogueSearchListingComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   const setupComponentTest = async (parameters: CatalogueSearchParameters) => {
     const params = mapSearchParametersToRawParams(parameters);

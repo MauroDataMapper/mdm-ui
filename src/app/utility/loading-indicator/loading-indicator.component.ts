@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +19,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoadingService } from '@mdm/services/loading.service';
 import { Subject } from 'rxjs';
 import { delay, map, startWith, takeUntil } from 'rxjs/operators';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-loading-indicator',
-  templateUrl: './loading-indicator.component.html',
-  styleUrls: ['./loading-indicator.component.scss']
+    selector: 'mdm-loading-indicator',
+    templateUrl: './loading-indicator.component.html',
+    styleUrls: ['./loading-indicator.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner]
 })
 export class LoadingIndicatorComponent implements OnInit, OnDestroy {
   visible = false;
@@ -45,7 +49,7 @@ export class LoadingIndicatorComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         startWith(false),
         delay(0),
-        map((value) => (this.visible = value))
+        map(value => (this.visible = value))
       )
       .subscribe();
   }

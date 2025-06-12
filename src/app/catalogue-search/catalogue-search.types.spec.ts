@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -223,8 +223,8 @@ describe('catalogue-search.types', () => {
           buildProfileFilter(namespace1, profile1, version1, key1, value1)
         ];
 
-        const expected =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIn19';
+        const expected
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIn19';
 
         const dto = mapProfileFiltersToDto(filters);
         const actual = serializeProfileFiltersDto(dto);
@@ -237,8 +237,8 @@ describe('catalogue-search.types', () => {
           buildProfileFilter(namespace1, profile1, version1, key2, value2)
         ];
 
-        const expected =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
+        const expected
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
 
         const dto = mapProfileFiltersToDto(filters);
         const actual = serializeProfileFiltersDto(dto);
@@ -253,8 +253,8 @@ describe('catalogue-search.types', () => {
           buildProfileFilter(namespace2, profile2, version2, key2, value2)
         ];
 
-        const expected =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9LCJ0ZXN0Lm5hbWVzcGFjZS4yfFRlc3RQcm9maWxlMnwyLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
+        const expected
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9LCJ0ZXN0Lm5hbWVzcGFjZS4yfFRlc3RQcm9maWxlMnwyLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
 
         const dto = mapProfileFiltersToDto(filters);
         const actual = serializeProfileFiltersDto(dto);
@@ -264,8 +264,8 @@ describe('catalogue-search.types', () => {
 
     describe('deserializeProfileFiltersToDto', () => {
       it('should deserialize filters with one namespace and field', () => {
-        const base64 =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIn19';
+        const base64
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIn19';
 
         const expected = {
           [`${namespace1}|${profile1}|${version1}`]: {
@@ -278,8 +278,8 @@ describe('catalogue-search.types', () => {
       });
 
       it('should deserialize filters with one namespace and multiple fields', () => {
-        const base64 =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
+        const base64
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
 
         const expected = {
           [`${namespace1}|${profile1}|${version1}`]: {
@@ -293,8 +293,8 @@ describe('catalogue-search.types', () => {
       });
 
       it('should deserialize filters with multiple namespaces and multiple fields', () => {
-        const base64 =
-          'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9LCJ0ZXN0Lm5hbWVzcGFjZS4yfFRlc3RQcm9maWxlMnwyLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
+        const base64
+          = 'eyJ0ZXN0Lm5hbWVzcGFjZS4xfFRlc3RQcm9maWxlMXwxLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9LCJ0ZXN0Lm5hbWVzcGFjZS4yfFRlc3RQcm9maWxlMnwyLjAuMCI6eyJrZXkxIjoidmFsdWUxIiwia2V5MiI6InZhbHVlMiJ9fQ==';
 
         const expected = {
           [`${namespace1}|${profile1}|${version1}`]: {

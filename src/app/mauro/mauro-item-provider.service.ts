@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ export class MauroItemProviderService {
     }
 
     return response.pipe(
-      map((res) => res.body),
+      map(res => res.body),
       catchError((error) => {
         if (identifier.fetchOptions?.failSilently) {
           return of({
@@ -133,7 +133,7 @@ export class MauroItemProviderService {
    * @returns An array of the requested catalogue items passed through an observable stream.
    */
   getMany(identifiers: MauroIdentifier[]): Observable<MauroItem[]> {
-    const requests$ = identifiers.map((identifier) => this.get(identifier));
+    const requests$ = identifiers.map(identifier => this.get(identifier));
     return forkJoin(requests$);
   }
 
@@ -148,8 +148,8 @@ export class MauroItemProviderService {
     path: string,
     options?: MauroItemLocateOptions
   ): Observable<MauroItem> {
-    const domain =
-      options?.domain ?? this.pathNames.getPathableDomainFromPath(path);
+    const domain
+      = options?.domain ?? this.pathNames.getPathableDomainFromPath(path);
     const query: PathQueryParameters = {
       ...(options?.finalisedOnly && { finalised: options.finalisedOnly })
     };
@@ -163,7 +163,7 @@ export class MauroItemProviderService {
         )
       : this.resources.catalogueItem.getPath(domain, path, query);
 
-    return request$.pipe(map((response) => response.body));
+    return request$.pipe(map(response => response.body));
   }
 
   private getDataModel(

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,11 +22,17 @@ import { StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { UIRouterModule } from '@uirouter/angular';
+import { AlertComponent } from '../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-doi-redirect',
-  templateUrl: './doi-redirect.component.html',
-  styleUrls: ['./doi-redirect.component.scss']
+    selector: 'mdm-doi-redirect',
+    templateUrl: './doi-redirect.component.html',
+    styleUrls: ['./doi-redirect.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner, AlertComponent, UIRouterModule]
 })
 export class DoiRedirectComponent implements OnInit {
   identifier: string;
@@ -48,7 +54,7 @@ export class DoiRedirectComponent implements OnInit {
     this.resources.pluginDoi
       .resolve(this.identifier)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.errorMessage = error;
           return EMPTY;
         }),
@@ -88,9 +94,8 @@ export class DoiRedirectComponent implements OnInit {
 
     this.stateHandler
       .Go(state, params)
-      .catch(error => {
+      .catch((error) => {
         this.errorMessage = `Unable to redirect to ${item.domainType} ${item.id}. ${error}`;
       });
   }
-
 }

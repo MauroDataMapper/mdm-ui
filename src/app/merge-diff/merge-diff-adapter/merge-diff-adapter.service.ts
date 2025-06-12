@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services';
 import { catchError, map } from 'rxjs/operators';
-
 
 /**
  * Adapter service around {@link MdmResourcesService} to wrap around
@@ -63,7 +62,7 @@ export class MergeDiffAdapterService {
     return this.resources.merge
       .mergeDiff(domainType, sourceId, targetId)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem analysing the differences between these two items.', error);
           return EMPTY;
         }),
@@ -79,7 +78,7 @@ export class MergeDiffAdapterService {
     return this.resources.merge
       .mergeInto(domainType, sourceId, targetId, data)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem committing the changes to the target item.', error);
           return EMPTY;
         }),

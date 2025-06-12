@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,15 +19,23 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 import { UIRouterGlobals } from '@uirouter/core';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { McDataSetMetadataComponent } from '../../shared/mc-data-set-metadata/mc-data-set-metadata.component';
+import { EnumerationValuesDetailsComponent } from '../enumeration-values-details/enumeration-values-details.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-   selector: 'mdm-enumeration-values',
-   templateUrl: './enumeration-values.component.html',
-   styleUrls: ['./enumeration-values.component.scss']
+    selector: 'mdm-enumeration-values',
+    templateUrl: './enumeration-values.component.html',
+    styleUrls: ['./enumeration-values.component.scss'],
+    standalone: true,
+    imports: [NgIf, EnumerationValuesDetailsComponent, MatTabGroup, MatTab, MatTabContent, McDataSetMetadataComponent, AnnotationListComponent, ElementLinkListComponent, AttachmentListComponent]
 })
 export class EnumerationValuesComponent implements OnInit, AfterViewInit {
    @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -80,14 +88,13 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
          this.parent = result.body;
 
-         this.resource.enumerationValues.getFromDataType(this.parentDataModel as string, this.parentDataType as string, this.id as string).subscribe(res => {
+         this.resource.enumerationValues.getFromDataType(this.parentDataModel as string, this.parentDataType as string, this.id as string).subscribe((res) => {
             if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {
                this.label = res.body.value;
                this.currentEnumerationValue = res.body;
                this.parent = result.body;
                this.parent.id = res.body.id;
                this.title.setTitle(`Enumeration Value - ${this.label}`);
-
             }
          });
       });
@@ -132,5 +139,4 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
           return { index: 0, name: 'properties' };
       }
     }
-
 }

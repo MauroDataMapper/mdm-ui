@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,11 +33,22 @@ import {
   DiagramMode,
   DiagramParameters
 } from './diagram.model';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelActionRow } from '@angular/material/expansion';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram',
-  templateUrl: './diagram.component.html',
-  styleUrls: ['./diagram.component.scss']
+    selector: 'mdm-diagram',
+    templateUrl: './diagram.component.html',
+    styleUrls: ['./diagram.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatLabel, MatInput, FormsModule, CodemirrorModule, MatExpansionPanelActionRow, MatButton, MatCard, MatProgressSpinner]
 })
 export class DiagramComponent implements OnInit {
   @Input() mode: DiagramMode;
@@ -79,7 +90,8 @@ export class DiagramComponent implements OnInit {
   public ngOnInit(): void {
     if (this.diagramComponent) {
       this.diagramService = this.diagramComponent.diagramService;
-    } else {
+    }
+ else {
       // we're loading from scratch
       this.initializeDiagramService({ parent: this.parent });
     }
@@ -127,7 +139,8 @@ export class DiagramComponent implements OnInit {
         if (this.mode === 'model-merging-graph') {
           // Bottom-to-top layout
           this.diagramService.layoutNodes('BT');
-        } else {
+        }
+ else {
           this.diagramService.layoutNodes();
         }
       },
@@ -161,7 +174,7 @@ export class DiagramComponent implements OnInit {
       This doesn't yet work with the typescript definition...
       interactive: {
         stopDelegation: false
-      }*/
+      } */
     });
 
     this.paper.setInteractivity({ stopDelegation: false });
@@ -218,7 +231,7 @@ export class DiagramComponent implements OnInit {
     });
 
     this.diagramService.currentComponent.subscribe(
-      (data) => (this.dataClassComponent = data)
+      data => (this.dataClassComponent = data)
     );
   }
 
@@ -257,7 +270,7 @@ export class DiagramComponent implements OnInit {
     this.diagramService.getDiagramContent(params).subscribe((data) => {
       const filteredClasses: Array<any> = [];
       filterList.forEach((x) => {
-        const index = data.body.childDataClasses.findIndex((y) => y.id === x);
+        const index = data.body.childDataClasses.findIndex(y => y.id === x);
         if (index !== -1) {
           filteredClasses.push(data.body.childDataClasses[index]);
         }
@@ -270,7 +283,8 @@ export class DiagramComponent implements OnInit {
       if (mode === 'model-merging-graph') {
         // Bottom-to-top layout
         this.diagramService.layoutNodes('BT');
-      } else {
+      }
+ else {
         this.diagramService.layoutNodes();
       }
 

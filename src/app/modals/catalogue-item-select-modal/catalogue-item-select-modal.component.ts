@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
 
 @Component({
-  selector: 'mdm-catalogue-item-select-modal',
-  templateUrl: './catalogue-item-select-modal.component.html',
-  styleUrls: ['./catalogue-item-select-modal.component.scss']
+    selector: 'mdm-catalogue-item-select-modal',
+    templateUrl: './catalogue-item-select-modal.component.html',
+    styleUrls: ['./catalogue-item-select-modal.component.scss'],
+    standalone: true,
+    imports: [ModelSelectorTreeComponent, FormsModule, MatButton, MatDialogClose]
 })
 export class CatalogueItemSelectModalComponent implements OnInit {
   @Input() root: any;
@@ -33,9 +38,8 @@ export class CatalogueItemSelectModalComponent implements OnInit {
 
   isOkDisabled = true;
 
-  constructor( private dialogRef: MatDialogRef<CatalogueItemSelectModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any)
- { }
+  constructor(private dialogRef: MatDialogRef<CatalogueItemSelectModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,9 +36,16 @@ import 'brace/mode/csharp';
 import 'brace/mode/text';
 import 'brace/theme/github';
 import { MessageHandlerService } from '@mdm/services';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { AceConfigInterface } from 'ngx-ace-wrapper';
+import { AceConfigInterface, AceModule } from 'ngx-ace-wrapper';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export class RuleLanguage {
   displayName: string;
@@ -87,33 +94,35 @@ export const supportedLanguages: RuleLanguage[] = [
 ];
 
 export interface AddRuleRepresentationModalConfig {
-  language: string;
-  representation: string;
-  title?: string;
-  message?: string;
-  okBtnTitle?: string;
-  cancelBtnTitle?: string;
-  cancelShown?: boolean;
-  btnType?: string;
+  language: string
+  representation: string
+  title?: string
+  message?: string
+  okBtnTitle?: string
+  cancelBtnTitle?: string
+  cancelShown?: boolean
+  btnType?: string
 }
 
 export interface AddRuleRepresentationModalResult {
-  status: ModalDialogStatus;
-  language?: string;
-  representation?: string;
+  status: ModalDialogStatus
+  language?: string
+  representation?: string
 }
 
 @Component({
-  selector: 'mdm-add-rule-representation-modal',
-  templateUrl: './add-rule-representation-modal.component.html',
-  styleUrls: ['./add-rule-representation-modal.component.scss']
+    selector: 'mdm-add-rule-representation-modal',
+    templateUrl: './add-rule-representation-modal.component.html',
+    styleUrls: ['./add-rule-representation-modal.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatToolbar, MatInput, MatButton, AceModule]
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
-
   dmnCanvas: ElementRef;
 
-  initialDiagram =
-    '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="REQUIRED" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
+  initialDiagram
+    = '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="REQUIRED" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
+
   okBtn: string;
   cancelBtn: string;
   btnType: string;
@@ -126,7 +135,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   aceEditorConfig: AceConfigInterface = { showPrintMargin: false };
 
   formGroup = new FormGroup({
-    language: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    language: new FormControl('', Validators.required),
     representation: new FormControl(''),
     importFileName: new FormControl('')
   });
@@ -158,7 +167,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
     }
 
     return this.supportedLanguages.find(
-      (lang) => lang.value === this.language.value
+      lang => lang.value === this.language.value
     );
   }
 
@@ -208,8 +217,8 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       let xml = content;
 
       if (!xml) {
-        xml =
-          this.data.language === 'dmn' && this.data.representation.length > 0
+        xml
+          = this.data.language === 'dmn' && this.data.representation.length > 0
             ? this.data.representation
             : this.initialDiagram;
       }
@@ -219,7 +228,8 @@ export class AddRuleRepresentationModalComponent implements OnInit {
           if (err) {
             this.messageHandler.showError(err.message);
             this.createDMNWindow(this.data.representation);
-          } else {
+          }
+ else {
             const activeEditor = this.modeler.getActiveViewer();
             const canvas = activeEditor.get('canvas');
             canvas.zoom('fit-viewport');
@@ -238,7 +248,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       this.importFileName.setValue(file.name);
 
       const lang = this.supportedLanguages.find(
-        (x) => x.fileExt === file.name.split('.')[1]
+        x => x.fileExt === file.name.split('.')[1]
       );
 
       if (!lang) {
@@ -255,7 +265,8 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       reader.onload = () => {
         if (lang.value === 'dmn') {
           this.createDMNWindow(reader.result);
-        } else {
+        }
+ else {
           this.representation.setValue(reader.result.toString());
         }
       };

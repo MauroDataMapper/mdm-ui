@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,13 +28,14 @@ import {
 
 // Helper component to add dynamic components
 @Component({
-  selector: 'mdm-dcl-wrapper',
-  template: '<div #target></div>'
+    selector: 'mdm-dcl-wrapper',
+    template: '<div #target></div>',
+    standalone: true
 })
 export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Output() stepChanged = new EventEmitter<any>();
   @ViewChild('target', { read: ViewContainerRef, static: false }) target;
-  @Input() type : Type<unknown>;
+  @Input() type: Type<unknown>;
   stepVal: any;
 
   private isViewInitialized = false;
@@ -45,6 +46,7 @@ export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy 
   get step(): any {
     return this.stepVal;
   }
+
   set step(val) {
     this.stepVal = val;
     this.stepChanged.emit();
@@ -70,7 +72,6 @@ export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
-
     this.isViewInitialized = true;
     this.updateComponent();
   }

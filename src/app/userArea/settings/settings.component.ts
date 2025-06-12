@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,11 +21,22 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+    selector: 'mdm-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, FormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatSelect, MatOption, MatCheckbox, NgIf, MatButton]
 })
 export class SettingsComponent implements OnInit {
   countPerTable = this.userSettingsHandler.defaultSettings.countPerTable;
@@ -48,7 +59,7 @@ export class SettingsComponent implements OnInit {
     this.title.setTitle('Preferences');
 
     this.securityHandler.isAdministrator()
-      .subscribe(state => {
+      .subscribe((state) => {
         this.isAdministrator = state;
         this.loadSettings();
       });
@@ -77,11 +88,12 @@ export class SettingsComponent implements OnInit {
 
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('User preferences saved successfully.');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('Failed to save user preferences.', error);
     }
     );
   };
+
   loadHelp = () => {
     this.helpDialogueService.open('Preferences');
   };

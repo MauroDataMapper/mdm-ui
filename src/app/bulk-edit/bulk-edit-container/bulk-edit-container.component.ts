@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,17 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, of } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
+import { BulkEditEditorGroupComponent } from '../bulk-edit-editor-group/bulk-edit-editor-group.component';
+import { BulkEditSelectComponent } from '../bulk-edit-select/bulk-edit-select.component';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-bulk-edit-container',
-  templateUrl: './bulk-edit-container.component.html',
-  styleUrls: ['./bulk-edit-container.component.scss']
+    selector: 'mdm-bulk-edit-container',
+    templateUrl: './bulk-edit-container.component.html',
+    styleUrls: ['./bulk-edit-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, ElementIconComponent, BulkEditSelectComponent, BulkEditEditorGroupComponent]
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
@@ -79,12 +85,12 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    const confirm$ =
-      this.currentStep === BulkEditStep.Editor && this.hasChanged
+    const confirm$
+      = this.currentStep === BulkEditStep.Editor && this.hasChanged
         ? this.editing.confirmCancelAsync()
         : of(true);
 
-    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
       this.editing.stop();
       this.stateHandler.GoPrevious();
     });
@@ -100,7 +106,7 @@ export class BulkEditContainerComponent implements OnInit {
       ? this.editing.confirmCancelAsync()
       : of(true);
 
-    confirm$.pipe(filter((confirm) => !!confirm)).subscribe(() => {
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
       this.currentStep = this.currentStep - 1;
       this.hasChanged = false;
     });

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,9 +51,9 @@ export const defaultProfileProvider: ProfileProvider = {
 
 export const isDefaultProvider = (provider: ProfileProvider) => {
   return (
-    provider &&
-    provider.name === defaultProfileProvider.name &&
-    provider.namespace === defaultProfileProvider.namespace
+    provider
+    && provider.name === defaultProfileProvider.name
+    && provider.namespace === defaultProfileProvider.namespace
   );
 };
 
@@ -186,7 +186,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
 
     return this.itemProvider
       .get(identifier)
-      .pipe(map((item) => this.mapItemToProfile(item)));
+      .pipe(map(item => this.mapItemToProfile(item)));
   }
 
   getMany(
@@ -200,7 +200,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
 
     return this.itemProvider
       .getMany(identifiers)
-      .pipe(map((items) => items.map((item) => {
+      .pipe(map(items => items.map((item) => {
         return {
           ...this.mapItemToProfile(item),
           breadcrumbs: item.breadcrumbs
@@ -228,8 +228,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
 
     const item = this.mapProfileToItem(identifier, profile);
     return of(item).pipe(
-      switchMap((value) => this.itemUpdater.save(identifier, value)),
-      map((_) => profile)
+      switchMap(value => this.itemUpdater.save(identifier, value)),
+      map(_ => profile)
     );
   }
 
@@ -258,8 +258,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     });
 
     return of(itemPayloads).pipe(
-      switchMap((items) => this.itemUpdater.saveMany(items)),
-      map((_) => payloads.map((pl) => pl.profile))
+      switchMap(items => this.itemUpdater.saveMany(items)),
+      map(_ => payloads.map(pl => pl.profile))
     );
   }
 
@@ -279,7 +279,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     const section = profile.sections.find(
-      (sec) => sec.name === defaultProfileSectionName
+      sec => sec.name === defaultProfileSectionName
     );
     if (!section) {
       return throwError(() => new Error('Cannot find default profile section'));
@@ -303,7 +303,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     return forkJoin(
-      profiles.map((profile) => this.validate(provider, profile))
+      profiles.map(profile => this.validate(provider, profile))
     );
   }
 
@@ -357,8 +357,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     if (
-      item.domainType === CatalogueItemDomainType.DataClass ||
-      item.domainType === CatalogueItemDomainType.DataElement
+      item.domainType === CatalogueItemDomainType.DataClass
+      || item.domainType === CatalogueItemDomainType.DataElement
     ) {
       // Multiplicity is a special profile field, as it is a combination of two properties
       fields.push({
@@ -398,7 +398,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     profile: Profile
   ): MauroItem {
     const section = profile.sections.find(
-      (sec) => sec.name === defaultProfileSectionName
+      sec => sec.name === defaultProfileSectionName
     );
 
     if (!section) {
@@ -444,8 +444,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     if (
-      item.domainType === CatalogueItemDomainType.DataClass ||
-      item.domainType === CatalogueItemDomainType.DataElement
+      item.domainType === CatalogueItemDomainType.DataClass
+      || item.domainType === CatalogueItemDomainType.DataElement
     ) {
       // Multiplicity is a special profile field, as it is a combination of two properties
       this.mapProfileFieldToItemProps(
@@ -458,7 +458,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
             return;
           }
 
-          const parts = multiplicity.split('..').map((part) => Number(part));
+          const parts = multiplicity.split('..').map(part => Number(part));
           target.minMultiplicity = parts[0];
           target.maxMultiplicity = parts[1];
         }
@@ -521,7 +521,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     setter: (field: ProfileField, item: MauroItem) => void
   ) {
     const field = section.fields.find(
-      (fld) => fld.metadataPropertyName === metadataPropertyName
+      fld => fld.metadataPropertyName === metadataPropertyName
     );
     if (field && field.currentValue) {
       setter(field, item);
@@ -534,8 +534,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
   ): ProfileValidationError[] {
     const errors: ProfileValidationError[] = [];
     if (
-      profile.domainType === CatalogueItemDomainType.DataClass ||
-      profile.domainType === CatalogueItemDomainType.DataElement
+      profile.domainType === CatalogueItemDomainType.DataClass
+      || profile.domainType === CatalogueItemDomainType.DataElement
     ) {
       errors.push(...this.validateMultiplicity(section));
     }
@@ -547,7 +547,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     section: ProfileSection
   ): ProfileValidationError[] {
     const field = section.fields.find(
-      (fld) =>
+      fld =>
         fld.metadataPropertyName === multiplicityField.metadataPropertyName
     );
 
@@ -582,8 +582,8 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     if (
-      domainType === CatalogueItemDomainType.DataClass ||
-      domainType === CatalogueItemDomainType.DataElement
+      domainType === CatalogueItemDomainType.DataClass
+      || domainType === CatalogueItemDomainType.DataElement
     ) {
       keys.push(multiplicityField.metadataPropertyName);
     }

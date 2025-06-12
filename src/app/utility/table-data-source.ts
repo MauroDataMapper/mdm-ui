@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import { SortDirection } from '@angular/material/sort';
 import { tap } from 'rxjs/operators';
 
 export interface Sortable {
-  sort?: string;
-  order?: SortDirection; // MatSort accepts 3 different values ('' | 'asc' | 'desc')
+  sort?: string
+  order?: SortDirection // MatSort accepts 3 different values ('' | 'asc' | 'desc')
 }
 
 export class MdmTableDataSource<T> extends DataSource<T> {
@@ -36,16 +36,20 @@ export class MdmTableDataSource<T> extends DataSource<T> {
   private _fetchFunction = new BehaviorSubject<
     (options?: any) => Observable<MdmIndexResponse<T>>
   >(() => EMPTY);
+
   private _updateFunction = new BehaviorSubject<
     (options?: any) => Observable<MdmResponse<T>>
   >(() => EMPTY);
+
   private _deleteFunction = new BehaviorSubject<
     (options?: any) => Observable<any>
   >(() => EMPTY);
+
   private _pageable = new BehaviorSubject<PageParameters>({
     max: 10,
     offset: 0
   });
+
   private _sortable = new BehaviorSubject<Sortable>({});
 
   constructor(
@@ -115,10 +119,10 @@ export class MdmTableDataSource<T> extends DataSource<T> {
     // Remove null or empty properties (e.g. {sort: ''})
     return Object.keys(combined)
       .filter(
-        (k) =>
-          combined[k] !== undefined &&
-          combined[k] !== null &&
-          combined[k] !== ''
+        k =>
+          combined[k] !== undefined
+          && combined[k] !== null
+          && combined[k] !== ''
       )
       .reduce((a, k) => ({ ...a, [k]: combined[k] }), {});
   }
@@ -150,7 +154,7 @@ export class MdmTableDataSource<T> extends DataSource<T> {
         this.count.next(data.body.count);
         this._dataStream.next(data.body.items);
       },
-      (error) => console.error(error)
+      error => console.error(error)
     );
   }
 

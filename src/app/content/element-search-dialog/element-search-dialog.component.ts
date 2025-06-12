@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
 import {
   CatalogueItem,
   CatalogueItemSearchResponse,
@@ -37,23 +37,30 @@ import {
   switchMap,
   tap
 } from 'rxjs/operators';
+import { MatOption } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf, NgFor } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatHint, MatError } from '@angular/material/form-field';
 
 const defaultMinSearchTermLength = 3;
 
 export interface ElementSearchDialogData {
-  root: CatalogueItem;
-  searchTerm?: string;
-  minSearchTermLength?: number;
+  root: CatalogueItem
+  searchTerm?: string
+  minSearchTermLength?: number
 }
 
 export interface ElementSearchDialogResponse {
-  selected?: MauroItem & Pathable;
+  selected?: MauroItem & Pathable
 }
 
 @Component({
-  selector: 'mdm-element-search-dialog',
-  templateUrl: './element-search-dialog.component.html',
-  styleUrls: ['./element-search-dialog.component.scss']
+    selector: 'mdm-element-search-dialog',
+    templateUrl: './element-search-dialog.component.html',
+    styleUrls: ['./element-search-dialog.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, MatFormField, MatInput, MatAutocompleteTrigger, FormsModule, ReactiveFormsModule, NgIf, MatHint, MatError, MatProgressSpinner, MatAutocomplete, NgFor, MatOption]
 })
 export class ElementSearchDialogComponent implements OnInit {
   searchTerm = new FormControl();
@@ -74,14 +81,14 @@ export class ElementSearchDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.minSearchTermLength =
-      this.data.minSearchTermLength ?? defaultMinSearchTermLength;
+    this.minSearchTermLength
+      = this.data.minSearchTermLength ?? defaultMinSearchTermLength;
     this.searchTerm.setValue(this.data.searchTerm);
 
     this.searchTerm.valueChanges
       .pipe(
         filter(
-          (value) => value !== null && value.length >= this.minSearchTermLength
+          value => value !== null && value.length >= this.minSearchTermLength
         ),
         distinctUntilChanged(),
         debounceTime(500),

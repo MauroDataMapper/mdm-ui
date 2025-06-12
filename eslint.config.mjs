@@ -15,18 +15,33 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-.mdm-group-access {
-  &__add-form {
-    padding: 0 20px;
 
-    form {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+import tseslint from 'typescript-eslint';
+import * as angular from 'typescript-eslint';
+import stylistic from '@stylistic/eslint-plugin';
 
-      button {
-        margin: 0 8px;
-      }
+export default tseslint.config(
+  {
+    ignores: [
+      'coverage/*',
+      'dist/*',
+      'eslint/*',
+      'lib/*',
+      'node_modules/*',
+      'test-report/*',
+      'jest.config.js'
+    ]
+  },
+  stylistic.configs.recommended,
+  angular.configs.recommended,
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+
+      // Turn these off for now - too many errors!
+      '@stylistic/semi': 'off',
+      '@stylistic/comma-dangle': 'off',
+      '@stylistic/indent': 'off',
     }
   }
-}
+);

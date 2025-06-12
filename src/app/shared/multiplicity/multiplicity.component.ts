@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,11 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-multiplicity',
-  templateUrl: './multiplicity.component.html',
-  styleUrls: ['./multiplicity.component.sass']
+    selector: 'mdm-multiplicity',
+    templateUrl: './multiplicity.component.html',
+    styleUrls: ['./multiplicity.component.sass'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class MultiplicityComponent {
   @Input() min: number | string;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -100,39 +100,39 @@ export class SecurityHandlerService {
   }
 
   // Note: this can be passed either a UserDetailsResult or a UserDetails
-  addToLocalStorage(user: { [key: string]: any} ) {
+  addToLocalStorage(user: { [key: string]: any }) {
     // Keep username for 100 days
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
     localStorage.setItem('userId', user.id as string);
-    if(user.token) {
+    if (user.token) {
       localStorage.setItem('token', user.token as string);
     }
     localStorage.setItem('firstName', user.firstName as string);
     localStorage.setItem('lastName', user.lastName as string);
-    if(user.userName) {
+    if (user.userName) {
       localStorage.setItem(
         'username',
         JSON.stringify({ username: user.userName, expiry: expireDate })
       );
     }
     localStorage.setItem('userId', user.id as string);
-    if(user.email) {
+    if (user.email) {
       localStorage.setItem(
         'email',
         JSON.stringify({ email: user.email, expiry: expireDate })
       );
     }
-    if(user.emailAddress) {
+    if (user.emailAddress) {
       localStorage.setItem(
         'email',
         JSON.stringify({ email: user.emailAddress, expiry: expireDate })
       );
     }
-    if(user.role) {
+    if (user.role) {
       localStorage.setItem('role', user.role as string);
     }
-    if(user.needsToResetPassword) {
+    if (user.needsToResetPassword) {
       localStorage.setItem('needsToResetPassword', String(user.needsToResetPassword));
     }
   }
@@ -174,13 +174,15 @@ export class SecurityHandlerService {
       await this.resources.security
         .logout({ responseType: 'text' })
         .toPromise();
-    } catch (err) {
+    }
+ catch (err) {
       if (
-        err.status === 500 &&
-        err.message === 'Session has been invalidated'
+        err.status === 500
+        && err.message === 'Session has been invalidated'
       ) {
         // Something's wrong
-      } else {
+      }
+ else {
         console.log(`Status ${err.status}: ${err.message}`);
       }
     }
@@ -221,7 +223,7 @@ export class SecurityHandlerService {
    *
    * @see {@link SecurityHandlerService.authenticateWithOpenIdConnect}
    */
-  authorizeOpenIdConnectSession(params: { state: string; sessionState: string; code: string }): Observable<UserDetails> {
+  authorizeOpenIdConnectSession(params: { state: string, sessionState: string, code: string }): Observable<UserDetails> {
     const providerId = localStorage.getItem('openIdConnectProviderId');
     if (!providerId) {
       return throwError(() => new Error('Cannot retrieve OpenID Connect provider identifier.'));
@@ -283,7 +285,8 @@ export class SecurityHandlerService {
     const isEditable = environment.appIsEditable;
     if (isEditable !== null && isEditable === false) {
       return false;
-    } else if (isEditable !== null && isEditable /* === true*/) {
+    }
+ else if (isEditable !== null && isEditable /* === true */) {
       // Now app is editable, lets check if the user has writable role
       const user = this.getCurrentUser();
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,20 +20,19 @@ import { Branchable, MergableMultiFacetAwareDomainType } from '@maurodatamapper/
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeDiffItemModel } from '@mdm/merge-diff/types/merge-item-type';
 
-export interface CheckinModelConfiguration
-{
-    deleteSourceBranch: boolean;
-    commitComment?: string;
-    items?: MergeDiffItemModel[];
-    label?: string;
-    domainType?: MergableMultiFacetAwareDomainType;
-    isDataAsset?: boolean;
-    source?: Branchable;
-    target?: Branchable;
+export interface CheckinModelConfiguration {
+    deleteSourceBranch: boolean
+    commitComment?: string
+    items?: MergeDiffItemModel[]
+    label?: string
+    domainType?: MergableMultiFacetAwareDomainType
+    isDataAsset?: boolean
+    source?: Branchable
+    target?: Branchable
 }
 
 export interface CheckinModelResult {
-  status: ModalDialogStatus;
-  deleteSourceBranch?: boolean;
-  commitComment?: string;
+  status: ModalDialogStatus
+  deleteSourceBranch?: boolean
+  commitComment?: string
 }

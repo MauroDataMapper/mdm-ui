@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   CatalogueItemDomainType,
@@ -31,11 +31,21 @@ import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
 
 @Component({
-  selector: 'mdm-terminology-main',
-  templateUrl: './terminology-main.component.html',
-  styleUrls: ['./terminology-main.component.scss']
+    selector: 'mdm-terminology-main',
+    templateUrl: './terminology-main.component.html',
+    styleUrls: ['./terminology-main.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, ElementLinkComponent, MatFormField, MatLabel, MatInput, NgIf, MatError, ContentEditorComponent, ElementClassificationsComponent, MatProgressBar, MatButton]
 })
 export class TerminologyMainComponent implements OnInit {
   parentFolderId: Uuid;
@@ -43,9 +53,9 @@ export class TerminologyMainComponent implements OnInit {
   parentFolder: Container;
   savingInProgress = false;
   setupForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
+    author: new FormControl(''),
+    organisation: new FormControl(''),
     description: new FormControl(''),
     classifiers: new FormControl([])
   });

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,5 +19,5 @@ SPDX-License-Identifier: Apache-2.0
 import { ModelDomainType } from '@maurodatamapper/mdm-resources';
 
 export class ModelMergingModel {
-  constructor(public sourceId : string, public targetId : string, public catalogueDomainType : ModelDomainType) {}
+  constructor(public sourceId: string, public targetId: string, public catalogueDomainType: ModelDomainType) {}
 }

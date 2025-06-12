@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { QueryParameters, Uuid } from '@maurodatamapper/mdm-resources';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -31,15 +31,24 @@ import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIconButton } from '@angular/material/button';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-newer-versions',
-  templateUrl: './newer-versions.component.html',
-  styleUrls: ['./newer-versions.component.scss']
+    selector: 'mdm-newer-versions',
+    templateUrl: './newer-versions.component.html',
+    styleUrls: ['./newer-versions.component.scss'],
+    standalone: true,
+    imports: [NgIf, SkeletonBadgeComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class NewerVersionsComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: false })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input() catalogueItem: FederatedDataModel;

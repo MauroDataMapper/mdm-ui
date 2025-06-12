@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSort, Sort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   ApiPropertyEditableState,
   ApiPropertyEditType
@@ -41,17 +41,27 @@ import {
   StateHandlerService
 } from '@mdm/services';
 import { catchError, switchMap } from 'rxjs/operators';
+import { MatchThemeColorPatternPipe } from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ApiPropertyTableViewChange {
-  category?: string;
-  sortBy?: string;
-  sortType?: SortDirection;
+  category?: string
+  sortBy?: string
+  sortType?: SortDirection
 }
 
 @Component({
-  selector: 'mdm-api-property-table',
-  templateUrl: './api-property-table.component.html',
-  styleUrls: ['./api-property-table.component.scss']
+    selector: 'mdm-api-property-table',
+    templateUrl: './api-property-table.component.html',
+    styleUrls: ['./api-property-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatSelect, MatOption, NgFor, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, MatTooltip, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatchThemeColorPatternPipe]
 })
 export class ApiPropertyTableComponent
   implements OnInit, OnChanges, AfterViewInit {
@@ -161,7 +171,8 @@ export class ApiPropertyTableComponent
 
         if (record.metadata.requiresReload) {
           this.stateHandler.reload();
-        } else {
+        }
+ else {
           this.viewChange.emit({
             category: this.selectedCategory,
             sortBy: this.sort.active,

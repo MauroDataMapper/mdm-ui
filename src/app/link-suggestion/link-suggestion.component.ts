@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,29 +15,57 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChild,
-  ViewChildren,
-  ElementRef,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ElementTypesService } from '../services/element-types.service';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { ElementTypesService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
 import { StateService } from '@uirouter/core';
-import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../shared/mdm-paginator/mdm-paginator';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { FormsModule } from '@angular/forms';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-link-suggestion',
-  templateUrl: './link-suggestion.component.html',
-  styleUrls: ['./link-suggestion.component.scss'],
+    selector: 'mdm-link-suggestion',
+    templateUrl: './link-suggestion.component.html',
+    styleUrls: ['./link-suggestion.component.scss'],
+    standalone: true,
+    imports: [
+        NgIf,
+        ModelSelectorTreeComponent,
+        FormsModule,
+        ElementLinkComponent,
+        ModelPathComponent,
+        MatCheckbox,
+        MatButton,
+        MatProgressBar,
+        MatTooltip,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        McSelectComponent,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MdmPaginatorComponent_1,
+    ],
 })
 export class LinkSuggestionComponent implements OnInit {
   @Input() sourceDataElementId: any;
@@ -48,6 +76,7 @@ export class LinkSuggestionComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable) table: MatTable<any>;
@@ -85,18 +114,15 @@ export class LinkSuggestionComponent implements OnInit {
     this.title.setTitle('Link Suggestion');
     this.hideFilters = true;
 
-    // tslint:disable-next-line: deprecation
     this.sourceDataModelId = this.sourceDataModelId ? this.sourceDataModelId : this.state.params.sourceDMId;
-    // tslint:disable-next-line: deprecation
     this.sourceDataElementId = this.sourceDataElementId ? this.sourceDataElementId : this.state.params.sourceDEId;
-    // tslint:disable-next-line: deprecation
     this.sourceDataClassId = this.sourceDataClassId ? this.sourceDataClassId : this.state.params.sourceDCId;
-    // tslint:disable-next-line: deprecation
     this.targetDataModelId = this.targetDataModelId ? this.targetDataModelId : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {
       this.setSourceDataElement(this.sourceDataModelId as string, this.sourceDataClassId as string, this.sourceDataElementId as string);
-    } else if (this.sourceDataModelId) {
+    }
+ else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
 
@@ -114,25 +140,24 @@ export class LinkSuggestionComponent implements OnInit {
     if (dataModels && dataModels.length > 0) {
       this.model.loadingSource = true;
       this.resources.dataModel.get(dataModels[0].id as string).subscribe((result) => {
-        const data = result.body;
-        this.model.source = data;
+        this.model.source = result.body;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
         const access = this.securityHandler.elementAccess(this.model.source as Securable | (Securable & Finalisable));
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
-    } else {
+    }
+ else {
       this.model.sourceLink = null;
       this.model.source = null;
       this.model.sourceEditable = true;
     }
   };
 
-  setSourceDataElement = (sourceDMId:string, sourceDCId:string, sourceDEId:string) => {
+  setSourceDataElement = (sourceDMId: string, sourceDCId: string, sourceDEId: string) => {
     this.model.loadingSource = true;
     this.resources.dataElement.get(sourceDMId, sourceDCId, sourceDEId).subscribe((result) => {
-      const data = result.body;
-      this.model.source = data;
+      this.model.source = result.body;
       this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
       const access = this.securityHandler.elementAccess(this.model.source as Securable | (Securable & Finalisable));
       this.model.sourceEditable = access.showEdit;
@@ -149,12 +174,12 @@ export class LinkSuggestionComponent implements OnInit {
     if (dataModels && dataModels.length > 0) {
       this.model.loadingTarget = true;
       this.resources.dataModel.get(dataModels[0].id as string).subscribe((result) => {
-        const data = result.body;
-        this.model.target = data;
+        this.model.target = result.body;
         this.model.targetLink = this.elementTypes.getLinkUrl(this.model.target);
         this.model.loadingTarget = false;
       });
-    } else {
+    }
+ else {
       this.model.targetLink = null;
       this.model.target = null;
     }
@@ -193,7 +218,6 @@ export class LinkSuggestionComponent implements OnInit {
   };
 
   ignoreSuggestion = (record) => {
-
     const index = this.model.suggestions.indexOf(record);
 
     if (index >= 0) {
@@ -234,7 +258,8 @@ export class LinkSuggestionComponent implements OnInit {
       }, () => {
         this.model.processing = false;
       });
-    } else if (this.model.source.domainType === 'DataElement') {
+    }
+ else if (this.model.source.domainType === 'DataElement') {
       this.resources.dataElement.suggestLinks(this.model.source.model as string, this.model.source.dataClass as string, this.model.source.id as string, this.model.target.id as string).subscribe((data) => {
         if (data.body) {
           this.model.suggestions = [data.body];

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import * as joint from '@joint/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
-
 export class DataflowDatamodelDiagramService extends BasicDiagramService {
-
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
@@ -33,7 +31,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataFlow.list(this.parentId, {all:true});
+    return this.resourcesService.dataFlow.list(this.parentId, { all: true });
   }
 
   render(data: any): void {
@@ -95,14 +93,12 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
       // console.log('next clicked: service');
     });
   }
+
   canGoUp(): boolean {
     return false;
   }
 
   goUp(): void {
 
-
   }
-
-
 }

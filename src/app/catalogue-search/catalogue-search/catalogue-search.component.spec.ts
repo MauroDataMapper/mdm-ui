@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ describe('CatalogueSearchComponent', () => {
   };
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     classifier: {
       list: jest.fn() as jest.MockedFunction<
         (query?: FilterQueryParameters) => Observable<ClassifierIndexResponse>
@@ -58,10 +61,11 @@ describe('CatalogueSearchComponent', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(CatalogueSearchComponent, {
-      declarations: [
+      imports: [
         CatalogueSearchFormComponent,
         CatalogueSearchAdvancedFormComponent,
         CatalogueSearchProfileFilterListComponent,
@@ -196,8 +200,8 @@ describe('CatalogueSearchComponent', () => {
         value
       });
 
-      const expectedMdBase64 =
-        'eyJ0ZXN0Lm5hbWVzcGFjZXxUZXN0UHJvZmlsZXwxLjAuMCI6eyJ0ZXN0S2V5IjoidGVzdFZhbHVlIn19';
+      const expectedMdBase64
+        = 'eyJ0ZXN0Lm5hbWVzcGFjZXxUZXN0UHJvZmlsZXwxLjAuMCI6eyJ0ZXN0S2V5IjoidGVzdFZhbHVlIn19';
 
       harness.component.search();
 

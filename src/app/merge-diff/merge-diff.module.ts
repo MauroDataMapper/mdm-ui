@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,22 +31,20 @@ import { NumberConflictEditorComponent } from './conflict-editor/number-conflict
 import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
-  declarations: [
-    MergeDiffContainerComponent,
-    MergeItemSelectorComponent,
-    MergeComparisonComponent,
-    MergeFilterPipe,
-    ConflictEditorModalComponent,
-    StringConflictEditorComponent,
-    NumberConflictEditorComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    CatalogueModule,
-    ContentModule
-  ],
-  exports: [MergeDiffContainerComponent]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        CatalogueModule,
+        ContentModule,
+        MergeDiffContainerComponent,
+        MergeItemSelectorComponent,
+        MergeComparisonComponent,
+        MergeFilterPipe,
+        ConflictEditorModalComponent,
+        StringConflictEditorComponent,
+        NumberConflictEditorComponent
+    ],
+    exports: [MergeDiffContainerComponent]
 })
 export class MergeDiffModule {}

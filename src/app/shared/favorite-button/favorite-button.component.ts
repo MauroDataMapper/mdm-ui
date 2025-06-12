@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,16 @@ import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { BroadcastService, FavouriteHandlerService, SecurityHandlerService } from '@mdm/services';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-favorite-button',
-  templateUrl: './favorite-button.component.html',
-  styleUrls: ['./favorite-button.component.scss']
+    selector: 'mdm-favorite-button',
+    templateUrl: './favorite-button.component.html',
+    styleUrls: ['./favorite-button.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, NgClass, ExtendedModule]
 })
 export class FavoriteButtonComponent implements OnInit, OnDestroy {
   @Input() catalogueItem: CatalogueItem;
@@ -57,7 +62,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         filter(data => data.element.id === this.catalogueItem.id)
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.isFavorite = data.name === 'add';
       });
   }
@@ -76,5 +81,4 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
       this.isFavorite = this.favorites.isAdded(this.catalogueItem);
     }
   }
-
 }

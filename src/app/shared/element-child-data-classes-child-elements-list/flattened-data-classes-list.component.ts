@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import {
@@ -48,11 +48,24 @@ import {
   DataModel,
   MdmIndexBody
 } from '@maurodatamapper/mdm-resources';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { CdkDrag } from '@angular/cdk/drag-drop';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { NgIf, NgClass } from '@angular/common';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-flattened-data-classes-list',
-  templateUrl: './flattened-data-classes-list.component.html',
-  styleUrls: ['./flattened-data-classes-list.component.scss']
+    selector: 'mdm-flattened-data-classes-list',
+    templateUrl: './flattened-data-classes-list.component.html',
+    styleUrls: ['./flattened-data-classes-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, NgIf, MoreDescriptionComponent, AllLinksInPagedListComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent]
 })
 export class FlattenedDataClassesComponent
   implements AfterViewInit, OnInit, OnDestroy {
@@ -67,6 +80,7 @@ export class FlattenedDataClassesComponent
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   total: number;
@@ -78,7 +92,7 @@ export class FlattenedDataClassesComponent
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
   filterSubject = new Subject<any>();
-  filter: {};
+  filter: object;
 
   /**
    * Signal to attach to subscriptions to trigger when they should be unsubscribed.
@@ -108,7 +122,7 @@ export class FlattenedDataClassesComponent
     // Set a debounce time so that HTTP requests are not constantly happening on each filter key press
     this.filterSubject
       .pipe(takeUntil(this.unsubscribe$), debounceTime(300))
-      .subscribe((event) => this.filterEvent.emit(event));
+      .subscribe(event => this.filterEvent.emit(event));
 
     merge(this.paginator.page, this.filterEvent, this.sort.sortChange)
       .pipe(
@@ -163,7 +177,7 @@ export class FlattenedDataClassesComponent
   flattenedElementsFetch(
     pageSize?: number,
     pageIndex?: number,
-    filters?: {},
+    filters?: object,
     sortBy?: string,
     sortType?: SortDirection
   ): Observable<any> {
@@ -186,7 +200,7 @@ export class FlattenedDataClassesComponent
                 const updatedDataElements = dataElements.body.items.map(
                   (de) => {
                     const dataClass = dataClasses.body.items.find(
-                      (dc) => dc.id === de.dataClass
+                      dc => dc.id === de.dataClass
                     );
                     if (dataClass) {
                       de.dataClassObject = dataClass;

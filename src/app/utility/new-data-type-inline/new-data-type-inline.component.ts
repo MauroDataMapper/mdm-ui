@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   CatalogueItemDomainType,
@@ -39,11 +39,26 @@ import {
   Terminology,
   TerminologyIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { ElementLabelComponent } from '../../shared/element-label/element-label.component';
+import { McSelectComponent } from '../mc-select/mc-select.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { ModelPathComponent } from '../model-path/model-path.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-inline',
-  templateUrl: './new-data-type-inline.component.html',
-  styleUrls: ['./new-data-type-inline.component.sass']
+    selector: 'mdm-data-type-inline',
+    templateUrl: './new-data-type-inline.component.html',
+    styleUrls: ['./new-data-type-inline.component.sass'],
+    standalone: true,
+    imports: [FormsModule, NgIf, ModelPathComponent, MatFormField, MatSelect, NgFor, MatOption, McSelectComponent, ElementLabelComponent, ModelSelectorTreeComponent, McEnumerationListWithCategoryComponent, MatSlideToggle, MatInput, ContentEditorComponent, ElementClassificationsComponent]
 })
 export class NewDataTypeInlineComponent
   implements OnInit, AfterViewInit, OnDestroy {
@@ -117,20 +132,22 @@ export class NewDataTypeInlineComponent
 
   onTypeSelect() {
     if (
-      this.model.domainType !== CatalogueItemDomainType.EnumerationType &&
-      this.model.enumerationValues &&
-      this.model.enumerationValues.length > 0
+      this.model.domainType !== CatalogueItemDomainType.EnumerationType
+      && this.model.enumerationValues
+      && this.model.enumerationValues.length > 0
     ) {
       this.model.enumerationValues = [];
-    } else if (
-      this.model.domainType !== CatalogueItemDomainType.ReferenceType &&
-      this.model.referenceClass
+    }
+ else if (
+      this.model.domainType !== CatalogueItemDomainType.ReferenceType
+      && this.model.referenceClass
     ) {
       this.model.referenceClass = null;
     }
     this.advanced = false;
     this.validate();
   }
+
   validate(newValue?) {
     let isValid = true;
     if (newValue !== undefined) {
@@ -139,46 +156,46 @@ export class NewDataTypeInlineComponent
     }
 
     if (
-      (!this.model.label || this.model.label.trim().length === 0) &&
-      (this.model.domainType === CatalogueItemDomainType.PrimitiveType ||
-        this.model.domainType === CatalogueItemDomainType.EnumerationType)
+      (!this.model.label || this.model.label.trim().length === 0)
+      && (this.model.domainType === CatalogueItemDomainType.PrimitiveType
+        || this.model.domainType === CatalogueItemDomainType.EnumerationType)
     ) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
     if (
-      this.model.domainType === CatalogueItemDomainType.EnumerationType &&
-      (!this.model.enumerationValues ||
-        this.model.enumerationValues.length === 0)
+      this.model.domainType === CatalogueItemDomainType.EnumerationType
+      && (!this.model.enumerationValues
+        || this.model.enumerationValues.length === 0)
     ) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
     if (
-      this.model.domainType === CatalogueItemDomainType.ReferenceType &&
-      (!this.model.referenceClass || this.model.referenceClass.id === '')
+      this.model.domainType === CatalogueItemDomainType.ReferenceType
+      && (!this.model.referenceClass || this.model.referenceClass.id === '')
     ) {
       isValid = false;
     }
     // Check if for TerminologyType, the terminology is selected
     if (
-      this.model.domainType === CatalogueItemDomainType.TerminologyType &&
-      !this.model.modelResourceId
+      this.model.domainType === CatalogueItemDomainType.TerminologyType
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
 
     if (
-      this.model.domainType === CatalogueItemDomainType.CodeSet &&
-      !this.model.modelResourceId
+      this.model.domainType === CatalogueItemDomainType.CodeSet
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
 
     if (
-      this.model.domainType ===
-        CatalogueItemDomainType.ReferenceDataModelType &&
-      !this.model.modelResourceId
+      this.model.domainType
+      === CatalogueItemDomainType.ReferenceDataModelType
+      && !this.model.modelResourceId
     ) {
       isValid = false;
     }
@@ -190,7 +207,8 @@ export class NewDataTypeInlineComponent
   onDataClassSelect = (dataClasses) => {
     if (dataClasses && dataClasses.length > 0) {
       this.model.referenceClass = dataClasses[0];
-    } else {
+    }
+ else {
       this.model.referenceClass = null;
     }
 
@@ -258,6 +276,6 @@ export class NewDataTypeInlineComponent
   };
 
   ngOnDestroy(): void {
-    this.formDataTypeChangesSubscription.unsubscribe();
+    this.formDataTypeChangesSubscription?.unsubscribe();
   }
 }

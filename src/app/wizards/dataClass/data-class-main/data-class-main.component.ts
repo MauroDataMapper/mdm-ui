@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,44 +33,51 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { CatalogueItemDomainType, DataClass, DataClassDetailResponse, DataModel } from '@maurodatamapper/mdm-resources';
 import { Observable } from 'rxjs';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
-type Classifier=
+type Classifier =
   {
-    [p:string] : string | boolean | number | Date;
-    id: string;
-    label: string;
-    description: string;
-    readableByEveryone: boolean;
-    readableByAuthenticatedUsers: boolean;
+    [p: string]: string | boolean | number | Date
+    id: string
+    label: string
+    description: string
+    readableByEveryone: boolean
+    readableByAuthenticatedUsers: boolean
   };
 
-type Metadata=
+type Metadata =
   {
-    [p:string] : string | boolean | number | Date;
-    id: string;
-    key: string;
-    value: string;
-    namespace: string;
-    lastUpdated?: string;
+    [p: string]: string | boolean | number | Date
+    id: string
+    key: string
+    value: string
+    namespace: string
+    lastUpdated?: string
   };
 
-type Model=
+type Model =
   {
-    metadata: Metadata[];
-    classifiers: Classifier[];
-    parent: DataModel;
-    createType: CreateType;
-    copyFromDataModel: Array<DataModel>;
-    selectedDataClasses: DataClass[];
-    selectedDataClassesMap: {[p:string]:DataClass};
-    label?: string;
-    description?: string;
+    metadata: Metadata[]
+    classifiers: Classifier[]
+    parent: DataModel
+    createType: CreateType
+    copyFromDataModel: Array<DataModel>
+    selectedDataClasses: DataClass[]
+    selectedDataClassesMap: { [p: string]: DataClass }
+    label?: string
+    description?: string
   };
 
 @Component({
-  selector: 'mdm-data-class-main',
-  templateUrl: './data-class-main.component.html',
-  styleUrls: ['./data-class-main.component.sass']
+    selector: 'mdm-data-class-main',
+    templateUrl: './data-class-main.component.html',
+    styleUrls: ['./data-class-main.component.sass'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class DataClassMainComponent implements AfterViewInit {
   steps: Step[] = [];
@@ -79,7 +86,7 @@ export class DataClassMainComponent implements AfterViewInit {
   grandParentDataClassId: string;
   parentDataClassId: string;
 
-  model:Model = {
+  model: Model = {
     metadata: [],
     classifiers: [],
     parent: {} as DataModel,
@@ -88,6 +95,7 @@ export class DataClassMainComponent implements AfterViewInit {
     selectedDataClasses: [],
     selectedDataClassesMap: {}
   };
+
   constructor(
     private title: Title,
     private stateService: StateService,
@@ -143,7 +151,8 @@ export class DataClassMainComponent implements AfterViewInit {
           this.steps.push(step2);
           this.changeRef.detectChanges();
         });
-    } else {
+    }
+ else {
       this.resources.dataModel
         .get(this.parentDataModelId)
         .toPromise()
@@ -165,7 +174,8 @@ export class DataClassMainComponent implements AfterViewInit {
   save = () => {
     if (this.model.createType === 'new') {
       this.saveNewDataClass();
-    } else {
+    }
+ else {
       this.saveCopiedDataClasses();
     }
   };
@@ -190,7 +200,8 @@ export class DataClassMainComponent implements AfterViewInit {
           }
           step.active = true;
         }
-      } else {
+      }
+ else {
         step.active = false;
       }
     }
@@ -229,7 +240,8 @@ export class DataClassMainComponent implements AfterViewInit {
         this.model.parent.id,
         resource
       );
-    } else {
+    }
+ else {
       deferred = this.resources.dataClass.save(this.model.parent.id, resource);
     }
 

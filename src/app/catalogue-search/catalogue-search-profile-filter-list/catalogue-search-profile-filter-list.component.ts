@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import {
   EventEmitter,
   Input
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   ProfileDefinition,
   ProfileDefinitionResponse,
@@ -34,11 +34,20 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatOptgroup } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-catalogue-search-profile-filter-list',
-  templateUrl: './catalogue-search-profile-filter-list.component.html',
-  styleUrls: ['./catalogue-search-profile-filter-list.component.scss']
+    selector: 'mdm-catalogue-search-profile-filter-list',
+    templateUrl: './catalogue-search-profile-filter-list.component.html',
+    styleUrls: ['./catalogue-search-profile-filter-list.component.scss'],
+    standalone: true,
+    imports: [MatButton, NgIf, FormsModule, ReactiveFormsModule, NgFor, MatFormField, MatLabel, MatSelect, MatOption, MatError, MatOptgroup, MatInput, MatTooltip]
 })
 export class CatalogueSearchProfileFilterListComponent
   implements OnInit, OnDestroy {
@@ -115,9 +124,9 @@ export class CatalogueSearchProfileFilterListComponent
     return this.filters.controls.map(
       (
         row: FormGroup<{
-          provider: FormControl<ProfileSummary>;
-          key: FormControl<ProfileField>;
-          value: FormControl<string>;
+          provider: FormControl<ProfileSummary>
+          key: FormControl<ProfileField>
+          value: FormControl<string>
         }>
       ) => {
         return {
@@ -144,14 +153,12 @@ export class CatalogueSearchProfileFilterListComponent
 
   compareKeys(a: ProfileSummary, b: ProfileSummary) {
     return (
-      a.metadataPropertyName === b.metadataPropertyName &&
-      a.description === b.description
+      a.metadataPropertyName === b.metadataPropertyName
+      && a.description === b.description
     );
   }
 
   private createFilter(profileFilter?: CatalogueSearchProfileFilter) {
-    /* eslint-disable @typescript-eslint/unbound-method */
-
     const filter = new FormGroup({
       // Important fields required for search filters
       provider: new FormControl<ProfileSummary>(
@@ -168,8 +175,6 @@ export class CatalogueSearchProfileFilterListComponent
       definition: new FormControl<ProfileDefinition>(null)
     });
 
-    /* eslint-enable @typescript-eslint/unbound-method */
-
     // Track when the "provider" field changes, then fetch that profile definition
     // to be able to select from the list of known fields. Set the definition to a
     // special "backing" field for this form group, this will be used to render the key
@@ -181,12 +186,12 @@ export class CatalogueSearchProfileFilterListComponent
     filter.controls.provider.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),
-        switchMap((provider) =>
+        switchMap(provider =>
           this.resources.profile.definition(provider.namespace, provider.name)
         ),
         map((response: ProfileDefinitionResponse) => response.body)
       )
-      .subscribe((definition) =>
+      .subscribe(definition =>
         filter.controls.definition.setValue(definition)
       );
 

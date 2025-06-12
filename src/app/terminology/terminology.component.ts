@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import {
   MessageService,
   SecurityHandlerService
 } from '@mdm/services';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ModelUpdatePayload,
@@ -46,11 +46,29 @@ import { TabCollection } from '@mdm/model/ui.model';
 import { Access } from '@mdm/model/access';
 
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { TermRelationshipTypeListComponent } from './term-relationship-type-list/term-relationship-type-list.component';
+import { TermListComponent } from './term-list/term-list.component';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-terminology',
-  templateUrl: './terminology.component.html',
-  styleUrls: ['./terminology.component.sass']
+    selector: 'mdm-terminology',
+    templateUrl: './terminology.component.html',
+    styleUrls: ['./terminology.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, SkeletonBadgeComponent, TermListComponent, TermRelationshipTypeListComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class TerminologyComponent
   implements OnInit, OnDestroy, AfterViewChecked {
@@ -83,6 +101,7 @@ export class TerminologyComponent
     'annotations',
     'history'
   ]);
+
   isLoadingTerms = true;
   termsItemCount = 0;
   isLoadingRelationshipTypes = true;
@@ -101,7 +120,7 @@ export class TerminologyComponent
   ) {}
 
   ngOnInit() {
-    const id:string = this.uiRouterGlobals.params.id;
+    const id: string = this.uiRouterGlobals.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -122,8 +141,8 @@ export class TerminologyComponent
 
         this.access = this.securityHandler.elementAccess(data);
         this.showEdit = this.access.showEdit;
-        this.showDelete =
-          this.access.showPermanentDelete || this.access.showSoftDelete;
+        this.showDelete
+          = this.access.showPermanentDelete || this.access.showSoftDelete;
         this.terminology = data;
         this.editingService.setTabGroupClickEvent(this.tabGroup);
         this.terminology.classifiers = this.terminology.classifiers || [];
@@ -132,8 +151,8 @@ export class TerminologyComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -178,7 +197,7 @@ export class TerminologyComponent
 
   // This fetch function needs to be a property-based function because it is passed as a property to the
   // mdm-select component for searching for terms
-  fetch = (text:string, loadAll, offset:number, limit:number) => {
+  fetch = (text: string, loadAll, offset: number, limit: number) => {
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
     this.pagination = {

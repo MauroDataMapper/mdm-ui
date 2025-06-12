@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,6 +36,10 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { BehaviorSubject } from 'rxjs';
 import { CreateTermRelationshipDialogComponent } from '../create-term-relationship-dialog/create-term-relationship-dialog.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 class CreateTermRelationshipForm {
   targetTerm: TermDetail;
@@ -48,9 +52,11 @@ class CreateTermRelationshipForm {
 }
 
 @Component({
-  selector: 'mdm-term-relationship-list',
-  templateUrl: './term-relationship-list.component.html',
-  styleUrls: ['./term-relationship-list.component.scss']
+    selector: 'mdm-term-relationship-list',
+    templateUrl: './term-relationship-list.component.html',
+    styleUrls: ['./term-relationship-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, NgIf, NgFor, MatIconButton, MatTooltip]
 })
 export class TermRelationshipListComponent implements OnInit, OnChanges {
   @Input() term: TermDetail;
@@ -75,7 +81,6 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
     this._relationships.next(relationships);
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   get relationshipTypes() {
     return this._relationshipTypes.value;
   }
@@ -102,15 +107,15 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
         .subscribe(
           (data) => {
             this.relationships = data.body.items.filter(
-              (i) =>
-                i.sourceTerm.id === this.term.id &&
-                i.targetTerm.domainType !== CatalogueItemDomainType.Terminology
+              i =>
+                i.sourceTerm.id === this.term.id
+                && i.targetTerm.domainType !== CatalogueItemDomainType.Terminology
             );
             const relationshipTypes = [];
             this.relationships.forEach((r) => {
               if (
                 !relationshipTypes
-                  .map((rt) => rt.id)
+                  .map(rt => rt.id)
                   .includes(r.relationshipType.id)
               ) {
                 relationshipTypes.push(r.relationshipType);
@@ -120,14 +125,14 @@ export class TermRelationshipListComponent implements OnInit, OnChanges {
             this.totalItemCount = this.relationships.length;
             this.totalCount.emit(this.totalItemCount);
           },
-          (error) => console.error(error)
+          error => console.error(error)
         );
     }
   }
 
   filterByRelationshipType(relationshipType: TermRelationshipType) {
     return this.relationships
-      .filter((r) => r.relationshipType.id === relationshipType.id)
+      .filter(r => r.relationshipType.id === relationshipType.id)
       .sort((first, second) => {
         if (first.targetTerm.code < second.targetTerm.code) {
           return -1;

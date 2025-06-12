@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,10 +29,6 @@ describe('MauroItemTreeComponent', () => {
   beforeEach(async () => {
     harness = await setupTestModuleForComponent(MauroItemTreeComponent, {
       providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: jest.fn()
-        },
         {
           provide: ModelTreeService,
           useValue: jest.fn()

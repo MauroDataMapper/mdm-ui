@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,22 +22,22 @@ export enum ApiPropertyEditType {
   Value,
   Text,
   Html,
-  Boolean, // eslint-disable-line id-blacklist
+  Boolean,
   Image
 }
 
 export interface ApiPropertyMetadata {
-  key: string;
-  category: string;
-  editType: ApiPropertyEditType;
-  publiclyVisible?: boolean;
-  isSystem: boolean;
-  requiresReload?: boolean;
+  key: string
+  category: string
+  editType: ApiPropertyEditType
+  publiclyVisible?: boolean
+  isSystem: boolean
+  requiresReload?: boolean
 }
 
 export interface ApiPropertyEditableState {
-  metadata: ApiPropertyMetadata;
-  original?: ApiProperty;
+  metadata: ApiPropertyMetadata
+  original?: ApiProperty
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MergeItemValueType } from '@mdm/merge-diff/types/merge-item-type';
 
 export interface ConflictEditorModalData {
-  source: Branchable;
-  target: Branchable;
-  item: MergeDiffItem;
-  valueType: MergeItemValueType;
+  source: Branchable
+  target: Branchable
+  item: MergeDiffItem
+  valueType: MergeItemValueType
 }
 
 export interface ConflictEditorModalResult {
-  status: ModalDialogStatus;
-  resolvedContent?: string;
+  status: ModalDialogStatus
+  resolvedContent?: string
 }

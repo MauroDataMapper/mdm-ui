@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,13 +35,24 @@ import { GridService } from '@mdm/services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { NgIf } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-group-member-table',
-  templateUrl: './group-member-table.component.html',
-  styleUrls: ['./group-member-table.component.scss']
+    selector: 'mdm-group-member-table',
+    templateUrl: './group-member-table.component.html',
+    styleUrls: ['./group-member-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, UIRouterModule, McSelectComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatCard, MatProgressSpinner, MdmPaginatorComponent_1]
 })
 export class GroupMemberTableComponent implements AfterViewInit {
   @Input() parent: any;
@@ -50,6 +61,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   ROLES = this.roles.map;
@@ -60,7 +72,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
   isLoadingResults: boolean;
 
   records: any[] = [];
-  filter: { [p: string]: any } = {};
+  filter: Record<string, any> = {};
   // applyFilter : any;
 
   constructor(
@@ -117,7 +129,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: { [key: string]: any }
+    filters?: Record<string, any>
   ) => {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -200,7 +212,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
         () => {
           this.records[$index] = record;
           this.messageHandler.showSuccess('User added successfully.');
-          this.groupMembersFetch().subscribe((data:any) => {
+          this.groupMembersFetch().subscribe((data: any) => {
             this.records.push(data.body.items[data.body.count - 1]);
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
@@ -221,7 +233,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
     record.deletePending = true;
   };
 
-  askForDelete = (record: { firstName: string; lastName: string }) => {
+  askForDelete = (record: { firstName: string, lastName: string }) => {
     this.dialog
       .openConfirmationAsync({
         data: {
@@ -240,7 +252,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
       .subscribe(
         () => {
           this.messageHandler.showSuccess('User removed successfully.');
-          this.groupMembersFetch().subscribe((data:any) => {
+          this.groupMembersFetch().subscribe((data: any) => {
             this.totalItemCount = data.body.count;
             this.records = data.body.items;
             this.table.renderRows();

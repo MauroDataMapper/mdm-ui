@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,11 +31,25 @@ import {
 } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { MatButton } from '@angular/material/button';
+import { FoldersTreeComponent } from '@mdm/folders-tree/folders-tree.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram-popup',
-  templateUrl: './diagram-popup.component.html',
+    selector: 'mdm-diagram-popup',
+    templateUrl: './diagram-popup.component.html',
+    standalone: true,
+    imports: [
+        DiagramToolbarComponent,
+        MatSidenavContainer,
+        MatSidenav,
+        NgIf,
+        FoldersTreeComponent,
+        MatButton,
+        MatSidenavContent,
+        DiagramComponent,
+    ],
 })
 export class DiagramPopupComponent implements OnInit {
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
@@ -43,7 +57,7 @@ export class DiagramPopupComponent implements OnInit {
   @ViewChild(MatSidenav) drawer: MatSidenav;
 
   node: any;
-  filterList: Array<any> = [];
+  filterList: any[] = [];
 
   constructor(
     protected resourcesService: MdmResourcesService,
@@ -67,7 +81,7 @@ export class DiagramPopupComponent implements OnInit {
     // this.diagramComponent.filter(this.data.diagramComponent.parent)
   }
 
-  onNodeChecked(node, parent, checkedList: {}): void {
+  onNodeChecked(node, parent, checkedList: object): void {
     this.filterList = Object.keys(checkedList);
   }
 

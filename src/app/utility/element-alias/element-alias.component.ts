@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { DataClassDetail } from '@maurodatamapper/mdm-resources';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-alias',
-  templateUrl: './element-alias.component.html',
-  styleUrls: ['./element-alias.component.sass']
+    selector: 'mdm-element-alias',
+    templateUrl: './element-alias.component.html',
+    styleUrls: ['./element-alias.component.sass'],
+    standalone: true,
+    imports: [NgFor, NgIf, FormsModule, MatButton]
 })
 export class ElementAliasComponent {
   @Input() aliases: any[] = [];
@@ -32,7 +37,6 @@ export class ElementAliasComponent {
   typedAlias: string;
 
   constructor() { }
-
 
   remove(element) {
     const index = this.aliases.findIndex(alias => alias === element);
@@ -51,7 +55,8 @@ export class ElementAliasComponent {
           return;
         }
       }
-    } else {
+    }
+ else {
       this.aliases = [];
     }
     this.aliases.push(this.typedAlias);

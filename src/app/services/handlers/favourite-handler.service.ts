@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ export class FavouriteHandlerService {
 
   remove(element: CatalogueItem) {
     const favorites = this.get();
-    const index = favorites.findIndex((favorite) => favorite.id === element.id);
+    const index = favorites.findIndex(favorite => favorite.id === element.id);
     if (index === -1) {
       return;
     }
@@ -116,7 +116,8 @@ export class FavouriteHandlerService {
     if (!fvt) {
       this.add(element);
       processFinish = true;
-    } else {
+    }
+ else {
       this.remove(element);
       processFinish = true;
     }

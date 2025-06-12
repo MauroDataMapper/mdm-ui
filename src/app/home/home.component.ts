@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { SecurityHandlerService } from '@mdm/services';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/forgot-password-modal.component';
-import { BroadcastService } from '../services/broadcast.service';
+import { BroadcastService } from '@mdm/services';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -31,6 +31,11 @@ import {
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { Subject } from 'rxjs';
+import { SafePipe } from '../content/safe.pipe';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgIf } from '@angular/common';
 
 const defaultHtmlContent = [
   {
@@ -89,12 +94,13 @@ const defaultHtmlContent = [
 ];
 
 @Component({
-  selector: 'mdm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+    selector: 'mdm-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgxSkeletonLoaderModule, FlexModule, MatButton, MatAnchor, SafePipe]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  profilePictureReloadIndex = 0;
   profile: any;
   isLoggedIn = false;
   isLoadingContent = false;
@@ -233,8 +239,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
     return (
-      properties?.find((p) => p.key === key)?.value ??
-      defaultHtmlContent.find((p) => p.key === key).value
+      properties?.find(p => p.key === key)?.value
+      ?? defaultHtmlContent.find(p => p.key === key).value
     );
   }
 }

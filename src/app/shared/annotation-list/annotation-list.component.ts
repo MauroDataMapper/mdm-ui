@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { GridService } from '@mdm/services';
@@ -38,11 +38,23 @@ import {
   Securable
 } from '@maurodatamapper/mdm-resources';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass, DatePipe } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-annotation-list',
-  templateUrl: './annotation-list.component.html',
-  styleUrls: ['./annotation-list.component.sass']
+    selector: 'mdm-annotation-list',
+    templateUrl: './annotation-list.component.html',
+    styleUrls: ['./annotation-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, ContentEditorComponent, NgFor, MatFormField, MatLabel, MatInput, FormsModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent, DatePipe]
 })
 export class AnnotationListComponent implements AfterViewInit {
   @Input() parent: CatalogueItem & Securable;
@@ -57,7 +69,7 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   reloadEvent = new EventEmitter<void>();
-  records:  EditableObject[];
+  records: EditableObject[];
   canAddAnnotation = false;
 
   constructor(
@@ -219,7 +231,8 @@ export class AnnotationListComponent implements AfterViewInit {
   showChildren(annotation: any) {
     if (annotation.show) {
       annotation.show = false;
-    } else {
+    }
+ else {
       annotation.newChildText = '';
       annotation.show = true;
     }

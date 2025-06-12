@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,14 +28,21 @@ import {
 } from '@mdm/model/api-properties';
 import { catchError, map } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
-import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
+import { ApiPropertyTableViewChange, ApiPropertyTableComponent } from '../api-property-table/api-property-table.component';
 import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss']
+    selector: 'mdm-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, ApiPropertyTableComponent, FlexModule, MatButton, NgIf, MatProgressSpinner]
 })
 export class ConfigurationComponent implements OnInit {
   activeTab: any;
@@ -80,7 +87,7 @@ export class ConfigurationComponent implements OnInit {
       .pipe(
         map((response: ApiPropertyIndexResponse) => {
           return response.body.items.map<ApiPropertyEditableState>((item) => {
-            let metadata = propertyMetadata.find((m) => m.key === item.key);
+            let metadata = propertyMetadata.find(m => m.key === item.key);
             if (!metadata) {
               metadata = {
                 key: item.key,
@@ -108,7 +115,7 @@ export class ConfigurationComponent implements OnInit {
       .subscribe((data: ApiPropertyEditableState[]) => {
         if (category) {
           this.apiProperties = data.filter(
-            (p) => p.metadata.category === category
+            p => p.metadata.category === category
           );
           return;
         }
@@ -116,10 +123,10 @@ export class ConfigurationComponent implements OnInit {
         this.apiProperties = data;
 
         const backendCategories = data
-          .map((prop) => prop.metadata.category)
-          .filter((cat) => cat && cat.length > 0);
+          .map(prop => prop.metadata.category)
+          .filter(cat => cat && cat.length > 0);
 
-        const knownCategories = propertyMetadata.map((prop) => prop.category);
+        const knownCategories = propertyMetadata.map(prop => prop.category);
 
         this.apiPropertyCategories = [
           ...new Set(backendCategories.concat(knownCategories).sort())
@@ -175,7 +182,8 @@ export class ConfigurationComponent implements OnInit {
           if (error.error && error.error.timeTaken) {
             this.indexingTime = `in ${error.error.timeTaken}`;
           }
-        } else {
+        }
+ else {
           this.indexingStatus = 'error';
         }
       }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,19 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { environment } from '@env/environment';
 import { Title } from '@angular/platform-browser';
 import { StateHandlerService } from '@mdm/services';
+import { MatButton } from '@angular/material/button';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.sass']
+    selector: 'mdm-change-password',
+    templateUrl: './change-password.component.html',
+    styleUrls: ['./change-password.component.sass'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton]
 })
 export class ChangePasswordComponent implements OnInit {
   @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
@@ -72,7 +80,7 @@ export class ChangePasswordComponent implements OnInit {
     this.resourcesService.catalogueUser.changePassword(this.currentUser.id as string, body).subscribe(() => {
         this.messageHandler.showSuccess('Password updated successfully.');
         this.stateHandler.Go('appContainer.userArea.profile');
-      }, error => {
+      }, (error) => {
         this.message = `Error : ${error.error.errors[0].message}`;
     });
   };

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
@@ -28,6 +28,11 @@ import { MessageHandlerService } from '@mdm/services';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export class CreateTermForm {
   terminology: TerminologyDetail;
@@ -41,13 +46,15 @@ export class CreateTermForm {
 }
 
 @Component({
-  selector: 'mdm-create-term-dialog',
-  templateUrl: 'create-term-dialog.component.html',
-  styleUrls: ['create-term-dialog.component.scss']
+    selector: 'mdm-create-term-dialog',
+    templateUrl: 'create-term-dialog.component.html',
+    styleUrls: ['create-term-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, ContentEditorComponent, MatButton]
 })
 export class CreateTermDialogComponent implements OnInit {
   form = new FormGroup({
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+
     code: new FormControl('', Validators.required),
     definition: new FormControl(''),
     description: new FormControl('')
@@ -91,8 +98,8 @@ export class CreateTermDialogComponent implements OnInit {
     }
 
     // If no definition provided, default to using the code
-    const definition =
-      this.definition.value && this.definition.value.length > 0
+    const definition
+      = this.definition.value && this.definition.value.length > 0
         ? this.definition.value
         : this.code.value;
 
@@ -114,7 +121,8 @@ export class CreateTermDialogComponent implements OnInit {
       .subscribe((response: HttpResponse<TermDetail>) => {
         if (response.ok) {
           this.dialogRef.close(response.body);
-        } else {
+        }
+ else {
           /* NOTE: Generic error message */
           this.messageHandler.showWarning('Unable to create new term');
         }

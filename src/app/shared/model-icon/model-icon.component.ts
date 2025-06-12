@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, OnInit } from '@angular/core';
-import {  ModelDomainType } from '@maurodatamapper/mdm-resources';
+import { ModelDomainType } from '@maurodatamapper/mdm-resources';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-model-icon',
-  templateUrl: './model-icon.component.html',
-  styleUrls: ['./model-icon.component.scss']
+    selector: 'mdm-model-icon',
+    templateUrl: './model-icon.component.html',
+    styleUrls: ['./model-icon.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgClass, ExtendedModule]
 })
 export class ModelIconComponent implements OnInit {
   @Input() domainType: ModelDomainType;
@@ -36,7 +41,8 @@ export class ModelIconComponent implements OnInit {
       case ModelDomainType.DataModels:
         if (this.isDataAsset) {
           this.style = 'fa-database';
-        } else {
+        }
+ else {
           this.style = 'fa-file-alt';
         }
         break;

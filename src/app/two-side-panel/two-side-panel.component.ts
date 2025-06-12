@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,13 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, HostListener, OnInit } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { AngularSplitModule } from 'angular-split';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 const mobileWidth = 768;
 
 @Component({
-  selector: 'mdm-two-side-panel',
-  templateUrl: './two-side-panel.component.html',
-  styleUrls: ['./two-side-panel.component.scss']
+    selector: 'mdm-two-side-panel',
+    templateUrl: './two-side-panel.component.html',
+    styleUrls: ['./two-side-panel.component.scss'],
+    standalone: true,
+    imports: [MatButton, NgIf, AngularSplitModule, UIRouterModule]
 })
 export class TwoSidePanelComponent implements OnInit {
   isOpen = true;

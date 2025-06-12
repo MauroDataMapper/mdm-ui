@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,12 +31,22 @@ import {
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MultipleTermsSelectorComponent } from '../../../utility/multiple-terms-selector/multiple-terms-selector.component';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
 
 @Component({
-  selector: 'mdm-code-set-main',
-  templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss']
+    selector: 'mdm-code-set-main',
+    templateUrl: './code-set-main.component.html',
+    styleUrls: ['./code-set-main.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, ElementLinkComponent, MatFormField, MatLabel, MatInput, NgIf, MatError, ContentEditorComponent, ElementClassificationsComponent, MultipleTermsSelectorComponent, MatButton]
 })
 export class CodeSetMainComponent implements OnInit {
   parentFolderId: Uuid;
@@ -44,13 +54,13 @@ export class CodeSetMainComponent implements OnInit {
   parentFolder: Container;
   savingInProgress = false;
   setupForm = new FormGroup({
-    label: new FormControl('', Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    author: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
-    organisation: new FormControl(''), // eslint-disable-line @typescript-eslint/unbound-method
+    label: new FormControl('', Validators.required),
+    author: new FormControl(''),
+    organisation: new FormControl(''),
     description: new FormControl(''),
     classifiers: new FormControl([]),
-    terms: new FormControl([]), // eslint-disable-line @typescript-eslint/unbound-method
-    terminology: new FormControl({ id: ''}),
+    terms: new FormControl([]),
+    terminology: new FormControl({ id: '' }),
     addAllTerms: new FormControl(false)
   });
 
@@ -142,7 +152,7 @@ export class CodeSetMainComponent implements OnInit {
       classifiers: this.classifiers.value,
       folder: this.parentFolderId,
       terms: this.terms.value,
-      terminologies: this.addAllTerms? [this.terminology.value] : null
+      terminologies: this.addAllTerms ? [this.terminology.value] : null
     };
 
     this.resources.codeSet

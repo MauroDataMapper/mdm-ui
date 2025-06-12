@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,16 +31,25 @@ import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataElement } from '@maurodatamapper/mdm-resources';
 import { SortDirection } from '@angular/material/sort';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { NgIf, NgClass } from '@angular/common';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
 
 @Component({
-  selector: 'mdm-element-child-data-elements-list',
-  templateUrl: './element-child-data-elements-list.component.html',
-  styleUrls: ['./element-child-data-elements-list.component.scss']
+    selector: 'mdm-element-child-data-elements-list',
+    templateUrl: './element-child-data-elements-list.component.html',
+    styleUrls: ['./element-child-data-elements-list.component.scss'],
+    standalone: true,
+    imports: [MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, NgIf, MoreDescriptionComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent]
 })
 export class ElementChildDataElementsListComponent implements AfterViewInit {
   @Input() parentDataModel: any;
@@ -59,7 +68,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   isLoadingResults: boolean;
   records: any[];
   totalItemCount = 0;
@@ -74,11 +83,10 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService
   ) { }
 
-
   ngAfterViewInit() {
     if (this.type === 'dynamic') {
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-      this.gridSvc.reloadEvent.subscribe( (this.applyFilter) );
+      this.gridSvc.reloadEvent.subscribe((this.applyFilter));
       merge(this.paginator.page, this.filterEvent, this.gridSvc.reloadEvent).pipe(startWith({}), switchMap(() => {
         this.isLoadingResults = true;
         return this.dataElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
@@ -91,7 +99,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
         this.isLoadingResults = false;
         this.changeRef.detectChanges();
         return [];
-      })).subscribe(data => {
+      })).subscribe((data) => {
         this.records = data;
         this.changeRef.detectChanges();
       });
@@ -103,7 +111,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    const filter: {} = {};
+    const filter: object = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
@@ -115,14 +123,15 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     this.filterEvent.emit(filter);
   };
 
-  dataElementsFetch(pageSize?:number, pageIndex?:number, filters?:{[p: string]: any}) {
+  dataElementsFetch(pageSize?: number, pageIndex?: number, filters?: { [p: string]: any }) {
     const sortBy = 'idx';
-    const sortDirection: SortDirection='asc';
+    const sortDirection: SortDirection = 'asc';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortDirection, filters);
 
     if (this.parentDataModel && this.parentDataClass) {
       return this.resources.dataElement.list(this.parentDataModel.id as string, this.parentDataClass.id as string, options);
-    } else if (this.parentDataModel && this.parentDataType) {
+    }
+ else if (this.parentDataModel && this.parentDataType) {
       return this.resources.dataElement.listWithDataType(this.parentDataModel.id as string, this.parentDataType.id as string, options);
     }
   }
@@ -152,7 +161,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
 
     this.resources.dataElement.update(this.parentDataModel.id as string, item.data.dataClass as string, item.data.id as string, resource).subscribe(() => {
       this.messageHandler.showSuccess('Data Element reorderedsuccessfully.');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Element.', error);
     });
   }

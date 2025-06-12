@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ SPDX-License-Identifier: Apache-2.0
   $warn: map-get($theme, warn);
 
   $infoColor: $defaultInfoColor;
-  $successColor: mat.get-color-from-palette($accent);
+  $successColor: mat.m2-get-color-from-palette($accent);
   $warningColor: $defaultWarningColor;
-  $errorColor: mat.get-color-from-palette($warn);
+  $errorColor: mat.m2-get-color-from-palette($warn);
 
   .mdm-alert {
     &--success {

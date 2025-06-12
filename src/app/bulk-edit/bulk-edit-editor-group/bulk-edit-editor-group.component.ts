@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MauroIdentifier } from '@mdm/mauro/mauro-item.types';
 import { BulkEditContext, BulkEditProfileContext } from '../bulk-edit.types';
+import { BulkEditEditorComponent } from '../bulk-edit-editor/bulk-edit-editor.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-bulk-edit-editor-group',
-  templateUrl: './bulk-edit-editor-group.component.html',
-  styleUrls: ['./bulk-edit-editor-group.component.scss']
+    selector: 'mdm-bulk-edit-editor-group',
+    templateUrl: './bulk-edit-editor-group.component.html',
+    styleUrls: ['./bulk-edit-editor-group.component.scss'],
+    standalone: true,
+    imports: [MatButton, MatTabGroup, NgFor, MatTab, MatTabLabel, NgIf, BulkEditEditorComponent]
 })
 export class BulkEditEditorGroupComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();

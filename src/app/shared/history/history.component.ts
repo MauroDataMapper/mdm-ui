@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,21 +29,29 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass, NgIf, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'mdm-history',
-  templateUrl: './history.component.html',
-  styleUrls: ['./history.component.scss']
+    selector: 'mdm-history',
+    templateUrl: './history.component.html',
+    styleUrls: ['./history.component.scss'],
+    standalone: true,
+    imports: [NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, DatePipe]
 })
 export class HistoryComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @Input() parent: any;
   @Input() parentType: string;
   @Input() parentId: string;
@@ -59,6 +67,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     'title',
     'description'
   ];
+
   totalItemCount = 0;
   parentVal;
   parentTypeVal;
@@ -79,7 +88,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   public getSortedData(
     pageSize?: number,
     pageIndex?: number,
-    filters?: {},
+    filters?: object,
     sortBy?: string,
     sortType?: SortDirection
   ) {
@@ -136,7 +145,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     pageOffset: number,
     sortBy: string,
     sortType: SortDirection,
-    filters?: {}
+    filters?: object
   ): any {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -152,8 +161,9 @@ export class HistoryComponent implements OnInit, AfterViewInit {
         this.parentId,
         options
       );
-    } else
-    if (this.parent?.id){
+    }
+ else
+    if (this.parent?.id) {
       return this.resourcesService.edit.status(
         this.domainType,
         this.parent.id as string,

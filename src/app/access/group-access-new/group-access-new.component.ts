@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
 import {
@@ -48,13 +48,24 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GridService } from '@mdm/services';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-group-access-new',
-  templateUrl: './group-access-new.component.html',
-  styleUrls: ['./group-access-new.component.scss']
+    selector: 'mdm-group-access-new',
+    templateUrl: './group-access-new.component.html',
+    styleUrls: ['./group-access-new.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatOption, NgFor, MatError, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class GroupAccessNewComponent
   implements OnInit, OnDestroy, AfterViewInit {
@@ -74,8 +85,8 @@ export class GroupAccessNewComponent
   state: 'view' | 'add' = 'view';
   dataSource: MatTableDataSource<SecurableResourceGroupRole>;
   formGroup = new FormGroup({
-    userGroup: new FormControl<UserGroup>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    groupRole: new FormControl<GroupRole>(null, Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+    userGroup: new FormControl<UserGroup>(null, Validators.required),
+    groupRole: new FormControl<GroupRole>(null, Validators.required)
   });
 
   private unsubscribe$ = new Subject<void>();
@@ -106,7 +117,7 @@ export class GroupAccessNewComponent
     this.securityHandler
       .isAuthenticated()
       .pipe(
-        filter((authenticated) => authenticated.body.authenticatedSession),
+        filter(authenticated => authenticated.body.authenticatedSession),
         switchMap(() => {
           this.loading = true;
 

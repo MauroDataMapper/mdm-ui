@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   Uuid,
@@ -36,6 +36,13 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { StateParams, UIRouterGlobals } from '@uirouter/angular';
 import { catchError, EMPTY, finalize, Observable } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint, MatError } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -44,9 +51,11 @@ import { catchError, EMPTY, finalize, Observable } from 'rxjs';
  * child components for rendering the different sections of data.
  */
 @Component({
-  selector: 'mdm-copy-dialog',
-  templateUrl: './copy-action.component.html',
-  styleUrls: ['./copy-action.component.scss']
+    selector: 'mdm-copy-dialog',
+    templateUrl: './copy-action.component.html',
+    styleUrls: ['./copy-action.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatError, FoldersTreeComponent, MatProgressBar, MatButton]
 })
 export class CopyActionComponent implements OnInit {
   loaded = false;
@@ -66,6 +75,7 @@ export class CopyActionComponent implements OnInit {
     | 'terminologies'
     | 'dataclasses'
     | 'datamodels' = 'folders';
+
   copying = false;
 
   constructor(
@@ -85,7 +95,7 @@ export class CopyActionComponent implements OnInit {
     this.title.setTitle('Copy Item');
 
     this.setupForm = new FormGroup({
-      label: new FormControl('', Validators.required) // eslint-disable-line @typescript-eslint/unbound-method
+      label: new FormControl('', Validators.required)
     });
 
     const identifier = this.getMauroIdentifier(this.uiRouterGlobals.params);
@@ -164,8 +174,8 @@ export class CopyActionComponent implements OnInit {
     }
 
     if (
-      this.domainType === CatalogueItemDomainType.DataElement &&
-      !this.subTargetDestinationId
+      this.domainType === CatalogueItemDomainType.DataElement
+      && !this.subTargetDestinationId
     ) {
       this.messageHandler.showError(
         `Please select a target data class to copy the ${this.domainType} to.`
@@ -421,7 +431,8 @@ export class CopyActionComponent implements OnInit {
             ].includes(this.domainType)
           ) {
             // TODO: clean this condition up
-          } else {
+          }
+ else {
             // remove node if it has no children in the case of data element and data class
             if (!node.hasChildren ?? false) {
               removedNodes = [...removedNodes, node];
@@ -433,7 +444,7 @@ export class CopyActionComponent implements OnInit {
         });
 
         this.tree.children = this.tree.children.filter(
-          (node) => !removedNodes.includes(node)
+          node => !removedNodes.includes(node)
         );
 
         this.loaded = true;

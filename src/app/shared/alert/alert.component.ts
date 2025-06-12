@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertStyle, AlertStyleMetadata } from './alert.model';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-alert',
-  templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+    selector: 'mdm-alert',
+    templateUrl: './alert.component.html',
+    styleUrls: ['./alert.component.scss'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class AlertComponent implements OnInit {
-
   @Input()
   alertStyle: AlertStyle = 'none';
 
@@ -32,7 +34,7 @@ export class AlertComponent implements OnInit {
   showIcon = false;
 
   private readonly styleMetadata = new Map<AlertStyle, AlertStyleMetadata>([
-    ['none', { icon: '', cssModifier: ''}],
+    ['none', { icon: '', cssModifier: '' }],
     ['success', { icon: 'fa-check-circle', cssModifier: 'mdm-alert--success' }],
     ['info', { icon: 'fa-info-circle', cssModifier: 'mdm-alert--info' }],
     ['warning', { icon: 'fa-exclamation-triangle', cssModifier: 'mdm-alert--warning' }],
@@ -55,5 +57,4 @@ export class AlertComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

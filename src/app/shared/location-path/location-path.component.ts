@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,21 +25,27 @@ import {
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '../path-name/path-name.service';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 interface LocationPathItem {
-  label: string;
-  href: string;
-  branchName?: string;
-  modelVersion?: string;
-  modelVersionTag?: string;
-  domainType?: string;
-  icon?: string;
+  label: string
+  href: string
+  branchName?: string
+  modelVersion?: string
+  modelVersionTag?: string
+  domainType?: string
+  icon?: string
 }
 
 @Component({
-  selector: 'mdm-location-path',
-  templateUrl: './location-path.component.html',
-  styleUrls: ['./location-path.component.scss']
+    selector: 'mdm-location-path',
+    templateUrl: './location-path.component.html',
+    styleUrls: ['./location-path.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, NgFor, MatIcon, NgClass, ExtendedModule]
 })
 export class LocationPathComponent implements OnInit, OnChanges {
   @Input() ancestorTreeItems: MdmTreeItem[] = [];
@@ -55,8 +61,8 @@ export class LocationPathComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.ancestorTreeItems) {
-      this.items =
-        this.ancestorTreeItems?.map((ancestor) => {
+      this.items
+        = this.ancestorTreeItems?.map((ancestor) => {
           return {
             label: ancestor.label,
             href: this.pathName.createHref(ancestor.path),
@@ -64,7 +70,7 @@ export class LocationPathComponent implements OnInit, OnChanges {
             modelVersion: ancestor.modelVersion,
             modelVersionTag: ancestor.modelVersionTag,
             domainType: ancestor.domainType,
-            icon: ancestor.domainType?getCatalogueItemDomainTypeIcon(ancestor.domainType):null
+            icon: ancestor.domainType ? getCatalogueItemDomainTypeIcon(ancestor.domainType) : null
           };
         }) ?? [];
 

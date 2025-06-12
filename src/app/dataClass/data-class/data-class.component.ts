@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
@@ -34,11 +34,29 @@ import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-class',
-  templateUrl: './data-class.component.html',
-  styleUrls: ['./data-class.component.sass']
+    selector: 'mdm-data-class',
+    templateUrl: './data-class.component.html',
+    styleUrls: ['./data-class.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, DataClassComponentsListComponent, ElementLinkListComponent, SummaryMetadataTableComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataClassComponent
   extends BaseComponent
@@ -47,7 +65,7 @@ export class DataClassComponent
   dataClass: DataClassDetail;
   showSecuritySection: boolean;
   showExtraTabs = false;
-  activeTab:  number;
+  activeTab: number;
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
@@ -65,9 +83,6 @@ export class DataClassComponent
     'annotations',
     'history'
   ]);
-
-  newMinText: any;
-  newMaxText: any;
 
   descriptionView = 'default';
   annotationsView = 'default';
@@ -90,18 +105,18 @@ export class DataClassComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id as string) &&
-      (!this.uiRouterGlobals.params.id ||
-        !this.uiRouterGlobals.params.dataModelId)
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && (!this.uiRouterGlobals.params.id
+        || !this.uiRouterGlobals.params.dataModelId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataClassId &&
-      this.uiRouterGlobals.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataClassId
+      && this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
       this.parentDataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
@@ -124,14 +139,14 @@ export class DataClassComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
 
-  dataClassDetails(model:string, id:string, parentDataClass?:string) {
+  dataClassDetails(model: string, id: string, parentDataClass?: string) {
     if (!parentDataClass) {
       this.resourcesService.dataClass
         .get(model, id)
@@ -152,24 +167,27 @@ export class DataClassComponent
           this.messageService.dataChanged(this.dataClass);
 
           if (
-            this.dataClass.minMultiplicity &&
-            this.dataClass.minMultiplicity === -1
+            this.dataClass.minMultiplicity
+            && this.dataClass.minMultiplicity === -1
           ) {
             this.min = '*';
-          } else {
+          }
+ else {
             this.min = this.dataClass.minMultiplicity;
           }
 
           if (
-            this.dataClass.maxMultiplicity &&
-            this.dataClass.maxMultiplicity === -1
+            this.dataClass.maxMultiplicity
+            && this.dataClass.maxMultiplicity === -1
           ) {
             this.max = '*';
-          } else {
+          }
+ else {
             this.max = this.dataClass.maxMultiplicity;
           }
         });
-    } else {
+    }
+ else {
       this.resourcesService.dataClass
         .getChildDataClass(model, parentDataClass, id)
         .subscribe((result: DataClassDetailResponse) => {
@@ -188,7 +206,7 @@ export class DataClassComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     this.error = '';
 
     const resource: DataClass = {
@@ -209,7 +227,8 @@ export class DataClassComponent
 
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
-      } else {
+      }
+ else {
         resource[item.propertyName] = item.value;
       }
     });
@@ -232,7 +251,8 @@ export class DataClassComponent
             );
           }
         );
-    } else {
+    }
+ else {
       this.resourcesService.dataClass
         .updateChildDataClass(
           this.dataClass.model,

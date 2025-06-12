@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ export class MauroItemUpdateService {
       return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   /**
@@ -109,7 +109,7 @@ export class MauroItemUpdateService {
    * @returns An array of the updated catalogue items passed through an observable stream, if successful.
    */
   saveMany(payloads: MauroUpdatePayload[]): Observable<MauroItem[]> {
-    const requests$ = payloads.map((payload) =>
+    const requests$ = payloads.map(payload =>
       this.save(payload.identifier, payload.item)
     );
 

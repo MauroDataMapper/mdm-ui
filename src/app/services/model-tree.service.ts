@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ export class ModelTreeService implements OnDestroy {
     this.broadcast
       .onCatalogueTreeNodeSelected()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => (this.currentNode = data.node));
+      .subscribe(data => (this.currentNode = data.node));
   }
 
   ngOnDestroy(): void {
@@ -97,9 +97,9 @@ export class ModelTreeService implements OnDestroy {
         includeModelSuperseded:
           this.userSettingsHandler.get('includeModelSuperseded') || false,
         includeDeleted:
-          (this.sharedService.isLoggedIn() &&
-            this.userSettingsHandler.get('includeDeleted')) ||
-          false
+          (this.sharedService.isLoggedIn()
+            && this.userSettingsHandler.get('includeDeleted'))
+          || false
       }
     };
 
@@ -114,8 +114,8 @@ export class ModelTreeService implements OnDestroy {
 
   getSubscribedCatalogueTreeNodes(): Observable<MdmTreeItem[]> {
     if (
-      !this.sharedService.isLoggedIn(true) ||
-      !this.sharedService.features.useSubscribedCatalogues
+      !this.sharedService.isLoggedIn(true)
+      || !this.sharedService.features.useSubscribedCatalogues
     ) {
       return of([]);
     }
@@ -140,8 +140,8 @@ export class ModelTreeService implements OnDestroy {
             response.body.items ?? []
         ),
         map((catalogues: SubscribedCatalogue[]) =>
-          catalogues.map((item) =>
-            Object.assign<{}, MdmTreeItem>(
+          catalogues.map(item =>
+            Object.assign<object, MdmTreeItem>(
               {},
               {
                 id: item.id,
@@ -154,7 +154,7 @@ export class ModelTreeService implements OnDestroy {
           )
         ),
         catchError((error) => {
-          if(error.status !== 404) {
+          if (error.status !== 404) {
             this.messageHandler.showError(
               'There was a problem getting the Subscribed Catalogues.',
               error
@@ -166,7 +166,7 @@ export class ModelTreeService implements OnDestroy {
   }
 
   createRootNode(children?: MdmTreeItem[]): MdmTreeItem {
-    return Object.assign<{}, MdmTreeItem>(
+    return Object.assign<object, MdmTreeItem>(
       {},
       {
         id: '',
@@ -180,7 +180,7 @@ export class ModelTreeService implements OnDestroy {
   }
 
   createLocalCatalogueNode(children?: MdmTreeItem[]): MdmTreeItem {
-    return Object.assign<{}, MdmTreeItem>(
+    return Object.assign<object, MdmTreeItem>(
       {},
       {
         id: '4aa2444c-ed08-471b-84dd-96f6b3b4a00a',
@@ -194,7 +194,7 @@ export class ModelTreeService implements OnDestroy {
   }
 
   createExternalCataloguesNode(children?: MdmTreeItem[]): MdmTreeItem {
-    return Object.assign<{}, MdmTreeItem>(
+    return Object.assign<object, MdmTreeItem>(
       {},
       {
         id: '30dca3f9-5cf5-41a8-97eb-fd2dab2d4c20',
@@ -228,9 +228,9 @@ export class ModelTreeService implements OnDestroy {
         );
         return EMPTY;
       }),
-      map((models) =>
-        models.map((item) =>
-          Object.assign<{}, MdmTreeItem>(
+      map(models =>
+        models.map(item =>
+          Object.assign<object, MdmTreeItem>(
             {},
             {
               id: item.modelId,
@@ -256,8 +256,8 @@ export class ModelTreeService implements OnDestroy {
    * depending on the options selected in the dialog.
    */
   createNewFolder(settings: {
-    allowVersioning?: boolean;
-    parentFolderId?: Uuid;
+    allowVersioning?: boolean
+    parentFolderId?: Uuid
   }): Observable<FolderDetailResponse | VersionedFolderDetailResponse> {
     return this.editing
       .openDialog<
@@ -277,7 +277,7 @@ export class ModelTreeService implements OnDestroy {
       })
       .afterClosed()
       .pipe(
-        filter((response) => response?.status === ModalDialogStatus.Ok),
+        filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap((modal) => {
           if (modal.useVersionedFolders && modal.isVersioned) {
             return this.saveVersionedFolder(
@@ -313,8 +313,8 @@ export class ModelTreeService implements OnDestroy {
       })
       .afterClosed()
       .pipe(
-        filter((response) => response?.status === ModalDialogStatus.Ok),
-        switchMap((modal) => this.saveClassifier(modal.label))
+        filter(response => response?.status === ModalDialogStatus.Ok),
+        switchMap(modal => this.saveClassifier(modal.label))
       );
   }
 

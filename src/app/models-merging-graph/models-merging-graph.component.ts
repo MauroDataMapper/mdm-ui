@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,14 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
+import { DiagramTabComponent } from '../diagram/diagram-tab/diagram-tab.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-models-merging-graph',
-  templateUrl: './models-merging-graph.component.html',
-  styleUrls: ['./models-merging-graph.component.scss']
+    selector: 'mdm-models-merging-graph',
+    templateUrl: './models-merging-graph.component.html',
+    styleUrls: ['./models-merging-graph.component.scss'],
+    standalone: true,
+    imports: [NgIf, DiagramTabComponent]
 })
 export class ModelsMergingGraphComponent implements OnInit {
-
   isDataLoaded: boolean;
 
   sourceModel: any;

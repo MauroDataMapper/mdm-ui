@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,24 @@ import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OpenIdConnectProviderForm } from './openid-connect-provider.model';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint, MatError } from '@angular/material/form-field';
+import { AlertComponent } from '@mdm/shared/alert/alert.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-openid-connect-provider',
-  templateUrl: './openid-connect-provider.component.html',
-  styleUrls: ['./openid-connect-provider.component.scss']
+    selector: 'mdm-openid-connect-provider',
+    templateUrl: './openid-connect-provider.component.html',
+    styleUrls: ['./openid-connect-provider.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, AlertComponent, MatFormField, MatLabel, MatInput, MatHint, MatError, MatButton, MatTooltip, MatCheckbox, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatSelect, MatOption]
 })
 export class OpenidConnectProviderComponent implements OnInit {
   id: Uuid;
@@ -76,7 +89,7 @@ export class OpenidConnectProviderComponent implements OnInit {
   }
 
   cancel() {
-    this.editing.confirmCancelAsync().subscribe(confirm => {
+    this.editing.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }
@@ -95,7 +108,7 @@ export class OpenidConnectProviderComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem saving the OpenID Connect provider.', error);
           return EMPTY;
         })
@@ -115,7 +128,7 @@ export class OpenidConnectProviderComponent implements OnInit {
     this.resources.pluginOpenIdConnect
       .get(this.id)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem getting the OpenID Connect provider.', error);
           return EMPTY;
         })

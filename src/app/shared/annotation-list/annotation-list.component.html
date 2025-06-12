@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                 <div *ngIf="!record.inEdit">
                     <div class="annotation-item-header">
-                        <span class="annotation-username">{{record.createdByUser.name}} @ </span>
+                        <span class="annotation-username">{{record.createdByUser.name}} &#64; </span>
                         <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                     </div>
                     <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
@@ -55,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
                         <div *ngFor="let childAnnotation of record.childAnnotations" [hidden]="!(record.show)">
                             <div class="annotation-item">
                                 <div class="annotation-child-item-header">
-                                    <span class="annotation-username">{{childAnnotation.createdByUser.name }} @ </span>
+                                    <span class="annotation-username">{{childAnnotation.createdByUser.name }} &#64; </span>
                                     <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                 </div>
                                 <div style="padding:5px 5px 5px 10px;">

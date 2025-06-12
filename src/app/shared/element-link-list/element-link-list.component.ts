@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,18 +24,33 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { MatTable } from '@angular/material/table';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { Access } from '@mdm/model/access';
 import { Finalisable, Securable } from '@maurodatamapper/mdm-resources';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass, KeyValuePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-element-link-list',
-  templateUrl: './element-link-list.component.html',
-  styleUrls: ['./element-link-list.component.sass']
+    selector: 'mdm-element-link-list',
+    templateUrl: './element-link-list.component.html',
+    styleUrls: ['./element-link-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MatSortHeader, MatFormField, MatLabel, MatInput, FormsModule, NgFor, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, KeyValuePipe, HighlighterPipe]
 })
 export class ElementLinkListComponent implements AfterViewInit {
   @Input() parent: any;
@@ -47,12 +62,14 @@ export class ElementLinkListComponent implements AfterViewInit {
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   @ViewChildren('filters', { read: ElementRef })
   filters: ElementRef[];
+
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
+
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   hideFilters = true;
   displayedColumns: string[] = ['source', 'link', 'target', 'other'];
   loading: boolean;
@@ -79,7 +96,6 @@ export class ElementLinkListComponent implements AfterViewInit {
     private elementSelector: ElementSelectorDialogueService,
     private gridService: GridService,
     private editingService: EditingService) { }
-
 
   ngAfterViewInit() {
     this.access = this.securityHandler.elementAccess(this.parent as Securable | (Securable & Finalisable));
@@ -109,8 +125,8 @@ export class ElementLinkListComponent implements AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
-      data.forEach(element => {
+    ).subscribe((data) => {
+      data.forEach((element) => {
         element.status = element.sourceMultiFacetAwareItem.id === this.parent.id ? 'source' : 'target';
       });
 
@@ -136,14 +152,14 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  semanticLinkFetch = (pageSize:number, pageIndex:number, sortBy: string, sortType: SortDirection, filters:{[p: string]: any}) => {
+  semanticLinkFetch = (pageSize: number, pageIndex: number, sortBy: string, sortType: SortDirection, filters: { [p: string]: any }) => {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.catalogueItem.listSemanticLinks(this.domainType as string, this.parent.id as string, options);
   };
 
-  handleShowLinkSuggestion = element => {
-    if (['DataModel', 'DataElement'].indexOf(element.domainType  as string) !== -1) {
+  handleShowLinkSuggestion = (element) => {
+    if (['DataModel', 'DataElement'].indexOf(element.domainType as string) !== -1) {
       this.showLinkSuggestion = true;
     }
   };
@@ -175,12 +191,13 @@ export class ElementLinkListComponent implements AfterViewInit {
       if (this.type === 'static') {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Link deleted successfully.');
-      } else {
+      }
+ else {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Link deleted successfully.');
         this.filterEvent.emit();
       }
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem deleting the link.', error);
     });
   };
@@ -211,7 +228,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   };
 
-  cancelEdit = (record, index:number) => {
+  cancelEdit = (record, index: number) => {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.table.renderRows();
@@ -250,7 +267,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.updateSemanticLink(this.domainType as string, this.parent.id as string, record.id as string, body).subscribe(response => {
+      this.resources.catalogueItem.updateSemanticLink(this.domainType as string, this.parent.id as string, record.id as string, body).subscribe((response) => {
         if (this.afterSave) {
           this.afterSave(resource);
         }
@@ -267,10 +284,11 @@ export class ElementLinkListComponent implements AfterViewInit {
         this.table.renderRows();
 
         this.messageHandler.showSuccess('Link updated successfully.');
-      }, err => {
+      }, (err) => {
         this.messageHandler.showError('There was a problem updating the link.', err);
       });
-    } else {
+    }
+ else {
       const body = {
         targetMultiFacetAwareItemDomainType: `${record.edit.target.domainType}`,
         targetMultiFacetAwareItemId: `${record.edit.target.id}`,
@@ -278,7 +296,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.saveSemanticLinks(this.domainType as string, this.parent.id as string, body).subscribe(response => {
+      this.resources.catalogueItem.saveSemanticLinks(this.domainType as string, this.parent.id as string, body).subscribe((response) => {
         record = Object.assign({}, response);
         record.status = 'source';
 
@@ -288,18 +306,19 @@ export class ElementLinkListComponent implements AfterViewInit {
         if (this.type === 'static') {
           this.records[index] = record;
           this.messageHandler.showSuccess('Link saved successfully.');
-        } else {
+        }
+ else {
           this.records[index] = record;
           this.messageHandler.showSuccess('Link saved successfully.');
           this.filterEvent.emit();
         }
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem saving link.', error);
       });
     }
   };
 
-  findElement = record => {
+  findElement = (record) => {
     let domainTypes = [];
     const notAllowedToSelectIds = [this.parent.id];
 
@@ -329,7 +348,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       domainTypes = ['Term', 'DataType'];
     }
 
-    this.elementSelector.open(domainTypes, notAllowedToSelectIds).afterClosed().subscribe(selectedElement => {
+    this.elementSelector.open(domainTypes, notAllowedToSelectIds).afterClosed().subscribe((selectedElement) => {
       if (!selectedElement) {
         return;
       }

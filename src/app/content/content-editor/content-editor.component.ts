@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,20 +19,26 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 import { UserSettingsHandlerService } from '@mdm/services';
-import { HtmlButtonMode } from '../html/html-editor/html-editor.component';
+import { HtmlButtonMode, HtmlEditorComponent } from '../html/html-editor/html-editor.component';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
+import { MarkdownTextAreaComponent } from '../markdown/markdown-text-area/markdown-text-area.component';
+import { NgIf } from '@angular/common';
 
 export interface ContentEditorMarkdownOptions {
-  showHelpText: boolean;
+  showHelpText: boolean
 }
 
 export interface ContentEditorHtmlOptions {
-  useBasicButtons: boolean;
+  useBasicButtons: boolean
 }
 
 @Component({
-  selector: 'mdm-content-editor',
-  templateUrl: './content-editor.component.html',
-  styleUrls: ['./content-editor.component.scss']
+    selector: 'mdm-content-editor',
+    templateUrl: './content-editor.component.html',
+    styleUrls: ['./content-editor.component.scss'],
+    standalone: true,
+    imports: [NgIf, MarkdownTextAreaComponent, HtmlEditorComponent, MatButtonToggleGroup, FormsModule, MatButtonToggle]
 })
 export class ContentEditorComponent implements OnInit {
   @Input() contentFormat: ContentEditorFormat = 'markdown';
@@ -57,13 +63,14 @@ export class ContentEditorComponent implements OnInit {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
     this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
 
-    const formatPreference =
-      this.userSettings.get<ContentEditorFormat>('editorFormat') ??
-      this.userSettings.defaultSettings.editorFormat;
+    const formatPreference
+      = this.userSettings.get<ContentEditorFormat>('editorFormat')
+        ?? this.userSettings.defaultSettings.editorFormat;
 
     if (this.isEmptyContent()) {
       this.contentFormat = formatPreference;
-    } else {
+    }
+ else {
       this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
   }

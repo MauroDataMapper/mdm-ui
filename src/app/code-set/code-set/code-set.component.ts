@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { EMPTY, Subscription } from 'rxjs';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -43,11 +43,28 @@ import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { catchError } from 'rxjs/operators';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-code-set',
-  templateUrl: './code-set.component.html',
-  styleUrls: ['./code-set.component.scss']
+    selector: 'mdm-code-set',
+    templateUrl: './code-set.component.html',
+    styleUrls: ['./code-set.component.scss'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, SkeletonBadgeComponent, CodeSetTermsTableComponent, ElementLinkListComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class CodeSetComponent
   extends BaseComponent
@@ -61,13 +78,9 @@ export class CodeSetComponent
   editMode = false;
   showExtraTabs = false;
   activeTab: number;
-  dataModel4Diagram: any;
-  cells: any;
-  rootCell: any;
   semanticLinks: any[] = [];
   descriptionView = 'default';
   annotationsView = 'default';
-  compareToList = [];
   rulesItemCount = 0;
   isLoadingRules = true;
   termsItemCount = 0;
@@ -152,10 +165,10 @@ export class CodeSetComponent
             }
           });
 
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() ||
-          !this.codeSetModel.editable ||
-          this.codeSetModel.finalised;
+        this.showExtraTabs
+          = !this.sharedService.isLoggedIn()
+            || !this.codeSetModel.editable
+            || this.codeSetModel.finalised;
 
         if (this.sharedService.isLoggedIn(true)) {
           this.CodeSetPermissions();
@@ -172,7 +185,7 @@ export class CodeSetComponent
   CodeSetPermissions() {
     this.resourcesService.security
       .permissions(SecurableDomainType.CodeSets, this.codeSetModel.id)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.codeSetModel[attrname] = permissions.body[attrname];
         });
@@ -216,7 +229,7 @@ export class CodeSetComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: ModelUpdatePayload = {
       id: this.codeSetModel.id,
       domainType: this.codeSetModel.domainType

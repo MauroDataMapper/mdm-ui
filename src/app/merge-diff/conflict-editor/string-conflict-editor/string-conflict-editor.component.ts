@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +19,11 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEnc
 import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
 import { StringConflictService } from '@mdm/merge-diff/services/string-conflict.service';
 import { Diff } from 'diff-match-patch';
+import { SafePipe } from '../../../content/safe.pipe';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf } from '@angular/common';
 
 const diffType = 0;
 const deletedType = -1;
@@ -26,17 +31,18 @@ const insertedType = 1;
 const conflictText = '---';
 
 interface DiffTrackedItem {
-  diffs: Diff[];
-  index: number;
-  value: string;
+  diffs: Diff[]
+  index: number
+  value: string
 }
 
-
 @Component({
-  selector: 'mdm-string-conflict-editor',
-  templateUrl: './string-conflict-editor.component.html',
-  styleUrls: ['./string-conflict-editor.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-string-conflict-editor',
+    templateUrl: './string-conflict-editor.component.html',
+    styleUrls: ['./string-conflict-editor.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [NgIf, MatTooltip, MatButton, ContentEditorComponent, SafePipe]
 })
 export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   @Input() source: Branchable;
@@ -50,7 +56,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
   targetText: string;
   resolvedText: string;
 
-  constructor(private stringConflict : StringConflictService) { }
+  constructor(private stringConflict: StringConflictService) { }
 
   ngOnInit(): void {
     this.sourceText = this.stringConflict.getDiffViewHtml(
@@ -86,7 +92,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
     resolvedDocument.body
       .querySelectorAll(`span.diff-marker[data-diff-id="${id}"`)
-      .forEach(element => {
+      .forEach((element) => {
         element.innerHTML = value;
         element.setAttribute('title', 'resolved');
         element.classList.replace('conflict', 'resolved');
@@ -111,7 +117,7 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
 
     resolvedDocument.body
       .querySelectorAll('span.diff-marker')
-      .forEach(element => {
+      .forEach((element) => {
         const newElement = resolvedDocument.createTextNode(element.innerHTML);
         element.parentNode.replaceChild(newElement, element);
       });
@@ -126,7 +132,6 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
       .querySelectorAll('ins')
       .forEach(elem => this.resolveDiffConflict(elem as HTMLElement));
   }
-
 
   private initialiseResolvedDiffHtml(
     text1: string,
@@ -182,6 +187,4 @@ export class StringConflictEditorComponent implements OnInit, AfterViewInit {
     // correctly (the click handler will swap this to as appropriate).
     return `<span class="diff-marker ${markerType}" data-diff-id="${id}" title="${markerType}">${markerType === 'conflict' ? conflictText : value}</span>`;
   }
-
-
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { CatalogueItemDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MauroItemUpdateService } from './mauro-item-update.service';
 import {
   MauroIdentifier,
@@ -110,6 +110,9 @@ describe('MauroItemUpdateService', () => {
       update: jest.fn() as jest.MockedFunction<
         (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -158,6 +161,7 @@ describe('MauroItemUpdateService', () => {
   };
 
   beforeEach(() => {
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
     service = setupTestModuleForService(MauroItemUpdateService, {
       providers: [
         {
@@ -212,7 +216,7 @@ describe('MauroItemUpdateService', () => {
       return { identifier, item };
     });
 
-    const expected$ = cold('---(a|)', { a: payloads.map((p) => p.item) });
+    const expected$ = cold('---(a|)', { a: payloads.map(p => p.item) });
     const actual$ = service.saveMany(payloads);
     expect(actual$).toBeObservable(expected$);
   };

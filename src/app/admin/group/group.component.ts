@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,21 @@ import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { Uuid } from '@maurodatamapper/mdm-resources';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { GroupMemberTableComponent } from '../group-member-table/group-member-table.component';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-group',
-  templateUrl: './group.component.html',
-  styleUrls: ['./group.component.scss']
+    selector: 'mdm-group',
+    templateUrl: './group.component.html',
+    styleUrls: ['./group.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatLabel, MatInput, MatError, MatButton, MatTabGroup, MatTab, MatTabContent, GroupMemberTableComponent, HistoryComponent]
 })
 export class GroupComponent implements OnInit {
   errors: any;
@@ -37,6 +47,7 @@ export class GroupComponent implements OnInit {
     groupMembers: [],
     id: ''
   };
+
   groupId: Uuid;
 
   constructor(
@@ -49,22 +60,22 @@ export class GroupComponent implements OnInit {
 
   ngOnInit() {
     this.editingService.start();
-    // tslint:disable-next-line: deprecation
     this.groupId = this.stateService.params.id;
     if (this.groupId) {
       this.title.setTitle('Group - Edit Group');
-      this.resources.userGroups.get(this.groupId).subscribe(result => {
+      this.resources.userGroups.get(this.groupId).subscribe((result) => {
         this.group = result.body;
       });
-      this.resources.catalogueUser.listInUserGroup(this.groupId).subscribe(result => {
+      this.resources.catalogueUser.listInUserGroup(this.groupId).subscribe((result) => {
         this.group.groupMembers = result.body.items || [];
       });
-    } else {
+    }
+ else {
       this.title.setTitle('Group - Add Group');
     }
   }
 
-  onUpdateGroupMembers = groupMembers => { // triggered when the Members table is updated
+  onUpdateGroupMembers = (groupMembers) => { // triggered when the Members table is updated
     this.group.groupMembers = groupMembers;
   };
 
@@ -90,21 +101,22 @@ export class GroupComponent implements OnInit {
       this.resources.userGroups.update(this.group.id, this.group).subscribe(() => {
         this.messageHandler.showSuccess('Group updated successfully.');
         this.navigateToParent();
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the group.', error);
       });
-    } else { // it's in new mode (create)
+    }
+ else { // it's in new mode (create)
       this.resources.userGroups.save(this.group).subscribe(() => {
         this.messageHandler.showSuccess('Group saved successfully.');
         this.navigateToParent();
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem saving the group.', error);
       });
     }
   };
 
   cancel = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.navigateToParent();
       }

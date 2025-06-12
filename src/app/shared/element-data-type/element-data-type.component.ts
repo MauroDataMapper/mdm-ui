@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,17 @@ import { groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { Categories } from '@mdm/model/model-types.model';
 import { CatalogueItem, CatalogueItemDomainType, DataType, MdmResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-data-type',
-  templateUrl: './element-data-type.component.html',
-  styleUrls: ['./element-data-type.component.sass']
+    selector: 'mdm-element-data-type',
+    templateUrl: './element-data-type.component.html',
+    styleUrls: ['./element-data-type.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, NgFor, NgClass, ExtendedModule, ElementLinkComponent]
 })
 export class ElementDataTypeComponent implements OnInit {
   @Input() elementDataType: DataType;
@@ -61,7 +67,6 @@ export class ElementDataTypeComponent implements OnInit {
     private resources: MdmResourcesService
   ) {}
 
-
   ngOnInit() {
     if (this.elementDataType !== null && this.elementDataType !== undefined) {
       let parentDataModelId = this.mcParentDataModel
@@ -72,8 +77,8 @@ export class ElementDataTypeComponent implements OnInit {
       }
 
       if (
-        this.elementDataType.domainType === 'ReferenceType' &&
-        this.elementDataType.referenceClass
+        this.elementDataType.domainType === 'ReferenceType'
+        && this.elementDataType.referenceClass
       ) {
         this.referenceClass = this.elementDataType.referenceClass;
         this.referenceClassLink = this.stateHandler.getURL('dataclass', {
@@ -85,17 +90,17 @@ export class ElementDataTypeComponent implements OnInit {
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
     }
 
-    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType ||
-      this.elementDataType.domainType === CatalogueItemDomainType.TerminologyType ||
-      this.elementDataType.domainType === CatalogueItemDomainType.CodeSetType ||
-      this.elementDataType.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
+    if (this.elementDataType.domainType === CatalogueItemDomainType.ModelDataType
+      || this.elementDataType.domainType === CatalogueItemDomainType.TerminologyType
+      || this.elementDataType.domainType === CatalogueItemDomainType.CodeSetType
+      || this.elementDataType.domainType === CatalogueItemDomainType.ReferenceDataModelType) {
       this.loadModelResource();
     }
 
     if (this.elementDataType.enumerationValues) {
       if (
-        this.elementDataType &&
-        this.elementDataType.domainType === 'EnumerationType'
+        this.elementDataType
+        && this.elementDataType.domainType === 'EnumerationType'
       ) {
         // Handle Category in enum
         // ...........................................................................
@@ -119,10 +124,11 @@ export class ElementDataTypeComponent implements OnInit {
           const categoryNames = [];
           let hasEmptyCategory = false;
 
-          cats.forEach(x => {
+          cats.forEach((x) => {
             if (x.category !== null) {
               categoryNames.push(x.category);
-            } else {
+            }
+ else {
               hasEmptyCategory = true;
             }
           });
@@ -132,7 +138,7 @@ export class ElementDataTypeComponent implements OnInit {
           }
 
           this.allRecordsWithGroups = [];
-          categoryNames.forEach(category => {
+          categoryNames.forEach((category) => {
             if (category !== null) {
               this.categories.push({ key: category, value: category });
             }
@@ -144,7 +150,7 @@ export class ElementDataTypeComponent implements OnInit {
             });
 
             cats.filter(x => x.category === category)
-              .forEach(row => {
+              .forEach((row) => {
                 this.allRecordsWithGroups.push(row);
               });
           });
@@ -168,7 +174,8 @@ export class ElementDataTypeComponent implements OnInit {
         elem.classList.remove('hiddenMoreEnumerationKeyValue');
       }
       element.innerHTML = 'hide <i class=\'fas fa-caret-down fa-xs\'></i>';
-    } else {
+    }
+ else {
       const elements = element.parentElement.offsetParent.getElementsByClassName(
         'moreEnumerationKeyValue'
       );

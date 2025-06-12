@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,20 +29,18 @@ import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-jo
 import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
 import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
 import { ContentModule } from '@mdm/content/content.module';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
-  declarations: [
-    UsersAppContainerComponent,
-    ProfileComponent,
-    UserDetailsComponent,
-    ChangePasswordComponent,
-    ApiKeysComponent,
-    AsyncJobListComponent,
-    AsyncJobDetailComponent,
-    DomainExportsListComponent,
-    DomainExportsDetailComponent
-  ],
-  imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule],
-  exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
+    imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule, PasswordStrengthMeterComponent, UsersAppContainerComponent,
+        ProfileComponent,
+        UserDetailsComponent,
+        ChangePasswordComponent,
+        ApiKeysComponent,
+        AsyncJobListComponent,
+        AsyncJobDetailComponent,
+        DomainExportsListComponent,
+        DomainExportsDetailComponent],
+    exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
 })
 export class UsersModule {}

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 /**
  * Component to authorize a user session authenticated via an OpenID Connect provider.
@@ -41,9 +44,11 @@ import { MdmResourcesService } from '@mdm/modules/resources';
  * 3. If logged into Mauro - update internal state with logged in broadcast messages and navigate to the start page.
  */
 @Component({
-  selector: 'mdm-open-id-connect-authorize',
-  templateUrl: './open-id-connect-authorize.component.html',
-  styleUrls: ['./open-id-connect-authorize.component.scss']
+    selector: 'mdm-open-id-connect-authorize',
+    templateUrl: './open-id-connect-authorize.component.html',
+    styleUrls: ['./open-id-connect-authorize.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner, AlertComponent]
 })
 export class OpenIdConnectAuthorizeComponent implements OnInit {
   authorizing = true;
@@ -83,7 +88,8 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
           this.verifyLoggedIn();
         }
       );
-    } else {
+    }
+ else {
       this.securityHandler
         .authorizeOpenIdConnectSession({
           state,

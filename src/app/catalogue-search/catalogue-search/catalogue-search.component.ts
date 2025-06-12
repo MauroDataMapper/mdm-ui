@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,11 +27,15 @@ import {
   mapProfileFiltersToDto,
   mapSearchParametersToRawParams
 } from '../catalogue-search.types';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-catalogue-search',
-  templateUrl: './catalogue-search.component.html',
-  styleUrls: ['./catalogue-search.component.scss']
+    selector: 'mdm-catalogue-search',
+    templateUrl: './catalogue-search.component.html',
+    styleUrls: ['./catalogue-search.component.scss'],
+    standalone: true,
+    imports: [CatalogueSearchFormComponent, MatButton, NgIf, CatalogueSearchAdvancedFormComponent, CatalogueSearchProfileFilterListComponent]
 })
 export class CatalogueSearchComponent implements AfterViewInit {
   constructor(private stateHandler: StateHandlerService) {}
@@ -123,9 +127,9 @@ export class CatalogueSearchComponent implements AfterViewInit {
   }
 
   private setValid() {
-    this.valid =
-      this.searchForm.formGroup.valid &&
-      (this.advancedForm?.formGroup?.valid ?? true) &&
-      (this.profileFiltersForm?.formGroup?.valid ?? true);
+    this.valid
+      = this.searchForm.formGroup.valid
+        && (this.advancedForm?.formGroup?.valid ?? true)
+        && (this.profileFiltersForm?.formGroup?.valid ?? true);
   }
 }

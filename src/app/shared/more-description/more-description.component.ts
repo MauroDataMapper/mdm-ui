@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,11 +24,15 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-more-description',
-  templateUrl: './more-description.component.html',
-  styleUrls: ['./more-description.component.scss']
+    selector: 'mdm-more-description',
+    templateUrl: './more-description.component.html',
+    styleUrls: ['./more-description.component.scss'],
+    standalone: true,
+    imports: [NgIf, ContentEditorComponent]
 })
 export class MoreDescriptionComponent implements AfterViewChecked {
   @Input() description: string;

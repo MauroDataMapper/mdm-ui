@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,11 +21,19 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { SharedService } from '../services/shared.service';
+import { MatButton } from '@angular/material/button';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-reset-password',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+    selector: 'mdm-reset-password',
+    templateUrl: './reset-password.component.html',
+    styleUrls: ['./reset-password.component.scss'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton]
 })
 export class ResetPasswordComponent implements OnInit {
   errors: any;
@@ -36,6 +44,7 @@ export class ResetPasswordComponent implements OnInit {
     password: '',
     confirmPassword: ''
   };
+
   uid: any;
   token: any;
 
@@ -97,7 +106,7 @@ export class ResetPasswordComponent implements OnInit {
     this.resources.catalogueUser.resetPassword(this.uid as string, resource).subscribe(() => {
       this.message = 'success';
       this.stateHandler.Go('home');
-    }, response => {
+    }, (response) => {
       this.message = response.error.errors[0].message;
       this.processing = false;
       this.confirmed = false;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,13 +21,18 @@ import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
 import { MessageHandlerService } from '@mdm/services';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 @Component({
-  selector: 'mdm-server-error',
-  templateUrl: '../error.component.html',
-  styleUrls: []
+    selector: 'mdm-server-error',
+    templateUrl: '../error.component.html',
+    styleUrls: [],
+    standalone: true,
+    imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class ServerErrorComponent extends ErrorComponent implements OnInit {
-
   constructor(
     protected messages: MessageService,
     protected messageHandler: MessageHandlerService,
@@ -46,7 +51,5 @@ export class ServerErrorComponent extends ErrorComponent implements OnInit {
     if (this.lastError.error?.devMode) this.dataSource.push({ field: 'Dev Mode', value: this.lastError.error?.devMode, code: false });
     if (this.lastError.error?.message) this.dataSource.push({ field: 'Message', value: this.lastError.error?.message, code: false });
     if (this.lastError.error?.exception) this.dataSource.push({ field: 'Exception', value: this.lastError.error?.exception, code: true });
-
   }
 }
-

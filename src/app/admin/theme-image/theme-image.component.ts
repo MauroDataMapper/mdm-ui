@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +23,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { ApiPropertyResponse, Uuid } from '@maurodatamapper/mdm-resources';
 import { catchError } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 export enum ImageChangeType {
   uploaded,
@@ -33,13 +38,15 @@ export enum ImageChangeType {
 }
 
 export interface ImageChangedEvent {
-  changeEvent: ImageChangeType;
+  changeEvent: ImageChangeType
 }
 
 @Component({
-  selector: 'mdm-theme-image',
-  templateUrl: './theme-image.component.html',
-  styleUrls: ['./theme-image.component.scss']
+    selector: 'mdm-theme-image',
+    templateUrl: './theme-image.component.html',
+    styleUrls: ['./theme-image.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, NgIf, MatInput, MatButton, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class ThemeImageComponent implements OnInit {
   @Input() apiPropertyId: Uuid;
@@ -57,7 +64,7 @@ export class ThemeImageComponent implements OnInit {
   DefaultImageMessage = 'Use default image';
 
   formGroup = new FormGroup({
-    value: new FormControl('', [Validators.required]) // eslint-disable-line @typescript-eslint/unbound-method
+    value: new FormControl('', [Validators.required])
   });
 
   get value() {
@@ -93,8 +100,8 @@ export class ThemeImageComponent implements OnInit {
       .subscribe((data: ApiPropertyResponse) => {
         this.showImage = this.isUUID(data.body.value);
         this.showDefaultMessageIfRequired();
-        this.originalValueWasDefault =
-          this.value?.value === this.DefaultImageMessage;
+        this.originalValueWasDefault
+          = this.value?.value === this.DefaultImageMessage;
       });
   }
 
@@ -183,7 +190,8 @@ export class ThemeImageComponent implements OnInit {
     if (this.showImage) {
       // This is required to avoid a mat-form-field must contain a MatFormFieldControl error
       this.value.setValue(' ');
-    } else {
+    }
+ else {
       this.value.setValue(this.DefaultImageMessage);
     }
   }
@@ -196,7 +204,8 @@ export class ThemeImageComponent implements OnInit {
       if (fileType) {
         if (fileType === 'image/jpg') {
           return 'image/jpeg';
-        } else {
+        }
+ else {
           return fileType;
         }
       }

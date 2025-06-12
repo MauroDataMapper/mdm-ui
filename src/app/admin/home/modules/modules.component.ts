@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,15 +26,21 @@ import {
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-modules',
-  templateUrl: './modules.component.html',
-  styleUrls: ['./modules.component.sass']
+    selector: 'mdm-modules',
+    templateUrl: './modules.component.html',
+    styleUrls: ['./modules.component.sass'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, NgClass, ExtendedModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class ModulesComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -71,11 +77,10 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   applyFilter = () => { };
 
-  modulesFetch(pageSize?:number, pageIndex?:number, sortBy?:string, sortType?: SortDirection, filters?:{[p: string]: any}) {
-
+  modulesFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
 
-    this.resourcesService.admin.modules(options).subscribe(resp => {
+    this.resourcesService.admin.modules(options).subscribe((resp) => {
       this.records = resp.body;
       this.records.push({
         id: '0',
@@ -85,7 +90,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
       });
       this.totalItemCount = this.records.length;
       this.dataSource.data = this.records;
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading the modules.', err);
     }
     );

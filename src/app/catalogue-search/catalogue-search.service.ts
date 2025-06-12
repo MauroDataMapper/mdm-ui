@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ export class CatalogueSearchService {
           map((searchResults) => {
             return {
               count: searchResults.count,
-              pageSize: pageParams.max!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+              pageSize: pageParams.max!,
               page,
               items: searchResults.items
             };
@@ -144,11 +144,11 @@ export class CatalogueSearchService {
       return forkJoin([provider$, definition$]).pipe(
         map(([provider, definition]) => {
           const fields = definition.sections.flatMap(
-            (section) => section.fields
+            section => section.fields
           );
 
           const key = fields.find(
-            (field) => field.metadataPropertyName === item.key
+            field => field.metadataPropertyName === item.key
           );
 
           return {

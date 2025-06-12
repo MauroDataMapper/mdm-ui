@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,11 +30,18 @@ import {
   Uuid
 } from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { DclWrapperComponent } from '../../dcl-wrapper.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
 
 @Component({
-  selector: 'mdm-data-type-main',
-  templateUrl: './data-type-main.component.html',
-  styleUrls: ['./data-type-main.component.sass']
+    selector: 'mdm-data-type-main',
+    templateUrl: './data-type-main.component.html',
+    styleUrls: ['./data-type-main.component.sass'],
+    standalone: true,
+    imports: [MatStepper, NgFor, MatStep, MatStepLabel, DclWrapperComponent, FlexModule, NgIf, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class DataTypeMainComponent implements OnInit {
   parentDataModelId: Uuid;
@@ -50,7 +57,7 @@ export class DataTypeMainComponent implements OnInit {
     },
     parentDataModel: { id: '' },
     dataType: {
-      label : '',
+      label: '',
       description: '',
       organisation: '',
       domainType: CatalogueItemDomainType.PrimitiveType,
@@ -64,6 +71,7 @@ export class DataTypeMainComponent implements OnInit {
     } as DataType,
     isProcessComplete: false
   };
+
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
@@ -118,7 +126,8 @@ export class DataTypeMainComponent implements OnInit {
   save = () => {
     if (this.model.createType === 'new') {
       this.saveNewDataType();
-    } else {
+    }
+ else {
       this.saveCopiedDataTypes();
     }
   };
@@ -133,7 +142,8 @@ export class DataTypeMainComponent implements OnInit {
           }
           step.active = true;
         }
-      } else {
+      }
+ else {
         step.active = false;
       }
     }
@@ -155,8 +165,8 @@ export class DataTypeMainComponent implements OnInit {
     if (domainType === CatalogueItemDomainType.ModelDataType) {
       resource.modelResourceDomainType = this.model.dataType.modelResourceDomainType;
       resource.modelResourceId = this.model.dataType.modelResourceId;
-
-    } else {
+    }
+ else {
       /*
       resource.id = this.model.dataType.referencedDataType
         ? this.model.dataType.referencedDataType.id

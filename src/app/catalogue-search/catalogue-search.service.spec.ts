@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { CatalogueSearchService } from './catalogue-search.service';
 
@@ -34,6 +34,9 @@ describe('CatalogueSearchService', () => {
   let service: CatalogueSearchService;
 
   const resourcesStub = {
+    apiProperties: {
+      listPublic: jest.fn()
+    },
     profile: {
       provider: jest.fn() as jest.MockedFunction<
         (
@@ -50,6 +53,7 @@ describe('CatalogueSearchService', () => {
       >
     }
   };
+  resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
   beforeEach(() => {
     service = setupTestModuleForService(CatalogueSearchService, {

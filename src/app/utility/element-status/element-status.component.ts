@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
 import { DataModelDetail } from '@maurodatamapper/mdm-resources';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-status',
-  templateUrl: './element-status.component.html',
-  styleUrls: ['./element-status.component.sass']
+    selector: 'mdm-element-status',
+    templateUrl: './element-status.component.html',
+    styleUrls: ['./element-status.component.sass'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class ElementStatusComponent {
-
   @Input() result: DataModelDetail;
 
   constructor() { }

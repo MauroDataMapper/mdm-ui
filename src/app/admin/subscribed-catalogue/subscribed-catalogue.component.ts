@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
   MdmResponse,
@@ -38,17 +38,26 @@ import { MdmValidators } from '@mdm/utility/mdm-validators';
 import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-subscribed-catalogue',
-  templateUrl: './subscribed-catalogue.component.html',
-  styleUrls: ['./subscribed-catalogue.component.scss']
+    selector: 'mdm-subscribed-catalogue',
+    templateUrl: './subscribed-catalogue.component.html',
+    styleUrls: ['./subscribed-catalogue.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatError, MatSelect, NgFor, MatOption, MatButton]
 })
 export class SubscribedCatalogueComponent implements OnInit {
   readonly noAuthAuthenticationType: string = 'No Authentication';
   readonly apiKeyAuthenticationType: string = 'API Key';
-  readonly oAuthClientCredentialsAuthenticationType: string =
-    'OAuth (Client Credentials)';
+  readonly oAuthClientCredentialsAuthenticationType: string
+    = 'OAuth (Client Credentials)';
+
   readonly supportedAuthenticationTypes: string[] = [
     this.noAuthAuthenticationType,
     this.apiKeyAuthenticationType,
@@ -61,7 +70,6 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   isCreating: boolean;
 
-  /* eslint-disable @typescript-eslint/unbound-method */
   formGroup = new FormGroup({
     label: new FormControl('', [Validators.required]),
     description: new FormControl(''),
@@ -86,7 +94,6 @@ export class SubscribedCatalogueComponent implements OnInit {
       MdmValidators.requiredConditional(() => this.useOauthAuthentication)
     )
   });
-  /* eslint-enable @typescript-eslint/unbound-method */
 
   constructor(
     private resources: MdmResourcesService,
@@ -141,16 +148,16 @@ export class SubscribedCatalogueComponent implements OnInit {
   get useApiKeyAuthentication() {
     // formGroup may not exist yet so use null conditionals
     return (
-      this.formGroup?.controls?.authenticationType?.value ===
-      this.apiKeyAuthenticationType
+      this.formGroup?.controls?.authenticationType?.value
+      === this.apiKeyAuthenticationType
     );
   }
 
   get useOauthAuthentication() {
     // formGroup may not exist yet so use null conditionals
     return (
-      this.formGroup?.controls?.authenticationType?.value ===
-      this.oAuthClientCredentialsAuthenticationType
+      this.formGroup?.controls?.authenticationType?.value
+      === this.oAuthClientCredentialsAuthenticationType
     );
   }
 
@@ -174,7 +181,7 @@ export class SubscribedCatalogueComponent implements OnInit {
           >[]) => {
             this.connectionTypes = typesResponse.body;
             this.authenticationTypes = this.supportedAuthenticationTypes.filter(
-              (authType) => authenticationTypesResponse.body.includes(authType)
+              authType => authenticationTypesResponse.body.includes(authType)
             );
 
             if (this.catalogueId) {

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* eslint-disable id-blacklist */
+
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle } from '@angular/material/dialog';
 import {
   CatalogueItemDomainType,
   ProfileSummary,
@@ -26,18 +26,27 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { map } from 'rxjs/operators';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { NgIf, NgFor } from '@angular/common';
 
 export interface AddProfileModalConfiguration {
-  domainId: Uuid;
-  domainType: CatalogueItemDomainType;
-  finalised?: boolean;
-  selectedProfile?: ProfileSummary;
+  domainId: Uuid
+  domainType: CatalogueItemDomainType
+  finalised?: boolean
+  selectedProfile?: ProfileSummary
 }
 
 @Component({
-  selector: 'mdm-add-profile-modal',
-  templateUrl: './add-profile-modal.component.html',
-  styleUrls: ['./add-profile-modal.component.scss']
+    selector: 'mdm-add-profile-modal',
+    templateUrl: './add-profile-modal.component.html',
+    styleUrls: ['./add-profile-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, NgIf, AlertComponent, MatFormField, MatLabel, MatSelect, FormsModule, NgFor, MatOption, MatButton]
 })
 export class AddProfileModalComponent implements OnInit {
   profiles: ProfileSummary[];
@@ -57,7 +66,7 @@ export class AddProfileModalComponent implements OnInit {
             // If the catalogue item is finalised, only allow profiles that are allowed
             // to be edited
             return response.body.filter(
-              (profile) => profile.editableAfterFinalisation
+              profile => profile.editableAfterFinalisation
             );
           }
 

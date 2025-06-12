@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'mdm-paginator',
-  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex" [length]="length" showFirstLastButtons (page)="changed($event)"></mat-paginator>'
+    selector: 'mdm-paginator',
+    template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex" [length]="length" showFirstLastButtons (page)="changed($event)"></mat-paginator>',
+    standalone: true,
+    imports: [MatPaginator]
 })
 export class MdmPaginatorComponent extends MatPaginator implements OnInit {
   ngOnInit(): void {

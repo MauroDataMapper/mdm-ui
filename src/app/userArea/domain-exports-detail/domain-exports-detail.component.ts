@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,13 +36,21 @@ import {
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgIf, DatePipe } from '@angular/common';
 
 type DomainExportModelItem = Modelable & Branchable & Versionable;
 
 @Component({
-  selector: 'mdm-domain-exports-detail',
-  templateUrl: './domain-exports-detail.component.html',
-  styleUrls: ['./domain-exports-detail.component.scss']
+    selector: 'mdm-domain-exports-detail',
+    templateUrl: './domain-exports-detail.component.html',
+    styleUrls: ['./domain-exports-detail.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementIconComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatButton, DatePipe, FileSizePipe]
 })
 export class DomainExportsDetailComponent implements OnInit {
   export: DomainExport;
@@ -86,7 +94,8 @@ export class DomainExportsDetailComponent implements OnInit {
             requests$ = this.export.exported.domainIds.map((modelId) => {
               return resource.get(modelId);
             });
-          } else {
+          }
+ else {
             requests$ = [resource.get(this.export.exported.domainId)];
           }
 
@@ -94,7 +103,7 @@ export class DomainExportsDetailComponent implements OnInit {
         })
       )
       .subscribe((responses: MdmResponse<DomainExportModelItem>[]) => {
-        this.models = responses.map((response) => response.body);
+        this.models = responses.map(response => response.body);
       });
   }
 

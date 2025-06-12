@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable, EventEmitter, Output, OnDestroy} from '@angular/core';
+import { Injectable, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService implements OnDestroy {
-
   @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 
   @Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
@@ -56,7 +55,6 @@ export class MessageService implements OnDestroy {
   private subjects: Map<string, Subject<any>> = new Map();
   private FolderSubject = new Subject<any>();
 
-
   get lastError(): any {
     return this.lastErrorVar;
   }
@@ -65,12 +63,11 @@ export class MessageService implements OnDestroy {
     this.lastErrorVar = value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  get errorMessage(): {} {
+  get errorMessage(): object {
     return this.errorMessageVar;
   }
 
-  set errorMessage(value: {}) {
+  set errorMessage(value: object) {
     this.errorMessageVar = value;
   }
 
@@ -119,7 +116,6 @@ export class MessageService implements OnDestroy {
   toggleShareReadWithEveryone() {
     this.isShareReadWithEveryone = !this.isShareReadWithEveryone;
     this.changeShareReadWithEveryone.emit(this.isShareReadWithEveryone);
-
   }
 
   showEditMode(showEdit: boolean) {
@@ -200,7 +196,7 @@ export class MessageService implements OnDestroy {
     return this.subjects.get(subject).subscribe(handler);
   }
 
-  on(subject:string, handler: () => void) {
+  on(subject: string, handler: () => void) {
     return this.subscribe(subject, handler);
   }
 

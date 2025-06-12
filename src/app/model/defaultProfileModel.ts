@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,23 +23,22 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface DefaultProfileModalConfiguration {
-  items: Array<DefaultProfileItem>;
-  parentCatalogueItem?: any;
+  items: Array<DefaultProfileItem>
+  parentCatalogueItem?: any
 }
 
 export interface DefaultProfileModalResponse {
-  status: ModalDialogStatus;
-  items?: Array<DefaultProfileItem>;
+  status: ModalDialogStatus
+  items?: Array<DefaultProfileItem>
 }
 
-
 export interface DefaultProfileItem {
-  displayName: string;
-  value?: string | Container[] | string[] | DataTypeReference;
-  controlType: ProfileControlTypes;
-  minMultiplicity?: number | string;
-  maxMultiplicity?: number | string;
-  propertyName: string;
+  displayName: string
+  value?: string | Container[] | string[] | DataTypeReference
+  controlType: ProfileControlTypes
+  minMultiplicity?: number | string
+  maxMultiplicity?: number | string
+  propertyName: string
 }
 
 export enum ProfileControlTypes {
@@ -51,10 +50,8 @@ export enum ProfileControlTypes {
   dataType = 'DataType'
 }
 
-export  class DefaultProfileControls {
-
+export class DefaultProfileControls {
   static renderControls(domainType): string[] {
-
     const dataModel = [
       'description',
       'author',
@@ -96,7 +93,6 @@ export  class DefaultProfileControls {
     ];
 
     const classification = ['description'];
-
 
     switch (domainType) {
       case CatalogueItemDomainType.DataModel:

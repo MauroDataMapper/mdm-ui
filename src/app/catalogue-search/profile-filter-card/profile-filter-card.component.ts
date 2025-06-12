@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +17,21 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CatalogueSearchProfileFilter } from '../catalogue-search.types';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-profile-filter-card',
-  templateUrl: './profile-filter-card.component.html',
-  styleUrls: ['./profile-filter-card.component.scss']
+    selector: 'mdm-profile-filter-card',
+    templateUrl: './profile-filter-card.component.html',
+    styleUrls: ['./profile-filter-card.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatCard, MatButton, MatTooltip]
 })
 export class ProfileFilterCardComponent implements OnInit {
   @Input() profileFilter: CatalogueSearchProfileFilter;
   @Output() delete = new EventEmitter<CatalogueSearchProfileFilter>();
-
-  constructor() {}
 
   ngOnInit(): void {}
 

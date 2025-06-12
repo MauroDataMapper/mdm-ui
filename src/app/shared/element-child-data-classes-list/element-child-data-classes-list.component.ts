@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,15 +36,31 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatTable } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
 import { DataClass } from '@maurodatamapper/mdm-resources';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-child-data-classes-list',
-  templateUrl: './element-child-data-classes-list.component.html',
-  styleUrls: ['./element-child-data-classes-list.component.sass']
+    selector: 'mdm-element-child-data-classes-list',
+    templateUrl: './element-child-data-classes-list.component.html',
+    styleUrls: ['./element-child-data-classes-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, MatTable, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, FormsModule, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent, JoinArrayPipe]
 })
 export class ElementChildDataClassesListComponent implements AfterViewInit, OnInit {
   @Input() parentDataModel: any;
@@ -72,7 +88,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   totalItemCount = 0;
   isLoadingResults = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   deleteInProgress: boolean;
   checkAllCheckbox = false;
   bulkActionsVisible = 0;
@@ -89,7 +105,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   ngOnInit(): void {
     if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
-    } else {
+    }
+ else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];
     }
   }
@@ -110,7 +127,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
       return [];
-    })).subscribe(data => {
+    })).subscribe((data) => {
       this.records = data;
     });
   }
@@ -136,9 +153,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(pageSize?:number, pageIndex?:number, filters?:{[p: string]: any}): Observable<any> {
+  dataClassesFetch(pageSize?: number, pageIndex?: number, filters?: { [p: string]: any }): Observable<any> {
     const sortBy = 'idx';
-    const sortDirection: SortDirection='asc';
+    const sortDirection: SortDirection = 'asc';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortDirection, filters);
 
     if (!this.parentDataClass.id) {
@@ -181,7 +198,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       dialog.afterClosed().subscribe((result) => {
         if (result != null && result.status === 'ok') {
           resolve();
-        } else {
+        }
+ else {
           reject();
         }
       });
@@ -215,13 +233,14 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     if (!this.parentDataClass.id) {
       this.resources.dataClass.update(this.parentDataModel.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
-    } else {
+    }
+ else {
       this.resources.dataClass.updateChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.data.id as string, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Class reordered successfully.');
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     }

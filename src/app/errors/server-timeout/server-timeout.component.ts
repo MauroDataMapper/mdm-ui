@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,13 +21,18 @@ import { ClipboardService } from 'ngx-clipboard';
 import { SharedService } from '@mdm/services/shared.service';
 import { ErrorComponent } from '../error.component';
 import { MessageHandlerService } from '@mdm/services';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 @Component({
-  selector: 'mdm-server-timeout-error',
-  templateUrl: '../error.component.html',
-  styleUrls: []
+    selector: 'mdm-server-timeout-error',
+    templateUrl: '../error.component.html',
+    styleUrls: [],
+    standalone: true,
+    imports: [NgIf, MatAnchor, MatButton, MatSlideToggle, NgFor, NgxJsonViewerModule]
 })
 export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
-
   constructor(
     protected messages: MessageService,
     protected messageHandler: MessageHandlerService,
@@ -44,4 +49,3 @@ export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
     this.dataSource.push({ field: 'Error Code', value: '504', code: false });
   }
 }
-

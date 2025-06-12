@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,17 @@ import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
+import { NewerVersionsComponent } from '../newer-versions/newer-versions.component';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
+import { FederatedDataModelDetailComponent } from '../federated-data-model-detail/federated-data-model-detail.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-federated-data-model-main',
-  templateUrl: './federated-data-model-main.component.html',
-  styleUrls: ['./federated-data-model-main.component.scss']
+    selector: 'mdm-federated-data-model-main',
+    templateUrl: './federated-data-model-main.component.html',
+    styleUrls: ['./federated-data-model-main.component.scss'],
+    standalone: true,
+    imports: [NgIf, FederatedDataModelDetailComponent, MatTabGroup, MatTab, MatTabContent, NewerVersionsComponent]
 })
 export class FederatedDataModelMainComponent
   extends BaseComponent
@@ -91,14 +97,14 @@ export class FederatedDataModelMainComponent
       .subscribe(
         (models) => {
           this.dataModel = models.find(
-            (model) => model.modelId === this.modelId
+            model => model.modelId === this.modelId
           );
 
           if (reloadView) {
             this.reloadView();
           }
         },
-        (errors) =>
+        errors =>
           this.messageHandler.showError(
             'There was a problem getting the Federated Data Model',
             errors

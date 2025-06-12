@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ const editableRouteNames = [
 ];
 
 export interface EditableObject {
-  inEdit?: boolean;
+  inEdit?: boolean
 }
 
 /**
@@ -97,7 +97,7 @@ export class EditingService {
       return;
     }
 
-    this._isEditing = items.some((item) => item.inEdit);
+    this._isEditing = items.some(item => item.inEdit);
   }
 
   /**
@@ -255,6 +255,6 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-      .pipe(map((result) => result.status === ModalDialogStatus.Ok));
+      .pipe(map(result => result.status === ModalDialogStatus.Ok));
   }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,15 +22,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
 import { DiagramCatalogueItem, DiagramMode } from '../diagram/diagram.model';
+import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
 
 @Component({
-  selector: 'mdm-diagram-tab',
-  templateUrl: './diagram-tab.component.html',
-  styleUrls: ['./diagram-tab.component.scss']
+    selector: 'mdm-diagram-tab',
+    templateUrl: './diagram-tab.component.html',
+    styleUrls: ['./diagram-tab.component.scss'],
+    standalone: true,
+    imports: [DiagramToolbarComponent, DiagramComponent]
 })
 
 export class DiagramTabComponent {
-
   @Input() mode: DiagramMode;
   @Input() parent: DiagramCatalogueItem;
   @Input() isPopup: boolean;
@@ -51,7 +53,7 @@ export class DiagramTabComponent {
         diagramComponent: this.diagramComponent
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.diagramComponent.diagramComponent = result.diagramComponent;
       this.diagramComponent.diagramService = result.diagramComponent.diagramService;
       this.diagramComponent.resetPaper();
@@ -67,6 +69,4 @@ export class DiagramTabComponent {
         this.diagramComponent.toolbarClick(buttonName);
     }
   }
-
 }
-

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +23,10 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { PathElement, PathElementType } from './path-name.model';
 import { PathNameService } from './path-name.service';
-import { UIRouter } from '@uirouter/core';
+import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
+import { FavouriteHandlerService } from '@mdm/services';
 import { TestBed } from '@angular/core/testing';
+import { UIRouter } from '@uirouter/core';
 
 describe('PathNameService', () => {
   let service: PathNameService;
@@ -32,14 +34,17 @@ describe('PathNameService', () => {
   const routerStub = {
     stateService: {
       href: jest.fn()
+    },
+    urlRouter: jest.fn(),
+    urlService: {
+      listen: jest.fn(),
+      sync: jest.fn()
     }
+
   };
 
-  beforeEach(() => {
-    // Setup the test bed manually instead of using setupTestModuleForService()
-    // so that the UIRouterModule is not imported, will override the UIRouter service
-    // so it can be mocked
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    service = setupTestModuleForService(PathNameService, {
       providers: [
         {
           provide: UIRouter,
@@ -47,9 +52,8 @@ describe('PathNameService', () => {
         }
       ]
     });
-
-    service = TestBed.inject(PathNameService);
-  });
+    }
+  );
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -430,7 +434,7 @@ describe('PathNameService', () => {
         // Encode the path using RFC3986 URL specification
         const encodedPath = encodeURIComponent(args.path).replace(
           /['()*]/g,
-          (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
+          c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
         );
 
         return `http://localhost:4200/#/catalogue/item/${args.domain}/${encodedPath}`;

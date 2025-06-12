@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class MessageHandlerService {
-
     constructor(private ngToast: ToastrService) { }
-    showError(defaultMessage:string, error?) {
-        let text:string = defaultMessage;
+    showError(defaultMessage: string, error?) {
+        let text: string = defaultMessage;
         if (error && error.status === 422) {
             const result = this.getErrorText(error);
             if (result) {
@@ -34,14 +32,13 @@ export class MessageHandlerService {
             }
         }
         this.ngToast.error(text);
-
     }
 
-    showSuccess(message:string) {
+    showSuccess(message: string) {
         this.ngToast.success(message);
     }
 
-    showWarning(message:string) {
+    showWarning(message: string) {
         this.ngToast.warning(message);
     }
 
@@ -59,8 +56,5 @@ export class MessageHandlerService {
             errorText = error.error.validationErrors.errors[0].message;
         }
         return errorText;
-
     }
-
-
 }

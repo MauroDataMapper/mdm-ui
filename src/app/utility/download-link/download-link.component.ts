@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,27 +17,31 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-download-link',
-  templateUrl: './download-link.component.html',
-  styleUrls: ['./download-link.component.scss']
+    selector: 'mdm-download-link',
+    templateUrl: './download-link.component.html',
+    styleUrls: ['./download-link.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, SafePipe]
 })
-export class DownloadLinkComponent implements OnChanges{
-
+export class DownloadLinkComponent implements OnChanges {
   @Input() links: Array<HTMLAnchorElement>;
   @Output() readonly linksChange = new EventEmitter<Array<HTMLAnchorElement>>();
 
-  displayedColumns: string[] = ['link','delete'];
+  displayedColumns: string[] = ['link', 'delete'];
   dataSource = new MatTableDataSource<HTMLAnchorElement>();
 
   constructor() { }
 
-  deleteLink(link : HTMLAnchorElement)
-  {
+  deleteLink(link: HTMLAnchorElement) {
     const index = this.dataSource.data.indexOf(link);
-    this.dataSource.data.splice(index,1);
+    this.dataSource.data.splice(index, 1);
     this.dataSource._updateChangeSubscription();
     this.linksChange.emit(this.dataSource.data);
   }
@@ -46,5 +50,3 @@ export class DownloadLinkComponent implements OnChanges{
     this.dataSource = new MatTableDataSource<HTMLAnchorElement>(this.links);
   }
 }
-
-

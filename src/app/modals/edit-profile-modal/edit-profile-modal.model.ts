@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ import { CatalogueItem, Profile } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface EditProfileModalConfiguration {
-  profile: Profile;
-  profileName: string;
-  catalogueItem: CatalogueItem;
-  isNew: boolean;
-  description?: string;
-  okBtn?: string;
-  finalised?: boolean;
+  profile: Profile
+  profileName: string
+  catalogueItem: CatalogueItem
+  isNew: boolean
+  description?: string
+  okBtn?: string
+  finalised?: boolean
 }
 
 export interface EditProfileModalResult {
-  status: ModalDialogStatus;
-  profile?: Profile;
+  status: ModalDialogStatus
+  profile?: Profile
 }

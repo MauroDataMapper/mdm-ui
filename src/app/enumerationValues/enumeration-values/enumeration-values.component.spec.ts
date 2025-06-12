@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,50 +16,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { EnumerationValuesComponent } from './enumeration-values.component';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { EMPTY } from 'rxjs';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MatTabsModule } from '@angular/material/tabs';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('EnumerationValuesComponent', () => {
-  let component: EnumerationValuesComponent;
-  let fixture: ComponentFixture<EnumerationValuesComponent>;
+  let harness: ComponentHarness<EnumerationValuesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-         MatTabsModule,
-         NoopAnimationsModule,
-         UIRouterModule.forRoot({ useHash: true }),
-         ToastrModule.forRoot()
-       ],
-      providers: [
-         {
-           provide: MdmResourcesService,
-           // tslint:disable-next-line: deprecation
-           useValue: { dataType: { get: () => EMPTY },
-           // tslint:disable-next-line: deprecation
-           enumerationValues: { getFromDataType: () => EMPTY }
-         },
-        },
-       ],
-      declarations: [ EnumerationValuesComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(EnumerationValuesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(EnumerationValuesComponent)
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

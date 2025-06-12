@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { GridService } from '@mdm/services/grid.service';
-import { CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDropList } from '@angular/cdk/drag-drop';
 import {
   DataClass,
   DataClassDetail,
@@ -48,15 +48,36 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MultiplicityComponent } from '../multiplicity/multiplicity.component';
+import { AllLinksInPagedListComponent } from '../../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { ElementDataTypeComponent } from '../element-data-type/element-data-type.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-class-components-list',
-  templateUrl: './data-class-components-list.component.html',
-  styleUrls: ['./data-class-components-list.component.scss']
+    selector: 'mdm-data-class-components-list',
+    templateUrl: './data-class-components-list.component.html',
+    styleUrls: ['./data-class-components-list.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, FlexModule, SkeletonBadgeComponent, MatTooltip, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatTable, MatSort, CdkDropList, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, ElementDataTypeComponent, AllLinksInPagedListComponent, MultiplicityComponent, MatCheckbox, FormsModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, CdkDrag, NgClass, ExtendedModule, MdmPaginatorComponent, JoinArrayPipe]
 })
 export class DataClassComponentsListComponent implements AfterViewInit {
   @ViewChildren('classFilters', { read: ElementRef })
   classFilters: ElementRef[];
+
   @ViewChildren('elementFilters', { read: ElementRef })
   elementFilters: ElementRef[];
 
@@ -65,6 +86,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   @ViewChild('classPaginator', { static: true })
   classPaginator: MdmPaginatorComponent;
+
   @ViewChild('elementPaginator', { static: true })
   elementPaginator: MdmPaginatorComponent;
 
@@ -96,8 +118,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   filterClassEvent = new EventEmitter<any>();
   filterElementEvent = new EventEmitter<any>();
-  classFilter: {};
-  elementFilter: {};
+  classFilter: object;
+  elementFilter: object;
 
   bulkClassActionsVisible = 0;
   bulkElementActionsVisible = 0;
@@ -129,7 +151,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         'multiplicity',
         'checkbox'
       ];
-    } else {
+    }
+ else {
       this.displayedClassColumns = ['name', 'description', 'multiplicity'];
       this.displayedElementColumns = ['name', 'description', 'multiplicity'];
     }
@@ -172,10 +195,11 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         }),
         map((data: DataClassIndexResponse) => {
           if (this.parentDataClass.extendsDataClasses) {
-            this.totalDataClassCount =
-              data.body.count +
-              (this.parentDataClass.extendsDataClasses.length as number);
-          } else {
+            this.totalDataClassCount
+              = data.body.count
+                + (this.parentDataClass.extendsDataClasses.length as number);
+          }
+ else {
             this.totalDataClassCount = data.body.count;
           }
           this.isLoadingClassResults = false;
@@ -195,11 +219,13 @@ export class DataClassComponentsListComponent implements AfterViewInit {
             }
           );
           this.dataClassRecords = [...data, ...extendedDC];
-        } else {
+        }
+ else {
           this.dataClassRecords = data;
         }
       });
   }
+
   loadDataElements() {
     merge(
       this.elementSort?.sortChange,
@@ -311,7 +337,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: object
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -333,7 +359,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filters?: {}
+    filters?: object
   ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
@@ -352,14 +378,14 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   onClassChecked() {
     this.dataClassRecords.forEach(
-      (x) => (x.checked = this.checkAllClassCheckbox)
+      x => (x.checked = this.checkAllClassCheckbox)
     );
     this.classListChecked();
   }
 
   onElementChecked() {
     this.dataElementRecords.forEach(
-      (x) => (x.checked = this.checkAllElementCheckbox)
+      x => (x.checked = this.checkAllElementCheckbox)
     );
     this.elementListChecked();
   }
@@ -435,7 +461,8 @@ export class DataClassComponentsListComponent implements AfterViewInit {
             );
           }
         );
-    } else {
+    }
+ else {
       this.resources.dataClass
         .updateChildDataClass(
           this.parentDataModel.id,
@@ -491,7 +518,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkEditClass() {
     const dataClassIds = this.dataClassRecords
-      .filter((record) => record.checked)
+      .filter(record => record.checked)
       .map((record) => {
         return {
           id: record.id,
@@ -511,7 +538,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataClassRecords.forEach((x) => (x.checked = false));
+          this.dataClassRecords.forEach(x => (x.checked = false));
           this.checkAllClassCheckbox = false;
           this.bulkClassActionsVisible = 0;
           this.filterClassEvent.emit();
@@ -521,7 +548,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkEditElement() {
     const dataElementIds = this.dataElementRecords
-      .filter((record) => record.checked)
+      .filter(record => record.checked)
       .map((record) => {
         return {
           id: record.id,
@@ -541,7 +568,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.dataElementRecords.forEach(x => (x.checked = false));
           this.checkAllElementCheckbox = false;
           this.bulkElementActionsVisible = 0;
           this.filterElementEvent.emit();
@@ -551,7 +578,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkClassDelete() {
     const dataClassIdList = this.dataClassRecords.filter(
-      (record) => record.checked
+      record => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
@@ -565,7 +592,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result != null && result.status === 'ok') {
-          this.dataClassRecords.forEach((x) => (x.checked = false));
+          this.dataClassRecords.forEach(x => (x.checked = false));
           this.checkAllClassCheckbox = false;
           this.bulkClassActionsVisible = 0;
           this.filterClassEvent.emit();
@@ -575,7 +602,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
 
   bulkDelete() {
     const dataElementIdList = this.dataElementRecords.filter(
-      (record) => record.checked
+      record => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
@@ -589,7 +616,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.dataElementRecords.forEach((x) => (x.checked = false));
+          this.dataElementRecords.forEach(x => (x.checked = false));
           this.checkAllElementCheckbox = false;
           this.bulkElementActionsVisible = 0;
           this.filterElementEvent.emit();

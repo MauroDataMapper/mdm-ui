@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,14 +22,17 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { Uuid } from '@maurodatamapper/mdm-resources';
 import { catchError } from 'rxjs/operators';
 import { SecurityAccessResource, securityAccessResourceDisplayNames } from '@mdm/modals/security-modal/security-modal.model';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'mdm-share-with',
-  templateUrl: './share-with.component.html',
-  styleUrls: ['./share-with.component.sass'],
+    selector: 'mdm-share-with',
+    templateUrl: './share-with.component.html',
+    styleUrls: ['./share-with.component.sass'],
+    standalone: true,
+    imports: [MatCheckbox, FormsModule],
 })
 export class ShareWithComponent implements OnInit {
-
   @Input() catalogueItemId: Uuid;
   @Input() readableByEveryone = false;
   @Input() readableByAuthenticatedUsers = false;
@@ -55,7 +58,7 @@ export class ShareWithComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
           return EMPTY;
         })
@@ -73,7 +76,7 @@ export class ShareWithComponent implements OnInit {
 
     request
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
           return EMPTY;
         })

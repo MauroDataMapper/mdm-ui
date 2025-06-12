@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/su
 import { OpenidConnectProviderTableComponent } from '@mdm/admin/openid-connect-provider-table/openid-connect-provider-table.component';
 import { OpenidConnectProviderComponent } from '@mdm/admin/openid-connect-provider/openid-connect-provider.component';
 
-export const pageRoutes: { states: Ng2StateDeclaration[] } = {
+export const adminPageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
       name: 'appContainer.adminArea',
@@ -63,7 +63,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     {
       name: 'appContainer.adminArea.subscribedCatalogue',
       url: '/subscribedCatalogue/{id}',
-      params: { id: { value: null, squash: true} },
+      params: { id: { value: null, squash: true } },
       component: SubscribedCatalogueComponent
     },
     {
@@ -111,7 +111,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       url: '/configuration/{tabView:string}',
       component: ConfigurationComponent,
       params: {
-        tabView: { dynamic: true, value: null, squash: true}
+        tabView: { dynamic: true, value: null, squash: true }
       }
     },
     {
@@ -128,7 +128,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 };
 
 @NgModule({
-  declarations: [],
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })]
+  imports: [UIRouterModule.forChild({ states: adminPageRoutes.states })]
 })
 export class AdminRoutesModule { }

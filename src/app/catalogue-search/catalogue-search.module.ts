@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,26 +34,24 @@ import { ProfileFiltersComponent } from './profile-filters/profile-filters.compo
 import { ProfileFilterDialogComponent } from './profile-filter-dialog-component/profile-filter-dialog-component';
 
 @NgModule({
-  declarations: [
-    CatalogueSearchComponent,
-    CatalogueSearchFormComponent,
-    CatalogueSearchListingComponent,
-    CatalogueItemSearchResultComponent,
-    CatalogueSearchAdvancedFormComponent,
-    SearchFiltersComponent,
-    CatalogueItemSearchComponent,
-    CatalogueSearchProfileFilterListComponent,
-    ProfileFilterCardComponent,
-    ProfileFiltersComponent,
-    ProfileFilterDialogComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    FoldersTreeModule,
-    ContentModule
-  ],
-  exports: [CatalogueItemSearchComponent]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        FoldersTreeModule,
+        ContentModule,
+        CatalogueSearchComponent,
+        CatalogueSearchFormComponent,
+        CatalogueSearchListingComponent,
+        CatalogueItemSearchResultComponent,
+        CatalogueSearchAdvancedFormComponent,
+        SearchFiltersComponent,
+        CatalogueItemSearchComponent,
+        CatalogueSearchProfileFilterListComponent,
+        ProfileFilterCardComponent,
+        ProfileFiltersComponent,
+        ProfileFilterDialogComponent
+    ],
+    exports: [CatalogueItemSearchComponent]
 })
 export class CatalogueSearchModule {}

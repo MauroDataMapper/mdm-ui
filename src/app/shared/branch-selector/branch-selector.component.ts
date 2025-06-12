@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,11 +31,19 @@ import {
 
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatOptgroup, MatOption } from '@angular/material/core';
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-branch-selector',
-  templateUrl: './branch-selector.component.html',
-  styleUrls: ['./branch-selector.component.scss']
+    selector: 'mdm-branch-selector',
+    templateUrl: './branch-selector.component.html',
+    styleUrls: ['./branch-selector.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatSelect, MatTooltip, FormsModule, NgIf, MatOptgroup, NgFor, MatOption]
 })
 export class BranchSelectorComponent implements OnInit {
   @Input() sourceCatalogueItem: CatalogueItem;
@@ -65,7 +73,7 @@ export class BranchSelectorComponent implements OnInit {
     );
 
     this.resources[domainElementType.resourceName]
-      .simpleModelVersionTree(this.sourceCatalogueItem.id,{branchesOnly : this.forMerge})
+      .simpleModelVersionTree(this.sourceCatalogueItem.id, { branchesOnly: this.forMerge })
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -88,7 +96,8 @@ export class BranchSelectorComponent implements OnInit {
   currentVersionIdChanged() {
     if (this.forMerge) {
       this.selectedCatalogueItemChanged.emit(this.currentVersionId);
-    } else {
+    }
+ else {
       this.stateHandler.Go(
         this.sourceCatalogueItem.domainType,
         {
@@ -104,8 +113,8 @@ export class BranchSelectorComponent implements OnInit {
 
   setBranches() {
     this.branches = this.versionList
-      .filter((x) => x.modelVersion === null)
-      .filter((x) =>
+      .filter(x => x.modelVersion === null)
+      .filter(x =>
         this.forMerge ? x.id !== this.sourceCatalogueItem.id : true
       );
   }

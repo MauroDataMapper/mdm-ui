@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -45,6 +45,18 @@ import {
   MergeDiffItemModel,
   MergeItemSelection
 } from '../types/merge-item-type';
+import { MergeComparisonComponent } from '../merge-comparsion/merge-comparsion.component';
+import { MergeItemSelectorComponent } from '../merge-item-selector/merge-item-selector.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { BranchSelectorComponent } from '../../shared/branch-selector/branch-selector.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ModelIconComponent } from '../../shared/model-icon/model-icon.component';
+import { MatMenuItem } from '@angular/material/menu';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -53,9 +65,11 @@ import {
  * child components for rendering the different sections of data.
  */
 @Component({
-  selector: 'mdm-merge-diff-container',
-  templateUrl: './merge-diff-container.component.html',
-  styleUrls: ['./merge-diff-container.component.scss']
+    selector: 'mdm-merge-diff-container',
+    templateUrl: './merge-diff-container.component.html',
+    styleUrls: ['./merge-diff-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatMenuItem, ModelIconComponent, MatTooltip, BranchSelectorComponent, MatProgressBar, MatTabGroup, MatTab, MatTabLabel, MatToolbar, MatIconButton, MergeItemSelectorComponent, MergeComparisonComponent]
 })
 export class MergeDiffContainerComponent implements OnInit {
   loaded = false;
@@ -123,8 +137,8 @@ export class MergeDiffContainerComponent implements OnInit {
           if (possibleMainBranchId && possibleMainBranchId === sourceId) {
             return of(null);
           }
-          const actualTargetId: Uuid =
-            (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
+          const actualTargetId: Uuid
+            = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
           return this.loadTarget(actualTargetId);
         }),
         finalize(() => (this.loaded = true))
@@ -163,10 +177,10 @@ export class MergeDiffContainerComponent implements OnInit {
       })
       .afterClosed()
       .pipe(
-        filter((result) => result.status === ModalDialogStatus.Ok),
+        filter(result => result.status === ModalDialogStatus.Ok),
         switchMap((result) => {
           const patches = this.committingList.filter(
-            (item) => item.branchSelected !== MergeConflictResolution.Target
+            item => item.branchSelected !== MergeConflictResolution.Target
           );
 
           const data: CommitMergePayload = {
@@ -224,7 +238,8 @@ export class MergeDiffContainerComponent implements OnInit {
 
           if (item.isMergeConflict) {
             this.changesList.push(item);
-          } else {
+          }
+ else {
             // This item can be merged automatically
             item.branchSelected = MergeConflictResolution.Source;
             item.branchNameSelected = this.source.branchName;
@@ -251,8 +266,8 @@ export class MergeDiffContainerComponent implements OnInit {
     this.changesList.forEach((item) => {
       if (item.type === MergeDiffType.Modification) {
         item.branchSelected = branchUsed;
-        item.branchNameSelected =
-          branchUsed === MergeConflictResolution.Source
+        item.branchNameSelected
+          = branchUsed === MergeConflictResolution.Source
             ? this.source.branchName
             : this.target.branchName;
         this.committingList.push(item);
@@ -262,7 +277,8 @@ export class MergeDiffContainerComponent implements OnInit {
         item.branchSelected = branchUsed;
         item.branchNameSelected = this.source.branchName;
         this.committingList.push(item);
-      } else {
+      }
+ else {
         tempArray.push(item);
       }
     });
@@ -303,7 +319,7 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   cancelCommit(item: MergeDiffItemModel) {
-    const index = this.committingList.findIndex((x) => x === item);
+    const index = this.committingList.findIndex(x => x === item);
     if (index >= 0) {
       this.selectedItem = null;
 
@@ -325,7 +341,7 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   acceptCommit(item: MergeDiffItemModel) {
-    const index = this.changesList.findIndex((x) => x === item);
+    const index = this.changesList.findIndex(x => x === item);
     if (index >= 0) {
       this.changesList.splice(index, 1);
 

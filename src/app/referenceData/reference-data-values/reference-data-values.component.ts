@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2024 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,13 +21,23 @@ import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { SortDirection } from '@angular/material/sort';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-   selector: 'mdm-reference-data-values',
-   templateUrl: './reference-data-values.component.html',
-   styleUrls: ['./reference-data-values.component.scss']
+    selector: 'mdm-reference-data-values',
+    templateUrl: './reference-data-values.component.html',
+    styleUrls: ['./reference-data-values.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, SkeletonBadgeComponent, MatTooltip, FormsModule, MatTable, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
    @Input() parent: any;
@@ -42,7 +52,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
    hideFilters = true;
    searchTerm = '';
    filterEvent = new EventEmitter<any>();
-   filter: {};
+   filter: object;
 
    constructor(
       private changeRef: ChangeDetectorRef,
@@ -72,9 +82,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          return [];
       })).subscribe((values: any[]) => {
          // Flatten the endpoint response to make the table rows tabular and not an object hierarchy
-         this.records = values.map(row => {
+         this.records = values.map((row) => {
             const flattened = { };
-            row.columns.forEach(column => {
+            row.columns.forEach((column) => {
                flattened[column.referenceDataElement.label] = column.value;
             });
             return flattened;
@@ -95,7 +105,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       this.changeRef.detectChanges();
    };
 
-   listReferenceDataValues = (pageSize?:number, pageIndex?:number, sortBy?:string, sortType?:SortDirection) => {
+   listReferenceDataValues = (pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection) => {
       const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
       return this.resources.referenceDataValue.list(this.parent.id as string, options);
    };
@@ -131,7 +141,8 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
 
       if (this.hideFilters) {
          return this.resources.referenceDataValue.list(this.parent.id as string, options);
-      } else if (!this.hideFilters) {
+      }
+ else if (!this.hideFilters) {
          return this.resources.referenceDataValue.search(this.parent.id as string, { search: this.searchTerm, max: pageSize, offset: pageIndex });
       }
    }

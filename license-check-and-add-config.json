@@ -5,6 +5,7 @@
     ".github",
     "coverage",
     "releases",
+    "eslint",
     ".idea",
     "test-report.xml",
     "test-report",

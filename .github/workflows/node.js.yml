@@ -21,7 +21,7 @@ jobs:
       - name: Install and configure
         uses: actions/setup-node@v4
         with:
-          node-version: '18.19.0'
+          node-version: '22.16.0'
 
       - name: Install tools
         run: |

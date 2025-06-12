@@ -2,7 +2,7 @@
   "name": "mdm-ui",
   "version": "7.4.0-SNAPSHOT",
   "engines": {
-    "node": "18.19.0",
+    "node": "22.16.0",
     "npm": "10.2.3"
   },
   "scripts": {
@@ -101,7 +101,7 @@
     "@types/jest": "27.5.2",
     "@types/lodash": "^4.14.161",
     "@types/marked": "^4.0.1",
-    "@types/node": "18.19.105",
+    "@types/node": "22.15.31",
     "angular-password-strength-meter": "12.0.0",
     "babel-loader": "^8.2.3",
     "eslint": "9.28.0",

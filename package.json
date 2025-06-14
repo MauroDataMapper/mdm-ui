@@ -35,10 +35,10 @@
     "titleTemplate": "{line} : {source}"
   },
   "dependencies": {
-    "@ag-grid-community/angular": "31.0.3",
-    "@ag-grid-community/client-side-row-model": "31.0.3",
-    "@ag-grid-community/core": "31.0.3",
-    "@ag-grid-community/styles": "31.0.3",
+    "@ag-grid-community/angular": "31.3.4",
+    "@ag-grid-community/client-side-row-model": "31.3.4",
+    "@ag-grid-community/core": "31.3.4",
+    "@ag-grid-community/styles": "31.3.4",
     "@angular/animations": "18.2.13",
     "@angular/cdk": "18.2.14",
     "@angular/common": "18.2.13",

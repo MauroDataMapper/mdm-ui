@@ -48,7 +48,7 @@
     "@angular/material": "18.2.14",
     "@angular/platform-browser": "18.2.13",
     "@angular/platform-browser-dynamic": "18.2.13",
-    "@bpmn-io/dmn-migrate": "0.4.3",
+    "@bpmn-io/dmn-migrate": "0.5.0",
     "@ctrl/ngx-codemirror": "6.1.0",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@joint/core": "^4.0.1",

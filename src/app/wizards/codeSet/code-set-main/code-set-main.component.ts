@@ -88,6 +88,10 @@ export class CodeSetMainComponent implements OnInit {
     this.classifiers.setValue(value);
   }
 
+  set addAllTerms(value: any) {
+    this.addAllTerms.setValue(value);
+  }
+
   get addAllTerms() {
     return this.setupForm.controls.addAllTerms;
   }
@@ -152,7 +156,7 @@ export class CodeSetMainComponent implements OnInit {
       classifiers: this.classifiers.value,
       folder: this.parentFolderId,
       terms: this.terms.value,
-      terminologies: this.addAllTerms ? [this.terminology.value] : null
+      terminologies: this.addAllTerms.value ? [this.terminology.value] : null
     };
 
     this.resources.codeSet

@@ -50,7 +50,7 @@ import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
 import { ElementLinkComponent } from '../element-link/element-link.component';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { ElementLabelComponent } from '../../shared/element-label/element-label.component';
 import { McSelectComponent } from '../mc-select/mc-select.component';
 
@@ -67,7 +67,7 @@ export class MultipleTermsSelectorComponent {
   @Output() selectedTermsChange = new EventEmitter<any[]>();
   @Output() selectedTerminologyChange = new EventEmitter<any[]>();
   @Output() addingTerms = new EventEmitter<Term[]>();
-  @Output() addAllTerms = false;
+  @Output() changeAddAllTerms = new EventEmitter<boolean>();
 
   @ViewChild('searchInputTerms', { static: true })
   dataSource = new MatTableDataSource<Term>();
@@ -85,14 +85,13 @@ export class MultipleTermsSelectorComponent {
     searchResultPageSize: 20,
     searchResultOffset: 0,
     searchResult: [],
-
     searchResultDisplayedSoFar: 0,
     searchResultTotal: 0,
     loading: false
   };
 
   loading = false;
-
+  addAllTerms = false;
   searchInputTerms: ElementRef;
   currentRecord: number;
   totalItemCount = 0;
@@ -392,5 +391,10 @@ export class MultipleTermsSelectorComponent {
       .subscribe((response: TermIndexResponse) => {
         this.addingTerms.emit(response.body.items);
       });
+  }
+
+  public onChangeAddAllTerms(event: MatCheckboxChange) {
+    this.addAllTerms = event.checked
+    this.changeAddAllTerms.emit(event.checked)
   }
 }

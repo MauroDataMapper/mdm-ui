@@ -110,12 +110,10 @@ export class SecurityHandlerService {
     }
     localStorage.setItem('firstName', user.firstName as string);
     localStorage.setItem('lastName', user.lastName as string);
-    if (user.userName) {
-      localStorage.setItem(
-        'username',
-        JSON.stringify({ username: user.userName, expiry: expireDate })
-      );
-    }
+    localStorage.setItem(
+      'username',
+      JSON.stringify({ username: user.username, expiry: expireDate })
+    );
     localStorage.setItem('userId', user.id as string);
     if (user.email) {
       localStorage.setItem(

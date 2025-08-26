@@ -116,8 +116,8 @@ SPDX-License-Identifier: Apache-2.0
 }
 
 .detailsRowHeader {
-  font-weight: bold;
-  background-color: #f9f9f9;
+  font-weight: bold !important;
+  background-color: #f9f9f9 !important;
 }
 
 // .breadcrumb > li + li:before {

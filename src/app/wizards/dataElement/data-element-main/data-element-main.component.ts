@@ -185,7 +185,7 @@ export class DataElementMainComponent implements OnInit {
   saveNewDataElement = () => {
     let dataType: DataType;
     if (!this.model.showNewInlineDataType) {
-      dataType = { id: this.model.dataType.id as string, domainType: CatalogueItemDomainType.DataElement, label: null };
+      dataType = { id: this.model.dataType.id as string, domainType: this.model.dataType.domainType, label: this.model.dataType.label, description: this.model.dataType.description };
       this.saveDataElement(dataType);
     }
  else {

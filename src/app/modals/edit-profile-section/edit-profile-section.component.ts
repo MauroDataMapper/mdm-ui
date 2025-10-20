@@ -17,13 +17,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   ApiProperty,
   ApiPropertyIndexResponse, Pathable,
   Profile,
-  ProfileField,
+  ProfileField, ProfileSection,
   ProfileValidationError,
   ProfileValidationErrorList
 } from '@maurodatamapper/mdm-resources';
@@ -37,32 +37,31 @@ import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
   EditProfileModalConfiguration,
   EditProfileModalResult
-} from './edit-profile-modal.model';
+} from './edit-profile-section.model';
 import { EditingService } from '@mdm/services/editing.service';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
-import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatInput } from '@angular/material/input';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AlertComponent } from '../../shared/alert/alert.component';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { EditProfileSectionComponent } from '@mdm/modals/edit-profile-section/edit-profile-section.component';
 
 @Component({
-    selector: 'mdm-edit-profile-modal',
-    templateUrl: './edit-profile-modal.component.html',
-    styleUrls: ['./edit-profile-modal.component.scss'],
+    selector: '[mdm-edit-profile-section]',
+    templateUrl: './edit-profile-section.component.html',
+    styleUrls: ['./edit-profile-section.component.scss'],
     standalone: true,
-  imports: [MatDialogTitle, NgIf, MatDialogContent, FormsModule, AlertComponent, NgFor, MatTooltip, ContentEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError, MatDialogActions, EditProfileSectionComponent]
+    imports: [NgIf, FormsModule, NgFor, MatTooltip, ContentEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError]
 })
-export class EditProfileModalComponent implements OnInit {
-  profileData: Profile;
+export class EditProfileSectionComponent implements OnInit {
+  @Input() profileSection: ProfileSection;
+
   description?: string;
   okBtnText: string;
   showCanEditPropertyAlert = true;
@@ -90,7 +89,7 @@ export class EditProfileModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<
-      EditProfileModalComponent,
+      EditProfileSectionComponent,
       EditProfileModalResult
     >,
     @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
@@ -118,7 +117,7 @@ export class EditProfileModalComponent implements OnInit {
           ) {
             field.currentValue = null;
           }
-          else {
+ else {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
@@ -127,95 +126,14 @@ export class EditProfileModalComponent implements OnInit {
       });
     });
 
-    this.profileData = data.profile;
     this.description = data.description;
     this.okBtnText = data.okBtn ?? 'Save';
   }
 
   ngOnInit(): void {
-    this.resources.apiProperties
-      .listPublic()
-      .pipe(
-        catchError((errors) => {
-          this.messageHandler.showError(
-            'There was a problem getting the configuration properties.',
-            errors
-          );
-          return [];
-        })
-      )
-      .subscribe((response: ApiPropertyIndexResponse) => {
-        this.loadDefaultCustomProfile(response.body.items);
-      });
   }
 
   save() {
-    this.validateData()
-      .pipe(
-        switchMap((errorList) => {
-          this.validationErrors = errorList;
-
-          if (errorList.fieldTotal > 0) {
-            return this.dialog
-              .openConfirmation({
-                data: {
-                  title: 'Validation issues',
-                  message: `There were ${errorList.fieldTotal} validation issue(s) found. Are you sure you want to save your changes?`,
-                  okBtnTitle: 'Yes, continue',
-                  cancelBtnTitle: 'No'
-                }
-              })
-              .afterClosed();
-          }
-
-          // No validation issues, continue
-          return of({ status: ModalDialogStatus.Ok });
-        }),
-        switchMap((dialogResult) => {
-          if (dialogResult.status !== ModalDialogStatus.Ok) {
-            return EMPTY;
-          }
-
-          // Continue to next step
-          return of({});
-        })
-      )
-      .subscribe(() => {
-        const returnData: Profile = JSON.parse(
-          JSON.stringify(this.profileData)
-        );
-
-        returnData.sections.forEach((section) => {
-          section.fields.forEach((field) => {
-            if (
-              field.dataType === 'folder'
-              && field.currentValue
-              && field.currentValue.length > 0
-            ) {
-              field.currentValue = JSON.stringify(field.currentValue);
-            }
-          });
-        });
-
-        this.dialogRef.close({
-          status: ModalDialogStatus.Ok,
-          profile: returnData
-        });
-      });
-  }
-
-  onCancel() {
-    this.editing.confirmCancelAsync().subscribe((confirm) => {
-      if (confirm) {
-        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-      }
-    });
-  }
-
-  validate() {
-    this.validateData().subscribe(
-      errorList => (this.validationErrors = errorList)
-    );
   }
 
   getValidationError(
@@ -252,40 +170,4 @@ export class EditProfileModalComponent implements OnInit {
         || (this.data.finalised && !field.editableAfterFinalisation);
   }
 
-  private validateData(): Observable<ProfileValidationErrorList> {
-    return this.resources.profile
-      .validateProfile(
-        this.data.profile.namespace as string,
-        this.data.profile.name as string,
-        this.data.catalogueItem.domainType,
-        this.data.catalogueItem.id,
-        this.profileData,
-        this.data.profile.version as string
-      )
-      .pipe(
-        map<unknown, ProfileValidationErrorList>(() => {
-          return {
-            total: 0,
-            fieldTotal: 0,
-            errors: []
-          };
-        }),
-        catchError((error: HttpErrorResponse) => {
-          return of(error.error as ProfileValidationErrorList);
-        }),
-        finalize(() => (this.isValidated = true))
-      );
-  }
-
-  private loadDefaultCustomProfile(properties: ApiProperty[]) {
-    console.log(properties);
-    console.log(this.showCanEditPropertyAlertKey);
-    this.showCanEditPropertyAlert = JSON.parse(
-      this.getContentProperty(properties, this.showCanEditPropertyAlertKey)
-    );
-  }
-
-  private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find(p => p.key === key)?.value;
-  }
 }

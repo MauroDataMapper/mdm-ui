@@ -387,6 +387,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
       sections: [
         {
           name: defaultProfileSectionName,
+          sections: [],
           fields
         }
       ]

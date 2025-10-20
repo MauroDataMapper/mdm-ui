@@ -17,23 +17,23 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input } from '@angular/core';
-import { Profile } from '@maurodatamapper/mdm-resources';
+import { ProfileSection } from '@maurodatamapper/mdm-resources';
 import { MoreDescriptionComponent } from '../more-description/more-description.component';
 import { FormsModule } from '@angular/forms';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf, NgFor } from '@angular/common';
-import { ProfileSectionComponent } from '@mdm/shared/profile-section/profile-section.component';
+import { EditProfileSectionComponent } from '@mdm/modals/edit-profile-section/edit-profile-section.component';
 
 @Component({
-    selector: 'mdm-profile-details',
-    templateUrl: './profile-details.component.html',
-    styleUrls: ['./profile-details.component.scss'],
+    selector: '[mdm-profile-section]',
+    templateUrl: './profile-section.component.html',
+    styleUrls: ['./profile-section.component.scss'],
     standalone: true,
-  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent, ProfileSectionComponent]
+  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent, EditProfileSectionComponent]
 })
-export class ProfileDetailsComponent {
-  @Input() currentProfileDetails: Profile;
+export class ProfileSectionComponent {
+  @Input() profileSection: ProfileSection;
 
   readonly formOptionsMap = {
     integer: 'number',

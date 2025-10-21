@@ -50,6 +50,7 @@ SPDX-License-Identifier: Apache-2.0
             position: relative;
             vertical-align: middle;
           "
+          [readonly]="true"
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
           name="{{ field.fieldName }} + {{ profileSection.name }}"
@@ -62,8 +63,6 @@ SPDX-License-Identifier: Apache-2.0
             field.dataType != 'text' &&
             field.dataType != 'date' &&
             field.dataType != 'datetime' &&
-            field.dataType != 'boolean' &&
-            field.dataType != 'folder' &&
             field.dataType != 'boolean'
           "
           style="background-color: #ffffff; width: 100%; border: hidden"
@@ -73,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
           value="field.currentValue"
         />
         <input
-          *ngIf="field.dataType === 'date'"
+          *ngIf="field.dataType === 'date' && field.currentValue != ''"
           style="background-color: #ffffff; border: hidden"
           [readonly]="true"
           type="date"

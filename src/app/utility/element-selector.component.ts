@@ -45,7 +45,6 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } fro
 import { GridService } from '@mdm/services/grid.service';
 import {
   ContainerDomainType,
-  FolderIndexResponse,
   MdmTreeItemListResponse,
   Terminology,
   SearchQueryParameters

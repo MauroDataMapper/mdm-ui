@@ -223,20 +223,22 @@ export class ElementSelectorComponent implements OnInit {
   }
 
   loadAllFolders = () => {
-    this.loading = true;
-    this.resourceService.folder.list().subscribe(
-      (data: FolderIndexResponse) => {
-        this.loading = false;
+  this.reloading = true;
+  this.resourceService.tree
+    .list(ContainerDomainType.Folders, { domainType: 'folders' })
+    .subscribe(
+      (data) => {
         this.rootNode = {
-          children: data.body.items,
+          children: data.body,
           isRoot: true
         };
+        this.reloading = false;
       },
       () => {
-        this.loading = false;
+        this.reloading = false;
       }
     );
-  };
+};
 
   onTerminologySelect = (terminology: any) => {
     this.dataSource = new MatTableDataSource<any>(null);

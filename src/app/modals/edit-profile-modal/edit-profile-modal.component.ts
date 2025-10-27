@@ -278,10 +278,8 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {
-    console.log(properties);
-    console.log(this.showCanEditPropertyAlertKey);
     this.showCanEditPropertyAlert = JSON.parse(
-      this.getContentProperty(properties, this.showCanEditPropertyAlertKey)
+      this.getContentProperty(properties, this.showCanEditPropertyAlertKey) || 'false'
     );
   }
 

@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     defaults:
       run:
         working-directory: ./mdm-ui # Only applies to `run` steps

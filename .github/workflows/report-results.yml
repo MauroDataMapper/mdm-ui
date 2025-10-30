@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name:
-          Debug: list artifacts from triggering run
+          Debug list artifacts from triggering run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

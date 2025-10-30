@@ -17,6 +17,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name:
+          Debug: list artifacts from triggering run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Triggering run id: ${{ github.event.workflow_run.id }}"
+          curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts" \
+            | jq .
+
+      - name: List downloaded artifacts (debug)
+        run: |
+          ls -R artifacts || true
+
       - name: Download test-results artifact
         uses: actions/download-artifact@v4
         with:
@@ -40,10 +54,6 @@ jobs:
         with:
           name: dist-artifacts
           path: artifacts/dist
-
-      - name: List downloaded artifacts (debug)
-        run: |
-          ls -R artifacts || true
 
       - name: Publish Test report (dorny)
         uses: dorny/test-reporter@v1

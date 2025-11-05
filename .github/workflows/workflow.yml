@@ -170,7 +170,7 @@ jobs:
         run: npm run eslint-sarif || true # Always succeed, even with linting errors
 
       - name: Upload EsLint scan results to GitHub Security tab
-        if: success() || failure()
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: './mdm-ui/eslint/eslint_report.sarif'
@@ -184,7 +184,7 @@ jobs:
           MDM_UI_THEME_NAME: nhs-digital
 
       - name: Archive distribution artifacts
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )}}
         run: |
           cd dist ; \
           for i in mdm-ui-*.tgz; do \
@@ -193,7 +193,7 @@ jobs:
           done
 
       - name: Send a stream message
-        if: success() || failure()
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' }}
         uses: zulip/github-actions-zulip/send-message@v1
         with:
           api-key: ${{ secrets.ZULIP_API_KEY }}

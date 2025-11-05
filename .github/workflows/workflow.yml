@@ -202,8 +202,5 @@ jobs:
           to: "build/github-actions"
           type: "stream"
           topic: "${{github.repository}}"
-          content: |
-            ${{ github.event.workflow_run.conclusion == 'success' && ':check_mark:' || ':cross_mark:' }} \
-            ${{ github.event.workflow_run.head_repository.full_name }} : **${{ github.event.workflow_run.head_branch }}** \
-            GitHub Actions build result: **${{ github.event.workflow_run.conclusion }}**
-            ${{ github.event.workflow_run.html_url }}
+          content: "${{ job.status == 'success' && ':check_mark:' || ':cross_mark:' }} ${{github.repository}} : **${{github.ref}}**\nGitHub Actions build result: **${{ job.status }}**\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+

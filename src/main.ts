@@ -32,6 +32,8 @@ import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { UIRouter } from '@uirouter/core';
 import { userPageRoutes } from '@mdm/modules/users-routes/users-routes.module'
 import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 
 if (environment.production) {
   enableProdMode();
@@ -39,6 +41,8 @@ if (environment.production) {
     window.console.log = () => {};
   }
 }
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 bootstrapApplication(UiViewComponent, {
   providers: [

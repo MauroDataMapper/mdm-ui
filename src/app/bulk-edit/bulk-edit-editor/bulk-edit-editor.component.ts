@@ -258,7 +258,7 @@ export class BulkEditEditorComponent implements OnInit {
         };
       })
       .forEach((value) => {
-        this.gridApi.setColumnWidth(value.column, value.width);
+        this.gridApi.setColumnWidths([{ key: value.column, newWidth: value.width }]);
       });
   }
 
@@ -315,6 +315,7 @@ export class BulkEditEditorComponent implements OnInit {
       column.cellRenderer = 'checkboxCellRenderer';
       column.editable = false;
       column.cellStyle = { textAlign: 'center' };
+      column.cellDataType = 'boolean'
     }
 
     if (field.dataType === 'date') {

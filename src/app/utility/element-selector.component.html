@@ -22,12 +22,12 @@ SPDX-License-Identifier: Apache-2.0
         What type of element are you looking for?
         <div style="margin-top: 10px">
           <ul class="list-group" style="cursor: pointer">
-            <!--Not supported for now-->
-            <!--<li class="list-group-item" *ngIf="validTypesToSelect.includes('Folder')">
+           
+            <li class="list-group-item" *ngIf="validTypesToSelect?.includes('Folder')">
                     <div (click)="onElementTypeSelect('Folder')">
-                      <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
+                      <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"/> Folder
                     </div>
-                    </li>-->
+            </li>
             <li
               class="list-group-item"
               *ngIf="validTypesToSelect?.includes('CodeSet')"
@@ -214,8 +214,8 @@ SPDX-License-Identifier: Apache-2.0
           </div>
         </div>
       </div>
-      <!--Not supported for now-->
-      <!--<div *ngIf="formData.selectedType == 'Folder'">
+      
+      <div *ngIf="formData.selectedType == 'Folder'">
       <div style="margin-bottom: 10px;margin-left: 5px;">
           Please select a Folder:
       </div>
@@ -227,7 +227,7 @@ SPDX-License-Identifier: Apache-2.0
                   (nodeClickEvent)="onNodeInTreeSelect($event)"
                   [node]="rootNode"></mdm-folders-tree>
       </div>
-  </div>-->
+  </div>
       <div
         *ngIf="formData.selectedType === 'Term'"
         style="background-color: #fff"

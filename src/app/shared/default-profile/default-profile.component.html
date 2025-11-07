@@ -117,22 +117,6 @@ SPDX-License-Identifier: Apache-2.0
     <tr *ngIf="isInControlList('terminology')" data-cy="terminology">
       <td class="detailsRowHeader">Terminology</td>
       <td data-cy="value" *ngIf="catalogueItem.terminology">
-        <span *ngIf="catalogueItem.terminology">
-          <small
-            ><span
-              *ngIf="!catalogueItem.terminology.finalised"
-              class="badge badge-warning ml-1"
-              >Draft</span
-            ></small
-          >
-          <small
-            ><span
-              *ngIf="catalogueItem.terminology.finalised"
-              class="badge badge-success ml-1"
-              >Finalised</span
-            >
-          </small>
-        </span>
         <mdm-element-link
           [element]="catalogueItem.terminology"
           [showLink]="true"

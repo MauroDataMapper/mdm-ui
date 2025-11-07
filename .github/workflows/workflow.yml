@@ -1,20 +1,54 @@
-name: Node.js CI
+name: Continuous Integration
 
 on:
   push:
     branches: [ "**" ]
-  pull_request:
-    branches: [ "**" ]
+  pull_request_target:
+    types: [ opened, synchronize ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+      actions: write
+      security-events: write
     defaults:
       run:
         working-directory: ./mdm-ui # Only applies to `run` steps
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Get User Permission
+        if: ${{ github.event_name == 'pull_request_target' }}
+        id: checkAccess
+        uses: actions-cool/check-user-permission@v2
+        with:
+          require: write
+          username: ${{ github.triggering_actor }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check User Permission
+        if: ${{ github.event_name == 'pull_request_target' && steps.checkAccess.outputs.require-result == 'false' }}
+        run: |
+          echo "${{ github.triggering_actor }} does not have permissions on this repo."
+          echo "Current permission level is ${{ steps.checkAccess.outputs.user-permission }}"
+          echo "Job originally triggered by ${{ github.actor }}"
+          exit 1
+
+      - name: Checkout PR head (gated for pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' && steps.checkAccess.outputs.require-result == 'true' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # This is dangerous without the first access check
+          path: ./mdm-ui
+
+      - name: Checkout default (push/pull_request)
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
         with:
           path: ./mdm-ui
 
@@ -81,7 +115,7 @@ jobs:
           npx jest --version
           npm ls jsdom jest ts-jest @angular/core
           printenv | grep -v -i 'token\|secret\|key' | sort
-          echo "${{ toJson(env) }}"
+
 
       - name: Run tests
         run: npx jest --coverage
@@ -136,7 +170,7 @@ jobs:
         run: npm run eslint-sarif || true # Always succeed, even with linting errors
 
       - name: Upload EsLint scan results to GitHub Security tab
-        if: success() || failure()
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: './mdm-ui/eslint/eslint_report.sarif'
@@ -150,7 +184,7 @@ jobs:
           MDM_UI_THEME_NAME: nhs-digital
 
       - name: Archive distribution artifacts
-        if: success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )}}
         run: |
           cd dist ; \
           for i in mdm-ui-*.tgz; do \
@@ -159,7 +193,7 @@ jobs:
           done
 
       - name: Send a stream message
-        if: success() || failure()
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' }}
         uses: zulip/github-actions-zulip/send-message@v1
         with:
           api-key: ${{ secrets.ZULIP_API_KEY }}
@@ -169,3 +203,4 @@ jobs:
           type: "stream"
           topic: "${{github.repository}}"
           content: "${{ job.status == 'success' && ':check_mark:' || ':cross_mark:' }} ${{github.repository}} : **${{github.ref}}**\nGitHub Actions build result: **${{ job.status }}**\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+

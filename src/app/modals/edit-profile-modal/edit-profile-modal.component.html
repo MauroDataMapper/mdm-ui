@@ -37,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0
       finalised.
     </mdm-alert>
     <table
-      *ngIf="this.profileData.sections.length > 0"
+      *ngIf="this.profileData && this.profileData.sections.length > 0"
       class="table table-bordered"
       role="presentation"
     >

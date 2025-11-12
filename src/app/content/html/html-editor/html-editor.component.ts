@@ -36,7 +36,7 @@ import { filter } from 'rxjs/operators';
 import { HtmlParserService } from '../html-parser/html-parser.service';
 import { SafePipe } from '../../safe.pipe';
 import { FormsModule } from '@angular/forms';
-import { NgxJoditComponent } from 'ngx-jodit';
+import { JoditConfig, NgxJoditComponent } from 'ngx-jodit';
 import { NgIf } from '@angular/common';
 
 const basicButtons = [
@@ -116,7 +116,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   @Input() buttonMode: HtmlButtonMode;
   ButtonModeType = HtmlButtonMode;
 
-  editorConfig: object;
+  editorConfig: JoditConfig;
 
   displayContent = '';
 
@@ -190,6 +190,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     }
 
     const focusNode = editor.selection.sel.focusNode;
+    const savedSelection = editor.selection.save();
 
     component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(
       (element: MauroItem & Pathable) => {
@@ -197,7 +198,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
           return;
         }
 
-        this.createAndInsertLink(this, editor, focusNode, element);
+        this.createAndInsertLink(this, editor, focusNode, element, savedSelection);
       }
     );
 
@@ -211,7 +212,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     if (!component.allowAutocompleteSearch) {
       return;
     }
-
+    const savedSelection = editor.selection.save();
     const focusNode = editor.selection.sel.focusNode;
 
     component.dialog
@@ -223,7 +224,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
           component,
           editor,
           focusNode,
-          response.selected
+          response.selected,
+          savedSelection
         );
       });
   }
@@ -232,7 +234,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     component: HtmlEditorComponent,
     editor: any,
     focusNode: any,
-    element: MauroItem & Pathable
+    element: MauroItem & Pathable,
+    savedSelection: any
   ) {
     const path
       = element.path ?? component.pathNames.createFromBreadcrumbs(element);
@@ -251,8 +254,9 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     const html = editor.create.fromHTML(
       `<a href='${pathWithoutBranch}' title='${element.label}'>${element.label}</a>`
     );
-
-    editor.selection.setCursorIn(focusNode);
+    editor.selection.restore(savedSelection);
+    // editor.selection.setCursorIn(focusNode);
+    editor.selection.focus();
     editor.selection.insertHTML(html);
 
     return { path, element };

@@ -30,7 +30,6 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
 import { ModelPathComponent } from './model-path/model-path.component';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ElementSelectorComponent', () => {

@@ -20,6 +20,10 @@ table.mat-mdc-table .mat-mdc-header-cell {
   font-weight: 600;
 }
 
+table tbody {
+  width: 100%;
+}
+
 .table-striped tbody tr:nth-of-type(even) {
   background-color: #fcfcfd;
 }

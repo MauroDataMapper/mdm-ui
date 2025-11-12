@@ -302,7 +302,8 @@ describe('DefaultProfileProviderService', () => {
       sections: [
         {
           name: 'Default',
-          fields
+          fields,
+          sections: []
         }
       ]
     };

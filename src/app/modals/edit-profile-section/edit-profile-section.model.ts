@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<table *ngIf="this.currentProfileDetails" class="table table-bordered" role="presentation">
-  <tbody>
-    <tr *ngFor="let section of this.currentProfileDetails?.sections"
-        mdm-profile-section [profileSection]="section">
-    </tr>
-  </tbody>
-</table>
+*/
+
+import { CatalogueItem, Profile } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+
+export interface EditProfileModalConfiguration {
+  profile: Profile
+  profileName: string
+  catalogueItem: CatalogueItem
+  isNew: boolean
+  description?: string
+  okBtn?: string
+  finalised?: boolean
+}
+
+export interface EditProfileModalResult {
+  status: ModalDialogStatus
+  profile?: Profile
+}

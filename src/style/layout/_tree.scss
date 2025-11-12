@@ -215,8 +215,8 @@ tr th.mat-mdc-header-cell {
 }
 
 .detailsRowHeader {
-  max-width: 180px;
-  width: 180px;
+  max-width: 20em;
+  width: 20em;
   @include respond-to($mobile-xs) {
     max-width: 140px;
     width: 140px;

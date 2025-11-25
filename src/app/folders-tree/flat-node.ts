@@ -151,7 +151,7 @@ const domainTypeIcons = new Map<CatalogueItemDomainType, FlatNodeIconCallback>([
   ],
   [
     CatalogueItemDomainType.DataModel,
-    (fnode, _) =>
+    fnode =>
       fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'
   ],
   [CatalogueItemDomainType.Terminology, () => 'fa-book'],

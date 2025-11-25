@@ -31,13 +31,13 @@ describe('LinkCreatorService', () => {
   });
 
   it('render urls as HTML', () => {
-    expect(service.createLink('http://localhost', '', 'link')).toEqual(
+    expect(service.createLink('http://localhost')).toEqual(
       'http://localhost'
     );
   });
 
   it('render emails as HTML', () => {
-    expect(service.createLink('mailto:user@test.com', '', 'email')).toEqual(
+    expect(service.createLink('mailto:user@test.com')).toEqual(
       'mailto:user@test.com'
     );
   });

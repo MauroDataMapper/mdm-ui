@@ -24,8 +24,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 export class LinkCreatorService {
   constructor(private elementTypes: ElementTypesService) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public createLink(href, title, text) {
+  public createLink(href) {
     href = href.split('^').join(' ');
 
     let elementType = '';

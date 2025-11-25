@@ -28,7 +28,6 @@ import { DiagramParameters } from '../diagram/diagram.model';
   providedIn: 'root'
 })
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class BasicDiagramService {
   fontColorWhite = '#ffffff';
   darkBackground = '#4a708b';
@@ -58,10 +57,6 @@ export abstract class BasicDiagramService {
   abstract render(data: any): void;
 
   abstract configurePaper(paper: joint.dia.Paper): void;
-
-  public updateDataClassComponentLevel(data: any): void { }
-
-  public updateDataElementLevel(data: any): void { }
 
   public onDrag(cellView: joint.dia.CellView): void {
     if (cellView instanceof joint.dia.ElementView) {

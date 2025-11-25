@@ -91,8 +91,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
 
   constructor(private dialog: MatDialog, private stringConflict: StringConflictService) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (this.isCommitting) {
       this.sourceUsed = this.mergeItem.branchSelected;
       switch (this.mergeItem.branchSelected) {

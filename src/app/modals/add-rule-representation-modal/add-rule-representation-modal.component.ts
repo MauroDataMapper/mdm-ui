@@ -47,6 +47,8 @@ import { NgFor, NgIf } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
+import { migrateDiagram } from '@bpmn-io/dmn-migrate';
+
 export class RuleLanguage {
   displayName: string;
   value: string;
@@ -222,7 +224,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
             ? this.data.representation
             : this.initialDiagram;
       }
-      const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
+
       migrateDiagram(xml).then((migratedXML) => {
         this.modeler.importXML(migratedXML, (err: Error) => {
           if (err) {

@@ -320,13 +320,13 @@ export class DiagramComponent implements OnInit {
   save = () => {
     switch (this.mode) {
       case 'dataflow-class':
-        this.diagramService.updateDataClassComponentLevel(
+        (this.diagramService as DataflowDataclassDiagramService).updateDataClassComponentLevel(
           this.dataClassComponent
         );
         this.isEdit = false;
         break;
       case 'dataflow-element':
-        this.diagramService.updateDataElementLevel(this.dataClassComponent);
+        (this.diagramService as DataflowDataelementDiagramService).updateDataElementLevel(this.dataClassComponent);
         this.isEdit = false;
         break;
       default:

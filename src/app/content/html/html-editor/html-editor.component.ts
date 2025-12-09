@@ -147,7 +147,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       buttons,
       buttonsMD: buttons,
       buttonsSM: buttons,
-      buttonsXS: buttons
+      buttonsXS: buttons,
+      sourceEditor: 'ace',
     };
   }
 

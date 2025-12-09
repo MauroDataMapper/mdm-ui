@@ -346,6 +346,13 @@ span.mchighlighter {
   width: 2em;
 }
 
+.jodit-popup {
+  pointer-events: auto;
+}
+
+.jodit-source{
+  background-color: white !important;
+}
 
 .jodit-container:not(.jodit_inline) .jodit-workplace {
   background-color: white !important; // Fix Jodit background issues

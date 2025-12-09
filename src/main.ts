@@ -35,6 +35,18 @@ import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 
+import 'jodit/esm/plugins/source/source.js';
+import 'jodit/esm/plugins/source/editor/engines/ace.js';
+import 'jodit/esm/plugins/inline-popup/inline-popup.js';
+
+// ACE core
+import 'ace-builds/src-noconflict/ace.js';
+
+// ACE modes & themes Jodit expects
+import 'ace-builds/src-noconflict/mode-html.js';
+import 'ace-builds/src-noconflict/ext-searchbox.js';
+import 'ace-builds/src-noconflict/theme-chrome.js';
+
 if (environment.production) {
   enableProdMode();
   if (window) {

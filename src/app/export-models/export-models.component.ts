@@ -63,7 +63,7 @@ export class ExportModelsComponent implements OnInit {
   processing = false;
   exporters: Exporter[] = [];
   exportedFileIsReady = false;
-  exportType: ModelDomain;
+  exportType: ModelDomain | 'folders';
   asynchronous = false;
   downloadLinks = new Array<HTMLAnchorElement>();
 
@@ -89,6 +89,10 @@ export class ExportModelsComponent implements OnInit {
         return CatalogueItemDomainType.CodeSet;
       case 'referenceDataModels':
         return CatalogueItemDomainType.ReferenceDataModel;
+      case 'versionedFolders':
+        return CatalogueItemDomainType.VersionedFolder;
+      case 'folders':
+        return CatalogueItemDomainType.Folder;
       default:
         return null;
     }

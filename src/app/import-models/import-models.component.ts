@@ -91,7 +91,7 @@ export class ImportModelsComponent implements OnInit {
     File: 'file'
   };
 
-  importType: ModelDomain;
+  importType: ModelDomain | CatalogueItemDomainType | 'folders';
 
   allowedFolderTreeDomainTypes = [
     CatalogueItemDomainType.Folder,

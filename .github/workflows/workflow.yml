@@ -41,14 +41,14 @@ jobs:
 
       - name: Checkout PR head (gated for pull_request_target)
         if: ${{ github.event_name == 'pull_request_target' && steps.checkAccess.outputs.require-result == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }} # This is dangerous without the first access check
           path: ./mdm-ui
 
       - name: Checkout default (push/pull_request)
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: ./mdm-ui
 
@@ -81,7 +81,7 @@ jobs:
       - name: Checkout mdm-resources
         if: success() && github.ref != 'refs/heads/main'
         # working-directory: ./mdm-resources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: MauroDataMapper/mdm-resources
           ref: refs/heads/feature/folder-importer-exporter # change to test against a different branch, but always change back to develop before merge

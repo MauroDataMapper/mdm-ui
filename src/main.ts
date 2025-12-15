@@ -46,6 +46,7 @@ import 'ace-builds/src-noconflict/ace.js';
 import 'ace-builds/src-noconflict/mode-html.js';
 import 'ace-builds/src-noconflict/ext-searchbox.js';
 import 'ace-builds/src-noconflict/theme-chrome.js';
+import { MatNativeDateModule } from '@angular/material/core';
 
 if (environment.production) {
   enableProdMode();
@@ -68,6 +69,7 @@ bootstrapApplication(UiViewComponent, {
         defaultHttpRequestOptions: { withCredentials: true },
         apiEndpoint: environment.apiEndpoint
       }),
+      MatNativeDateModule,
       UIRouterModule.forRoot({
         useHash: true,
         states: [

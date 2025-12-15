@@ -84,7 +84,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: MauroDataMapper/mdm-resources
-          ref: refs/heads/feature/folder-importer-exporter # change to test against a different branch, but always change back to develop before merge
+          ref: refs/heads/develop
           path: ./mdm-resources
 
       - name: Build mdm-resources

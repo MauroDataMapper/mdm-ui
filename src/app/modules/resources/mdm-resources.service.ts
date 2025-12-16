@@ -299,7 +299,7 @@ export class MdmResourcesService {
   }
 
   getImportableResource(
-    domainType: ModelDomain | CatalogueItemDomainType
+    domainType: ModelDomain | CatalogueItemDomainType | 'folders'
   ): ImportableResource {
     if (
       domainType === 'dataModels'
@@ -327,6 +327,14 @@ export class MdmResourcesService {
       || domainType === CatalogueItemDomainType.ReferenceDataModel
     ) {
       return this.referenceDataModel;
+    }
+    if (
+      domainType === 'folders'
+      || domainType === CatalogueItemDomainType.Folder
+      || domainType === 'versionedFolders'
+      || domainType === CatalogueItemDomainType.VersionedFolder
+    ) {
+      return this.folder;
     }
 
     return null;
@@ -366,7 +374,7 @@ export class MdmResourcesService {
     }
   }
 
-  getExportableResource(domain: ModelDomain): ExportableResource {
+  getExportableResource(domain: ModelDomain | 'folders'): ExportableResource {
     switch (domain) {
       case 'dataModels':
         return this.dataModel;
@@ -376,6 +384,8 @@ export class MdmResourcesService {
         return this.codeSet;
       case 'referenceDataModels':
         return this.referenceDataModel;
+      case 'folders':
+        return this.folder;
       default:
         throw new Error(`Not an ExportableResource: ${domain}`);
     }

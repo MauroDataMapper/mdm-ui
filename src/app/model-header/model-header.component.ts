@@ -67,6 +67,7 @@ import { ElementStatusComponent } from '../utility/element-status/element-status
 import { ElementIconComponent } from '../shared/element-icon/element-icon.component';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgIf, NgClass, NgFor } from '@angular/common';
+import { isContainerDomainType } from '../../../../mdm-resources/src';
 
 export type ModelHeaderCatalogueItem = CatalogueItemDetail &
   Securable &
@@ -126,7 +127,7 @@ export class ModelHeaderComponent implements OnInit {
     if (!this.item) {
       return false;
     }
-    return isModelDomainType(this.item.domainType);
+    return isModelDomainType(this.item.domainType) || isContainerDomainType(this.item.domainType);
   }
 
   get canBulkEdit() {

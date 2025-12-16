@@ -68,7 +68,7 @@ export class ExportHandlerService {
   exportDataModel(
     models: CatalogueItem[],
     exporter: Exporter,
-    type: ModelDomain,
+    type: ModelDomain | 'folders',
     options?: ExportQueryParameters
   ): Observable<HttpResponse<ArrayBuffer>> {
     const ids = models.map(model => model.id);

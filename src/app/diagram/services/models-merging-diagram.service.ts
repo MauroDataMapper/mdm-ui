@@ -59,12 +59,23 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     this.changeComponent(null);
 
     result.body.forEach((item: ModelVersionItem) => {
+      let versionText = `${item.label}\n\n`;
+      if (item.branchName) {
+        versionText += `Branch: ${item.branchName}`;
+      }
+      else if (item.modelVersion) {
+        versionText += `Version: ${item.modelVersionTag}`;
+      }
+      else if (item.modelVersion) {
+        versionText += `Version: ${item.modelVersion}`;
+      }
+
       if (item.id === this.parentId) {
         this.addColoredRectangleCell(
           this.fontColorWhite,
           this.darkOrange,
           item.id,
-          `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`,
+          versionText,
           300,
           100,
           288
@@ -73,18 +84,29 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
  else if (item.isNewFork) {
         this.addRectangleCell(
           item.id,
-          `Fork \n\n ${item.label} \n\n  ${item.branch} branch`,
+          `Fork \n\n ${item.label} \n\n  ${item.branchName} branch`,
           300,
           100,
           288
         );
       }
  else if (item.isNewDocumentationVersion) {
+        let versionText = `${item.label}\n\n`;
+        if (item.branchName) {
+          versionText += `Branch: ${item.branchName}`;
+        }
+        else if (item.modelVersion) {
+          versionText += `Version: ${item.modelVersionTag}`;
+        }
+        else if (item.modelVersion) {
+          versionText += `Version: ${item.modelVersion}`;
+        }
+
         this.addColoredRectangleCell(
           this.fontColorBlack,
           this.shadedOrange,
           item.id,
-          `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`,
+          versionText,
           300,
           100,
           288
@@ -107,7 +129,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
             this.fontColorBlack,
             this.shadedOrange,
             item.id,
-            `${item.label} \n\n ${item.branch} branch`,
+            `${item.label} \n\n ${item.branchName} branch`,
             300,
             100,
             288

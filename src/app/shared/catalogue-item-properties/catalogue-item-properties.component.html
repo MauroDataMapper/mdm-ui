@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
       <span *ngIf="item.modelVersionTag">({{ item.modelVersion }})</span>
     </small>
   </div>
-  <div class="text-muted" data-cy="branch" *ngIf="item?.branchName">
+  <div class="text-muted" data-cy="branch" *ngIf="item?.branchName || item?.modelVersion">
     <small>
       <span class="fas fa-code-branch" matTooltip="Branch name"></span>
       <span><strong>Branch: </strong></span>

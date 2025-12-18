@@ -21,8 +21,18 @@ SPDX-License-Identifier: Apache-2.0
   <span class="fas fa-code-branch"></span>
   {{ item.branchName }}
 </small>
+<small *ngIf="item.owningModel && item.owningModel.branchName && !item.owningModel.modelVersion" class="ml-1 text-muted">
+  <span> | </span>
+  <span class="fas fa-code-branch"></span>
+  {{ item.owningModel.branchName }}
+</small>
 <small *ngIf="item.modelVersion" class="ml-1 text-muted">
   <span> | </span>
   <span class="fas fa-file-alt"></span>
-  <span *ngIf="item.modelVersionTag"> {{ item.modelVersionTag?item.modelVersionTag:item.modelVersion }}</span>
+  <span> {{ item.modelVersionTag?item.modelVersionTag:item.modelVersion }}</span>
+</small>
+<small *ngIf="item.owningModel && item.owningModel.modelVersion" class="ml-1 text-muted">
+  <span> | </span>
+  <span class="fas fa-file-alt"></span>
+  <span> {{ item.owningModel.modelVersionTag?item.owningModel.modelVersionTag:item.owningModel.modelVersion }}</span>
 </small>

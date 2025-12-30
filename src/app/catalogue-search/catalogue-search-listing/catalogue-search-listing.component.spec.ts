@@ -270,7 +270,7 @@ describe('CatalogueSearchListingComponent', () => {
           body: {
             sections: [
               {
-                name: 'section',
+                label: 'section',
                 fields: [key]
               }
             ]

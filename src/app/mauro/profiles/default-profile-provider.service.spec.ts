@@ -301,7 +301,7 @@ describe('DefaultProfileProviderService', () => {
       label: item.label,
       sections: [
         {
-          name: 'Default',
+          label: 'Default',
           fields,
           sections: []
         }
@@ -590,7 +590,7 @@ describe('DefaultProfileProviderService', () => {
 
       // Manually create bad string format
       profile.sections
-        .find(s => s.name === 'Default')
+        .find(s => s.label === 'Default')
         .fields.find(
           f => f.metadataPropertyName === 'multiplicity'
         ).currentValue = 'bad format';

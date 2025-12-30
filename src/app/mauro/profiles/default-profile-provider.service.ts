@@ -279,7 +279,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     }
 
     const section = profile.sections.find(
-      sec => sec.name === defaultProfileSectionName
+      sec => sec.label === defaultProfileSectionName
     );
     if (!section) {
       return throwError(() => new Error('Cannot find default profile section'));
@@ -386,7 +386,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
       label: item.label,
       sections: [
         {
-          name: defaultProfileSectionName,
+          label: defaultProfileSectionName,
           sections: [],
           fields
         }
@@ -399,7 +399,7 @@ export class DefaultProfileProviderService implements ProfileProviderService {
     profile: Profile
   ): MauroItem {
     const section = profile.sections.find(
-      sec => sec.name === defaultProfileSectionName
+      sec => sec.label === defaultProfileSectionName
     );
 
     if (!section) {

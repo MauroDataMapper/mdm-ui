@@ -59,7 +59,7 @@ export const environment = {
   features: {
     useSubscribedCatalogues: true,
     useVersionedFolders: true,
-    useOpenIdConnect: false,
+    useOpenIdConnect: true,
     useDigitalObjectIdentifiers: false,
     useIssueReporting: false
   }

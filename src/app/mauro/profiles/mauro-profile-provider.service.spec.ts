@@ -117,7 +117,7 @@ describe('MauroProfileProviderService', () => {
       label: item.label,
       sections: [
         {
-          name: 'Test',
+          label: 'Test',
           fields: [
             {
               fieldName: 'Test field',

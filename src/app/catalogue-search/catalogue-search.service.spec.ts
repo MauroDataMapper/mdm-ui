@@ -110,7 +110,7 @@ describe('CatalogueSearchService', () => {
       return {
         sections: [
           {
-            name: 'section1',
+            label: 'section1',
             fields
           }
         ]

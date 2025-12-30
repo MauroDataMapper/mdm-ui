@@ -214,7 +214,7 @@ describe('CatalogueSearchProfileFiltersComponent', () => {
       const definition: ProfileDefinition = {
         sections: [
           {
-            name: 'section',
+            label: 'section',
             fields: [
               {
                 fieldName: 'field',

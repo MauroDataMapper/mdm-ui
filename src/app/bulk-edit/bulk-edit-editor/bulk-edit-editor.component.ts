@@ -292,7 +292,7 @@ export class BulkEditEditorComponent implements OnInit {
 
     const profileGroups = profile.sections.map((section) => {
       return {
-        headerName: section.name,
+        headerName: section.label,
         children: section.fields.map(field =>
           this.getColumnForProfileField(field)
         )

@@ -20,7 +20,11 @@ SPDX-License-Identifier: Apache-2.0
     <tbody>
     <tr>
       <td [attr.colspan]="2" class="detailsRowHeader">
-        {{ profileSection.name }}
+        {{ profileSection.label }}
+        <p *ngIf="profileSection.description" style="font-weight: normal">
+          <small>{{ profileSection.description }}</small>
+        </p>
+
       </td>
     </tr>
     <tr *ngFor="let field of profileSection.fields">
@@ -53,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
           [readonly]="true"
           [checked]="field.currentValue === 'true'"
           (click)="$event.preventDefault()"
-          name="{{ field.fieldName }} + {{ profileSection.name }}"
+          name="{{ field.fieldName }} + {{ profileSection.label }}"
         />
 
         <input
@@ -72,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
           value="field.currentValue"
         />
         <input
-          *ngIf="field.dataType === 'date' && field.currentValue != ''"
+          *ngIf="field.dataType === 'date' && field.currentValue && field.currentValue != ''"
           style="background-color: #ffffff; border: hidden"
           [readonly]="true"
           type="date"

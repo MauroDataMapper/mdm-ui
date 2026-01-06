@@ -40,7 +40,10 @@ export class ExportHandlerService {
   ) {}
 
   createFileName(label: string, exporter: Exporter) {
-    const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+    let extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+    if (extension.startsWith('.')) {
+      extension = extension.replace('.', '');
+    }
     const rightNow = new Date();
     const res = rightNow
       .toISOString()

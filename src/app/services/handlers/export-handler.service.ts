@@ -103,9 +103,7 @@ export class ExportHandlerService {
   createBlobLink(blob: Blob, fileName: string) {
     // http://jsbin.com/kelijatigo/edit?html,js,output
     // https://github.com/keeweb/keeweb/issues/130
-    console.log(fileName);
     const url = (window.URL || window.webkitURL).createObjectURL(blob);
-    console.log(url);
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', fileName);

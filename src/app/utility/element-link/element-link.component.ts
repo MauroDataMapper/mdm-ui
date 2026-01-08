@@ -117,13 +117,13 @@ export class ElementLinkComponent implements OnInit {
         .get({ id: parentDM.id, domainType: parentDM.domainType })
         .pipe(
           map((model) => {
-            if (model.finalised) {
-              return `${model.label} [${model.modelVersion}] : ${
+            if (model.finalised || model.owningModel?.finalised) {
+              return `${model.label} [${model.modelVersion || model.owningModel?.modelVersion}] : ${
                 this.element?.label ?? this.element?.definition ?? ''
               }`;
             }
 
-            return `${model.label} [${model.branchName}] : ${
+            return `${model.label} [${model.branchName || model.owningModel?.branchName}] : ${
               this.element?.label ?? this.element?.definition ?? ''
             }`;
           })

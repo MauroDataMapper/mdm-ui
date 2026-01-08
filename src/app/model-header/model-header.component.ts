@@ -180,6 +180,8 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
+    if (this.item.owningModel) return false;
+
     const model = this.item as Branchable;
     return this.access.showEdit && model.branchName !== defaultBranchName;
   }

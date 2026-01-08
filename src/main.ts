@@ -35,17 +35,6 @@ import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 
-import 'jodit/esm/plugins/source/source.js';
-import 'jodit/esm/plugins/source/editor/engines/ace.js';
-import 'jodit/esm/plugins/inline-popup/inline-popup.js';
-
-// ACE core
-import 'ace-builds/src-noconflict/ace.js';
-
-// ACE modes & themes Jodit expects
-import 'ace-builds/src-noconflict/mode-html.js';
-import 'ace-builds/src-noconflict/ext-searchbox.js';
-import 'ace-builds/src-noconflict/theme-chrome.js';
 import { MatNativeDateModule } from '@angular/material/core';
 
 if (environment.production) {
@@ -57,36 +46,45 @@ if (environment.production) {
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
-bootstrapApplication(UiViewComponent, {
-  providers: [
-    MdmResourcesConfiguration,
-    MdmRestHandlerService,
-    provideAnimations(), // enables full animation support
-    provideToastr(),
-    provideHttpClient(),
-    importProvidersFrom(
-      MdmResourcesModule.forRoot({
-        defaultHttpRequestOptions: { withCredentials: true },
-        apiEndpoint: environment.apiEndpoint
-      }),
-      MatNativeDateModule,
-      UIRouterModule.forRoot({
-        useHash: true,
-        states: [
-          ...pageRoutes.states,
-          ...userPageRoutes.states,
-          ...adminPageRoutes.states
-        ],
-        config: routerConfigFn
-      })
-    ),
-    {
-      provide: 'traceRouter',
-      useFactory: (router: UIRouter) => {
-        router.trace.enable(1); // Shows transitions in console
+async function bootstrap() {
+  // Dynamically load some jodit files (avoids CommonJS warning)
+  await import('jodit/esm/plugins/source/source.js');
+  await import('jodit/esm/plugins/source/editor/engines/ace.js');
+  await import('jodit/esm/plugins/inline-popup/inline-popup.js');
+
+  // Now bootstrap the Angular app
+  await bootstrapApplication(UiViewComponent, {
+    providers: [
+      MdmResourcesConfiguration,
+      MdmRestHandlerService,
+      provideAnimations(), // enables full animation support
+      provideToastr(),
+      provideHttpClient(),
+      importProvidersFrom(
+        MdmResourcesModule.forRoot({
+          defaultHttpRequestOptions: { withCredentials: true },
+          apiEndpoint: environment.apiEndpoint
+        }),
+        MatNativeDateModule,
+        UIRouterModule.forRoot({
+          useHash: true,
+          states: [
+            ...pageRoutes.states,
+            ...userPageRoutes.states,
+            ...adminPageRoutes.states
+          ],
+          config: routerConfigFn
+        })
+      ),
+      {
+        provide: 'traceRouter',
+        useFactory: (router: UIRouter) => {
+          router.trace.enable(1); // Shows transitions in console
+        },
+        deps: [UIRouter]
       },
-      deps: [UIRouter]
-    },
-    provideZxvbnServiceForPSM()
-  ]
-});
+      provideZxvbnServiceForPSM()
+    ]
+  });
+}
+bootstrap().catch(err => console.error(err));

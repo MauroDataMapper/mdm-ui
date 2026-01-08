@@ -67,10 +67,13 @@ export class ContentEditorComponent implements OnInit {
       = this.userSettings.get<ContentEditorFormat>('editorFormat')
         ?? this.userSettings.defaultSettings.editorFormat;
 
+    if (this.content === undefined || this.content == '<p></p>') {
+      this.content = '';
+    }
     if (this.isEmptyContent()) {
       this.contentFormat = formatPreference;
     }
- else {
+    else {
       this.contentFormat = this.isHtmlContent() ? 'html' : 'markdown';
     }
   }

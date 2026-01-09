@@ -25,7 +25,7 @@ import { StringConflictEditorComponent } from '../string-conflict-editor/string-
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
 import { MatButton } from '@angular/material/button';
 import { NgIf } from '@angular/common';
-import { PathNameComponent } from '../../../shared/path-name/path-name.component';
+import { PathNameComponent } from '@mdm/shared/path-name/path-name.component';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({

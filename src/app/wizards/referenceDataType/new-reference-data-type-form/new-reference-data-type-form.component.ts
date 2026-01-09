@@ -31,13 +31,13 @@ import {
 } from '@maurodatamapper/mdm-resources';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
-import { McEnumerationListWithCategoryComponent } from '../../../utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
+import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatError } from '@angular/material/form-field';
-import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { NgIf } from '@angular/common';
 
 export interface NewReferenceDataTypeState {

@@ -29,7 +29,7 @@ import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { MatButton } from '@angular/material/button';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { NgIf } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';

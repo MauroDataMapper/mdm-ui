@@ -19,8 +19,8 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEnc
 import { Branchable, MergeDiffItem } from '@maurodatamapper/mdm-resources';
 import { StringConflictService } from '@mdm/merge-diff/services/string-conflict.service';
 import { Diff } from 'diff-match-patch';
-import { SafePipe } from '../../../content/safe.pipe';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { SafePipe } from '@mdm/content/safe.pipe';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';

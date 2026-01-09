@@ -33,12 +33,12 @@ import { UIRouterGlobals } from '@uirouter/core';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MatButton } from '@angular/material/button';
-import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { NgIf } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 
 @Component({
     selector: 'mdm-reference-data-model-main',

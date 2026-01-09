@@ -35,18 +35,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { CreateType } from '@mdm/wizards/wizards.model';
-import { DataClass } from '../../../../../../mdm-resources';
+import { DataClass } from '@maurodatamapper/mdm-resources';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { MoreDescriptionComponent } from '../../../shared/more-description/more-description.component';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { ExtendedModule } from '@angular/flex-layout/extended';
-import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
-import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
 import { FlexModule } from '@angular/flex-layout/flex';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
-import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { NgIf, NgClass } from '@angular/common';
 @Component({
     selector: 'mdm-data-class-step2',

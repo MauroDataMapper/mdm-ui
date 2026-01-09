@@ -1,6 +1,6 @@
 {
   "name": "mdm-ui",
-  "version": "7.4.0",
+  "version": "7.5.0-SNAPSHOT",
   "engines": {
     "node": "22.16.0",
     "npm": "10.2.3"

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,17 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-/* eslint-disable id-blacklist */
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   ApiProperty,
-  ApiPropertyIndexResponse,
+  ApiPropertyIndexResponse, Pathable,
   Profile,
   ProfileField,
   ProfileValidationError,
@@ -35,8 +30,8 @@ import {
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
-import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { MessageHandlerService } from '@mdm/services';
+import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
@@ -44,10 +39,27 @@ import {
   EditProfileModalResult
 } from './edit-profile-modal.model';
 import { EditingService } from '@mdm/services/editing.service';
+import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatInput } from '@angular/material/input';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { EditProfileSectionComponent } from '@mdm/modals/edit-profile-section/edit-profile-section.component';
+
 @Component({
-  selector: 'mdm-edit-profile-modal',
-  templateUrl: './edit-profile-modal.component.html',
-  styleUrls: ['./edit-profile-modal.component.scss']
+    selector: 'mdm-edit-profile-modal',
+    templateUrl: './edit-profile-modal.component.html',
+    styleUrls: ['./edit-profile-modal.component.scss'],
+    standalone: true,
+  imports: [MatDialogTitle, NgIf, MatDialogContent, FormsModule, AlertComponent, NgFor, MatTooltip, ContentEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError, MatDialogActions, EditProfileSectionComponent]
 })
 export class EditProfileModalComponent implements OnInit {
   profileData: Profile;
@@ -59,8 +71,8 @@ export class EditProfileModalComponent implements OnInit {
     fieldTotal: 0,
     errors: []
   };
+
   isValidated = false;
-  private readonly showCanEditPropertyAlertKey = 'ui.show_can_edit_property_alert';
 
   formOptionsMap = {
     integer: 'number',
@@ -72,6 +84,9 @@ export class EditProfileModalComponent implements OnInit {
     datetime: 'datetime',
     decimal: 'number'
   };
+
+  private readonly showCanEditPropertyAlertKey
+    = 'ui.show_can_edit_property_alert';
 
   constructor(
     public dialogRef: MatDialogRef<
@@ -90,15 +105,20 @@ export class EditProfileModalComponent implements OnInit {
         if (data.isNew && field.defaultValue) {
           field.currentValue = field.defaultValue;
         }
-
+        if (field.dataType === 'boolean') {
+          if (field.currentValue !== 'true') {
+            field.currentValue = 'false';
+          }
+        }
         if (field.dataType === 'folder') {
           if (
-            field.currentValue === '[]' ||
-            field.currentValue === '""' ||
-            field.currentValue === ''
+            field.currentValue === '[]'
+            || field.currentValue === '""'
+            || field.currentValue === ''
           ) {
             field.currentValue = null;
-          } else {
+          }
+          else {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
@@ -116,8 +136,11 @@ export class EditProfileModalComponent implements OnInit {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties.',
+            errors
+          );
           return [];
         })
       )
@@ -165,9 +188,9 @@ export class EditProfileModalComponent implements OnInit {
         returnData.sections.forEach((section) => {
           section.fields.forEach((field) => {
             if (
-              field.dataType === 'folder' &&
-              field.currentValue &&
-              field.currentValue.length > 0
+              field.dataType === 'folder'
+              && field.currentValue
+              && field.currentValue.length > 0
             ) {
               field.currentValue = JSON.stringify(field.currentValue);
             }
@@ -191,7 +214,7 @@ export class EditProfileModalComponent implements OnInit {
 
   validate() {
     this.validateData().subscribe(
-      (errorList) => (this.validationErrors = errorList)
+      errorList => (this.validationErrors = errorList)
     );
   }
 
@@ -203,7 +226,7 @@ export class EditProfileModalComponent implements OnInit {
     }
 
     return this.validationErrors.errors.find(
-      (e) => e.metadataPropertyName === metadataPropertyName
+      e => e.metadataPropertyName === metadataPropertyName
     );
   }
 
@@ -218,27 +241,26 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     dg.afterClosed().subscribe((dgData) => {
-      this.markdownParser.createMarkdownLink(dgData).subscribe((mkData) => {
-        field.currentValue = mkData;
-      });
+      const link = this.markdownParser.createMarkdownLink(dgData as MauroItem & Pathable);
+      field.currentValue = link;
     });
   }
 
   private attachReadOnlyPropertyToField(field: ProfileField) {
-    field.readOnly =
-      field.uneditable ||
-      (this.data.finalised && !field.editableAfterFinalisation);
+    field.readOnly
+      = field.uneditable
+        || (this.data.finalised && !field.editableAfterFinalisation);
   }
 
   private validateData(): Observable<ProfileValidationErrorList> {
     return this.resources.profile
       .validateProfile(
-        this.data.profile.namespace,
-        this.data.profile.name,
+        this.data.profile.namespace as string,
+        this.data.profile.name as string,
         this.data.catalogueItem.domainType,
         this.data.catalogueItem.id,
         this.profileData,
-        this.data.profile.version
+        this.data.profile.version as string
       )
       .pipe(
         map<unknown, ProfileValidationErrorList>(() => {
@@ -256,7 +278,9 @@ export class EditProfileModalComponent implements OnInit {
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {
-    this.showCanEditPropertyAlert = JSON.parse(this.getContentProperty(properties, this.showCanEditPropertyAlertKey));
+    this.showCanEditPropertyAlert = JSON.parse(
+      this.getContentProperty(properties, this.showCanEditPropertyAlertKey) || 'false'
+    );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

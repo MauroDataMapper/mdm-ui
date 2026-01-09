@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ SPDX-License-Identifier: Apache-2.0
     style="width: 100%; height: 50vh"
     id="tab.tabTitle"
     class="ag-theme-alpine"
+    [components]="frameworkComponents"
     [stopEditingWhenCellsLoseFocus]="true"
     [defaultColDef]="defaultColDef"
     [singleClickEdit]="true"
@@ -53,7 +54,6 @@ SPDX-License-Identifier: Apache-2.0
     (gridReady)="onGridReady($event)"
     [columnDefs]="columns"
     [rowData]="rows"
-    [frameworkComponents]="frameworkComponents"
     [tooltipShowDelay]="0"
   >
   </ag-grid-angular>

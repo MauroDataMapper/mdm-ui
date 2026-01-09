@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import {
   ComponentHarness,
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
+import { serializeDate } from '../catalogue-search.types';
 import { CatalogueSearchAdvancedFormComponent } from './catalogue-search-advanced-form.component';
 
 describe('CatalogueSearchFormAdvancedComponent', () => {
@@ -62,7 +63,7 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
     harness.component.lastUpdatedBefore.setValue(
       new Date('July 24, 1983 01:15:00')
     );
-
+    harness.component.includeSuperseded.setValue(false);
     harness.component.reset();
     expect(harness.component.context.value).toBe(null);
     expect(harness.component.domainTypes.value).toBe(null);
@@ -73,13 +74,14 @@ describe('CatalogueSearchFormAdvancedComponent', () => {
     expect(harness.component.createdBefore.value).toBe(null);
     expect(harness.component.lastUpdatedAfter.value).toBe(null);
     expect(harness.component.lastUpdatedBefore.value).toBe(null);
+    expect(harness.component.includeSuperseded.value).toBe(null);
   });
 
   it('it should format dates correctly', () => {
     harness.component.createdAfter.setValue(new Date('July 21, 1983 01:15:00'));
-    expect(
-      harness.component.formatDate(harness.component.createdAfter.value)
-    ).toMatch('1983-06-21');
+    expect(serializeDate(harness.component.createdAfter.value)).toMatch(
+      '1983-07-21'
+    );
   });
 
   it('it should return classifer lables in an array', () => {

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ export interface MdmHttpHandlerOptions {
    *
    * If no value is provided or is undefined, the default value is considered to be `true`.
    */
-  handleGetErrors?: boolean;
+  handleGetErrors?: boolean
 }
 
 export type MdmRestHandlerOptions = RequestSettings & MdmHttpHandlerOptions;

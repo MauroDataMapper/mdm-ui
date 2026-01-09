@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Branchable, Versionable } from '@maurodatamapper/mdm-resources';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-label',
-  templateUrl: './element-label.component.html',
-  styleUrls: ['./element-label.component.scss']
+    selector: 'mdm-element-label',
+    templateUrl: './element-label.component.html',
+    styleUrls: ['./element-label.component.scss'],
+    standalone: true,
+    imports: [NgIf]
 })
 export class ElementLabelComponent {
   @Input() item: MauroItem & Branchable & Versionable;

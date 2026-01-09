@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,8 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   Classifier,
   ClassifierIndexResponse,
@@ -24,16 +30,28 @@ import {
   ModelDomainType
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { Subject, takeUntil } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { MatDatepickerInput, MatDatepickerToggleIcon, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatInput } from '@angular/material/input';
+import { NgFor } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'mdm-catalogue-search-advanced-form',
-  templateUrl: './catalogue-search-advanced-form.component.html',
-  styleUrls: ['./catalogue-search-advanced-form.component.scss']
+    selector: 'mdm-catalogue-search-advanced-form',
+    templateUrl: './catalogue-search-advanced-form.component.html',
+    styleUrls: ['./catalogue-search-advanced-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatCheckbox, ModelSelectorTreeComponent, MatFormField, MatLabel, MatSelect, MatOption, NgFor, MatInput, MatDatepickerInput, MatIcon, MatDatepickerToggleIcon, MatDatepickerToggle, MatSuffix, MatDatepicker]
 })
-export class CatalogueSearchAdvancedFormComponent implements OnInit {
-  advancedSearch: boolean;
+export class CatalogueSearchAdvancedFormComponent implements OnInit, OnDestroy {
+  @Output() valueChange = new EventEmitter<void>();
+
   classifications: Classifier[];
-  @Output() searchEvent = new EventEmitter<string>();
 
   formGroup = new FormGroup({
     context: new FormControl<MdmTreeItem[]>(null),
@@ -44,8 +62,11 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
     createdAfter: new FormControl<Date>(null),
     createdBefore: new FormControl<Date>(null),
     lastUpdatedAfter: new FormControl<Date>(null),
-    lastUpdatedBefore: new FormControl<Date>(null)
+    lastUpdatedBefore: new FormControl<Date>(null),
+    includeSuperseded: new FormControl(false)
   });
+
+  private unsubscribe$ = new Subject<void>();
 
   get context() {
     return this.formGroup.controls.context;
@@ -99,30 +120,27 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
     return this.formGroup.controls.createdBefore;
   }
 
+  get includeSuperseded() {
+    return this.formGroup.controls.includeSuperseded;
+  }
+
+  constructor(private resources: MdmResourcesService) {}
+
   ngOnInit(): void {
     this.resources.classifier
       .list({ all: true })
       .subscribe((result: ClassifierIndexResponse) => {
         this.classifications = result.body.items;
       });
+
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.valueChange.emit());
   }
 
-  constructor(private resources: MdmResourcesService) {}
-
-  toggleAdvancedSearch() {
-    this.advancedSearch = !this.advancedSearch;
-  }
-
-  formatDate(date: Date) {
-    if (!date) {
-      return;
-    }
-
-    const yyyy: String = date.getFullYear().toString();
-    const mm: String = date.getMonth().toString().padStart(2, '0');
-    const dd: String = date.getDate().toString().padStart(2, '0');
-
-    return `${yyyy}-${mm}-${dd}`;
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onDateClear(control: string) {
@@ -130,18 +148,6 @@ export class CatalogueSearchAdvancedFormComponent implements OnInit {
   }
 
   reset() {
-    this.context.reset();
-    this.domainTypes.reset();
-    this.labelOnly.reset();
-    this.exactMatch.reset();
-    this.classifiers.reset();
-    this.createdAfter.reset();
-    this.createdBefore.reset();
-    this.lastUpdatedAfter.reset();
-    this.lastUpdatedBefore.reset();
-  }
-
-  callParentSearch() {
-    this.searchEvent.emit('advancedFormCallSearch');
+    this.formGroup.reset();
   }
 }

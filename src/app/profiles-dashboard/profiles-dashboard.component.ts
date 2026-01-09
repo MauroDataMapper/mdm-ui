@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,31 +23,40 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { merge, Observable } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgClass } from '@angular/common';
+import { ElementLinkComponent } from '../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-profiles-dashboard',
-  templateUrl: './profiles-dashboard.component.html',
-  styleUrls: ['./profiles-dashboard.component.scss']
+    selector: 'mdm-profiles-dashboard',
+    templateUrl: './profiles-dashboard.component.html',
+    styleUrls: ['./profiles-dashboard.component.scss'],
+    standalone: true,
+    imports: [MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class ProfilesDashboardComponent implements AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   filterEvent = new EventEmitter<any>();
 
   isLoadingResults: boolean;
   totalProfileCount: number;
-  filter: {};
+  filter: object;
   dynamicProfileRecords: any[] = [];
   hideFilters = true;
   displayedColumns = ['displayName', 'metadataNamespace', 'version'];
@@ -83,7 +92,7 @@ export class ProfilesDashboardComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => {
-        data.forEach((res) => res.dataModel['domainType'] = 'DataModel');
+        data.forEach(res => res.dataModel['domainType'] = 'DataModel');
         this.dynamicProfileRecords = data;
       });
   }

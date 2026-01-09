@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,26 +27,37 @@ import {
   ChangeDetectorRef,
   AfterViewInit, OnDestroy
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription, merge } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataModel, DataType } from '@maurodatamapper/mdm-resources';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/new-data-type-inline.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-step2',
-  templateUrl: './data-type-step2.component.html',
-  styleUrls: ['./data-type-step2.component.sass']
+    selector: 'mdm-data-type-step2',
+    templateUrl: './data-type-step2.component.html',
+    styleUrls: ['./data-type-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, NewDataTypeInlineComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
-  @Input() parent;
+  @Input() parent: any;
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
@@ -58,25 +69,27 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   totalSelectedItemsCount: number;
   filter: object;
   step: {
-    invalid : boolean;
-    isProcessComplete : boolean;
-    scope : {
+    invalid: boolean
+    isProcessComplete: boolean
+    scope: {
        model: {
-        [key: string]: any;
-        createType: CreateType;
-        selectedDataTypes: Array<any>;
-        parent:DataModel;
-        copyFromDataModel: Array<DataModel>;
-      };
-    };
+        [key: string]: any
+        createType: CreateType
+        selectedDataTypes: any[]
+        parent: DataModel
+        copyFromDataModel: DataModel[]
+      }
+    }
   };
+
   model: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: Array<any>;
-    parent:DataModel;
-    copyFromDataModel: Array<DataModel>;
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: any[]
+    parent: DataModel
+    copyFromDataModel: DataModel[]
   };
+
   scope: any;
   defaultCheckedMap: any;
   loaded = false;
@@ -129,19 +142,19 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
-  validationStatusEmitter($event : string) {
+  validationStatusEmitter($event: string) {
     this.step.invalid = JSON.parse($event);
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe((x) => {
       this.validate(x);
     });
   }
 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after each backend call
-  dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
+  dataTypesFetch(pageSize: number, pageIndex: number, sortBy: string, sortType: SortDirection, filters: Record<string, any>) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
@@ -179,7 +192,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
             this.isLoadingResults = false;
             return [];
           })
-        ).subscribe(data => {
+        ).subscribe((data) => {
           this.recordsDataTypes = data;
           this.dataSourceDataTypes.data = this.recordsDataTypes;
 
@@ -213,7 +226,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     // If all the records on the current page are selected, check the "Check All" checkbox
     if (currentPageSelectedItemsNum === this.paginator.toArray()[0].pageSize) {
       this.isAllChecked = true;
-    } else {
+    }
+ else {
       this.isAllChecked = false;
     }
   }
@@ -221,7 +235,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   createSelectedArray = () => {
     this.model.selectedDataTypes = [];
     for (const id in this.model.selectedDataTypesMap) {
-      if (this.model.selectedDataTypesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataTypesMap, id)) {
         const element = this.model.selectedDataTypesMap[id];
         this.model.selectedDataTypes.push(element.node);
       }
@@ -229,12 +243,13 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   };
 
   onCheckAll = () => {
-    this.recordsDataTypes.forEach(element => {
+    this.recordsDataTypes.forEach((element) => {
       element.checked = this.checkAllCheckbox;
 
       if (this.checkAllCheckbox) {
         this.model.selectedDataTypes.push(element);
-      } else {
+      }
+ else {
         const currentId = element.id;
         const index = this.model.selectedDataTypes.findIndex(r => r.id === currentId);
         if (index !== -1) {
@@ -252,7 +267,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   onCheck(record) {
     if (record.checked) {
       this.model.selectedDataTypes.push(record);
-    } else {
+    }
+ else {
       const index = this.model.selectedDataTypes.findIndex((r) => {
         return r.id === record.id;
       });
@@ -332,11 +348,11 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        switch(this.model.createType) {
+        switch (this.model.createType) {
           case 'copy': return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
           case 'import': return this.resourceService.dataModel.importDataType(this.model.parent.id, dc.model, dc.id, null).toPromise();
         }
-      }).catch(error => {
+      }).catch((error) => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);
         this.finalResult[dc.id] = { result: errorText, hasError: true };

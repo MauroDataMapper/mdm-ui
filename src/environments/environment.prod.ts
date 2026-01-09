@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ export const environment = {
   features: {
     useSubscribedCatalogues: true,
     useVersionedFolders: true,
-    useOpenIdConnect: false,
+    useOpenIdConnect: true,
     useDigitalObjectIdentifiers: false,
     useIssueReporting: false
   }

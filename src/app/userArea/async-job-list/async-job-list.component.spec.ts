@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   ComponentHarness,
   setupTestModuleForComponent
@@ -27,15 +26,7 @@ describe('AsyncJobListComponent', () => {
   let harness: ComponentHarness<AsyncJobListComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(AsyncJobListComponent, {
-      declarations: [AsyncJobListComponent],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: jest.fn()
-        }
-      ]
-    });
+    harness = await setupTestModuleForComponent(AsyncJobListComponent)
   });
 
   it('should create', () => {

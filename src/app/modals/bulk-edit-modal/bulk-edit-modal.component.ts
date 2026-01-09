@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,16 +17,34 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input, Inject, AfterViewInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CatalogueItemDomainType, DataClass, DataElement } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { MatInput } from '@angular/material/input';
+import { MatFormField } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-bulk-edit',
-  templateUrl: './bulk-edit-modal.component.html',
-  styleUrls: ['./bulk-edit-modal.component.scss'],
+    selector: 'mdm-bulk-edit',
+    templateUrl: './bulk-edit-modal.component.html',
+    styleUrls: ['./bulk-edit-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        MatIconButton,
+        MatDialogContent,
+        NgFor,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        NgIf,
+        MatDialogActions,
+        MatButton,
+    ],
 })
 export class BulkEditModalComponent implements AfterViewInit {
   @Input() afterSave: any;
@@ -53,7 +71,6 @@ export class BulkEditModalComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private editingService: EditingService) { }
 
-
   ngAfterViewInit() {
     this.parentDataModel = this.data.parentDataModel;
     this.parentDataClass = this.data.parentDataClass;
@@ -67,19 +84,20 @@ export class BulkEditModalComponent implements AfterViewInit {
   getDataElements() {
     this.data.dataElementIdLst.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
+        this.resources.dataElement.get(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
-        }, err => {
+        }, (err) => {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
-      } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
+      }
+ else if (item.domainType === 'DataClass') {
+        this.resources.dataClass.getChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
-        }, err => {
+        }, (err) => {
           this.messageHandler.showError('There was a problem getting the Data Classes.', err);
         });
       }
@@ -87,7 +105,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   }
 
   cancel = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close();
       }
@@ -95,7 +113,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   };
 
   closeAndRefresh = () => {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close({ status: 'ok' });
       }
@@ -121,7 +139,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataElement
           };
-          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, dataElement.id, dataElement).toPromise();
+          return this.resources.dataElement.update(this.parentDataModel.id as string, this.parentDataClass.id as string, dataElement.id, dataElement).toPromise();
         }
         if (item.domainType === 'DataClass') {
           const dataClass: DataClass = {
@@ -130,7 +148,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataClass
           };
-          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, dataClass.id, dataClass).toPromise();
+          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, dataClass.id, dataClass).toPromise();
         }
       }).catch(() => {
         this.failCount++;
@@ -148,5 +166,5 @@ export class BulkEditModalComponent implements AfterViewInit {
       this.processing = false;
       this.isProcessComplete = true;
     });
-  };
+  }
 }

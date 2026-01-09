@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -59,7 +59,6 @@ describe('ValidatorService', () => {
       'bish-bosh_bash@nowhere.org.gs',
       'no.dash@-allowed.es'
 
-
     ];
     for (const email of validEmails) {
       expect(service.validateEmail(email)).toBe(true);
@@ -96,10 +95,14 @@ describe('ValidatorService', () => {
       new Date(),
       new Date(2019, 9, 30, 10, 32, 18)
     ];
-    for (const value of validDates) { expect(service.isDate(value)).toBe(true); }
+    for (const value of validDates) {
+      expect(service.isDate(value)).toBe(true);
+    }
 
     const inValidDates = ['2019-09-30', null, undefined, 2019];
-    for (const value of inValidDates) { expect(service.isDate(value)).toBe(false); }
+    for (const value of inValidDates) {
+      expect(service.isDate(value)).toBe(false);
+    }
   });
   it('should identify empty strings', () => {
     expect(service.isEmpty(null)).toBe(true);

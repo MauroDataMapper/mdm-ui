@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { CatalogueItemDomainType, Uuid } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { setupTestModuleForService } from '@mdm/testing/testing.helpers';
 import { cold } from 'jest-marbles';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MauroItemUpdateService } from './mauro-item-update.service';
 import {
   MauroIdentifier,
@@ -110,6 +110,9 @@ describe('MauroItemUpdateService', () => {
       update: jest.fn() as jest.MockedFunction<
         (id: Uuid, data: MauroItem) => Observable<MauroItemResponse>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -158,6 +161,7 @@ describe('MauroItemUpdateService', () => {
   };
 
   beforeEach(() => {
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
     service = setupTestModuleForService(MauroItemUpdateService, {
       providers: [
         {
@@ -212,19 +216,19 @@ describe('MauroItemUpdateService', () => {
       return { identifier, item };
     });
 
-    const expected$ = cold('---(a|)', { a: payloads.map((p) => p.item) });
+    const expected$ = cold('---(a|)', { a: payloads.map(p => p.item) });
     const actual$ = service.saveMany(payloads);
     expect(actual$).toBeObservable(expected$);
   };
 
   const testMissingModelIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(identifier.domainType.toString() + ' ' + identifier.id + ' has not provided a model'));
     const actual$ = service.save(identifier, {} as MauroItem);
     expect(actual$).toBeObservable(expected$);
   };
 
   const testMissingDataClassIdThrowsError = (identifier: MauroIdentifier) => {
-    const expected$ = cold('#', null, new Error());
+    const expected$ = cold('#', null, new Error(`${identifier.domainType.toString()} ${identifier.id} has not provided a data class`));
     const actual$ = service.save(identifier, {} as MauroItem);
     expect(actual$).toBeObservable(expected$);
   };
@@ -238,7 +242,7 @@ describe('MauroItemUpdateService', () => {
     it.each(unsupported)(
       'should throw an error for the domain type %p',
       (domainType) => {
-        const expected$ = cold('#', null, new Error());
+        const expected$ = cold('#', null, new Error(`${domainType.toString()} 123 has not provided a model`));
         const actual$ = service.save(
           { id: '123', domainType },
           {} as MauroItem

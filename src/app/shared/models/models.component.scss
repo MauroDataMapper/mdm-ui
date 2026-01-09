@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,15 @@ SPDX-License-Identifier: Apache-2.0
   $primary: map-get($theme, primary);
 
   span.tree-top-actions button, .import-folder-actions button {
-    color: mat.get-color-from-palette($primary);
+    color: mat.m2-get-color-from-palette($primary);
   }
 }
+
+.leftTab {
+  height: 100%;
+}
+
+.container-inner {
+  height: 100%;
+}
+

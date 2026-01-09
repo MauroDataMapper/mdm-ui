@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { UsersTableComponent } from '../users-table/users-table.component';
 
 @Component({
-  selector: 'mdm-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.sass']
+    selector: 'mdm-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.sass'],
+    standalone: true,
+    imports: [UsersTableComponent]
 })
 export class UsersComponent {
-  constructor() {}
 }

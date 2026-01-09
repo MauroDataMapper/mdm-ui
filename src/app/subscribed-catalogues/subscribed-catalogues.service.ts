@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ export class SubscribedCataloguesService {
       map(([publishedModels, subscribedModels]) => {
         return publishedModels.map((publishedModel) => {
           const subscribed = subscribedModels.find(
-            (item) => item.subscribedModelId === (publishedModel.modelId ?? '')
+            item => item.subscribedModelId === (publishedModel.modelId ?? '')
           );
           return new FederatedDataModel(
             catalogueId,

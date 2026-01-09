@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '../utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
@@ -72,7 +72,7 @@ export class FolderHandlerService {
       .remove(id, { permanent })
       .pipe(
         map(() => this.messageHandler.showSuccess('Successfully Deleted Folder')),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem deleting the Folder.', error);
           return of();
         })

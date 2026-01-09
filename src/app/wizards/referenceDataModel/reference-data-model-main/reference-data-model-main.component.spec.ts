@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import { ElementClassificationsComponent } from '@mdm/utility/element-classifica
 import { MockComponent } from 'ng-mocks';
 import { Observable, of } from 'rxjs';
 import { ReferenceDataModelMainComponent } from './reference-data-model-main.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 describe('ReferenceDataModelMainComponent', () => {
   let harness: ComponentHarness<ReferenceDataModelMainComponent>;
@@ -56,6 +57,9 @@ describe('ReferenceDataModelMainComponent', () => {
           data: ModelCreatePayload
         ) => Observable<MdmResponse<MauroItem>>
       >
+    },
+    apiProperties: {
+      listPublic: jest.fn()
     }
   };
 
@@ -79,11 +83,14 @@ describe('ReferenceDataModelMainComponent', () => {
         }
       })
     );
+    resourcesStub.apiProperties.listPublic.mockImplementation(() => of([]));
 
-    harness = await setupTestModuleForComponent(
-      ReferenceDataModelMainComponent,
+    harness = await setupTestModuleForComponent(ReferenceDataModelMainComponent,
       {
-        declarations: [MockComponent(ElementClassificationsComponent)],
+        imports: [
+          MockComponent(ElementClassificationsComponent),
+          ContentEditorComponent
+        ],
         providers: [
           {
             provide: FolderService,

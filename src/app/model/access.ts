@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,26 +22,26 @@ SPDX-License-Identifier: Apache-2.0
  * @see {@link SecurityHandlerService.elementAccess}
  */
 export interface Access {
-  showEdit: boolean;
-  canEditDescription: boolean;
-  showNewVersion?: boolean;
-  showFinalise: boolean;
-  showPermission: boolean;
-  showSoftDelete: boolean;
-  showPermanentDelete: boolean;
-  canAddAnnotation: boolean;
-  canAddMetadata: boolean;
-  showDelete: boolean;
-  canAddLink: boolean;
-  canCreateFolder: boolean;
-  canCreateVersionedFolder: boolean;
-  canCreateFolderContainer: boolean;
-  canCreateModel: boolean;
-  canCreateModelItem: boolean;
-  canCreate: boolean;
-  canMoveToFolder: boolean;
-  canMoveToVersionedFolder: boolean;
-  canReadAfterFinalised: boolean;
-  canEditAfterFinalise: boolean;
-  canMergeInto: boolean;
+  showEdit: boolean
+  canEditDescription: boolean
+  showNewVersion?: boolean
+  showFinalise: boolean
+  showPermission: boolean
+  showSoftDelete: boolean
+  showPermanentDelete: boolean
+  canAddAnnotation: boolean
+  canAddMetadata: boolean
+  showDelete: boolean
+  canAddLink: boolean
+  canCreateFolder: boolean
+  canCreateVersionedFolder: boolean
+  canCreateFolderContainer: boolean
+  canCreateModel: boolean
+  canCreateModelItem: boolean
+  canCreate: boolean
+  canMoveToFolder: boolean
+  canMoveToVersionedFolder: boolean
+  canReadAfterFinalised: boolean
+  canEditAfterFinalise: boolean
+  canMergeInto: boolean
 }

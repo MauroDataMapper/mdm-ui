@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,8 +66,6 @@ import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
-import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
-import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -121,8 +119,8 @@ import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-se
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { NgChartsModule } from 'ng2-charts';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import { BaseChartDirective } from 'ng2-charts';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
 import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
 import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
@@ -157,7 +155,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 import { VersionedFolderComponent } from '@mdm/versioned-folder/versioned-folder/versioned-folder.component';
 import { DefaultProfileComponent } from '@mdm/shared/default-profile/default-profile.component';
-import { PipesModule } from '../pipes/pipes.module';
+
 import { OpenIdConnectAuthorizeComponent } from '@mdm/security/open-id-connect-authorize/open-id-connect-authorize.component';
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { TermRelationshipTypeListComponent } from '@mdm/terminology/term-relationship-type-list/term-relationship-type-list.component';
@@ -169,29 +167,58 @@ import { NewerVersionsComponent } from '@mdm/subscribed-catalogues/newer-version
 import { BulkEditModule } from '@mdm/bulk-edit/bulk-edit.module';
 import { TerminologyMainComponent } from '@mdm/wizards/terminology/terminology-main/terminology-main.component';
 import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
-import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { CatalogueSearchModule } from '@mdm/catalogue-search/catalogue-search.module';
-import { ReferenceDataTypeMainComponent } from '../../wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
-import { ReferenceDataTypeStep1Component } from '../../wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
-import { ReferenceDataTypeStep2Component } from '../../wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
-import { NewReferenceDataTypeFormComponent } from '../../wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
-import { ReferenceDataTypeSelectComponent } from '../../wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
-import { ReferenceDataModelMainComponent } from '../../wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
-import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { ReferenceDataTypeMainComponent } from '@mdm/wizards/referenceDataType/reference-data-type-main/reference-data-type-main.component';
+import { ReferenceDataTypeStep1Component } from '@mdm/wizards/referenceDataType/reference-data-type-step1/reference-data-type-step1.component';
+import { ReferenceDataTypeStep2Component } from '@mdm/wizards/referenceDataType/reference-data-type-step2/reference-data-type-step2.component';
+import { NewReferenceDataTypeFormComponent } from '@mdm/wizards/referenceDataType/new-reference-data-type-form/new-reference-data-type-form.component';
+import { ReferenceDataTypeSelectComponent } from '@mdm/wizards/referenceDataType/reference-data-type-select/reference-data-type-select.component';
+import { ReferenceDataModelMainComponent } from '@mdm/wizards/referenceDataModel/reference-data-model-main/reference-data-model-main.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.service';
+import { ContentModule } from '@mdm/content/content.module';
+import { DataClassComponentsListComponent } from '@mdm/shared/data-class-components-list/data-class-components-list.component';
+import { ElementDataTypeDetailsComponent } from '@mdm/shared/element-data-type-details/element-data-type-details.component';
+import { FlattenedDataClassesComponent } from '@mdm/shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
+import { CopyActionComponent } from '@mdm/shared/copy-action/copy-action.component';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
-  providers: [
-    {
-      provide: USER_IDLE_CONFIGURATION,
-      // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
-      useValue: {
-        idle: 600,
-        timeout: 300,
-      },
-    },
-  ],
-  declarations: [
+    providers: [
+        {
+            provide: USER_IDLE_CONFIGURATION,
+            // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
+            useValue: {
+                idle: 600,
+                timeout: 300
+            }
+        }
+    ],
+    imports: [
+    AdminModule,
+    AngularSplitModule,
+    BulkEditModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    BaseChartDirective,
+    CommonModule,
+    ContentModule,
+    DragDropModule,
+    FoldersTreeModule,
+    FormsModule,
+    HttpClientModule,
+    ImageCropperComponent,
+    ReactiveFormsModule,
+    SharedModule,
+    ToastrModule.forRoot({
+        timeOut: 30000,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false
+    }),
+    UsersModule,
+    MatTabsModule,
+    CatalogueSearchModule,
+    PasswordStrengthMeterComponent,
     FolderComponent,
     ExportModelsComponent,
     DiagramComponent,
@@ -218,12 +245,14 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     SummaryMetadataPopupComponent,
     ElementOwnedDataTypeListComponent,
     ElementChildDataClassesListComponent,
+    FlattenedDataClassesComponent,
     McDataSetMetadataComponent,
     ElementStatusComponent,
     ElementClassificationsComponent,
     ElementAliasComponent,
     PropertiesDirective,
     ElementDataTypeComponent,
+    ElementDataTypeDetailsComponent,
     MultiplicityComponent,
     ElementLinkListComponent,
     AttachmentListComponent,
@@ -239,8 +268,7 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    DataElementsListComponent,
-    DataClassesListComponent,
+    DataClassComponentsListComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -341,168 +369,145 @@ import { USER_IDLE_CONFIGURATION } from '@mdm/external/user-idle/user-idle.servi
     ReferenceDataTypeStep2Component,
     NewReferenceDataTypeFormComponent,
     ReferenceDataTypeSelectComponent,
-    ModelHeaderComponent
-  ],
-  imports: [
-    AdminModule,
-    AngularSplitModule.forRoot(),
-    BulkEditModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    NgChartsModule,
-    CommonModule,
-    DragDropModule,
-    FoldersTreeModule,
-    FormsModule,
-    HttpClientModule,
-    ImageCropperModule,
-    ReactiveFormsModule,
-    SharedModule,
-    ToastrModule.forRoot({
-      timeOut: 30000,
-      positionClass: 'toast-bottom-right',
-      preventDuplicates: false
-    }),
-    UsersModule,
-    MatTabsModule,
-    PipesModule,
-    CatalogueSearchModule
-  ],
-  exports: [
-    FolderComponent,
-    SummaryMetadataPopupComponent,
-    ExportModelsComponent,
-    HistoryComponent,
-    ModelPathComponent,
-    ElementSelectorComponent,
-    ModelPathComponent,
-    NotFoundComponent,
-    DataModelDefaultComponent,
-    ServerErrorComponent,
-    ServerTimeoutComponent,
-    NotImplementedComponent,
-    NotAuthorizedComponent,
-    DataModelComponent,
-    McDataSetMetadataComponent,
-    TableButtonsComponent,
-    AnnotationListComponent,
-    ProfilePictureComponent,
-    SummaryMetadataTableComponent,
-    SummaryMetadataChartComponent,
-    ElementOwnedDataTypeListComponent,
-    ElementChildDataClassesListComponent,
-    McDataSetMetadataComponent,
-    ElementStatusComponent,
-    ElementClassificationsComponent,
-    ElementAliasComponent,
-    PropertiesDirective,
-    ElementDataTypeComponent,
-    MultiplicityComponent,
-    ElementLinkListComponent,
-    AttachmentListComponent,
-    DataClassComponent,
-    ShowIfRolesWritableDirective,
-    DataModelMainComponent,
-    DclWrapperComponent,
-    DataModelStep1Component,
-    DataModelStep2Component,
-    DataClassMainComponent,
-    DataClassStep1Component,
-    DataClassStep2Component,
-    DataTypeMainComponent,
-    DataTypeStep1Component,
-    DataTypeStep2Component,
-    DataClassesListComponent,
-    DataElementsListComponent,
-    AllLinksInPagedListComponent,
-    McPagedListComponent,
-    ConfigurationComponent,
-    UsersComponent,
-    UsersTableComponent,
-    GroupsComponent,
-    GroupsTableComponent,
-    PendingUsersComponent,
-    PendingUsersTableComponent,
-    SubscribedCatalogueComponent,
-    SubscribedCataloguesComponent,
-    DashboardComponent,
-    ModulesComponent,
-    PluginsComponent,
-    ActiveSessionsComponent,
-    ModelManagementComponent,
-    DataElementComponent,
-    NewDataTypeInlineComponent,
-    DataElementMainComponent,
-    DataElementStep1Component,
-    DataElementStep2Component,
-    HomeComponent,
-    ImportModelsComponent,
-    TerminologyComponent,
-    TermListComponent,
-    TermCodeSetListComponent,
-    CreateTermDialogComponent,
-    CreateTermRelationshipTypeDialogComponent,
-    CreateTermRelationshipDialogComponent,
-    TwoSidePanelComponent,
-    UiViewComponent,
-    ModelsComponent,
-    FavouritesComponent,
-    ShowIfRoleIsWritableDirective,
-    McEnumerationListWithCategoryComponent,
-    ClassificationComponent,
-    ClassifiedElementsListComponent,
-    AppContainerComponent,
-    NavbarComponent,
-    CapitalizePipe,
-    FilterPipe,
-    ByteArrayToBase64Pipe,
-    GroupComponent,
-    DataTypeComponent,
-    ElementChildDataElementsListComponent,
-    SettingsComponent,
-    AboutComponent,
-    ResetPasswordComponent,
-    TermComponent,
-    TermRelationshipsComponent,
-    ByteArrayToBase64Pipe,
-    SettingsComponent,
-    LinkSuggestionComponent,
-    ModelComparisonComponent,
-    CodeSetMainComponent,
-    MultipleTermsSelectorComponent,
-    CodeSetComponent,
-    CodeSetTermsTableComponent,
-    BulkEditModalComponent,
-    BulkDeleteModalComponent,
-    ModelsMergingGraphComponent,
-    VersioningGraphModalComponent,
-    BulkDeleteModalComponent,
-    BaseComponent,
-    ReferenceDataComponent,
-    EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent,
-    ConstraintsRulesComponent,
-    SubscribedCatalogueMainComponent,
-    SubscribedCatalogueDetailComponent,
-    ConstraintsRulesComponent,
-    LoadingIndicatorComponent,
-    ApiPropertyTableComponent,
-    SubscribedCatalogueMainComponent,
-    SubscribedCatalogueDetailComponent,
-    ApiPropertyTableComponent,
-    FederatedDataModelMainComponent,
-    FederatedDataModelDetailComponent,
-    NewFederatedSubscriptionModalComponent,
-    ProfileDetailsComponent,
-    DefaultProfileComponent,
-    OpenIdConnectAuthorizeComponent,
-    ProfileDataViewComponent,
-    NewerVersionsComponent,
-    TerminologyMainComponent,
-    SkeletonBadgeComponent,
-    MoreDescriptionComponent,
-    ReferenceDataModelMainComponent,
-    ModelHeaderComponent
-  ]
+    ModelHeaderComponent,
+    CopyActionComponent
+],
+    exports: [
+        FolderComponent,
+        SummaryMetadataPopupComponent,
+        ExportModelsComponent,
+        HistoryComponent,
+        ModelPathComponent,
+        ElementSelectorComponent,
+        ModelPathComponent,
+        NotFoundComponent,
+        DataModelDefaultComponent,
+        ServerErrorComponent,
+        ServerTimeoutComponent,
+        NotImplementedComponent,
+        NotAuthorizedComponent,
+        DataModelComponent,
+        McDataSetMetadataComponent,
+        TableButtonsComponent,
+        AnnotationListComponent,
+        ProfilePictureComponent,
+        SummaryMetadataTableComponent,
+        SummaryMetadataChartComponent,
+        ElementOwnedDataTypeListComponent,
+        ElementChildDataClassesListComponent,
+        FlattenedDataClassesComponent,
+        McDataSetMetadataComponent,
+        ElementStatusComponent,
+        ElementClassificationsComponent,
+        ElementAliasComponent,
+        PropertiesDirective,
+        ElementDataTypeComponent,
+        ElementDataTypeDetailsComponent,
+        MultiplicityComponent,
+        ElementLinkListComponent,
+        AttachmentListComponent,
+        DataClassComponent,
+        ShowIfRolesWritableDirective,
+        DataModelMainComponent,
+        DclWrapperComponent,
+        DataModelStep1Component,
+        DataModelStep2Component,
+        DataClassMainComponent,
+        DataClassStep1Component,
+        DataClassStep2Component,
+        DataTypeMainComponent,
+        DataTypeStep1Component,
+        DataTypeStep2Component,
+        DataClassComponentsListComponent,
+        AllLinksInPagedListComponent,
+        McPagedListComponent,
+        ConfigurationComponent,
+        UsersComponent,
+        UsersTableComponent,
+        GroupsComponent,
+        GroupsTableComponent,
+        PendingUsersComponent,
+        PendingUsersTableComponent,
+        SubscribedCatalogueComponent,
+        SubscribedCataloguesComponent,
+        DashboardComponent,
+        ModulesComponent,
+        PluginsComponent,
+        ActiveSessionsComponent,
+        ModelManagementComponent,
+        DataElementComponent,
+        NewDataTypeInlineComponent,
+        DataElementMainComponent,
+        DataElementStep1Component,
+        DataElementStep2Component,
+        HomeComponent,
+        ImportModelsComponent,
+        TerminologyComponent,
+        TermListComponent,
+        TermCodeSetListComponent,
+        CreateTermDialogComponent,
+        CreateTermRelationshipTypeDialogComponent,
+        CreateTermRelationshipDialogComponent,
+        TwoSidePanelComponent,
+        UiViewComponent,
+        ModelsComponent,
+        FavouritesComponent,
+        ShowIfRoleIsWritableDirective,
+        McEnumerationListWithCategoryComponent,
+        ClassificationComponent,
+        ClassifiedElementsListComponent,
+        AppContainerComponent,
+        NavbarComponent,
+        CapitalizePipe,
+        FilterPipe,
+        ByteArrayToBase64Pipe,
+        GroupComponent,
+        DataTypeComponent,
+        ElementChildDataElementsListComponent,
+        SettingsComponent,
+        AboutComponent,
+        ResetPasswordComponent,
+        TermComponent,
+        TermRelationshipsComponent,
+        ByteArrayToBase64Pipe,
+        SettingsComponent,
+        LinkSuggestionComponent,
+        ModelComparisonComponent,
+        CodeSetMainComponent,
+        MultipleTermsSelectorComponent,
+        CodeSetComponent,
+        CodeSetTermsTableComponent,
+        BulkEditModalComponent,
+        BulkDeleteModalComponent,
+        ModelsMergingGraphComponent,
+        VersioningGraphModalComponent,
+        BulkDeleteModalComponent,
+        BaseComponent,
+        ReferenceDataComponent,
+        EnumerationValuesComponent,
+        EnumerationValuesDetailsComponent,
+        ConstraintsRulesComponent,
+        SubscribedCatalogueMainComponent,
+        SubscribedCatalogueDetailComponent,
+        ConstraintsRulesComponent,
+        LoadingIndicatorComponent,
+        ApiPropertyTableComponent,
+        SubscribedCatalogueMainComponent,
+        SubscribedCatalogueDetailComponent,
+        ApiPropertyTableComponent,
+        FederatedDataModelMainComponent,
+        FederatedDataModelDetailComponent,
+        NewFederatedSubscriptionModalComponent,
+        ProfileDetailsComponent,
+        DefaultProfileComponent,
+        OpenIdConnectAuthorizeComponent,
+        ProfileDataViewComponent,
+        NewerVersionsComponent,
+        TerminologyMainComponent,
+        SkeletonBadgeComponent,
+        ReferenceDataModelMainComponent,
+        ModelHeaderComponent,
+        CopyActionComponent
+    ]
 })
 export class CatalogueModule {}

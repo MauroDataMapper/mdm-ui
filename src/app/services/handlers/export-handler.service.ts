@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,7 +40,10 @@ export class ExportHandlerService {
   ) {}
 
   createFileName(label: string, exporter: Exporter) {
-    const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+    let extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+    if (extension.startsWith('.')) {
+      extension = extension.replace('.', '');
+    }
     const rightNow = new Date();
     const res = rightNow
       .toISOString()
@@ -68,10 +71,10 @@ export class ExportHandlerService {
   exportDataModel(
     models: CatalogueItem[],
     exporter: Exporter,
-    type: ModelDomain,
+    type: ModelDomain | 'folders',
     options?: ExportQueryParameters
   ): Observable<HttpResponse<ArrayBuffer>> {
-    const ids = models.map((model) => model.id);
+    const ids = models.map(model => model.id);
     const resource = this.resources.getExportableResource(type);
     const requestSettings = { responseType: 'arraybuffer' };
 

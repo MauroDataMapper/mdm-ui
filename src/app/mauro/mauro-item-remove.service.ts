@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ export class MauroItemRemoveService {
       return this.removeTerm(identifier);
     }
 
-    return throwError(`${identifier.domainType} is not supported`);
+    return throwError(() => new Error(`${identifier.domainType} is not supported`));
   }
 
   restore(identifier: MauroIdentifier): Observable<MauroItem> {
@@ -107,10 +107,10 @@ export class MauroItemRemoveService {
     }
 
     if (!response) {
-      return throwError(`${identifier.domainType} is not supported`);
+      return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
-    return response.pipe(map((res) => res.body));
+    return response.pipe(map(res => res.body));
   }
 
   private removeDataModel(

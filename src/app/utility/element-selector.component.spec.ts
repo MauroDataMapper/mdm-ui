@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selec
 import { ModelPathComponent } from './model-path/model-path.component';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ElementSelectorComponent', () => {
@@ -46,15 +45,7 @@ describe('ElementSelectorComponent', () => {
         MatTooltipModule,
         MatDialogModule,
         MatTableModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MdmResourcesService, useValue: {} }
-      ],
-      declarations: [
+        ToastrModule.forRoot(),
         ProfilePictureComponent,
         ByteArrayToBase64Pipe,
         McSelectComponent,
@@ -62,6 +53,11 @@ describe('ElementSelectorComponent', () => {
         ModelSelectorTreeComponent,
         ModelPathComponent,
         ElementSelectorComponent
+      ],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MdmResourcesService, useValue: {} }
       ]
     })
     .compileComponents();

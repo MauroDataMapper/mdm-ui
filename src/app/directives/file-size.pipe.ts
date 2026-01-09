@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,20 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'fileSize'
+    name: 'fileSize',
+    standalone: true
 })
 export class FileSizePipe implements PipeTransform {
-  transform(bytes : any, precision? : number): string {
-    if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) { return '-'; }
-    if (typeof precision === 'undefined') { precision = 1; }
+  transform(bytes: string | number, precision?: number): string {
+    if (isNaN(parseFloat(bytes as string)) || !isFinite(bytes as number)) {
+      return '-';
+    }
+    if (typeof precision === 'undefined') {
+      precision = 1;
+    }
     const units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
-    const num = Math.floor(Math.log(bytes) / Math.log(1024));
+    const num = Math.floor(Math.log(bytes as number) / Math.log(1024));
 
-    return ((bytes / Math.pow(1024, Math.floor(num))).toFixed(precision) + ' ' + units[num]);
+    return ((bytes as number / Math.pow(1024, Math.floor(num))).toFixed(precision) + ' ' + units[num]);
   }
 }

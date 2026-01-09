@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
@@ -43,15 +43,32 @@ import {
 import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
+import { ElementLinkListComponent } from '../../shared/element-link-list/element-link-list.component';
+import { TermCodeSetListComponent } from '../codeset-list/term-codeset-list.component';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { TermRelationshipListComponent } from '../relationship-list/term-relationship-list.component';
+import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-term',
-  templateUrl: './term.component.html',
-  styleUrls: ['./term.component.scss']
+    selector: 'mdm-term',
+    templateUrl: './term.component.html',
+    styleUrls: ['./term.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, MatTabLabel, TermRelationshipListComponent, SkeletonBadgeComponent, TermCodeSetListComponent, ElementLinkListComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
-export class TermComponent
-  implements OnInit, AfterViewChecked {
-
+export class TermComponent implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology: TerminologyDetail = null;
   term: TermDetail;
@@ -75,10 +92,18 @@ export class TermComponent
   isLoadingRules = true;
   isLoadingCodeSets = true;
   isLoadingRelationships = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   showEdit = false;
   showDelete = false;
   access: Access;
-  tabs = new TabCollection(['description', 'links', 'rules', 'annotations']);
+  tabs = new TabCollection([
+    'description',
+    'links',
+    'rules',
+    'annotations',
+    'history'
+  ]);
 
   constructor(
     private resources: MdmResourcesService,
@@ -90,8 +115,7 @@ export class TermComponent
     private title: Title,
     private editingService: EditingService,
     private securityHandler: SecurityHandlerService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     if (!this.uiRouterGlobals.params.id) {
@@ -105,7 +129,9 @@ export class TermComponent
     this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
 
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as Uuid).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as Uuid
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.termDetails(this.parentId);
@@ -117,7 +143,10 @@ export class TermComponent
   }
 
   ngAfterViewChecked(): void {
-    if (this.tabGroup && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)) {
+    if (
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+    ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
   }
@@ -129,7 +158,6 @@ export class TermComponent
 
   termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
-
 
     forkJoin([
       this.resources.terminology.get(terminologyId) as Observable<
@@ -147,7 +175,6 @@ export class TermComponent
         .subscribe((resp) => {
           this.term.semanticLinks = resp.body.items;
         });
-
 
       this.watchTermObject();
 
@@ -171,11 +198,10 @@ export class TermComponent
     this.access = this.securityHandler.elementAccess(this.term);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
-
 
   tabSelected(index: number) {
     const tab = this.tabs.getByIndex(index);
@@ -187,7 +213,6 @@ export class TermComponent
   }
 
   save(saveItems: Array<DefaultProfileItem>) {
-
     const resource: Term = {
       id: this.term.id,
       domainType: this.term.domainType,
@@ -200,20 +225,20 @@ export class TermComponent
     });
 
     this.resources.term
-    .update(this.terminology.id, this.term.id, resource)
-    .subscribe(
-      (result:TermDetailResponse) => {
-        this.termDetails(result.body.id);
-        this.messageHandler.showSuccess('Term updated successfully.');
-        this.editingService.stop();
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Term.',
-          error
-        );
-      }
-    );
+      .update(this.terminology.id, this.term.id, resource)
+      .subscribe(
+        (result: TermDetailResponse) => {
+          this.termDetails(result.body.id);
+          this.messageHandler.showSuccess('Term updated successfully.');
+          this.editingService.stop();
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Term.',
+            error
+          );
+        }
+      );
   }
 
   codeSetCountEmitter(count: number) {
@@ -222,11 +247,7 @@ export class TermComponent
   }
 
   onCodeSetSelect(codeset) {
-    this.stateHandler.Go(
-      'codeset',
-      { id: codeset.id },
-      null
-    );
+    this.stateHandler.Go('codeset', { id: codeset.id }, null);
   }
 
   relationshipCountEmitter(count: number) {
@@ -240,5 +261,10 @@ export class TermComponent
       { terminologyId: term.model, id: term.id },
       null
     );
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 }

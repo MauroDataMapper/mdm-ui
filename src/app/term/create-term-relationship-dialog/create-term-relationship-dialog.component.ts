@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   CatalogueItemDomainType,
@@ -33,11 +33,20 @@ import { MessageHandlerService } from '@mdm/services';
 import { BehaviorSubject, EMPTY, Observable, of, Subscription } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { MatInput } from '@angular/material/input';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-create-term-relationship-dialog',
-  templateUrl: 'create-term-relationship-dialog.component.html',
-  styleUrls: ['create-term-relationship-dialog.component.scss']
+    selector: 'mdm-create-term-relationship-dialog',
+    templateUrl: 'create-term-relationship-dialog.component.html',
+    styleUrls: ['create-term-relationship-dialog.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatButton, FoldersTreeComponent, MatDialogContent, MatInput, MatError]
 })
 export class CreateTermRelationshipDialogComponent
   implements OnInit, OnDestroy {
@@ -92,29 +101,29 @@ export class CreateTermRelationshipDialogComponent
 
     this.resources.termRelationshipTypes
       .list(this.terminology.id)
-      .subscribe((data) => (this.relationshipTypes = data.body.items));
+      .subscribe(data => (this.relationshipTypes = data.body.items));
 
     this.sourceTerm = this.data.sourceTerm;
     this.targetTerm = this.data.targetTerm;
 
     this.formWithExistingTerm = this.formBuilder.group({
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       sourceTerm: [this.data.sourceTerm.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       relationshipType: [this.data.relationshipType?.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       targetTerm: [this.data.targetTerm?.id, Validators.required]
     });
 
     this.formWithNewTerm = this.formBuilder.group({
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       sourceTerm: [this.data.sourceTerm.id, Validators.required],
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       relationshipType: [this.data.relationshipType?.id, Validators.required],
       targetTerm: this.formBuilder.group({
-        // eslint-disable-next-line @typescript-eslint/unbound-method
+
         code: [this.data.code, Validators.required],
-        // eslint-disable-next-line @typescript-eslint/unbound-method
+
         definition: [this.data.definition, Validators.required],
         description: [this.data.description]
       })
@@ -144,7 +153,8 @@ export class CreateTermRelationshipDialogComponent
       this._useExistingTerms.subscribe((useExistingTerms) => {
         if (useExistingTerms) {
           this.form = this.formWithExistingTerm;
-        } else {
+        }
+ else {
           this.form = this.formWithNewTerm;
         }
       })
@@ -153,8 +163,8 @@ export class CreateTermRelationshipDialogComponent
     this.subscriptions.add(
       this.formWithNewTerm.valueChanges.subscribe(() => {
         if (
-          this.form.value.targetTerm?.code &&
-          this.form.value.targetTerm?.definition
+          this.form.value.targetTerm?.code
+          && this.form.value.targetTerm?.definition
         ) {
           this.targetTerm = this.form.value.targetTerm;
         }
@@ -164,8 +174,8 @@ export class CreateTermRelationshipDialogComponent
 
   selectedTerm(term: TermDetail | TerminologyDetail) {
     if (
-      term.domainType === CatalogueItemDomainType.Term &&
-      this.sourceTerm.id !== term.id
+      term.domainType === CatalogueItemDomainType.Term
+      && this.sourceTerm.id !== term.id
     ) {
       this.targetTerm = term as TermDetail;
     }
@@ -229,15 +239,20 @@ export class CreateTermRelationshipDialogComponent
               .subscribe((trResponse: HttpResponse<TermRelationship>) => {
                 if (trResponse.ok) {
                   this.dialogRef.close(trResponse.body);
-                } else {
-                  this.messageHandler.showWarning(trResponse.body);
+                }
+ else {
+                  /* NOTE: Generic error message */
+                  this.messageHandler.showWarning('Unable to create new relationship between terms #1');
                 }
               });
-          } else {
-            this.messageHandler.showWarning(response.body);
+          }
+ else {
+            /* NOTE: Generic error message */
+            this.messageHandler.showWarning('Unable to create the new term');
           }
         });
-    } else {
+    }
+ else {
       this.resources.terms
         .addTermRelationships(this.terminology.id, this.sourceTerm.id, {
           sourceTerm: this.sourceTerm.id,
@@ -255,8 +270,10 @@ export class CreateTermRelationshipDialogComponent
         .subscribe((response: HttpResponse<TermRelationship>) => {
           if (response.ok) {
             this.dialogRef.close(response.body);
-          } else {
-            this.messageHandler.showWarning(response.body);
+          }
+ else {
+            /* NOTE: Generic error message */
+            this.messageHandler.showWarning('Unable to create new relationship between terms #2');
           }
         });
     }
@@ -274,7 +291,7 @@ export class CreateTermRelationshipDialogComponent
       }),
       map((response: CatalogueItemSearchResponse) =>
         response.body.items.some(
-          (e) => e.code === this.form.value.targetTerm.code
+          e => e.code === this.form.value.targetTerm.code
         )
       )
     );

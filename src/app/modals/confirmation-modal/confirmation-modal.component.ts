@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,24 +18,29 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 export interface ConfirmationModalConfig {
-  title?: string;
-  message: string;
-  okBtnTitle?: string;
-  cancelBtnTitle?: string;
-  cancelShown?: boolean;
-  btnType?: string;
+  title?: string
+  message: string
+  okBtnTitle?: string
+  cancelBtnTitle?: string
+  cancelShown?: boolean
+  btnType?: string
 }
 
 export interface ConfirmationModalResult {
-  status: ModalDialogStatus;
+  status: ModalDialogStatus
 }
 
 @Component({
-  selector: 'mdm-confirmation-modal',
-  templateUrl: './confirmation-modal.component.html',
-  styleUrls: ['./confirmation-modal.component.sass']
+    selector: 'mdm-confirmation-modal',
+    templateUrl: './confirmation-modal.component.html',
+    styleUrls: ['./confirmation-modal.component.sass'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatButton]
 })
 export class ConfirmationModalComponent implements OnInit {
   title: string;

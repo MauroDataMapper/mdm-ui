@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'mdm-input-modal',
-  templateUrl: './input-modal.component.html',
-  styleUrls: ['./input-modal.component.scss']
+    selector: 'mdm-input-modal',
+    templateUrl: './input-modal.component.html',
+    styleUrls: ['./input-modal.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatDialogClose]
 })
 export class InputModalComponent implements OnInit {
   okBtn: string;

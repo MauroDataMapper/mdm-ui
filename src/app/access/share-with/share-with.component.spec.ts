@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,44 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MdmResourcesService } from '@mdm/modules/resources';
 import { ShareWithComponent } from './share-with.component';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('ShareWithComponent', () => {
-  let component: ShareWithComponent;
-  let fixture: ComponentFixture<ShareWithComponent>;
+  let harness: ComponentHarness<ShareWithComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatCheckboxModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
-      declarations: [
-        ShareWithComponent
-      ]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ShareWithComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(ShareWithComponent)
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

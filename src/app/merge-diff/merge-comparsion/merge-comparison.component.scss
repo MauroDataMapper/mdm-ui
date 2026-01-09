@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,6 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 $changeColor: #e6ffe6;
 
+.item-path {
+  margin: 1em;
+}
+
 .sourceCol {
   height: 25vh;
   overflow-y: auto;
@@ -32,8 +36,6 @@ $changeColor: #e6ffe6;
   }
 }
 
-
-
 .spacer {
   flex: 1 1 auto;
 }
@@ -41,7 +43,7 @@ $changeColor: #e6ffe6;
 .panel {
   .button {
     padding-right: 10px !important;
-    font-size: small  !important;
+    font-size: small !important;
     width: fit-content !important;
   }
 
@@ -50,9 +52,9 @@ $changeColor: #e6ffe6;
     font-size: small;
   }
 
-  .deleteContent {
+  .content {
     height: 25vh;
-    text-align: center;
+    // text-align: center;
   }
 
   .textArea {
@@ -63,7 +65,17 @@ $changeColor: #e6ffe6;
     width: 150px;
   }
 
+  .create-item {
+    margin: 1em;
+    color: green;
+  }
+
+  .delete-item {
+    margin: 1em;
+    color: red;
+  }
+
+  .modified-item {
+    margin: 1em;
+  }
 }
-
-
-

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,17 +18,20 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import {
   CatalogueItemDomainType,
-  isDataType
+  isDataType,
+  PathQueryParameters
 } from '@maurodatamapper/mdm-resources';
 import {
   MdmHttpHandlerOptions,
   MdmResourcesService
 } from '@mdm/modules/resources';
+import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
   MauroIdentifier,
   MauroItem,
+  MauroItemLocateOptions,
   MauroItemResponse
 } from './mauro-item.types';
 
@@ -39,7 +42,10 @@ import {
   providedIn: 'root'
 })
 export class MauroItemProviderService {
-  constructor(private resources: MdmResourcesService) {}
+  constructor(
+    private resources: MdmResourcesService,
+    private pathNames: PathNameService
+  ) {}
 
   /**
    * Get any Mauro catalogue item based on the identifier information provided.
@@ -99,13 +105,13 @@ export class MauroItemProviderService {
     }
 
     if (!response) {
-      return throwError(`${identifier.domainType} is not supported`);
+      return throwError(() => new Error(`${identifier.domainType} is not supported`));
     }
 
     return response.pipe(
-      map((res) => res.body),
+      map(res => res.body),
       catchError((error) => {
-        if (identifier.fetchOptions.failSilently) {
+        if (identifier.fetchOptions?.failSilently) {
           return of({
             ...identifier,
             label: '',
@@ -114,7 +120,7 @@ export class MauroItemProviderService {
           });
         }
 
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -127,8 +133,37 @@ export class MauroItemProviderService {
    * @returns An array of the requested catalogue items passed through an observable stream.
    */
   getMany(identifiers: MauroIdentifier[]): Observable<MauroItem[]> {
-    const requests$ = identifiers.map((identifier) => this.get(identifier));
+    const requests$ = identifiers.map(identifier => this.get(identifier));
     return forkJoin(requests$);
+  }
+
+  /**
+   * Locate a catalogue item from its path.
+   *
+   * @param path The path to locate.
+   * @param options The options to control the locate function.
+   * @returns The matching catalogue item if found.
+   */
+  locate(
+    path: string,
+    options?: MauroItemLocateOptions
+  ): Observable<MauroItem> {
+    const domain
+      = options?.domain ?? this.pathNames.getPathableDomainFromPath(path);
+    const query: PathQueryParameters = {
+      ...(options?.finalisedOnly && { finalised: options.finalisedOnly })
+    };
+
+    const request$: Observable<MauroItemResponse> = options?.parentId
+      ? this.resources.catalogueItem.getPathFromParent(
+          domain,
+          options.parentId,
+          path,
+          query
+        )
+      : this.resources.catalogueItem.getPath(domain, path, query);
+
+    return request$.pipe(map(response => response.body));
   }
 
   private getDataModel(
@@ -143,13 +178,13 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
     const dataClassId = identifier.parentDataClass ?? identifier.dataClass;
-    if (dataClassId) {
+    if (dataClassId && dataClassId !== '') {
       return this.resources.dataClass.getChildDataClass(
         identifier.model,
         dataClassId,
@@ -172,14 +207,14 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
     if (!identifier.dataClass) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a data class`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a data class`)
       );
     }
 
@@ -197,8 +232,8 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 
@@ -222,8 +257,8 @@ export class MauroItemProviderService {
     options: MdmHttpHandlerOptions
   ): Observable<MauroItemResponse> {
     if (!identifier.model) {
-      return throwError(
-        `${identifier.domainType} ${identifier.id} has not provided a model`
+      return throwError(() =>
+        new Error(`${identifier.domainType} ${identifier.id} has not provided a model`)
       );
     }
 

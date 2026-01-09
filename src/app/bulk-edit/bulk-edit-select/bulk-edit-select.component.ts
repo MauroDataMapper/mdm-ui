@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectionListChange } from '@angular/material/list';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectionListChange, MatSelectionList, MatListOption } from '@angular/material/list';
 import {
   CatalogueItemDomainType,
   FilterQueryParameters,
@@ -48,16 +48,27 @@ import {
 } from 'rxjs/operators';
 import { BulkEditProfileService } from '../bulk-edit-profile.service';
 import { BulkEditContext } from '../bulk-edit.types';
+import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
+import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatOption, MatLine } from '@angular/material/core';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatHint, MatError } from '@angular/material/form-field';
 
 interface CatalogueItemDomainTypeOption {
-  domainType: CatalogueItemDomainType;
-  displayName: string;
+  domainType: CatalogueItemDomainType
+  displayName: string
 }
 
 @Component({
-  selector: 'mdm-bulk-edit-select',
-  templateUrl: './bulk-edit-select.component.html',
-  styleUrls: ['./bulk-edit-select.component.scss']
+    selector: 'mdm-bulk-edit-select',
+    templateUrl: './bulk-edit-select.component.html',
+    styleUrls: ['./bulk-edit-select.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatHint, NgIf, MatError, MatProgressBar, NgClass, ExtendedModule, MatButton, MatSelectionList, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, MatListOption, MatLine, BreadcrumbComponent]
 })
 export class BulkEditSelectComponent implements OnInit, OnDestroy {
   @Output() cancel = new EventEmitter<void>();
@@ -80,10 +91,10 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   setupForm = new FormGroup({
     childDomainType: new FormControl<CatalogueItemDomainType>(
       null,
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required
     ),
-    childItems: new FormControl<MauroItem[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
-    profiles: new FormControl<ProfileSummary[]>([], Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    childItems: new FormControl<MauroItem[]>([], Validators.required),
+    profiles: new FormControl<ProfileSummary[]>([], Validators.required),
     filter: new FormControl('')
   });
 
@@ -107,8 +118,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
 
   get showBreadcrumbs() {
     return (
-      this.context.childDomainType === CatalogueItemDomainType.DataClass ||
-      this.context.childDomainType === CatalogueItemDomainType.DataElement
+      this.context.childDomainType === CatalogueItemDomainType.DataClass
+      || this.context.childDomainType === CatalogueItemDomainType.DataElement
     );
   }
 
@@ -138,7 +149,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
           const item = childItems[0];
           return this.loadAvailableProfiles(item);
         }),
-        map((profiles) => (this.availableProfiles = profiles))
+        map(profiles => (this.availableProfiles = profiles))
       )
       .subscribe(() => {
         // Subscribe to get notifications
@@ -163,8 +174,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         debounceTime(500),
         distinctUntilChanged(),
-        map((value) =>
-          this.availableChildItems.filter((item) =>
+        map(value =>
+          this.availableChildItems.filter(item =>
             item.label.toLowerCase().includes(value.toLowerCase())
           )
         )
@@ -198,10 +209,10 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
   }
 
   childItemSelected(selection: MatSelectionListChange) {
-    selection.options.forEach((option) =>
+    selection.options.forEach(option =>
       option.selected
-        ? this.childItemSelections.select(option.value)
-        : this.childItemSelections.deselect(option.value)
+        ? this.childItemSelections.select(option.value as MauroItem)
+        : this.childItemSelections.deselect(option.value as MauroItem)
     );
 
     this.syncChildItemSelectionsWithForm();
@@ -268,9 +279,9 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     }
 
     if (
-      this.context.rootItem.domainType ===
-        CatalogueItemDomainType.Terminology ||
-      this.context.rootItem.domainType === CatalogueItemDomainType.CodeSet
+      this.context.rootItem.domainType
+      === CatalogueItemDomainType.Terminology
+      || this.context.rootItem.domainType === CatalogueItemDomainType.CodeSet
     ) {
       return [
         {
@@ -288,8 +299,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
     const filters: FilterQueryParameters = { all: true, sort: 'label' };
 
     if (this.context.childDomainType === CatalogueItemDomainType.DataElement) {
-      request$ =
-        this.context.rootItem.domainType === CatalogueItemDomainType.DataClass
+      request$
+        = this.context.rootItem.domainType === CatalogueItemDomainType.DataClass
           ? this.resources.dataElement.list(
               this.context.rootItem.model,
               this.context.rootItem.id,
@@ -299,18 +310,20 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
               this.context.rootItem.id,
               filters
             );
-    } else if (
+    }
+ else if (
       this.context.childDomainType === CatalogueItemDomainType.DataClass
     ) {
       request$ = this.resources.dataClass.all(
         this.context.rootItem.id,
         filters
       );
-    } else if (
-      this.context.childDomainType === CatalogueItemDomainType.PrimitiveType ||
-      this.context.childDomainType ===
-        CatalogueItemDomainType.EnumerationType ||
-      this.context.childDomainType === CatalogueItemDomainType.ModelDataType
+    }
+ else if (
+      this.context.childDomainType === CatalogueItemDomainType.PrimitiveType
+      || this.context.childDomainType
+      === CatalogueItemDomainType.EnumerationType
+      || this.context.childDomainType === CatalogueItemDomainType.ModelDataType
     ) {
       const dataTypeFilters: FilterQueryParameters = {
         ...filters,
@@ -320,7 +333,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         this.context.rootItem.id,
         dataTypeFilters
       );
-    } else if (this.context.childDomainType === CatalogueItemDomainType.Term) {
+    }
+ else if (this.context.childDomainType === CatalogueItemDomainType.Term) {
       // This is a workaround for the fact that the `all` param doesn't work on Term lists
       // (a backend check to avoid huge term lists being processed). Basically do one request to get the total count,
       // then provide `max: count` to get one full page of results.  This isn't ideal and should be revisited at a
@@ -338,7 +352,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
               })
             )
           );
-      } else {
+      }
+ else {
         request$ = this.resources.term
           .list(this.context.rootItem.id, { max: 1 })
           .pipe(
@@ -350,7 +365,8 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
             )
           );
       }
-    } else {
+    }
+ else {
       request$ = of({ body: { count: 0, items: [] } });
     }
 
@@ -363,7 +379,7 @@ export class BulkEditSelectComponent implements OnInit, OnDestroy {
         );
         return EMPTY;
       }),
-      map((response) => response.body.items),
+      map(response => response.body.items),
       finalize(() => (this.loading = false))
     );
   }

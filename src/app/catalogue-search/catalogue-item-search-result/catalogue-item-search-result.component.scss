@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ SPDX-License-Identifier: Apache-2.0
 @mixin mdm-catalogue-item-search-result-theme($theme) {
   $primary: map-get($theme, primary);
 
-  $search-result-heading-background-color: mat.get-color-from-palette($primary);
-  $search-result-heading-color: mat.get-color-from-palette(
+  $search-result-heading-background-color: mat.m2-get-color-from-palette($primary);
+  $search-result-heading-color: mat.m2-get-color-from-palette(
     $primary,
     '500-contrast'
   );
@@ -30,6 +30,11 @@ SPDX-License-Identifier: Apache-2.0
     &__header {
       background-color: $search-result-heading-background-color;
       color: $search-result-heading-color;
+
+      a {
+        color: $search-result-heading-color;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -61,6 +66,16 @@ $search-result-border-radius: 4px;
     }
   }
 
+  .panel-body {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0;
+  }
+
+  .item-type {
+    margin: 1em 1em 0em 1em;
+  }
+
   &__content,
   &__footer {
     padding: $search-result-content-padding;
@@ -69,7 +84,7 @@ $search-result-border-radius: 4px;
     border-radius: $search-result-border-radius;
   }
 
-  .panel-body {
-    padding: 0;
+  &__no-content {
+    font-style: italic;
   }
 }

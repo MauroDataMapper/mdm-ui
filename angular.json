@@ -41,7 +41,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jodit/es2021/jodit.min.css"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
@@ -91,14 +92,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mdm-ui:build"
+            "buildTarget": "mdm-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mdm-ui:build:production"
+              "buildTarget": "mdm-ui:build:production"
             },
             "development": {
-              "browserTarget": "mdm-ui:build:development"
+              "buildTarget": "mdm-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -107,7 +108,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mdm-ui:build"
+            "buildTarget": "mdm-ui:build"
           }
         },
         "test": {

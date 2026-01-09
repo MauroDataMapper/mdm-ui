@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Injectable } from '@angular/core';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 
 import { Observable, throwError } from 'rxjs';
 import { DiagramParameters } from '../diagram/diagram.model';
@@ -51,7 +51,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
       case CatalogueItemDomainType.VersionedFolder:
         return this.resourcesService.versionedFolder.modelVersionTree(params.parent.id);
       default:
-        return throwError(`Cannot get merge graph content for '${params.parent.domainType} ${params.parent.id}' - not supported.`);
+        return throwError(() => new Error(`Cannot get merge graph content for '${params.parent.domainType} ${params.parent.id}' - not supported.`));
     }
   }
 
@@ -59,35 +59,60 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     this.changeComponent(null);
 
     result.body.forEach((item: ModelVersionItem) => {
+      let versionText = `${item.label}\n\n`;
+      if (item.branchName) {
+        versionText += `Branch: ${item.branchName}`;
+      }
+      else if (item.modelVersion) {
+        versionText += `Version: ${item.modelVersionTag}`;
+      }
+      else if (item.modelVersion) {
+        versionText += `Version: ${item.modelVersion}`;
+      }
+
       if (item.id === this.parentId) {
         this.addColoredRectangleCell(
           this.fontColorWhite,
           this.darkOrange,
           item.id,
-          `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`,
+          versionText,
           300,
           100,
           288
         );
-      } else if (item.isNewFork) {
+      }
+ else if (item.isNewFork) {
         this.addRectangleCell(
           item.id,
-          `Fork \n\n ${item.label} \n\n  ${item.branch} branch`,
+          `Fork \n\n ${item.label} \n\n  ${item.branchName} branch`,
           300,
           100,
           288
         );
-      } else if (item.isNewDocumentationVersion) {
+      }
+ else if (item.isNewDocumentationVersion) {
+        let versionText = `${item.label}\n\n`;
+        if (item.branchName) {
+          versionText += `Branch: ${item.branchName}`;
+        }
+        else if (item.modelVersion) {
+          versionText += `Version: ${item.modelVersionTag}`;
+        }
+        else if (item.modelVersion) {
+          versionText += `Version: ${item.modelVersion}`;
+        }
+
         this.addColoredRectangleCell(
           this.fontColorBlack,
           this.shadedOrange,
           item.id,
-          `${item.label} \n\n Version ${item.documentationVersion} \n\n ${item.branch} branch`,
+          versionText,
           300,
           100,
           288
         );
-      } else {
+      }
+ else {
         if (item.modelVersion) {
           this.addColoredRectangleCell(
             this.fontColorBlack,
@@ -98,12 +123,13 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
             100,
             288
           );
-        } else {
+        }
+ else {
           this.addColoredRectangleCell(
             this.fontColorBlack,
             this.shadedOrange,
             item.id,
-            `${item.label} \n\n ${item.branch} branch`,
+            `${item.label} \n\n ${item.branchName} branch`,
             300,
             100,
             288
@@ -114,7 +140,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
     // Adding the links in a separate loop, because it won't find the target otherwise
     result.body.forEach((item: ModelVersionItem) => {
-      let link: any;
+      let link: joint.shapes.standard.Link;
       item.targets.forEach((itmTarget) => {
         link = new joint.shapes.standard.Link({
           id: `${item.id} _  ${itmTarget.id}`,

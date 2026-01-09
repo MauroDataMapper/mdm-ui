@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import {
   Uuid,
@@ -49,11 +49,27 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HistoryComponent } from '../../shared/history/history.component';
+import { AttachmentListComponent } from '../../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../../constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../../shared/profile-data-view/profile-data-view.component';
+import { CatalogueItemSearchComponent } from '../../catalogue-search/catalogue-item-search/catalogue-item-search.component';
+import { ModelHeaderComponent } from '../../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-versioned-folder',
-  templateUrl: './versioned-folder.component.html',
-  styleUrls: ['./versioned-folder.component.scss']
+    selector: 'mdm-versioned-folder',
+    templateUrl: './versioned-folder.component.html',
+    styleUrls: ['./versioned-folder.component.scss'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabLabel, CatalogueItemSearchComponent, MatTabContent, ProfileDataViewComponent, SkeletonBadgeComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class VersionedFolderComponent
   extends BaseComponent
@@ -142,6 +158,7 @@ export class VersionedFolderComponent
   toggleShowSearch() {
     this.messages.toggleSearch();
   }
+
   save(saveItems: Array<DefaultProfileItem>) {
     const resource = {
       id: this.detail.id,

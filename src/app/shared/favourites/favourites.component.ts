@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,11 +36,15 @@ import {
   isDomainExpandable,
   MauroItemTreeFlatNode
 } from '../mauro-item-tree/mauro-item-tree.types';
+import { NgIf } from '@angular/common';
+import { MauroItemTreeComponent } from '../mauro-item-tree/mauro-item-tree.component';
 
 @Component({
-  selector: 'mdm-favourites',
-  templateUrl: './favourites.component.html',
-  styleUrls: ['./favourites.component.sass']
+    selector: 'mdm-favourites',
+    templateUrl: './favourites.component.html',
+    styleUrls: ['./favourites.component.sass'],
+    standalone: true,
+    imports: [MauroItemTreeComponent, NgIf]
 })
 export class FavouritesComponent implements OnInit, OnDestroy {
   @Output() selectionChange = new EventEmitter<MauroItemTreeFlatNode>();
@@ -89,8 +93,8 @@ export class FavouritesComponent implements OnInit, OnDestroy {
     this.itemProvider
       .getMany(identifiers)
       .pipe(
-        map((items) => this.cleanUnusedFavourites(items)),
-        map((items) => items.sort((a, b) => a.label.localeCompare(b.label))),
+        map(items => this.cleanUnusedFavourites(items)),
+        map(items => items.sort((a, b) => a.label.localeCompare(b.label))),
         finalize(() => (this.reloading = false))
       )
       .subscribe((items) => {
@@ -113,9 +117,9 @@ export class FavouritesComponent implements OnInit, OnDestroy {
     // Identify catalogue items that were favourites but have been removed from the catalogue
     // Then clear them from the user favourites to not be issues anymore
     items
-      .filter((item) => item.error)
-      .forEach((item) => this.favouriteHandler.remove(item));
+      .filter(item => item.error)
+      .forEach(item => this.favouriteHandler.remove(item));
 
-    return items.filter((item) => !item.error);
+    return items.filter(item => !item.error);
   }
 }

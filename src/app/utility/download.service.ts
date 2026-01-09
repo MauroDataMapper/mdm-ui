@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DownloadService {
-
   constructor() {}
 
   /* Canvas Download */
@@ -63,7 +62,7 @@ export class DownloadService {
     let svgString = new XMLSerializer().serializeToString(svg);
     svgString = svgString.replace(/&nbsp;/g, ' ');
 
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;
 
     canvas.width = width * scale + 10;
     canvas.height = height * scale + 10;
@@ -73,13 +72,13 @@ export class DownloadService {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     svg.parentElement.append(canvas);
     // const img = new Image();
-    const img = new Image();
+    const img: HTMLImageElement = new Image();
     svg.parentElement.append(img);
     img.setAttribute('style', 'display: block');
     img.width = width * (scale + 1);
     img.height = height * (scale + 1);
 
-    const blob = new Blob([svgString], {type: 'image/svg+xml'});
+    const blob = new Blob([svgString], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     img.addEventListener('load', () => {
       URL.revokeObjectURL(url);
@@ -88,7 +87,7 @@ export class DownloadService {
       this.downloadCanvas(canvas, filename);
       canvas.remove();
       img.remove();
-    }, {once: true});
+    }, { once: true });
     img.src = url;
 
     // var img1 = new Image(); // Image constructor
@@ -101,5 +100,4 @@ export class DownloadService {
     // img2.alt = 'alt text';
     // document.body.appendChild(img2);
   }
-
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,18 +28,23 @@ import { MergeFilterPipe } from './pipes/merge-filter.pipe';
 import { ConflictEditorModalComponent } from './conflict-editor/conflict-editor-modal/conflict-editor-modal.component';
 import { StringConflictEditorComponent } from './conflict-editor/string-conflict-editor/string-conflict-editor.component';
 import { NumberConflictEditorComponent } from './conflict-editor/number-conflict-editor/number-conflict-editor.component';
+import { ContentModule } from '@mdm/content/content.module';
 
 @NgModule({
-  declarations: [
-    MergeDiffContainerComponent,
-    MergeItemSelectorComponent,
-    MergeComparisonComponent,
-    MergeFilterPipe,
-    ConflictEditorModalComponent,
-    StringConflictEditorComponent,
-    NumberConflictEditorComponent
-  ],
-  imports: [CommonModule, SharedModule, MaterialModule, CatalogueModule],
-  exports: [MergeDiffContainerComponent]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        CatalogueModule,
+        ContentModule,
+        MergeDiffContainerComponent,
+        MergeItemSelectorComponent,
+        MergeComparisonComponent,
+        MergeFilterPipe,
+        ConflictEditorModalComponent,
+        StringConflictEditorComponent,
+        NumberConflictEditorComponent
+    ],
+    exports: [MergeDiffContainerComponent]
 })
 export class MergeDiffModule {}

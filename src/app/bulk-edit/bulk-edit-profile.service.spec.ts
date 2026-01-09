@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -175,7 +175,7 @@ describe('BulkEditProfileService', () => {
         label: 'test'
       };
 
-      const expected$ = cold('#', null, new Error());
+      const expected$ = cold('#', null, new Error(domain.toString() + ' is not a model domain type'));
       const actual$ = action(rootItem);
       expect(actual$).toBeObservable(expected$);
     };
@@ -183,7 +183,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on getMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.getMany(item, [], {} as ProfileProvider)
         );
       }
@@ -192,7 +192,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on saveMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.saveMany(item, {} as ProfileProvider, [])
         );
       }
@@ -201,7 +201,7 @@ describe('BulkEditProfileService', () => {
     it.each(badDomains)(
       'should throw an error on validateMany if domain is %p',
       (domain) => {
-        testRootItem(domain, (item) =>
+        testRootItem(domain, item =>
           service.validateMany(item, {} as ProfileProvider, [])
         );
       }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+// Enable this line to view the systems environment
+// console.log('ENV:', JSON.stringify(process.env, null, 2));
+
 module.exports = {
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
@@ -28,12 +32,17 @@ module.exports = {
     '.html'
   ],
   transform: {
-    '^.+\\.(ts|html)$': 'ts-jest'
+    '^.+\\.(ts|js|mjs|html|svg)$': [
+      'jest-preset-angular',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
+    ],
   },
   globals: {
     'ts - jest': {
       tsconfig: 'tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.html'
     }
   },
   moduleNameMapper: {
@@ -42,7 +51,9 @@ module.exports = {
   },
   reporters: [
     'default',
-    ['jest-junit',{outputDirectory: 'test-report'}],
+    ["jest-junit", {
+      outputDirectory: "test-report",
+      reportTestSuiteErrors: "true"}],
     ['jest-html-reporter', {
       pageTitle: 'Mauro UI: Test Report',
       outputPath: 'test-report/index.html',

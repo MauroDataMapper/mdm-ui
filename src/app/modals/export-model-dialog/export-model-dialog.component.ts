@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   Exporter,
   ExporterIndexResponse,
@@ -29,26 +29,35 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatOption } from '@angular/material/core';
+import { NgFor, NgIf } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 export interface ExportModelDialogOptions {
-  domain: ModelDomain;
+  domain: ModelDomain
 }
 
 export interface ExportModelDialogResponse {
-  status: ModalDialogStatus;
-  exporter?: Exporter;
-  parameters?: ExportQueryParameters;
+  status: ModalDialogStatus
+  exporter?: Exporter
+  parameters?: ExportQueryParameters
 }
 
 @Component({
-  selector: 'mdm-export-model-dialog',
-  templateUrl: './export-model-dialog.component.html',
-  styleUrls: ['./export-model-dialog.component.scss']
+    selector: 'mdm-export-model-dialog',
+    templateUrl: './export-model-dialog.component.html',
+    styleUrls: ['./export-model-dialog.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatCheckbox, AlertComponent, MatDialogActions, MatButton]
 })
 export class ExportModelDialogComponent implements OnInit {
   exporters: Exporter[];
   formGroup = new FormGroup({
-    exporter: new FormControl<Exporter>(null, Validators.required), // eslint-disable-line @typescript-eslint/unbound-method
+    exporter: new FormControl<Exporter>(null, Validators.required),
     asynchronous: new FormControl(false)
   });
 

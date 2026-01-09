@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,19 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { UserDetailsComponent } from '../user-details/user-details.component';
+import { ImgCroppieComponent } from '../../shared/img-croppie/img-croppie.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+    selector: 'mdm-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatButton, MatMenuTrigger, MatMenu, MatMenuItem, ImgCroppieComponent, UserDetailsComponent]
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
@@ -45,7 +53,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   trustedUrl: any;
   afterSave: (result: { body: { id: any } }) => void;
   backendUrl: string = environment.apiEndpoint;
-
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -65,11 +72,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Get the user details data
   userDetails() {
-    this.resourcesService.catalogueUser.get(this.currentUser.id).subscribe((result: { body: UserDetailsResult }) => {
+    this.resourcesService.catalogueUser.get(this.currentUser.id as string).subscribe((result: { body: UserDetailsResult }) => {
       this.user = result.body;
       this.messageService.sendUserDetails(this.user);
       this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.backendUrl + '/catalogueUsers/' + this.user.id + '/image');
-    }, err => {
+    }, (err) => {
       this.messageHandler.showError('There was a problem loading user details.', err);
     });
   }
@@ -91,7 +98,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Saves the selected profile picture
   public savePicture() {
-
     this.resourcesService.userImage.update(this.user.id, { image: this.imageThumb, type: 'image/png' }).subscribe(() => {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
@@ -99,7 +105,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.isChangingProfileImage = false;
       this.broadcast.dispatch('profileImageUpdated');
       this.userDetails();
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
     });
   }
@@ -131,7 +137,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.userDetails();
       this.broadcast.dispatch('profileImageUpdated');
     },
-      error => {
+      (error) => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);
       }
     );

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Observable } from 'rxjs';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
-
 export class DataflowDatamodelDiagramService extends BasicDiagramService {
-
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
@@ -33,7 +31,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataFlow.list(this.parentId, {all:true});
+    return this.resourcesService.dataFlow.list(this.parentId, { all: true });
   }
 
   render(data: any): void {
@@ -47,7 +45,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
     // this.addCylinderCell('12345', 'This is a very long node name');
     Object.keys(nodes).forEach((key) => {
-      this.addCylinderCell(key, nodes[key]);
+      this.addCylinderCell(key, nodes[key] as string);
     });
 
     data.body.items.forEach((flow) => {
@@ -61,7 +59,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
       link.appendLabel({
         attrs: {
           text: {
-            text: joint.util.breakText(flow.label, { width: 150 }),
+            text: joint.util.breakText(flow.label as string, { width: 150 }),
             fill: '#222222',
             fontSize: 10,
             fontWeight: 'normal'
@@ -95,14 +93,12 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
       // console.log('next clicked: service');
     });
   }
+
   canGoUp(): boolean {
     return false;
   }
 
   goUp(): void {
 
-
   }
-
-
 }

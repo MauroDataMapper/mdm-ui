@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -45,7 +45,7 @@ const editableRouteNames = [
 ];
 
 export interface EditableObject {
-  inEdit?: boolean;
+  inEdit?: boolean
 }
 
 /**
@@ -97,7 +97,7 @@ export class EditingService {
       return;
     }
 
-    this._isEditing = items.some((item) => item.inEdit);
+    this._isEditing = items.some(item => item.inEdit);
   }
 
   /**
@@ -113,6 +113,10 @@ export class EditingService {
    * place. If not or the user allows the transition, the original tab click event will be carried out.
    */
   setTabGroupClickEvent(tabGroup: MatTabGroup) {
+    if (!tabGroup) {
+      return;
+    }
+
     tabGroup._handleClick = (
       tab: MatTab,
       tabHeader: MatTabHeader,
@@ -251,6 +255,6 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-      .pipe(map((result) => result.status === ModalDialogStatus.Ok));
+      .pipe(map(result => result.status === ModalDialogStatus.Ok));
   }
 }

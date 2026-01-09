@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,14 +15,22 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-/* eslint-disable id-blacklist */
+
 import { Component, Input } from '@angular/core';
 import { Profile } from '@maurodatamapper/mdm-resources';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { FormsModule } from '@angular/forms';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor } from '@angular/common';
+import { ProfileSectionComponent } from '@mdm/shared/profile-section/profile-section.component';
 
 @Component({
-  selector: 'mdm-profile-details',
-  templateUrl: './profile-details.component.html',
-  styleUrls: ['./profile-details.component.scss']
+    selector: 'mdm-profile-details',
+    templateUrl: './profile-details.component.html',
+    styleUrls: ['./profile-details.component.scss'],
+    standalone: true,
+  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent, ProfileSectionComponent]
 })
 export class ProfileDetailsComponent {
   @Input() currentProfileDetails: Profile;

@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,15 +19,15 @@ SPDX-License-Identifier: Apache-2.0
   <div class="mat-typography mdm-app-component">
     <mdm-navbar></mdm-navbar>
 
+    <!--<ui-view></ui-view>-->
     <main ui-view></main>
 
     <mdm-loading-indicator></mdm-loading-indicator>
+    <mdm-footer
+      class="app-footer"
+      [version]="appVersion"
+      [copyright]="copyright"
+      [links]="footerLinks"
+    ></mdm-footer>
   </div>
-
-  <mdm-footer
-    class="app-footer"
-    [version]="appVersion"
-    [copyright]="copyright"
-    [links]="footerLinks"
-  ></mdm-footer>
 </div>

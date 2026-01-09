@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,15 +21,19 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-diagram-toolbar',
-  templateUrl: './diagram-toolbar.component.html',
-  styleUrls: [ './diagram-toolbar.component.scss' ]
+    selector: 'mdm-diagram-toolbar',
+    templateUrl: './diagram-toolbar.component.html',
+    styleUrls: ['./diagram-toolbar.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatButton, MatTooltip]
 })
 
 export class DiagramToolbarComponent {
-
   @Output() toolbarClick = new EventEmitter<string>();
 
   @Input() isPopup: boolean;
@@ -41,6 +45,4 @@ export class DiagramToolbarComponent {
   click(buttonName: string): void {
     this.toolbarClick.emit(buttonName);
   }
-
 }
-

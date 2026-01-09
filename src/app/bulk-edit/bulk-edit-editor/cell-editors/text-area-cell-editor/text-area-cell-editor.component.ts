@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,19 +16,27 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ICellEditorAngularComp } from 'ag-grid-angular';
-import { ICellEditorParams } from 'ag-grid-community';
+import { ICellEditorAngularComp } from '@ag-grid-community/angular';
+import { ICellEditorParams } from '@ag-grid-community/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface TextAreaCellEditorParams {
-  rows?: number;
-  cols?: number;
-  onEditClick?: (value: string, params: ICellEditorParams) => void;
+  rows?: number
+  cols?: number
+  onEditClick?: (value: string, params: ICellEditorParams) => void
 }
 
+export type PopupPosition = 'under' | 'over';
+
 @Component({
-  selector: 'mdm-text-area-cell-editor',
-  templateUrl: './text-area-cell-editor.component.html',
-  styleUrls: ['./text-area-cell-editor.component.scss']
+    selector: 'mdm-text-area-cell-editor',
+    templateUrl: './text-area-cell-editor.component.html',
+    styleUrls: ['./text-area-cell-editor.component.scss'],
+    standalone: true,
+    imports: [FormsModule, NgIf, MatButton, MatTooltip]
 })
 export class TextAreaCellEditorComponent implements ICellEditorAngularComp {
   @ViewChild('valueInput') textArea: ElementRef<HTMLTextAreaElement>;
@@ -58,7 +66,7 @@ export class TextAreaCellEditorComponent implements ICellEditorAngularComp {
     return true;
   }
 
-  getPopupPosition(): string {
+  getPopupPosition(): PopupPosition {
     return 'under';
   }
 

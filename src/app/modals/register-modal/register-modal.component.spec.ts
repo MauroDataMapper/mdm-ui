@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,56 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { RegisterModalComponent } from './register-modal.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
-import { FormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import '@mdm/utility/extensions/mat-dialog.extensions';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('RegisterModalComponent', () => {
-  let component: RegisterModalComponent;
-  let fixture: ComponentFixture<RegisterModalComponent>;
+  let harness: ComponentHarness<RegisterModalComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatFormFieldModule,
-        MatPasswordStrengthModule,
-        MatInputModule,
-        NoopAnimationsModule,
-        MatDialogModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MatDialogRef, useValue: {}
-        },
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
-      declarations: [ RegisterModalComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RegisterModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(RegisterModalComponent)
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

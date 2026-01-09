@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,75 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { McDataSetMetadataComponent } from './mc-data-set-metadata.component';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { MoreDescriptionComponent } from '../more-description/more-description.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
-import { FormsModule } from '@angular/forms';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('McDataSetMetadataComponent', () => {
-  let component: McDataSetMetadataComponent;
-  let fixture: ComponentFixture<McDataSetMetadataComponent>;
+  let harness: ComponentHarness<McDataSetMetadataComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NgxSkeletonLoaderModule,
-        MatFormFieldModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatDialogModule,
-        NoopAnimationsModule,
-        MatInputModule,
-        MatSortModule,
-        MatCheckboxModule,
-        FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService, useValue: {}
-        }
-      ],
-      declarations: [
-        MdmPaginatorComponent,
-        McSelectComponent,
-        TableButtonsComponent,
-        MarkdownTextAreaComponent,
-        MarkdownDirective,
-        MoreDescriptionComponent,
-        McDataSetMetadataComponent,
-        SkeletonBadgeComponent
-      ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(McDataSetMetadataComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(McDataSetMetadataComponent)
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CatalogueSearchService } from '../catalogue-search.service';
 import {
   CatalogueSearchContext,
   CatalogueSearchParameters,
+  CatalogueSearchProfileFilter,
   CatalogueSearchResultSet,
   getOrderFromSortByOptionString,
   getSortFromSortByOptionString,
+  mapProfileFiltersToDto,
   mapSearchParametersToRawParams,
   mapStateParamsToSearchParameters,
   SearchListingSortByOption,
@@ -34,12 +36,30 @@ import {
 } from '../catalogue-search.types';
 import { PageEvent } from '@angular/material/paginator';
 import { SortByOption } from '@mdm/shared/sort-by/sort-by.component';
-import { SearchFilterChange } from '../search-filters/search-filters.component';
+import { SearchFilterChange, SearchFiltersComponent } from '../search-filters/search-filters.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
+import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { CatalogueItemSearchResultComponent } from '../catalogue-item-search-result/catalogue-item-search-result.component';
+import { ProfileFiltersComponent } from '../profile-filters/profile-filters.component';
+import { MatDivider } from '@angular/material/divider';
+import { SortByComponent } from '../../shared/sort-by/sort-by.component';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'mdm-catalogue-search-listing',
-  templateUrl: './catalogue-search-listing.component.html',
-  styleUrls: ['./catalogue-search-listing.component.scss']
+    selector: 'mdm-catalogue-search-listing',
+    templateUrl: './catalogue-search-listing.component.html',
+    styleUrls: ['./catalogue-search-listing.component.scss'],
+    standalone: true,
+    imports: [FormsModule, MatFormField, MatInput, MatIconButton, MatSuffix, MatIcon, NgIf, MatProgressSpinner, AlertComponent, SortByComponent, SearchFiltersComponent, MatDivider, ProfileFiltersComponent, NgFor, CatalogueItemSearchResultComponent, NgClass, ExtendedModule, MdmPaginatorComponent]
 })
 export class CatalogueSearchListingComponent implements OnInit {
   status: SearchListingStatus = 'init';
@@ -55,13 +75,16 @@ export class CatalogueSearchListingComponent implements OnInit {
     { value: 'label-asc', displayName: 'Label (a-z)' },
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
+
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
+  profileFilters?: CatalogueSearchProfileFilter[];
 
   constructor(
     private routerGlobals: UIRouterGlobals,
     private stateRouter: StateHandlerService,
     private catalogueSearch: CatalogueSearchService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -74,12 +97,46 @@ export class CatalogueSearchListingComponent implements OnInit {
       this.parameters.order
     );
 
-    if (!this.parameters.search || this.parameters.search === '') {
-      this.setEmptyResultPage();
-      return;
-    }
+    this.status = 'loading';
 
-    this.performSearch();
+    this.catalogueSearch
+      .mapProfileFilters(this.parameters.profileFiltersDto)
+      .pipe(
+        catchError(() => {
+          this.messageHandler.showWarning(
+            'A problem occurred when getting your profile filters.'
+          );
+          return of([] as CatalogueSearchProfileFilter[]); // Continue
+        }),
+        switchMap((profileFilters) => {
+          // Profile filters must be mapped to the correct object type before they can be
+          // used properly
+          this.profileFilters = profileFilters;
+
+          if (!this.parameters.search || this.parameters.search === '') {
+            return of<CatalogueSearchResultSet>({
+              count: 0,
+              page: 1,
+              pageSize: 10,
+              items: []
+            });
+          }
+
+          return this.catalogueSearch.search(this.parameters);
+        }),
+        catchError((error) => {
+          this.status = 'error';
+          this.messageHandler.showError(
+            'A problem occurred when searching.',
+            error
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe((resultSet) => {
+        this.status = 'ready';
+        this.resultSet = resultSet;
+      });
   }
 
   /**
@@ -135,39 +192,40 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.lastUpdatedBefore = undefined;
     this.parameters.createdAfter = undefined;
     this.parameters.createdBefore = undefined;
+    this.parameters.includeSuperseded = undefined;
     this.parameters.classifiers = [];
     this.updateSearch();
   }
 
-  private setEmptyResultPage() {
-    this.resultSet = {
-      count: 0,
-      page: 1,
-      pageSize: 10,
-      items: []
-    };
-    this.status = 'ready';
+  /**
+   * Updates the profile filters on the page for external changes
+   * solves a bug with seralising a empty array
+   */
+  onUpdateProfileFilters(profileFilters: CatalogueSearchProfileFilter[]) {
+    if (profileFilters.length > 0) {
+      this.parameters.profileFiltersDto = mapProfileFiltersToDto(
+        profileFilters
+      );
+    }
+ else {
+      this.parameters.profileFiltersDto = null;
+    }
+    this.updateSearch();
   }
 
-  private performSearch() {
-    this.status = 'loading';
+  openProfileFilterDialog() {
+    const dialogRef = this.dialog.open(ProfileFilterDialogComponent, {
+      data: {
+        profileFilters: this.profileFilters
+      }
+    });
 
-    this.catalogueSearch
-      .search(this.parameters)
-      .pipe(
-        catchError((error) => {
-          this.status = 'error';
-          this.messageHandler.showError(
-            'A problem occurred when searching.',
-            error
-          );
-          return EMPTY;
-        })
-      )
-      .subscribe((resultSet) => {
-        this.resultSet = resultSet;
-        this.status = 'ready';
-      });
+    dialogRef.afterClosed().subscribe((result: CatalogueSearchProfileFilter[]) => {
+      if (result) {
+        this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
+        this.updateSearch();
+      }
+    });
   }
 
   /**

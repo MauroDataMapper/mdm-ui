@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,35 +15,64 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ApiPropertyEditableState, ApiPropertyEditType } from '@mdm/model/api-properties';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSort, Sort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  ApiPropertyEditableState,
+  ApiPropertyEditType
+} from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import {
+  BroadcastService,
+  MessageHandlerService,
+  StateHandlerService
+} from '@mdm/services';
 import { catchError, switchMap } from 'rxjs/operators';
+import { MatchThemeColorPatternPipe } from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatOption } from '@angular/material/core';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ApiPropertyTableViewChange {
-  category?: string;
-  sortBy?: string;
-  sortType?: string;
+  category?: string
+  sortBy?: string
+  sortType?: SortDirection
 }
 
 @Component({
-  selector: 'mdm-api-property-table',
-  templateUrl: './api-property-table.component.html',
-  styleUrls: ['./api-property-table.component.scss']
+    selector: 'mdm-api-property-table',
+    templateUrl: './api-property-table.component.html',
+    styleUrls: ['./api-property-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatSelect, MatOption, NgFor, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgIf, MatTooltip, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatchThemeColorPatternPipe]
 })
-export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewInit {
-
+export class ApiPropertyTableComponent
+  implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() properties: ApiPropertyEditableState[] = [];
   @Input() categories: string[] = [];
 
-  @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
+  @Output() readonly viewChange = new EventEmitter<
+    ApiPropertyTableViewChange
+  >();
 
   @Output() valueCleared = new EventEmitter();
 
@@ -60,18 +89,21 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     private resources: MdmResourcesService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private broadcast: BroadcastService) { }
+    private broadcast: BroadcastService
+  ) {}
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe((sort: Sort) => this.viewChange.emit({
-      category: this.selectedCategory,
-      sortBy: sort.active,
-      sortType: sort.direction
-    }));
+    this.sort.sortChange.subscribe((sort: Sort) =>
+      this.viewChange.emit({
+        category: this.selectedCategory,
+        sortBy: sort.active,
+        sortType: sort.direction
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -98,7 +130,9 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
       return;
     }
 
-    this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', { id: record.original.id });
+    this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', {
+      id: record.original.id
+    });
   }
 
   delete(record: ApiPropertyEditableState) {
@@ -113,24 +147,32 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
         }
       })
       .pipe(
-        switchMap(() => this.resources.apiProperties.remove(record.original.id)),
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem deleting the property.', errors);
+        switchMap(() =>
+          this.resources.apiProperties.remove(record.original.id)
+        ),
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem deleting the property.',
+            errors
+          );
           return [];
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`Successfully deleted the property ${record.original.key}.`);
+        this.messageHandler.showSuccess(
+          `Successfully deleted the property ${record.original.key}.`
+        );
 
         this.broadcast.apiPropertyUpdated({
           key: record.original.key,
           value: record.original.value,
-          deleted: true });
+          deleted: true
+        });
 
         if (record.metadata.requiresReload) {
           this.stateHandler.reload();
         }
-        else {
+ else {
           this.viewChange.emit({
             category: this.selectedCategory,
             sortBy: this.sort.active,

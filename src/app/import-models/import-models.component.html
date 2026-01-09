@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ SPDX-License-Identifier: Apache-2.0
           Import Reference Data Model
         </h4>
         <h4 *ngIf="importType === 'terminologies'">Import a new Terminology</h4>
+        <h4 *ngIf="importType === 'folders'">Import a new Folder</h4>
         <span
           class="fas fa-info-circle helpIcon"
           (click)="loadHelp()"

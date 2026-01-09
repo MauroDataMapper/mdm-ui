@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable, Optional } from '@angular/core';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import dagre from 'dagre';
-import graphlib from 'graphlib';
+import { DirectedGraph } from '@joint/layout-directed-graph';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import _ from 'lodash';
@@ -29,10 +28,8 @@ import { DiagramParameters } from '../diagram/diagram.model';
   providedIn: 'root'
 })
 
-/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class BasicDiagramService {
-
   fontColorWhite = '#ffffff';
   darkBackground = '#4a708b';
   lightBackground = '#e0e5e9';
@@ -49,7 +46,6 @@ export abstract class BasicDiagramService {
 
   public constructor(protected resourcesService: MdmResourcesService,
     protected messageHandler: MessageHandlerService) {
-
     this.graph = new joint.dia.Graph();
   }
 
@@ -63,7 +59,6 @@ export abstract class BasicDiagramService {
 
   abstract configurePaper(paper: joint.dia.Paper): void;
 
-
   public updateDataClassComponentLevel(data: any): void { }
 
   public updateDataElementLevel(data: any): void { }
@@ -72,24 +67,13 @@ export abstract class BasicDiagramService {
     if (cellView instanceof joint.dia.ElementView) {
       this.adjustVertices(this.graph, (cellView).model);
     }
-
   }
 
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
-    let nodeSep = 100;
-    let rankSep = 400;
-
-    if (rankDir === 'TB') {
-      nodeSep = 100;
-      rankSep = 250;
-    }
-
-    joint.layout.DirectedGraph.layout(this.graph, {
+    DirectedGraph.layout(this.graph, {
       setLabels: true,
       setVertices: true,
       setLinkVertices: true,
-      dagre,
-      graphlib,
       rankDir,
       marginX: 40,
       marginY: 40,
@@ -113,13 +97,12 @@ export abstract class BasicDiagramService {
     cylinder.attr('body/strokeWidth', 0);
     cylinder.attr('top/fill', this.lightBackground);
 
-
     cylinder.attr('text/ref-y', -50);
     this.graph.addCell(cylinder);
     return cylinder;
   }
 
-  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+  protected addRectangleCell(id: string, label: string, width = 120, height = 80, textWidth = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
       size: { width, height }
@@ -138,7 +121,7 @@ export abstract class BasicDiagramService {
     return rectangle;
   }
 
-  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width = 120, height = 80, textWidth = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
       size: { width, height }
@@ -172,7 +155,6 @@ export abstract class BasicDiagramService {
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
     return rectangle;
-
   }
 
   protected addLink(id: string, sourceId: string, targetId: string): joint.dia.Link {
@@ -206,25 +188,25 @@ export abstract class BasicDiagramService {
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
     return rectangle;
-
   }
 
-  protected addUmlClassCell(id: string, label: string, attributes: Array<any>,
+  protected addUmlClassCell(id: string, label: string, attributes: any[],
     @Optional() position: joint.g.Point = null,
     @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
-    const cells: Array<joint.dia.Cell> = [];
+    const cells: joint.dia.Cell[] = [];
     if (!position) {
       position = new joint.g.Point({ x: 0, y: 0 });
     }
 
-    let classBox = null;
+    let classBox: joint.dia.Cell = null;
     if (existingClassBox) {
       classBox = existingClassBox;
       position = existingClassBox.position();
       // classBox.attr('body/fill', this.lightBackground);
       classBox.attr('body/fillOpacity', 0);
       classBox.attr('z', 2);
-    } else {
+    }
+ else {
       classBox = new joint.shapes.standard.Rectangle({
         id,
         position,
@@ -263,7 +245,6 @@ export abstract class BasicDiagramService {
     classBox.embed(classNameBox);
     cells.push(classNameBox);
     attributes.forEach((attribute, idx) => {
-
       const attributeBox = new joint.shapes.standard.Rectangle({
         position: { x: position.x, y: position.y + 31 + idx * 25 },
         id: attribute.id,
@@ -291,7 +272,6 @@ export abstract class BasicDiagramService {
 
     this.graph.addCells(cells);
     return classBox;
-
   }
 
   /*
@@ -306,7 +286,6 @@ export abstract class BasicDiagramService {
   */
 
   private adjustVertices(graph: joint.dia.Graph, cell: joint.dia.Cell) {
-
     // if `cell` is a view, find its model
     // cell = cell.model || cell;
 
@@ -315,13 +294,11 @@ export abstract class BasicDiagramService {
 
       _.chain(graph.getConnectedLinks(cell))
         .groupBy((link) => {
-
           // the key of the group is the model id of the link's source or target
           // cell id is omitted
           return _.omit([link.source().id, link.target().id], cell.id)[0];
         })
         .each((group, key) => {
-
           // if the member of the group has both source and target model
           // then adjust vertices
           if (key !== 'undefined') {
@@ -335,8 +312,8 @@ export abstract class BasicDiagramService {
 
     // `cell` is a link
     // get its source and target model IDs
-    const sourceId = cell.get('source').id || cell.previous('source').id;
-    const targetId = cell.get('target').id || cell.previous('target').id;
+    const sourceId: joint.dia.Cell.ID | joint.dia.Cell = cell.get('source').id || cell.previous('source').id;
+    const targetId: joint.dia.Cell.ID | joint.dia.Cell = cell.get('target').id || cell.previous('target').id;
 
     // if one of the ends is not a model
     // (if the link is pinned to paper at a point)
@@ -347,7 +324,6 @@ export abstract class BasicDiagramService {
 
     // identify link siblings
     const siblings = graph.getLinks().filter((sibling: joint.dia.Link) => {
-
       const siblingSourceId = sibling.source().id;
       const siblingTargetId = sibling.target().id;
 
@@ -359,18 +335,15 @@ export abstract class BasicDiagramService {
 
     const numSiblings = siblings.length;
     switch (numSiblings) {
-
       case 0: {
         // the link has no siblings
         break;
-
       }
       case 1: {
         // there is only one link
         // no vertices needed
         // cell.unset('vertices');
         break;
-
       }
       default: {
         // there are multiple siblings
@@ -389,7 +362,6 @@ export abstract class BasicDiagramService {
         const gap = 30;
 
         siblings.forEach((sibling, index) => {
-
           // we want offset values to be calculated as 0, 20, 20, 40, 40, 60, 60 ...
           let offset = gap * Math.ceil(index / 2);
 
@@ -437,7 +409,7 @@ export abstract class BasicDiagramService {
     return this.dataComponentSubject;
   }
 
-  changeComponent(dataClassComponent: any) {
+  changeComponent(dataClassComponent: string) {
     this.dataComponentSubject.next(dataClassComponent);
   }
 }

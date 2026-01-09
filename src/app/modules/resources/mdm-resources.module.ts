@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {  NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { MdmResourcesConfiguration } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from './mdm-resources.service';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
@@ -42,7 +42,7 @@ export class MdmResourcesModule {
     return {
       ngModule: MdmResourcesModule,
       providers: [
-        {provide: MdmResourcesConfiguration, useValue: config }
+        { provide: MdmResourcesConfiguration, useValue: config }
       ]
     };
   }

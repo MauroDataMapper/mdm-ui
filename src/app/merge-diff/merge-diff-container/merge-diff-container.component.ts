@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,17 +30,33 @@ import {
   MainBranchResponse
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { CheckinModelConfiguration, CheckinModelResult } from '@mdm/modals/check-in-modal/check-in-modal-payload';
-import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import {
-  MessageHandlerService,
-  StateHandlerService
-} from '@mdm/services';
+  CheckinModelConfiguration,
+  CheckinModelResult
+} from '@mdm/modals/check-in-modal/check-in-modal-payload';
+import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
+import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/angular';
 import { EMPTY, of } from 'rxjs';
 import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapter.service';
-import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../types/merge-item-type';
+import {
+  branchNameField,
+  MergeDiffItemModel,
+  MergeItemSelection
+} from '../types/merge-item-type';
+import { MergeComparisonComponent } from '../merge-comparsion/merge-comparsion.component';
+import { MergeItemSelectorComponent } from '../merge-item-selector/merge-item-selector.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { BranchSelectorComponent } from '../../shared/branch-selector/branch-selector.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ModelIconComponent } from '../../shared/model-icon/model-icon.component';
+import { MatMenuItem } from '@angular/material/menu';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgIf } from '@angular/common';
 
 /**
  * Top-level view component for the Merge/Diff user interface.
@@ -49,14 +65,18 @@ import { branchNameField, MergeDiffItemModel, MergeItemSelection } from '../type
  * child components for rendering the different sections of data.
  */
 @Component({
-  selector: 'mdm-merge-diff-container',
-  templateUrl: './merge-diff-container.component.html',
-  styleUrls: ['./merge-diff-container.component.scss']
+    selector: 'mdm-merge-diff-container',
+    templateUrl: './merge-diff-container.component.html',
+    styleUrls: ['./merge-diff-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, FlexModule, MatMenuItem, ModelIconComponent, MatTooltip, BranchSelectorComponent, MatProgressBar, MatTabGroup, MatTab, MatTabLabel, MatToolbar, MatIconButton, MergeItemSelectorComponent, MergeComparisonComponent]
 })
 export class MergeDiffContainerComponent implements OnInit {
   loaded = false;
   loadingContent = false;
   targetLoaded = false;
+  comparingBranches = false;
+  committingDiffs = false;
   domainType: MergableMultiFacetAwareDomainType;
   source: MergableCatalogueItem;
   target: MergableCatalogueItem;
@@ -72,73 +92,93 @@ export class MergeDiffContainerComponent implements OnInit {
     private mergeDiff: MergeDiffAdapterService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private title: Title) { }
+    private title: Title
+  ) {}
+
+  public get MergeUsed() {
+    return MergeConflictResolution;
+  }
 
   ngOnInit(): void {
     this.title.setTitle('Merge Changes');
-
     const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
     const targetId: Uuid = this.uiRouterGlobals.params.targetId;
     this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
-
     this.mergeDiff
       .getCatalogueItemDetails(this.domainType, sourceId)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the source item.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem loading the source item.',
+            error
+          );
           return EMPTY;
         }),
-        switchMap(response => {
+        switchMap((response) => {
           this.source = response.body;
           if (!targetId) {
-            return this.mergeDiff.getMainBranch(this.domainType, this.source.id);
+            return this.mergeDiff.getMainBranch(
+              this.domainType,
+              this.source.id
+            );
           }
-
           return of(targetId);
         }),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem finding the main branch.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem finding the main branch.',
+            error
+          );
           return EMPTY;
         }),
         switchMap((response: MainBranchResponse | Uuid) => {
-          const actualTargetId: Uuid = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
+          const possibleMainBranchId = (response as MainBranchResponse)?.body
+            ?.id;
+          if (possibleMainBranchId && possibleMainBranchId === sourceId) {
+            return of(null);
+          }
+          const actualTargetId: Uuid
+            = (response as MainBranchResponse)?.body?.id ?? (response as Uuid);
           return this.loadTarget(actualTargetId);
         }),
-        finalize(() => this.loaded = true)
+        finalize(() => (this.loaded = true))
       )
-      .subscribe(response => {
-        this.target = response.body;
-        this.runDiff();
+      .subscribe((response) => {
+        this.target = response?.body;
+        if (this.target) {
+          this.runDiff();
+        }
       });
   }
 
   setTarget(id: Uuid) {
-    this.loadTarget(id)
-      .subscribe(response => {
-        this.target = response.body;
-        this.runDiff();
-      });
+    this.loadTarget(id).subscribe((response) => {
+      this.target = response.body;
+      this.runDiff();
+    });
   }
 
   onCommitChanges(): void {
     this.dialog
-      .open<CheckInModalComponent, CheckinModelConfiguration, CheckinModelResult>(
+      .open<
         CheckInModalComponent,
-        {
-          data: {
-            deleteSourceBranch: false,
-            items: this.committingList,
-            label: this.source.label,
-            domainType: this.domainType,
-            isDataAsset: this.source?.type === 'Data Asset',
-            source: this.source,
-            target: this.target
-          }
-        })
+        CheckinModelConfiguration,
+        CheckinModelResult
+      >(CheckInModalComponent, {
+        data: {
+          deleteSourceBranch: false,
+          items: this.committingList,
+          label: this.source.label,
+          domainType: this.domainType,
+          isDataAsset: this.source?.type === 'Data Asset',
+          source: this.source,
+          target: this.target
+        }
+      })
       .afterClosed()
       .pipe(
         filter(result => result.status === ModalDialogStatus.Ok),
-        switchMap(result => {
+        switchMap((result) => {
           const patches = this.committingList.filter(
             item => item.branchSelected !== MergeConflictResolution.Target
           );
@@ -155,22 +195,26 @@ export class MergeDiffContainerComponent implements OnInit {
             }
           };
 
+          this.committingDiffs = true;
+
           return this.mergeDiff.commitMergePatches(
             this.domainType,
             this.source.id,
             this.target.id,
-            data);
-        })
+            data
+          );
+        }),
+        finalize(() => (this.committingDiffs = false))
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`);
-        this.stateHandler.Go(
-          this.target.domainType,
-          {
-            id: this.target.id,
-            reload: true,
-            location: true
-          });
+        this.messageHandler.showSuccess(
+          `Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`
+        );
+        this.stateHandler.Go(this.target.domainType, {
+          id: this.target.id,
+          reload: true,
+          location: true
+        });
       });
   }
 
@@ -180,9 +224,11 @@ export class MergeDiffContainerComponent implements OnInit {
 
   runDiff() {
     this.resetLists();
+    this.comparingBranches = true;
     this.mergeDiff
       .getMergeDiff(this.domainType, this.source.id, this.target.id)
-      .subscribe(data => {
+      .pipe(finalize(() => (this.comparingBranches = false)))
+      .subscribe((data) => {
         data.diffs.forEach((item: MergeDiffItemModel) => {
           if (item.fieldName === branchNameField) {
             // A merge diff item with the field name "branchName" should not be considered for the user
@@ -193,7 +239,7 @@ export class MergeDiffContainerComponent implements OnInit {
           if (item.isMergeConflict) {
             this.changesList.push(item);
           }
-          else {
+ else {
             // This item can be merged automatically
             item.branchSelected = MergeConflictResolution.Source;
             item.branchNameSelected = this.source.branchName;
@@ -214,18 +260,14 @@ export class MergeDiffContainerComponent implements OnInit {
     this.committingList = Array<MergeDiffItemModel>();
   }
 
-  public get MergeUsed() {
-    return MergeConflictResolution;
-  }
-
   selectAll(branchUsed: MergeConflictResolution) {
     this.selectedItem = null;
     const tempArray: MergeDiffItemModel[] = [];
     this.changesList.forEach((item) => {
       if (item.type === MergeDiffType.Modification) {
         item.branchSelected = branchUsed;
-        item.branchNameSelected =
-          branchUsed === MergeConflictResolution.Source
+        item.branchNameSelected
+          = branchUsed === MergeConflictResolution.Source
             ? this.source.branchName
             : this.target.branchName;
         this.committingList.push(item);
@@ -235,10 +277,16 @@ export class MergeDiffContainerComponent implements OnInit {
         item.branchSelected = branchUsed;
         item.branchNameSelected = this.source.branchName;
         this.committingList.push(item);
-      } else {
+      }
+ else {
         tempArray.push(item);
       }
     });
+
+    // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+    // array instance must be observed to affect a render
+    this.committingList = [...this.committingList];
+
     this.changesList = new Array<MergeDiffItemModel>();
     this.changesList = Object.assign([], tempArray);
   }
@@ -260,28 +308,46 @@ export class MergeDiffContainerComponent implements OnInit {
             item.branchNameSelected = null;
             this.changesList.push(item);
           });
+
+          // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+          // array instance must be observed to affect a render
+          this.changesList = [...this.changesList];
+
           this.committingList = new Array<MergeDiffItemModel>();
         }
       });
   }
 
   cancelCommit(item: MergeDiffItemModel) {
-    const index = this.committingList.findIndex((x) => x === item);
+    const index = this.committingList.findIndex(x => x === item);
     if (index >= 0) {
       this.selectedItem = null;
+
       this.committingList.splice(index, 1);
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.committingList = [...this.committingList];
+
       item.branchSelected = null;
       item.branchNameSelected = null;
-      this.changesList.push(item);
+
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.changesList = [...this.changesList, item];
+
       this.activeTab = 0;
       this.setSelectedMergeItem(item, false);
     }
   }
 
   acceptCommit(item: MergeDiffItemModel) {
-    const index = this.changesList.findIndex((x) => x === item);
+    const index = this.changesList.findIndex(x => x === item);
     if (index >= 0) {
       this.changesList.splice(index, 1);
+
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.changesList = [...this.changesList];
 
       switch (item.branchSelected) {
         case MergeConflictResolution.Source:
@@ -298,7 +364,10 @@ export class MergeDiffContainerComponent implements OnInit {
           break;
       }
 
-      this.committingList.push(item);
+      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
+      // array instance must be observed to affect a render
+      this.committingList = [...this.committingList, item];
+
       this.selectedItem = null;
     }
   }
@@ -309,14 +378,15 @@ export class MergeDiffContainerComponent implements OnInit {
 
   private loadTarget(id: Uuid) {
     this.targetLoaded = false;
-    return this.mergeDiff
-      .getCatalogueItemDetails(this.domainType, id)
-      .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem loading the target item.', error);
-          return EMPTY;
-        }),
-        finalize(() => this.targetLoaded = true)
-      );
+    return this.mergeDiff.getCatalogueItemDetails(this.domainType, id).pipe(
+      catchError((error) => {
+        this.messageHandler.showError(
+          'There was a problem loading the target item.',
+          error
+        );
+        return EMPTY;
+      }),
+      finalize(() => (this.targetLoaded = true))
+    );
   }
 }

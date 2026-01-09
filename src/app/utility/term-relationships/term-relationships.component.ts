@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +19,16 @@ import { Component, OnInit, Input } from '@angular/core';
 import { QueryParameters, TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Subscription } from 'rxjs';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-term-relationships',
-  templateUrl: './term-relationships.component.html',
-  styleUrls: ['./term-relationships.component.scss']
+    selector: 'mdm-term-relationships',
+    templateUrl: './term-relationships.component.html',
+    styleUrls: ['./term-relationships.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, McPagedListComponent, ElementLinkComponent]
 })
 export class TermRelationshipsComponent implements OnInit {
   @Input() term: TermDetail;
@@ -46,10 +51,10 @@ export class TermRelationshipsComponent implements OnInit {
         parameters.type = this.type;
       }
 
-      this.resources.term.termRelationships(this.term.terminology.id, this.term.id, parameters)
-        .subscribe(data => {
+      this.resources.term.termRelationships(this.term.terminology.id as string, this.term.id, parameters)
+        .subscribe((data) => {
           this.totalItems = data.body.count;
-          data.body.items.forEach(item => {
+          data.body.items.forEach((item) => {
             if (!this.relations[item.relationshipType.displayLabel]) {
               this.relationshipTypes.push(item.relationshipType.displayLabel);
               this.relations[item.relationshipType.displayLabel] = [];

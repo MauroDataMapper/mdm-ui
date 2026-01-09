@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +17,25 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { SecurityHandlerService } from '@mdm/services';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/forgot-password-modal.component';
-import { BroadcastService } from '../services/broadcast.service';
+import { BroadcastService } from '@mdm/services';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, SharedService } from '@mdm/services';
 import { catchError, takeUntil } from 'rxjs/operators';
-import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import {
+  ApiProperty,
+  ApiPropertyIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { Subject } from 'rxjs';
+import { SafePipe } from '../content/safe.pipe';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgIf } from '@angular/common';
 
 const defaultHtmlContent = [
   {
@@ -38,7 +46,7 @@ const defaultHtmlContent = [
   },
   {
     key: 'content.home.intro.right',
-    value: `<div class="text-center bdi--hero-header__image mt-3">
+    value: `<div class="text-center mdm--hero-header__image mt-3">
     <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
 </div>`
   },
@@ -86,12 +94,13 @@ const defaultHtmlContent = [
 ];
 
 @Component({
-  selector: 'mdm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+    selector: 'mdm-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgxSkeletonLoaderModule, FlexModule, MatButton, MatAnchor, SafePipe]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  profilePictureReloadIndex = 0;
   profile: any;
   isLoggedIn = false;
   isLoadingContent = false;
@@ -119,7 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.broadcast
       .onUserLoggedOut()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => this.isLoggedIn = false);
+      .subscribe(() => (this.isLoggedIn = false));
   }
 
   ngOnInit() {
@@ -134,8 +143,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties.',
+            errors
+          );
           this.loadContent(null);
           this.isLoadingContent = false;
           return [];
@@ -153,45 +165,82 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   login = () => {
-    this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
-      if (user) {
-        if (user.needsToResetPassword) {
-          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.changePassword' });
-          return;
+    this.dialog
+      .open(LoginModalComponent, {})
+      .afterClosed()
+      .subscribe((user) => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcast.userLoggedIn({
+              nextRoute: 'appContainer.userArea.changePassword'
+            });
+            return;
+          }
+          this.profile = user;
+          this.broadcast.userLoggedIn({
+            nextRoute:
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+          });
         }
-        this.profile = user;
-        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-      }
-    });
+      });
   };
 
   forgottenPassword = () => {
-    this.dialog.open(ForgotPasswordModalComponent, { });
+    this.dialog.open(ForgotPasswordModalComponent, {});
   };
 
   register = () => {
-    this.dialog.open(RegisterModalComponent, {panelClass: 'register-modal'}).afterClosed().subscribe(user => {
-      if (user) {
-        if (user.needsToResetPassword) {
-          this.broadcast.userLoggedIn({ nextRoute: 'appContainer.userArea.change-password' });
-          return;
+    this.dialog
+      .open(RegisterModalComponent, { panelClass: 'register-modal' })
+      .afterClosed()
+      .subscribe((user) => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcast.userLoggedIn({
+              nextRoute: 'appContainer.userArea.change-password'
+            });
+            return;
+          }
+          this.profile = user;
+          this.broadcast.userLoggedIn({
+            nextRoute:
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+          });
         }
-        this.profile = user;
-        this.broadcast.userLoggedIn({ nextRoute: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-      }
-    });
+      });
   };
 
   private loadContent(properties: ApiProperty[]) {
-    this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
-    this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
-    this.detailHeading = this.getContentProperty(properties, 'content.home.detail.heading');
-    this.detailColumn1 = this.getContentProperty(properties, 'content.home.detail.column_one');
-    this.detailColumn2 = this.getContentProperty(properties, 'content.home.detail.column_two');
-    this.detailColumn3 = this.getContentProperty(properties, 'content.home.detail.column_three');
+    this.introLeftContent = this.getContentProperty(
+      properties,
+      'content.home.intro.left'
+    );
+    this.introRightContent = this.getContentProperty(
+      properties,
+      'content.home.intro.right'
+    );
+    this.detailHeading = this.getContentProperty(
+      properties,
+      'content.home.detail.heading'
+    );
+    this.detailColumn1 = this.getContentProperty(
+      properties,
+      'content.home.detail.column_one'
+    );
+    this.detailColumn2 = this.getContentProperty(
+      properties,
+      'content.home.detail.column_two'
+    );
+    this.detailColumn3 = this.getContentProperty(
+      properties,
+      'content.home.detail.column_three'
+    );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find(p => p.key === key)?.value ?? defaultHtmlContent.find(p => p.key === key).value;
+    return (
+      properties?.find(p => p.key === key)?.value
+      ?? defaultHtmlContent.find(p => p.key === key).value
+    );
   }
 }

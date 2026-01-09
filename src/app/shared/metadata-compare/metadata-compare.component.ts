@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,16 +16,19 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgStyle, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-metadata-compare',
-  templateUrl: './metadata-compare.component.html',
-  styleUrls: ['./metadata-compare.component.scss']
+    selector: 'mdm-metadata-compare',
+    templateUrl: './metadata-compare.component.html',
+    styleUrls: ['./metadata-compare.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgStyle, ExtendedModule, NgFor, NgClass]
 })
 export class MetadataCompareComponent {
   @Input() diffs: any;
   @Input() diffColumnWidth: any;
 
   constructor() {}
-
 }

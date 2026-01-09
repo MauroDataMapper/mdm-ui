@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
 import {
   ApiProperty,
@@ -39,26 +39,51 @@ import {
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { catchError, map } from 'rxjs/operators';
+import { ImageChangedEvent, ImageChangeType, ThemeImageComponent } from '../theme-image/theme-image.component';
+import { MatchThemeColorPatternPipe } from '@mdm/pipes/matchThemeColorPattern.pipe';
+import { MatButton } from '@angular/material/button';
+import { HtmlEditorComponent } from '../../content/html/html-editor/html-editor.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-api-property',
-  templateUrl: './api-property.component.html',
-  styleUrls: ['./api-property.component.scss']
+    selector: 'mdm-api-property',
+    templateUrl: './api-property.component.html',
+    styleUrls: ['./api-property.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, NgFor, MatLabel, MatInput, MatError, MatCheckbox, HtmlEditorComponent, ThemeImageComponent, MatButton, MatchThemeColorPatternPipe]
 })
 export class ApiPropertyComponent implements OnInit {
+  @ViewChild(ThemeImageComponent) themeImageComponent: ThemeImageComponent;
+  EditTypes = ApiPropertyEditType;
   id: string;
   isNew: boolean;
   editExisting = false;
   property: ApiPropertyEditableState;
   systemProperties: ApiPropertyMetadata[];
   selectedSystemProperty: ApiPropertyMetadata;
+  imageChangeType: ImageChangeType = ImageChangeType.nochange;
+  showValue = true;
 
   formGroup = new FormGroup({
-    key: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
-    category: new FormControl('', [Validators.required]), // eslint-disable-line @typescript-eslint/unbound-method
+    key: new FormControl('', [Validators.required]),
+    category: new FormControl('', [Validators.required]),
     publiclyVisible: new FormControl({ value: false, disabled: false }),
-    value: new FormControl('', [Validators.required]) // eslint-disable-line @typescript-eslint/unbound-method
+    value: new FormControl('', [Validators.required])
   });
+
+  constructor(
+    private uiRouterGlobals: UIRouterGlobals,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
+    private broadcast: BroadcastService,
+    private editing: EditingService,
+    private title: Title
+  ) {}
 
   get key() {
     return this.formGroup.controls.key;
@@ -76,18 +101,6 @@ export class ApiPropertyComponent implements OnInit {
     return this.formGroup.controls.value;
   }
 
-  EditTypes = ApiPropertyEditType;
-
-  constructor(
-    private uiRouterGlobals: UIRouterGlobals,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateHandler: StateHandlerService,
-    private broadcast: BroadcastService,
-    private editing: EditingService,
-    private title: Title
-  ) {}
-
   ngOnInit(): void {
     this.editing.start();
 
@@ -97,7 +110,8 @@ export class ApiPropertyComponent implements OnInit {
     if (this.editExisting) {
       this.title.setTitle('Configuration - Edit Property');
       this.loadExistingProperty();
-    } else {
+    }
+ else {
       this.title.setTitle('Configuration - Add Property');
       this.loadAvailableSystemProperties();
     }
@@ -106,9 +120,10 @@ export class ApiPropertyComponent implements OnInit {
   systemPropertyChanged(change: MatSelectChange) {
     if (change.value) {
       this.property.metadata = propertyMetadata.find(
-        (m) => m.key === change.value
+        m => m.key === change.value
       );
-    } else {
+    }
+ else {
       this.property.metadata = this.getBlankMetadata();
     }
 
@@ -118,7 +133,8 @@ export class ApiPropertyComponent implements OnInit {
 
     if (this.property.metadata.isSystem) {
       this.publiclyVisible.disable();
-    } else {
+    }
+ else {
       this.publiclyVisible.enable();
     }
   }
@@ -135,64 +151,39 @@ export class ApiPropertyComponent implements OnInit {
     });
   }
 
+  imageSavedEventHandler() {
+    this.navigateToParent();
+  }
+
+  imageChangedEventHandler(event: ImageChangedEvent) {
+    this.imageChangeType = event.changeEvent;
+  }
+
   save() {
     if (this.formGroup.invalid) {
       return;
     }
 
     if (this.editExisting) {
-      const updated = Object.assign({}, this.property.original);
-      updated.key = this.key?.value;
-      updated.category = this.category?.value;
-      updated.publiclyVisible = this.publiclyVisible?.value;
-      updated.value = this.value?.value;
-
-      this.resources.apiProperties
-        .update(this.property.original.id, updated)
-        .pipe(
-          catchError((errors) => {
-            this.messageHandler.showError(
-              'There was a problem updating the property.',
-              errors
-            );
-            return [];
-          })
-        )
-        .subscribe(() => {
-          this.messageHandler.showSuccess('Property was updated successfully.');
-          this.broadcast.apiPropertyUpdated({
-            key: this.key.value,
-            value: this.value.value
-          });
-          this.navigateToParent();
-        });
-    } else {
-      const data: ApiProperty = {
-        key: this.key?.value,
-        value: this.value?.value,
-        publiclyVisible: this.publiclyVisible?.value ?? false,
-        category: this.category?.value
-      };
-
-      this.resources.apiProperties
-        .save(data)
-        .pipe(
-          catchError((errors) => {
-            this.messageHandler.showError(
-              'There was a problem saving the property.',
-              errors
-            );
-            return [];
-          })
-        )
-        .subscribe(() => {
-          this.messageHandler.showSuccess('Property was saved successfully.');
-          this.broadcast.apiPropertyUpdated({
-            key: this.key.value,
-            value: this.value.value
-          });
-          this.navigateToParent();
-        });
+      if (this.property.metadata.editType === ApiPropertyEditType.Image) {
+        switch (this.imageChangeType) {
+          case ImageChangeType.uploaded:
+            this.themeImageComponent.saveImage();
+            break;
+          case ImageChangeType.removed:
+            this.themeImageComponent.removeImage();
+            break;
+          case ImageChangeType.nochange:
+            this.navigateToParent();
+            break;
+        }
+      }
+ else {
+        this.updateProperty();
+      }
+    }
+ else {
+      this.saveProperty();
     }
   }
 
@@ -204,7 +195,8 @@ export class ApiPropertyComponent implements OnInit {
 
     if (this.property.metadata.isSystem) {
       this.publiclyVisible.disable();
-    } else {
+    }
+ else {
       this.publiclyVisible.enable();
     }
   }
@@ -227,7 +219,7 @@ export class ApiPropertyComponent implements OnInit {
           (response: ApiPropertyResponse): ApiPropertyEditableState => {
             const original = response.body;
             const metadata = propertyMetadata.find(
-              (p) => p.key === original.key
+              p => p.key === original.key
             ) ?? {
               key: original.key,
               category: original.category,
@@ -272,8 +264,8 @@ export class ApiPropertyComponent implements OnInit {
         })
       )
       .subscribe((data: ApiProperty[]) => {
-        this.systemProperties = propertyMetadata.filter((m) =>
-          data.every((p) => p.key !== m.key)
+        this.systemProperties = propertyMetadata.filter(m =>
+          data.every(p => p.key !== m.key)
         );
         this.property = {
           metadata: this.getBlankMetadata()
@@ -294,5 +286,62 @@ export class ApiPropertyComponent implements OnInit {
         inherit: false
       }
     );
+  }
+
+  private updateProperty() {
+    const updated = Object.assign({}, this.property.original);
+    updated.key = this.key?.value;
+    updated.category = this.category?.value;
+    updated.publiclyVisible = this.publiclyVisible?.value;
+    updated.value = this.value?.value;
+
+    this.resources.apiProperties
+      .update(this.property.original.id, updated)
+      .pipe(
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem updating the property.',
+            errors
+          );
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Property was updated successfully.');
+        this.broadcast.apiPropertyUpdated({
+          key: this.key.value,
+          value: this.value.value
+        });
+        this.navigateToParent();
+      });
+  }
+
+  private saveProperty() {
+    const data: ApiProperty = {
+      key: this.key?.value,
+      value: this.value?.value,
+      publiclyVisible: this.publiclyVisible?.value ?? false,
+      category: this.category?.value
+    };
+
+    this.resources.apiProperties
+      .save(data)
+      .pipe(
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem saving the property.',
+            errors
+          );
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Property was saved successfully.');
+        this.broadcast.apiPropertyUpdated({
+          key: this.key.value,
+          value: this.value.value
+        });
+        this.navigateToParent();
+      });
   }
 }

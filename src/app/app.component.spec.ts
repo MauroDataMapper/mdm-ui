@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,74 +15,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { ProfilePictureComponent } from './shared/profile-picture/profile-picture.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ByteArrayToBase64Pipe } from './pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { NavbarComponent } from './navbar/navbar.component';
-import { FooterComponent } from './shared/footer/footer.component';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { MdmResourcesService } from './modules/resources';
-import { MatDialogModule } from '@angular/material/dialog';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FeaturesService } from './services/features.service';
-import { MockComponent } from 'ng-mocks';
-import { LoadingIndicatorComponent } from './utility/loading-indicator/loading-indicator.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('AppComponent', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          NgxSkeletonLoaderModule,
-          MatTooltipModule,
-          MatMenuModule,
-          MatDialogModule,
-          MatBadgeModule,
-          MatToolbarModule,
-          NoopAnimationsModule,
-          MatSidenavModule,
-          UIRouterModule.forRoot({ useHash: true }),
-          ToastrModule.forRoot()
-        ],
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: {}
-          },
-          {
-            provide: FeaturesService,
-            useValue: jest.fn()
-          }
-        ],
-        declarations: [
-          ProfilePictureComponent,
-          ByteArrayToBase64Pipe,
-          NavbarComponent,
-          FooterComponent,
-          AppComponent,
-          MockComponent(LoadingIndicatorComponent)
-        ]
-      }).compileComponents();
-    })
-  );
+  let harness: ComponentHarness<AppComponent>;
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(AppComponent,
+      {
+        providers: [
+          { provide: FeaturesService, useValue: jest.fn() }
+        ]
+
+      })
   });
 
+  it('should create the app', () => {
+    expect(harness.isComponentCreated).toBeTruthy();
+  });
   it('should have as title \'mdm-ui\'', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('mdm-ui');
+    expect(harness.component.title).toEqual('mdm-ui');
   });
 });

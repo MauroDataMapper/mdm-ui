@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,16 +21,26 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-groups-table',
-  templateUrl: './groups-table.component.html',
-  styleUrls: ['./groups-table.component.sass']
+    selector: 'mdm-groups-table',
+    templateUrl: './groups-table.component.html',
+    styleUrls: ['./groups-table.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent_1]
 })
 export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -38,7 +48,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
   isLoadingResults: boolean;
   totalItemCount = 0;
   hideFilters = true;
@@ -87,13 +97,13 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
+    ).subscribe((data) => {
       this.records = data;
       this.dataSource.data = this.records;
     });
   }
 
-  groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  groupsFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourcesService.userGroups.list(options);
@@ -116,23 +126,23 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  editUser(row) {
+  editUser(row: any) {
     if (row) {
       this.stateHandlerService.Go('admin.group', { id: row.id }, null);
     }
   }
 
-  deleteUser(row) {
-    this.resourcesService.userGroups.remove(row.id).subscribe(() => {
+  deleteUser(row: any) {
+    this.resourcesService.userGroups.remove(row.id as string).subscribe(() => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
-      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
+      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe((data) => {
         this.records = data.body.items;
         this.totalItemCount = data.body.count;
         this.dataSource.data = this.records;
-      }, err => {
+      }, (err) => {
         this.messageHandlerService.showError('There was a problem loading the groups.', err);
       });
-    }, err => {
+    }, (err) => {
       this.messageHandlerService.showError('There was a problem deleting the group.', err);
     });
   }

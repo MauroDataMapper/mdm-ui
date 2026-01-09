@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,31 +17,39 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 export interface ApiKeysModalConfiguration {
-  showName?: boolean;
-  showExpiryDay?: boolean;
-  showRefreshable?: boolean;
+  showName?: boolean
+  showExpiryDay?: boolean
+  showRefreshable?: boolean
 }
 
 export interface ApiKeysModalResponseData {
-  name: string;
-  expiresInDays: number;
-  refreshable: boolean;
+  name: string
+  expiresInDays: number
+  refreshable: boolean
 }
 
 export interface ApiKeysModalResponse {
-  status: ModalDialogStatus;
-  data?: ApiKeysModalResponseData;
+  status: ModalDialogStatus
+  data?: ApiKeysModalResponseData
 }
 
 @Component({
-  selector: 'mdm-api-keys-modal',
-  templateUrl: './api-keys-modal.component.html',
-  styleUrls: ['./api-keys-modal.component.scss']
+    selector: 'mdm-api-keys-modal',
+    templateUrl: './api-keys-modal.component.html',
+    styleUrls: ['./api-keys-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, NgIf, MatDialogContent, FormsModule, MatFormField, MatLabel, MatInput, MatCheckbox, MatDialogActions, MatButton]
 })
 export class ApiKeysModalComponent implements OnInit {
   name: string;
@@ -75,7 +83,7 @@ export class ApiKeysModalComponent implements OnInit {
   }
 
   cancel() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (confirm) {
         this.dialogRef.close({ status: ModalDialogStatus.Cancel });
       }
@@ -83,6 +91,6 @@ export class ApiKeysModalComponent implements OnInit {
   }
 
   enableOk() {
-    return this.name && this.name.trim().length !== 0 && this.expiresInDays && this.expiresInDays >= 0;
+    return (!this.showName || (this.name && this.name.trim().length !== 0)) && this.expiresInDays && this.expiresInDays >= 0;
   }
 }

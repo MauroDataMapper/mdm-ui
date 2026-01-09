@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,6 +61,6 @@ describe('BreadcrumbComponent', () => {
 
     const crumbSpans = dom.querySelectorAll('span');
     // Note: don't display breadcrumb for the data model
-    expect(crumbSpans.length).toBe(item.breadcrumbs!.length + 1); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    expect(crumbSpans.length).toBe(item.breadcrumbs!.length + 1);
   });
 });

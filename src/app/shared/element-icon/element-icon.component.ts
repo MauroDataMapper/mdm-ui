@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,11 +22,17 @@ import {
   DataModelDetail
 } from '@maurodatamapper/mdm-resources';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-icon',
-  templateUrl: './element-icon.component.html',
-  styleUrls: ['./element-icon.component.sass']
+    selector: 'mdm-element-icon',
+    templateUrl: './element-icon.component.html',
+    styleUrls: ['./element-icon.component.sass'],
+    standalone: true,
+    imports: [NgIf, MatIcon, MatTooltip, NgClass, ExtendedModule]
 })
 export class ElementIconComponent implements OnChanges {
   @Input() element: CatalogueItem;

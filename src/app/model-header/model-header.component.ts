@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import {
   catalogueItemToMultiFacetAware,
   Exporter,
   isModelDomainType,
+  MdmTreeItem,
   MergableCatalogueItem,
   ModelDomain,
   Securable
@@ -51,17 +52,33 @@ import {
   SecurityHandlerService,
   StateHandlerService
 } from '@mdm/services';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { EMPTY, forkJoin, of } from 'rxjs';
-import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, switchMap } from 'rxjs/operators';
+import { MatDivider } from '@angular/material/divider';
+import { DownloadLinkComponent } from '../utility/download-link/download-link.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { CatalogueItemPropertiesComponent } from '../shared/catalogue-item-properties/catalogue-item-properties.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { FavoriteButtonComponent } from '../shared/favorite-button/favorite-button.component';
+import { ElementStatusComponent } from '../utility/element-status/element-status.component';
+import { ElementIconComponent } from '../shared/element-icon/element-icon.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgIf, NgClass, NgFor } from '@angular/common';
+import { isContainerDomainType } from '../../../../mdm-resources/src';
 
 export type ModelHeaderCatalogueItem = CatalogueItemDetail &
   Securable &
   Branchable;
 
 @Component({
-  selector: 'mdm-model-header',
-  templateUrl: './model-header.component.html',
-  styleUrls: ['./model-header.component.scss']
+    selector: 'mdm-model-header',
+    templateUrl: './model-header.component.html',
+    styleUrls: ['./model-header.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgClass, ExtendedModule, ElementIconComponent, ElementStatusComponent, FavoriteButtonComponent, MatIconButton, MatTooltip, MatMenuTrigger, CatalogueItemPropertiesComponent, MatProgressBar, DownloadLinkComponent, MatMenu, MatMenuItem, MatDivider, NgFor]
 })
 export class ModelHeaderComponent implements OnInit {
   @Input() item: ModelHeaderCatalogueItem;
@@ -72,14 +89,29 @@ export class ModelHeaderComponent implements OnInit {
   isAdministrator = false;
   access: Access;
   downloadLinks: HTMLAnchorElement[] = [];
+  ancestorTreeItems: MdmTreeItem[] = [];
+
+  constructor(
+    private security: SecurityHandlerService,
+    private dialog: MatDialog,
+    private elementTypes: ElementTypesService,
+    private stateHandler: StateHandlerService,
+    private itemUpdates: MauroItemUpdateService,
+    private messageHandler: MessageHandlerService,
+    private exportHandler: ExportHandlerService,
+    private modelVersioning: MauroModelVersioningService,
+    private itemRemoval: MauroItemRemoveService,
+    private broadcast: BroadcastService,
+    private modelTree: ModelTreeService
+  ) {}
 
   get isFinalisable() {
     if (!this.item) {
       return false;
     }
     return (
-      isModelDomainType(this.item.domainType) ||
-      this.item.domainType === CatalogueItemDomainType.VersionedFolder
+      isModelDomainType(this.item.domainType)
+      || this.item.domainType === CatalogueItemDomainType.VersionedFolder
     );
   }
 
@@ -95,7 +127,7 @@ export class ModelHeaderComponent implements OnInit {
     if (!this.item) {
       return false;
     }
-    return isModelDomainType(this.item.domainType);
+    return isModelDomainType(this.item.domainType) || isContainerDomainType(this.item.domainType);
   }
 
   get canBulkEdit() {
@@ -103,11 +135,11 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
     return (
-      this.access.showEdit &&
-      (this.item.domainType === CatalogueItemDomainType.DataModel ||
-        this.item.domainType === CatalogueItemDomainType.DataClass ||
-        this.item.domainType === CatalogueItemDomainType.CodeSet ||
-        this.item.domainType === CatalogueItemDomainType.Terminology)
+      this.access.showEdit
+      && (this.item.domainType === CatalogueItemDomainType.DataModel
+        || this.item.domainType === CatalogueItemDomainType.DataClass
+        || this.item.domainType === CatalogueItemDomainType.CodeSet
+        || this.item.domainType === CatalogueItemDomainType.Terminology)
     );
   }
 
@@ -116,7 +148,10 @@ export class ModelHeaderComponent implements OnInit {
       return false;
     }
 
-    return this.item.domainType === CatalogueItemDomainType.DataModel;
+    return (
+      this.isLoggedIn
+      && this.item.domainType === CatalogueItemDomainType.DataModel
+    );
   }
 
   get canShowMergeGraph() {
@@ -125,8 +160,9 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.item.domainType === CatalogueItemDomainType.DataModel ||
-      this.item.domainType === CatalogueItemDomainType.VersionedFolder
+      this.isLoggedIn
+      && (this.item.domainType === CatalogueItemDomainType.DataModel
+        || this.item.domainType === CatalogueItemDomainType.VersionedFolder)
     );
   }
 
@@ -137,12 +173,14 @@ export class ModelHeaderComponent implements OnInit {
 
     if (
       !(
-        isModelDomainType(this.item.domainType) ||
-        this.item.domainType === CatalogueItemDomainType.VersionedFolder
+        isModelDomainType(this.item.domainType)
+        || this.item.domainType === CatalogueItemDomainType.VersionedFolder
       )
     ) {
       return false;
     }
+
+    if (this.item.owningModel) return false;
 
     const model = this.item as Branchable;
     return this.access.showEdit && model.branchName !== defaultBranchName;
@@ -154,9 +192,9 @@ export class ModelHeaderComponent implements OnInit {
     }
 
     return (
-      this.item.deleted &&
-      this.isAdministrator &&
-      isModelDomainType(this.item.domainType)
+      this.item.deleted
+      && this.isAdministrator
+      && isModelDomainType(this.item.domainType)
     );
   }
 
@@ -168,40 +206,79 @@ export class ModelHeaderComponent implements OnInit {
     return isModelDomainType(this.item.domainType);
   }
 
+  get canCopy() {
+    if (!this.item) {
+      return false;
+    }
+
+    if (
+      ![
+        CatalogueItemDomainType.DataModel,
+        CatalogueItemDomainType.Terminology,
+        CatalogueItemDomainType.CodeSet,
+        CatalogueItemDomainType.DataClass,
+        CatalogueItemDomainType.DataElement,
+        CatalogueItemDomainType.Term
+      ].includes(this.item.domainType)
+    ) {
+      return false;
+    }
+
+    if (
+      [
+        CatalogueItemDomainType.DataModel,
+        CatalogueItemDomainType.Terminology,
+        CatalogueItemDomainType.CodeSet
+      ].includes(this.item.domainType)
+    ) {
+      // need to check it is in a versionedfolder
+      // has a ancestor with a domaintype.versionedfolder property
+      return this.ancestorTreeItems.some(
+        item => item.domainType === CatalogueItemDomainType.VersionedFolder
+      );
+    }
+
+    return this.item.availableActions.includes('update');
+  }
+
   get hasMenuOptions() {
     if (!this.item) {
       return false;
     }
 
     return (
-      this.canChangeBranchName ||
-      this.canBulkEdit ||
-      this.canCompareModels ||
-      this.access.showDelete ||
-      this.canRestore
+      this.canChangeBranchName
+      || this.canBulkEdit
+      || this.canCompareModels
+      || this.access.showDelete
+      || this.canRestore
     );
   }
-
-  constructor(
-    private security: SecurityHandlerService,
-    private dialog: MatDialog,
-    private elementTypes: ElementTypesService,
-    private stateHandler: StateHandlerService,
-    private itemUpdates: MauroItemUpdateService,
-    private messageHandler: MessageHandlerService,
-    private exportHandler: ExportHandlerService,
-    private modelVersioning: MauroModelVersioningService,
-    private itemRemoval: MauroItemRemoveService,
-    private broadcast: BroadcastService
-  ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.security.isLoggedIn();
     this.access = this.security.elementAccess(this.item);
-
     this.security
       .isAdministrator()
-      .subscribe((state) => (this.isAdministrator = state));
+      .subscribe(state => (this.isAdministrator = state));
+
+    if (this.item) {
+      this.modelTree
+        .getAncestors(this.item)
+        .pipe(
+          map((rootItem) => {
+            const itemList: MdmTreeItem[] = [];
+            this.flattenTreeItemChildren(rootItem, itemList);
+            return itemList;
+          })
+        )
+        .subscribe((ancestorTreeItems) => {
+          // Exclude the item being shown (not relevant to display twice)
+          this.ancestorTreeItems = ancestorTreeItems.filter(
+            treeItem => treeItem.id !== this.item.id
+          );
+        });
+    }
   }
 
   openUserGroupAccessDialog() {
@@ -215,8 +292,8 @@ export class ModelHeaderComponent implements OnInit {
   }
 
   bulkEdit() {
-    const stateName =
-      this.item.domainType === CatalogueItemDomainType.DataClass
+    const stateName
+      = this.item.domainType === CatalogueItemDomainType.DataClass
         ? 'appContainer.mainApp.bulkEditDataClass'
         : 'appContainer.mainApp.bulkEdit';
 
@@ -228,6 +305,56 @@ export class ModelHeaderComponent implements OnInit {
         dataClassId: this.item.parentDataClass
       })
     });
+  }
+
+  copy() {
+    switch (this.item.domainType) {
+      case CatalogueItemDomainType.Term: {
+        return this.stateHandler.Go('termCopy', {
+          id: this.item.id,
+          terminologyId: this.item.terminology.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.DataClass: {
+        return this.stateHandler.Go('dataClassCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType,
+          dataModelId: this.item.model,
+          dataClassId: this.item.parentDataClass ?? ''
+        });
+      }
+      case CatalogueItemDomainType.DataElement: {
+        return this.stateHandler.Go('dataElementCopy', {
+          id: this.item.id,
+          dataModelId: this.item.model,
+          dataClassId: this.item.dataClass,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.DataModel: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.Terminology: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      case CatalogueItemDomainType.CodeSet: {
+        return this.stateHandler.Go('containerCopy', {
+          id: this.item.id,
+          domainType: this.item.domainType
+        });
+      }
+      default:
+        this.messageHandler.showError(
+          `Cannot get catalogue item details for ${this.item.domainType} ${this.item.label}: unrecognised domain type.`
+        );
+    }
   }
 
   merge() {
@@ -369,7 +496,7 @@ export class ModelHeaderComponent implements OnInit {
             .afterClosed();
         }),
         filter(
-          (dialogResponse) => dialogResponse?.status === ModalDialogStatus.Ok
+          dialogResponse => dialogResponse?.status === ModalDialogStatus.Ok
         ),
         switchMap((dialogResponse) => {
           this.busy = true;
@@ -511,27 +638,6 @@ export class ModelHeaderComponent implements OnInit {
       });
   }
 
-  private handleStandardExporterResponse(
-    exporter: Exporter,
-    response: HttpResponse<ArrayBuffer>
-  ) {
-    const fileName = this.exportHandler.createFileName(
-      this.item.label,
-      exporter
-    );
-    const file = new Blob([response.body], {
-      type: exporter.fileType
-    });
-    const link = this.exportHandler.createBlobLink(file, fileName);
-    this.downloadLinks.push(link);
-  }
-
-  private handleAsyncExporterResponse() {
-    this.messageHandler.showInfo(
-      'A new background task to export your model has started. You can continue working while the export continues.'
-    );
-  }
-
   deleteItem(permanent: boolean) {
     this.busy = true;
     this.itemRemoval
@@ -555,9 +661,43 @@ export class ModelHeaderComponent implements OnInit {
           this.stateHandler.Go(
             'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
           );
-        } else {
+        }
+ else {
           this.stateHandler.reload();
         }
       });
+  }
+
+  private handleStandardExporterResponse(
+    exporter: Exporter,
+    response: HttpResponse<ArrayBuffer>
+  ) {
+    const fileName = this.exportHandler.createFileName(
+      this.item.label,
+      exporter
+    );
+    const file = new Blob([response.body], {
+      type: exporter.fileType
+    });
+    const link = this.exportHandler.createBlobLink(file, fileName);
+    this.downloadLinks.push(link);
+  }
+
+  private handleAsyncExporterResponse() {
+    this.messageHandler.showInfo(
+      'A new background task to export your model has started. You can continue working while the export continues.'
+    );
+  }
+
+  private flattenTreeItemChildren(item: MdmTreeItem, itemList: MdmTreeItem[]) {
+    itemList.push(item);
+
+    if (!item || !item.children || item.children.length === 0) {
+      return;
+    }
+
+    item.children.forEach((child) => {
+      this.flattenTreeItemChildren(child, itemList);
+    });
   }
 }

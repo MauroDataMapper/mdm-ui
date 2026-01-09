@@ -2,7 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["node"]
+    "types": ["node"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    // Added for ngx-jodit
+    "skipLibCheck": true
   },
   "files": [
     "src/main.ts",

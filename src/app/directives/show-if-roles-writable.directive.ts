@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,27 +15,29 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { Securable, Finalisable } from '@maurodatamapper/mdm-resources';
-import {SecurityHandlerService} from '../services/handlers/security-handler.service';
+import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 
 @Directive({
-  selector: '[mdmShowIfRolesWritable]'
+    selector: '[mdmShowIfRolesWritable]',
+    standalone: true
 })
 export class ShowIfRolesWritableDirective implements OnInit {
 @Input() result: Securable & Finalisable;
   constructor(private securityHandler: SecurityHandlerService, private elementRef: ElementRef) {
 
   }
+
   ngOnInit(): void {
     this.watchRole(this.result);
   }
-  watchRole(newValue : Securable & Finalisable) {
+
+  watchRole(newValue: Securable & Finalisable) {
     const show = this.securityHandler.showIfRoleIsWritable(newValue);
     if (!show) {
       this.elementRef.nativeElement.style.display = 'none';
       return;
     }
   }
-
 }

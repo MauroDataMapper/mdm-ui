@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ export class SharedService {
   appVersion = environment.version;
   appTitle = environment.appTitle;
   issueReporting = environment.issueReporting;
-  documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
+  documentation: { url: string, pages: { [key: string]: string }, importers: { [key: string]: string } } = environment.documentation;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
   // isAdmin;
@@ -52,10 +52,9 @@ export class SharedService {
 
   logout() {
     this.securityHandler.logout();
-  };
+  }
 
-  handleRequiredToLogin()
-  {
+  handleRequiredToLogin() {
     this.securityHandler.loginRequired();
     this.toaster.info('Please log in to continue.');
   }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
 import { Observable } from 'rxjs';
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import { Uuid } from '@maurodatamapper/mdm-resources';
 
-
 export class DataflowDataclassDiagramService extends BasicDiagramService {
-
   parentId: string;
   flowId: string;
   selDataClassComponentId: string;
@@ -33,12 +31,12 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
 
-    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id as Uuid, params.flowId as Uuid, {all:true});
+    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id as Uuid, params.flowId as Uuid, { all: true });
   }
 
   render(data: any): void {
-    const nodes: any = {};
-    const nodesMerge: any = {};
+    const nodes: object = {};
+    const nodesMerge: object = {};
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
@@ -60,18 +58,17 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     });
 
     Object.keys(nodes).forEach((key) => {
-      this.addRectangleCell(key, nodes[key]);
+      this.addRectangleCell(key, nodes[key] as string);
     });
 
     Object.keys(nodesMerge).forEach((key) => {
-      this.addSmallColorfulRectangleCell(key, nodesMerge[key]);
+      this.addSmallColorfulRectangleCell(key, nodesMerge[key] as string);
     });
 
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((sourceDataClass: any) => {
         flow.targetDataClasses.forEach((targetDataClass: any) => {
-
-          let link: any;
+          let link: joint.shapes.standard.Link;
           if (flow.sourceDataClasses.length > 1) {
             // this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
             // link the sourceDataClass to the merged dataClassComponent
@@ -80,7 +77,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
               source: { id: sourceDataClass.id },
               target: { id: flow.id }
             });
-          } else {
+          }
+ else {
             link = new joint.shapes.standard.Link({
               id: `${flow.id}/${targetDataClass.id}`,
               source: { id: sourceDataClass.id },
@@ -108,7 +106,6 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         mergedLink.toBack();
         this.graph.addCell(mergedLink);
       }
-
     });
   }
 
@@ -117,11 +114,9 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
 
   doubleClick = (cellView: joint.dia.CellView) => {
-
     const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
     if (arrMergedId.length > 0) {
-
       this.selDataClassComponentId = arrMergedId[0];
     }
 
@@ -139,28 +134,26 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   };
 
   singleClick = (cellView: joint.dia.CellView) => {
-
     if (cellView.model.id !== undefined && cellView.model.id !== null) {
-
       const arrMergedId: any[] = cellView.model.id.toString().split('/');
       let foundDataClassComponents: any = this.dataClassComponents;
 
       if (arrMergedId.length > 0) {
-
         this.selDataClassComponentId = arrMergedId[0];
         // Check if this id is a DataClassComponent
-        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(() => {
+        foundDataClassComponents = Object.keys(this.dataClassComponents as object).filter(() => {
           return foundDataClassComponents[arrMergedId[0]];
         });
 
         if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
           const options = { sort: 'label', order: 'asc', all: true };
-          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0] as string, options).subscribe((result) => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-              this.changeComponent(result.body);
+              this.changeComponent(result.body as string);
             }
           });
-        } else {
+        }
+ else {
           this.changeComponent(null);
         }
       }
@@ -176,12 +169,9 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     });
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
-
       clicks++;
       if (clicks === 1) {
-
         (async () => {
-
           await this.delay(200);
 
           // Do something after
@@ -190,7 +180,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
             this.singleClick(cellView);
           }
         })();
-      } else {
+      }
+ else {
         clicks = 0;
         doubleClick = true;
         this.changeComponent(null);
@@ -214,11 +205,10 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
 
   updateDataClassComponentLevel = (data) => {
-
     const options = { sort: 'label', order: 'asc', all: true };
-    this.resourcesService.dataFlow.dataClassComponents.update(this.parentId, this.flowId, this.selDataClassComponentId, data, options).subscribe(result => {
+    this.resourcesService.dataFlow.dataClassComponents.update(this.parentId, this.flowId, this.selDataClassComponentId, data, options).subscribe((result) => {
       if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-        this.changeComponent(result.body);
+        this.changeComponent(result.body as string);
       }
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Class Component.', error);

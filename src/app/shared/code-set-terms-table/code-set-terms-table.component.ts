@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,18 +29,33 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
-import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { CatalogueElementType, ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { CatalogueItemDomainType, CodeSetDetail, ModelUpdatePayload, Term } from '@maurodatamapper/mdm-resources';
 import { Access } from '@mdm/model/access';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MultipleTermsSelectorComponent } from '../../utility/multiple-terms-selector/multiple-terms-selector.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-code-set-terms-table',
-  templateUrl: './code-set-terms-table.component.html',
-  styleUrls: ['./code-set-terms-table.component.scss']
+    selector: 'mdm-code-set-terms-table',
+    templateUrl: './code-set-terms-table.component.html',
+    styleUrls: ['./code-set-terms-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, MatButton, MatTooltip, MultipleTermsSelectorComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, ElementAliasComponent, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, NgClass, ExtendedModule, MdmPaginatorComponent]
 })
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   @Input() codeSet: CodeSetDetail;
@@ -56,12 +71,12 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = false;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   deleteInProgress: boolean;
   records: any[] = [];
   access: Access;
-  baseTypes: any;
-  classifiableBaseTypes: any;
+  baseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
+  classifiableBaseTypes: { [key: string]: CatalogueElementType } | { id: string, title: string, classifiable?: boolean }[];
   filterValue: any;
   filterName: any;
   showAddTerm: any;
@@ -98,21 +113,20 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-    ).subscribe(data => {
-
+    ).subscribe((data) => {
       this.records = data;
       this.access = this.securityHandler.elementAccess(this.codeSet);
       if (this.codeSet.availableActions.includes('update') && !this.codeSet.finalised) {
         this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
-      } else {
+      }
+ else {
         this.displayedColumns = ['terminology', 'term', 'definition'];
       }
-
     });
     this.changeRef.detectChanges();
   }
 
-  termFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  termFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: { [p: string]: any }): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.codeSet.terms(this.codeSet.id, options);
@@ -135,7 +149,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.filterValue = filterValue;
     if (this.filterValue !== '') {
       this.filterName = filterName;
-    } else {
+    }
+ else {
       this.filterName = '';
     }
     this.applyFilter();
@@ -145,17 +160,18 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  delete(record, $index) {
+  delete(record, $index: number) {
     if (this.clientSide) {
       this.records.splice($index, 1);
       return;
     }
 
-    this.resources.codeSet.removeTerm(this.codeSet.id, record.id).subscribe(() => {
+    this.resources.codeSet.removeTerm(this.codeSet.id, record.id as string).subscribe(() => {
       if (this.type === 'static') {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Term removed successfully.');
-      } else {
+      }
+ else {
         this.records.splice($index, 1);
         this.messageHandler.showSuccess('Term removed successfully.');
         this.filterEvent.emit();
@@ -192,14 +208,14 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('Terms added successfully.');
       const options = this.gridService.constructOptions(40, 0);
 
-      this.resources.codeSet.terms(this.codeSet.id, options).subscribe(data => {
+      this.resources.codeSet.terms(this.codeSet.id, options).subscribe((data) => {
         this.records = data.body.items;
       });
       setTimeout(() => {
         this.toggleAddTermsSection();
       }, 500);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem adding the Terms.', error);
     });
-  };
+  }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SharedService } from '../services/shared.service';
+import { SharedService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { StateHandlerService } from '@mdm/services';
+import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
@@ -34,19 +34,42 @@ import { Access } from '@mdm/model/access';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { AllLinksInPagedListComponent } from '../utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { ElementLinkListComponent } from '../shared/element-link-list/element-link-list.component';
+import { ElementOwnedDataTypeListComponent } from '../shared/element-owned-data-type-list/element-owned-data-type-list.component';
+import { FlattenedDataClassesComponent } from '../shared/element-child-data-classes-child-elements-list/flattened-data-classes-list.component';
+import { DiagramTabComponent } from '../diagram/diagram-tab/diagram-tab.component';
+import { ElementChildDataClassesListComponent } from '../shared/element-child-data-classes-list/element-child-data-classes-list.component';
+import { MatButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { CatalogueItemSearchComponent } from '../catalogue-search/catalogue-item-search/catalogue-item-search.component';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-model',
-  templateUrl: './data-model.component.html',
-  styleUrls: ['./data-model.component.scss']
+    selector: 'mdm-data-model',
+    templateUrl: './data-model.component.html',
+    styleUrls: ['./data-model.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressBar, ModelHeaderComponent, MatTabGroup, MatTab, MatTabLabel, CatalogueItemSearchComponent, MatTabContent, ProfileDataViewComponent, SkeletonBadgeComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, MatButton, ElementChildDataClassesListComponent, DiagramTabComponent, FlattenedDataClassesComponent, ElementOwnedDataTypeListComponent, ElementLinkListComponent, AllLinksInPagedListComponent, ConstraintsRulesComponent, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataModelComponent
   extends BaseComponent
   implements OnInit, AfterViewChecked {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   parentId: string;
-  showFinalised: string;
-  downloadLinks: HTMLAnchorElement[] = [];
+  showFinalised: boolean;
   compareToList: any[] = []; // TODO: define better type
 
   dataModel: DataModelDetail;
@@ -54,7 +77,7 @@ export class DataModelComponent
   showExtraTabs = false;
   showEdit = false;
   showDelete = false;
-  activeTab: any;
+  activeTab: number;
   semanticLinks: any[] = [];
   access: Access;
   tabs = new TabCollection([
@@ -111,7 +134,7 @@ export class DataModelComponent
     this.showFinalised = this.uiRouterGlobals.params.finalised;
 
     this.activeTab = this.tabs.getByName(
-      this.uiRouterGlobals.params.tabView ?? 'description'
+      this.uiRouterGlobals.params.tabView as string ?? 'description'
     ).index;
     this.tabSelected(this.activeTab);
 
@@ -120,7 +143,7 @@ export class DataModelComponent
     this.dataModelDetails(this.parentId, this.showFinalised);
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: ModelUpdatePayload = {
       id: this.dataModel.id,
       domainType: this.dataModel.domainType
@@ -149,8 +172,8 @@ export class DataModelComponent
 
   ngAfterViewChecked(): void {
     if (
-      this.tabGroup &&
-      !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
+      this.tabGroup
+      && !this.editingService.isTabGroupClickEventHandled(this.tabGroup)
     ) {
       this.editingService.setTabGroupClickEvent(this.tabGroup);
     }
@@ -160,12 +183,12 @@ export class DataModelComponent
     this.access = this.securityHandler.elementAccess(this.catalogueItem);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
-  dataModelDetails(id: string, showFinalised: string) {
+  dataModelDetails(id: string, showFinalised: boolean) {
     let arr = [];
 
     if (!showFinalised) {
@@ -178,11 +201,11 @@ export class DataModelComponent
           if (this.dataModel.semanticLinks) {
             this.compareToList = this.dataModel.semanticLinks
               .filter(
-                (link) =>
-                  link.linkType === 'New Version Of' ||
-                  link.linkType === 'Superseded By'
+                link =>
+                  link.linkType === 'New Version Of'
+                  || link.linkType === 'Superseded By'
               )
-              .map((link) => link.target);
+              .map(link => link.target);
           }
 
           this.watchDataModelObject();
@@ -205,7 +228,8 @@ export class DataModelComponent
             this.DataModelPermissions(this.catalogueItem.id);
           }
         });
-    } else {
+    }
+ else {
       const data = {
         finalised: this.showFinalised
       };
@@ -240,8 +264,8 @@ export class DataModelComponent
 
   async DataModelPermissions(id: any) {
     await this.resourcesService.security
-      .permissions(SecurableDomainType.DataModels, id)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+      .permissions(SecurableDomainType.DataModels, id as string)
+      .subscribe((permissions: { body: Record<string, any> }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.catalogueItem[attrname] = permissions.body[attrname];
         });

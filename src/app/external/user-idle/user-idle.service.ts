@@ -164,7 +164,7 @@ export class UserIdleService {
     this.idleSubscription = this.idle$
       .pipe(
         bufferTime(this.idleSensitivityMillisec), // Starting point of detecting of user's inactivity
-        filter((arr) => !arr.length && !this.isIdleDetected && !this.isInactivityTimer),
+        filter(arr => !arr.length && !this.isIdleDetected && !this.isInactivityTimer),
         tap(() => {
           this.isIdleDetected = true;
           this.idleDetected$.next(true);
@@ -220,7 +220,7 @@ export class UserIdleService {
   onTimerStart(): Observable<number> {
     return this.timerStart$.pipe(
       distinctUntilChanged(),
-      switchMap((start) => (start && this.timer$ ? this.timer$ : of(null)))
+      switchMap(start => (start && this.timer$ ? this.timer$ : of(null)))
     );
   }
 
@@ -236,7 +236,7 @@ export class UserIdleService {
    */
   onTimeout(): Observable<boolean> {
     return this.timeout$.pipe(
-      filter((timeout) => !!timeout),
+      filter(timeout => !!timeout),
       tap(() => (this.isTimeout = true)),
       map(() => true)
     );
@@ -264,7 +264,6 @@ export class UserIdleService {
 
     this.setConfig(config);
   }
-
 
   /**
    * Set custom activity events
@@ -297,8 +296,8 @@ export class UserIdleService {
   protected setupTimer(timeout: number) {
     this.ngZone.runOutsideAngular(() => {
       this.timer$ = of(() => new Date()).pipe(
-        map((fn) => fn()),
-        switchMap((startDate) =>
+        map(fn => fn()),
+        switchMap(startDate =>
           interval(1000).pipe(
             map(() => Math.round((new Date().valueOf() - startDate.valueOf()) / 1000)), //   convert elapsed count to seconds
             tap((elapsed) => {
@@ -337,5 +336,4 @@ export class UserIdleService {
       this.timeout = config.timeout;
     }
   }
-
 }

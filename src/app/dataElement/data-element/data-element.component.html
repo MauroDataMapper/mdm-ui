@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <mat-tab-group
   #tab
+  [mat-stretch-tabs]="false"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
 >
@@ -143,5 +144,23 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
     </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      History
+      <mdm-skeleton-badge *ngIf="isLoadingHistory"></mdm-skeleton-badge>
+      ({{ historyItemCount }})
+    </ng-template>
+
+    <div class="full-width">
+      <mdm-history
+        (totalCount)="historyCountEmitter($event)"
+        *ngIf="dataElementOutput"
+        [parent]="dataElementOutput"
+        [parentType]="'DataElement'"
+        [parentId]="parentId"
+        [domainType]="'dataElements'"
+      ></mdm-history>
+    </div>
   </mat-tab>
 </mat-tab-group>

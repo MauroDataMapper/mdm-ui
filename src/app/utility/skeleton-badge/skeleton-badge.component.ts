@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'mdm-skeleton-badge',
-  templateUrl: './skeleton-badge.component.html',
-  styleUrls: ['./skeleton-badge.component.scss']
+    selector: 'mdm-skeleton-badge',
+    templateUrl: './skeleton-badge.component.html',
+    styleUrls: ['./skeleton-badge.component.scss'],
+    standalone: true,
+    imports: [NgxSkeletonLoaderModule]
 })
 export class SkeletonBadgeComponent { }

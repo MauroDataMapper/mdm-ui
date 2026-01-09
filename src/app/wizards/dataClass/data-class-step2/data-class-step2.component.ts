@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,18 +27,33 @@ import {
   QueryList
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { DataClass } from '../../../../../../mdm-resources';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MoreDescriptionComponent } from '../../../shared/more-description/more-description.component';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { ModelPathComponent } from '../../../utility/model-path/model-path.component';
+import { NgIf, NgClass } from '@angular/common';
 @Component({
-  selector: 'mdm-data-class-step2',
-  templateUrl: './data-class-step2.component.html',
-  styleUrls: ['./data-class-step2.component.sass']
+    selector: 'mdm-data-class-step2',
+    templateUrl: './data-class-step2.component.html',
+    styleUrls: ['./data-class-step2.component.sass'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatLabel, MatInput, ContentEditorComponent, FlexModule, MatHint, ElementClassificationsComponent, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
 })
 export class DataClassStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
@@ -48,9 +63,12 @@ export class DataClassStep2Component
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: {
-    [key: string]: any;
-    createType: CreateType;
+    [key: string]: any
+    createType: CreateType
+    selectedDataClasses: DataClass[]
+    selectedDataClassesMap: { [p: string]: any } // Selected by the mat-table
   };
+
   scope: any;
   multiplicityError: any;
   selectedDataClassesStr = '';
@@ -102,12 +120,12 @@ export class DataClassStep2Component
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
     if (
-      this.sort !== null &&
-      this.sort !== undefined &&
-      this.sort.toArray().length > 0 &&
-      this.paginator !== null &&
-      this.paginator !== undefined &&
-      this.paginator.toArray().length > 0
+      this.sort !== null
+      && this.sort !== undefined
+      && this.sort.toArray().length > 0
+      && this.paginator !== null
+      && this.paginator !== undefined
+      && this.paginator.toArray().length > 0
     ) {
       this.sort
         .toArray()[0]
@@ -151,7 +169,7 @@ export class DataClassStep2Component
     for (const id in this.model.selectedDataClassesMap) {
       if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
         const element = this.model.selectedDataClassesMap[id];
-        this.model.selectedDataClasses.push(element.node);
+        this.model.selectedDataClasses.push(element.node as DataClass);
       }
     }
     this.totalItemCount = this.model.selectedDataClasses.length;
@@ -161,7 +179,7 @@ export class DataClassStep2Component
     this.model.selectedDataClassesMap = checkedMap;
     this.createSelectedArray();
     this.dataSource.data = this.model.selectedDataClasses;
-    // eslint-disable-next-line no-underscore-dangle
+
     this.dataSource._updateChangeSubscription();
     this.validate();
     this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
@@ -174,15 +192,15 @@ export class DataClassStep2Component
       if (newValue) {
         // check Min/Max
         this.multiplicityError = this.validator.validateMultiplicities(
-          newValue.minMultiplicity,
-          newValue.maxMultiplicity
+          newValue.minMultiplicity as string,
+          newValue.maxMultiplicity as string
         );
 
         // Check Mandatory fields
         if (
-          !newValue.label ||
-          newValue.label.trim().length === 0 ||
-          this.multiplicityError
+          !newValue.label
+          || newValue.label.trim().length === 0
+          || this.multiplicityError
         ) {
           this.step.invalid = true;
           return;
@@ -193,9 +211,12 @@ export class DataClassStep2Component
     }
     if (['copy', 'import', 'extend'].includes(this.model.createType)) {
       switch (this.model.createType) {
-        case 'copy': this.copyMessage = 'copy'; break;
-        case 'import': this.copyMessage = 'import'; break;
-        case 'extend': this.copyMessage = 'extend with'; break;
+        case 'copy': this.copyMessage = 'copy';
+        break;
+        case 'import': this.copyMessage = 'import';
+        break;
+        case 'extend': this.copyMessage = 'extend with';
+        break;
         default: this.copyMessage = '';
       }
 
@@ -229,17 +250,21 @@ export class DataClassStep2Component
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
             switch (this.model.createType) {
-              case 'copy': return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
-              case 'import': return this.resources.dataClass.importDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
-              case 'extend': return this.resources.dataClass.addExtendDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'copy': return this.resources.dataClass.copyChildDataClass(this.model.parent.model as string, this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
+              case 'import': return this.resources.dataClass.importDataClass(this.model.parent.model as string, this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
+              case 'extend': return this.resources.dataClass.addExtendDataClass(this.model.parent.model as string, this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
             }
-          } if (this.model.parent.domainType === 'DataModel') {
+          }
+          if (this.model.parent.domainType === 'DataModel') {
             switch (this.model.createType) {
-              case 'copy': return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
-              case 'import': return this.resources.dataModel.importDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+              case 'copy':
+                return this.resources.dataClass.copyDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
+              case 'import':
+                return this.resources.dataModel.importDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
             }
-          } else {
-            return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+          }
+          else {
+            return this.resources.dataClass.copyDataClass(this.model.parent.id as string, dc.modelId as string, dc.id as string, null).toPromise();
           }
         })
         .catch((error) => {

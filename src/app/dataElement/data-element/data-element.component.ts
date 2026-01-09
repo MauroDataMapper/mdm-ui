@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,32 +22,37 @@ import { SharedService } from '@mdm/services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Subscription } from 'rxjs';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTab, MatTabContent, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
-import {
-  GridService,
-  MessageHandlerService,
-  SecurityHandlerService
-} from '@mdm/services';
+import { ElementTypesService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
-import {
-  DataElement,
-  DataElementDetail,
-  DataElementDetailResponse,
-  DataTypeReference
-} from '@maurodatamapper/mdm-resources';
-import {
-  DefaultProfileItem,
-  ProfileControlTypes
-} from '@mdm/model/defaultProfileModel';
+import { CatalogueItemDomainType, DataElement, DataElementDetail, DataElementDetailResponse, DataType } from '@maurodatamapper/mdm-resources';
+import { DefaultProfileItem, ProfileControlTypes } from '@mdm/model/defaultProfileModel';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element',
-  templateUrl: './data-element.component.html',
-  styleUrls: ['./data-element.component.sass']
+    selector: 'mdm-data-element',
+    templateUrl: './data-element.component.html',
+    styleUrls: ['./data-element.component.sass'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ElementLinkListComponent, SummaryMetadataTableComponent, MatTabLabel, SkeletonBadgeComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class DataElementComponent
   extends BaseComponent
@@ -63,7 +68,7 @@ export class DataElementComponent
   showEdit = false;
   showDelete = false;
   showExtraTabs = false;
-  activeTab: any;
+  activeTab: number;
   dataClass = { id: null };
   dataModel = { id: null };
   isDataLoaded = false;
@@ -71,8 +76,6 @@ export class DataElementComponent
   max: any;
   min: any;
   error: any;
-  newMinText: any;
-  newMaxText: any;
   pagination: McSelectPagination;
   descriptionView = 'default';
   annotationsView = 'default';
@@ -82,25 +85,17 @@ export class DataElementComponent
   isValid = false;
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   access: any;
   tabs = new TabCollection([
     'description',
     'links',
     'summaryMetadata',
     'rules',
-    'annotations'
+    'annotations',
+    'history'
   ]);
-  newlyAddedDataType = {
-    label: '',
-    description: '',
-
-    metadata: [],
-    domainType: 'PrimitiveType',
-    enumerationValues: [],
-    classifiers: [],
-    referencedDataClass: '',
-    referencedTerminology: ''
-  };
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -112,31 +107,32 @@ export class DataElementComponent
     private gridService: GridService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private elementTypes: ElementTypesService
   ) {
     super();
     if (
-      this.isGuid(this.uiRouterGlobals.params.id) &&
-      (!this.uiRouterGlobals.params.id ||
-        !this.uiRouterGlobals.params.dataModelId ||
-        !this.uiRouterGlobals.params.dataClassId)
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && (!this.uiRouterGlobals.params.id
+        || !this.uiRouterGlobals.params.dataModelId
+        || !this.uiRouterGlobals.params.dataClassId)
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataModelId &&
-      this.uiRouterGlobals.params.dataModelId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataModelId
+      && this.uiRouterGlobals.params.dataModelId.trim() !== ''
     ) {
       this.dataModel = { id: this.uiRouterGlobals.params.dataModelId };
     }
 
     if (
-      this.uiRouterGlobals.params.id &&
-      this.uiRouterGlobals.params.dataClassId &&
-      this.uiRouterGlobals.params.dataClassId.trim() !== ''
+      this.uiRouterGlobals.params.id
+      && this.uiRouterGlobals.params.dataClassId
+      && this.uiRouterGlobals.params.dataClassId.trim() !== ''
     ) {
       this.dataClass = { id: this.uiRouterGlobals.params.dataClassId };
     }
@@ -147,16 +143,18 @@ export class DataElementComponent
   }
 
   ngOnInit() {
-    this.activeTab = this.tabs.getByName(this.uiRouterGlobals.params.tabView as string).index;
+    this.activeTab = this.tabs.getByName(
+      this.uiRouterGlobals.params.tabView as string
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Data Element');
 
     this.dataElementDetails(
-      this.uiRouterGlobals.params.dataModelId,
-      this.dataClass.id,
-      this.uiRouterGlobals.params.id
+      this.uiRouterGlobals.params.dataModelId as string,
+      this.dataClass.id as string,
+      this.uiRouterGlobals.params.id as string
     );
     this.subscription = this.messageService.changeSearch.subscribe(
       (message: boolean) => {
@@ -169,7 +167,7 @@ export class DataElementComponent
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  fetchDataTypes = (text, loadAll, offset, limit) => {
+  fetchDataTypes = (text, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -181,7 +179,7 @@ export class DataElementComponent
       limit: options['limit'],
       offset: options['offset']
     };
-    return this.resourcesService.dataType.list(this.dataModel.id, options);
+    return this.resourcesService.dataType.list(this.dataModel.id as string, options);
   };
 
   getTabDetailByName(tabName) {
@@ -201,7 +199,7 @@ export class DataElementComponent
     }
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: DataElement = {
       id: this.dataElementOutput.id,
       label: this.dataElementOutput.label,
@@ -220,18 +218,31 @@ export class DataElementComponent
 
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
-      } else if (item.controlType === ProfileControlTypes.dataType) {
-        resource.dataType = item.value as DataTypeReference;
-      } else {
+      }
+ else if (item.controlType === ProfileControlTypes.dataType) {
+        const dataType = item.value as DataType;
+
+        // Backend dataType groups several frontend types into one
+        // (i.e. frontend's referenceType and dataModelReferenceType
+        // both map to backend's ModelDataType)
+        dataType.domainType = this.elementTypes.isModelDataType(
+          dataType.domainType
+        )
+          ? CatalogueItemDomainType.ModelDataType
+          : dataType.domainType;
+
+        resource.dataType = dataType;
+      }
+ else {
         resource[item.propertyName] = item.value;
       }
     });
 
     this.resourcesService.dataElement
       .update(
-        this.dataModel.id,
-        this.dataClass.id,
-        this.dataElementOutput.id,
+        this.dataModel.id as string,
+        this.dataClass.id as string,
+        this.dataElementOutput.id as string,
         resource
       )
       .subscribe(
@@ -254,7 +265,7 @@ export class DataElementComponent
       );
   }
 
-  dataElementDetails(dataModelId: any, dataClassId, id) {
+  dataElementDetails(dataModelId: string, dataClassId: string, id: string) {
     this.resourcesService.dataElement
       .get(dataModelId, dataClassId, id)
       .subscribe((result: DataElementDetailResponse) => {
@@ -270,7 +281,6 @@ export class DataElementComponent
         this.messageService.dataChanged(this.dataElementOutput);
 
         if (this.dataElementOutput) {
-          // tslint:disable-next-line: deprecation
           this.activeTab = this.getTabDetailByName(
             this.uiRouterGlobals.params.tabView as string
           ).index;
@@ -284,6 +294,11 @@ export class DataElementComponent
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 
   toggleShowNewInlineDataType() {
@@ -308,8 +323,8 @@ export class DataElementComponent
     this.access = this.securityHandler.elementAccess(this.dataElementOutput);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 }

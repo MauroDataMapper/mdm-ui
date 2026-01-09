@@ -1,6 +1,6 @@
 import { StateHandlerService } from './../../services/handlers/state-handler.service';
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,13 +18,28 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogClose, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { JoinArrayPipe } from '@mdm/pipes/join-array.pipe';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
 @Component({
-  selector: 'mdm-bulk-delete',
-  templateUrl: './bulk-delete-modal.component.html',
-  styleUrls: ['./bulk-delete-modal.component.scss'],
+    selector: 'mdm-bulk-delete',
+    templateUrl: './bulk-delete-modal.component.html',
+    styleUrls: ['./bulk-delete-modal.component.scss'],
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        NgIf,
+        MatIconButton,
+        MatDialogClose,
+        MatDialogContent,
+        NgFor,
+        MatDialogActions,
+        MatButton,
+        JoinArrayPipe,
+    ],
 })
 export class BulkDeleteModalComponent implements AfterViewInit {
   parentDataModel: any;
@@ -35,7 +50,6 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   processing = false;
   isProcessComplete = false;
   finalResult = {};
-
 
   constructor(
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
@@ -77,27 +91,36 @@ export class BulkDeleteModalComponent implements AfterViewInit {
         switch (item.domainType) {
           case CatalogueItemDomainType.DataClass:
             if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
-              return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id, item.model, item.id).toPromise();
-            } else if (item.imported && this.parentDataClass?.id !== null) {
-              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
-            } else if (item.extended && this.parentDataClass) {
-              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id, this.parentDataClass.id, item.model, item.id).toPromise();
-            } else {
-              return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
+              return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id as string, item.model as string, item.id as string).toPromise();
+            }
+ else if (item.imported && this.parentDataClass?.id !== null) {
+              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
+            }
+ else if (item.extended && this.parentDataClass) {
+              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
+            }
+ else {
+              return this.resources.dataClass.removeChildDataClass(item.model as string, item.parentDataClass as string, item.id as string).toPromise();
             }
           case CatalogueItemDomainType.DataElement:
             if (item.imported) {
-              return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id, this.parentDataClass.id, item.model, item.dataClass, item.id).toPromise();
-            } else {
-              return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
+              return this.resources.dataClass.removeImportedDataElement(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.dataClass as string, item.id as string).toPromise();
+            }
+ else {
+              return this.resources.dataElement.remove(item.model as string, item.dataClass as string, item.id as string).toPromise();
             }
           case CatalogueItemDomainType.PrimitiveType:
           case CatalogueItemDomainType.ReferenceType:
+          case CatalogueItemDomainType.ModelDataType:
+          case CatalogueItemDomainType.CodeSetType:
+          case CatalogueItemDomainType.TerminologyType:
+          case CatalogueItemDomainType.ReferenceDataModelType:
           case CatalogueItemDomainType.EnumerationType:
             if (item.imported) {
-              return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id, item.model, item.id).toPromise();
-            } else {
-              return this.resources.dataType.remove(item.model, item.id).toPromise();
+              return this.resources.dataModel.removeImportedDataType(this.parentDataModel.id as string, item.model as string, item.id as string).toPromise();
+            }
+ else {
+              return this.resources.dataType.remove(item.model as string, item.id as string).toPromise();
             }
         }
       }).catch(() => {

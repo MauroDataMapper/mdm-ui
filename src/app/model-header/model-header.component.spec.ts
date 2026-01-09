@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,12 +20,20 @@ import {
   setupTestModuleForComponent
 } from '@mdm/testing/testing.helpers';
 import { ModelHeaderComponent } from './model-header.component';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 describe('ModelHeaderComponent', () => {
   let harness: ComponentHarness<ModelHeaderComponent>;
 
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(ModelHeaderComponent);
+    harness = await setupTestModuleForComponent(ModelHeaderComponent, {
+      providers: [
+        {
+          provide: ModelTreeService,
+          useValue: jest.fn()
+        }
+      ]
+    });
   });
 
   it('should create', () => {

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-desc
 import { UIRouterModule } from '@uirouter/angular';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
 import { FooterComponent } from '@mdm/shared/footer/footer.component';
 import { MetadataCompareComponent } from '@mdm/shared/metadata-compare/metadata-compare.component';
@@ -35,7 +34,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new/group-access-new.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
@@ -51,116 +49,105 @@ import { PathNameComponent } from './path-name/path-name.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { CatalogueItemPropertiesComponent } from './catalogue-item-properties/catalogue-item-properties.component';
 import { ElementIconComponent } from '@mdm/shared/element-icon/element-icon.component';
-import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
-import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
-import { JoditAngularModule } from 'jodit-angular';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { SortByComponent } from '@mdm/shared/sort-by/sort-by.component';
 import { BreadcrumbComponent } from '@mdm/shared/breadcrumb/breadcrumb.component';
-import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MauroItemTreeComponent } from './mauro-item-tree/mauro-item-tree.component';
 import { ElementLabelComponent } from './element-label/element-label.component';
+import { ContentModule } from '@mdm/content/content.module';
+import { ImgCroppieComponent } from './img-croppie/img-croppie.component';
+import { ImageCropperComponent } from 'ngx-image-cropper';
+import { LocationPathComponent } from './location-path/location-path.component';
+import { NgxJoditComponent } from 'ngx-jodit';
 
 @NgModule({
-  declarations: [
-    EditableFormButtonsComponent,
-    McSelectComponent,
-    InlineTextEditComponent,
-    FooterComponent,
-    MetadataCompareComponent,
-    EnumerationCompareComponent,
-    ErrorComponent,
-    MdmPaginatorComponent,
-    SafePipe,
-    ShareWithComponent,
-    GroupAccessNewComponent,
-    TextDiffComponent,
-    ElementLinkComponent,
-    DownloadLinkComponent,
-    NewVersionComponent,
-    AlertComponent,
-    BranchSelectorComponent,
-    ResizableDirective,
-    DataTypeListButtonsComponent,
-    ModelIconComponent,
-    PathNameComponent,
-    FavoriteButtonComponent,
-    CatalogueItemPropertiesComponent,
-    ElementIconComponent,
-    MarkdownTextAreaComponent,
-    MarkdownDirective,
-    HtmlEditorComponent,
-    ContentEditorComponent,
-    MoreDescriptionComponent,
-    SortByComponent,
-    BreadcrumbComponent,
-    MarkedPipe,
-    FileSizePipe,
-    MauroItemTreeComponent,
-    ElementLabelComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    MatPasswordStrengthModule,
-    NgxJsonViewerModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    NgxSkeletonLoaderModule,
-    CodemirrorModule,
-    JoditAngularModule,
-    UIRouterModule
-  ],
-  exports: [
-    EditableFormButtonsComponent,
-    FormsModule,
-    UIRouterModule,
-    MaterialModule,
-    McSelectComponent,
-    ReactiveFormsModule,
-    MatPasswordStrengthModule,
-    InlineTextEditComponent,
-    FooterComponent,
-    MetadataCompareComponent,
-    EnumerationCompareComponent,
-    NgxJsonViewerModule,
-    ErrorComponent,
-    FlexLayoutModule,
-    MdmPaginatorComponent,
-    NgxSkeletonLoaderModule,
-    CodemirrorModule,
-    SafePipe,
-    ShareWithComponent,
-    GroupAccessNewComponent,
-    TextDiffComponent,
-    ElementLinkComponent,
-    TextDiffComponent,
-    DownloadLinkComponent,
-    NewVersionComponent,
-    AlertComponent,
-    BranchSelectorComponent,
-    ResizableDirective,
-    DataTypeListButtonsComponent,
-    PathNameComponent,
-    ModelIconComponent,
-    FavoriteButtonComponent,
-    CatalogueItemPropertiesComponent,
-    ElementIconComponent,
-    MarkdownTextAreaComponent,
-    MarkdownDirective,
-    HtmlEditorComponent,
-    ContentEditorComponent,
-    MoreDescriptionComponent,
-    SortByComponent,
-    BreadcrumbComponent,
-    MarkedPipe,
-    FileSizePipe,
-    MauroItemTreeComponent,
-    ElementLabelComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        NgxJsonViewerModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+        NgxSkeletonLoaderModule,
+        CodemirrorModule,
+        UIRouterModule,
+        ImageCropperComponent,
+        NgxJoditComponent,
+        ContentModule,
+        EditableFormButtonsComponent,
+        McSelectComponent,
+        InlineTextEditComponent,
+        FooterComponent,
+        MetadataCompareComponent,
+        EnumerationCompareComponent,
+        ErrorComponent,
+        MdmPaginatorComponent,
+        ShareWithComponent,
+        GroupAccessNewComponent,
+        TextDiffComponent,
+        ElementLinkComponent,
+        DownloadLinkComponent,
+        NewVersionComponent,
+        AlertComponent,
+        BranchSelectorComponent,
+        ResizableDirective,
+        DataTypeListButtonsComponent,
+        ModelIconComponent,
+        PathNameComponent,
+        FavoriteButtonComponent,
+        CatalogueItemPropertiesComponent,
+        ElementIconComponent,
+        MoreDescriptionComponent,
+        SortByComponent,
+        BreadcrumbComponent,
+        FileSizePipe,
+        MauroItemTreeComponent,
+        ElementLabelComponent,
+        ImgCroppieComponent,
+        LocationPathComponent
+    ],
+    exports: [
+        EditableFormButtonsComponent,
+        FormsModule,
+        UIRouterModule,
+        MaterialModule,
+        McSelectComponent,
+        ReactiveFormsModule,
+        InlineTextEditComponent,
+        FooterComponent,
+        MetadataCompareComponent,
+        EnumerationCompareComponent,
+        NgxJsonViewerModule,
+        ErrorComponent,
+        FlexLayoutModule,
+        MdmPaginatorComponent,
+        NgxSkeletonLoaderModule,
+        CodemirrorModule,
+        ShareWithComponent,
+        GroupAccessNewComponent,
+        TextDiffComponent,
+        ElementLinkComponent,
+        TextDiffComponent,
+        DownloadLinkComponent,
+        NewVersionComponent,
+        AlertComponent,
+        BranchSelectorComponent,
+        ResizableDirective,
+        DataTypeListButtonsComponent,
+        PathNameComponent,
+        ModelIconComponent,
+        FavoriteButtonComponent,
+        CatalogueItemPropertiesComponent,
+        ElementIconComponent,
+        MoreDescriptionComponent,
+        SortByComponent,
+        BreadcrumbComponent,
+        FileSizePipe,
+        MauroItemTreeComponent,
+        ElementLabelComponent,
+        ImgCroppieComponent,
+        LocationPathComponent
+    ]
 })
 export class SharedModule {}

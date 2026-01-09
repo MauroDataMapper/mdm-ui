@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { ModulesResponse, OpenIdConnectProvider, OpenIdConnectProvidersIndexResponse } from '@maurodatamapper/mdm-resources';
 import { openIdConnectModuleName } from '@mdm/model/openid-connect.model';
@@ -27,11 +27,22 @@ import { GridService, MessageHandlerService, SharedService, StateHandlerService 
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, finalize, map, startWith, switchMap } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { DataTypeListButtonsComponent } from '../../shared/data-type-list-buttons/data-type-list-buttons.component';
+import { NgIf, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-openid-connect-provider-table',
-  templateUrl: './openid-connect-provider-table.component.html',
-  styleUrls: ['./openid-connect-provider-table.component.scss']
+    selector: 'mdm-openid-connect-provider-table',
+    templateUrl: './openid-connect-provider-table.component.html',
+    styleUrls: ['./openid-connect-provider-table.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, DataTypeListButtonsComponent, MatProgressBar, AlertComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class OpenidConnectProviderTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -70,7 +81,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
     this.resources.admin
       .modules()
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem getting the installed modules.', error);
           return EMPTY;
         }),
@@ -108,7 +119,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
       })
       .pipe(
         switchMap(() => this.resources.pluginOpenIdConnect.remove(record.id)),
-        catchError(error => {
+        catchError((error) => {
           this.messageHandler.showError('There was a problem deleting the OpenID Connect provider.', error);
           return EMPTY;
         })
@@ -142,7 +153,7 @@ export class OpenidConnectProviderTableComponent implements OnInit, AfterViewIni
           this.totalItemCount = response.body.count;
           return response.body.items;
         }),
-        catchError(error => {
+        catchError((error) => {
           this.loading = false;
           this.messageHandler.showError('There was a problem getting the list of OpenID Connect providers.', error);
           return EMPTY;

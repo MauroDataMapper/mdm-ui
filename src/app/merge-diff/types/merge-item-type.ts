@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@ export const branchNameField = 'branchName';
 export type MergeItemValueType = 'undefined' | 'string' | 'number';
 
 export interface MergeItemSelection {
-  mergeItem: MergeDiffItem;
-  isCommitting: boolean;
+  mergeItem: MergeDiffItem
+  isCommitting: boolean
 }
 
 export interface CommittingMergeDiffItem {
-  branchSelected: MergeConflictResolution;
-  branchNameSelected?: string;
-  mixedContent?: string;
+  branchSelected: MergeConflictResolution
+  branchNameSelected?: string
+  mixedContent?: string
 }
 
 /**

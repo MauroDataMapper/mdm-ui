@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,17 +24,17 @@ import { MdmResponse } from '@maurodatamapper/mdm-resources';
 import { ContentEditorFormat } from '@mdm/constants/ui.types';
 
 export interface UserSettings {
-  countPerTable?: number;
-  counts?: number[];
-  expandMoreDescription?: boolean;
-  favourites?: any[];
-  includeModelSuperseded?: boolean;
-  includeDocumentSuperseded?: boolean;
-  includeDeleted?: boolean;
-  showSupersededModels?: boolean;
-  includeSupersededDocModels?: boolean;
-  dataFlowDiagramsSetting?: any;
-  editorFormat?: ContentEditorFormat;
+  countPerTable?: number
+  counts?: number[]
+  expandMoreDescription?: boolean
+  favourites?: any[]
+  includeModelSuperseded?: boolean
+  includeDocumentSuperseded?: boolean
+  includeDeleted?: boolean
+  showSupersededModels?: boolean
+  includeSupersededDocModels?: boolean
+  dataFlowDiagramsSetting?: any
+  editorFormat?: ContentEditorFormat
 }
 
 @Injectable({
@@ -85,7 +85,8 @@ export class UserSettingsHandlerService {
           let settings: UserSettings = null;
           if (!body) {
             settings = this.defaultSettings;
-          } else {
+          }
+ else {
             // check if we have added new items but they don't exists already, then add them
             for (const property in this.defaultSettings) {
               if (this.defaultSettings.hasOwnProperty(property) && !body[property]) {

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 
 @Component({
-  selector: 'mdm-img-croppie',
-  templateUrl: './img-croppie.component.html',
-  styleUrls: ['./img-croppie.component.scss']
+    selector: 'mdm-img-croppie',
+    templateUrl: './img-croppie.component.html',
+    styleUrls: ['./img-croppie.component.scss'],
+    standalone: true,
+    imports: [ImageCropperComponent]
 })
 export class ImgCroppieComponent {
   @Output() cropImage: EventEmitter<any> = new EventEmitter();
@@ -30,7 +32,6 @@ export class ImgCroppieComponent {
   croppedImage: any = '';
 
   constructor() {}
-
 
   imageCropped(event: ImageCroppedEvent) {
     this.imageBase64 = event.base64;

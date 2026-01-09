@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,16 +21,29 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable, from } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
 import { GridService } from '@mdm/services/grid.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { NgFor, NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { DataTypeListButtonsComponent } from '@mdm/shared/data-type-list-buttons/data-type-list-buttons.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-users-table',
-  templateUrl: './users-table.component.html',
-  styleUrls: ['./users-table.component.sass']
+    selector: 'mdm-users-table',
+    templateUrl: './users-table.component.html',
+    styleUrls: ['./users-table.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, DataTypeListButtonsComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, NgFor, NgIf, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent_1]
 })
 export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -38,7 +51,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: Record<string, any>;
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
@@ -49,7 +62,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   showDisable = false;
   showEdit = false;
 
-  displayedColumns: string[] = ['firstName','lastName', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(
@@ -80,7 +93,6 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       this.isLoadingResults = false;
       return [];
     })).subscribe((data) => {
-      // tslint:disable-next-line: forin
       for (const val in data) {
         if (data[val].availableActions.includes('update')) {
           data[val].showEdit = true;
@@ -93,7 +105,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  usersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+  usersFetch(pageSize?: number, pageIndex?: number, sortBy?: string, sortType?: SortDirection, filters?: Record<string, any>): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }
@@ -114,20 +126,20 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.stateHandler.Go('admin.user', { id: null }, null);
   };
 
-  resetPassword(row) {
-    from(this.resources.catalogueUser.adminPasswordReset(row.id, null)).subscribe(() => {
+  resetPassword(row: any) {
+    from(this.resources.catalogueUser.adminPasswordReset(row.id as string, null)).subscribe(() => {
       this.messageHandler.showSuccess('Reset password request received successfully, please use the email tab to view status');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem sending reset password email.', error);
     });
   }
 
-  toggleDeactivate(row) {
+  toggleDeactivate(row: any) {
     row.disabled = !row.disabled;
-    from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
+    from(this.resources.catalogueUser.update(row.id as string, row)).subscribe(() => {
       this.messageHandler.showSuccess('User details updated successfully.');
       this.broadcast.dispatch('pendingUserUpdated');
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the user.', error);
     });
   }

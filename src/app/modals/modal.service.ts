@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import { BroadcastService } from '../services/broadcast.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-// eslint-disable-next-line no-shadow
 export enum ModalType {
   Login,
   Register,
@@ -45,27 +44,30 @@ export class ModalService implements OnDestroy {
     this.broadcast
       .on<any>('openLoginModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.Login, options));
+      .subscribe(options => this.open(ModalType.Login, options as MatDialogConfig<any>));
 
     this.broadcast
       .on<any>('openRegisterModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.Register, options));
+      .subscribe(options => this.open(ModalType.Register, options as MatDialogConfig<any>));
 
     this.broadcast
       .on<any>('openForgotPasswordModalDialog')
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(options => this.open(ModalType.ForgotPassword, options));
+      .subscribe(options => this.open(ModalType.ForgotPassword, options as MatDialogConfig<any>));
   }
 
   open(modalType: ModalType, options?: MatDialogConfig) {
     switch (modalType) {
       case ModalType.Login:
-        this.dialog.open(LoginModalComponent, options); break;
+        this.dialog.open(LoginModalComponent, options);
+        break;
       case ModalType.Register:
-        this.dialog.open(RegisterModalComponent, options); break;
+        this.dialog.open(RegisterModalComponent, options);
+        break;
       case ModalType.ForgotPassword:
-        this.dialog.open(ForgotPasswordModalComponent, options); break;
+        this.dialog.open(ForgotPasswordModalComponent, options);
+        break;
       default:
         throw new Error('Modal not found');
     }

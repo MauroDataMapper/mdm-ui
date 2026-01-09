@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,12 +43,21 @@ import {
   ConflictEditorModalResult
 } from '../conflict-editor/conflict-editor-modal/conflict-editor-modal.model';
 import { StringConflictService } from '../services/string-conflict.service';
+import { SafePipe } from '../../content/safe.pipe';
+import { MatDivider } from '@angular/material/divider';
+import { PathNameComponent } from '../../shared/path-name/path-name.component';
+import { MatIconButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatToolbar } from '@angular/material/toolbar';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-merge-comparison',
-  templateUrl: './merge-comparison.component.html',
-  styleUrls: ['./merge-comparison.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-merge-comparison',
+    templateUrl: './merge-comparison.component.html',
+    styleUrls: ['./merge-comparison.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [FlexModule, MatToolbar, NgIf, MatIconButton, PathNameComponent, MatDivider, SafePipe]
 })
 export class MergeComparisonComponent implements OnInit, OnChanges {
   @ViewChild('sourceContent') sourceContent: ElementRef;
@@ -80,7 +89,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
     return this.mergeItem.targetValue !== undefined || this.mergeItem.targetValue !== null;
   }
 
-  constructor(private dialog: MatDialog, private stringConflict : StringConflictService) {}
+  constructor(private dialog: MatDialog, private stringConflict: StringConflictService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
@@ -138,7 +147,7 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
         }
       })
       .afterClosed()
-      .pipe(filter((result) => result.status === ModalDialogStatus.Ok))
+      .pipe(filter(result => result.status === ModalDialogStatus.Ok))
       .subscribe((result: ConflictEditorModalResult) => {
           this.mergeItem.mixedContent = result.resolvedContent;
           this.mergeItem.branchSelected = MergeConflictResolution.Mixed;
@@ -158,7 +167,8 @@ export class MergeComparisonComponent implements OnInit, OnChanges {
     if (this.linkScroll) {
       if (this.currentElement === 'targetContent') {
         this.sourceContent.nativeElement.scrollTop = event.target.scrollTop;
-      } else if (this.currentElement === 'sourceContent') {
+      }
+ else if (this.currentElement === 'sourceContent') {
         this.targetContent.nativeElement.scrollTop = event.target.scrollTop;
       }
     }

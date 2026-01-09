@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,16 +21,28 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { ApiPropertyEditableState, ApiPropertyEditType, propertyMetadata } from '@mdm/model/api-properties';
+import {
+  ApiPropertyEditableState,
+  ApiPropertyEditType,
+  propertyMetadata
+} from '@mdm/model/api-properties';
 import { catchError, map } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
-import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
+import { ApiPropertyTableViewChange, ApiPropertyTableComponent } from '../api-property-table/api-property-table.component';
 import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { SortDirection } from '@angular/material/sort';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss']
+    selector: 'mdm-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, ApiPropertyTableComponent, FlexModule, MatButton, NgIf, MatProgressSpinner]
 })
 export class ConfigurationComponent implements OnInit {
   activeTab: any;
@@ -50,7 +62,9 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getApiProperties();
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView as string);
+    this.activeTab = this.getTabDetailByName(
+      this.uiRouterGlobals.params.tabView as string
+    );
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }
@@ -58,14 +72,21 @@ export class ConfigurationComponent implements OnInit {
   getApiProperties(
     category?: string,
     sortBy?: string,
-    sortType?: string) {
-    const options = this.gridService.constructOptions(null, null, sortBy, sortType, null);
+    sortType?: SortDirection
+  ) {
+    const options = this.gridService.constructOptions(
+      null,
+      null,
+      sortBy,
+      sortType,
+      null
+    );
 
     this.resources.apiProperties
       .list(options)
       .pipe(
         map((response: ApiPropertyIndexResponse) => {
-          return response.body.items.map<ApiPropertyEditableState>(item => {
+          return response.body.items.map<ApiPropertyEditableState>((item) => {
             let metadata = propertyMetadata.find(m => m.key === item.key);
             if (!metadata) {
               metadata = {
@@ -83,14 +104,19 @@ export class ConfigurationComponent implements OnInit {
             };
           });
         }),
-        catchError(errors => {
-          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+        catchError((errors) => {
+          this.messageHandler.showError(
+            'There was a problem getting the configuration properties.',
+            errors
+          );
           return [];
         })
       )
       .subscribe((data: ApiPropertyEditableState[]) => {
         if (category) {
-          this.apiProperties = data.filter(p => p.metadata.category === category);
+          this.apiProperties = data.filter(
+            p => p.metadata.category === category
+          );
           return;
         }
 
@@ -100,10 +126,11 @@ export class ConfigurationComponent implements OnInit {
           .map(prop => prop.metadata.category)
           .filter(cat => cat && cat.length > 0);
 
-        const knownCategories = propertyMetadata
-          .map(prop => prop.category);
+        const knownCategories = propertyMetadata.map(prop => prop.category);
 
-        this.apiPropertyCategories = [...new Set(backendCategories.concat(knownCategories).sort())];
+        this.apiPropertyCategories = [
+          ...new Set(backendCategories.concat(knownCategories).sort())
+        ];
       });
   }
 
@@ -113,7 +140,11 @@ export class ConfigurationComponent implements OnInit {
 
   tabSelected(itemsName) {
     const tab = this.getTabDetail(itemsName);
-    this.stateHandler.Go('configuration', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+    this.stateHandler.Go(
+      'configuration',
+      { tabView: tab.name },
+      { notify: false, location: tab.index !== 0 }
+    );
   }
 
   getTabDetail(tabIndex) {
@@ -141,18 +172,21 @@ export class ConfigurationComponent implements OnInit {
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resources.admin.rebuildLuceneIndexes(null).subscribe(() => {
+    this.resources.admin.rebuildLuceneIndexes(null).subscribe(
+      () => {
         this.indexingStatus = 'success';
       },
-      error => {
+      (error) => {
         if (error.status === 418) {
           this.indexingStatus = 'success';
           if (error.error && error.error.timeTaken) {
             this.indexingTime = `in ${error.error.timeTaken}`;
           }
-        } else {
+        }
+ else {
           this.indexingStatus = 'error';
         }
-    });
+      }
+    );
   }
 }

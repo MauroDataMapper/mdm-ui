@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,33 +15,39 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component,  OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { FormsModule } from '@angular/forms';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-element-step1',
-  templateUrl: './data-element-step1.component.html',
-  styleUrls: ['./data-element-step1.component.sass']
+    selector: 'mdm-data-element-step1',
+    templateUrl: './data-element-step1.component.html',
+    styleUrls: ['./data-element-step1.component.sass'],
+    standalone: true,
+    imports: [NgIf, ElementLinkComponent, MatRadioGroup, FormsModule, MatRadioButton, ModelSelectorTreeComponent]
 })
 export class DataElementStep1Component implements OnInit {
   step = {
-    invalid : true,
-    isProcessComplete : false,
-    scope : {
+    invalid: true,
+    isProcessComplete: false,
+    scope: {
        model: null
       }
   };
-  modelVal: {
-    [key: string]: any;
-    createType: CreateType;
-    selectedDataTypes: Array<any>;
-    parent:DataModel;
-    copyFromDataModel: Array<DataModel>;
-    copyFromDataClass: Array<DataClass>;
-  };;
 
-  constructor() { }
+  modelVal: {
+    [key: string]: any
+    createType: CreateType
+    selectedDataTypes: any[]
+    parent: DataModel
+    copyFromDataModel: DataModel[]
+    copyFromDataClass: DataClass[]
+  };
 
   get model() {
     return this.modelVal;
@@ -51,7 +57,6 @@ export class DataElementStep1Component implements OnInit {
     this.modelVal = val;
     this.validate();
   }
-
 
   validate = () => {
     if (!this.model?.createType) {
@@ -71,14 +76,14 @@ export class DataElementStep1Component implements OnInit {
     this.model = this.step?.scope.model;
   }
 
-  onSelect = dataClass => {
+  onSelect = (dataClass) => {
     // TODO: Work out why [(ngModel)] is not working here!
     this.model.copyFromDataClass = dataClass;
     this.model.selectedDataElements = [];
     this.validate();
   };
 
-  selectCreateType = createType => {
+  selectCreateType = (createType) => {
     this.model.createType = createType;
     this.validate();
   };

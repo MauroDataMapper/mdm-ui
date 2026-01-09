@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,41 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogue-main.component';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
-describe('SubscribedCatalogueComponent', () => {
-  let component: SubscribedCatalogueMainComponent;
-  let fixture: ComponentFixture<SubscribedCatalogueMainComponent>;
+describe('SubscribedCatalogueMainComponent', () => {
+  let harness: ComponentHarness<SubscribedCatalogueMainComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
-      ],
-      providers: [
-        {
-          provide: MdmResourcesService,
-          useValue: { }
-        }
-      ],
-      declarations: [ SubscribedCatalogueMainComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SubscribedCatalogueMainComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(SubscribedCatalogueMainComponent)
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

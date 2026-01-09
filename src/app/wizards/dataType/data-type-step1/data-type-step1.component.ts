@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,27 +17,34 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { CreateType } from '@mdm/wizards/wizards.model';
+import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { FormsModule } from '@angular/forms';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type-step1',
-  templateUrl: './data-type-step1.component.html',
-  styleUrls: ['./data-type-step1.component.sass']
+    selector: 'mdm-data-type-step1',
+    templateUrl: './data-type-step1.component.html',
+    styleUrls: ['./data-type-step1.component.sass'],
+    standalone: true,
+    imports: [NgIf, ElementLinkComponent, MatRadioGroup, FormsModule, MatRadioButton, ModelSelectorTreeComponent]
 })
 export class DataTypeStep1Component implements OnInit {
-
   step: {
-    invalid : boolean;
-    isProcessComplete : boolean;
-    scope : {
+    invalid: boolean
+    isProcessComplete: boolean
+    scope: {
        model: {
-        [key: string]: any;
-        createType: CreateType;
-      };
-    };
+        [key: string]: any
+        createType: CreateType
+      }
+    }
   };
+
   modelVal: {
-    [key: string]: any;
-    createType: CreateType;
+    [key: string]: any
+    createType: CreateType
   };
 
   constructor() { }
@@ -69,7 +76,7 @@ export class DataTypeStep1Component implements OnInit {
     this.step.invalid = false;
   };
 
-  selectCreateType = createType => {
+  selectCreateType = (createType) => {
     this.model.createType = createType;
     this.validate();
   };
@@ -79,5 +86,4 @@ export class DataTypeStep1Component implements OnInit {
     this.model.copyFromDataModel = dataType;
     this.validate();
   };
-
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,18 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { Title } from '@angular/platform-browser';
+import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
+import { ModulesComponent } from './modules/modules.component';
+import { PluginsComponent } from './plugins/plugins.component';
+import { ActiveSessionsComponent } from './active-sessions/active-sessions.component';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+    selector: 'mdm-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.sass'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, MatTabLabel, ActiveSessionsComponent, PluginsComponent, ModulesComponent, ProfilesDashboardComponent]
 })
 export class DashboardComponent implements OnInit {
   activeTab: any;
@@ -38,7 +45,6 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView as string);
     this.appVersion = this.shared.appVersion;
     this.title.setTitle('Dashboard');

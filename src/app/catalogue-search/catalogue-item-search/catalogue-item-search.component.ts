@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,11 +34,26 @@ import {
   SearchListingSortByOption,
   SearchListingStatus
 } from '../catalogue-search.types';
+import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { CatalogueItemSearchResultComponent } from '../catalogue-item-search-result/catalogue-item-search-result.component';
+import { SortByComponent } from '../../shared/sort-by/sort-by.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-catalogue-item-search',
-  templateUrl: './catalogue-item-search.component.html',
-  styleUrls: ['./catalogue-item-search.component.scss']
+    selector: 'mdm-catalogue-item-search',
+    templateUrl: './catalogue-item-search.component.html',
+    styleUrls: ['./catalogue-item-search.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatInput, MatIconButton, MatSuffix, MatIcon, MatProgressSpinner, AlertComponent, UIRouterModule, SortByComponent, NgFor, CatalogueItemSearchResultComponent, NgClass, ExtendedModule, MdmPaginatorComponent]
 })
 export class CatalogueItemSearchComponent {
   @Input() context: CatalogueSearchContext;
@@ -56,6 +71,7 @@ export class CatalogueItemSearchComponent {
     { value: 'label-asc', displayName: 'Label (a-z)' },
     { value: 'label-desc', displayName: 'Label (z-a)' }
   ];
+
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
   routeParams?: RawParams;

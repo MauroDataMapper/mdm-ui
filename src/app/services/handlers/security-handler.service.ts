@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import {
   AuthenticatedSessionError,
-  SignInError,
   UserDetails
 } from './security-handler.model';
 import { Observable, of, throwError } from 'rxjs';
@@ -100,25 +99,40 @@ export class SecurityHandlerService {
     this.stateHandler.Go('appContainer.mainApp.home');
   }
 
-  addToLocalStorage(user) {
+  // Note: this can be passed either a UserDetailsResult or a UserDetails
+  addToLocalStorage(user: { [key: string]: any }) {
     // Keep username for 100 days
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 1);
-    localStorage.setItem('userId', user.id);
-    localStorage.setItem('token', user.token);
-    localStorage.setItem('firstName', user.firstName);
-    localStorage.setItem('lastName', user.lastName);
+    localStorage.setItem('userId', user.id as string);
+    if (user.token) {
+      localStorage.setItem('token', user.token as string);
+    }
+    localStorage.setItem('firstName', user.firstName as string);
+    localStorage.setItem('lastName', user.lastName as string);
     localStorage.setItem(
       'username',
       JSON.stringify({ username: user.username, expiry: expireDate })
     );
-    localStorage.setItem('userId', user.id);
-    localStorage.setItem(
-      'email',
-      JSON.stringify({ email: user.username, expiry: expireDate })
-    );
-    localStorage.setItem('role', user.role);
-    localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
+    localStorage.setItem('userId', user.id as string);
+    if (user.email) {
+      localStorage.setItem(
+        'email',
+        JSON.stringify({ email: user.email, expiry: expireDate })
+      );
+    }
+    if (user.emailAddress) {
+      localStorage.setItem(
+        'email',
+        JSON.stringify({ email: user.emailAddress, expiry: expireDate })
+      );
+    }
+    if (user.role) {
+      localStorage.setItem('role', user.role as string);
+    }
+    if (user.needsToResetPassword) {
+      localStorage.setItem('needsToResetPassword', String(user.needsToResetPassword));
+    }
   }
 
   /**
@@ -133,7 +147,7 @@ export class SecurityHandlerService {
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     return this.resources.security.login(credentials, { login: true }).pipe(
       catchError((error: HttpErrorResponse) =>
-        throwError(new SignInError(error))
+        throwError(() => error)
       ),
       map((response: LoginResponse) => {
         const signIn = response.body;
@@ -158,13 +172,15 @@ export class SecurityHandlerService {
       await this.resources.security
         .logout({ responseType: 'text' })
         .toPromise();
-    } catch (err) {
+    }
+ catch (err) {
       if (
-        err.status === 500 &&
-        err.message === 'Session has been invalidated'
+        err.status === 500
+        && err.message === 'Session has been invalidated'
       ) {
         // Something's wrong
-      } else {
+      }
+ else {
         console.log(`Status ${err.status}: ${err.message}`);
       }
     }
@@ -205,10 +221,10 @@ export class SecurityHandlerService {
    *
    * @see {@link SecurityHandlerService.authenticateWithOpenIdConnect}
    */
-  authorizeOpenIdConnectSession(params: { state: string; sessionState: string; code: string }): Observable<UserDetails> {
+  authorizeOpenIdConnectSession(params: { state: string, sessionState: string, code: string }): Observable<UserDetails> {
     const providerId = localStorage.getItem('openIdConnectProviderId');
     if (!providerId) {
-      return throwError('Cannot retrieve OpenID Connect provider identifier.');
+      return throwError(() => new Error('Cannot retrieve OpenID Connect provider identifier.'));
     }
 
     const redirectUri = this.getOpenIdAuthorizeUrl();
@@ -267,7 +283,8 @@ export class SecurityHandlerService {
     const isEditable = environment.appIsEditable;
     if (isEditable !== null && isEditable === false) {
       return false;
-    } else if (isEditable !== null && isEditable /* === true*/) {
+    }
+ else if (isEditable !== null && isEditable /* === true */) {
       // Now app is editable, lets check if the user has writable role
       const user = this.getCurrentUser();
 

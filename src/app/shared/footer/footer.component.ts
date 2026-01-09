@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { NgFor, NgIf } from '@angular/common';
 
 /**
  * Define the details for a link in the layout and navigation components.
@@ -24,32 +26,34 @@ export interface FooterLink {
   /**
    * The display label to apply to the link.
    */
-  label: string;
+  label: string
 
   /**
    * If this is a hyperlink, provide the href for the anchor tag.
    *
    * @see {@link routerLink}
    */
-  href?: string;
+  href?: string
 
   /**
    * If this is a router link to another component, provide the route name to transition to.
    *
    * @see {@link href}
    */
-  routerLink?: string;
+  routerLink?: string
 
   /**
    * State the target to use on the anchor tag.
    */
-  target?: '_blank' | '_self';
+  target?: '_blank' | '_self'
 }
 
 @Component({
-  selector: 'mdm-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+    selector: 'mdm-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, UIRouterModule]
 })
 export class FooterComponent {
   /**

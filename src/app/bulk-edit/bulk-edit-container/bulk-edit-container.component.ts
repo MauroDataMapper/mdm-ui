@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,19 +22,26 @@ import { MauroItem } from '@mdm/mauro/mauro-item.types';
 import { StateHandlerService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
-import { EMPTY } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { BulkEditContext, BulkEditStep } from '../bulk-edit.types';
+import { BulkEditEditorGroupComponent } from '../bulk-edit-editor-group/bulk-edit-editor-group.component';
+import { BulkEditSelectComponent } from '../bulk-edit-select/bulk-edit-select.component';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-bulk-edit-container',
-  templateUrl: './bulk-edit-container.component.html',
-  styleUrls: ['./bulk-edit-container.component.scss']
+    selector: 'mdm-bulk-edit-container',
+    templateUrl: './bulk-edit-container.component.html',
+    styleUrls: ['./bulk-edit-container.component.scss'],
+    standalone: true,
+    imports: [NgIf, ElementIconComponent, BulkEditSelectComponent, BulkEditEditorGroupComponent]
 })
 export class BulkEditContainerComponent implements OnInit {
   context: BulkEditContext;
   parent: MauroItem;
   currentStep: BulkEditStep = BulkEditStep.Selection;
+  hasChanged = false;
 
   public Steps = BulkEditStep;
 
@@ -78,20 +85,38 @@ export class BulkEditContainerComponent implements OnInit {
   }
 
   cancel() {
-    this.editing
-      .confirmCancelAsync()
-      .pipe(filter((confirm) => !!confirm))
-      .subscribe(() => {
-        this.editing.stop();
-        this.stateHandler.GoPrevious();
-      });
+    const confirm$
+      = this.currentStep === BulkEditStep.Editor && this.hasChanged
+        ? this.editing.confirmCancelAsync()
+        : of(true);
+
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
+      this.editing.stop();
+      this.stateHandler.GoPrevious();
+    });
   }
 
   next() {
     this.currentStep = this.currentStep + 1;
+    this.hasChanged = false;
   }
 
   previous() {
-    this.currentStep = this.currentStep - 1;
+    const confirm$ = this.hasChanged
+      ? this.editing.confirmCancelAsync()
+      : of(true);
+
+    confirm$.pipe(filter(confirm => !!confirm)).subscribe(() => {
+      this.currentStep = this.currentStep - 1;
+      this.hasChanged = false;
+    });
+  }
+
+  onChanged() {
+    this.hasChanged = true;
+  }
+
+  onSaved() {
+    this.hasChanged = false;
   }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,23 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
 import {
   CatalogueElementType,
   ElementTypesService
 } from '@mdm/services/element-types.service';
+import { map } from 'rxjs';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-element-link',
-  templateUrl: './element-link.component.html'
+    selector: 'mdm-element-link',
+    templateUrl: './element-link.component.html',
+    standalone: true,
+    imports: [NgIf, MatIcon, NgClass, ExtendedModule, MatTooltip]
 })
 export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
@@ -42,6 +51,17 @@ export class ElementLinkComponent implements OnInit {
 
   linkUrl: string;
 
+  icon: string;
+
+  label: string;
+  versionNumber: string;
+  openLinkLocation: string;
+  elementTypeTitle: string;
+  types: CatalogueElementType[];
+
+  replaceLabelBy: any;
+  disableLink: any;
+
   @Input()
   get element() {
     return this.elementVal;
@@ -53,16 +73,10 @@ export class ElementLinkComponent implements OnInit {
     this.ngOnInit();
   }
 
-  label: string;
-  versionNumber: string;
-  openLinkLocation: string;
-  elementTypeTitle: string;
-  types: CatalogueElementType[];
-
-  replaceLabelBy: any;
-  disableLink: any;
-
-  constructor(private elementTypes: ElementTypesService) {}
+  constructor(
+    private elementTypes: ElementTypesService,
+    private itemProvider: MauroItemProviderService
+  ) {}
 
   ngOnInit() {
     this.label = '';
@@ -89,37 +103,48 @@ export class ElementLinkComponent implements OnInit {
     }
 
     if (
-      this.showParentDataModelName &&
-      this.element?.domainType !== 'DataModel' &&
-      this.element?.domainType !== 'Term' &&
-      this.element?.domainType !== 'Terminology'
+      this.showParentDataModelName
+      && this.element?.domainType !== 'DataModel'
+      && this.element?.domainType !== 'Term'
+      && this.element?.domainType !== 'Terminology'
     ) {
-      const parentDM =
-        this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
+      const parentDM
+        = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
-      this.label = parentDM?.label
-        ? `${parentDM?.label} : ${this.label}`
-        : this.label;
-      if (this.label === 'undefined : undefined') {
-        this.label = '';
-      }
-    }
 
+      this.itemProvider
+        .get({ id: parentDM.id, domainType: parentDM.domainType })
+        .pipe(
+          map((model) => {
+            if (model.finalised || model.owningModel?.finalised) {
+              return `${model.label} [${model.modelVersion || model.owningModel?.modelVersion}] : ${
+                this.element?.label ?? this.element?.definition ?? ''
+              }`;
+            }
+
+            return `${model.label} [${model.branchName || model.owningModel?.branchName}] : ${
+              this.element?.label ?? this.element?.definition ?? ''
+            }`;
+          })
+        )
+        .subscribe(fullLabel => (this.label = fullLabel));
+    }
     this.initTypeLabel();
     this.initLink();
+    this.icon = this.getIcon();
   }
 
   public initTypeLabel(): any {
     this.elementTypeTitle = '';
     this.types = this.elementTypes.getTypes();
     if (
-      this.element &&
-      this.element.domainType &&
-      this.types.filter((x) => x.id === this.element.domainType)
+      this.element
+      && this.element.domainType
+      && this.types.filter(x => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        (x) => x.id === this.element.domainType
+        x => x.id === this.element.domainType
       )[0].title;
     }
   }
@@ -131,19 +156,18 @@ export class ElementLinkComponent implements OnInit {
     }
     // if it's true or it's NOT mentioned then make it true
     if (
-      this.showLink === true ||
-      this.showLink ||
-      this.showLink === undefined
+      this.showLink === true
+      || this.showLink
+      || this.showLink === undefined
     ) {
       this.showLink = true;
     }
   }
 
   getIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType);
-  }
-
-  hasIcon() {
-    return getCatalogueItemDomainTypeIcon(this.element.domainType) !== null;
+    if (this.element) {
+      return getCatalogueItemDomainTypeIcon(this.element.domainType as CatalogueItemDomainType);
+    }
+    return null;
   }
 }

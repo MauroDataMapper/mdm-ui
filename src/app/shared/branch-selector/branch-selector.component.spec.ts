@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,50 +15,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
-import { of } from 'rxjs';
+import {
+  ComponentHarness,
+  setupTestModuleForComponent
+} from '@mdm/testing/testing.helpers';
 import { BranchSelectorComponent } from './branch-selector.component';
-
-interface MdmResourcesBranchableApiStub {
-  simpleModelVersionTree: jest.Mock;
-}
-
-interface MdmResourcesServiceStub {
-  dataModel: MdmResourcesBranchableApiStub;
-}
 
 describe('BranchSelectorComponent', () => {
   let harness: ComponentHarness<BranchSelectorComponent>;
 
-  const mdmResourcesStub: MdmResourcesServiceStub = {
-    dataModel: {
-      simpleModelVersionTree: jest.fn(() => of())
-    }
-  };
-
   beforeEach(async () => {
-    harness = await setupTestModuleForComponent(
-      BranchSelectorComponent,
-      {
-        providers: [
-          {
-            provide: MdmResourcesService,
-            useValue: mdmResourcesStub
-          }
-        ]
-      });
-
-    harness.detectChanges(component => {
-      component.catalogueItem = {
-        id: '1234',
-        domainType: CatalogueItemDomainType.DataModel
-      };
-    });
+    harness = await setupTestModuleForComponent(BranchSelectorComponent)
   });
 
   it('should create', () => {
-    expect(harness?.isComponentCreated).toBeTruthy();
+    expect(harness.isComponentCreated).toBeTruthy();
   });
 });

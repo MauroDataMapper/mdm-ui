@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   Term,
@@ -41,11 +41,24 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GridService, MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { NgIf, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-term-list',
-  templateUrl: './term-list.component.html',
-  styleUrls: ['./term-list.component.scss']
+    selector: 'mdm-term-list',
+    templateUrl: './term-list.component.html',
+    styleUrls: ['./term-list.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, FormsModule, MatCellDef, MatCell, NgIf, MoreDescriptionComponent, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class TermListComponent implements AfterViewInit {
   @Input() terminology: TerminologyDetail;
@@ -68,7 +81,7 @@ export class TermListComponent implements AfterViewInit {
 
   hideFilters = true;
   filterEvent = new EventEmitter<any>();
-  filter: {};
+  filter: object;
   codeFilter?: string;
   definitionFilter?: string;
   descriptionFilter?: string;
@@ -119,9 +132,14 @@ export class TermListComponent implements AfterViewInit {
 
   applyFilter() {
     this.filter = {
-      ...(this.codeFilter && this.codeFilter !== '' && { code: this.codeFilter }),
-      ...(this.definitionFilter && this.definitionFilter !== '' && { definition: this.definitionFilter }),
-      ...(this.descriptionFilter && this.descriptionFilter !== '' && { description: this.descriptionFilter })
+      ...(this.codeFilter
+        && this.codeFilter !== '' && { code: this.codeFilter }),
+      ...(this.definitionFilter
+        && this.definitionFilter !== '' && { definition: this.definitionFilter }),
+      ...(this.descriptionFilter
+        && this.descriptionFilter !== '' && {
+          description: this.descriptionFilter
+        })
     };
 
     this.filterEvent.emit();
@@ -137,8 +155,8 @@ export class TermListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
-    filters?: {}
+    sortType?: SortDirection,
+    filters?: object
   ): Observable<TermIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,

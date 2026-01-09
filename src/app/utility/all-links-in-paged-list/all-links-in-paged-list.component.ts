@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,11 +16,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-all-links-in-paged-list',
-  templateUrl: './all-links-in-paged-list.component.html',
-  styleUrls: ['./all-links-in-paged-list.component.sass']
+    selector: 'mdm-all-links-in-paged-list',
+    templateUrl: './all-links-in-paged-list.component.html',
+    styleUrls: ['./all-links-in-paged-list.component.sass'],
+    standalone: true,
+    imports: [NgIf, NgFor, McPagedListComponent, ElementLinkComponent, MoreDescriptionComponent]
 })
 export class AllLinksInPagedListComponent implements OnInit {
   @Input() parent: any;
@@ -36,6 +42,7 @@ export class AllLinksInPagedListComponent implements OnInit {
     from: [],
     total: 0
   };
+
   linkTypes = [];
   allLinksMap: any;
   total: any;
@@ -63,7 +70,7 @@ export class AllLinksInPagedListComponent implements OnInit {
       return;
     }
 
-    this.parent.forEach(link => {
+    this.parent.forEach((link) => {
       if (!this.allLinksMap[link.linkType]) {
         this.allLinksMap[link.linkType] = {
           linkType: link.linkType,

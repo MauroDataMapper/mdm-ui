@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,37 +15,61 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  ViewChild,
+  EventEmitter,
+  ChangeDetectorRef
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { EditingService } from '@mdm/services/editing.service';
+import { EditableObject, EditingService } from '@mdm/services/editing.service';
 import { GridService } from '@mdm/services';
-import { CatalogueItem, ModelDomainType, Securable } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItem,
+  ModelDomainType,
+  Securable
+} from '@maurodatamapper/mdm-resources';
 import { UserDetails } from '@mdm/services/handlers/security-handler.model';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor, NgClass, DatePipe } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-annotation-list',
-  templateUrl: './annotation-list.component.html',
-  styleUrls: ['./annotation-list.component.sass']
+    selector: 'mdm-annotation-list',
+    templateUrl: './annotation-list.component.html',
+    styleUrls: ['./annotation-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, ContentEditorComponent, NgFor, MatFormField, MatLabel, MatInput, FormsModule, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent, DatePipe]
 })
 export class AnnotationListComponent implements AfterViewInit {
   @Input() parent: CatalogueItem & Securable;
   @Input() domainType: ModelDomainType;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
   currentUser: UserDetails;
   displayedColumns: string[] = ['lastUpdated'];
   totalItemCount = 0;
   isLoadingResults = true;
   reloadEvent = new EventEmitter<void>();
-  records: any[];
+  records: EditableObject[];
   canAddAnnotation = false;
 
   constructor(
@@ -54,7 +78,8 @@ export class AnnotationListComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private editingService: EditingService,
-    private gridService: GridService) { }
+    private gridService: GridService
+  ) {}
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -88,7 +113,7 @@ export class AnnotationListComponent implements AfterViewInit {
           return EMPTY;
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.records = data;
       });
   }
@@ -97,17 +122,20 @@ export class AnnotationListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,): Observable<any> {
+    sortType?: SortDirection
+  ): Observable<any> {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
       sortBy,
-      sortType);
+      sortType
+    );
 
     return this.resources.catalogueItem.listAnnotations(
       this.domainType,
       this.parent.id,
-      options);
+      options
+    );
   }
 
   add() {
@@ -132,7 +160,7 @@ export class AnnotationListComponent implements AfterViewInit {
   }
 
   cancelEdit(record: any, index: number) {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
+    this.editingService.confirmCancelAsync().subscribe((confirm) => {
       if (!confirm) {
         return;
       }
@@ -155,8 +183,11 @@ export class AnnotationListComponent implements AfterViewInit {
     this.resources.catalogueItem
       .saveAnnotations(this.domainType, this.parent.id, resource)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem adding the comment.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem adding the comment.',
+            error
+          );
           return EMPTY;
         })
       )
@@ -174,14 +205,22 @@ export class AnnotationListComponent implements AfterViewInit {
     };
 
     this.resources.catalogueItem
-      .saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource)
+      .saveAnnotationChildren(
+        this.domainType,
+        this.parent.id,
+        annotation.id as string,
+        resource
+      )
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem saving the comment.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem saving the comment.',
+            error
+          );
           return EMPTY;
         })
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         annotation.childAnnotations = annotation.childAnnotations || [];
         annotation.childAnnotations.push(response.body);
         annotation.newChildText = '';
@@ -193,7 +232,7 @@ export class AnnotationListComponent implements AfterViewInit {
     if (annotation.show) {
       annotation.show = false;
     }
-    else {
+ else {
       annotation.newChildText = '';
       annotation.show = true;
     }

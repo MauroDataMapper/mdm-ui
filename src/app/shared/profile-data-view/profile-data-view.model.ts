@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,23 +31,23 @@ import {
 
 export type ProfileDataViewType = 'default' | 'other' | 'addnew';
 
-export const doiProfileNamespace =
-  'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
+export const doiProfileNamespace
+  = 'uk.ac.ox.softeng.maurodatamapper.plugins.digitalobjectidentifiers.profile';
 
 export interface ProfileSummaryListItem {
-  display: string;
-  value: string;
-  namespace: string;
-  name: string;
-  version: Version;
-  editableAfterFinalisation?: boolean;
+  display: string
+  value: string
+  namespace: string
+  name: string
+  version: Version
+  editableAfterFinalisation?: boolean
 }
 
 export const showControl = (
   controls: string[],
   controlName: string
 ): boolean => {
-  return controls.findIndex((x) => x === controlName) !== -1;
+  return controls.findIndex(x => x === controlName) !== -1;
 };
 
 export const createDefaultProfileItem = (
@@ -76,7 +76,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'code')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.code,
+        catalogueItem.code as string | Container[] | string[] | DataTypeReference,
         'Code',
         ProfileControlTypes.text,
         'code'
@@ -86,7 +86,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'definition')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.definition,
+        catalogueItem.definition as string | string[] | DataTypeReference | Container[],
         'Definition',
         ProfileControlTypes.text,
         'definition'
@@ -119,8 +119,8 @@ export const getDefaultProfileData = (
   }
 
   if (
-    'organisation' in catalogueItem &&
-    showControl(controls, 'organisation')
+    'organisation' in catalogueItem
+    && showControl(controls, 'organisation')
   ) {
     items.push(
       createDefaultProfileItem(
@@ -183,7 +183,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'dataType')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.dataType,
+        catalogueItem.dataType as string | string[] | DataTypeReference | Container[],
         'Data Type',
         ProfileControlTypes.dataType,
         'dataType'
@@ -194,7 +194,7 @@ export const getDefaultProfileData = (
   if (showControl(controls, 'url')) {
     items.push(
       createDefaultProfileItem(
-        catalogueItem.url,
+        catalogueItem.url as string | string[] | DataTypeReference | Container[],
         'URL',
         ProfileControlTypes.text,
         'url'

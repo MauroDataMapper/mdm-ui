@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderRow, MatCellDef, MatCell, MatRowDef, MatRow } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
 import {
   CatalogueItemDomainType,
@@ -45,17 +45,29 @@ import {
 import { MessageHandlerService } from '@mdm/services';
 import { CatalogueSearchService } from '@mdm/catalogue-search/catalogue-search.service';
 import { CatalogueSearchParameters } from '@mdm/catalogue-search/catalogue-search.types';
+import { MatButton } from '@angular/material/button';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { ElementLabelComponent } from '../../shared/element-label/element-label.component';
+import { McSelectComponent } from '../mc-select/mc-select.component';
 
 @Component({
-  selector: 'mdm-multiple-terms-selector',
-  templateUrl: './multiple-terms-selector.component.html',
-  styleUrls: ['./multiple-terms-selector.component.scss']
+    selector: 'mdm-multiple-terms-selector',
+    templateUrl: './multiple-terms-selector.component.html',
+    styleUrls: ['./multiple-terms-selector.component.scss'],
+    standalone: true,
+    imports: [McSelectComponent, ElementLabelComponent, MatCheckbox, FormsModule, NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderRow, MatCellDef, MatCell, ElementLinkComponent, MatRowDef, MatRow, McPagedListComponent, MatButton]
 })
 export class MultipleTermsSelectorComponent {
   @Input() hideAddButton = true;
 
   @Output() selectedTermsChange = new EventEmitter<any[]>();
+  @Output() selectedTerminologyChange = new EventEmitter<any[]>();
   @Output() addingTerms = new EventEmitter<Term[]>();
+  @Output() changeAddAllTerms = new EventEmitter<boolean>();
 
   @ViewChild('searchInputTerms', { static: true })
   dataSource = new MatTableDataSource<Term>();
@@ -73,14 +85,13 @@ export class MultipleTermsSelectorComponent {
     searchResultPageSize: 20,
     searchResultOffset: 0,
     searchResult: [],
-
     searchResultDisplayedSoFar: 0,
     searchResultTotal: 0,
     loading: false
   };
+
   loading = false;
   addAllTerms = false;
-
   searchInputTerms: ElementRef;
   currentRecord: number;
   totalItemCount = 0;
@@ -106,7 +117,7 @@ export class MultipleTermsSelectorComponent {
           map((event: any) => {
             return event.target.value;
           }),
-          filter((res) => res.length >= 0),
+          filter(res => res.length >= 0),
           debounceTime(500),
           distinctUntilChanged()
         )
@@ -146,10 +157,12 @@ export class MultipleTermsSelectorComponent {
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
       this.fetch(40, 0);
-    } else {
+    }
+ else {
       this.totalItemCount = 0;
       this.currentRecord = 0;
     }
+    this.selectedTerminologyChange.emit(this.selectorSection.selectedTerminology);
   }
 
   runTermSearch() {
@@ -181,7 +194,8 @@ export class MultipleTermsSelectorComponent {
           this.currentRecord = this.dataSource.data.length;
           this.loading = false;
           this.isProcessing = false;
-        } else {
+        }
+ else {
           this.dataSource.data = this.selectorSection.searchResult;
           this.currentRecord = this.dataSource.data.length;
           this.isProcessing = false;
@@ -192,8 +206,8 @@ export class MultipleTermsSelectorComponent {
 
   fetch(pageSize: number, offset: number) {
     if (
-      this.selectorSection.termSearchText.length === 0 &&
-      this.selectorSection.selectedTerminology
+      this.selectorSection.termSearchText.length === 0
+      && this.selectorSection.selectedTerminology
     ) {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
       return this.loadAllTerms(
@@ -201,7 +215,8 @@ export class MultipleTermsSelectorComponent {
         pageSize,
         offset
       );
-    } else {
+    }
+ else {
       this.selectorSection.searchResultOffset = offset;
 
       const parameters: CatalogueSearchParameters = {
@@ -244,7 +259,8 @@ export class MultipleTermsSelectorComponent {
             this.currentRecord = this.dataSource.data.length;
             this.loading = false;
             this.isProcessing = false;
-          } else {
+          }
+ else {
             this.dataSource.data = this.selectorSection.searchResult;
             this.currentRecord = this.dataSource.data.length;
             this.isProcessing = false;
@@ -270,8 +286,8 @@ export class MultipleTermsSelectorComponent {
     if (scrollLocation > limit && limit > 0) {
       const requiredNum = this.dataSource.data.length + this.pageSize;
       if (
-        this.totalItemCount + this.pageSize > requiredNum &&
-        !this.isProcessing
+        this.totalItemCount + this.pageSize > requiredNum
+        && !this.isProcessing
       ) {
         this.isProcessing = true;
         this.fetch(this.pageSize, this.dataSource.data.length);
@@ -282,15 +298,17 @@ export class MultipleTermsSelectorComponent {
   calculateDisplayedSoFar(resultTotal: number) {
     this.selectorSection.searchResultTotal = resultTotal;
     if (resultTotal >= this.selectorSection.searchResultPageSize) {
-      const total =
-        (this.selectorSection.searchResultOffset + 1) *
-        this.selectorSection.searchResultPageSize;
+      const total
+        = (this.selectorSection.searchResultOffset + 1)
+          * this.selectorSection.searchResultPageSize;
       if (total >= resultTotal) {
         this.selectorSection.searchResultDisplayedSoFar = resultTotal;
-      } else {
+      }
+ else {
         this.selectorSection.searchResultDisplayedSoFar = total;
       }
-    } else {
+    }
+ else {
       this.selectorSection.searchResultDisplayedSoFar = resultTotal;
     }
   }
@@ -303,7 +321,8 @@ export class MultipleTermsSelectorComponent {
       this.selectorSection.selectedTermsArray = [];
       this.selectorSection.selectedTermsArray = Object.assign([], local);
       this.selectorSection.selectedTermsCount++;
-    } else {
+    }
+ else {
       let i = this.selectorSection.selectedTermsArray.length - 1;
       while (i >= 0) {
         if (this.selectorSection.selectedTermsArray[i].id === $item.id) {
@@ -372,5 +391,10 @@ export class MultipleTermsSelectorComponent {
       .subscribe((response: TermIndexResponse) => {
         this.addingTerms.emit(response.body.items);
       });
+  }
+
+  public onChangeAddAllTerms(event: MatCheckboxChange) {
+    this.addAllTerms = event.checked
+    this.changeAddAllTerms.emit(event.checked)
   }
 }

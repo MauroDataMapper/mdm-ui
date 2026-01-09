@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FeaturesService } from '@mdm/services/features.service';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 import { OpenidConnectProviderComponent } from './openid-connect-provider.component';
 
@@ -26,12 +25,6 @@ describe('OpenidConnectProviderComponent', () => {
     harness = await setupTestModuleForComponent(
       OpenidConnectProviderComponent,
       {
-        providers: [
-          {
-            provide: FeaturesService,
-            useValue: jest.fn()
-          }
-        ]
       });
   });
 

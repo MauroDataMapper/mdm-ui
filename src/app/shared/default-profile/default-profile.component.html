@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 
 <table *ngIf="controls" class="table table-bordered mdm--table-fixed">
   <tbody>
+    <tr *ngIf="isInControlList('dataTypeDetails')" data-cy="data-type-details">
+      <th class="detailsRowHeader" scope="col">Data Type Details</th>
+      <td data-cy="value">
+        <mdm-element-data-type-details
+          *ngIf="catalogueItem"
+          [elementDataType]="
+            catalogueItem.dataType ? catalogueItem.dataType : catalogueItem
+          "
+        ></mdm-element-data-type-details>
+      </td>
+    </tr>
     <tr *ngIf="isInControlList('code')" data-cy="code">
       <td class="detailsRowHeader">Code</td>
       <td data-cy="value" *ngIf="catalogueItem">
@@ -44,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
         </mdm-inline-text-edit>
       </td>
     </tr>
-    <tr *ngIf="isInControlList('aliases')" data-cy="aliases" >
+    <tr *ngIf="isInControlList('aliases')" data-cy="aliases">
       <td class="detailsRowHeader">Aliases</td>
       <td data-cy="value">
         <mdm-element-alias
@@ -62,6 +73,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="catalogueItem">
           <mdm-content-editor
             [(content)]="catalogueItem.description"
+            [rootElement]="catalogueItem"
             [inEditMode]="false"
           ></mdm-content-editor>
         </div>
@@ -105,22 +117,6 @@ SPDX-License-Identifier: Apache-2.0
     <tr *ngIf="isInControlList('terminology')" data-cy="terminology">
       <td class="detailsRowHeader">Terminology</td>
       <td data-cy="value" *ngIf="catalogueItem.terminology">
-        <span *ngIf="catalogueItem.terminology">
-          <small
-            ><span
-              *ngIf="!catalogueItem.terminology.finalised"
-              class="badge badge-warning ml-1"
-              >Draft</span
-            ></small
-          >
-          <small
-            ><span
-              *ngIf="catalogueItem.terminology.finalised"
-              class="badge badge-success ml-1"
-              >Finalised</span
-            >
-          </small>
-        </span>
         <mdm-element-link
           [element]="catalogueItem.terminology"
           [showLink]="true"
@@ -146,11 +142,13 @@ SPDX-License-Identifier: Apache-2.0
       <th class="detailsRowHeader" scope="col">Data Type</th>
       <td data-cy="value">
         <mdm-element-data-type
-        *ngIf="catalogueItem"
-        [elementDataType]="catalogueItem.dataType ? catalogueItem.dataType : catalogueItem"
-        [mcParentDataModel]="catalogueItem"
-      >
-      </mdm-element-data-type>
+          *ngIf="catalogueItem"
+          [elementDataType]="
+            catalogueItem.dataType ? catalogueItem.dataType : catalogueItem
+          "
+          [mcParentDataModel]="catalogueItem"
+        >
+        </mdm-element-data-type>
       </td>
     </tr>
 

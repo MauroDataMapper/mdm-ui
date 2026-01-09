@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import {
   DomainExport,
@@ -40,11 +40,24 @@ import {
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-domain-exports-list',
-  templateUrl: './domain-exports-list.component.html',
-  styleUrls: ['./domain-exports-list.component.scss']
+    selector: 'mdm-domain-exports-list',
+    templateUrl: './domain-exports-list.component.html',
+    styleUrls: ['./domain-exports-list.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatProgressBar, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1, DatePipe, FileSizePipe]
 })
 export class DomainExportsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -64,6 +77,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
     'exportedBy',
     'actions'
   ];
+
   showFilters = false;
 
   constructor(
@@ -165,7 +179,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
           return response.body.items;
         })
       )
-      .subscribe((data) => (this.dataSource.data = data));
+      .subscribe(data => (this.dataSource.data = data));
   }
 
   private fetch(
@@ -173,7 +187,7 @@ export class DomainExportsListComponent implements OnInit, AfterViewInit {
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ): Observable<DomainExportIndexResponse> {
     const options = this.grid.constructOptions(
       pageSize,

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,49 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { FeaturesService } from '@mdm/services/features.service';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
 import { FoldersTreeComponent } from './folders-tree.component';
-import { FoldersTreeModule } from './folders-tree.module';
+import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('mdm-folders-tree', () => {
-    let component: FoldersTreeComponent;
-    let fixture: ComponentFixture<FoldersTreeComponent>;
+  let harness: ComponentHarness<FoldersTreeComponent>;
 
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FoldersTreeModule,
-
-          // Transitive dependencies
-          MatDialogModule,
-          HttpClientTestingModule,
-          UIRouterModule.forRoot({ useHash: true }),
-          ToastrModule.forRoot()
-        ],
-        providers: [
-          { provide: MdmResourcesService, useValue: {} },
-          {
-            provide: FeaturesService,
-            useValue: jest.fn()
-          }
-        ]
-      })
-      .compileComponents();
-    });
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(FoldersTreeComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
-
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+  beforeEach(async () => {
+    harness = await setupTestModuleForComponent(FoldersTreeComponent)
   });
+
+  it('should create', () => {
+    expect(harness.isComponentCreated).toBeTruthy();
+  });
+});

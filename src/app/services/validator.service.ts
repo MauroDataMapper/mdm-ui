@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ValidatorService {
-
-  // eslint-disable-next-line no-useless-escape
   readonly emailPattern = /^[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+(\.[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+)*@[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-\+]+)*(\.[A-Za-z]{2,})$/;
 
   constructor() { }
@@ -32,21 +30,19 @@ export class ValidatorService {
   }
 
   getProperty(obj, str) {
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     return str.split('.').reduce(this.index, obj);
   }
-
 
   capitalize(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  validateEmail(email): boolean {
+  validateEmail(email: string): boolean {
     return this.emailPattern.test(email);
   }
 
   isDate(date: any): boolean {
-    if (!isNaN(date)) {
+    if (!Number.isNaN(date)) {
       return date instanceof Date;
     }
     return false;
@@ -63,9 +59,9 @@ export class ValidatorService {
     return false;
   }
 
-  validateMultiplicities(min, max) {
-    if ((min == null && max == null) ||
-      (min === undefined && max === undefined)) {
+  validateMultiplicities(min: string, max: string) {
+    if ((min == null && max == null)
+      || (min === undefined && max === undefined)) {
       return null;
     }
 
@@ -76,7 +72,6 @@ export class ValidatorService {
     if (max === undefined || max === null) {
       max = '';
     }
-
 
     if (min.trim().length === 0 && max.trim().length === 0) {
       return null;
@@ -90,27 +85,23 @@ export class ValidatorService {
       max = '-1';
     }
 
-    if (min.length > 0 && (parseInt(min, 10) < -1 || isNaN(min) || min.indexOf('.') !== -1)) {
+    if (min.length > 0 && (parseInt(min, 10) < -1 || isNaN(Number(min)) || min.indexOf('.') !== -1)) {
       return 'Invalid Min Multiplicity';
     }
 
-    if (max.length > 0 && (parseInt(max, 10) < -1 || isNaN(max) || max.indexOf('.') !== -1)) {
+    if (max.length > 0 && (parseInt(max, 10) < -1 || isNaN(Number(max)) || max.indexOf('.') !== -1)) {
       return 'Invalid Max Multiplicity';
     }
-
 
     if (min.trim().length === 0 && max.trim().length > 0) {
       return 'Min Multiplicity should have a value';
     }
 
-
     if (max.trim().length === 0 && min.trim().length > 0) {
       return 'Max Multiplicity should have a value';
     }
 
-
     if (min.length > 0 && max.length > 0) {
-
       let minInt = parseInt(min, 10);
       let maxInt = parseInt(max, 10);
 
@@ -133,21 +124,20 @@ export class ValidatorService {
       if (minInt === Number.MAX_VALUE && maxInt === Number.MAX_VALUE) {
         return 'Min and Max Multiplicities can not both be unbound';
       }
-
     }
     return null;
   }
 
-  validateLabel(label :string): boolean {
+  validateLabel(label: string): boolean {
     if (!label || (label && label.trim().length === 0)) {
       return false;
-    } else {
+    }
+ else {
       return true;
     }
   }
 
   guid() {
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }

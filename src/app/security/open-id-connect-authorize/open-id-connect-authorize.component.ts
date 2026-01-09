@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@ import { BroadcastService, MessageService, SecurityHandlerService } from '@mdm/s
 import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 /**
  * Component to authorize a user session authenticated via an OpenID Connect provider.
@@ -39,9 +44,11 @@ import { catchError, finalize } from 'rxjs/operators';
  * 3. If logged into Mauro - update internal state with logged in broadcast messages and navigate to the start page.
  */
 @Component({
-  selector: 'mdm-open-id-connect-authorize',
-  templateUrl: './open-id-connect-authorize.component.html',
-  styleUrls: ['./open-id-connect-authorize.component.scss']
+    selector: 'mdm-open-id-connect-authorize',
+    templateUrl: './open-id-connect-authorize.component.html',
+    styleUrls: ['./open-id-connect-authorize.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatProgressSpinner, AlertComponent]
 })
 export class OpenIdConnectAuthorizeComponent implements OnInit {
   authorizing = true;
@@ -49,8 +56,10 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
 
   constructor(
     private securityHandler: SecurityHandlerService,
+    private resourcesService: MdmResourcesService,
     private messages: MessageService,
-    private broadcast: BroadcastService) { }
+    private broadcast: BroadcastService) {
+  }
 
   ngOnInit(): void {
     if (this.verifyLoggedIn()) {
@@ -68,38 +77,46 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
     const code = params.get('code');
 
     if (!state || !sessionState || !code) {
-      this.authorizing = false;
-      this.errorMessage = 'OpenID Connect session state has not been provided.';
-      return;
-    }
-
-    this.securityHandler
-      .authorizeOpenIdConnectSession({
-        state,
-        sessionState,
-        code
-      })
-      .pipe(
-        catchError((error: SignInError) => {
-          switch (error.type) {
-            case SignInErrorType.InvalidCredentials:
-              this.errorMessage = 'Invalid username or password!';
-              break;
-            case SignInErrorType.AlreadySignedIn:
-              this.errorMessage = 'A user is already signed in, please sign out first.';
-              break;
-            default:
-              this.errorMessage = 'Unable to sign in. Please try again later.';
-              break;
-          }
-
+      this.resourcesService.catalogueUser.get('currentUser').pipe(
+        catchError(() => {
+          this.authorizing = false;
+          this.errorMessage = 'OpenID Connect session state has not been provided, and can\'t authenticate current user.';
           return EMPTY;
-        }),
-        finalize(() => this.authorizing = false)
-      )
-      .subscribe(() => {
-        this.verifyLoggedIn();
-      });
+        })
+      ).subscribe((result: { body: UserDetailsResult }) => {
+          this.securityHandler.addToLocalStorage(result.body);
+          this.verifyLoggedIn();
+        }
+      );
+    }
+ else {
+      this.securityHandler
+        .authorizeOpenIdConnectSession({
+          state,
+          sessionState,
+          code
+        })
+        .pipe(
+          catchError((error: SignInError) => {
+            switch (error.type) {
+              case SignInErrorType.InvalidCredentials:
+                this.errorMessage = 'Invalid username or password!';
+                break;
+              case SignInErrorType.AlreadySignedIn:
+                this.errorMessage = 'A user is already signed in, please sign out first.';
+                break;
+              default:
+                this.errorMessage = 'Unable to sign in. Please try again later.';
+                break;
+            }
+            return EMPTY;
+          }),
+          finalize(() => this.authorizing = false)
+        )
+        .subscribe(() => {
+          this.verifyLoggedIn();
+        });
+    }
   }
 
   private verifyLoggedIn() {

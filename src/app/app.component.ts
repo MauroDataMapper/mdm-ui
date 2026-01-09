@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,29 +21,34 @@ import {
   ApiProperty,
   ApiPropertyIndexResponse
 } from '@maurodatamapper/mdm-resources';
-import { UserIdleService } from './external/user-idle/user-idle.service';
+import { UserIdleService } from '@mdm/external/user-idle/user-idle.service';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
-import { MdmResourcesService } from './modules/resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   BroadcastService,
   StateHandlerService,
   UserSettingsHandlerService
-} from './services';
-import { EditingService } from './services/editing.service';
-import { FeaturesService } from './services/features.service';
-import { SharedService } from './services/shared.service';
-import { ThemingService } from './services/theming.service';
-import { FooterLink } from './shared/footer/footer.component';
+} from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
+import { FeaturesService } from '@mdm/services/features.service';
+import { SharedService } from '@mdm/services';
+import { ThemingService } from '@mdm/services/theming.service';
+import { FooterLink, FooterComponent } from '@mdm/shared/footer/footer.component';
+import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { NavbarComponent } from '@mdm/navbar/navbar.component';
 
-const defaultCopyright =
-  'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
+const defaultCopyright
+  = 'Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
-  selector: 'mdm-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'mdm-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+  imports: [NavbarComponent, UIRouterModule, LoadingIndicatorComponent, FooterComponent]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'mdm-ui';
@@ -104,9 +109,9 @@ export class AppComponent implements OnInit, OnDestroy {
           return forkJoin([of(args), settings$]);
         })
       )
-      .subscribe(([args, _]) => {
+      .subscribe(([args]) => {
         // To remove any ngToast messages specifically sessionExpiry,...
-        this.toastr.toasts.forEach((x) => this.toastr.clear(x.toastId));
+        this.toastr.toasts.forEach(x => this.toastr.clear(x.toastId));
         if (args && args.nextRoute) {
           this.stateHandler.Go(
             args.nextRoute,
@@ -136,12 +141,12 @@ export class AppComponent implements OnInit, OnDestroy {
         map((apiProperties: ApiProperty[]) => {
           return {
             copyright: apiProperties.find(
-              (p) => p.key === 'content.footer.copyright'
+              p => p.key === 'content.footer.copyright'
             ),
             documentationUrl: this.shared.documentation?.url,
             issueReportingUrl:
-              this.features.useIssueReporting &&
-              this.shared.issueReporting?.defaultUrl
+              this.features.useIssueReporting
+              && this.shared.issueReporting?.defaultUrl
           };
         })
       )
@@ -172,7 +177,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userIdle
       .onTimerStart()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {});
+      .subscribe();
 
     this.userIdle
       .onTimeout()
@@ -181,8 +186,8 @@ export class AppComponent implements OnInit, OnDestroy {
         const now = new Date();
 
         if (
-          now.valueOf() - this.lastUserIdleCheck.valueOf() >
-          this.shared.checkSessionExpiryTimeout
+          now.valueOf() - this.lastUserIdleCheck.valueOf()
+          > this.shared.checkSessionExpiryTimeout
         ) {
           this.shared.handleExpiredSession();
           this.userIdle.resetTimer();

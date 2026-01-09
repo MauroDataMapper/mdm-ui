@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSelectChange, MatSelect } from '@angular/material/select';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {
   CatalogueItem,
   ReferenceDataType,
@@ -46,11 +46,22 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatOption } from '@angular/material/core';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-reference-data-type-select',
-  templateUrl: './reference-data-type-select.component.html',
-  styleUrls: ['./reference-data-type-select.component.scss']
+    selector: 'mdm-reference-data-type-select',
+    templateUrl: './reference-data-type-select.component.html',
+    styleUrls: ['./reference-data-type-select.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, NgIf, MatProgressBar, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgSwitch, NgSwitchCase, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataTypeSelectComponent
   implements OnChanges, AfterViewInit, OnDestroy {
@@ -109,7 +120,7 @@ export class ReferenceDataTypeSelectComponent
 
     this.selection.changed
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((changes) =>
+      .subscribe(changes =>
         this.selectionChange.emit(changes.source.selected)
       );
 
@@ -147,8 +158,9 @@ export class ReferenceDataTypeSelectComponent
   selectAllItems() {
     if (this.allSelected) {
       this.selection.clear();
-    } else {
-      this.dataSource.data.forEach((item) => this.selection.select(item));
+    }
+ else {
+      this.dataSource.data.forEach(item => this.selection.select(item));
     }
   }
 
@@ -195,7 +207,7 @@ export class ReferenceDataTypeSelectComponent
     pageIndex?: number,
     sortBy?: string,
     sortType?: SortDirection,
-    filter?: {}
+    filter?: object
   ): Observable<ReferenceDataTypeIndexResponse> {
     const options = this.grid.constructOptions(
       pageSize,
@@ -214,7 +226,7 @@ export class ReferenceDataTypeSelectComponent
     // references
     const itemsToSelect = items.filter((item) => {
       const selected = this.selection.selected.find(
-        (selItem) => selItem.id === item.id
+        selItem => selItem.id === item.id
       );
       if (!selected) {
         return;

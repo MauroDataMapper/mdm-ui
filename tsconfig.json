@@ -3,10 +3,14 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@mdm/*": ["./app/*"],
-      "@env/*": ["./environments/*"]
+      "@mdm/*": [
+        "./app/*"
+      ],
+      "@env/*": [
+        "./environments/*"
+      ]
     },
-    "emitDecoratorMetadata" : true,
+    "emitDecoratorMetadata": true,
     "outDir": "./dist/",
     "sourceMap": true,
     "declaration": false,
@@ -14,9 +18,9 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "importHelpers": true,
+    "importHelpers": false,
     "esModuleInterop": true,
-    "target": "es2020",
+    "target": "ES2022",
     "types": [
       "jest"
     ],
@@ -24,9 +28,10 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
+      "es2020",
       "dom"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

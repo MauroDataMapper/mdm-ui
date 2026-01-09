@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,9 +21,18 @@ SPDX-License-Identifier: Apache-2.0
   <span class="fas fa-code-branch"></span>
   {{ item.branchName }}
 </small>
+<small *ngIf="item.owningModel && item.owningModel.branchName && !item.owningModel.modelVersion" class="ml-1 text-muted">
+  <span> | </span>
+  <span class="fas fa-code-branch"></span>
+  {{ item.owningModel.branchName }}
+</small>
 <small *ngIf="item.modelVersion" class="ml-1 text-muted">
   <span> | </span>
   <span class="fas fa-file-alt"></span>
-  <span *ngIf="item.modelVersion">{{ item.modelVersion }}</span>
-  <span *ngIf="item.version">{{ item.version }}</span>
+  <span> {{ item.modelVersionTag?item.modelVersionTag:item.modelVersion }}</span>
+</small>
+<small *ngIf="item.owningModel && item.owningModel.modelVersion" class="ml-1 text-muted">
+  <span> | </span>
+  <span class="fas fa-file-alt"></span>
+  <span> {{ item.owningModel.modelVersionTag?item.owningModel.modelVersionTag:item.owningModel.modelVersion }}</span>
 </small>

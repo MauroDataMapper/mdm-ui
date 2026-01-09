@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,8 +19,11 @@ SPDX-License-Identifier: Apache-2.0
 // TODO update to use reactive forms
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  CatalogueItemDomainType,
+  DataType
+} from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
   DefaultProfileModalConfiguration,
@@ -32,18 +35,33 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, ValidatorService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
+import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
+import { ElementClassificationsComponent } from '../../utility/element-classifications/element-classifications.component';
+import { ElementLinkComponent } from '../../utility/element-link/element-link.component';
+import { McSelectComponent } from '../../utility/mc-select/mc-select.component';
+import { NewDataTypeInlineComponent } from '../../utility/new-data-type-inline/new-data-type-inline.component';
+import { MatButton } from '@angular/material/button';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'mdm-default-profile-editor-modal',
-  templateUrl: './default-profile-editor-modal.component.html',
-  styleUrls: ['./default-profile-editor-modal.component.sass']
+    selector: 'mdm-default-profile-editor-modal',
+    templateUrl: './default-profile-editor-modal.component.html',
+    styleUrls: ['./default-profile-editor-modal.component.sass'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;
   dataTypeErrors: string;
   showNewInlineDataType = false;
   pagination: McSelectPagination;
-
+  newDataTypeHasErrors = false;
   constructor(
     public dialogRef: MatDialogRef<
       DefaultProfileEditorModalComponent,
@@ -56,6 +74,10 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     protected resources: MdmResourcesService,
     protected editing: EditingService
   ) {}
+
+  public get profileControlType(): typeof ProfileControlTypes {
+    return ProfileControlTypes;
+  }
 
   ngOnInit(): void {}
 
@@ -76,8 +98,9 @@ export class DefaultProfileEditorModalComponent implements OnInit {
           this.multiplicityError = valResult;
           hasError = true;
         }
-      } else if (item.controlType === ProfileControlTypes.dataType) {
-        hasError = !this.validateDataType(item);
+      }
+ else if (item.controlType === ProfileControlTypes.dataType) {
+        hasError = this.newDataTypeHasErrors;
       }
     });
 
@@ -97,53 +120,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     });
   }
 
-  public get profileControlType(): typeof ProfileControlTypes {
-    return ProfileControlTypes;
-  }
-
-  validateDataType(item: any) {
-    let isValid = true;
-
-    if (!this.showNewInlineDataType) {
-      return true;
-    }
-    if (!item.value.label || item.value.label.trim().length === 0) {
-      isValid = false;
-    }
-    // Check if for EnumerationType, at least one value is added
-    if (
-      item.value.domainType === CatalogueItemDomainType.EnumerationType &&
-      item.value.enumerationValues.length === 0
-    ) {
-      isValid = false;
-    }
-    // Check if for ReferenceType, the dataClass is selected
-    if (
-      item.value.domainType === CatalogueItemDomainType.ReferenceType &&
-      !item.value.referencedDataClass
-    ) {
-      isValid = false;
-    }
-
-    // Check if for TerminologyType, the terminology is selected
-    if (
-      item.value.domainType === CatalogueItemDomainType.TerminologyType &&
-      !item.value.referencedTerminology
-    ) {
-      isValid = false;
-    }
-
-    if (!isValid) {
-      this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  fetchDataTypes = (text, loadAll, offset, limit) => {
+  fetchDataTypes = (text, loadAll, offset: number, limit: number) => {
     const options = this.gridService.constructOptions(
       limit,
       offset,
@@ -156,7 +133,7 @@ export class DefaultProfileEditorModalComponent implements OnInit {
       offset: options['offset']
     };
     return this.resources.dataType.list(
-      this.data.parentCatalogueItem.id,
+      this.data.parentCatalogueItem.id as string,
       options
     );
   };
@@ -169,21 +146,25 @@ export class DefaultProfileEditorModalComponent implements OnInit {
     this.showNewInlineDataType = !this.showNewInlineDataType;
     this.dataTypeErrors = '';
     if (this.showNewInlineDataType) {
-       const newDT = {
+      const newDT: DataType = {
         label: item.value.label,
         description: '',
-        metadata: [],
         domainType: CatalogueItemDomainType.PrimitiveType,
-        enumerationValues: [],
-        classifiers: [],
-        organisation: '',
-        referencedTerminology: {id : ''},
-        referencedDataType: { id: '' },
-        referencedDataClass: { id: '' },
-        referencedModel: { id: '', domainType: '' }
+        classifiers: []
       };
 
       item.value = newDT;
+    }
+  }
+
+  validationStatusEventHandler(value: string) {
+    const hasErrors = value === 'true' ? true : false;
+    this.newDataTypeHasErrors = hasErrors;
+
+    if (this.newDataTypeHasErrors) {
+      this.dataTypeErrors = '';
+      this.dataTypeErrors
+        = 'Please fill in all required values for the new Data Type';
     }
   }
 

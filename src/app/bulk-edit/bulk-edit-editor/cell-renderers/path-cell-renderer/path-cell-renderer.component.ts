@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,13 +17,14 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
 import { NavigatableProfile } from '@mdm/mauro/mauro-item.types';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
-import { ICellRendererParams } from 'ag-grid-community';
+import { ICellRendererAngularComp } from '@ag-grid-community/angular';
+import { ICellRendererParams } from '@ag-grid-community/core';
 
 @Component({
   selector: 'mdm-path-cell-renderer',
   templateUrl: './path-cell-renderer.component.html',
-  styleUrls: ['./path-cell-renderer.component.scss']
+  styleUrls: ['./path-cell-renderer.component.scss'],
+  standalone: true
 })
 export class PathCellRendererComponent implements ICellRendererAngularComp {
   public profile: NavigatableProfile;

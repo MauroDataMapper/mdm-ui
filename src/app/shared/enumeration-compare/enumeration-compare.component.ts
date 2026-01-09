@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'mdm-enumeration-compare',
-  templateUrl: './enumeration-compare.component.html',
-  styleUrls: ['./enumeration-compare.component.scss']
+    selector: 'mdm-enumeration-compare',
+    templateUrl: './enumeration-compare.component.html',
+    styleUrls: ['./enumeration-compare.component.scss'],
+    standalone: true
 })
 export class EnumerationCompareComponent {
   @Input() diffs: any;
 
   constructor() { }
-
 }

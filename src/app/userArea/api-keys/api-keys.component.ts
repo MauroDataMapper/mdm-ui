@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,11 +25,21 @@ import { ClipboardService } from 'ngx-clipboard';
 import { filter, mergeMap } from 'rxjs/operators';
 import { EditingService } from '@mdm/services/editing.service';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatDivider } from '@angular/material/divider';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-api-keys',
-  templateUrl: './api-keys.component.html',
-  styleUrls: ['./api-keys.component.scss']
+    selector: 'mdm-api-keys',
+    templateUrl: './api-keys.component.html',
+    styleUrls: ['./api-keys.component.scss'],
+    standalone: true,
+    imports: [FlexModule, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, MatIconButton, MatMenuTrigger, MatMenu, MatMenuItem, MatDivider, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule]
 })
 export class ApiKeysComponent implements OnInit {
   records: any[] = [];
@@ -61,11 +71,11 @@ export class ApiKeysComponent implements OnInit {
     }
 
     this.isLoadingResults = true;
-    this.resourcesService.catalogueUser.listApiKeys(currentUser?.id).subscribe((result) => {
+    this.resourcesService.catalogueUser.listApiKeys(currentUser.id as string).subscribe((result) => {
       this.records = result.body.items;
       this.totalItemCount = result.body.count;
       this.isLoadingResults = false;
-    }, error => {
+    }, (error) => {
       this.records = [];
       this.totalItemCount = 0;
       this.messageHandler.showError('There was a problem loading the API Keys', error);
@@ -73,25 +83,34 @@ export class ApiKeysComponent implements OnInit {
     });
   }
 
-  disableKey = record => {
-    this.resourcesService.catalogueUser.disableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+  disableKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
+    this.resourcesService.catalogueUser.disableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key disabled successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the API Key.', error);
     });
   };
 
-  enableKey = record => {
-    this.resourcesService.catalogueUser.enableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+  enableKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
+    this.resourcesService.catalogueUser.enableApiKey(this.currentUser.id as string, record.apiKey as string).subscribe(() => {
       this.messageHandler.showSuccess('API Key enabled successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem updating the API Key.', error);
     });
   };
 
-  refreshKey = record => {
+  refreshKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -104,17 +123,20 @@ export class ApiKeysComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter(result => result && result.status === ModalDialogStatus.Ok),
-        mergeMap(result => this.resourcesService.catalogueUser.refreshApiKey(this.currentUser?.id, record.apiKey, result.data.expiresInDays))
+        mergeMap(result => this.resourcesService.catalogueUser.refreshApiKey(this.currentUser.id as string, record.apiKey as string, result.data.expiresInDays))
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key enabled successfully.');
         this.listApiKeys(this.currentUser);
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem updating the API Key.', error);
       });
   };
 
   addApiKey = () => {
+    if (!this.currentUser) {
+      return;
+    }
     this.editingService
       .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
@@ -127,17 +149,20 @@ export class ApiKeysComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter(result => result && result.status === ModalDialogStatus.Ok),
-        mergeMap(result => this.resourcesService.catalogueUser.saveApiKey(this.currentUser?.id, result.data))
+        mergeMap(result => this.resourcesService.catalogueUser.saveApiKey(this.currentUser.id as string, result.data))
       )
       .subscribe(() => {
         this.messageHandler.showSuccess('API Key created successfully.');
         this.listApiKeys(this.currentUser);
-      }, error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem creating this API Key.', error);
       });
   };
 
-  removeKey = record => {
+  removeKey = (record) => {
+    if (!this.currentUser) {
+      return;
+    }
     this.dialog.openConfirmationAsync({
       data: {
         title: 'Are you sure you want to delete this API Key?',
@@ -147,18 +172,18 @@ export class ApiKeysComponent implements OnInit {
       }
     })
     .pipe(
-      mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser?.id, record.apiKey))
+      mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser.id as string, record.apiKey as string))
     )
     .subscribe(() => {
       this.messageHandler.showSuccess('API Key removed successfully.');
       this.listApiKeys(this.currentUser);
-    }, error => {
+    }, (error) => {
       this.messageHandler.showError('There was a problem removing this API Key.', error);
     });
   };
 
-  copyToClipboard = record => {
-    this.clipboardService.copyFromContent(record.apiKey);
+  copyToClipboard = (record) => {
+    this.clipboardService.copyFromContent(record.apiKey as string);
     this.messageHandler.showSuccess(`API Key (${record.name}) copied successfully!`);
   };
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'joinArray'})
+@Pipe({
+    name: 'joinArray',
+    standalone: true
+})
 export class JoinArrayPipe implements PipeTransform {
   transform(values: any[], delimiter = '', propertyName?: string) {
     if (!values || values.length === 0) {
@@ -30,5 +33,4 @@ export class JoinArrayPipe implements PipeTransform {
 
     return values.join(delimiter);
   }
-
 }

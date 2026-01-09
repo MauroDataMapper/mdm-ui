@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'capitalize'
+    name: 'capitalize',
+    standalone: true
 })
 export class CapitalizePipe implements PipeTransform {
-
     transform(value: string): any {
         return (value) ? value.charAt(0).toUpperCase() + value.substr(1) : '';
   }
-
 }

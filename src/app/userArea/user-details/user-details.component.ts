@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,12 +30,19 @@ import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { MatButton } from '@angular/material/button';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-user-details',
-  templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.sass'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'mdm-user-details',
+    templateUrl: './user-details.component.html',
+    styleUrls: ['./user-details.component.sass'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [NgIf, FormsModule, MatFormField, MatLabel, MatInput, MatButton]
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
   @Input() afterSave: any;
@@ -70,7 +77,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     return this.resourcesService.catalogueUser.exists(data);
   }
 
-  formBeforeSave =  () => {
+  formBeforeSave = () => {
     this.errorMessage = '';
     this.checkEmailExists(this.user.emailAddress).subscribe(() => {
       const userDetails = {
@@ -80,12 +87,12 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         jobTitle: this.user.jobTitle || '',
       };
       if (this.validateInput(this.user.firstName) && this.validateInput(this.user.lastName) && this.validateInput(this.user.organisation)) {
-        this.resourcesService.catalogueUser.update(this.user.id, userDetails).subscribe(result => {
+        this.resourcesService.catalogueUser.update(this.user.id, userDetails).subscribe((result) => {
           if (this.afterSave) {
             this.afterSave(result);
           }
           this.messageHandler.showSuccess('User details updated successfully.');
-        }, error => {
+        }, (error) => {
           this.messageHandler.showError('There was a problem updating the User Details.', error);
         }
         );
@@ -96,7 +103,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   validateInput(value): any {
     if (value != null && value.trim().length === 0) {
       return false;
-    } else {
+    }
+ else {
       return true;
     }
   }

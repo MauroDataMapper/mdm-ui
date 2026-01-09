@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,14 +43,21 @@ import {
   ContainerDomainType,
   FolderIndexResponse,
   MdmTreeItem,
-  MdmTreeItemListResponse,
-  SearchQueryParameters
+  MdmTreeItemListResponse, RequestSettings,
+  SearchQueryParameters, TreeItemListQueryParameters
 } from '@maurodatamapper/mdm-resources';
+import { HasEventTargetAddRemove } from 'rxjs/internal/observable/fromEvent';
+import { FoldersTreeComponent } from '../folders-tree/folders-tree.component';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass, NgStyle } from '@angular/common';
 
 @Component({
-  selector: 'mdm-model-selector-tree',
-  templateUrl: './model-selector-tree.component.html',
-  styleUrls: ['./model-selector-tree.component.sass']
+    selector: 'mdm-model-selector-tree',
+    templateUrl: './model-selector-tree.component.html',
+    styleUrls: ['./model-selector-tree.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, NgClass, FormsModule, MatButton, NgStyle, FoldersTreeComponent]
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() root: any;
@@ -86,6 +93,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() ngModelChange = new EventEmitter<MdmTreeItem[]>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
+
   selectedElementsVal: MdmTreeItem[];
   @Input()
   get ngModel() {
@@ -96,7 +104,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.selectedElementsVal = val;
     if (val === null || val === undefined) {
       this.selectedElements = [];
-    } else {
+    }
+ else {
       this.selectedElements = val;
     }
     this.ngModelChange.emit(this.selectedElementsVal);
@@ -130,7 +139,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.wasInside = false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor(
     private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
@@ -154,10 +162,10 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
             ? this.selectedElements[0].label
             : '';
           if (
-            this.selectedElements &&
-            this.searchCriteria.trim().toLowerCase() ===
-              label.trim().toLowerCase() &&
-            label.trim().toLowerCase() !== ''
+            this.selectedElements
+            && this.searchCriteria.trim().toLowerCase()
+            === label.trim().toLowerCase()
+            && label.trim().toLowerCase() !== ''
           ) {
             return;
           }
@@ -175,14 +183,15 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
         this.resources.tree
-          .search(ContainerDomainType.Folders, this.searchCriteria, options)
+          .search(ContainerDomainType.Folders, this.searchCriteria as string, options)
           .subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
               isRoot: true
             };
           });
-      } else {
+      }
+ else {
         this.inSearchMode = false;
         this.reload();
       }
@@ -195,7 +204,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.reload();
 
     if (this.showInputGroup) {
-      fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
+      fromEvent(this.searchInputTreeControl.nativeElement as HasEventTargetAddRemove<unknown> | ArrayLike<HasEventTargetAddRemove<unknown>>, 'keyup')
       .pipe(
         map((event: any) => {
           return event.target.value;
@@ -212,9 +221,9 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
                 ? this.selectedElements[0].label
                 : '';
               if (
-                this.selectedElements &&
-                text?.trim().toLowerCase() === label?.trim().toLowerCase() &&
-                label?.trim().toLowerCase() !== ''
+                this.selectedElements
+                && text?.trim().toLowerCase() === label?.trim().toLowerCase()
+                && label?.trim().toLowerCase() !== ''
               ) {
                 return;
               }
@@ -223,18 +232,20 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           if (this.searchCriteria.trim().length > 0) {
             this.inSearchMode = true;
             this.resources.tree
-              .search(ContainerDomainType.Folders, this.searchCriteria)
+              .search(ContainerDomainType.Folders, this.searchCriteria as string)
               .subscribe((result: MdmTreeItemListResponse) => {
                 this.filteredRootNode = {
                   children: result.body,
                   isRoot: true
                 };
               });
-          } else {
+          }
+ else {
             this.inSearchMode = false;
             this.reload();
           }
-        } else {
+        }
+ else {
           this.reload();
         }
       });
@@ -242,7 +253,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
   loadFolder(folder) {
-    const id = folder && folder.id ? folder.id : null;
+    const id: string = folder && folder.id ? folder.id : null;
     this.loading = true;
     if (folder?.id) {
       this.resources.folder.get(id).subscribe(
@@ -259,7 +270,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           this.loading = false;
         }
       );
-    } else {
+    }
+ else {
       this.resources.tree
         .list(ContainerDomainType.Folders, {
           foldersOnly: true,
@@ -306,7 +318,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           }
         };
       }
-    } else {
+    }
+ else {
       options = {
         queryStringParams: {
           includeDocumentSuperseded: true,
@@ -318,11 +331,11 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     let method = this.resources.tree.list(
       ContainerDomainType.Folders,
-      options.queryStringParams
+      options.queryStringParams as TreeItemListQueryParameters
     );
 
     if (id) {
-      method = this.resources.tree.get('folders', 'dataModel', id, options);
+      method = this.resources.tree.get('folders', 'dataModel', id as string, options as RequestSettings);
     }
 
     method.subscribe(
@@ -358,8 +371,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     let i = 0;
     while (this.selectedElements && i < this.selectedElements.length) {
       if (
-        this.selectedElements[i] &&
-        this.selectedElements[i].id === element.id
+        this.selectedElements[i]
+        && this.selectedElements[i].id === element.id
       ) {
         return { element: this.selectedElements[i], index: i };
       }
@@ -391,9 +404,9 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.hasValidationError = true;
       }
       if (
-        !this.multiple &&
-        (!this.selectedElements ||
-          (this.selectedElements && this.selectedElements.length === 0))
+        !this.multiple
+        && (!this.selectedElements
+          || (this.selectedElements && this.selectedElements.length === 0))
       ) {
         this.hasValidationError = true;
       }
@@ -449,7 +462,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
       if (this.alwaysShowTree) {
         this.showTree = true;
-      } else {
+      }
+ else {
         this.showTree = false;
       }
       this.changeRef.detectChanges();
@@ -468,10 +482,12 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   reload() {
     if (this.justShowFolders) {
       this.loadFolder(this.root);
-    } else {
+    }
+ else {
       this.loadTree(this.root);
     }
   }
+
   inputClick = () => {
     this.showTree = true;
   };

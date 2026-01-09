@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ export class BulkEditProfileService {
     provider: ProfileProvider
   ): Observable<NavigatableProfile[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
@@ -105,7 +105,7 @@ export class BulkEditProfileService {
     payloads: MauroProfileUpdatePayload[]
   ): Observable<Profile[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
@@ -132,7 +132,7 @@ export class BulkEditProfileService {
     profiles: Profile[]
   ): Observable<MauroProfileValidationResult[]> {
     if (!this.isCorrectDomainType(rootItem.domainType)) {
-      return throwError(
+      return throwError(() =>
         new Error(`${rootItem.domainType} is not a model domain type`)
       );
     }
@@ -146,8 +146,8 @@ export class BulkEditProfileService {
 
   private isCorrectDomainType(domainType: CatalogueItemDomainType) {
     return (
-      isModelDomainType(domainType) ||
-      domainType === CatalogueItemDomainType.DataClass
+      isModelDomainType(domainType)
+      || domainType === CatalogueItemDomainType.DataClass
     );
   }
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldAppearance, MatFormField, MatLabel } from '@angular/material/form-field';
+import { Subject, takeUntil } from 'rxjs';
+import { MatInput } from '@angular/material/input';
 
 /**
  * Top-level component that represents the overall Catalogue Search page.
@@ -26,19 +35,24 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
  * entering search criteria.
  */
 @Component({
-  selector: 'mdm-catalogue-search-form',
-  templateUrl: './catalogue-search-form.component.html',
-  styleUrls: ['./catalogue-search-form.component.scss']
+    selector: 'mdm-catalogue-search-form',
+    templateUrl: './catalogue-search-form.component.html',
+    styleUrls: ['./catalogue-search-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput]
 })
-export class CatalogueSearchFormComponent implements OnInit {
+export class CatalogueSearchFormComponent implements OnInit, OnDestroy {
   @Input() appearance: MatFormFieldAppearance = 'outline';
   @Input() routeSearchTerm?: string = '';
 
+  @Output() valueChange = new EventEmitter<void>();
   @Output() searchEvent = new EventEmitter<string>();
 
   formGroup = new FormGroup({
     searchTerms: new FormControl(this.routeSearchTerm)
   });
+
+  private unsubscribe$ = new Subject<void>();
 
   get searchTerms() {
     return this.formGroup.controls.searchTerms;
@@ -46,6 +60,15 @@ export class CatalogueSearchFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchTerms.setValue(this.routeSearchTerm);
+
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.valueChange.emit());
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   reset() {

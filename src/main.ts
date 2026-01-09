@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,15 +15,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments//environment';
+import { environment } from '@env/environment';
+import { UIRouterModule } from '@uirouter/angular';
+import { bootstrapApplication } from '@angular/platform-browser';
 
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/markdown/markdown';
-import 'codemirror/mode/sql/sql.js';
+import { MdmResourcesConfiguration } from '@maurodatamapper/mdm-resources';
+import { MdmResourcesModule, MdmRestHandlerService } from '@mdm/modules/resources';
+import { provideHttpClient } from '@angular/common/http';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
+import { pageRoutes, routerConfigFn } from '@mdm/app-routing.module';
+import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
+import { UIRouter } from '@uirouter/core';
+import { userPageRoutes } from '@mdm/modules/users-routes/users-routes.module'
+import { adminPageRoutes } from '@mdm/modules/admin-routes/admin-routes.module';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+import { MatNativeDateModule } from '@angular/material/core';
 
 if (environment.production) {
   enableProdMode();
@@ -32,4 +44,47 @@ if (environment.production) {
   }
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.error(err));
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
+
+async function bootstrap() {
+  // Dynamically load some jodit files (avoids CommonJS warning)
+  await import('jodit/esm/plugins/source/source.js');
+  await import('jodit/esm/plugins/source/editor/engines/ace.js');
+  await import('jodit/esm/plugins/inline-popup/inline-popup.js');
+
+  // Now bootstrap the Angular app
+  await bootstrapApplication(UiViewComponent, {
+    providers: [
+      MdmResourcesConfiguration,
+      MdmRestHandlerService,
+      provideAnimations(), // enables full animation support
+      provideToastr(),
+      provideHttpClient(),
+      importProvidersFrom(
+        MdmResourcesModule.forRoot({
+          defaultHttpRequestOptions: { withCredentials: true },
+          apiEndpoint: environment.apiEndpoint
+        }),
+        MatNativeDateModule,
+        UIRouterModule.forRoot({
+          useHash: true,
+          states: [
+            ...pageRoutes.states,
+            ...userPageRoutes.states,
+            ...adminPageRoutes.states
+          ],
+          config: routerConfigFn
+        })
+      ),
+      {
+        provide: 'traceRouter',
+        useFactory: (router: UIRouter) => {
+          router.trace.enable(1); // Shows transitions in console
+        },
+        deps: [UIRouter]
+      },
+      provideZxvbnServiceForPSM()
+    ]
+  });
+}
+bootstrap().catch(err => console.error(err));

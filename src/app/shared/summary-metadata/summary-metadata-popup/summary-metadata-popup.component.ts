@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,31 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SummaryMetadataChartComponent } from '../summary-metadata-chart/summary-metadata-chart.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { BaseChartDirective } from 'ng2-charts';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'mdm-summary-metadata-popup',
-  templateUrl: './summary-metadata-popup.component.html',
-  styleUrls: ['./summary-metadata-popup.component.scss'],
+    selector: 'mdm-summary-metadata-popup',
+    templateUrl: './summary-metadata-popup.component.html',
+    styleUrls: ['./summary-metadata-popup.component.scss'],
+    standalone: true,
+    imports: [
+        MatButton,
+        NgIf,
+        BaseChartDirective,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+    ],
 })
 export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent implements OnInit {
   public tableDataForTable = [];
@@ -36,7 +56,6 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     super();
     this.summary = data;
   }
-
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -55,7 +74,7 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     super.drawBarChart();
     if (this.summary.summaryMetadataType.toLowerCase() === 'map') {
       this.tableDataForTable = [];
-      Object.keys(this.selectedReport.reportValue).forEach((x, idx) => {
+      Object.keys(this.selectedReport.reportValue as { [p: string]: number } | ArrayLike<number>).forEach((x, idx) => {
         this.tableDataForTable.push({
           keyColor: this.chartBackgroundColors[idx],
           keyBorderColor: this.chartBorderColors[idx],
@@ -71,18 +90,21 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
       this.drawBarChart();
     }
   }
+
   datePrev() {
     if (this.reportIndex > 0) {
       this.reportIndex = this.reportIndex - 1;
       this.drawBarChart();
     }
   }
+
   dateNext() {
     if (this.reportIndex < this.data.summaryMetadataReports.length - 1) {
       this.reportIndex = this.reportIndex + 1;
       this.drawBarChart();
     }
   }
+
   dateLast() {
     if (this.reportIndex !== this.data.summaryMetadataReports.length - 1) {
       this.reportIndex = this.data.summaryMetadataReports.length - 1;

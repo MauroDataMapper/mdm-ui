@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,30 +16,37 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CatalogueItemDetail } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { ElementIconComponent } from '../../shared/element-icon/element-icon.component';
 
 export interface ChangeLabelModalData {
-  item: CatalogueItemDetail;
+  item: CatalogueItemDetail
 }
 
 export interface ChangeLabelModalResult {
-  status: ModalDialogStatus;
-  label?: string;
+  status: ModalDialogStatus
+  label?: string
 }
 
 @Component({
-  selector: 'mdm-change-label-modal',
-  templateUrl: './change-label-modal.component.html',
-  styleUrls: ['./change-label-modal.component.scss']
+    selector: 'mdm-change-label-modal',
+    templateUrl: './change-label-modal.component.html',
+    styleUrls: ['./change-label-modal.component.scss'],
+    standalone: true,
+    imports: [MatDialogTitle, MatDialogContent, ElementIconComponent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatDialogActions, MatButton]
 })
 export class ChangeLabelModalComponent implements OnInit {
   item: CatalogueItemDetail;
   formGroup = new FormGroup({
     label: new FormControl('', [
-      Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      Validators.required
     ])
   });
 

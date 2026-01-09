@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { diff_match_patch } from 'diff-match-patch';
 
 @Component({
-  selector: 'mdm-text-diff',
-  templateUrl: './text-diff.component.html',
-  styleUrls: ['./text-diff.component.scss']
+    selector: 'mdm-text-diff',
+    templateUrl: './text-diff.component.html',
+    styleUrls: ['./text-diff.component.scss'],
+    standalone: true
 })
 export class TextDiffComponent implements AfterViewInit {
-  @Input() left : any;
-  @Input() right : any;
+  @Input() left: any;
+  @Input() right: any;
 
   // This is new
   @ViewChild('diff', { static: false }) set diffCon(content: ElementRef) {
@@ -42,7 +43,7 @@ export class TextDiffComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.right && this.left) {
-      const diffrl = this.diffLineMode(this.right.toString(), this.left.toString());
+      const diffrl = this.diffLineMode(this.right.toString() as string, this.left.toString() as string);
       this.diff.nativeElement.innerHTML = this.diffPrettyPlain(diffrl);
     }
   }
@@ -75,8 +76,7 @@ export class TextDiffComponent implements AfterViewInit {
     return html.join('');
   };
 
-
-  diffLineMode(text1, text2) {
+  diffLineMode(text1: string, text2: string) {
     const dmp = new diff_match_patch();
     const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
@@ -87,9 +87,8 @@ export class TextDiffComponent implements AfterViewInit {
     return diffs;
   }
 
-
-  diffLinesToChars = (text1, text2) => {
-    const lineArray = []; // e.g. lineArray[4] == 'Hello\n'
+  diffLinesToChars = (text1: string, text2: string) => {
+    const lineArray: string[] = []; // e.g. lineArray[4] == 'Hello\n'
     const lineHash = {}; // e.g. lineHash['Hello\n'] == 4
 
     // '\x00' is a valid character, but various debuggers don't like it.
@@ -124,7 +123,7 @@ export class TextDiffComponent implements AfterViewInit {
     return { chars1, chars2, lineArray };
   };
 
-  diffLinesToCharsMunge = (text, lineArray, lineHash, maxLines) => {
+  diffLinesToCharsMunge = (text: string, lineArray: string[], lineHash: { [p: string]: number }, maxLines: number) => {
     let chars = '';
     // Walk the text, pulling out a substring for each line.
     // text.split('\n') would would temporarily double our memory footprint.
@@ -146,7 +145,8 @@ export class TextDiffComponent implements AfterViewInit {
           : lineHash[line] !== undefined
       ) {
         chars += String.fromCharCode(lineHash[line]);
-      } else {
+      }
+ else {
         if (lineArrayLength === maxLines) {
           // Bail out at 65535 because
           // String.fromCharCode(65536) == String.fromCharCode(0)

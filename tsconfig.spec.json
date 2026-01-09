@@ -3,10 +3,9 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jest",
-      "node"
+      "jest", "node"
     ],
-    "allowJs": true
+    "module": "CommonJS"
   },
   "files": [
     "src/polyfills.ts"

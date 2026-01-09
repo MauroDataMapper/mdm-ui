@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 
     <mdm-element-classifications [readOnly]="false" (classificationsChanged)="classifiersValue = $event" class="mb-2"></mdm-element-classifications>
-    <mdm-multiple-terms-selector (selectedTermsChange)="termsValue = $event"></mdm-multiple-terms-selector>
+    <mdm-multiple-terms-selector (changeAddAllTerms)="addAllTerms=$event" (selectedTerminologyChange)="terminologyValue=$event" (selectedTermsChange)="termsValue = $event"></mdm-multiple-terms-selector>
     <mat-error *ngIf="setupForm && terms.errors?.required">
       At least one term is required
     </mat-error>

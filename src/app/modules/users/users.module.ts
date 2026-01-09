@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UsersAppContainerComponent } from '@mdm/users/users-app-container/users-app-container.component';
 import { ProfileComponent } from '@mdm/userArea/profile/profile.component';
-import { ImgCroppieComponent } from '@mdm/shared/img-croppie/img-croppie.component';
 import { UserDetailsComponent } from '@mdm/userArea/user-details/user-details.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
 import { SharedModule } from '@mdm/shared/shared.module';
 import { UsersRoutesModule } from '../users-routes/users-routes.module';
 import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
@@ -30,26 +28,19 @@ import { AsyncJobListComponent } from '@mdm/userArea/async-job-list/async-job-li
 import { AsyncJobDetailComponent } from '@mdm/userArea/async-job-detail/async-job-detail.component';
 import { DomainExportsListComponent } from '@mdm/userArea/domain-exports-list/domain-exports-list.component';
 import { DomainExportsDetailComponent } from '@mdm/userArea/domain-exports-detail/domain-exports-detail.component';
+import { ContentModule } from '@mdm/content/content.module';
+import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
 @NgModule({
-  declarations: [
-    UsersAppContainerComponent,
-    ProfileComponent,
-    ImgCroppieComponent,
-    UserDetailsComponent,
-    ChangePasswordComponent,
-    ApiKeysComponent,
-    AsyncJobListComponent,
-    AsyncJobDetailComponent,
-    DomainExportsListComponent,
-    DomainExportsDetailComponent
-  ],
-  imports: [CommonModule, ImageCropperModule, SharedModule, UsersRoutesModule],
-  exports: [
-    UsersAppContainerComponent,
-    ProfileComponent,
-    ImgCroppieComponent,
-    UserDetailsComponent
-  ]
+    imports: [CommonModule, SharedModule, UsersRoutesModule, ContentModule, PasswordStrengthMeterComponent, UsersAppContainerComponent,
+        ProfileComponent,
+        UserDetailsComponent,
+        ChangePasswordComponent,
+        ApiKeysComponent,
+        AsyncJobListComponent,
+        AsyncJobDetailComponent,
+        DomainExportsListComponent,
+        DomainExportsDetailComponent],
+    exports: [UsersAppContainerComponent, ProfileComponent, UserDetailsComponent]
 })
 export class UsersModule {}

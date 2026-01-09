@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -65,10 +65,8 @@ SPDX-License-Identifier: Apache-2.0
             <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
             <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">
         </mat-form-field>
-        <mat-password-strength [password]="password" class="green mb-2" [enableDigitRule]="true"
-            [enableLengthRule]="true" [enableLowerCaseLetterRule]="true" [enableSpecialCharRule]="false"
-            [enableUpperCaseLetterRule]="true">
-        </mat-password-strength>
+        <password-strength-meter [password]="password" class="green mb-2">
+        </password-strength-meter>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">

@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +46,9 @@ SPDX-License-Identifier: Apache-2.0
           type="button"
           matToolTip="Commit Changes"
           aria-label="Commit Changes"
-          [disabled]="!committingList || committingList.length === 0"
+          [disabled]="
+            !committingList || committingList.length === 0 || committingDiffs
+          "
           (click)="onCommitChanges()"
         >
           <i
@@ -70,21 +72,27 @@ SPDX-License-Identifier: Apache-2.0
       <div class="detail-icons">
         <div class="text-muted">
           <small>
-            <span class="fas fa-file-export" matTooltip="{{ source.branchName }}"></span>
+            <span
+              class="fas fa-file-export"
+              matTooltip="{{ source.branchName }}"
+            ></span>
             <span
               ><strong>Source Branch : {{ source.branchName }} </strong></span
             >
           </small>
         </div>
-        <div *ngIf="targetLoaded" class="text-muted">
+        <div class="text-muted">
           <small>
-            <span class="fas fa-file-import" matTooltip="{{target.branchName}}"></span>
+            <span
+              class="fas fa-file-import"
+              matTooltip="{{ target?.branchName }}"
+            ></span>
             <span><strong>Target Branch : </strong></span>
             <span>
               <mdm-branch-selector
-                [disabled]="this.committingList.length > 0"
                 [forMerge]="true"
-                [catalogueItem]="target"
+                [sourceCatalogueItem]="source"
+                [targetCatalogueItem]="target"
                 (selectedCatalogueItemChanged)="setTarget($event)"
               ></mdm-branch-selector>
             </span>
@@ -94,15 +102,41 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
   <div>
-    <div class="tabContainer panel panel-default mdm--shadow-block" fxLayout="row" >
+    <div
+      *ngIf="comparingBranches"
+      class="panel panel-default mdm--shadow-block"
+    >
+      <p>Comparing branches...</p>
+      <p>Depending on the size of the branches, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div *ngIf="committingDiffs" class="panel panel-default mdm--shadow-block">
+      <p>Committing your selected changes...</p>
+      <p>Depending on the of differences selected, this may take some time.</p>
+      <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div
+      *ngIf="!comparingBranches && !committingDiffs"
+      class="tabContainer panel panel-default mdm--shadow-block"
+      fxLayout="row"
+    >
       <div class="full-width" style="clear: both">
         <mat-tab-group
+          [mat-stretch-tabs]="false"
           [selectedIndex]="activeTab"
           (selectedIndexChange)="tabSelected($event)"
         >
+          <!-- Displays if no branch is selected -->
+          <mat-tab *ngIf="!changesList">
+            <ng-template mat-tab-label> No Branch </ng-template>
+            <div class="noContent">
+              <h4 style="margin-top: 75px">No Target Branch Selected</h4>
+            </div>
+          </mat-tab>
+          <!-- Displays if a branch is selected -->
           <mat-tab *ngIf="changesList">
             <ng-template mat-tab-label>
-              Changes ({{changesList.length}})
+              Changes ({{ changesList.length }})
             </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">
@@ -117,7 +151,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <span class="fas fa-file-export" aria-hidden="true"></span>
-                  Use all of "{{source.branchName}}"
+                  Use all of "{{ source.branchName }}"
                 </button>
                 <button
                   *ngIf="changesList.length > 0"
@@ -129,7 +163,7 @@ SPDX-License-Identifier: Apache-2.0
                   class="button"
                 >
                   <span class="fas fa-file-import" aria-hidden="true"></span>
-                  Use all of "{{target.branchName}}"
+                  Use all of "{{ target.branchName }}"
                 </button>
               </mat-toolbar>
 
@@ -138,16 +172,14 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="changesList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4 style="margin-top: 75px" *ngIf="changesList.length === 0">
-                  No Pending Changes
-                </h4>
+              <div class="noContent" *ngIf="changesList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Changes</h4>
               </div>
             </div>
           </mat-tab>
           <mat-tab *ngIf="committingList">
             <ng-template mat-tab-label>
-              Committing ({{committingList.length}})
+              Committing ({{ committingList.length }})
             </ng-template>
             <div class="full-width" style="clear: both">
               <mat-toolbar style="height: 50%">
@@ -171,13 +203,8 @@ SPDX-License-Identifier: Apache-2.0
                 [mergeItems]="committingList"
                 style="display: flex"
               ></mdm-merge-item-selector>
-              <div class="noContent">
-                <h4
-                  style="margin-top: 75px"
-                  *ngIf="committingList.length === 0"
-                >
-                  No Pending Commits
-                </h4>
+              <div class="noContent" *ngIf="committingList.length === 0">
+                <h4 style="margin-top: 75px">No Pending Commits</h4>
               </div>
             </div>
           </mat-tab>

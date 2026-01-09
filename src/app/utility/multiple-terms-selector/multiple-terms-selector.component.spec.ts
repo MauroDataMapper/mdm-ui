@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,8 +41,11 @@ describe('MultipleTermsSelectorComponent', () => {
         MatCheckboxModule,
         MatTooltipModule,
         FormsModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        McPagedListComponent,
+        ElementLinkComponent,
+        McSelectComponent,
+        MultipleTermsSelectorComponent
       ],
       providers: [
         {
@@ -54,12 +57,6 @@ describe('MultipleTermsSelectorComponent', () => {
             }
           }
         }
-      ],
-      declarations: [
-        McPagedListComponent,
-        ElementLinkComponent,
-        McSelectComponent,
-        MultipleTermsSelectorComponent
       ]
     })
     .compileComponents();

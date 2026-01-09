@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -131,27 +131,27 @@ $nhs-digital-palette-warn: (
   )
 );
 
-$nhs-digital-theme-primary: mat.define-palette($nhs-digital-palette-primary);
-$nhs-digital-theme-accent: mat.define-palette($nhs-digital-palette-accent);
-$nhs-digital-theme-warn: mat.define-palette($nhs-digital-palette-warn);
+$nhs-digital-theme-primary: mat.m2-define-palette($nhs-digital-palette-primary);
+$nhs-digital-theme-accent: mat.m2-define-palette($nhs-digital-palette-accent);
+$nhs-digital-theme-warn: mat.m2-define-palette($nhs-digital-palette-warn);
 
-$nhs-digital-theme: mat.define-light-theme(
+$nhs-digital-theme: mat.m2-define-light-theme(
   $nhs-digital-theme-primary,
   $nhs-digital-theme-accent,
   $nhs-digital-theme-warn
 );
 
-$nhs-digital-typography: mat.define-typography-config(
+$nhs-digital-typography: mat.m2-define-typography-config(
   $font-family: "Frutiger, Arial, sans-serif",
-  $body-1: mat.define-typography-level(17px, 26px, 500),
-  $body-2: mat.define-typography-level(18px, 26px, 500),
-  $headline: mat.define-typography-level(36px, 42px, 600),
-  $title: mat.define-typography-level(32px, 38px, 600),
-  $subheading-2: mat.define-typography-level(26px, 32px, 600),
-  $subheading-1: mat.define-typography-level(22px, 28px, 600),
-  $button: mat.define-typography-level(20px, 26px, 600),
-  $input: mat.define-typography-level(18px, 1.125, 500)
-);
+  $subtitle-2: mat.m2-define-typography-level(18px, 26px, 500),
+  $headline-5: mat.m2-define-typography-level(36px, 42px, 600),
+  $headline-6: mat.m2-define-typography-level(32px, 38px, 600),
+  $subtitle-1: mat.m2-define-typography-level(26px, 32px, 600),
+  $body-1: mat.m2-define-typography-level(18px, 28px, 600),
+  $body-2: mat.m2-define-typography-level(17px, 26px, 500),
+  $button: mat.m2-define-typography-level(20px, 26px, 600),
+  /* TODO(mdc-migration): No longer supported. Use `body-1` instead. $input: mat.m2-define-typography-level(18px, 1.125, 500)
+ */);
 
 .nhs-digital-theme {
   @include mat.all-component-themes($nhs-digital-theme);
@@ -159,6 +159,10 @@ $nhs-digital-typography: mat.define-typography-config(
   @include mdm-custom-components-theme($nhs-digital-theme);
 
   /* Style overrides for the NHS Digital theme */
+
+  div.as-split-gutter {
+    background-color: $nhs-digital-background-color !important;
+  }
 
   .heading-container {
     background-color: $nhs-digital-plain-background-color;

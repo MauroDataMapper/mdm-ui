@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,11 +39,23 @@ import {
   ReferenceDataType,
   ReferenceDataTypeIndexResponse
 } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent as MdmPaginatorComponent_1 } from '../../shared/mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { ElementDataTypeComponent } from '../../shared/element-data-type/element-data-type.component';
+import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatButton } from '@angular/material/button';
+import { SkeletonBadgeComponent } from '../../utility/skeleton-badge/skeleton-badge.component';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-reference-data-type',
-  templateUrl: './reference-data-type.component.html',
-  styleUrls: ['./reference-data-type.component.scss']
+    selector: 'mdm-reference-data-type',
+    templateUrl: './reference-data-type.component.html',
+    styleUrls: ['./reference-data-type.component.scss'],
+    standalone: true,
+    imports: [FlexModule, NgIf, SkeletonBadgeComponent, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MoreDescriptionComponent, NgSwitch, NgSwitchCase, ElementDataTypeComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1]
 })
 export class ReferenceDataTypeComponent implements AfterViewInit {
   @Input() parent: ReferenceDataModelDetail;
@@ -53,6 +65,7 @@ export class ReferenceDataTypeComponent implements AfterViewInit {
 
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
+
   records: ReferenceDataType[] = [];
   totalItemCount = 0;
   loading = true;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,28 +23,51 @@ import {
   ViewChild,
   ElementRef,
   EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { CatalogueItem, CatalogueItemDomainType, ModelDomainType, ReferenceFile, ReferenceFileCreatePayload, ReferenceFileIndexResponse, Securable } from '@maurodatamapper/mdm-resources';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import {
+  CatalogueItem,
+  CatalogueItemDomainType,
+  ModelDomainType,
+  ReferenceFile,
+  ReferenceFileCreatePayload,
+  ReferenceFileIndexResponse,
+  Securable,
+  ApiProperty,
+  ApiPropertyIndexResponse
+} from '@maurodatamapper/mdm-resources';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 export interface ReferenceFileEditor {
-  fileName: string;
+  fileName: string
 }
 
 @Component({
-  selector: 'mdm-attachment-list',
-  templateUrl: './attachment-list.component.html',
-  styleUrls: ['./attachment-list.component.sass'],
+    selector: 'mdm-attachment-list',
+    templateUrl: './attachment-list.component.html',
+    styleUrls: ['./attachment-list.component.sass'],
+    standalone: true,
+    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, FormsModule, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, MdmPaginatorComponent, DatePipe, FileSizePipe]
 })
 export class AttachmentListComponent implements AfterViewInit {
   @Input() parent: CatalogueItem & Securable;
@@ -52,7 +75,8 @@ export class AttachmentListComponent implements AfterViewInit {
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<any>();
   hideFilters = true;
@@ -60,24 +84,33 @@ export class AttachmentListComponent implements AfterViewInit {
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: {};
+  filter: object;
   canEdit: boolean;
   records: EditableRecord<ReferenceFile, ReferenceFileEditor>[] = [];
-  dataSource = new MatTableDataSource<EditableRecord<ReferenceFile, ReferenceFileEditor>>();
+  dataSource = new MatTableDataSource<
+    EditableRecord<ReferenceFile, ReferenceFileEditor>
+  >();
+
   apiEndpoint: string;
+  attachmentFileSizeLimit = 0;
+
+  private readonly attachmentFileSizeLimitKey = 'feature.attachment_size_limit_mb';
 
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private sharedService: SharedService,
     private editingService: EditingService,
+    private changeRef: ChangeDetectorRef,
     private gridService: GridService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog
+  ) {}
 
   ngAfterViewInit() {
     this.apiEndpoint = this.sharedService.backendURL;
 
     this.canEdit = this.parent.availableActions.includes('update');
+    this.changeRef.detectChanges();
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.dataSource.sort = this.sort;
@@ -95,9 +128,10 @@ export class AttachmentListComponent implements AfterViewInit {
             this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
-            this.filter);
+            this.filter
+          );
         }),
-        map(data => {
+        map((data) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
@@ -108,17 +142,33 @@ export class AttachmentListComponent implements AfterViewInit {
         })
       )
       .subscribe((data: ReferenceFile[]) => {
-        this.records = data.map(item => new EditableRecord<ReferenceFile, ReferenceFileEditor>(
-          item,
-          {
-            fileName: item.fileName
-          },
-          {
-            isNew: false,
-            inEdit: false
-          }));
+        this.records = data.map(
+          item =>
+            new EditableRecord<ReferenceFile, ReferenceFileEditor>(
+              item,
+              {
+                fileName: item.fileName
+              },
+              {
+                isNew: false,
+                inEdit: false
+              }
+            )
+        );
 
         this.dataSource.data = this.records;
+      });
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError((errors) => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadAttachmentFileSizeLimit(response.body.items);
       });
   }
 
@@ -143,14 +193,16 @@ export class AttachmentListComponent implements AfterViewInit {
     pageSize?: number,
     pageIndex?: number,
     sortBy?: string,
-    sortType?: string,
-    filters?: any): Observable<ReferenceFileIndexResponse> {
+    sortType?: SortDirection,
+    filters?: { [p: string]: any }
+  ): Observable<ReferenceFileIndexResponse> {
     const options = this.gridService.constructOptions(
       pageSize,
       pageIndex,
       sortBy,
       sortType,
-      filters);
+      filters
+    );
 
     return this.resources.catalogueItem.listReferenceFiles(
       this.domainType,
@@ -159,7 +211,10 @@ export class AttachmentListComponent implements AfterViewInit {
     );
   }
 
-  cancelEdit(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
+  cancelEdit(
+    record: EditableRecord<ReferenceFile, ReferenceFileEditor>,
+    index: number
+  ) {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.records = [].concat(this.records);
@@ -169,8 +224,8 @@ export class AttachmentListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   }
 
-  getFile(inputFileName: string) {
-    const element: any = document.getElementById(inputFileName);
+  getFile(inputFileName: string): File | string {
+    const element: HTMLInputElement = document.getElementById(inputFileName) as HTMLInputElement;
     return element && element.files ? element.files[0] : '';
   }
 
@@ -185,9 +240,18 @@ export class AttachmentListComponent implements AfterViewInit {
         }
       })
       .pipe(
-        switchMap(() => this.resources.catalogueItem.removeReferenceFile(this.domainType, this.parent.id, record.source.id)),
-        catchError(error => {
-          this.messageHandler.showError('There was a problem deleting the attachment.', error);
+        switchMap(() =>
+          this.resources.catalogueItem.removeReferenceFile(
+            this.domainType,
+            this.parent.id,
+            record.source.id
+          )
+        ),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem deleting the attachment.',
+            error
+          );
           return EMPTY;
         })
       )
@@ -210,17 +274,25 @@ export class AttachmentListComponent implements AfterViewInit {
       {
         isNew: true,
         inEdit: true
-      });
+      }
+    );
 
     this.records = [].concat([newRecord]).concat(this.records);
     this.dataSource.data = this.records;
     this.editingService.setFromCollection(this.records);
-  };
+  }
 
-
-  save(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
+  save(
+    record: EditableRecord<ReferenceFile, ReferenceFileEditor>,
+    index: number
+  ) {
     const fileName = `File${index}`;
-    const file = this.getFile(fileName);
+    const fileOrNot = this.getFile(fileName);
+    // There might not be a file attached to save
+    if (!fileOrNot) {
+      return;
+    }
+    const file = fileOrNot as File;
     const reader = new FileReader();
 
     reader.readAsArrayBuffer(file);
@@ -235,11 +307,19 @@ export class AttachmentListComponent implements AfterViewInit {
         fileContents: Array.from(fileBytes)
       };
 
+      if (this.attachmentFileSizeLimit > 0 && +file.size / 1000000 > this.attachmentFileSizeLimit) {
+        this.messageHandler.showError(`There was a problem saving the attachment. Files cannot be larger than ${this.attachmentFileSizeLimit}mb.`);
+        return EMPTY;
+      }
+
       this.resources.catalogueItem
         .saveReferenceFiles(this.domainType, this.parent.id, data)
         .pipe(
-          catchError(error => {
-            this.messageHandler.showError('There was a problem saving the attachment.', error);
+          catchError((error) => {
+            this.messageHandler.showError(
+              'There was a problem saving the attachment.',
+              error
+            );
             return EMPTY;
           })
         )
@@ -252,5 +332,13 @@ export class AttachmentListComponent implements AfterViewInit {
           this.filterEvent.emit();
         });
     };
+  }
+
+  private loadAttachmentFileSizeLimit(properties: ApiProperty[]) {
+    this.attachmentFileSizeLimit = JSON.parse(this.getContentProperty(properties, this.attachmentFileSizeLimitKey) ?? '0');
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value;
   }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,11 +56,23 @@ import {
   MdmTreeLevelManager
 } from './models.model';
 import { MauroItemTreeFlatNode } from '../mauro-item-tree/mauro-item-tree.types';
+import { FavouritesComponent } from '../favourites/favourites.component';
+import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
 
 @Component({
-  selector: 'mdm-models',
-  templateUrl: './models.component.html',
-  styleUrls: ['./models.component.scss']
+    selector: 'mdm-models',
+    templateUrl: './models.component.html',
+    styleUrls: ['./models.component.scss'],
+    standalone: true,
+    imports: [MatTabGroup, MatTab, MatTabLabel, NgIf, FormsModule, MatButton, MatTooltip, MatMenuTrigger, NgClass, ExtendedModule, MatMenu, MatMenuItem, MatCheckbox, FoldersTreeComponent, FavouritesComponent]
 })
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
@@ -76,6 +88,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   canCreateFolder = true;
   isRootFolderRestricted = false;
   isClassifierCreateRestricted = false;
+  isLoggedIn = false;
 
   // Hard
   includeModelSuperseded = false;
@@ -93,7 +106,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   currentClassification: any;
   allClassifications: any;
-  classifiers: { children: Classifier[]; isRoot: boolean };
+  classifiers: { children: Classifier[], isRoot: boolean };
 
   searchText: any;
 
@@ -118,8 +131,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.reloading = true;
 
         if (
-          containerType !== ModelDomainType.Folders &&
-          containerType !== ModelDomainType.VersionedFolders
+          containerType !== ModelDomainType.Folders
+          && containerType !== ModelDomainType.VersionedFolders
         ) {
           this.resources.tree
             .get(
@@ -149,7 +162,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
               this.filteredModels = Object.assign({}, curModel);
               this.levels.current = 1;
             });
-        } else {
+        }
+ else {
           this.resources.tree
             .getFolder(this.levels.currentFocusedElement.id)
             .pipe(
@@ -198,22 +212,23 @@ export class ModelsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.title.setTitle('Models');
 
+    this.includeModelSuperseded
+      = this.userSettingsHandler.get('includeModelSuperseded') || false;
+    this.showSupersededModels
+      = this.userSettingsHandler.get('showSupersededModels') || false;
+
     if (this.sharedService.isLoggedIn()) {
-      this.includeModelSuperseded =
-        this.userSettingsHandler.get('includeModelSuperseded') || false;
-      this.showSupersededModels =
-        this.userSettingsHandler.get('showSupersededModels') || false;
-      this.includeDeleted =
-        this.userSettingsHandler.get('includeDeleted') || false;
+      this.includeDeleted
+        = this.userSettingsHandler.get('includeDeleted') || false;
 
       this.securityHandler
         .isAdministrator()
-        .subscribe((state) => (this.isAdministrator = state));
+        .subscribe(state => (this.isAdministrator = state));
     }
 
     if (
-      this.sharedService.searchCriteria &&
-      this.sharedService.searchCriteria.length > 0
+      this.sharedService.searchCriteria
+      && this.sharedService.searchCriteria.length > 0
     ) {
       this.formData.filterCriteria = this.sharedService.searchCriteria;
     }
@@ -232,6 +247,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.currentClassification = null;
     this.allClassifications = [];
+
+    this.isLoggedIn = this.sharedService.isLoggedIn();
 
     this.resources.apiProperties
       .listPublic()
@@ -256,10 +273,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  isLoggedIn() {
-    return this.sharedService.isLoggedIn();
   }
 
   tabSelected(tabIndex: number) {
@@ -375,9 +388,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onNodeDbClick(node: MdmTreeItem) {
     if (
-      isContainerDomainType(node.domainType) ||
-      node.domainType === CatalogueItemDomainType.DataModel ||
-      node.domainType === CatalogueItemDomainType.Terminology
+      isContainerDomainType(node.domainType)
+      || node.domainType === CatalogueItemDomainType.DataModel
+      || node.domainType === CatalogueItemDomainType.Terminology
     ) {
       this.levels.focusTreeItem(node);
     }
@@ -395,8 +408,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
         const semanticLinks = result.body;
         semanticLinks.items.forEach((link) => {
           if (
-            ['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 &&
-            link.source.id === dataModel.id
+            ['Superseded By', 'New Version Of'].indexOf(link.linkType as string) !== -1
+            && link.source.id === dataModel.id
           ) {
             compareToList.push(link.target);
           }
@@ -437,15 +450,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this[filerName] = !this[filerName];
     this.reloading = true;
 
+    this.userSettingsHandler.update(
+      'includeModelSuperseded',
+      this.includeModelSuperseded
+    );
+    this.userSettingsHandler.update(
+      'showSupersededModels',
+      this.showSupersededModels
+    );
     if (this.sharedService.isLoggedIn()) {
-      this.userSettingsHandler.update(
-        'includeModelSuperseded',
-        this.includeModelSuperseded
-      );
-      this.userSettingsHandler.update(
-        'showSupersededModels',
-        this.showSupersededModels
-      );
       this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
@@ -466,7 +479,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (newState) {
       if (newState === 'import') {
         this.stateHandler.Go(newState, { importType: type });
-      } else if (newState === 'export') {
+      }
+ else if (newState === 'export') {
         this.stateHandler.Go(newState, { exportType: type });
       }
       return;
@@ -499,7 +513,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.search();
           }
 
-          if (this.validator.isEmpty(this.formData.filterCriteria)) {
+          if (this.validator.isEmpty(this.formData.filterCriteria as string)) {
             this.search();
           }
         });
@@ -537,7 +551,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
           this.filteredModels = Object.assign({}, this.allModels);
           this.searchText = this.formData.filterCriteria;
         });
-    } else {
+    }
+ else {
       this.inSearchMode = false;
       this.sharedService.searchCriteria = '';
       this.searchText = '';
@@ -552,7 +567,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
   classificationFilterChange(val: string) {
     if (val && val.length !== 0 && val.trim().length === 0) {
       this.filterClassifications();
-    } else {
+    }
+ else {
       this.loadClassifiers();
     }
   }
@@ -561,7 +577,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
       this.formData.filterCriteria = '';
       this.sharedService.searchCriteria = this.formData.ClassificationFilterCriteria;
-    } else {
+    }
+ else {
       this.loadClassifiers();
     }
   }
@@ -602,14 +619,18 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private loadApiContentProperties(properties: ApiProperty[]) {
     this.isRootFolderRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.root.folder') ?? 'false'
+      this.getContentProperty(properties, 'security.restrict.root.folder')
+      ?? 'false'
     );
     this.isClassifierCreateRestricted = JSON.parse(
-      this.getContentProperty(properties, 'security.restrict.classifier.create') ?? 'false'
+      this.getContentProperty(
+        properties,
+        'security.restrict.classifier.create'
+      ) ?? 'false'
     );
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {
-    return properties?.find((p) => p.key === key)?.value;
+    return properties?.find(p => p.key === key)?.value;
   }
 }

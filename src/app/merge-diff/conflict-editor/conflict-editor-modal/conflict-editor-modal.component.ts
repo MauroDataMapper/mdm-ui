@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +23,17 @@ import { HelpDialogueHandlerService } from '@mdm/services';
 import { NumberConflictEditorComponent } from '../number-conflict-editor/number-conflict-editor.component';
 import { StringConflictEditorComponent } from '../string-conflict-editor/string-conflict-editor.component';
 import { ConflictEditorModalData, ConflictEditorModalResult } from './conflict-editor-modal.model';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { PathNameComponent } from '../../../shared/path-name/path-name.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'mdm-conflict-editor-modal',
-  templateUrl: './conflict-editor-modal.component.html',
-  styleUrls: ['./conflict-editor-modal.component.scss']
+    selector: 'mdm-conflict-editor-modal',
+    templateUrl: './conflict-editor-modal.component.html',
+    styleUrls: ['./conflict-editor-modal.component.scss'],
+    standalone: true,
+    imports: [MatTooltip, PathNameComponent, NgIf, StringConflictEditorComponent, NumberConflictEditorComponent, MatButton]
 })
 export class ConflictEditorModalComponent implements OnInit {
   @ViewChild(StringConflictEditorComponent) stringEditor: StringConflictEditorComponent;

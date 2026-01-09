@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,11 +40,28 @@ import { Access } from '@mdm/model/access';
 import { TabCollection } from '@mdm/model/ui.model';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '../shared/history/history.component';
+import { AttachmentListComponent } from '../shared/attachment-list/attachment-list.component';
+import { AnnotationListComponent } from '../shared/annotation-list/annotation-list.component';
+import { MatOption } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ConstraintsRulesComponent } from '../constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '../utility/skeleton-badge/skeleton-badge.component';
+import { ProfileDataViewComponent } from '../shared/profile-data-view/profile-data-view.component';
+import { CatalogueItemSearchComponent } from '../catalogue-search/catalogue-item-search/catalogue-item-search.component';
+import { MatTabGroup, MatTab, MatTabLabel, MatTabContent } from '@angular/material/tabs';
+import { ModelHeaderComponent } from '../model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-folder',
-  templateUrl: './folder.component.html',
-  styleUrls: ['./folder.component.css']
+    selector: 'mdm-folder',
+    templateUrl: './folder.component.html',
+    styleUrls: ['./folder.component.css'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, MatTabGroup, MatTab, MatTabLabel, CatalogueItemSearchComponent, MatTabContent, ProfileDataViewComponent, SkeletonBadgeComponent, ConstraintsRulesComponent, FlexModule, MatFormField, MatSelect, FormsModule, MatOption, AnnotationListComponent, AttachmentListComponent, HistoryComponent]
 })
 export class FolderComponent
   extends BaseComponent
@@ -94,8 +111,8 @@ export class FolderComponent
 
   ngOnInit() {
     if (
-      this.isGuid(this.uiRouterGlobals.params.id) &&
-      !this.uiRouterGlobals.params.id
+      this.isGuid(this.uiRouterGlobals.params.id as string)
+      && !this.uiRouterGlobals.params.id
     ) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -131,8 +148,8 @@ export class FolderComponent
 
       this.access = this.securityHandler.elementAccess(this.folder);
       this.showEdit = this.access.showEdit;
-      this.showDelete =
-        this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete
+        = this.access.showPermanentDelete || this.access.showSoftDelete;
 
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable, EventEmitter, Output, OnDestroy} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Injectable, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService implements OnDestroy {
-
   @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 
   @Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
@@ -56,8 +55,6 @@ export class MessageService implements OnDestroy {
   private subjects: Map<string, Subject<any>> = new Map();
   private FolderSubject = new Subject<any>();
 
-
-
   get lastError(): any {
     return this.lastErrorVar;
   }
@@ -66,12 +63,11 @@ export class MessageService implements OnDestroy {
     this.lastErrorVar = value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  get errorMessage(): {} {
+  get errorMessage(): object {
     return this.errorMessageVar;
   }
 
-  set errorMessage(value: {}) {
+  set errorMessage(value: object) {
     this.errorMessageVar = value;
   }
 
@@ -120,7 +116,6 @@ export class MessageService implements OnDestroy {
   toggleShareReadWithEveryone() {
     this.isShareReadWithEveryone = !this.isShareReadWithEveryone;
     this.changeShareReadWithEveryone.emit(this.isShareReadWithEveryone);
-
   }
 
   showEditMode(showEdit: boolean) {
@@ -132,30 +127,30 @@ export class MessageService implements OnDestroy {
     this.FolderSubject.next(message);
   }
 
-/* Not used
-  FolderSendClearMessages() {
-    this.FolderSubject.next();
-  }
-  FolderGetMessage(): Observable<any> {
-    return this.FolderSubject.asObservable();
-  }
-
-  getFolderPermissions() {
-    if (this.folderPermissions != null) {
-
-      return this.folderPermissions;
+  /* Not used
+    FolderSendClearMessages() {
+      this.FolderSubject.next();
     }
-    // else{      add a call in else condition to get folders
-    //   this.FoldersPermissionGet();
-    //   return this.permissionsData;
-    // }
-  }
+    FolderGetMessage(): Observable<any> {
+      return this.FolderSubject.asObservable();
+    }
 
-  DataModelSendMessage(message: any) {
-    this.folderPermissions = message;
-    this.FolderSubject.next(message);
-  }
-*/
+    getFolderPermissions() {
+      if (this.folderPermissions != null) {
+
+        return this.folderPermissions;
+      }
+      // else{      add a call in else condition to get folders
+      //   this.FoldersPermissionGet();
+      //   return this.permissionsData;
+      // }
+    }
+
+    DataModelSendMessage(message: any) {
+      this.folderPermissions = message;
+      this.FolderSubject.next(message);
+    }
+  */
 
   /**
    * Broadcast to all subscribers of a given subject.
@@ -163,7 +158,7 @@ export class MessageService implements OnDestroy {
    * @param subject name of subject/channel to broadcast to
    * @param message message to broadcast
    */
-  broadcast(subject, ...message: any) {
+  broadcast(subject: string, ...message: any) {
     // Create the named Subject if not exists
     if (!this.subjects.has(subject)) {
       this.subjects.set(subject, new Subject());
@@ -177,7 +172,7 @@ export class MessageService implements OnDestroy {
    *
    * @param subject name of subject to get
    */
-  getSubject(subject) {
+  getSubject(subject: string) {
     // Create the named Subject if not exists
     if (!this.subjects.has(subject)) {
       this.subjects.set(subject, new Subject());
@@ -190,9 +185,9 @@ export class MessageService implements OnDestroy {
    * Subscribe to named subject/channel
    *
    * @param subject subject to subscribe to
-   * @param callback message handler
+   * @param handler message handler
    */
-  subscribe(subject, handler) {
+  subscribe(subject: string, handler: () => void) {
     // Create the named Subject if not exists
     if (!this.subjects.has(subject)) {
       this.subjects.set(subject, new Subject());
@@ -201,7 +196,7 @@ export class MessageService implements OnDestroy {
     return this.subjects.get(subject).subscribe(handler);
   }
 
-  on(subject, handler) {
+  on(subject: string, handler: () => void) {
     return this.subscribe(subject, handler);
   }
 

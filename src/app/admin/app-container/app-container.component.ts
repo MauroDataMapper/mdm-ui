@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,11 +21,17 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { UIRouterModule } from '@uirouter/angular';
+import { ExtendedModule } from '@angular/flex-layout/extended';
+import { FlexModule } from '@angular/flex-layout/flex';
 
 @Component({
-  selector: 'mdm-app-container',
-  templateUrl: './app-container.component.html',
-  styleUrls: ['./app-container.component.sass']
+    selector: 'mdm-app-container',
+    templateUrl: './app-container.component.html',
+    styleUrls: ['./app-container.component.sass'],
+    standalone: true,
+    imports: [FlexModule, ExtendedModule, UIRouterModule, NgIf]
 })
 export class AdminAppContainerComponent implements OnInit, OnDestroy {
   isAdministrator = false;
@@ -42,7 +48,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.securityHandler
       .isAdministrator()
-      .subscribe(isAdministrator => {
+      .subscribe((isAdministrator) => {
         this.isAdministrator = isAdministrator;
 
         if (!isAdministrator) {
@@ -63,7 +69,7 @@ export class AdminAppContainerComponent implements OnInit, OnDestroy {
   }
 
   getPendingUsers = () => {
-    this.sharedService.pendingUsersCount().subscribe(data => {
+    this.sharedService.pendingUsersCount().subscribe((data) => {
       this.pendingUsersCount = data.body.count;
     });
   };

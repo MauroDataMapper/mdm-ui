@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,14 +33,13 @@ SPDX-License-Identifier: Apache-2.0
       </ng-template>
     </mdm-select>
   </div>
-  <div class="mb-2">
+  <div class="mb-2" *ngIf="selectorSection.selectedTerminology">
     <mat-checkbox
+      (change)="onChangeAddAllTerms($event)"
       [(ngModel)]="addAllTerms"
-      [disabled]="!selectorSection.selectedTerminology"
-      >Add all Terms</mat-checkbox
-    >
+      >Add all Terms</mat-checkbox>
   </div>
-  <div class="mb-2" *ngIf="!addAllTerms">
+  <div class="mb-2" *ngIf="selectorSection.selectedTerminology && !addAllTerms">
     <strong>Or select one or more Terms to add</strong>
     <input
       #searchInputControl

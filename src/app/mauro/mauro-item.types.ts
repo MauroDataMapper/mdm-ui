@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import {
   Breadcrumb,
   CatalogueItem,
   MdmResponse,
+  PathableDomainType,
   Profile,
   ProfileValidationError,
   Uuid
@@ -28,7 +29,7 @@ export interface MauroIdentifierFetchOptions {
   /**
    * If true, will not throw a global error if unable to fetch this item.
    */
-  failSilently?: boolean;
+  failSilently?: boolean
 }
 
 /**
@@ -38,19 +39,19 @@ export interface MauroIdentifier extends Required<CatalogueItem> {
   /**
    * If locating a child catalogue item, provide the unique identifier of the parent model.
    */
-  model?: Uuid;
+  model?: Uuid
 
   /**
    * If locating a Data Class, provide an optional parent Data Class if locating a child item.
    */
-  parentDataClass?: Uuid;
+  parentDataClass?: Uuid
 
   /**
    * If locating a Data Element, provide the unique identifier of the parent Data Class.
    */
-  dataClass?: Uuid;
+  dataClass?: Uuid
 
-  fetchOptions?: MauroIdentifierFetchOptions;
+  fetchOptions?: MauroIdentifierFetchOptions
 }
 
 /**
@@ -60,17 +61,17 @@ export interface MauroIdentifier extends Required<CatalogueItem> {
  * To provide more structure, cast this object to a more specific type e.g. {@link DataModel}.
  */
 export interface MauroItem extends Required<CatalogueItem> {
-  [key: string]: any;
+  [key: string]: any
 
   /**
    * The label assigned to this catalogue item.
    */
-  label: string;
+  label: string
 
   /**
    * An optional description for this catalogue item.
    */
-  description?: string;
+  description?: string
 }
 
 export type MauroItemResponse = MdmResponse<MauroItem>;
@@ -79,20 +80,41 @@ export type MauroItemResponse = MdmResponse<MauroItem>;
  * Represents the grouping of data required to update a collection of Mauro catalogue items in bulk.
  */
 export interface MauroUpdatePayload {
-  identifier: MauroIdentifier;
-  item: MauroItem;
+  identifier: MauroIdentifier
+  item: MauroItem
 }
 
 export interface MauroProfileUpdatePayload {
-  identifier: MauroIdentifier;
-  profile: Profile;
+  identifier: MauroIdentifier
+  profile: Profile
 }
 
 export interface MauroProfileValidationResult {
-  profile: Profile;
-  errors?: ProfileValidationError[];
+  profile: Profile
+  errors?: ProfileValidationError[]
 }
 
 export interface NavigatableProfile extends Profile {
-  breadcrumbs?: Breadcrumb[];
+  breadcrumbs?: Breadcrumb[]
+}
+
+/**
+ * Options to control locating Mauro catalogue items by path.
+ */
+export interface MauroItemLocateOptions {
+  /**
+   * The domain to locate under. If not provided, it will be determined via the first path item if possible.
+   */
+  domain?: PathableDomainType
+
+  /**
+   * The parent ID of the root item to locate under. If not provided, will search the entire domain.
+   */
+  parentId?: Uuid
+
+  /**
+   * State if only the latest finalised models should be considered. This has no effect if the path
+   * contains a model version identifier.
+   */
+  finalisedOnly?: boolean
 }

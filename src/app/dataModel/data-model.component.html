@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ SPDX-License-Identifier: Apache-2.0
   *ngIf="dataModel"
   #tab
   animationDuration="0ms"
+  [mat-stretch-tabs]="false"
   [selectedIndex]="activeTab"
   (selectedIndexChange)="tabSelected($event)"
 >
@@ -99,6 +100,7 @@ SPDX-License-Identifier: Apache-2.0
               <mat-select [(ngModel)]="schemaView" name="schemaView">
                 <mat-option value="list">List</mat-option>
                 <mat-option value="diagram">Diagram</mat-option>
+                <mat-option value="flat">Data Elements</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -141,6 +143,16 @@ SPDX-License-Identifier: Apache-2.0
           [mode]="'umlclass'"
         ></mdm-diagram-tab>
       </div>
+      <div *ngIf="schemaView === 'flat'">
+        <mdm-flattened-data-classes-list
+        *ngIf="catalogueItem"
+        [parentDataModel]="catalogueItem"
+        [isEditable]="access.showEdit"
+        [parentDataClass]="{ id: null }"
+        [type]="'dynamic'"
+        (totalCount)="schemaCountEmitter($event)"
+      ></mdm-flattened-data-classes-list>
+    </div>
     </div>
   </mat-tab>
   <mat-tab>

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PathElement } from './path-name.model';
 import { PathNameService } from './path-name.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'mdm-path-name',
-  templateUrl: './path-name.component.html',
-  styleUrls: ['./path-name.component.scss']
+    selector: 'mdm-path-name',
+    templateUrl: './path-name.component.html',
+    styleUrls: ['./path-name.component.scss'],
+    standalone: true,
+    imports: [NgFor, NgIf, MatTooltip, UpperCasePipe]
 })
 export class PathNameComponent implements OnInit, OnChanges {
   @Input() path: string;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,11 +35,26 @@ import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { StateHandlerService } from '@mdm/services';
+import { FilterPipe } from '@mdm/directives/filter-pipe.directive';
+import { DownloadLinkComponent } from '../utility/download-link/download-link.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { AlertComponent } from '../shared/alert/alert.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { ModelSelectorTreeComponent } from '../model-selector-tree/model-selector-tree.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-models-export',
-  templateUrl: './export-models.component.html',
-  styleUrls: ['./export-models.component.scss']
+    selector: 'mdm-data-models-export',
+    templateUrl: './export-models.component.html',
+    styleUrls: ['./export-models.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatTooltip, ModelSelectorTreeComponent, FormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatCheckbox, AlertComponent, MatButton, MatProgressBar, DownloadLinkComponent, FilterPipe]
 })
 export class ExportModelsComponent implements OnInit {
   step = 1;
@@ -48,7 +63,7 @@ export class ExportModelsComponent implements OnInit {
   processing = false;
   exporters: Exporter[] = [];
   exportedFileIsReady = false;
-  exportType: ModelDomain;
+  exportType: ModelDomain | 'folders';
   asynchronous = false;
   downloadLinks = new Array<HTMLAnchorElement>();
 
@@ -74,6 +89,10 @@ export class ExportModelsComponent implements OnInit {
         return CatalogueItemDomainType.CodeSet;
       case 'referenceDataModels':
         return CatalogueItemDomainType.ReferenceDataModel;
+      case 'versionedFolders':
+        return CatalogueItemDomainType.VersionedFolder;
+      case 'folders':
+        return CatalogueItemDomainType.Folder;
       default:
         return null;
     }
@@ -94,7 +113,8 @@ export class ExportModelsComponent implements OnInit {
     if (items && items.length > 0) {
       this.step = 2;
       this.changeDedRef.detectChanges();
-    } else {
+    }
+ else {
       this.step = 1;
     }
   };
@@ -177,8 +197,8 @@ export class ExportModelsComponent implements OnInit {
 
   private handleStandardExporterResponse(response: HttpResponse<ArrayBuffer>) {
     this.exportedFileIsReady = true;
-    const label =
-      this.selectedDataModels.length === 1
+    const label
+      = this.selectedDataModels.length === 1
         ? this.selectedDataModels[0].label
         : this.exportType;
 

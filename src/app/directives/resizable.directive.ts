@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Directive, ElementRef, OnInit, Input, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[mdmResizable]' // Attribute selector
+    selector: '[mdmResizable]', // Attribute selector
+    standalone: true
 })
 export class ResizableDirective implements OnInit {
   @Input() resizableGrabWidth = 4;
@@ -29,7 +30,7 @@ export class ResizableDirective implements OnInit {
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     const newWidth = (wid) => {
-      const newWidthCalc = Math.max(this.resizableMinWidth, wid);
+      const newWidthCalc = Math.max(this.resizableMinWidth, wid as number);
       this.renderer.setStyle(
         this.el.nativeElement,
         'width',
@@ -65,7 +66,8 @@ export class ResizableDirective implements OnInit {
     const mouseMove = (evt) => {
       if (this.inDragRegion(evt) || this.dragging) {
         el.nativeElement.style.cursor = 'col-resize';
-      } else {
+      }
+ else {
         el.nativeElement.style.cursor = 'default';
       }
     };

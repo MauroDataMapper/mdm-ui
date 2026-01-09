@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2023 University of Oxford and NHS England
+Copyright 2020-2025 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,28 +17,47 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SharedService } from '../services/shared.service';
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTab, MatTabContent, MatTabLabel } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import {
   ElementTypesService,
   MessageHandlerService,
-  SecurityHandlerService,
+  SecurityHandlerService
 } from '@mdm/services';
 import { DefaultProfileItem } from '@mdm/model/defaultProfileModel';
-import { DataModel, DataType, DataTypeDetail, DataTypeDetailResponse, Uuid } from '@maurodatamapper/mdm-resources';
+import {
+  DataModel,
+  DataType,
+  DataTypeDetail,
+  DataTypeDetailResponse,
+  Uuid
+} from '@maurodatamapper/mdm-resources';
 import { TabCollection } from '@mdm/model/ui.model';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
+import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
+import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
+import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { SkeletonBadgeComponent } from '@mdm/utility/skeleton-badge/skeleton-badge.component';
+import { ElementChildDataElementsListComponent } from '@mdm/shared/element-child-data-elements-list/element-child-data-elements-list.component';
+import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
+import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'mdm-data-type',
-  templateUrl: './data-type.component.html',
-  styleUrls: ['./data-type.component.scss']
+    selector: 'mdm-data-type',
+    templateUrl: './data-type.component.html',
+    styleUrls: ['./data-type.component.scss'],
+    standalone: true,
+    imports: [NgIf, ModelHeaderComponent, McEnumerationListWithCategoryComponent, MatTabGroup, MatTab, MatTabContent, ProfileDataViewComponent, ElementChildDataElementsListComponent, MatTabLabel, SkeletonBadgeComponent, ConstraintsRulesComponent, AnnotationListComponent, ElementLinkListComponent, AttachmentListComponent, HistoryComponent]
 })
-export class DataTypeComponent extends BaseComponent
+export class DataTypeComponent
+  extends BaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -47,18 +66,15 @@ export class DataTypeComponent extends BaseComponent
   dataModel: DataModel;
   id: Uuid;
   activeTab: number;
-  showExtraTabs: boolean;
-  showEditForm = false;
 
   loadingData = false;
 
-  schemaView = 'list';
   descriptionView = 'default';
-  contextView = 'default';
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
   errorMessage: any;
-  elementType: any;
   showEdit: boolean;
   showEditDescription = false;
   access: any;
@@ -69,24 +85,27 @@ export class DataTypeComponent extends BaseComponent
     'rules',
     'comments',
     'links',
-    'attachments'
+    'attachments',
+    'history'
   ]);
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
-  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
 
   constructor(
     private title: Title,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
-    private sharedService: SharedService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private elementTypes: ElementTypesService,
-    private editingService: EditingService,
+    private editingService: EditingService
   ) {
     super();
+  }
+
+  get typeOfDataType() {
+    return this.dataType.domainType;
   }
 
   ngOnInit() {
@@ -97,12 +116,9 @@ export class DataTypeComponent extends BaseComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.resources.dataModel.get(this.dataModelId).subscribe(
-      (result) =>
-      {
-        this.dataModel = result.body;
-      }
-    );
+    this.resources.dataModel.get(this.dataModelId).subscribe((result) => {
+      this.dataModel = result.body;
+    });
 
     this.title.setTitle('Data Type');
 
@@ -129,8 +145,6 @@ export class DataTypeComponent extends BaseComponent
 
         this.dataType.classifiers = this.dataType.classifiers || [];
         this.loadingData = false;
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() || !this.dataType.editable;
       },
       () => {
         this.loadingData = false;
@@ -154,7 +168,7 @@ export class DataTypeComponent extends BaseComponent
     this.stateHandler.Go('dataType', { tabView: tab.name }, { notify: false });
   }
 
-  save(saveItems: Array<DefaultProfileItem>) {
+  save(saveItems: DefaultProfileItem[]) {
     const resource: DataType = {
       id: this.dataType.id,
       domainType: this.dataType.domainType,
@@ -185,5 +199,10 @@ export class DataTypeComponent extends BaseComponent
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 }

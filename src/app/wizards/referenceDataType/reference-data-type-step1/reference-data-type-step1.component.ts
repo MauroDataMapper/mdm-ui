@@ -19,10 +19,10 @@ import { Component, OnInit } from '@angular/core';
 import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { WizardStep } from '@mdm/wizards/wizards.model';
 import { ReferenceDataTypeMainComponent } from '../reference-data-type-main/reference-data-type-main.component';
-import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { FormsModule } from '@angular/forms';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { NgIf } from '@angular/common';
 
 @Component({

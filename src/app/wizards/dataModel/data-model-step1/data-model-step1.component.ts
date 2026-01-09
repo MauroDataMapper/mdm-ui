@@ -24,15 +24,15 @@ import { WizardStep } from '@mdm/wizards/wizards.model';
 import { DataModelMainComponent } from '../data-model-main/data-model-main.component';
 import { takeUntil } from 'rxjs/operators';
 import { DataModelType } from '@maurodatamapper/mdm-resources';
-import { ElementClassificationsComponent } from '../../../utility/element-classifications/element-classifications.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { ContentEditorComponent } from '../../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { NgIf, NgFor } from '@angular/common';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatTooltip } from '@angular/material/tooltip';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 
 @Component({
     selector: 'mdm-data-model-step1',

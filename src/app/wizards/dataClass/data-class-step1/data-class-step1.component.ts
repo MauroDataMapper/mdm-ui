@@ -16,12 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { DataModel } from '../../../../../../mdm-resources';
-import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { DataModel } from '@maurodatamapper/mdm-resources';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 
 @Component({
     selector: 'mdm-data-class-step1',

@@ -19,7 +19,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MatButton } from '@angular/material/button';
-import { ContentEditorComponent } from '../../../../content/content-editor/content-editor.component';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { NgIf } from '@angular/common';
 
 export interface FullContentEditDialogData {

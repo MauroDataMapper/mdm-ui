@@ -22,7 +22,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef } fro
 import { MockComponent, MockDirective } from 'ng-mocks';
 import { CatalogueSearchProfileFilterListComponent } from '@mdm/catalogue-search/catalogue-search-profile-filter-list/catalogue-search-profile-filter-list.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ClassifierIndexResponse, FilterQueryParameters, ProfileSummaryIndexResponse } from '../../../../../mdm-resources';
+import { ClassifierIndexResponse, FilterQueryParameters, ProfileSummaryIndexResponse } from '@maurodatamapper/mdm-resources';
 import { Observable, of } from 'rxjs';
 
 describe('ProfileFilterDialogComponent', () => {

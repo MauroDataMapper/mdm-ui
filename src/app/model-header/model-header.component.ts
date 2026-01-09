@@ -67,7 +67,7 @@ import { ElementStatusComponent } from '../utility/element-status/element-status
 import { ElementIconComponent } from '../shared/element-icon/element-icon.component';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgIf, NgClass, NgFor } from '@angular/common';
-import { isContainerDomainType } from '../../../../mdm-resources/src';
+import { isContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 export type ModelHeaderCatalogueItem = CatalogueItemDetail &
   Securable &

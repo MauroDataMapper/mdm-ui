@@ -17,10 +17,10 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { CreateType } from '@mdm/wizards/wizards.model';
-import { ModelSelectorTreeComponent } from '../../../model-selector-tree/model-selector-tree.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { FormsModule } from '@angular/forms';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { ElementLinkComponent } from '../../../utility/element-link/element-link.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { NgIf } from '@angular/common';
 
 @Component({

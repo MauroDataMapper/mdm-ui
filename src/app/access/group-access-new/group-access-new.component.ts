@@ -135,6 +135,7 @@ export class GroupAccessNewComponent
       .subscribe(([userGroups, groupRoles]) => {
         this.userGroups = userGroups.body.items;
         this.groupRoles = groupRoles.body.items;
+        this.filterUserGroups();
       });
   }
 
@@ -177,7 +178,7 @@ export class GroupAccessNewComponent
       .addUserGroupToSecurableResourceGroupRole(
         this.catalogueItem.domainType,
         this.catalogueItem.id,
-        this.formGroup.controls.groupRole.value.id,
+        this.formGroup.controls.groupRole.value.name,
         this.formGroup.controls.userGroup.value.id,
         null
       )
@@ -201,7 +202,7 @@ export class GroupAccessNewComponent
       .removeUserGroupFromSecurableResourceGroupRole(
         this.catalogueItem.domainType,
         this.catalogueItem.id,
-        item.groupRole.id,
+        item.groupRole.name,
         item.userGroup.id
       )
       .pipe(
@@ -245,6 +246,7 @@ export class GroupAccessNewComponent
         this.securableResourceGroupRoles = response.body.items;
         this.totalItemCount = response.body.count;
         this.dataSource.data = this.securableResourceGroupRoles;
+        this.filterUserGroups();
       });
   }
 
@@ -258,5 +260,13 @@ export class GroupAccessNewComponent
     }
 
     return undefined;
+  }
+
+  private filterUserGroups() {
+    this.securableResourceGroupRoles.forEach((securableResourceGroupRole) => {
+      this.userGroups = this.userGroups.filter(userGroup =>
+        securableResourceGroupRole.userGroup.name !== userGroup.name
+      );
+    });
   }
 }

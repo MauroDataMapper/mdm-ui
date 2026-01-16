@@ -80,6 +80,7 @@ export class GroupAccessNewComponent
   totalItemCount = 0;
   securableResourceGroupRoles: SecurableResourceGroupRole[] = [];
   userGroups: UserGroup[] = [];
+  availableUserGroups: UserGroup[] = [];
   groupRoles: GroupRole[] = [];
   loading = true;
   state: 'view' | 'add' = 'view';
@@ -263,8 +264,10 @@ export class GroupAccessNewComponent
   }
 
   private filterUserGroups() {
+    this.availableUserGroups = []
+    this.userGroups.forEach(val => this.availableUserGroups.push(Object.assign({}, val)));
     this.securableResourceGroupRoles.forEach((securableResourceGroupRole) => {
-      this.userGroups = this.userGroups.filter(userGroup =>
+      this.availableUserGroups = this.userGroups.filter(userGroup =>
         securableResourceGroupRole.userGroup.name !== userGroup.name
       );
     });

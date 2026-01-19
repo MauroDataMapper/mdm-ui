@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
           mat-flat-button
           color="primary"
           type="button"
-          [disabled]="state === 'add'"
+          [disabled]="state === 'add' || availableUserGroups.length == 0"
           (click)="startAdding()"
         >
           <span class="fas fa-plus"></span>
@@ -65,9 +65,8 @@ SPDX-License-Identifier: Apache-2.0
   <form [formGroup]="formGroup">
     <mat-form-field appearance="outline">
       <mat-label>Group</mat-label>
-      <mat-select formControlName="userGroup">
-        <mat-option></mat-option>
-        <mat-option *ngFor="let userGroup of userGroups" [value]="userGroup">{{
+      <mat-select formControlName="userGroup" placeholder="User Group">
+        <mat-option *ngFor="let userGroup of availableUserGroups" [value]="userGroup">{{
           userGroup.name
         }}</mat-option>
       </mat-select>
@@ -77,8 +76,7 @@ SPDX-License-Identifier: Apache-2.0
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Role</mat-label>
-      <mat-select formControlName="groupRole">
-        <mat-option></mat-option>
+      <mat-select formControlName="groupRole" placeholder="Role">
         <mat-option *ngFor="let groupRole of groupRoles" [value]="groupRole">{{
           groupRole.displayName
         }}</mat-option>

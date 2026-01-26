@@ -104,7 +104,9 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.elementSelected();
-
+    if (this.description == '<p></p>') {
+      this.description = '';
+    }
     if (this.inEditMode) {
       const usingMacOs = window.navigator.userAgent.search('Mac') !== -1;
       this.keyboardShortcuts = usingMacOs ? macShortcuts : standardShortcuts;

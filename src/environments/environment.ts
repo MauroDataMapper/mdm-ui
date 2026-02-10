@@ -24,7 +24,7 @@ const packageFile = require('../../package.json');
 export const environment = {
   production: false,
   version: packageFile?.version ?? '',
-  apiEndpoint: 'http://localhost:8080/api',
+  apiEndpoint: '/api',
   HDFLink: '',
   themeName: 'default',
   appTitle: 'Mauro Data Mapper',

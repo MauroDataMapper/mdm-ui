@@ -88,8 +88,7 @@ export class OpenIdConnectAuthorizeComponent implements OnInit {
           this.verifyLoggedIn();
         }
       );
-    }
- else {
+    } else {
       this.securityHandler
         .authorizeOpenIdConnectSession({
           state,

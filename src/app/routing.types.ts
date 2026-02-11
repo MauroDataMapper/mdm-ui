@@ -42,7 +42,7 @@ export const redirectUsingPath = async (
   const domain: PathableDomainType = params.domain;
   const path: string = params.path;
   const finalised: boolean = params.finalised ?? false;
-
+  const uuid: string = params.uuid;
   const notFoundState: RedirectToResult = {
     state: 'appContainer.mainApp.twoSidePanel.catalogue.notFound'
   };
@@ -53,7 +53,8 @@ export const redirectUsingPath = async (
 
   const item$ = mauroItemProvider.locate(path, {
     domain,
-    finalisedOnly: finalised
+    parentId: uuid,
+    finalisedOnly: finalised,
   });
 
   // Must convert the observable into a promise so the UI Router can use the result

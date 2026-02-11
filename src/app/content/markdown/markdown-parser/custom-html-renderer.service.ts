@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import * as marked from 'marked';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,8 @@ export class CustomHtmlRendererService extends marked.Renderer {
   constructor(private pathNames: PathNameService) {
     super();
   }
+
+  rootObject?: CatalogueItem;
 
   link(href: string, _: string, text: string) {
     if (!href) {
@@ -42,7 +45,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
     // First have to convert back hat characters to spaces. This was done in MarkdownParserService
     // because spaces in the href part meant the marked parser would not get us this far
     const path = href.replace(/\^/g, ' ');
-    const link = this.pathNames.createHref(path);
+    const link = this.pathNames.createHref(path, this.rootObject);
     return `<a href='${link}'>${text}</a>`;
   }
 

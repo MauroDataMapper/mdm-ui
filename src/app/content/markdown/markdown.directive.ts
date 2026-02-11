@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { MarkdownParserService } from './markdown-parser/markdown-parser.service';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Directive({
     selector: '[mdmMarkdown]',
@@ -24,6 +25,16 @@ import { MarkdownParserService } from './markdown-parser/markdown-parser.service
 })
 export class MarkdownDirective implements OnInit {
   @Input() renderType: string;
+
+  @Input('rootObject')
+  set rootObject(rootObject: CatalogueItem) {
+    this.rootObjectInternal = rootObject;
+    return
+  }
+
+  get rootElement(): CatalogueItem {
+    return this.rootObjectInternal;
+  }
 
   @Input('markdown')
   set markdown(markdown: string) {
@@ -40,6 +51,8 @@ export class MarkdownDirective implements OnInit {
   }
 
   private markdownInternal: string;
+  private rootObjectInternal: CatalogueItem;
+
   constructor(
     private markdownParser: MarkdownParserService,
     private el: ElementRef,
@@ -52,7 +65,7 @@ export class MarkdownDirective implements OnInit {
 
   private renderMarkdown() {
     if (this.markdown) {
-      let html = this.markdownParser.parse(this.markdown, this.renderType);
+      let html = this.markdownParser.parse(this.markdown, this.renderType, this.rootElement);
       if (this.renderType === 'text') {
         html = `<p>${html}</p>`;
       }

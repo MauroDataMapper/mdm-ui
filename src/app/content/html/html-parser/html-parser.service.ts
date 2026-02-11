@@ -18,6 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
+import { UIRouter } from '@uirouter/core';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 export interface HtmlParserContext {
   versionOrBranchOverride?: string
@@ -29,23 +31,24 @@ export interface HtmlParserContext {
 export class HtmlParserService {
   private domParser = new DOMParser();
 
-  constructor(private pathNames: PathNameService) {}
+  constructor(private pathNames: PathNameService, private router: UIRouter) {}
 
   /**
    * Parse the given HTML (fragment) and modify to make suitable for local content display.
    *
    * @param original The original HTML source.
+   * @param original The catalogue item to which the HTML belongs (where applicable).
    * @param context Information relevant for applying to the resulting HTML.
    * @returns A modified version of the HTML source for local content display.
    */
-  parseAndModify(original: string, context: HtmlParserContext): string {
+  parseAndModify(original: string, rootObject: CatalogueItem, context: HtmlParserContext): string {
     const document = this.domParser.parseFromString(original, 'text/html');
-    this.rewriteHrefs(document, context);
+    this.rewriteHrefs(document, context, rootObject);
 
     return document.body.innerHTML;
   }
 
-  private rewriteHrefs(document: Document, context: HtmlParserContext) {
+  private rewriteHrefs(document: Document, context: HtmlParserContext, rootObject: CatalogueItem) {
     const links = document.querySelectorAll('a');
 
     links.forEach((link) => {
@@ -61,13 +64,7 @@ export class HtmlParserService {
 
       // Create internal link, assuming the href is a Mauro path to a catalogue item
       const path = link.href;
-      const internalHref = context.versionOrBranchOverride
-        ? this.pathNames.createHrefRelativeToVersionOrBranch(
-            path,
-            context.versionOrBranchOverride
-          )
-        : this.pathNames.createHref(path);
-      link.href = internalHref;
+      link.href = this.pathNames.createHref(path, rootObject);
     });
   }
 }

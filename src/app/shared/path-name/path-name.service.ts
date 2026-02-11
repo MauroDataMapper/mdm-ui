@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  CatalogueItem,
   Modelable,
   Navigatable,
   PathableDomainType
@@ -192,26 +193,28 @@ export class PathNameService {
     return pathElements;
   }
 
-  createHref(path: string) {
-    const domain = this.getPathableDomainFromPath(path);
-    return this.createHrefFromPath(domain, path);
+  createHref(path: string, rootObject: CatalogueItem) {
+    // const domain = this.getPathableDomainFromPath(path);
+
+    return this.createHrefFromPath(path, rootObject);
   }
 
-  createHrefRelativeToVersionOrBranch(path: string, branchName: string) {
+  createHrefRelativeToVersionOrBranch(path: string, branchName: string, rootObject: CatalogueItem) {
     const pathElements = this.parseAndOverrideVersionOrBranch(path, branchName);
     const overriddenPath = this.build(pathElements);
 
-    const domain = pathableDomainTypesFromPrefix.get(pathElements[0].type);
+    // const domain = pathableDomainTypesFromPrefix.get(pathElements[0].type);
 
     // Create a href to the path pointing to the version/branch, not the original parameter
-    return this.createHrefFromPath(domain, overriddenPath);
+    return this.createHrefFromPath(overriddenPath, rootObject);
   }
 
-  private createHrefFromPath(domain: PathableDomainType, path: string) {
+  private createHrefFromPath(path: string, rootObject: CatalogueItem) {
     return this.router.stateService.href(
       'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
       {
-        domain,
+        domain: rootObject.domainType,
+        uuid: rootObject.id,
         path
       }
     );

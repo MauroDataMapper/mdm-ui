@@ -163,7 +163,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       // Intercept the HTML content to render for display only so that certain parts can be altered
       // The version or branch override will try to force all Mauro path links to work within the same context as
       // the containing model the root element is in, if available
-      this.displayContent = this.htmlParser.parseAndModify(this.description, {
+      this.displayContent = this.htmlParser.parseAndModify(this.description, this.rootElement,{
         versionOrBranchOverride: this.getVersionOrBranchOverride()
       });
     }
@@ -244,7 +244,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     savedSelection: any
   ) {
     const path
-      = element.path ?? component.pathNames.createFromBreadcrumbs(element);
+      = element.localPath ?? element.path ?? component.pathNames.createFromBreadcrumbs(element);
 
     // Need to do this for NHS England, local paths should be used so that links can be maintained within the context of the branches
     // they live under

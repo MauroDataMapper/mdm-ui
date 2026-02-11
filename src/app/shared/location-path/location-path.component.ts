@@ -65,7 +65,7 @@ export class LocationPathComponent implements OnInit, OnChanges {
         = this.ancestorTreeItems?.map((ancestor) => {
           return {
             label: ancestor.label,
-            href: this.pathName.createHref(ancestor.path),
+            href: this.pathName.createHref(ancestor.path, ancestor),
             branchName: ancestor.branchName,
             modelVersion: ancestor.modelVersion,
             modelVersionTag: ancestor.modelVersionTag,

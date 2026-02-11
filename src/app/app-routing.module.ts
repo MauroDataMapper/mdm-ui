@@ -545,7 +545,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
        * redirected to.
        */
       name: 'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
-      url: '/item/{domain:string}/{path:string}?{finalised:bool}',
+      url: '/item/{domain:string}/{uuid:string}/{path:string}?{finalised:bool}',
       params: {
         finalised: false
       },

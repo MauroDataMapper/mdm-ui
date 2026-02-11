@@ -170,11 +170,11 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   }
 
   onHtmlEditorChanged(newValue: string) {
-    if (newValue == '<p></p>') {
-      this.description = newValue;
+    if (newValue == null || newValue == '<p></p>') {
+      this.description = '';
     }
     else {
-      this.description = '';
+       this.description = newValue;
     }
     this.descriptionChange.emit(this.description);
   }

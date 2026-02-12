@@ -36,7 +36,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
       return `<a href='#'>${text}</a>`;
     }
 
-    if (isUrl(href)) {
+    if (isUrl(href) || !this.rootObject) {
       // Create external link
       return `<a href='${href}' target="_blank">${text}</a>`;
     }

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <table *ngIf="this.currentProfileDetails" class="table table-bordered" role="presentation">
   <tbody>
     <tr *ngFor="let section of this.currentProfileDetails?.sections"
-        mdm-profile-section [profileSection]="section">
+        mdm-profile-section [profileSection]="section" [rootObject]="rootObject">
     </tr>
   </tbody>
 </table>

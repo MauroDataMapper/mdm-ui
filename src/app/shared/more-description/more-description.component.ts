@@ -26,6 +26,7 @@ import {
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
 import { NgIf } from '@angular/common';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Component({
     selector: 'mdm-more-description',
@@ -37,6 +38,7 @@ import { NgIf } from '@angular/common';
 export class MoreDescriptionComponent implements AfterViewChecked {
   @Input() description: string;
   @Input() type: 'editable' | 'preformatted' = 'editable';
+  @Input() rootObject: CatalogueItem;
 
   showMore = true;
   isOverflowing = false;

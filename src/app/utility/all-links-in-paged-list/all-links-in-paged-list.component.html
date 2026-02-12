@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [showTypeTitle]="true">
                     </mdm-element-link>
                     <div style="padding-left: 3px;" *ngIf="showDescription && item.targetModel.description && item.targetModel.description.length > 0">
-                        <mdm-more-description [description]="item.sourceModel.description"></mdm-more-description>
+                        <mdm-more-description [description]="item.sourceModel.description" [rootObject]="item.sourceModel"></mdm-more-description>
                     </div>
                 </div>
             </ng-template>

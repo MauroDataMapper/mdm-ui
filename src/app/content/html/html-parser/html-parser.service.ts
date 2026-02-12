@@ -57,7 +57,7 @@ export class HtmlParserService {
         return;
       }
 
-      if (isUrl(link.href)) {
+      if (isUrl(link.href) || !rootObject) {
         // Consider this to be a link to an external document, should not change
         return;
       }

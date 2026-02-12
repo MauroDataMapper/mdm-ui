@@ -191,6 +191,7 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="!record.inEdit" style="margin-top: 8px">
           <mdm-more-description
             [description]="record.value"
+            [rootObject]="record"
           ></mdm-more-description>
         </div>
         <div *ngIf="record.inEdit" style="margin-top: 8px">

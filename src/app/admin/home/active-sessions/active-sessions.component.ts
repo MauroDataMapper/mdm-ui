@@ -94,24 +94,27 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
     this.resourcesService.session.activeSessions({}, options).subscribe(
       (resp) => {
-        for (const [key] of Object.entries(resp.body.authorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
-          resp.body.authorisedItems[key].creationDateTime = new Date(
-            resp.body.authorisedItems[key].creationDateTime as string | number | Date
-          );
-          resp.body.authorisedItems[key].lastAccessedDateTime = new Date(
-            resp.body.authorisedItems[key].lastAccessedDateTime as string | number | Date
-          );
-          this.records.push(resp.body.authorisedItems[key]);
+        if (resp.body.authorisedItems) {
+          for (const [key] of Object.entries(resp.body.authorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
+            resp.body.authorisedItems[key].creationDateTime = new Date(
+              resp.body.authorisedItems[key].creationDateTime as string | number | Date
+            );
+            resp.body.authorisedItems[key].lastAccessedDateTime = new Date(
+              resp.body.authorisedItems[key].lastAccessedDateTime as string | number | Date
+            );
+            this.records.push(resp.body.authorisedItems[key]);
+          }
         }
-
-        for (const [key] of Object.entries(resp.body.unauthorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
-          resp.body.unauthorisedItems[key].creationDateTime = new Date(
-            resp.body.unauthorisedItems[key].creationDateTimeas as string | number | Date
-          );
-          resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(
-            resp.body.unauthorisedItems[key].lastAccessedDateTime as string | number | Date
-          );
-          this.unauthorised.push(resp.body.unauthorisedItems[key]);
+        if (resp.body.unauthorisedItems) {
+          for (const [key] of Object.entries(resp.body.unauthorisedItems as Record<string, unknown> | ArrayLike<unknown>)) {
+            resp.body.unauthorisedItems[key].creationDateTime = new Date(
+              resp.body.unauthorisedItems[key].creationDateTime as string | number | Date
+            );
+            resp.body.unauthorisedItems[key].lastAccessedDateTime = new Date(
+              resp.body.unauthorisedItems[key].lastAccessedDateTime as string | number | Date
+            );
+            this.unauthorised.push(resp.body.unauthorisedItems[key]);
+          }
         }
 
         this.totalItemCount = resp.body.countAuthorised;

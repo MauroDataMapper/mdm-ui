@@ -148,7 +148,7 @@ SPDX-License-Identifier: Apache-2.0
                       let-searchTerm="inputText"
                     >
                       <div
-                        [innerHTML]="item.label | mchighlighter: searchTerm"
+                        [innerHTML]="item.label | escapeHtml | mchighlighter: searchTerm"
                       ></div>
                       <div>
                         <mdm-element-link

@@ -107,6 +107,7 @@ SPDX-License-Identifier: Apache-2.0
             <span
               [innerHtml]="
                 record.sourceMultiFacetAwareItem?.label
+                  | escapeHtml
                   | mchighlighter: searchCriteria
               "
             ></span>
@@ -191,6 +192,7 @@ SPDX-License-Identifier: Apache-2.0
                 <span
                   [innerHtml]="
                     record.targetMultiFacetAwareItem.label
+                      | escapeHtml
                       | mchighlighter: searchCriteria
                   "
                 ></span>
@@ -208,6 +210,7 @@ SPDX-License-Identifier: Apache-2.0
                 <span
                   [innerHtml]="
                     record.targetMultiFacetAwareItem.label
+                      | escapeHtml
                       | mchighlighter: searchCriteria
                   "
                 ></span>

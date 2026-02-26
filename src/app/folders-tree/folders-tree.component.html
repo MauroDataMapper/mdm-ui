@@ -370,7 +370,7 @@ SPDX-License-Identifier: Apache-2.0
         isGhost: node.isGhost,
         modified: node.modified
       }">
-      <span [innerHTML]="node.label | mchighlighter: searchCriteria"></span>
+      <span [innerHTML]="node.label | escapeHtml | mchighlighter: searchCriteria"></span>
         <small *ngIf="node.branchName" class="ml-1 text-muted">
       <span> | </span>
       <span class="fas fa-code-branch mr-xsm"></span>

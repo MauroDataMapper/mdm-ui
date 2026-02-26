@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
   target="{{ openLinkLocation }}"
 >
   <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
-  <span [innerHtml]="label"></span>
+  <span>{{ label }}</span>
 </a>
 <a
   *ngIf="elementVal && !showHref && showLink"
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
   target="{{ openLinkLocation }}"
 >
   <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
-  <span [innerHtml]="label"></span>
+  <span>{{ label }}</span>
 </a>
 <span
   ><small *ngIf="elementVal && showTypeTitle" class="item-type ml-1">{{

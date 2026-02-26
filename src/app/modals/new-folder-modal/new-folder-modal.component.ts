@@ -33,13 +33,14 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { NgIf } from '@angular/common';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 @Component({
     selector: 'mdm-new-folder-modal',
     templateUrl: './new-folder-modal.component.html',
     styleUrls: ['./new-folder-modal.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, AlertComponent, MatFormField, MatLabel, MatInput, MatError, MatCheckbox, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, NgIf, AlertComponent, MatFormField, MatLabel, MatInput, MatError, MatCheckbox, MatButton, SafePipe]
 })
 export class NewFolderModalComponent implements OnInit {
   okBtn: string;

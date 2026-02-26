@@ -21,13 +21,14 @@ import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 @Component({
     selector: 'mdm-input-modal',
     templateUrl: './input-modal.component.html',
     styleUrls: ['./input-modal.component.scss'],
     standalone: true,
-    imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatDialogClose]
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, MatButton, MatDialogClose, SafePipe]
 })
 export class InputModalComponent implements OnInit {
   okBtn: string;

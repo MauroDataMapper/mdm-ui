@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
     <h4 class="modal-title marginless">{{ title }}</h4>
   </div>
   <div class="modal-body">
-    <span [innerHtml]="message"></span>
+    <span [innerHtml]="message | safe: 'html'"></span>
   </div>
   <div class="modal-footer" style="padding: 10px">
     <button

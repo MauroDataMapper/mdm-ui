@@ -29,11 +29,11 @@ export class HighlighterPipe implements PipeTransform {
       if (wildcardMatch) {
         const sections: string[] = phrase.split(' ');
         sections.forEach((section) => {
-          text = value.replace(new RegExp('(' + escape(section) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
+          text = value.replace(new RegExp('(' + encodeURIComponent(section) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
         });
       }
  else {
-        text = value.replace(new RegExp('(' + escape(phrase) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
+        text = value.replace(new RegExp('(' + encodeURIComponent(phrase) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
       }
     }
     return text;

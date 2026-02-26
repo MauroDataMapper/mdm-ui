@@ -54,6 +54,7 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
 import { NgIf, NgFor } from '@angular/common';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 interface NewVersionAction {
   name: string
@@ -71,7 +72,7 @@ interface NewVersionAction {
     templateUrl: './new-version.component.html',
     styleUrls: ['./new-version.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatSelectTrigger, NgFor, MatOption, MatError, MatInput, MatHint, MatCheckbox, AlertComponent, MatButton, MatProgressBar]
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, MatSelectTrigger, NgFor, MatOption, MatError, MatInput, MatHint, MatCheckbox, AlertComponent, MatButton, MatProgressBar, SafePipe]
 })
 export class NewVersionComponent implements OnInit {
   catalogueItem: CatalogueItem & Modelable;

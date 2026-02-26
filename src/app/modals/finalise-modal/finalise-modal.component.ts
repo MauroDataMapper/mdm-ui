@@ -27,6 +27,7 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgClass, NgIf } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 export interface FinaliseModalResponse {
   status: ModalDialogStatus
@@ -38,7 +39,7 @@ export interface FinaliseModalResponse {
     templateUrl: './finalise-modal.component.html',
     styleUrls: ['./finalise-modal.component.scss'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatRadioGroup, MatRadioButton, NgClass, ExtendedModule, MatFormField, MatLabel, MatInput, MatDialogActions, NgIf, MatButton]
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatRadioGroup, MatRadioButton, NgClass, ExtendedModule, MatFormField, MatLabel, MatInput, MatDialogActions, NgIf, MatButton, SafePipe]
 })
 export class FinaliseModalComponent implements OnInit {
   title: string;

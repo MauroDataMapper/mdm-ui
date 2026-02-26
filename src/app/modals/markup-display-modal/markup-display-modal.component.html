@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
   <hr>
   <mat-dialog-content class="mat-typography">
     <div class="full-width">
-    <span [innerHtml]="data.content"></span>
+    <span [innerHtml]="data.content | safe: 'html'"></span>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end" class="pt-2 pb-2">

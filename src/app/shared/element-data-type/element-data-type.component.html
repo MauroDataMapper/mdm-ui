@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div>
   <span *ngIf="elementDataType.domainType == 'PrimitiveType'">
     <a class="dataTypePrimitive" href="{{ link }}" [hidden]="hideName"
-      ><span [innerHtml]="elementDataType.label"></span></a
+      ><span>{{ elementDataType.label }}</span></a
     ><span class="dataTypeLabel dataTypePrimitive" [hidden]="hideName"
       >(Primitive)</span
     >
@@ -100,8 +100,7 @@ SPDX-License-Identifier: Apache-2.0
                     max-width: 100px;
                     min-width: 50px;
                   "
-                  [innerHtml]="record.key"
-                ></span>
+                >{{ record.key }}</span>
               </div>
             </td>
             <td
@@ -116,8 +115,7 @@ SPDX-License-Identifier: Apache-2.0
                   display: block;
                   max-width: 400px;
                 "
-                [innerHtml]="record.value"
-              >
+              >{{ record.value }}
               </span>
             </td>
           </tr>

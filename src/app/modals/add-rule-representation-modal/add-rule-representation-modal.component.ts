@@ -46,6 +46,7 @@ import { MatOption } from '@angular/material/core';
 import { NgFor, NgIf } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 export class RuleLanguage {
   displayName: string;
@@ -115,7 +116,7 @@ export interface AddRuleRepresentationModalResult {
     templateUrl: './add-rule-representation-modal.component.html',
     styleUrls: ['./add-rule-representation-modal.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatToolbar, MatInput, MatButton, AceModule]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatError, MatToolbar, MatInput, MatButton, AceModule, SafePipe]
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
   dmnCanvas: ElementRef;

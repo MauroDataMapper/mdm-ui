@@ -80,7 +80,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   }
 
   getDataElements() {
-    this.data.dataElementIdLst.forEach((item: any) => {
+    this.data.dataElementIdList.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
         this.resources.dataElement.get(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {

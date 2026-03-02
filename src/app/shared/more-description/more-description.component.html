@@ -23,6 +23,7 @@ SPDX-License-Identifier: Apache-2.0
     <mdm-content-editor
       *ngIf="type === 'editable'"
       [(content)]="this.description"
+      [rootElement]="this.rootObject"
       [inEditMode]="false"
       style="height: 100%"
     ></mdm-content-editor>

@@ -37,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0
       *ngIf="item.description"
       class="mdm-catalogue-item-search-result__content"
     >
-      <mdm-more-description [description]="item.description">
+      <mdm-more-description [description]="item.description" [rootObject]="item">
       </mdm-more-description>
     </div>
     <div

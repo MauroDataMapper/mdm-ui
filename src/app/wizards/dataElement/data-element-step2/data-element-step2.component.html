@@ -280,7 +280,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span [hidden]="!hideFilters">Name</span>
             <div [hidden]="hideFilters">
-              <mat-form-field class="filter" floatLabel="never">
+              <mat-form-field class="filter" floatLabel="auto">
                 <mat-label>Name</mat-label>
                 <input #filters matInput name="label" (keyup)="applyFilter()" />
               </mat-form-field>
@@ -306,7 +306,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span [hidden]="!hideFilters">Description</span>
             <div [hidden]="hideFilters">
-              <mat-form-field class="filter" floatLabel="never">
+              <mat-form-field class="filter" floatLabel="auto">
                 <mat-label>Description</mat-label>
                 <input
                   #filters
@@ -329,6 +329,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <mdm-more-description
               description="{{ record.description }}"
+              [rootObject]="record"
             ></mdm-more-description>
           </td>
         </ng-container>
@@ -427,7 +428,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span [hidden]="!hideFiltersSelectedDataTypes">Name</span>
             <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
+              <mat-form-field class="filter" floatLabel="auto">
                 <mat-label>Name</mat-label>
                 <input #filters matInput name="label" (keyup)="applyFilter()" />
               </mat-form-field>
@@ -460,7 +461,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span [hidden]="!hideFiltersSelectedDataTypes">Description</span>
             <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
+              <mat-form-field class="filter" floatLabel="auto">
                 <mat-label>Description</mat-label>
                 <input
                   #filters
@@ -481,7 +482,7 @@ SPDX-License-Identifier: Apache-2.0
               word-wrap: break-word;
             "
           >
-            <span>{{ record.description }}</span>
+            <mdm-more-description [description]="record.description" [rootObject]="record"></mdm-more-description>
           </td>
         </ng-container>
         <ng-container matColumnDef="domainType">
@@ -496,7 +497,7 @@ SPDX-License-Identifier: Apache-2.0
           >
             <span [hidden]="!hideFiltersSelectedDataTypes">Type</span>
             <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
+              <mat-form-field class="filter" floatLabel="auto">
                 <mat-label>Type</mat-label>
                 <input
                   #filters

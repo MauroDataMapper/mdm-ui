@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input } from '@angular/core';
-import { Profile } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Profile } from '@maurodatamapper/mdm-resources';
 import { MoreDescriptionComponent } from '../more-description/more-description.component';
 import { FormsModule } from '@angular/forms';
 import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
@@ -34,6 +34,7 @@ import { ProfileSectionComponent } from '@mdm/shared/profile-section/profile-sec
 })
 export class ProfileDetailsComponent {
   @Input() currentProfileDetails: Profile;
+  @Input() rootObject: CatalogueItem;
 
   readonly formOptionsMap = {
     integer: 'number',

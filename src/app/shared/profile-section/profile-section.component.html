@@ -43,6 +43,7 @@ SPDX-License-Identifier: Apache-2.0
           [(content)]="field.currentValue"
           id="{{ field.fieldName }}"
           [inEditMode]="false"
+          [rootElement]="rootObject"
           *ngIf="field.dataType === 'text'"
         ></mdm-content-editor>
         <input
@@ -94,7 +95,8 @@ SPDX-License-Identifier: Apache-2.0
         <div *ngIf="field.dataType === 'model'">
           <mdm-more-description
             [description]="field.currentValue"
-          ></mdm-more-description>
+            [rootObject]="rootObject">
+          </mdm-more-description>
         </div>
         <div *ngIf="field.dataType === 'folder'">
           {{ field.currentValue }}

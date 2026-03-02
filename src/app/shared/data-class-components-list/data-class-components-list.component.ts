@@ -529,7 +529,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.editing
       .openDialog(BulkEditModalComponent, {
         data: {
-          dataElementIdLst: dataClassIds,
+          dataElementIdList: dataClassIds,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },
@@ -559,7 +559,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.editing
       .openDialog(BulkEditModalComponent, {
         data: {
-          dataElementIdLst: dataElementIds,
+          dataElementIdList: dataElementIds,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },

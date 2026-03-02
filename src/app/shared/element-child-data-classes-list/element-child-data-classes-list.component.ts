@@ -187,11 +187,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   bulkDelete() {
-    const dataElementIdLst = this.records.filter(record => record.checked === true);
+    const dataElementIdList = this.records.filter(record => record.checked === true);
 
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
+        data: { dataElementIdList, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
         panelClass: 'bulk-delete-modal'
       });
 

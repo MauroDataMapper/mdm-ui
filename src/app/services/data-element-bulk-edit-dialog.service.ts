@@ -32,9 +32,9 @@ export class DataElementBulkEditDialogService {
     public dialog: MatDialog,
     private editingService: EditingService) { }
 
-  open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any) {
+  open(dataElementIdList: any, parentDataModel: any, parentDataClass: any) {
     const dg = this.dialog.open(BulkEditModalComponent, {
-        data: { dataElementIdLst, parentDataModel, parentDataClass },
+        data: { dataElementIdList, parentDataModel, parentDataClass },
         panelClass: 'bulk-edit-modal'
       });
 

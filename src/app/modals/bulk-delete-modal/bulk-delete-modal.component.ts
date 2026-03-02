@@ -66,7 +66,7 @@ export class BulkDeleteModalComponent implements AfterViewInit {
   }
 
   getData = () => {
-    this.records = this.data.dataElementIdLst;
+    this.records = this.data.dataElementIdList;
     this.changeRef.detectChanges();
   };
 

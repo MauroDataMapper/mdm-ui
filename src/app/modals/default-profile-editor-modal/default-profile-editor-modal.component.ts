@@ -48,13 +48,14 @@ import { MatInput } from '@angular/material/input';
 import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
 import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
 
 @Component({
     selector: 'mdm-default-profile-editor-modal',
     templateUrl: './default-profile-editor-modal.component.html',
     styleUrls: ['./default-profile-editor-modal.component.sass'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe]
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe, EscapeHtmlPipe]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;

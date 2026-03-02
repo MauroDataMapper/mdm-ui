@@ -275,10 +275,10 @@ export class ElementOwnedDataTypeListComponent
   };
 
   bulkDelete = () => {
-    const dataElementIdLst = this.records.filter(record => record.checked);
+    const dataElementIdList = this.records.filter(record => record.checked);
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: { dataElementIdLst, parentDataModel: this.parent },
+        data: { dataElementIdList, parentDataModel: this.parent },
         panelClass: 'bulk-delete-modal'
       });
 

@@ -59,13 +59,14 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
 import { NgIf, NgClass } from '@angular/common';
+import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
 
 @Component({
     selector: 'mdm-data-element-step2',
     templateUrl: './data-element-step2.component.html',
     styleUrls: ['./data-element-step2.component.sass'],
     standalone: true,
-    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar, HighlighterPipe]
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar, HighlighterPipe, EscapeHtmlPipe]
 })
 export class DataElementStep2Component
   implements OnInit, AfterViewInit, OnDestroy {

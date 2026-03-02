@@ -49,13 +49,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { NgIf, NgClass } from '@angular/common';
 import { FlexModule } from '@angular/flex-layout/flex';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 @Component({
     selector: 'mdm-code-set-terms-table',
     templateUrl: './code-set-terms-table.component.html',
     styleUrls: ['./code-set-terms-table.component.scss'],
     standalone: true,
-    imports: [FlexModule, NgIf, MatButton, MatTooltip, MultipleTermsSelectorComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, ElementAliasComponent, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, NgClass, ExtendedModule, MdmPaginatorComponent]
+    imports: [FlexModule, NgIf, MatButton, MatTooltip, MultipleTermsSelectorComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatCellDef, MatCell, ElementLinkComponent, ElementAliasComponent, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxSkeletonLoaderModule, NgClass, ExtendedModule, MdmPaginatorComponent, SafePipe]
 })
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   @Input() codeSet: CodeSetDetail;

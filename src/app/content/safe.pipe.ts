@@ -35,7 +35,6 @@ export class SafePipe implements PipeTransform {
 
     // DOMPurify defaults are safe; you can pass a config object here to allow certain tags/attributes.
     const cleaned = DOMPurify.sanitize(unsafeHtml, { RETURN_TRUSTED_TYPE: false });
-    console.error('cleaned: ', cleaned);
     // Return SafeHtml so you can bind directly to [innerHTML].
     return this.sanitizer.bypassSecurityTrustHtml(cleaned);
   }

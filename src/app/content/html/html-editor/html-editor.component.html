@@ -25,5 +25,5 @@ SPDX-License-Identifier: Apache-2.0
 >
 </ngx-jodit>
 <div style="clear: both">
-  <span [innerHTML]="displayContent | safe: 'html'" *ngIf="!inEditMode"></span>
+  <span [innerHTML]="displayContent | safe" *ngIf="!inEditMode"></span>
 </div>

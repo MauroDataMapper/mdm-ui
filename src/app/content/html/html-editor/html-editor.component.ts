@@ -149,6 +149,14 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       buttonsSM: buttons,
       buttonsXS: buttons,
       sourceEditor: 'ace',
+      cleanHTML: {
+        // deny script tags; remove attributes like onerror
+        denyTags: 'script',
+        // if any element has error handlers, remove them
+        removeOnError: true,
+        // run cleaner inside an iframe sandbox (safer but slower)
+        useIframeSandbox: true
+      } as any
     };
   }
 
@@ -163,7 +171,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       // Intercept the HTML content to render for display only so that certain parts can be altered
       // The version or branch override will try to force all Mauro path links to work within the same context as
       // the containing model the root element is in, if available
-      this.displayContent = this.htmlParser.parseAndModify(this.description, this.rootElement,{
+      this.displayContent = this.htmlParser.parseAndModify(this.description, this.rootElement, {
         versionOrBranchOverride: this.getVersionOrBranchOverride()
       });
     }
@@ -218,8 +226,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     if (!component.allowAutocompleteSearch) {
       return;
     }
-    const savedSelection = editor.selection.save();
-    const focusNode = editor.selection.sel.focusNode;
+    const savedSelection = editor.selection?.save();
+    const focusNode = editor.selection?.sel?.focusNode;
 
     component.dialog
       .openElementSearch(component.rootElement)

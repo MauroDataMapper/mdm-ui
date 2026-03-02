@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <h4 class="modal-title marginless">{{ modalTitle }}</h4>
 </div>
 <div class="modal-body pxy-2">
-  <p [innerHtml]="message | safe: 'html'"></p>
+  <p [innerHtml]="message | safe"></p>
   <form [formGroup]="formGroup">
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width paddingless">

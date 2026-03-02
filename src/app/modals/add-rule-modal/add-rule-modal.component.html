@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <form [formGroup]="formGroup">
   <div class="modal-body pxy-2">
-    <p *ngIf="message" [innerHtml]="message | safe: 'html'"></p>
+    <p *ngIf="message" [innerHtml]="message | safe"></p>
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" required class="full-width">
         <mat-label>Name</mat-label>

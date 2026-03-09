@@ -21,19 +21,20 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { SharedService } from '../services/shared.service';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'mdm-reset-password',
     templateUrl: './reset-password.component.html',
     styleUrls: ['./reset-password.component.scss'],
     standalone: true,
-    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton]
+    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton, MatIcon, MatIconButton]
 })
 export class ResetPasswordComponent implements OnInit {
   errors: any;
@@ -47,6 +48,9 @@ export class ResetPasswordComponent implements OnInit {
 
   uid: any;
   token: any;
+
+  hideOldPassword: boolean;
+  hideNewPassword: boolean;
 
   constructor(
     private title: Title,
@@ -62,6 +66,9 @@ export class ResetPasswordComponent implements OnInit {
     this.uid = this.stateService.params.uid;
     // tslint:disable-next-line: deprecation
     this.token = this.stateService.params.token;
+
+    this.hideOldPassword = true;
+    this.hideNewPassword = true;
 
     if (!this.uid || !this.token || this.sharedService.isLoggedIn()) {
       this.stateHandler.Go('home');

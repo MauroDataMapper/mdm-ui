@@ -27,7 +27,7 @@ export class EscapeHtmlPipe implements PipeTransform {
   }
 }
 
-function rawToXml(raw: string | null, full: boolean = false): string | null {
+export function rawToXml(raw: string | null, full: boolean = false): string | null {
   if (raw == null) return null;
 
   let count = 0;

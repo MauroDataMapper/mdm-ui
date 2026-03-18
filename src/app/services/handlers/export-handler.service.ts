@@ -103,7 +103,11 @@ export class ExportHandlerService {
   createBlobLink(blob: Blob, fileName: string) {
     // http://jsbin.com/kelijatigo/edit?html,js,output
     // https://github.com/keeweb/keeweb/issues/130
+    console.log('blob', blob);
+    console.log('blob.size', blob?.size);
+    console.log('blob.type', blob?.type);
     const url = (window.URL || window.webkitURL).createObjectURL(blob);
+    console.log('url', url);
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', fileName);
@@ -112,6 +116,8 @@ export class ExportHandlerService {
     link.setAttribute('title', fileName);
     // DO NOT set target!!!!!
     // link.setAttribute('target', '_blank');
+    console.log('link.href', link.href);
+    console.log('link.outerHTML', link.outerHTML);
     return link;
   }
 

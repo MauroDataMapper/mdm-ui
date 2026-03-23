@@ -53,7 +53,7 @@ export class CatalogueSearchService {
   search(
     params: CatalogueSearchParameters
   ): Observable<CatalogueSearchResultSet> {
-    const [page, pageParams] = this.getPageParameters(params);
+    const [offset, max, pageParams] = this.getPageParameters(params);
 
     // Create a stream emitting the profile filters to be used in the query
     const profileFieldsQueryData$ = params.profileFiltersDto
@@ -74,8 +74,8 @@ export class CatalogueSearchService {
           map((searchResults) => {
             return {
               count: searchResults.count,
-              pageSize: pageParams.max!,
-              page,
+              max,
+              offset,
               items: searchResults.items
             };
           })
@@ -186,14 +186,14 @@ export class CatalogueSearchService {
 
   private getPageParameters(
     params: CatalogueSearchParameters
-  ): [number, PageParameters] {
-    const page = params.page ?? defaultPage;
-    const pageSize = params.pageSize ?? defaultPageSize;
+  ): [number, number, PageParameters] {
+    const offset = params.offset ?? defaultPage;
+    const max = params.max ?? defaultPageSize;
     const pageParams: PageParameters = {
-      max: pageSize,
-      offset: page * pageSize
+      max: max,
+      offset: offset
     };
-    return [page, pageParams];
+    return [offset, max, pageParams];
   }
 
   private getCommonQueryParameters(

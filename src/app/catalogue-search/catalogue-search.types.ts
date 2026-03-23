@@ -221,13 +221,13 @@ export interface CatalogueSearchParameters {
    * If provided, state which page of results to fetch. If not provided, the first page
    * is assumed.
    */
-  page?: number
+  offset?: number
 
   /**
    * If provided, state how many results to return per page. If not provided, the default
    * value is assumed.
    */
-  pageSize?: number
+  max?: number
 
   /**
    * The field/property name to sort by.
@@ -345,13 +345,19 @@ export const mapStateParamsToSearchParameters = (
     ? deserializeProfileFiltersToDto(query.md as string)
     : undefined;
 
+  const fallbackMax = query?.pageSize ?? undefined;
+  const fallbackOffset =
+    query?.page !== undefined
+      ? Number(query.page) * Number(query?.pageSize ?? defaultPageSize)
+      : undefined;
+
   return {
     ...(hasContext && { context }),
     search: query?.search ?? undefined,
-    page: query?.page ?? undefined,
+    offset: query?.offset ?? fallbackOffset,
     sort: query?.sort ?? undefined,
     order: query?.order ?? undefined,
-    pageSize: query?.pageSize ?? undefined,
+    max: query?.max ?? fallbackMax,
     domainTypes,
     labelOnly: query?.l !== false,
     exactMatch: query?.e === true ? true : undefined,
@@ -383,10 +389,10 @@ export const mapSearchParametersToRawParams = (
       cxmid: parameters.context.dataModelId
     }),
     ...(parameters.search && { search: parameters.search }),
-    ...(parameters.page && { page: parameters.page }),
+    ...(parameters.offset !== undefined && { offset: parameters.offset }),
     ...(parameters.sort && { sort: parameters.sort }),
     ...(parameters.order && { order: parameters.order }),
-    ...(parameters.pageSize && { pageSize: parameters.pageSize }),
+    ...(parameters.max !== undefined && { max: parameters.max }),
     ...(parameters.domainTypes && { dt: parameters.domainTypes }),
     ...(parameters.labelOnly && { l: parameters.labelOnly }),
     ...(parameters.exactMatch && { e: parameters.exactMatch }),
@@ -412,7 +418,7 @@ export const mapSearchParametersToRawParams = (
 
 export interface CatalogueSearchResultSet {
   count: number
-  pageSize: number
-  page: number
+  max: number
+  offset: number
   items: CatalogueItemSearchResult[]
 }

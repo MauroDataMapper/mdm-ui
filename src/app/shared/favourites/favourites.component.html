@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-mauro-item-tree
     [nodes]="treeNodes"
     (selectionChange)="selected($event)"
+    (focusChange)="focused($event)"
   ></mdm-mauro-item-tree>
   <div class="loading-spinner" *ngIf="reloading">
     <div>

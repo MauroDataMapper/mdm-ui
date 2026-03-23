@@ -617,6 +617,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   }
 
+  favouriteFocused(item: MauroItemTreeFlatNode) {
+    this.activeTab = 0;
+    this.currentTab = 'models';
+    this.onNodeDbClick(item as unknown as MdmTreeItem);
+  }
+
   private loadApiContentProperties(properties: ApiProperty[]) {
     this.isRootFolderRestricted = JSON.parse(
       this.getContentProperty(properties, 'security.restrict.root.folder')

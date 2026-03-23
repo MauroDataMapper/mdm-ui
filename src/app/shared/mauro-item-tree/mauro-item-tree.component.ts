@@ -21,7 +21,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild
@@ -203,9 +202,7 @@ export class MauroItemTreeComponent implements OnChanges {
       this.contextMenuTrigger.openMenu();
     }
 
-    this.targetVersions = node.domainType === CatalogueItemDomainType.DataModel
-      ? await this.folderService.loadVersions(node)
-      : [];
+    this.targetVersions = await this.folderService.loadVersions(node);
   }
 
   canCreateElements(node: MauroItemTreeFlatNode) {

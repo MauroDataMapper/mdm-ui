@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div style="margin-top: 2px">
   <mdm-mauro-item-tree
     [nodes]="treeNodes"
+    [wizardReturnTab]="'favourites'"
     (selectionChange)="selected($event)"
     (focusChange)="focused($event)"
   ></mdm-mauro-item-tree>

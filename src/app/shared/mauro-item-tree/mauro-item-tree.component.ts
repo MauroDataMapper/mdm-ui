@@ -21,18 +21,21 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { Access } from '@mdm/model/access';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderService } from '@mdm/folders-tree/folder.service';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import {
+  BroadcastService,
   FavouriteHandlerService,
   SecurityHandlerService,
   StateHandlerService
@@ -48,6 +51,10 @@ import {
   MauroItemTreeFlatNode,
   MauroTreeViewDataSource
 } from './mauro-item-tree.types';
+import {
+  ModelsTreeTab,
+  ModelsTreeTabStateService
+} from '@mdm/shared/models/models-tree-tab-state.service';
 import { ElementLabelComponent } from '../element-label/element-label.component';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatIcon } from '@angular/material/icon';
@@ -75,6 +82,11 @@ export class MauroItemTreeComponent implements OnChanges {
   @Input() nodes: MauroItemTreeFlatNode[] = [];
 
   /**
+   * Optional preferred models tree tab to reopen after wizard navigation.
+   */
+  @Input() wizardReturnTab?: ModelsTreeTab;
+
+  /**
    * Event emitted when the selected node has changed.
    */
   @Output() selectionChange = new EventEmitter<MauroItemTreeFlatNode>();
@@ -92,15 +104,20 @@ export class MauroItemTreeComponent implements OnChanges {
   selected?: MauroItemTreeFlatNode;
   contextMenuPosition = { x: '0', y: '0' };
   targetVersions = [];
+  private expandedNodeIds = new Set<string>();
+  private pendingExpandedNodeIds = new Set<string>();
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private resources: MdmResourcesService,
     private modelTree: ModelTreeService,
     private securityHandler: SecurityHandlerService,
+    private broadcast: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
-    private folderService: FolderService
+    private folderService: FolderService,
+    private modelsTreeTabState: ModelsTreeTabStateService
   ) {
     this.treeControl = new FlatTreeControl<MauroItemTreeFlatNode>(
       this.getLevel,
@@ -112,12 +129,32 @@ export class MauroItemTreeComponent implements OnChanges {
       this.resources,
       this.modelTree
     );
+
+    this.treeControl.expansionModel.changed
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((change) => {
+        change.added?.forEach(node => this.expandedNodeIds.add(node.id));
+        change.removed?.forEach(node => this.expandedNodeIds.delete(node.id));
+      });
+
+    this.dataSource.dataChange
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.reapplyExpandedState());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.nodes) {
+      if (this.shouldRememberExpandedStates()) {
+        this.pendingExpandedNodeIds = new Set(this.expandedNodeIds);
+      }
+
       this.dataSource.data = this.nodes;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   getLevel = (node: MauroItemTreeFlatNode) => node.level;
@@ -241,6 +278,7 @@ export class MauroItemTreeComponent implements OnChanges {
     this.modelTree
       .createNewFolder({ parentFolderId: node.id, allowVersioning })
       .pipe(
+        finalize(() => this.refreshFavouritesIfRequired(node)),
         catchError((error) => {
           this.messageHandler.showError(
             'There was a problem creating the Folder.',
@@ -256,6 +294,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddDataModel(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewDataModel', {
       parentFolderId: node.id,
       parentDomainType: node.domainType
@@ -263,6 +302,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddTerminology(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewTerminology', {
       parentFolderId: node.id,
       parentDomainType: node.domainType
@@ -270,6 +310,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddCodeSet(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewCodeSet', {
       parentFolderId: node.id,
       parentDomainType: node.domainType
@@ -277,6 +318,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddReferenceDataModel(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewReferenceDataModel', {
       parentFolderId: node.id,
       parentDomainType: node.domainType
@@ -284,6 +326,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddDataClass(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewDataClass', {
       grandParentDataClassId:
         node.domainType === CatalogueItemDomainType.DataClass
@@ -299,6 +342,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddDataElement(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: node.parentId ? node.parentId : null,
       parentDataModelId: node.modelId,
@@ -307,6 +351,7 @@ export class MauroItemTreeComponent implements OnChanges {
   }
 
   handleAddDataType(node: MauroItemTreeFlatNode) {
+    this.setWizardReturnTab();
     this.stateHandler.Go('NewDataType', { parentDataModelId: node.id });
   }
 
@@ -379,5 +424,44 @@ export class MauroItemTreeComponent implements OnChanges {
 
     data.splice(index, count);
     this.dataSource.data = data;
+  }
+
+  private setWizardReturnTab() {
+    if (this.wizardReturnTab) {
+      this.modelsTreeTabState.setNextActiveTab(this.wizardReturnTab);
+    }
+  }
+
+  private refreshFavouritesIfRequired(node: MauroItemTreeFlatNode) {
+    if (this.wizardReturnTab === 'favourites') {
+      this.broadcast.favouritesChanged({
+        name: 'add',
+        element: node
+      });
+    }
+  }
+
+  private reapplyExpandedState() {
+    if (!this.shouldRememberExpandedStates() || this.pendingExpandedNodeIds.size === 0) {
+      return;
+    }
+
+    this.treeControl.dataNodes.forEach((node) => {
+      if (
+        this.pendingExpandedNodeIds.has(node.id)
+        && node.expandable
+        && !this.treeControl.isExpanded(node)
+      ) {
+        this.treeControl.expand(node);
+      }
+
+      if (this.treeControl.isExpanded(node)) {
+        this.pendingExpandedNodeIds.delete(node.id);
+      }
+    });
+  }
+
+  private shouldRememberExpandedStates() {
+    return this.wizardReturnTab === 'favourites';
   }
 }

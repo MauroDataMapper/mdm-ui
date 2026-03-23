@@ -55,6 +55,7 @@ import {
   mapCatalogueDomainTypeToContainer,
   MdmTreeLevelManager
 } from './models.model';
+import { ModelsTreeTabStateService } from './models-tree-tab-state.service';
 import { MauroItemTreeFlatNode } from '../mauro-item-tree/mauro-item-tree.types';
 import { FavouritesComponent } from '../favourites/favourites.component';
 import { FoldersTreeComponent } from '../../folders-tree/folders-tree.component';
@@ -206,11 +207,20 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
-    private modelTree: ModelTreeService
+    private modelTree: ModelTreeService,
+    private modelsTreeTabState: ModelsTreeTabStateService
   ) {}
 
   ngOnInit() {
     this.title.setTitle('Models');
+
+    this.isLoggedIn = this.sharedService.isLoggedIn();
+
+    const preferredTab = this.modelsTreeTabState.consumeNextActiveTab();
+    if (preferredTab === 'favourites' && this.isLoggedIn) {
+      this.activeTab = 2;
+      this.currentTab = 'favourites';
+    }
 
     this.includeModelSuperseded
       = this.userSettingsHandler.get('includeModelSuperseded') || false;
@@ -247,8 +257,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.currentClassification = null;
     this.allClassifications = [];
-
-    this.isLoggedIn = this.sharedService.isLoggedIn();
 
     this.resources.apiProperties
       .listPublic()
@@ -614,6 +622,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
       dataClassId: item.parentId || '',
       terminologyId: item.modelId,
       parentId: item.parentId
+    });
+  }
+
+  favouriteFocused(item: MauroItemTreeFlatNode) {
+    this.activeTab = 0;
+    this.tabSelected(0);
+
+    // Ensure tab switch is applied before focusing in the models tree.
+    setTimeout(() => {
+      this.onNodeDbClick(item as unknown as MdmTreeItem);
     });
   }
 

@@ -58,6 +58,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { NgIf, NgTemplateOutlet, NgFor, NgClass } from '@angular/common';
 import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
+import { ElementLabelComponent } from '@mdm/shared/element-label/element-label.component';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -78,7 +79,7 @@ export class NodeConfirmClickEvent {
     templateUrl: './folders-tree.component.html',
     styleUrls: ['./folders-tree.component.scss'],
     standalone: true,
-    imports: [NgIf, MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatIconButton, MatIcon, NgTemplateOutlet, MatTreeNodeToggle, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, NgFor, NgClass, MatCheckbox, FormsModule, HighlighterPipe, EscapeHtmlPipe]
+  imports: [NgIf, MatTree, MatTreeNodeDef, MatTreeNode, MatTreeNodePadding, MatIconButton, MatIcon, NgTemplateOutlet, MatTreeNodeToggle, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, NgFor, NgClass, MatCheckbox, FormsModule, HighlighterPipe, EscapeHtmlPipe, ElementLabelComponent]
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
   @Input() node: any;

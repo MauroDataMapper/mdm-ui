@@ -581,7 +581,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           items,
           parentCatalogueItem: this.catalogueItem.breadcrumbs
             ? this.catalogueItem.breadcrumbs[0]
-            : this.catalogueItem
+            : this.catalogueItem,
+          currentCatalogueItem: this.catalogueItem
         },
         panelClass: 'full-width-dialog'
       })

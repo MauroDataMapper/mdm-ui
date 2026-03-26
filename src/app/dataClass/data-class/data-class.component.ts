@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -50,6 +51,7 @@ import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-
 import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
     selector: 'mdm-data-class',
@@ -98,7 +100,8 @@ export class DataClassComponent
     private securityHandler: SecurityHandlerService,
     private title: Title,
     private editingService: EditingService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService
   ) {
     super();
   }
@@ -208,6 +211,10 @@ export class DataClassComponent
 
   save(saveItems: DefaultProfileItem[]) {
     this.error = '';
+    const previousParentDataClassId = this.dataClass.parentDataClass ?? null;
+
+    // parentDataClass is handled via the move() API call, not the update payload
+    let newParentDataClassId: string | null = previousParentDataClassId;
 
     const resource: DataClass = {
       id: this.dataClass.id,
@@ -228,51 +235,81 @@ export class DataClassComponent
         resource.minMultiplicity = item.minMultiplicity as number;
         resource.maxMultiplicity = item.maxMultiplicity;
       }
- else {
+      else if (item.propertyName === 'parentDataClass') {
+        // Capture separately - do not include in the update resource body
+        newParentDataClassId = (item.value as string | null) ?? null;
+      }
+      else {
         resource[item.propertyName] = item.value;
       }
     });
 
-    if (!this.dataClass.parentDataClass) {
-      this.resourcesService.dataClass
-        .update(this.dataClass.model, this.dataClass.id, resource)
-        .subscribe(
-          (result: DataClassDetailResponse) => {
-            this.dataClass = result.body;
-            this.catalogueItem = result.body;
-            this.messageHandler.showSuccess('Data Class updated successfully.');
-            this.editingService.stop();
-            this.messageService.dataChanged(result.body);
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the Data Class.',
-              error
-            );
-          }
-        );
-    }
- else {
-      this.resourcesService.dataClass
+    const parentDataClassChanged = previousParentDataClassId !== newParentDataClassId;
+
+    const currentTab = this.tabs.getByIndex(this.activeTab)?.name ?? 'description';
+
+    const onSaveSuccess = (result: DataClassDetailResponse) => {
+      const updated = result.body;
+
+      this.dataClass = updated;
+      this.catalogueItem = updated;
+      this.messageHandler.showSuccess('Data Class updated successfully.');
+      this.editingService.stop();
+      this.messageService.dataChanged(updated);
+
+      if (parentDataClassChanged) {
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.Go('dataClass', {
+          dataModelId: updated.model,
+          id: updated.id,
+          dataClassId: newParentDataClassId,
+          tabView: currentTab
+        });
+        return;
+      }
+
+      this.dataClassDetails(
+        updated.model,
+        updated.id,
+        newParentDataClassId ?? undefined
+      );
+    };
+
+    const onError = (error) => {
+      this.messageHandler.showError(
+        'There was a problem updating the Data Class.',
+        error
+      );
+    };
+
+    // Build the update call using the new parent context for the URL
+    const doUpdate = () => {
+      if (!newParentDataClassId) {
+        return this.resourcesService.dataClass
+          .update(this.dataClass.model, this.dataClass.id, resource);
+      }
+      return this.resourcesService.dataClass
         .updateChildDataClass(
           this.dataClass.model,
-          this.dataClass.parentDataClass,
+          newParentDataClassId,
           this.dataClass.id,
           resource
-        )
-        .subscribe(
-          (result: DataClassDetailResponse) => {
-            this.messageHandler.showSuccess('Data Class updated successfully.');
-            this.editingService.stop();
-            this.dataClass = result.body;
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the Data Class.',
-              error
-            );
-          }
         );
+    };
+
+    if (parentDataClassChanged) {
+      // Move to the new parent first, then run the regular update
+      this.resourcesService.dataClass
+        .move(
+          this.dataClass.model,
+          this.dataClass.id,
+          newParentDataClassId ?? undefined
+        )
+        .pipe(switchMap(() => doUpdate()))
+        .subscribe(onSaveSuccess, onError);
+    }
+    else {
+      doUpdate().subscribe(onSaveSuccess, onError);
     }
   }
 

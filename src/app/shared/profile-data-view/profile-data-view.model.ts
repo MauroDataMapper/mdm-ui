@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import {
+  CatalogueItemDomainType,
   Container,
   DataTypeReference,
   Modelable,
@@ -51,7 +52,7 @@ export const showControl = (
 };
 
 export const createDefaultProfileItem = (
-  value: string | Container[] | string[] | DataTypeReference,
+  value: string | Container[] | string[] | DataTypeReference | null,
   displayName: string,
   controlType: ProfileControlTypes,
   propertyName: string
@@ -189,6 +190,49 @@ export const getDefaultProfileData = (
         'dataType'
       )
     );
+  }
+
+  if (showControl(controls, 'parentDataClass')) {
+    const parentDataClassId = (catalogueItem.parentDataClass ?? null) as string | null;
+    const parentDataClassBreadcrumb = (catalogueItem.breadcrumbs as Array<{ id: string, label: string, domainType: string }> | undefined)
+      ?.find(b => b.domainType === CatalogueItemDomainType.DataClass && b.id === parentDataClassId);
+
+    const item = createDefaultProfileItem(
+      parentDataClassId,
+      'Parent Data Class',
+      ProfileControlTypes.dataClass,
+      'parentDataClass'
+    );
+    if (parentDataClassId) {
+      item.selectedDataClass = {
+        id: parentDataClassId,
+        label: parentDataClassBreadcrumb?.label ?? parentDataClassId,
+        domainType: CatalogueItemDomainType.DataClass
+      };
+    }
+    items.push(item);
+  }
+
+  if (showControl(controls, 'dataClass')) {
+    // Build a display object from the element's breadcrumbs so the tree selector shows the current parent.
+    const dataClassId = catalogueItem.dataClass as string;
+    const dataClassBreadcrumb = (catalogueItem.breadcrumbs as Array<{ id: string, label: string, domainType: string }> | undefined)
+      ?.find(b => b.domainType === CatalogueItemDomainType.DataClass && b.id === dataClassId);
+
+    const item = createDefaultProfileItem(
+      dataClassId,
+      'Parent Data Class',
+      ProfileControlTypes.dataClass,
+      'dataClass'
+    );
+    if (dataClassId) {
+      item.selectedDataClass = {
+        id: dataClassId,
+        label: dataClassBreadcrumb?.label ?? dataClassId,
+        domainType: CatalogueItemDomainType.DataClass
+      };
+    }
+    items.push(item);
   }
 
   if (showControl(controls, 'url')) {

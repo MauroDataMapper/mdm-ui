@@ -305,7 +305,7 @@ SPDX-License-Identifier: Apache-2.0
       class="tree-context-menu-item"
       (click)="handleDataModelCompare(node)"
     >
-      Another Data Model
+      Another Data Model...
     </button>
     <button
       type="button"
@@ -314,10 +314,7 @@ SPDX-License-Identifier: Apache-2.0
       class="tree-context-menu-item"
       (click)="handleDataModelCompare(node, targetVersion)"
     >
-      {{ targetVersion.label }}
-      <span style="padding-left: 5px; font-style: italic; font-size: 11px">{{
-        targetVersion.documentationVersion
-      }}</span>
+      <mdm-element-label [item]="targetVersion"></mdm-element-label>
     </button>
   </ng-template>
 </mat-menu>

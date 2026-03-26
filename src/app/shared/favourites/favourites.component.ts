@@ -26,7 +26,7 @@ import {
   Favourite,
   FavouriteHandlerService
 } from '@mdm/services/handlers/favourite-handler.service';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { finalize, map, takeUntil } from 'rxjs/operators';
 import { BroadcastService } from '@mdm/services';
 import { MauroItemProviderService } from '@mdm/mauro/mauro-item-provider.service';
@@ -48,6 +48,7 @@ import { MauroItemTreeComponent } from '../mauro-item-tree/mauro-item-tree.compo
 })
 export class FavouritesComponent implements OnInit, OnDestroy {
   @Output() selectionChange = new EventEmitter<MauroItemTreeFlatNode>();
+  @Output() focusChange = new EventEmitter<MauroItemTreeFlatNode>();
 
   reloading = false;
   treeNodes: MauroItemTreeFlatNode[] = [];
@@ -78,6 +79,7 @@ export class FavouritesComponent implements OnInit, OnDestroy {
   loadFavourites = () => {
     this.reloading = true;
     this.favourites = [];
+    this.treeNodes = [];
 
     const identifiers: MauroIdentifier[] = this.favouriteHandler
       .get()
@@ -89,6 +91,17 @@ export class FavouritesComponent implements OnInit, OnDestroy {
           }
         };
       });
+
+    if (identifiers.length === 0) {
+      of([])
+        .pipe(finalize(() => (this.reloading = false)))
+        .subscribe((items) => {
+          this.favourites = items;
+          this.treeNodes = [];
+        });
+
+      return;
+    }
 
     this.itemProvider
       .getMany(identifiers)
@@ -111,6 +124,10 @@ export class FavouritesComponent implements OnInit, OnDestroy {
 
   selected(node: MauroItemTreeFlatNode) {
     this.selectionChange.emit(node);
+  }
+
+  focused(node: MauroItemTreeFlatNode) {
+    this.focusChange.emit(node);
   }
 
   private cleanUnusedFavourites(items: MauroItem[]) {

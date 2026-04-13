@@ -193,7 +193,7 @@ jobs:
           done
 
       - name: Send a stream message
-        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' }}
+        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
         uses: zulip/github-actions-zulip/send-message@v1
         with:
           api-key: ${{ secrets.ZULIP_API_KEY }}

@@ -127,7 +127,7 @@ SPDX-License-Identifier: Apache-2.0
         <div
           *ngIf="hasSourceValue"
           class="diff-view"
-          [innerHTML]="sourceText | safe: 'html'"
+          [innerHTML]="sourceText | safe"
         ></div>
       </div>
     </div>
@@ -143,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0
         <div
           *ngIf="hasTargetValue"
           class="diff-view"
-          [innerHTML]="targetText | safe: 'html'"
+          [innerHTML]="targetText | safe"
         ></div>
       </div>
     </div>
@@ -158,7 +158,7 @@ SPDX-License-Identifier: Apache-2.0
     >
       <div
         class="diff-view"
-        [innerHTML]="committingContent | safe: 'html'"
+        [innerHTML]="committingContent | safe"
       ></div>
     </div>
   </div>

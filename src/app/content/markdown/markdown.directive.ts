@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { MarkdownParserService } from './markdown-parser/markdown-parser.service';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import DOMPurify from 'dompurify';
 
 @Directive({
     selector: '[mdmMarkdown]',
@@ -67,9 +68,9 @@ export class MarkdownDirective implements OnInit {
     if (this.markdown) {
       let html = this.markdownParser.parse(this.markdown, this.renderType, this.rootElement);
       if (this.renderType === 'text') {
-        html = `<p>${html}</p>`;
+        html = `<span>${html}</span>`;
       }
-      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', html);
+      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', DOMPurify.sanitize(html, { RETURN_TRUSTED_TYPE: false }));
     }
   }
 }

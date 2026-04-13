@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
             <span>Link</span>
           </th>
           <td *matCellDef="let link" mat-cell>
-            <a [href]="link.href | safe: 'url'" [download]="link.download" [title]="link.title">{{ link.textContent }}</a>
+            <a [href]="link.href | safe" [download]="link.download" [title]="link.title">{{ link.textContent }}</a>
           </td>
         </ng-container>
         <ng-container matColumnDef="delete">

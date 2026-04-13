@@ -20,14 +20,14 @@ SPDX-License-Identifier: Apache-2.0
   <h2>
     <span
       *ngIf="!isLoadingContent"
-      [innerHTML]="applicationName | safe: 'html'"
+      [innerHTML]="applicationName | safe"
     ></span>
     &nbsp;<span style="font-size: 14px">version {{ appVersion }}</span>
   </h2>
   <div
     *ngIf="!isLoadingContent"
-    [innerHTML]="content | safe: 'html'"
+    [innerHTML]="content | safe"
     class="clearfix"
   ></div>
-  <p *ngIf="!isLoadingContent" [innerHTML]="contactDetails | safe: 'html'"></p>
+  <p *ngIf="!isLoadingContent" [innerHTML]="contactDetails | safe"></p>
 </div>

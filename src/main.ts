@@ -51,6 +51,7 @@ async function bootstrap() {
   await import('jodit/esm/plugins/source/source.js');
   await import('jodit/esm/plugins/source/editor/engines/ace.js');
   await import('jodit/esm/plugins/inline-popup/inline-popup.js');
+  await import('jodit/esm/plugins/clean-html/clean-html.js');
 
   // Now bootstrap the Angular app
   await bootstrapApplication(UiViewComponent, {

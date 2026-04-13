@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
   </table>
   <div *ngIf="job.message">
     <h4>Message</h4>
-    <p [innerHTML]="job.message | marked | safe: 'html'"></p>
+    <p [innerHTML]="job.message | marked | safe"></p>
   </div>
   <div>
     <button

@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
     <div
       #sourceView
       class="diff-view"
-      [innerHTML]="sourceText | safe: 'html'"
+      [innerHTML]="sourceText | safe"
     ></div>
   </div>
   <div class="target-view">
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
     <div
       #targetView
       class="diff-view"
-      [innerHTML]="targetText | safe: 'html'"
+      [innerHTML]="targetText | safe"
     ></div>
   </div>
   <div class="resolved-view">

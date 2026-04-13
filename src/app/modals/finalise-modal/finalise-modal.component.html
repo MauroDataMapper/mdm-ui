@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-dialog-content class="mat-typography">
   <div class="full-width">
     <form role="form" class="mb-2">
-      <span [innerHtml]="message | safe: 'html'"></span>
+      <span [innerHtml]="message | safe"></span>
       <mat-radio-group name="versionList" [(value)]="data.versionList" [(ngModel)]="data.versionList" (ngModelChange)="onVersionChange()" class="mb-0">
 
         <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><em>(default)</em></small></mat-radio-button>

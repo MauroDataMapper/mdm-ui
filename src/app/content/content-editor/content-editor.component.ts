@@ -92,6 +92,7 @@ export class ContentEditorComponent implements OnInit {
       return false;
     }
 
+    // TODO: Revisit this regexp
     const expression = /<([A-Z][A-Z0-9]*)\b[^>]*>(.*?)<\/\1>/gim;
     return expression.test(this.content);
   }

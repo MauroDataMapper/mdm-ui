@@ -73,7 +73,7 @@
     "dompurify": "^3.3.1",
     "jodit": "4.7.9",
     "jszip": "3.10.1",
-    "lodash": "4.17.23",
+    "lodash": "4.18.1",
     "marked": "4.0.10",
     "ng2-charts": "6.0.1",
     "ngx-ace-wrapper": "17.0.0",

@@ -15,67 +15,180 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
 $changeColor: #e6ffe6;
 
-.item-path {
-  margin: 1em;
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
 }
 
-.sourceCol {
-  height: 25vh;
-  overflow-y: auto;
+.comparison-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.item-summary {
+  min-width: 0;
+}
+
+.summary-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.type-badge,
+.status-badge,
+.column-header {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.type-badge,
+.status-badge {
+  padding: 4px 10px;
+}
+
+.creation-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.deletion-badge {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.modification-badge {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-badge {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.72);
+}
+
+.conflict-badge {
+  background: #fde8e7;
+  color: #8f1d18;
+}
+
+.item-path {
+  min-width: 0;
+  font-size: 12px;
+  word-break: break-word;
+
+  mdm-location-path {
+    display: block;
+    min-width: 0;
+  }
+}
+
+.comparison-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.comparison-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.comparison-column,
+.simple-change-panel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.column-header {
+  padding: 10px 12px;
+  border-radius: 0;
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.72);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.column-content,
+.simple-change-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+}
+
+.diff-view {
+  min-height: 100%;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+
   ins {
     background-color: $changeColor;
+    text-decoration: none;
+  }
+
+  del {
+    background-color: rgba(252, 9, 9, 0.18);
   }
 }
 
-.targetCol {
-  @extend .sourceCol;
-  ins {
-    background-color: rgba(252, 9, 9, 0.364);
-  }
+.simple-value {
+  margin: 0;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
-.panel {
-  .button {
-    padding-right: 10px !important;
-    font-size: small !important;
-    width: fit-content !important;
+@media (max-width: 900px) {
+  .comparison-header {
+    flex-direction: column;
   }
 
-  .acceptButton {
-    padding-right: 70px;
-    font-size: small;
+  .comparison-actions {
+    justify-content: flex-start;
   }
 
-  .content {
-    height: 25vh;
-    // text-align: center;
-  }
-
-  .textArea {
-    border: 1px black solid;
-  }
-
-  .branchHeader {
-    width: 150px;
-  }
-
-  .create-item {
-    margin: 1em;
-    color: green;
-  }
-
-  .delete-item {
-    margin: 1em;
-    color: red;
-  }
-
-  .modified-item {
-    margin: 1em;
+  .comparison-body {
+    grid-template-columns: 1fr;
   }
 }

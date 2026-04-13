@@ -53,6 +53,10 @@ import {
   ExportModelDialogOptions,
   ExportModelDialogResponse
 } from '@mdm/modals/export-model-dialog/export-model-dialog.component';
+import {
+  MergeDiffModalComponent,
+  MergeDiffModalData
+} from '@mdm/modals/merge-diff-modal/merge-diff-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import {
   SecurityAccessResource,
@@ -184,6 +188,10 @@ declare module '@angular/material/dialog' {
       root: CatalogueItem,
       searchTerm?: string
     ): MatDialogRef<ElementSearchDialogComponent, ElementSearchDialogResponse>
+
+    openMergeDiff(
+      data: MergeDiffModalData
+    ): MatDialogRef<MergeDiffModalComponent, { success: boolean }>
   }
 }
 
@@ -330,5 +338,20 @@ MatDialog.prototype.openElementSearch = function (
     },
     minWidth: 600,
     autoFocus: true
+  });
+};
+
+MatDialog.prototype.openMergeDiff = function (
+  this: MatDialog,
+  data: MergeDiffModalData
+): MatDialogRef<MergeDiffModalComponent, { success: boolean }> {
+  return this.open<
+    MergeDiffModalComponent,
+    MergeDiffModalData,
+    { success: boolean }
+  >(MergeDiffModalComponent, {
+    data,
+    panelClass: 'merge-diff-modal',
+    disableClose: true // Prevent accidental closing during merge operations
   });
 };

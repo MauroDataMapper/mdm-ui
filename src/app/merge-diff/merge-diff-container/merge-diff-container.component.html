@@ -15,214 +15,165 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="loading-spinner" *ngIf="!loaded">
-  <div>
-    <span class="fas fa-sync-alt fa-spin"></span>
+<div class="merge-diff-container">
+  <div class="loading-spinner" *ngIf="!loaded">
+    <div>
+      <span class="fas fa-sync-alt fa-spin"></span>
+    </div>
   </div>
-</div>
-<div *ngIf="loaded" class="container">
-  <div fxLayout="row" class="panel panel-default mdm--shadow-block">
-    <div class="full-width" style="clear: both">
-      <div style="position: relative; float: right; margin-right: 8px">
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Cancel Changes"
-          aria-label="Cancel Changes"
-          (click)="onCancelChanges()"
-        >
-          <i
-            class="fas fa-times-circle"
-            style="color: red"
-            aria-hidden="true"
-          ></i>
-          Cancel
-        </button>
-      </div>
 
-      <div style="position: relative; float: right; margin-right: 8px">
-        <button
-          mat-menu-item
-          type="button"
-          matToolTip="Commit Changes"
-          aria-label="Commit Changes"
-          [disabled]="
-            !committingList || committingList.length === 0 || committingDiffs
-          "
-          (click)="onCommitChanges()"
-        >
-          <i
-            class="fas fa-check-circle"
-            style="color: green"
-            aria-hidden="true"
-          ></i>
-          Commit Changes
-        </button>
-      </div>
-
-      <h4 class="inline-block marginless">
-        <span class="dataModelTypeIcon">
-          <mdm-model-icon
-            [domainType]="domainType"
-            [isDataAsset]="source?.type === 'Data Asset'"
-          ></mdm-model-icon>
-        </span>
-        <span class="dataModelDetailsLabel">{{ source.label }}</span>
-      </h4>
-      <div class="detail-icons">
-        <div class="text-muted">
-          <small>
-            <span
-              class="fas fa-file-export"
-              matTooltip="{{ source.branchName }}"
-            ></span>
-            <span
-              ><strong>Source Branch : {{ source.branchName }} </strong></span
-            >
-          </small>
-        </div>
-        <div class="text-muted">
-          <small>
-            <span
-              class="fas fa-file-import"
-              matTooltip="{{ target?.branchName }}"
-            ></span>
-            <span><strong>Target Branch : </strong></span>
-            <span>
-              <mdm-branch-selector
-                [forMerge]="true"
-                [sourceCatalogueItem]="source"
-                [targetCatalogueItem]="target"
-                (selectedCatalogueItemChanged)="setTarget($event)"
-              ></mdm-branch-selector>
+  <div *ngIf="loaded" class="merge-diff-content">
+    <div class="header-panel panel panel-default mdm--shadow-block">
+      <div class="header-top-row">
+        <div class="title-block">
+          <h3 class="inline-block marginless">
+            <mdm-model-icon
+              [domainType]="domainType"
+              [isDataAsset]="source?.type === 'Data Asset'"
+            ></mdm-model-icon>&nbsp;
+            <span class="dataModelDetailsLabel">{{ source.label }}</span>
+          </h3>
+          <div class="summary-row" *ngIf="mergeItems">
+            <span>{{ mergeItems.length }} changes</span>
+            <span>{{ selectedChangesCount }} selected</span>
+            <span *ngIf="conflictCount > 0" class="conflict-summary">
+              {{ conflictCount }} conflict{{ conflictCount === 1 ? '' : 's' }} highlighted
             </span>
-          </small>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button
+            mat-stroked-button
+            type="button"
+            matTooltip="Cancel merge changes"
+            aria-label="Cancel Changes"
+            (click)="onCancelChanges()"
+          >
+            <i class="fas fa-times-circle cancel-icon" aria-hidden="true"></i>
+            Cancel
+          </button>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            matTooltip="Commit selected changes"
+            aria-label="Commit Changes"
+            [disabled]="selectedChangesCount === 0 || committingDiffs"
+            (click)="onCommitChanges()"
+          >
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            Commit Changes
+          </button>
+        </div>
+      </div>
+
+      <div class="branch-info-container">
+        <div class="branch-info source-branch-info">
+          <div class="branch-label">
+            <span class="fas fa-file-export" [matTooltip]="source.branchName"></span>
+            <span>Source Branch</span>
+          </div>
+          <div class="branch-value">{{ source.branchName }}</div>
+        </div>
+
+        <div class="branch-info target-branch-info">
+          <div class="branch-label">
+            <span class="fas fa-file-import" [matTooltip]="target?.branchName"></span>
+            <span>Target Branch</span>
+          </div>
+          <div class="branch-selector">
+            <mdm-branch-selector
+              [forMerge]="true"
+              [compact]="true"
+              [sourceCatalogueItem]="source"
+              [targetCatalogueItem]="target"
+              (selectedCatalogueItemChanged)="setTarget($event)"
+            ></mdm-branch-selector>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <div
-      *ngIf="comparingBranches"
-      class="panel panel-default mdm--shadow-block"
-    >
+
+    <div *ngIf="comparingBranches" class="status-panel panel panel-default mdm--shadow-block">
       <p>Comparing branches...</p>
       <p>Depending on the size of the branches, this may take some time.</p>
       <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
-    <div *ngIf="committingDiffs" class="panel panel-default mdm--shadow-block">
+
+    <div *ngIf="committingDiffs" class="status-panel panel panel-default mdm--shadow-block">
       <p>Committing your selected changes...</p>
-      <p>Depending on the of differences selected, this may take some time.</p>
+      <p>Depending on the number of differences selected, this may take some time.</p>
       <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
-    <div
-      *ngIf="!comparingBranches && !committingDiffs"
-      class="tabContainer panel panel-default mdm--shadow-block"
-      fxLayout="row"
-    >
-      <div class="full-width" style="clear: both">
-        <mat-tab-group
-          [mat-stretch-tabs]="false"
-          [selectedIndex]="activeTab"
-          (selectedIndexChange)="tabSelected($event)"
-        >
-          <!-- Displays if no branch is selected -->
-          <mat-tab *ngIf="!changesList">
-            <ng-template mat-tab-label> No Branch </ng-template>
-            <div class="noContent">
-              <h4 style="margin-top: 75px">No Target Branch Selected</h4>
-            </div>
-          </mat-tab>
-          <!-- Displays if a branch is selected -->
-          <mat-tab *ngIf="changesList">
-            <ng-template mat-tab-label>
-              Changes ({{ changesList.length }})
-            </ng-template>
-            <div class="full-width" style="clear: both">
-              <mat-toolbar style="height: 50%">
-                <span class="spacer"></span>
-                <button
-                  *ngIf="changesList.length > 0"
-                  mat-icon-button
-                  type="button"
-                  matToolTip="Commit all changes from the source branch"
-                  aria-label="Commit Changes from source branch"
-                  (click)="selectAll(MergeUsed.Source)"
-                  class="button"
-                >
-                  <span class="fas fa-file-export" aria-hidden="true"></span>
-                  Use all of "{{ source.branchName }}"
-                </button>
-                <button
-                  *ngIf="changesList.length > 0"
-                  mat-icon-button
-                  type="button"
-                  matToolTip="Commit all changes from the target branch"
-                  aria-label="Commit Changes from target branch"
-                  (click)="selectAll(MergeUsed.Target)"
-                  class="button"
-                >
-                  <span class="fas fa-file-import" aria-hidden="true"></span>
-                  Use all of "{{ target.branchName }}"
-                </button>
-              </mat-toolbar>
 
-              <mdm-merge-item-selector
-                (selectedMergeItemChanged)="setSelectedMergeItem($event, false)"
-                [mergeItems]="changesList"
-                style="display: flex"
-              ></mdm-merge-item-selector>
-              <div class="noContent" *ngIf="changesList.length === 0">
-                <h4 style="margin-top: 75px">No Pending Changes</h4>
-              </div>
-            </div>
-          </mat-tab>
-          <mat-tab *ngIf="committingList">
-            <ng-template mat-tab-label>
-              Committing ({{ committingList.length }})
-            </ng-template>
-            <div class="full-width" style="clear: both">
-              <mat-toolbar style="height: 50%">
-                <span class="spacer"></span>
-                <button
-                  *ngIf="committingList.length > 0"
-                  mat-icon-button
-                  type="button"
-                  matToolTip="Cancel All Changes"
-                  aria-label="Cancel All Changes"
-                  (click)="cancelAll()"
-                  class="cancelButton"
-                >
-                  <span class="fas fa-edit" aria-hidden="true"></span>
-                  Cancel All
-                </button>
-              </mat-toolbar>
+    <div *ngIf="!comparingBranches && !committingDiffs" class="content-panels">
+      <div class="changes-panel panel panel-default mdm--shadow-block">
+        <div class="panel-header">
+          <div>
+            <h4 class="marginless">Changes</h4>
+            <p class="panel-subtitle marginless">
+              Review and select the changes to apply. Open the filter when needed.
+            </p>
+          </div>
 
-              <mdm-merge-item-selector
-                (selectedMergeItemChanged)="setSelectedMergeItem($event, true)"
-                [mergeItems]="committingList"
-                style="display: flex"
-              ></mdm-merge-item-selector>
-              <div class="noContent" *ngIf="committingList.length === 0">
-                <h4 style="margin-top: 75px">No Pending Commits</h4>
-              </div>
-            </div>
-          </mat-tab>
-        </mat-tab-group>
+          <div class="bulk-actions" *ngIf="mergeItems.length > 0">
+            <button
+              mat-stroked-button
+              type="button"
+              matTooltip="Apply every change from the source branch"
+              aria-label="Apply all source changes"
+              (click)="selectAll(MergeUsed.Source)"
+            >
+              <span class="fas fa-file-export" aria-hidden="true"></span>
+              Apply all
+            </button>
+
+            <button
+              mat-stroked-button
+              type="button"
+              matTooltip="Keep the target version for every change"
+              aria-label="Keep target for all changes"
+              (click)="cancelAll()"
+            >
+              <span class="fas fa-file-import" aria-hidden="true"></span>
+              Clear all
+            </button>
+          </div>
+        </div>
+
+        <mdm-merge-item-selector
+          *ngIf="mergeItems"
+          [mergeItems]="mergeItems"
+          [selectedMergeItem]="selectedItem"
+          (selectedMergeItemChanged)="setSelectedMergeItem($event)"
+          (mergeItemSelectionChanged)="onMergeItemSelectionChanged($event)"
+        ></mdm-merge-item-selector>
+
+        <div class="noContent" *ngIf="mergeItems.length === 0">
+          <h4>No pending changes</h4>
+        </div>
       </div>
-    </div>
-    <div fxLayout="row" class="panel panel-default mdm--shadow-block">
-      <mdm-merge-comparison
-        class="full-width"
-        *ngIf="!loadingContent && selectedItem"
-        [source]="source"
-        [target]="target"
-        [mergeItem]="selectedItem.mergeItem"
-        [isCommitting]="selectedItem.isCommitting"
-        (cancelCommitEvent)="cancelCommit($event)"
-        (acceptCommitEvent)="acceptCommit($event)"
-      >
-      </mdm-merge-comparison>
+
+      <div class="details-panel panel panel-default mdm--shadow-block">
+        <mdm-merge-comparison
+          *ngIf="selectedItem; else emptySelection"
+          [source]="source"
+          [target]="target"
+          [mergeItem]="selectedItem"
+          (cancelCommitEvent)="cancelCommit($event)"
+          (acceptCommitEvent)="acceptCommit($event)"
+        >
+        </mdm-merge-comparison>
+
+        <ng-template #emptySelection>
+          <div class="empty-selection">
+            <span class="fas fa-hand-pointer"></span>
+            <p>Select a change above to review its details.</p>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

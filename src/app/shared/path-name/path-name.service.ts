@@ -68,7 +68,7 @@ export class PathNameService {
         );
       }
 
-      const type = parts[0] as PathElementType;
+      const type = parts[0].toLowerCase() as PathElementType;
       const label = labelAndVersion[0];
       const version
         = labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;

@@ -343,8 +343,8 @@ export class ElementSelectorComponent implements OnInit {
 
       const parameters: CatalogueSearchParameters = {
         search: this.searchInput,
-        page: offset,
-        pageSize,
+        offset,
+        max: pageSize,
         domainTypes: [this.formData.selectedType],
         labelOnly: true,
         ...(hasSearchContext && {

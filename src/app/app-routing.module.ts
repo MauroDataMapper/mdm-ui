@@ -473,7 +473,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.catalogueSearchListing',
       // For search URL, compress the parameter names as much as possible - metadata (md) query param value could be very long
       url:
-        '/search/listing?{cxdt:string}&{cxid:string}&{cxl:string}&{cxpid:string}&{cxmid:string}&{search:string}&{page:int}&{sort:string}&{order:string}&{pageSize:int}&{dt:string}&{l:bool}&{e:bool}&{lua:string}&{lub:string}&{ca:string}&{cb:string}&{cls:string}&{md:string}',
+        '/search/listing?{cxdt:string}&{cxid:string}&{cxl:string}&{cxpid:string}&{cxmid:string}&{search:string}&{offset:int}&{sort:string}&{order:string}&{max:int}&{dt:string}&{l:bool}&{e:bool}&{lua:string}&{lub:string}&{ca:string}&{cb:string}&{cls:string}&{md:string}',
       component: CatalogueSearchListingComponent,
       data: {
         allowAnonymous: true
@@ -485,10 +485,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         cxpid: null, // contextParentId: string
         cxmid: null, // contextDataModelId: string
         search: null,
-        page: null,
+        offset: null,
         sort: null,
         order: null,
-        pageSize: null,
+        max: null,
         l: false, // labelOnly: bool
         e: false, // exactMatch: bool
         dt: {

@@ -226,9 +226,8 @@ export class MultipleTermsSelectorComponent {
           label: this.selectorSection.selectedTerminology.label
         },
         search: this.selectorSection.termSearchText,
-        pageSize: this.selectorSection.searchResultPageSize,
-        page:
-          offset === 0 ? 0 : this.selectorSection.searchResultPageSize / offset,
+        max: this.selectorSection.searchResultPageSize,
+        offset: offset,
         domainTypes: [CatalogueItemDomainType.Term],
         labelOnly: true
       };

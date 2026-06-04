@@ -21,16 +21,53 @@ import {
 } from '@mdm/testing/testing.helpers';
 import { ModelHeaderComponent } from './model-header.component';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
+import { BroadcastService, StateHandlerService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  CatalogueItemDomainType,
+  catalogueItemToMultiFacetAware
+} from '@maurodatamapper/mdm-resources';
+import { of } from 'rxjs';
 
 describe('ModelHeaderComponent', () => {
   let harness: ComponentHarness<ModelHeaderComponent>;
+  let dialog: { openMergeDiff: jest.Mock };
+  let stateHandler: { reload: jest.Mock };
+  let broadcast: any;
 
   beforeEach(async () => {
+    dialog = {
+      openMergeDiff: jest.fn().mockReturnValue({
+        afterClosed: () => of({ success: true })
+      })
+    };
+
+    stateHandler = {
+      reload: jest.fn()
+    };
+
+    broadcast = {
+      reloadCatalogueTree: jest.fn(),
+      onApiProperyUpdated: jest.fn().mockReturnValue(of(null))
+    };
+
     harness = await setupTestModuleForComponent(ModelHeaderComponent, {
       providers: [
         {
           provide: ModelTreeService,
           useValue: jest.fn()
+        },
+        {
+          provide: MatDialog,
+          useValue: dialog
+        },
+        {
+          provide: StateHandlerService,
+          useValue: stateHandler
+        },
+        {
+          provide: BroadcastService,
+          useValue: broadcast
         }
       ]
     });
@@ -38,5 +75,23 @@ describe('ModelHeaderComponent', () => {
 
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
+  });
+
+  it('should open the merge diff modal when merge is selected', () => {
+    harness.component.item = {
+      id: 'source-id',
+      domainType: CatalogueItemDomainType.DataModel
+    } as any;
+
+    harness.component.merge();
+
+    expect(dialog.openMergeDiff).toHaveBeenCalledWith({
+      sourceId: 'source-id',
+      catalogueDomainType: catalogueItemToMultiFacetAware(
+        CatalogueItemDomainType.DataModel
+      )
+    });
+    expect(broadcast.reloadCatalogueTree).toHaveBeenCalled();
+    expect(stateHandler.reload).toHaveBeenCalled();
   });
 });

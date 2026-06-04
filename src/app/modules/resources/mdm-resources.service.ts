@@ -385,6 +385,7 @@ export class MdmResourcesService {
       case 'referenceDataModels':
         return this.referenceDataModel;
       case 'folders':
+      case 'versionedFolders':
         return this.folder;
       default:
         throw new Error(`Not an ExportableResource: ${domain}`);

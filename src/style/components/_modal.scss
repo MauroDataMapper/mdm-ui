@@ -60,6 +60,7 @@ SPDX-License-Identifier: Apache-2.0
   max-width: 95vw;
   height: 97vh;
   max-height: 97vh;
+  min-height: 0;
 
   @include respond-to($mobile-xs) {
     width: 98vw;
@@ -68,16 +69,30 @@ SPDX-License-Identifier: Apache-2.0
     max-height: 98vh;
   }
 
+  .mat-mdc-dialog-container {
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .mat-mdc-dialog-surface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
   .mat-mdc-dialog-content {
-    height: calc(97vh - 64px); // Minimal title/padding reservation
-    max-height: calc(97vh - 64px);
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+    max-height: none;
     overflow: hidden;
     padding: 0;
-
-    @include respond-to($mobile-xs) {
-      height: calc(98vh - 64px);
-      max-height: calc(98vh - 64px);
-    }
+    margin: 0;
   }
 }
 

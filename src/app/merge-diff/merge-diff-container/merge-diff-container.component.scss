@@ -21,6 +21,8 @@ SPDX-License-Identifier: Apache-2.0
   width: 100%;
   height: 100%;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .merge-diff-container {
@@ -29,6 +31,8 @@ SPDX-License-Identifier: Apache-2.0
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .merge-diff-content {
@@ -37,6 +41,7 @@ SPDX-License-Identifier: Apache-2.0
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: hidden;
 }
 
 .panel {
@@ -150,8 +155,10 @@ SPDX-License-Identifier: Apache-2.0
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-rows: minmax(220px, 0.95fr) minmax(270px, 1.1fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: 8px;
+  overflow: hidden;
 }
 
 .changes-panel,
@@ -169,6 +176,16 @@ SPDX-License-Identifier: Apache-2.0
 
 .details-panel {
   padding: 0;
+}
+
+.details-panel > mdm-merge-comparison,
+.details-panel > .empty-selection {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.details-panel > mdm-merge-comparison {
+  display: flex;
 }
 
 .panel-header {
@@ -223,6 +240,12 @@ SPDX-License-Identifier: Apache-2.0
   margin: 0;
 }
 
+@media (max-width: 1200px) {
+  .content-panels {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
 @media (max-width: 900px) {
   .header-top-row,
   .panel-header {
@@ -239,6 +262,7 @@ SPDX-License-Identifier: Apache-2.0
   }
 
   .content-panels {
-    grid-template-rows: minmax(210px, 0.9fr) minmax(280px, 1.1fr);
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 0.8fr) minmax(0, 1.2fr);
   }
 }

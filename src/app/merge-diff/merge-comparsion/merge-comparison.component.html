@@ -100,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0
         (mouseenter)="updateCurrentElement('targetContent')"
         (scroll)="updateVerticalScroll($event)"
       >
-        <div class="diff-view" [innerHTML]="targetText | safe: 'html'"></div>
+        <div class="diff-view" [innerHTML]="targetText | safe"></div>
       </div>
     </div>
 
@@ -112,7 +112,7 @@ SPDX-License-Identifier: Apache-2.0
         (mouseenter)="updateCurrentElement('sourceContent')"
         (scroll)="updateVerticalScroll($event)"
       >
-        <div class="diff-view" [innerHTML]="getAfterHtml() | safe: 'html'"></div>
+        <div class="diff-view" [innerHTML]="getAfterHtml() | safe"></div>
       </div>
     </div>
   </div>

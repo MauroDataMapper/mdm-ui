@@ -352,6 +352,10 @@ MatDialog.prototype.openMergeDiff = function (
   >(MergeDiffModalComponent, {
     data,
     panelClass: 'merge-diff-modal',
+    width: '95vw',
+    maxWidth: '95vw',
+    height: '97vh',
+    maxHeight: '97vh',
     disableClose: true // Prevent accidental closing during merge operations
   });
 };

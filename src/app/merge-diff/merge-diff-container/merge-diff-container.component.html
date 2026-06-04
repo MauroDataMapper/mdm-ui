@@ -73,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="branch-info source-branch-info">
           <div class="branch-label">
             <span class="fas fa-file-export" [matTooltip]="source.branchName"></span>
-            <span>Source Branch</span>
+            <span>Source Branch: </span>
           </div>
           <div class="branch-value">{{ source.branchName }}</div>
         </div>
@@ -81,16 +81,17 @@ SPDX-License-Identifier: Apache-2.0
         <div class="branch-info target-branch-info">
           <div class="branch-label">
             <span class="fas fa-file-import" [matTooltip]="target?.branchName"></span>
-            <span>Target Branch</span>
+            <span>Target Branch: </span>
           </div>
           <div class="branch-selector">
-            <mdm-branch-selector
+            <small><mdm-branch-selector
               [forMerge]="true"
               [compact]="true"
               [sourceCatalogueItem]="source"
               [targetCatalogueItem]="target"
               (selectedCatalogueItemChanged)="setTarget($event)"
             ></mdm-branch-selector>
+            </small>
           </div>
         </div>
       </div>
@@ -170,7 +171,7 @@ SPDX-License-Identifier: Apache-2.0
         <ng-template #emptySelection>
           <div class="empty-selection">
             <span class="fas fa-hand-pointer"></span>
-            <p>Select a change above to review its details.</p>
+            <p>Select a change on the left to review its details.</p>
           </div>
         </ng-template>
       </div>

@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
 
     .header-icon {
       color: rgba(0, 0, 0, 0.58);
-      font-size: 10px;
+      //font-size: 10px;
     }
 
     .content-header-icon {
@@ -149,14 +149,14 @@ SPDX-License-Identifier: Apache-2.0
 
       ::ng-deep .mat-mdc-input-element,
       ::ng-deep .mat-mdc-select-value {
-        font-size: 12px;
+        // font-size: 12px;
       }
     }
 
     .type-label {
       font-weight: 600;
       white-space: nowrap;
-      font-size: 12px;
+      // font-size: 12px;
     }
 
     .type-icon {
@@ -217,7 +217,7 @@ SPDX-License-Identifier: Apache-2.0
       z-index: 1;
       background: #fafafa;
       font-weight: 700;
-      font-size: 12px;
+      // font-size: 12px;
       padding: 6px 10px 6px;
       color: rgba(0, 0, 0, 0.87);
       border-bottom: 1px solid rgba(0, 0, 0, 0.12);

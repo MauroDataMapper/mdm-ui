@@ -105,7 +105,7 @@ export class McEnumerationListWithCategoryComponent
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   dataSource: any;
-  enumsCount: number;
+  enumsCount: number = 0;
   total: number;
   displayItems: DisplayItem[];
   categories: string[] = [];
@@ -428,7 +428,6 @@ export class McEnumerationListWithCategoryComponent
 
   add() {
     const newRecord = {
-      id: 'temp-' + this.validator.guid(),
       key: '',
       value: '',
       category: '',
@@ -584,11 +583,10 @@ export class McEnumerationListWithCategoryComponent
       record.value = resource.value;
       record.category = resource.category;
       record.inEdit = false;
-      record.isNew = false;
       this.editingService.setFromCollection(this.displayItems);
 
       // New Record
-      if (record.id.indexOf('temp-') === 0) {
+      if (record.isNew) {
         // find max index
         let maxIndex = -1;
 
@@ -602,13 +600,12 @@ export class McEnumerationListWithCategoryComponent
         record.edit.index = maxIndex + 1;
 
         // remove the "temp-" prefix of the id
-        record.id = record.id.replace('temp-', '');
+        record.id = null; // record.id.replace('temp-', '');
 
         const newRecs = ([] as DisplayItem[]).concat(this.allRecords);
         newRecs.push(record);
         this.showRecords(newRecs);
       }
-
       const allRecs = ([] as DisplayItem[]).concat(this.allRecords);
       this.showRecords(allRecs);
 

@@ -258,9 +258,12 @@ export class NewDataTypeInlineComponent
     this.reloading = true;
     this.resourceService.referenceDataModel.list({ all: true }).subscribe(
       (data: ReferenceDataModelIndexResponse) => {
-        this.dataModels = data.body.items.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        );
+        this.dataModels = [];
+        if (data.body.items) {
+          this.dataModels = data.body.items.sort((a, b) =>
+            a.label.localeCompare(b.label)
+          );
+        }
         this.reloading = false;
       },
       () => {

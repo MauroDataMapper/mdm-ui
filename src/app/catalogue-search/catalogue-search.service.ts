@@ -27,7 +27,8 @@ import {
   ProfileFieldQueryData,
   ProfileSummary,
   ProfileSummaryResponse,
-  SearchQueryParameters
+  SearchQueryParameters,
+  DataElementIndexParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -67,7 +68,8 @@ export class CatalogueSearchService {
           ...this.getCommonQueryParameters(params),
           ...pageParams,
           searchTerm: this.getSearchTerm(params),
-          profileFields: profileFieldsQueryData
+          profileFields: profileFieldsQueryData,
+          prefixSearch: params.prefixSearch
         };
 
         return this.searchCatalogue(query, params.context).pipe(
@@ -226,8 +228,10 @@ export class CatalogueSearchService {
     if (context) {
       if (context.domainType === CatalogueItemDomainType.DataClass) {
         // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
-        return this.resources.dataClass
-          .search(context.dataModelId, context.id, query)
+        const indexParams: DataElementIndexParameters = {
+            label: query.searchTerm
+        };
+        return this.resources.dataElement.list(context.dataModelId, context.id, indexParams)
           .pipe(map((response: CatalogueItemSearchResponse) => response.body));
       }
 

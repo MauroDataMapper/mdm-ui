@@ -335,14 +335,13 @@ export class ElementSelectorComponent implements OnInit {
         pageSize,
         offset
       );
-    }
- else {
+    } else {
       this.formData.searchResultOffset = offset;
 
       const hasSearchContext = this.formData.currentContext;
-
       const parameters: CatalogueSearchParameters = {
         search: this.searchInput,
+        prefixSearch: true,
         offset,
         max: pageSize,
         domainTypes: [this.formData.selectedType],
@@ -360,7 +359,6 @@ export class ElementSelectorComponent implements OnInit {
       };
 
       this.loading = true;
-
       this.catalogueSearch.search(parameters).subscribe((resultSet) => {
         const rows = resultSet.items;
         this.loading = false;
@@ -370,8 +368,7 @@ export class ElementSelectorComponent implements OnInit {
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(rows);
             this.dataSource._updateChangeSubscription();
-          }
- else {
+          } else {
             this.dataSource = new MatTableDataSource<any>(rows);
           }
           this.totalItemCount = resultSet.count;
@@ -381,8 +378,7 @@ export class ElementSelectorComponent implements OnInit {
           this.dataSource._updateChangeSubscription();
           this.noData = false;
           this.isProcessing = false;
-        }
- else {
+        } else {
           this.isProcessing = true;
           this.dataSource = new MatTableDataSource<any>(rows);
           this.currentRecord = this.dataSource.data.filter(
@@ -424,8 +420,7 @@ export class ElementSelectorComponent implements OnInit {
           result.body.items.forEach((element) => {
             if (element.hasOwnProperty('breadcrumbs')) {
               rows.push(element, { detailRow: true, element });
-            }
- else {
+            } else {
               rows.push(element);
             }
           });
@@ -433,8 +428,7 @@ export class ElementSelectorComponent implements OnInit {
           this.calculateDisplayedSoFar(result);
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(rows);
-          }
- else {
+          } else {
             this.dataSource.data = rows;
           }
           this.totalItemCount = result.body.count;
@@ -461,8 +455,7 @@ export class ElementSelectorComponent implements OnInit {
           result.body.items.forEach((element) => {
             if (element.hasOwnProperty('breadcrumbs')) {
               rows.push(element, { detailRow: true, element });
-            }
- else {
+            } else {
               rows.push(element);
             }
           });
@@ -471,8 +464,7 @@ export class ElementSelectorComponent implements OnInit {
           this.termsList = rows;
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(this.termsList);
-          }
- else {
+          } else {
             this.dataSource.data = this.termsList;
           }
           this.totalItemCount = result.body.count;
@@ -501,8 +493,7 @@ export class ElementSelectorComponent implements OnInit {
           this.totalItemCount = result.body.count;
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(this.termsList);
-          }
- else {
+          } else {
             this.dataSource.data = this.termsList;
           }
           this.currentRecord = this.dataSource.data.filter(

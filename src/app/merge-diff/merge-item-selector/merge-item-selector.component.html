@@ -15,44 +15,153 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container">
-  <mat-form-field>
-    <input matInput #mergeItemSearch placeholder="Filter" />
-  </mat-form-field>
-  <mat-selection-list [multiple]="false">
-    <cdk-virtual-scroll-viewport
-      itemSize="20"
-      class="mdm-merge-item-selector__scroll-viewport"
-    >
-      <mat-list-option
+<div class="merge-item-selector-container">
+  <div class="table-container">
+    <table mat-table [dataSource]="getFilteredItems()" class="merge-items-table">
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef class="type-column">
+          <div class="header-cell-content">
+            <div class="header-label-row">
+              <span class="header-icon content-header-icon" [class]="getHeaderIcon('type')" aria-hidden="true"></span>
+              <span>Type</span>
+              <button
+                type="button"
+                class="header-filter-toggle"
+                [ngClass]="{ active: hasColumnFilter('type') }"
+                [matTooltip]="getFilterToggleLabel('type')"
+                [attr.aria-expanded]="isColumnFilterVisible('type')"
+                aria-label="Toggle type filter"
+                (click)="toggleColumnFilter('type', $event)"
+              >
+                <span class="fas fa-filter" aria-hidden="true"></span>
+              </button>
+            </div>
+            <mat-form-field *ngIf="isColumnFilterVisible('type')" class="header-filter-field" appearance="outline">
+              <mat-select
+                [(ngModel)]="columnFilters.type"
+                aria-label="Filter by change type"
+              >
+                <mat-option *ngFor="let option of typeFilterOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let item" class="type-column">
+          <div class="type-cell-content" [matTooltip]="getMergeTypeTooltip(item.type)">
+            <span
+              class="fas type-icon"
+              [ngClass]="{
+                'fa-plus-square creation-icon': item.type === mergeType.Creation,
+                'fa-minus-square deletion-icon': item.type === mergeType.Deletion,
+                'fa-pen-square modification-icon': item.type === mergeType.Modification
+              }"
+            ></span>
+            <span class="type-label">{{ getMergeTypeLabel(item.type) }}</span>
+            <span *ngIf="item.isMergeConflict && item.type !== mergeType.Deletion" class="conflict-pill">Conflict</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Path Column -->
+      <ng-container matColumnDef="path">
+        <th mat-header-cell *matHeaderCellDef class="path-column">
+          <div class="header-cell-content">
+            <div class="header-label-row">
+              <span class="header-icon content-header-icon" [class]="getHeaderIcon('path')" aria-hidden="true"></span>
+              <span>Path</span>
+              <button
+                type="button"
+                class="header-filter-toggle"
+                [ngClass]="{ active: hasColumnFilter('path') }"
+                [matTooltip]="getFilterToggleLabel('path')"
+                [attr.aria-expanded]="isColumnFilterVisible('path')"
+                aria-label="Toggle path filter"
+                (click)="toggleColumnFilter('path', $event)"
+              >
+                <span class="fas fa-filter" aria-hidden="true"></span>
+              </button>
+            </div>
+            <mat-form-field *ngIf="isColumnFilterVisible('path')" class="header-filter-field" appearance="outline">
+              <input
+                matInput
+                [(ngModel)]="columnFilters.path"
+                placeholder="Filter path"
+                aria-label="Filter by change path"
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let item" class="path-column">
+          <div class="path-cell-content" (click)="selectItem(item)">
+            <mdm-location-path
+              [path]="item.path"
+              [compact]="true"
+              [skipFirst]="true"
+            ></mdm-location-path>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Apply Column -->
+      <ng-container matColumnDef="apply">
+        <th mat-header-cell *matHeaderCellDef class="apply-column">
+          <div class="header-cell-content">
+            <div class="header-label-row apply-header-label">
+              <span class="header-icon content-header-icon" [class]="getHeaderIcon('apply')" aria-hidden="true"></span>
+              <span>Apply</span>
+              <button
+                type="button"
+                class="header-filter-toggle"
+                [ngClass]="{ active: hasColumnFilter('apply') }"
+                [matTooltip]="getFilterToggleLabel('apply')"
+                [attr.aria-expanded]="isColumnFilterVisible('apply')"
+                aria-label="Toggle apply filter"
+                (click)="toggleColumnFilter('apply', $event)"
+              >
+                <span class="fas fa-filter" aria-hidden="true"></span>
+              </button>
+            </div>
+            <mat-form-field *ngIf="isColumnFilterVisible('apply')" class="header-filter-field" appearance="outline">
+              <mat-select
+                [(ngModel)]="columnFilters.apply"
+                [panelWidth]="140"
+                aria-label="Filter by apply state"
+              >
+                <mat-option *ngFor="let option of applyFilterOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let item" class="apply-column">
+          <mat-checkbox
+            [checked]="isApplied(item)"
+            [matTooltip]="getApplyTooltip(item)"
+            (click)="$event.stopPropagation()"
+            (change)="toggleSelection(item, $event)"
+            aria-label="Toggle whether this change should be applied"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="merge-item-row"
         [ngClass]="{
-          creation: item.type === mergeType.Creation,
-          deletion: item.type === mergeType.Deletion
+          'selected-row': isRowSelected(row),
+          'conflict-row': row.isMergeConflict,
+          'creation-row': row.type === mergeType.Creation,
+          'deletion-row': row.type === mergeType.Deletion,
+          'modification-row': row.type === mergeType.Modification
         }"
-        *cdkVirtualFor="
-          let item of mergeItems | mergeFilter: mergeItemSearch.value;
-          templateCacheSize: 0
-        "
-        [value]="item"
-        (click)="selectedItem(item)"
-      >
-        <span
-          mat-list-icon
-          class="fas"
-          [ngClass]="{
-            'fa-plus-square': item.type === mergeType.Creation,
-            'fa-minus-square': item.type === mergeType.Deletion,
-            'fa-pen-square': item.type === mergeType.Modification
-          }"
-          [matTooltip]="getMergeTypeTooltip(item.type)"
-        ></span>
-        <mdm-path-name
-          [path]="item.path"
-          [suffixLabel]="item.branchNameSelected | uppercase"
-          [suffixIcon]="getBranchSelectedIcon(item.branchSelected)"
-          [suffixTooltip]="getBranchSelectedTooltip(item.branchSelected)"
-        ></mdm-path-name>
-      </mat-list-option>
-    </cdk-virtual-scroll-viewport>
-  </mat-selection-list>
+        (click)="selectItem(row)"
+      ></tr>
+    </table>
+  </div>
 </div>

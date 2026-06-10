@@ -16,27 +16,255 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.changesArea {
-  padding-bottom: 10px;
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
 }
 
-.mat-list-option {
-  font-size: smaller !important;
-  border-bottom: 1px solid rgb(132, 132, 132);
-  height: auto;
-}
+.merge-item-selector-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
 
-.creation {
-  color: green !important ;
-}
-
-.deletion {
-  color: darkred !important;
-}
-
-.mdm-merge-item-selector {
-  &__scroll-viewport {
-    height: 40vh;
+  .table-container {
+    flex: 1 1 auto;
+    overflow: auto;
     width: 100%;
+    min-width: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+  }
+
+  .merge-items-table {
+    width: 100%;
+    table-layout: fixed;
+    font-size: 12px;
+    background: #fff;
+
+    .type-column {
+      width: 148px;
+      padding: 6px 10px;
+      vertical-align: middle;
+    }
+
+    .path-column {
+      width: auto;
+      padding: 4px 8px;
+      overflow: hidden;
+    }
+
+    .apply-column {
+      width: 118px;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .type-cell-content {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .header-cell-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .header-label-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      line-height: 1.1;
+    }
+
+    .apply-header-label {
+      justify-content: center;
+    }
+
+    .header-icon {
+      color: rgba(0, 0, 0, 0.58);
+      //font-size: 10px;
+    }
+
+    .content-header-icon {
+      flex-shrink: 0;
+    }
+
+    .header-filter-toggle {
+      margin-left: auto;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: rgba(0, 0, 0, 0.48);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      &.active {
+        color: #1976d2;
+        background: rgba(25, 118, 210, 0.12);
+      }
+
+      .fas {
+        font-size: 10px;
+      }
+    }
+
+    .header-filter-field {
+      width: 100%;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background: #fff;
+        padding: 0 8px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-infix {
+        min-height: 28px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+
+      ::ng-deep .mat-mdc-input-element,
+      ::ng-deep .mat-mdc-select-value {
+        // font-size: 12px;
+      }
+    }
+
+    .type-label {
+      font-weight: 600;
+      white-space: nowrap;
+      // font-size: 12px;
+    }
+
+    .type-icon {
+      font-size: 13px;
+
+      &.creation-icon { color: #2e7d32; }
+      &.deletion-icon { color: #c62828; }
+      &.modification-icon { color: #1565c0; }
+    }
+
+    .conflict-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #8f1d18;
+      background: #fde8e7;
+      white-space: nowrap;
+    }
+
+    .path-cell-content {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+
+      mdm-location-path {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        font-size: 12px;
+
+        ::ng-deep .location-path.compact {
+          display: block;
+          width: 100%;
+          overflow: hidden;
+
+          ol {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .breadcrumb-item {
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    .mat-mdc-header-cell {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #fafafa;
+      font-weight: 700;
+      // font-size: 12px;
+      padding: 6px 10px 6px;
+      color: rgba(0, 0, 0, 0.87);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      vertical-align: top;
+    }
+
+    .mat-mdc-row {
+      cursor: pointer;
+      min-height: 30px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      &.selected-row {
+        background-color: rgba(25, 118, 210, 0.08);
+        box-shadow: inset 3px 0 0 #1976d2;
+      }
+
+      &.creation-row:hover {
+        background-color: rgba(76, 175, 80, 0.08);
+      }
+
+      &.deletion-row:hover {
+        background-color: rgba(244, 67, 54, 0.08);
+      }
+
+      &.modification-row:hover {
+        background-color: rgba(33, 150, 243, 0.08);
+      }
+
+      &.conflict-row {
+        background: linear-gradient(90deg, rgba(244, 67, 54, 0.08), rgba(244, 67, 54, 0.02));
+      }
+
+      &.conflict-row.selected-row {
+        background: linear-gradient(90deg, rgba(25, 118, 210, 0.12), rgba(244, 67, 54, 0.05));
+      }
+    }
+
+    .mat-mdc-cell {
+      border-bottom: none;
+      padding: 3px 8px;
+      vertical-align: middle;
+      font-size: 12px;
+    }
   }
 }

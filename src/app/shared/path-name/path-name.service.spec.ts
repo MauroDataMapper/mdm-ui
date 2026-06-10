@@ -151,6 +151,21 @@ describe('PathNameService', () => {
         ]
       ],
       [
+        'FO:Root Folder|DC:Test Data Class',
+        [
+          {
+            type: PathElementType.Folder,
+            typeName: 'Folder',
+            label: 'Root Folder'
+          },
+          {
+            type: PathElementType.DataClass,
+            typeName: 'Data class',
+            label: 'Test Data Class'
+          }
+        ]
+      ],
+      [
         'dm:Test Data Model@description',
         [
           {

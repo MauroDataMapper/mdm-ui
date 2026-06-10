@@ -22,20 +22,24 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { MdmTreeItem } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { PathNameService } from '../path-name/path-name.service';
 import { getCatalogueItemDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf, NgFor, NgClass } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
+import { PathElementType, pathElementDomainTypes } from '../path-name/path-name.model';
 
 interface LocationPathItem {
   label: string
-  href: string
+  href?: string
   branchName?: string
   modelVersion?: string
   modelVersionTag?: string
+  versionOrBranch?: string
+  propertyName?: string
+  typeName?: string
   domainType?: string
   icon?: string
 }
@@ -49,32 +53,73 @@ interface LocationPathItem {
 })
 export class LocationPathComponent implements OnInit, OnChanges {
   @Input() ancestorTreeItems: MdmTreeItem[] = [];
+  @Input() path?: string;
+  @Input() compact = false;
+  @Input() skipFirst = false;
 
   items: LocationPathItem[] = [];
   loading = true;
+  private readonly pathTypeDomainMap = new Map<PathElementType, CatalogueItemDomainType>(
+    Array.from(pathElementDomainTypes.entries()).map(([domainType, pathType]) => [pathType, domainType])
+  );
 
   constructor(private pathName: PathNameService) {}
 
   ngOnInit(): void {
-    this.loading = !this.items || this.items.length === 0;
+    this.rebuildItems();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.ancestorTreeItems) {
-      this.items
-        = this.ancestorTreeItems?.map((ancestor) => {
-          return {
-            label: ancestor.label,
-            href: this.pathName.createHref(ancestor.path, ancestor),
-            branchName: ancestor.branchName,
-            modelVersion: ancestor.modelVersion,
-            modelVersionTag: ancestor.modelVersionTag,
-            domainType: ancestor.domainType,
-            icon: ancestor.domainType ? getCatalogueItemDomainTypeIcon(ancestor.domainType) : null
-          };
-        }) ?? [];
-
-      this.loading = false;
+    if (changes.ancestorTreeItems || changes.path) {
+      this.rebuildItems();
     }
+  }
+
+  private rebuildItems() {
+    this.loading = true;
+
+    if (this.path?.trim()) {
+      this.items = this.buildItemsFromPath(this.path);
+      this.loading = false;
+      return;
+    }
+
+    this.items = this.ancestorTreeItems?.map((ancestor) => {
+      return {
+        label: ancestor.label,
+        href: this.pathName.createHref(ancestor.path, ancestor),
+        branchName: ancestor.branchName,
+        modelVersion: ancestor.modelVersion,
+        modelVersionTag: ancestor.modelVersionTag,
+        domainType: ancestor.domainType,
+        icon: ancestor.domainType ? getCatalogueItemDomainTypeIcon(ancestor.domainType) : null
+      };
+    }) ?? [];
+
+    this.loading = false;
+  }
+
+  private buildItemsFromPath(path: string): LocationPathItem[] {
+    try {
+      const pathElements = this.pathName.parse(path) ?? [];
+      const itemsToRender = this.skipFirst && pathElements.length > 1
+        ? pathElements.slice(1)
+        : pathElements;
+
+      return itemsToRender.map((pathElement) => ({
+        label: pathElement.label,
+        versionOrBranch: pathElement.version,
+        propertyName: pathElement.property?.qualifiedName?.join('.'),
+        typeName: pathElement.typeName,
+        icon: this.getIconFromPathElementType(pathElement.type)
+      }));
+    } catch {
+      return [];
+    }
+  }
+
+  private getIconFromPathElementType(type: PathElementType): string {
+    const domainType = this.pathTypeDomainMap.get(type);
+    return domainType ? getCatalogueItemDomainTypeIcon(domainType) : 'fa-file-alt';
   }
 }

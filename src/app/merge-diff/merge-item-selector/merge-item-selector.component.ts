@@ -18,34 +18,85 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import {
-  MergeDiffItem,
   MergeDiffType,
   MergeConflictResolution
 } from '@maurodatamapper/mdm-resources';
-import { MergeDiffItemModel } from '../types/merge-item-type';
+import {
+  MergeDiffItemModel,
+  MergeItemSelectionChange,
+  MergeItemColumnFilters
+} from '../types/merge-item-type';
 import { MergeFilterPipe } from '../pipes/merge-filter.pipe';
-import { PathNameComponent } from '../../shared/path-name/path-name.component';
+import { LocationPathComponent } from '../../shared/location-path/location-path.component';
 import { MatTooltip } from '@angular/material/tooltip';
-import { ExtendedModule } from '@angular/flex-layout/extended';
-import { NgClass, UpperCasePipe } from '@angular/common';
-import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
-import { MatSelectionList, MatListOption } from '@angular/material/list';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { MatTable, MatHeaderCell, MatCell, MatHeaderRow, MatRow, MatHeaderCellDef, MatCellDef, MatHeaderRowDef, MatRowDef, MatColumnDef } from '@angular/material/table';
 import { MatInput } from '@angular/material/input';
 import { MatFormField } from '@angular/material/form-field';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
 
 @Component({
     selector: 'mdm-merge-item-selector',
     templateUrl: './merge-item-selector.component.html',
     styleUrls: ['./merge-item-selector.component.scss'],
     standalone: true,
-    imports: [MatFormField, MatInput, MatSelectionList, CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, MatListOption, NgClass, ExtendedModule, MatTooltip, PathNameComponent, UpperCasePipe, MergeFilterPipe]
+    imports: [
+      MatFormField,
+      MatInput,
+      MatTable,
+      MatHeaderCell,
+      MatCell,
+      MatHeaderRow,
+      MatRow,
+      MatHeaderCellDef,
+      MatCellDef,
+      MatHeaderRowDef,
+      MatRowDef,
+      MatColumnDef,
+      MatCheckbox,
+      FormsModule,
+      MatSelect,
+      MatOption,
+      NgClass,
+      NgFor,
+      NgIf,
+      MatTooltip,
+      LocationPathComponent
+    ]
 })
 export class MergeItemSelectorComponent implements OnInit {
-  @Output() selectedMergeItemChanged = new EventEmitter<MergeDiffItem>();
+  @Output() selectedMergeItemChanged = new EventEmitter<MergeDiffItemModel>();
+  @Output() mergeItemSelectionChanged = new EventEmitter<MergeItemSelectionChange>();
   @Input() mergeItems: MergeDiffItemModel[];
-  @Input() isCommitting: boolean;
+  @Input() selectedMergeItem: MergeDiffItemModel | null = null;
 
-  changesList: MergeDiffItem[] = [];
+  displayedColumns: string[] = ['type', 'path', 'apply'];
+  columnFilters: MergeItemColumnFilters = {
+    type: '',
+    path: '',
+    apply: ''
+  };
+  showColumnFilters: Record<keyof MergeItemColumnFilters, boolean> = {
+    type: false,
+    path: false,
+    apply: false
+  };
+  readonly typeFilterOptions = [
+    { value: '', label: 'All types' },
+    { value: 'creation', label: 'Create' },
+    { value: 'modification', label: 'Modify' },
+    { value: 'deletion', label: 'Delete' },
+    { value: 'conflict', label: 'Conflicts' }
+  ];
+  readonly applyFilterOptions = [
+    { value: '', label: 'All states' },
+    { value: 'applied', label: 'Applied' },
+    { value: 'skipped', label: 'Skipped' }
+  ];
+  private mergeFilterPipe = new MergeFilterPipe();
 
   constructor() {}
 
@@ -55,37 +106,50 @@ export class MergeItemSelectorComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  selectedItem(mergeItem: MergeDiffItem) {
+  toggleColumnFilter(column: keyof MergeItemColumnFilters, event?: Event): void {
+    event?.stopPropagation();
+    this.showColumnFilters[column] = !this.showColumnFilters[column];
+  }
+
+  isColumnFilterVisible(column: keyof MergeItemColumnFilters): boolean {
+    return this.showColumnFilters[column] || this.hasColumnFilter(column);
+  }
+
+  hasColumnFilter(column: keyof MergeItemColumnFilters): boolean {
+    return !!this.columnFilters[column]?.trim();
+  }
+
+  selectItem(mergeItem: MergeDiffItemModel): void {
     this.selectedMergeItemChanged.emit(mergeItem);
   }
 
-  getBranchSelectedIcon(selected: MergeConflictResolution) {
-    switch (selected) {
-      case MergeConflictResolution.Source:
-        return 'fas fa-file-export';
-      case MergeConflictResolution.Target:
-        return 'fas fa-file-import';
-      case MergeConflictResolution.Mixed:
-        return 'fab fa-mixer';
-      default:
-        return '';
-    }
+  toggleSelection(mergeItem: MergeDiffItemModel, event: MatCheckboxChange): void {
+    this.mergeItemSelectionChanged.emit({
+      mergeItem,
+      selected: event.checked
+    });
   }
 
-  getBranchSelectedTooltip(selected: MergeConflictResolution) {
-    switch (selected) {
-      case MergeConflictResolution.Source:
-        return 'Take from Source';
-      case MergeConflictResolution.Target:
-        return 'Take from Target';
-      case MergeConflictResolution.Mixed:
-        return 'Mixed/combined content';
-      default:
-        return '';
+  getFilteredItems(): MergeDiffItemModel[] {
+    if (!this.mergeItems) {
+      return [];
     }
+    return this.mergeFilterPipe.transform(this.mergeItems, this.columnFilters);
   }
 
-  getMergeTypeTooltip(type: MergeDiffType) {
+  isRowSelected(item: MergeDiffItemModel): boolean {
+    return this.selectedMergeItem === item;
+  }
+
+  isApplied(item: MergeDiffItemModel): boolean {
+    return item.branchSelected !== null && item.branchSelected !== MergeConflictResolution.Target;
+  }
+
+  getApplyTooltip(item: MergeDiffItemModel): string {
+    return this.isApplied(item) ? 'Change will be applied' : 'Change will be skipped';
+  }
+
+  getMergeTypeTooltip(type: MergeDiffType): string {
     switch (type) {
       case MergeDiffType.Creation:
         return 'Created';
@@ -96,5 +160,35 @@ export class MergeItemSelectorComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  getMergeTypeLabel(type: MergeDiffType): string {
+    switch (type) {
+      case MergeDiffType.Creation:
+        return 'Create';
+      case MergeDiffType.Deletion:
+        return 'Delete';
+      case MergeDiffType.Modification:
+        return 'Modify';
+      default:
+        return '';
+    }
+  }
+
+  getHeaderIcon(column: 'type' | 'path' | 'apply'): string {
+    switch (column) {
+      case 'type':
+        return 'fas fa-code-branch';
+      case 'path':
+        return 'fas fa-folder-open';
+      case 'apply':
+        return 'fas fa-check-square';
+      default:
+        return '';
+    }
+  }
+
+  getFilterToggleLabel(column: keyof MergeItemColumnFilters): string {
+    return `${this.isColumnFilterVisible(column) ? 'Hide' : 'Show'} ${column} filter`;
   }
 }

@@ -19,6 +19,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UIRouterGlobals } from '@uirouter/core';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 import {
   Branchable,
   CatalogueItemDetail,
@@ -28,6 +29,7 @@ import {
   isModelDomainType,
   MdmTreeItem,
   MergableCatalogueItem,
+  MergableMultiFacetAwareDomainType,
   ModelDomain,
   Securable
 } from '@maurodatamapper/mdm-resources';
@@ -533,10 +535,25 @@ export class ModelHeaderComponent implements OnInit {
   }
 
   merge() {
-    return this.stateHandler.Go('mergediff', {
-      sourceId: this.item.id,
-      catalogueDomainType: catalogueItemToMultiFacetAware(this.item.domainType)
-    });
+    if (!this.item) {
+      return;
+    }
+
+    const catalogueDomainType = catalogueItemToMultiFacetAware(
+      this.item.domainType
+    ) as MergableMultiFacetAwareDomainType;
+
+    return this.dialog
+      .openMergeDiff({
+        sourceId: this.item.id,
+        catalogueDomainType
+      })
+      .afterClosed()
+      .pipe(filter(result => !!result?.success))
+      .subscribe(() => {
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.reload();
+      });
   }
 
   showMergeGraph() {

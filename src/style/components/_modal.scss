@@ -54,7 +54,49 @@ SPDX-License-Identifier: Apache-2.0
     }
   }
 }
-.mdm--form-modal, .bulk-edit-modal, .bulk-delete-modal, .versioning-graph-modal, .security-modal {
+
+.merge-diff-modal {
+  width: 95vw;
+  max-width: 95vw;
+  height: 97vh;
+  max-height: 97vh;
+  min-height: 0;
+
+  @include respond-to($mobile-xs) {
+    width: 98vw;
+    max-width: 98vw;
+    height: 98vh;
+    max-height: 98vh;
+  }
+
+  .mat-mdc-dialog-container {
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .mat-mdc-dialog-surface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .mat-mdc-dialog-content {
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.mdm--form-modal, .bulk-edit-modal, .bulk-delete-modal, .versioning-graph-modal, .security-modal, .merge-diff-modal {
   position: relative!important;
   .close-modal {
     position: absolute;

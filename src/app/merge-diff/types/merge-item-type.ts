@@ -21,9 +21,15 @@ export const branchNameField = 'branchName';
 
 export type MergeItemValueType = 'undefined' | 'string' | 'number';
 
-export interface MergeItemSelection {
-  mergeItem: MergeDiffItem
-  isCommitting: boolean
+export interface MergeItemSelectionChange {
+  mergeItem: MergeDiffItemModel
+  selected: boolean
+}
+
+export interface MergeItemColumnFilters {
+  type: string
+  path: string
+  apply: string
 }
 
 export interface CommittingMergeDiffItem {

@@ -206,6 +206,12 @@ export const deserializeProfileFiltersToDto = (base64String: string) => {
  * Represents the parameters to drive a Catalogue Search.
  */
 export interface CatalogueSearchParameters {
+
+  /**
+   * Whether the search should be by matching terms / keywords or run as a 'prefix search'
+   */
+  prefixSearch?: boolean
+
   /**
    * If provided, a search context element i.e. the catalogue item within
    * which searching should be restricted to.

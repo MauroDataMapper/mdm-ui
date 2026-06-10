@@ -15,13 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<nav aria-label="breadcrumb" class="location-path">
+<nav aria-label="breadcrumb" class="location-path" [ngClass]="{ compact: compact }">
   <ol>
-    <li>
-      <small>
-        <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
-        <strong>Location: </strong>
-      </small>
+    <li *ngIf="!compact">
+      <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
+      <strong>Location: </strong>
     </li>
     <li class="breadcrumb-item" *ngIf="loading">
       <small>Locating...</small>
@@ -30,19 +28,19 @@ SPDX-License-Identifier: Apache-2.0
       class="breadcrumb-item"
       *ngIf="!loading && (!items || items.length === 0)"
     >
-      <small>Root item</small>
+      Root item
     </li>
     <li class="breadcrumb-item" *ngFor="let item of items">
-      <small>
+      <span class="breadcrumb-content">
         <mat-icon
           fontSet="fas"
           [fontIcon]="item.icon"
-          [ngClass]="'dataModelTypeIcon'"
-          [attr.aria-label]="item.label + ' icon'"
-          [style]="'margin-right: 0'"
+          [ngClass]="'dataModelTypeIcon segment-icon'"
+          [attr.aria-label]="(item.typeName || item.label) + ' icon'"
+          [matTooltip]="item.typeName || item.label"
         ></mat-icon>
 
-        <a [href]="item.href">
+        <a [attr.href]="item.href || null" [ngClass]="{ 'plain-item': !item.href }">
           <span>{{ item.label }}</span>
           <span *ngIf="item.branchName" class="model-suffix">
             <span class="fas fa-code-branch"></span>
@@ -53,9 +51,15 @@ SPDX-License-Identifier: Apache-2.0
           >
           <span *ngIf="item.modelVersionTag" class="model-suffix">
             <span class="fas fa-tag"></span>{{ item.modelVersionTag }}</span
-          ></a
-        >
-      </small>
+          >
+          <span *ngIf="item.versionOrBranch" class="model-suffix">
+            <span class="fas fa-code-branch"></span>{{ item.versionOrBranch }}</span
+          >
+          <span *ngIf="item.propertyName" class="model-suffix property-suffix">
+            <span class="fas fa-at"></span>{{ item.propertyName }}</span
+          >
+        </a>
+      </span>
     </li>
   </ol>
 </nav>

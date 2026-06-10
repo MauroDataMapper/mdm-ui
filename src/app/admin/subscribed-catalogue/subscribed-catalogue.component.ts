@@ -177,11 +177,12 @@ export class SubscribedCatalogueComponent implements OnInit {
       .pipe(
         switchMap(
           ([typesResponse, authenticationTypesResponse]: MdmResponse<
-            string[]
+            any
           >[]) => {
-            this.connectionTypes = typesResponse.body;
+            console.log(authenticationTypesResponse);
+            this.connectionTypes = typesResponse.body.items;
             this.authenticationTypes = this.supportedAuthenticationTypes.filter(
-              authType => authenticationTypesResponse.body.includes(authType)
+              authType => authenticationTypesResponse.body.items.includes(authType)
             );
 
             if (this.catalogueId) {

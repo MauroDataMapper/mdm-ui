@@ -106,14 +106,15 @@ export class LocationPathComponent implements OnInit, OnChanges {
         ? pathElements.slice(1)
         : pathElements;
 
-      return itemsToRender.map((pathElement) => ({
+      return itemsToRender.map(pathElement => ({
         label: pathElement.label,
         versionOrBranch: pathElement.version,
         propertyName: pathElement.property?.qualifiedName?.join('.'),
         typeName: pathElement.typeName,
         icon: this.getIconFromPathElementType(pathElement.type)
       }));
-    } catch {
+    }
+    catch {
       return [];
     }
   }

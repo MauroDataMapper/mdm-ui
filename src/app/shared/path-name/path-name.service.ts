@@ -99,24 +99,6 @@ export class PathNameService {
     });
   }
 
-  parseAndOverrideVersionOrBranch(
-    path: string,
-    versionOrBranch: string
-  ): PathElement[] | null {
-    const pathElements = this.parse(path);
-    if (!pathElements) {
-      return null;
-    }
-
-    pathElements
-      .filter(pathElement => isPathElementBranchable(pathElement))
-      .forEach((pathElement) => {
-        pathElement.version = versionOrBranch;
-      });
-
-    return pathElements;
-  }
-
   build(pathElements: PathElement[]): string {
     if (!pathElements || pathElements.length === 0) {
       return null;
@@ -199,24 +181,29 @@ export class PathNameService {
     return this.createHrefFromPath(path, rootObject);
   }
 
-  createHrefRelativeToVersionOrBranch(path: string, branchName: string, rootObject: CatalogueItem) {
-    const pathElements = this.parseAndOverrideVersionOrBranch(path, branchName);
-    const overriddenPath = this.build(pathElements);
-
-    // const domain = pathableDomainTypesFromPrefix.get(pathElements[0].type);
-
-    // Create a href to the path pointing to the version/branch, not the original parameter
-    return this.createHrefFromPath(overriddenPath, rootObject);
-  }
-
-  private createHrefFromPath(path: string, rootObject: CatalogueItem) {
-    return this.router.stateService.href(
-      'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
-      {
-        domain: rootObject.domainType,
-        uuid: rootObject.id,
-        path
-      }
-    );
+  createHrefFromPath(path: string, rootObject?: CatalogueItem) {
+    const pathElements = this.parse(path);
+    const i = pathElements.findIndex(x => x.version);
+    if (i === -1) {
+      return this.router.stateService.href(
+        'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+        {
+          domain: rootObject.domainType,
+          uuid: null,
+          path: path
+        }
+      );
+    }
+    else {
+      const newPath = this.build(pathElements.slice(i));
+      return this.router.stateService.href(
+        'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+        {
+          domain: rootObject.domainType,
+          uuid: rootObject?.id,
+          path: newPath
+        }
+      );
+    }
   }
 }

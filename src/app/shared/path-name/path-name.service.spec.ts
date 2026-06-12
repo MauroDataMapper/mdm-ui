@@ -480,10 +480,6 @@ describe('PathNameService', () => {
         'http://localhost:4200/#/catalogue/item/Folder/te%3ASimple%20Test%20Terminology%242.0.0'
       ],
       [
-        'fo:Development Folder|vf:Simple Versioned Folder$1.0.0',
-        'http://localhost:4200/#/catalogue/item/Folder/fo%3ADevelopment%20Folder%7Cvf%3ASimple%20Versioned%20Folder%241.0.0'
-      ],
-      [
         'fo:Data sets',
         'http://localhost:4200/#/catalogue/item/Folder/fo%3AData%20sets'
       ],

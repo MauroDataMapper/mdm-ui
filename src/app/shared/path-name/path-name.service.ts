@@ -17,10 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  Branchable,
   CatalogueItem,
   Modelable,
   Navigatable,
-  PathableDomainType
+  PathableDomainType, Versionable
 } from '@maurodatamapper/mdm-resources';
 import {
   isPathElementBranchable,
@@ -123,7 +124,7 @@ export class PathNameService {
     return pathElementsAsStrings.join(this.elementSeparator);
   }
 
-  createFromBreadcrumbs(item: Modelable & Navigatable): string {
+  createFromBreadcrumbs(item: Modelable & Navigatable & Versionable & Branchable): string {
     if (!item) {
       return null;
     }
@@ -133,14 +134,26 @@ export class PathNameService {
       {
         domainType: item.domainType,
         id: item.id,
-        label: item.label
+        label: item.label,
+        branchName: item.branchName,
+        modelVersionTag: item.modelVersionTag,
+        modelVersion: item.modelVersion
       }
     ];
-
     return crumbs
       .map((crumb) => {
         const pathType = pathElementDomainTypes.get(crumb.domainType);
-        return `${pathType}:${crumb.label}`;
+        let path = `${pathType}:${crumb.label}`
+        if (crumb.branchName) {
+          path = path + `${this.branchSeparator}${crumb.branchName}`
+        }
+        else if (crumb.modelVersionTag) {
+          path = path + `${this.branchSeparator}${crumb.modelVersionTag}`
+        }
+        else if (crumb.modelVersion) {
+          path = path + `${this.branchSeparator}${crumb.modelVersion}`
+        }
+        return path;
       })
       .join('|');
   }

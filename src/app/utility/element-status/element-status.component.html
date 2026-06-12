@@ -15,5 +15,5 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<small><span *ngIf="result && !result.finalised" class="badge badge-warning ml-1">Draft</span></small>
-<small><span *ngIf="result && result.finalised" class="badge badge-success ml-1">Finalised</span></small>
+<span *ngIf="result && !result.finalised" class="badge badge-warning ml-1 badge-draft">Draft</span>
+<span *ngIf="result && result.finalised" class="badge badge-success ml-1 badge-finalised">Finalised</span>

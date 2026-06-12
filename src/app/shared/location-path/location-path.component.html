@@ -16,11 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <nav aria-label="breadcrumb" class="location-path" [ngClass]="{ compact: compact }">
+  <span *ngIf="!compact" >
+    <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
+    <strong>Location: </strong>
+  </span>
   <ol>
-    <li *ngIf="!compact">
-      <span class="fas fa-map-marker-alt" matTooltip="Location"></span>
-      <strong>Location: </strong>
-    </li>
     <li class="breadcrumb-item" *ngIf="loading">
       <small>Locating...</small>
     </li>
@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
             <span class="fas fa-code-branch"></span>
             {{ item.branchName }}</span
           >
-          <span *ngIf="item.modelVersion" class="model-suffix">
+          <span *ngIf="item.modelVersion && !item.modelVersionTag" class="model-suffix">
             <span class="fas fa-file-alt"></span>{{ item.modelVersion }}</span
           >
           <span *ngIf="item.modelVersionTag" class="model-suffix">

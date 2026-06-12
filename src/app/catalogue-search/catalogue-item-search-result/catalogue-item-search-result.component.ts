@@ -54,6 +54,9 @@ export class CatalogueItemSearchResultComponent implements OnChanges {
             id: crumb.id,
             domainType: crumb.domainType,
             label: crumb.label,
+            branchName: crumb.branchName,
+            modelVersionTag: crumb.modelVersionTag,
+            modelVersion: crumb.modelVersion,
             breadcrumbs: this.item.breadcrumbs.slice(0, index)
           } as any);
 

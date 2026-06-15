@@ -2,8 +2,8 @@
   "name": "mdm-ui",
   "version": "7.5.0-SNAPSHOT",
   "engines": {
-    "node": "22.16.0",
-    "npm": "10.2.3"
+    "node": "24.16.0",
+    "npm": "11.13.0"
   },
   "scripts": {
     "ng": "ng",
@@ -53,7 +53,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@joint/core": "^4.0.1",
     "@joint/layout-directed-graph": "^4.0.1",
-    "@maurodatamapper/mdm-resources": "5.4.0",
+    "@maurodatamapper/mdm-resources": "5.5.0",
     "@types/ace": "^0.0.52",
     "@uirouter/angular": "15.0.0",
     "@uirouter/core": "6.1.1",

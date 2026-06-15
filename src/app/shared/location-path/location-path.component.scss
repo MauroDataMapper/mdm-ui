@@ -15,17 +15,33 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+.breadcrumb-item + .breadcrumb-item::before {
+  font-size: 200%;
+}
+
+
 .location-path {
   display: inline-block;
   min-width: 0;
 
+  .fa-code-branch::before,
+  .fa-file-alt::before,
+  .fa-tag::before {
+    margin-left: 0.4em;
+    text-decoration: none !important;
+  }
+
   ol {
     list-style: none;
-    margin-bottom: 0;
-    padding: 0;
-    display: flex;
+    display: inline-block;
     flex-wrap: wrap;
     align-items: center;
+    margin-right: 1em;
+    padding: 5px;
+    line-height: 1.5em;
+    margin-bottom: 0.2em;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
 
     li {
       display: inline-flex;
@@ -38,14 +54,15 @@ SPDX-License-Identifier: Apache-2.0
 
       &::before {
         float: none;
-        margin-right: 0.85em;
+        margin-right: 0.5em;
         padding-right: 0;
         align-self: center;
       }
 
       padding-left: 0;
-      padding-right: 1em;
+      padding-right: 0.8em;
       font-size: medium;
+      vertical-align: middle;
 
       .breadcrumb-content {
         display: inline-flex;
@@ -57,19 +74,17 @@ SPDX-License-Identifier: Apache-2.0
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1em;
-        min-width: 1em;
-        height: 1em;
+        height: 2em;
         line-height: 1em;
         font-size: 0.95em;
         vertical-align: middle;
-        margin-right: 0.12em;
       }
 
       a {
         display: inline-flex;
         align-items: center;
         min-width: 0;
+        text-decoration: none !important;
       }
 
       a.plain-item {
@@ -84,13 +99,14 @@ SPDX-License-Identifier: Apache-2.0
 
         &::before {
           padding: 0 0.5rem;
-          content: '|';
+          /* content: '|'; */
           font-size: larger;
         }
 
         .fas {
           font-size: medium;
           margin-right: 2px;
+          text-decoration: none !important;
         }
       }
 

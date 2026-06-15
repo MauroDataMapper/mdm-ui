@@ -15,19 +15,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input } from '@angular/core';
-import { DataModelDetail } from '@maurodatamapper/mdm-resources';
-import { NgIf } from '@angular/common';
 
-@Component({
-    selector: 'mdm-element-status',
-    templateUrl: './element-status.component.html',
-    styleUrls: ['./element-status.component.scss'],
-    standalone: true,
-    imports: [NgIf]
-})
-export class ElementStatusComponent {
-  @Input() result: DataModelDetail;
+.badge-draft {
+  background-color: orange;
+  color: black;
+  border: 1px solid darkorange;
+  border-radius: 5px;
+  font-size: small;
+  margin-right: 1em;
+}
 
-  constructor() { }
+.badge-finalised {
+  background-color: lightgreen;
+  color: darkgreen;
+  border: 1px solid darkgreen;
+  border-radius: 5px;
+  font-size: small;
+  margin-right: 1em;
 }

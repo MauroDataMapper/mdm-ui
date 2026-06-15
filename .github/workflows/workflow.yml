@@ -53,7 +53,7 @@ jobs:
           path: ./mdm-ui
 
       - name: Install and configure
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22.16.0'
 
@@ -121,7 +121,7 @@ jobs:
         run: npx jest --coverage
 
       - name: Report Test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           working-directory: ./mdm-ui
@@ -157,7 +157,7 @@ jobs:
         run: npm run eslint-junit || true # Always succeed, even with linting errors
 
       - name: Report ESLint results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           working-directory: ./mdm-ui
@@ -171,7 +171,7 @@ jobs:
 
       - name: Upload EsLint scan results to GitHub Security tab
         if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: './mdm-ui/eslint/eslint_report.sarif'
 
@@ -194,7 +194,7 @@ jobs:
 
       - name: Send a stream message
         if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
-        uses: zulip/github-actions-zulip/send-message@v1
+        uses: zulip/github-actions-zulip/send-message@v2
         with:
           api-key: ${{ secrets.ZULIP_API_KEY }}
           email: "githubactionsbot-bot@maurodatamapper.zulipchat.com"

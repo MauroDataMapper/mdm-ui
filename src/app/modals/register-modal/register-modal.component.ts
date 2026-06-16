@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field'
 import { NgIf } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'mdm-register-modal',
     templateUrl: './register-modal.component.html',
     styleUrls: ['./register-modal.component.sass'],
     standalone: true,
-    imports: [FormsModule, MatIconButton, NgIf, MatFormField, MatLabel, MatInput, MatSuffix, PasswordStrengthMeterComponent, MatButton]
+    imports: [FormsModule, MatIconButton, NgIf, MatFormField, MatLabel, MatInput, MatSuffix, PasswordStrengthMeterComponent, MatButton, MatIcon]
 })
 export class RegisterModalComponent implements OnInit {
   email: any;
@@ -43,6 +44,9 @@ export class RegisterModalComponent implements OnInit {
   password: any;
   confirmPassword: any;
   message: any;
+
+  hidePassword: boolean;
+  hideConfirmPassword: boolean;
 
   constructor(
     public broadcast: BroadcastService,
@@ -59,6 +63,8 @@ export class RegisterModalComponent implements OnInit {
     this.roleInOrganisation = '';
     this.password = '';
     this.confirmPassword = '';
+    this.hidePassword = true;
+    this.hideConfirmPassword = true;
   }
 
   register() {

@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [showTypeTitle]="true">
                     </mdm-element-link>
                     <div style="padding-left: 3px;" *ngIf="showDescription && item.targetModel.description && item.targetModel.description.length > 0">
-                        <mdm-more-description [description]="item.sourceModel.description"></mdm-more-description>
+                        <mdm-more-description [description]="item.sourceModel.description" [rootObject]="item.sourceModel"></mdm-more-description>
                     </div>
                 </div>
             </ng-template>

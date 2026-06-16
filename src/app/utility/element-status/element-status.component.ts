@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'mdm-element-status',
     templateUrl: './element-status.component.html',
-    styleUrls: ['./element-status.component.sass'],
+    styleUrls: ['./element-status.component.scss'],
     standalone: true,
     imports: [NgIf]
 })

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ import {
   ProfileFieldQueryData,
   ProfileSummary,
   ProfileSummaryResponse,
-  SearchQueryParameters
+  SearchQueryParameters,
+  DataElementIndexParameters
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin, Observable, of } from 'rxjs';
@@ -53,7 +54,7 @@ export class CatalogueSearchService {
   search(
     params: CatalogueSearchParameters
   ): Observable<CatalogueSearchResultSet> {
-    const [page, pageParams] = this.getPageParameters(params);
+    const [offset, max, pageParams] = this.getPageParameters(params);
 
     // Create a stream emitting the profile filters to be used in the query
     const profileFieldsQueryData$ = params.profileFiltersDto
@@ -67,15 +68,16 @@ export class CatalogueSearchService {
           ...this.getCommonQueryParameters(params),
           ...pageParams,
           searchTerm: this.getSearchTerm(params),
-          profileFields: profileFieldsQueryData
+          profileFields: profileFieldsQueryData,
+          prefixSearch: params.prefixSearch
         };
 
         return this.searchCatalogue(query, params.context).pipe(
           map((searchResults) => {
             return {
               count: searchResults.count,
-              pageSize: pageParams.max!,
-              page,
+              max,
+              offset,
               items: searchResults.items
             };
           })
@@ -186,14 +188,14 @@ export class CatalogueSearchService {
 
   private getPageParameters(
     params: CatalogueSearchParameters
-  ): [number, PageParameters] {
-    const page = params.page ?? defaultPage;
-    const pageSize = params.pageSize ?? defaultPageSize;
+  ): [number, number, PageParameters] {
+    const offset = params.offset ?? defaultPage;
+    const max = params.max ?? defaultPageSize;
     const pageParams: PageParameters = {
-      max: pageSize,
-      offset: page * pageSize
+      max: max,
+      offset: offset
     };
-    return [page, pageParams];
+    return [offset, max, pageParams];
   }
 
   private getCommonQueryParameters(
@@ -226,8 +228,10 @@ export class CatalogueSearchService {
     if (context) {
       if (context.domainType === CatalogueItemDomainType.DataClass) {
         // Data Classes are a special case. Otherwise use a generic approach for SearchableItemResource
-        return this.resources.dataClass
-          .search(context.dataModelId, context.id, query)
+        const indexParams: DataElementIndexParameters = {
+            label: query.searchTerm
+        };
+        return this.resources.dataElement.list(context.dataModelId, context.id, indexParams)
           .pipe(map((response: CatalogueItemSearchResponse) => response.body));
       }
 

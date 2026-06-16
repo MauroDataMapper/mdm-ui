@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,39 +17,25 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import {
-  DomSanitizer,
-  SafeHtml,
-  SafeStyle,
-  SafeScript,
-  SafeUrl,
-  SafeResourceUrl
-} from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 
 @Pipe({
-    name: 'safe',
-    standalone: true
+  name: 'safe',
+  standalone: true,
+  // Set pure: true for performance; if your code mutates the same string reference,
+  // set pure: false so pipe runs every change detection cycle.
+  pure: true
 })
 export class SafePipe implements PipeTransform {
-  constructor(protected sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
-  public transform(
-    value: string,
-    type: string
-  ): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
-    switch (type) {
-      case 'html':
-        return this.sanitizer.bypassSecurityTrustHtml(value);
-      case 'style':
-        return this.sanitizer.bypassSecurityTrustStyle(value);
-      case 'script':
-        return this.sanitizer.bypassSecurityTrustScript(value);
-      case 'url':
-        return this.sanitizer.bypassSecurityTrustUrl(value);
-      case 'resourceUrl':
-        return this.sanitizer.bypassSecurityTrustResourceUrl(value);
-      default:
-        throw new Error(`Invalid safe type specified: ${type}`);
-    }
+  transform(unsafeHtml: string | null | undefined): SafeHtml | null {
+    if (!unsafeHtml) return null;
+
+    // DOMPurify defaults are safe; you can pass a config object here to allow certain tags/attributes.
+    const cleaned = DOMPurify.sanitize(unsafeHtml, { RETURN_TRUSTED_TYPE: false });
+    // Return SafeHtml so you can bind directly to [innerHTML].
+    return this.sanitizer.bypassSecurityTrustHtml(cleaned);
   }
 }

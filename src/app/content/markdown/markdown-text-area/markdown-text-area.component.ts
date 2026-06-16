@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -104,7 +104,9 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.elementSelected();
-
+    if (this.description == '<p></p>') {
+      this.description = '';
+    }
     if (this.inEditMode) {
       const usingMacOs = window.navigator.userAgent.search('Mac') !== -1;
       this.keyboardShortcuts = usingMacOs ? macShortcuts : standardShortcuts;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import { MatButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { NgIf } from '@angular/common';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 export interface AddRuleModalConfig {
   name: string
@@ -47,7 +48,7 @@ export interface AddRuleModalResult {
     templateUrl: './add-rule-modal.component.html',
     styleUrls: ['./add-rule-modal.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatLabel, MatInput, MatError, MatButton, SafePipe]
 })
 export class AddRuleModalComponent implements OnInit {
   okBtn: string;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -149,6 +149,14 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       buttonsSM: buttons,
       buttonsXS: buttons,
       sourceEditor: 'ace',
+      cleanHTML: {
+        // deny script tags; remove attributes like onerror
+        denyTags: 'script',
+        // if any element has error handlers, remove them
+        removeOnError: true,
+        // run cleaner inside an iframe sandbox (safer but slower)
+        useIframeSandbox: true
+      } as any
     };
   }
 
@@ -163,14 +171,19 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       // Intercept the HTML content to render for display only so that certain parts can be altered
       // The version or branch override will try to force all Mauro path links to work within the same context as
       // the containing model the root element is in, if available
-      this.displayContent = this.htmlParser.parseAndModify(this.description, {
+      this.displayContent = this.htmlParser.parseAndModify(this.description, this.rootElement, {
         versionOrBranchOverride: this.getVersionOrBranchOverride()
       });
     }
   }
 
   onHtmlEditorChanged(newValue: string) {
-    this.description = newValue;
+    if (newValue == null || newValue == '<p></p>') {
+      this.description = '';
+    }
+    else {
+       this.description = newValue;
+    }
     this.descriptionChange.emit(this.description);
   }
 
@@ -213,8 +226,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     if (!component.allowAutocompleteSearch) {
       return;
     }
-    const savedSelection = editor.selection.save();
-    const focusNode = editor.selection.sel.focusNode;
+    const savedSelection = editor.selection?.save();
+    const focusNode = editor.selection?.sel?.focusNode;
 
     component.dialog
       .openElementSearch(component.rootElement)
@@ -239,7 +252,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     savedSelection: any
   ) {
     const path
-      = element.path ?? component.pathNames.createFromBreadcrumbs(element);
+      = element.localPath ?? element.path ?? component.pathNames.createFromBreadcrumbs(element);
 
     // Need to do this for NHS England, local paths should be used so that links can be maintained within the context of the branches
     // they live under

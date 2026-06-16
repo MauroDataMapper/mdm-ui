@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -305,7 +305,7 @@ SPDX-License-Identifier: Apache-2.0
       class="tree-context-menu-item"
       (click)="handleDataModelCompare(node)"
     >
-      Another Data Model
+      Another Data Model...
     </button>
     <button
       type="button"
@@ -314,10 +314,7 @@ SPDX-License-Identifier: Apache-2.0
       class="tree-context-menu-item"
       (click)="handleDataModelCompare(node, targetVersion)"
     >
-      {{ targetVersion.label }}
-      <span style="padding-left: 5px; font-style: italic; font-size: 11px">{{
-        targetVersion.documentationVersion
-      }}</span>
+      <mdm-element-label [item]="targetVersion"></mdm-element-label>
     </button>
   </ng-template>
 </mat-menu>
@@ -370,7 +367,7 @@ SPDX-License-Identifier: Apache-2.0
         isGhost: node.isGhost,
         modified: node.modified
       }">
-      <span [innerHTML]="node.label | mchighlighter: searchCriteria"></span>
+      <span [innerHTML]="node.label | escapeHtml | mchighlighter: searchCriteria"></span>
         <small *ngIf="node.branchName" class="ml-1 text-muted">
       <span> | </span>
       <span class="fas fa-code-branch mr-xsm"></span>

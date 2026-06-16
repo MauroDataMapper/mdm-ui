@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,10 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { HtmlParserService } from './html-parser.service';
 import { HrefOptions, RawParams, StateOrName, UIRouter } from '@uirouter/core';
 import { TestBed } from '@angular/core/testing';
+import { CatalogueItemDomainType } from '../../../../../../mdm-resources';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { randomUUID } from 'node:crypto';
 
 describe('HtmlParserService', () => {
   let service: HtmlParserService;
 
+  const dummyCatalogueItem: CatalogueItem = {
+    domainType: CatalogueItemDomainType.DataModel,
+    id: randomUUID()
+  }
   const uiRouterStub = {
     stateService: {
       href: jest.fn() as jest.MockedFunction<
@@ -56,13 +63,13 @@ describe('HtmlParserService', () => {
 
   it('should ignore empty hrefs in links', () => {
     const content = '<a href="">No link</a>';
-    const modified = service.parseAndModify(content, {});
+    const modified = service.parseAndModify(content, dummyCatalogueItem, {});
     expect(modified).toStrictEqual(content);
   });
 
   it('should ignore empty fragment links', () => {
     const content = '<a href="#">Empty fragment</a>';
-    const modified = service.parseAndModify(content, {});
+    const modified = service.parseAndModify(content, dummyCatalogueItem, {});
     expect(modified).toStrictEqual(content);
   });
 
@@ -72,7 +79,7 @@ describe('HtmlParserService', () => {
     'https://my.web.site/folder/page'
   ])('should ignore regular url %p', (url) => {
     const content = `<a href="${url}">Page link</a>`;
-    const modified = service.parseAndModify(content, {});
+    const modified = service.parseAndModify(content, dummyCatalogueItem, {});
     expect(modified).toStrictEqual(content);
   });
 
@@ -88,7 +95,7 @@ describe('HtmlParserService', () => {
 
     const content = `<a href="${path}">Mauro item link</a>`;
     const expected = `<a href="${baseUrl}${pathUrl}">Mauro item link</a>`;
-    const modified = service.parseAndModify(content, {});
+    const modified = service.parseAndModify(content, dummyCatalogueItem, {});
     expect(modified).toStrictEqual(expected);
   });
 
@@ -114,7 +121,7 @@ describe('HtmlParserService', () => {
 
       const content = `<a href="${path}">Mauro item link</a>`;
       const expected = `<a href="${baseUrl}${pathUrl}">Mauro item link</a>`;
-      const modified = service.parseAndModify(content, {
+      const modified = service.parseAndModify(content, dummyCatalogueItem, {
         versionOrBranchOverride: branchName
       });
       expect(modified).toStrictEqual(expected);

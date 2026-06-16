@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 <div style="margin-top: 2px">
   <mdm-mauro-item-tree
     [nodes]="treeNodes"
+    [wizardReturnTab]="'favourites'"
     (selectionChange)="selected($event)"
+    (focusChange)="focused($event)"
   ></mdm-mauro-item-tree>
   <div class="loading-spinner" *ngIf="reloading">
     <div>

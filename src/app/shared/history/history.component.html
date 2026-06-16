@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ SPDX-License-Identifier: Apache-2.0
         mat-cell
         *matCellDef="let element"
       >
-        <div *ngIf="element && element.createdByUser && element.createdByUser.name" style="float: left; margin: 3px">
-          <span [innerHTML]="element.createdByUser.name"></span>
+        <div *ngIf="element && element.createdBy" style="float: left; margin: 3px">
+          <span>{{ element.createdBy }}</span>
         </div>
       </td>
     </ng-container>

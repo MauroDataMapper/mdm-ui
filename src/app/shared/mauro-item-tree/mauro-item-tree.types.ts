@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {
   SelectionChange
 } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { Access } from '@mdm/model/access';
 import {
   CatalogueItemDomainType,
   MdmTreeItemListResponse,
@@ -50,12 +51,17 @@ export interface MauroItemTreeFlatNode {
   label: string
   level: number
   expandable: boolean
+  availableActions?: string[]
+  access?: Access
   isLoading?: boolean
+  deleted?: boolean
+  type?: string
   modelId?: Uuid
   parentId?: Uuid
   finalised?: boolean
   branchName?: string
   modelVersion?: string
+  version?: string
 }
 
 export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
@@ -98,7 +104,8 @@ export class MauroTreeViewDataSource extends DataSource<MauroItemTreeFlatNode> {
     );
   }
 
-  disconnect(_: CollectionViewer): void {
+  disconnect(collectionViewer: CollectionViewer): void {
+    void collectionViewer;
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

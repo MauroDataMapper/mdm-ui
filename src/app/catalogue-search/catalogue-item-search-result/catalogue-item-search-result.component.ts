@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CatalogueItemSearchResult } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemSearchResult, MdmTreeItem } from '@maurodatamapper/mdm-resources';
 import { ElementTypesService } from '@mdm/services';
 import { MoreDescriptionComponent } from '../../shared/more-description/more-description.component';
-import { BreadcrumbComponent } from '../../shared/breadcrumb/breadcrumb.component';
+import { LocationPathComponent } from '../../shared/location-path/location-path.component';
+import { PathNameService } from '../../shared/path-name/path-name.service';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -27,7 +28,7 @@ import { NgIf } from '@angular/common';
     templateUrl: './catalogue-item-search-result.component.html',
     styleUrls: ['./catalogue-item-search-result.component.scss'],
     standalone: true,
-    imports: [NgIf, BreadcrumbComponent, MoreDescriptionComponent]
+    imports: [NgIf, LocationPathComponent, MoreDescriptionComponent]
 })
 export class CatalogueItemSearchResultComponent implements OnChanges {
   @Input() item?: CatalogueItemSearchResult;
@@ -35,12 +36,35 @@ export class CatalogueItemSearchResultComponent implements OnChanges {
   @Input() showBreadcrumb = false;
 
   linkUrl = '';
+  ancestorTreeItems: MdmTreeItem[] = [];
 
-  constructor(private elementTypes: ElementTypesService) {}
+  constructor(
+    private elementTypes: ElementTypesService,
+    private pathName: PathNameService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.item) {
       this.linkUrl = this.elementTypes.getLinkUrl(this.item);
+      this.ancestorTreeItems = this.item?.breadcrumbs?.map((crumb, index) => {
+        const crumbPath = (crumb as { path?: string }).path;
+        const path = crumbPath
+          ? crumbPath
+          : this.pathName.createFromBreadcrumbs({
+            id: crumb.id,
+            domainType: crumb.domainType,
+            label: crumb.label,
+            branchName: crumb.branchName,
+            modelVersionTag: crumb.modelVersionTag,
+            modelVersion: crumb.modelVersion,
+            breadcrumbs: this.item.breadcrumbs.slice(0, index)
+          } as any);
+
+        return {
+          ...crumb,
+          path
+        } as MdmTreeItem;
+      }) ?? [];
     }
   }
 }

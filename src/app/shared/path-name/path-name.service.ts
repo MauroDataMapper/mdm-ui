@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import {
+  Branchable,
+  CatalogueItem,
   Modelable,
   Navigatable,
-  PathableDomainType
+  PathableDomainType, Versionable
 } from '@maurodatamapper/mdm-resources';
 import {
   isPathElementBranchable,
@@ -67,7 +69,7 @@ export class PathNameService {
         );
       }
 
-      const type = parts[0] as PathElementType;
+      const type = parts[0].toLowerCase() as PathElementType;
       const label = labelAndVersion[0];
       const version
         = labelAndVersion.length > 1 ? labelAndVersion[1] : undefined;
@@ -98,24 +100,6 @@ export class PathNameService {
     });
   }
 
-  parseAndOverrideVersionOrBranch(
-    path: string,
-    versionOrBranch: string
-  ): PathElement[] | null {
-    const pathElements = this.parse(path);
-    if (!pathElements) {
-      return null;
-    }
-
-    pathElements
-      .filter(pathElement => isPathElementBranchable(pathElement))
-      .forEach((pathElement) => {
-        pathElement.version = versionOrBranch;
-      });
-
-    return pathElements;
-  }
-
   build(pathElements: PathElement[]): string {
     if (!pathElements || pathElements.length === 0) {
       return null;
@@ -140,7 +124,7 @@ export class PathNameService {
     return pathElementsAsStrings.join(this.elementSeparator);
   }
 
-  createFromBreadcrumbs(item: Modelable & Navigatable): string {
+  createFromBreadcrumbs(item: Modelable & Navigatable & Versionable & Branchable): string {
     if (!item) {
       return null;
     }
@@ -150,14 +134,26 @@ export class PathNameService {
       {
         domainType: item.domainType,
         id: item.id,
-        label: item.label
+        label: item.label,
+        branchName: item.branchName,
+        modelVersionTag: item.modelVersionTag,
+        modelVersion: item.modelVersion
       }
     ];
-
     return crumbs
       .map((crumb) => {
         const pathType = pathElementDomainTypes.get(crumb.domainType);
-        return `${pathType}:${crumb.label}`;
+        let path = `${pathType}:${crumb.label}`
+        if (crumb.branchName) {
+          path = path + `${this.branchSeparator}${crumb.branchName}`
+        }
+        else if (crumb.modelVersionTag) {
+          path = path + `${this.branchSeparator}${crumb.modelVersionTag}`
+        }
+        else if (crumb.modelVersion) {
+          path = path + `${this.branchSeparator}${crumb.modelVersion}`
+        }
+        return path;
       })
       .join('|');
   }
@@ -192,28 +188,35 @@ export class PathNameService {
     return pathElements;
   }
 
-  createHref(path: string) {
-    const domain = this.getPathableDomainFromPath(path);
-    return this.createHrefFromPath(domain, path);
+  createHref(path: string, rootObject: CatalogueItem) {
+    // const domain = this.getPathableDomainFromPath(path);
+
+    return this.createHrefFromPath(path, rootObject);
   }
 
-  createHrefRelativeToVersionOrBranch(path: string, branchName: string) {
-    const pathElements = this.parseAndOverrideVersionOrBranch(path, branchName);
-    const overriddenPath = this.build(pathElements);
-
-    const domain = pathableDomainTypesFromPrefix.get(pathElements[0].type);
-
-    // Create a href to the path pointing to the version/branch, not the original parameter
-    return this.createHrefFromPath(domain, overriddenPath);
-  }
-
-  private createHrefFromPath(domain: PathableDomainType, path: string) {
-    return this.router.stateService.href(
-      'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
-      {
-        domain,
-        path
-      }
-    );
+  createHrefFromPath(path: string, rootObject?: CatalogueItem) {
+    const pathElements = this.parse(path);
+    const i = pathElements.findIndex(x => x.version);
+    if (i === -1) {
+      return this.router.stateService.href(
+        'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+        {
+          domain: rootObject.domainType,
+          uuid: null,
+          path: path
+        }
+      );
+    }
+    else {
+      const newPath = this.build(pathElements.slice(i));
+      return this.router.stateService.href(
+        'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
+        {
+          domain: rootObject.domainType,
+          uuid: rootObject?.id,
+          path: newPath
+        }
+      );
+    }
   }
 }

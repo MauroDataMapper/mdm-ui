@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,19 +23,20 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { environment } from '@env/environment';
 import { Title } from '@angular/platform-browser';
 import { StateHandlerService } from '@mdm/services';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'mdm-change-password',
     templateUrl: './change-password.component.html',
     styleUrls: ['./change-password.component.sass'],
     standalone: true,
-    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton]
+    imports: [FormsModule, NgIf, MatFormField, MatLabel, MatSuffix, MatInput, PasswordStrengthMeterComponent, MatButton, MatIcon, MatIconButton]
 })
 export class ChangePasswordComponent implements OnInit {
   @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
@@ -46,6 +47,9 @@ export class ChangePasswordComponent implements OnInit {
   confirm: string;
   message: string;
   afterSave: (result: { body: { id: any } }) => void;
+  hideOldPassword: boolean;
+  hideNewPassword: boolean;
+  hideConfirmPassword: boolean;
 
   backendUrl: string = environment.apiEndpoint;
 
@@ -61,6 +65,9 @@ export class ChangePasswordComponent implements OnInit {
     this.oldPassword = '';
     this.confirm = '';
     this.message = '';
+    this.hideOldPassword = true;
+    this.hideNewPassword = true;
+    this.hideConfirmPassword = true;
   }
 
   ngOnInit() {

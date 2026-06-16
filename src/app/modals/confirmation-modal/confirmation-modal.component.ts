@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MatButton } from '@angular/material/button';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 export interface ConfirmationModalConfig {
   title?: string
@@ -40,7 +41,7 @@ export interface ConfirmationModalResult {
     templateUrl: './confirmation-modal.component.html',
     styleUrls: ['./confirmation-modal.component.sass'],
     standalone: true,
-    imports: [FormsModule, NgIf, MatButton]
+    imports: [FormsModule, NgIf, MatButton, SafePipe]
 })
 export class ConfirmationModalComponent implements OnInit {
   title: string;

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +17,75 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { MergeDiffItemModel } from '../types/merge-item-type';
+import { MergeConflictResolution, MergeDiffType } from '@maurodatamapper/mdm-resources';
+import { MergeDiffItemModel, MergeItemColumnFilters } from '../types/merge-item-type';
 
 @Pipe({
     name: 'mergeFilter',
     standalone: true
 })
 export class MergeFilterPipe implements PipeTransform {
-  public transform(items: MergeDiffItemModel[], searchText: string): MergeDiffItemModel[] {
-    if (searchText === '') {
+  public transform(items: MergeDiffItemModel[], filters: MergeItemColumnFilters): MergeDiffItemModel[] {
+    if (!items?.length) {
       return items;
     }
-    return items.filter(item => item.path.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
+
+    const normalisedFilters: MergeItemColumnFilters = {
+      type: filters?.type?.trim().toLowerCase() ?? '',
+      path: filters?.path?.trim().toLowerCase() ?? '',
+      apply: filters?.apply?.trim().toLowerCase() ?? ''
+    };
+
+    if (!normalisedFilters.type && !normalisedFilters.path && !normalisedFilters.apply) {
+      return items;
+    }
+
+    return items.filter(item =>
+      this.matchesTypeFilter(item, normalisedFilters.type)
+      && this.matchesPathFilter(item, normalisedFilters.path)
+      && this.matchesApplyFilter(item, normalisedFilters.apply)
+    );
+  }
+
+  private matchesTypeFilter(item: MergeDiffItemModel, filterValue: string): boolean {
+    if (!filterValue) {
+      return true;
+    }
+
+    if (filterValue === 'conflict') {
+      return !!item.isMergeConflict;
+    }
+
+    return this.getTypeKey(item.type) === filterValue;
+  }
+
+  private matchesPathFilter(item: MergeDiffItemModel, filterValue: string): boolean {
+    if (!filterValue) {
+      return true;
+    }
+
+    return item.path?.toLowerCase().includes(filterValue);
+  }
+
+  private matchesApplyFilter(item: MergeDiffItemModel, filterValue: string): boolean {
+    if (!filterValue) {
+      return true;
+    }
+
+    const isApplied = item.branchSelected !== null && item.branchSelected !== MergeConflictResolution.Target;
+    return filterValue === 'applied' ? isApplied : !isApplied;
+  }
+
+  private getTypeKey(type: MergeDiffType): string {
+    switch (type) {
+      case MergeDiffType.Creation:
+        return 'creation';
+      case MergeDiffType.Deletion:
+        return 'deletion';
+      case MergeDiffType.Modification:
+        return 'modification';
+      default:
+        return '';
+    }
   }
 }

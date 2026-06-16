@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -78,6 +78,8 @@ export class CatalogueSearchListingComponent implements OnInit {
 
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
   profileFilters?: CatalogueSearchProfileFilter[];
+  clientPageIndex = 0;
+  clientPageSize = 20;
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -116,8 +118,8 @@ export class CatalogueSearchListingComponent implements OnInit {
           if (!this.parameters.search || this.parameters.search === '') {
             return of<CatalogueSearchResultSet>({
               count: 0,
-              page: 1,
-              pageSize: 10,
+              offset: 0,
+              max: 10,
               items: []
             });
           }
@@ -136,6 +138,12 @@ export class CatalogueSearchListingComponent implements OnInit {
       .subscribe((resultSet) => {
         this.status = 'ready';
         this.resultSet = resultSet;
+        if (this.usesClientPagination) {
+          const pageCount = Math.ceil(this.paginationLength / this.clientPageSize);
+          if (this.clientPageIndex >= pageCount) {
+            this.clientPageIndex = 0;
+          }
+        }
       });
   }
 
@@ -156,22 +164,46 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onContextChanged(event: CatalogueSearchContext) {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 50;
+    }
     this.parameters.context = event;
     this.updateSearch();
   }
 
   onSearchTerm() {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 50;
+    }
     this.parameters.search = this.searchTerms;
     this.updateSearch();
   }
 
   onPageChange(event: PageEvent) {
-    this.parameters.page = event.pageIndex;
-    this.parameters.pageSize = event.pageSize;
+    if (this.usesClientPagination) {
+      this.clientPageIndex = event.pageIndex;
+      this.clientPageSize = event.pageSize;
+      return;
+    }
+
+    this.parameters.offset = event.pageIndex * event.pageSize;
+    this.parameters.max = event.pageSize;
     this.updateSearch();
   }
 
   onSelectSortBy(selected: SortByOption) {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 50;
+    }
     const sortBy = selected.value as SearchListingSortByOption;
     this.parameters.sort = getSortFromSortByOptionString(sortBy);
     this.parameters.order = getOrderFromSortByOptionString(sortBy);
@@ -179,11 +211,23 @@ export class CatalogueSearchListingComponent implements OnInit {
   }
 
   onFilterChanged(event: SearchFilterChange) {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 50;
+    }
     this.parameters[event.name] = event.value;
     this.updateSearch();
   }
 
   onFilterReset() {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 50;
+    }
     this.parameters.context = undefined;
     this.parameters.domainTypes = [];
     this.parameters.labelOnly = undefined;
@@ -202,6 +246,7 @@ export class CatalogueSearchListingComponent implements OnInit {
    * solves a bug with seralising a empty array
    */
   onUpdateProfileFilters(profileFilters: CatalogueSearchProfileFilter[]) {
+    this.clientPageIndex = 0;
     if (profileFilters.length > 0) {
       this.parameters.profileFiltersDto = mapProfileFiltersToDto(
         profileFilters
@@ -222,10 +267,56 @@ export class CatalogueSearchListingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: CatalogueSearchProfileFilter[]) => {
       if (result) {
+        this.clientPageIndex = 0;
         this.parameters.profileFiltersDto = mapProfileFiltersToDto(result);
         this.updateSearch();
       }
     });
+  }
+
+  get visibleItems() {
+    if (!this.resultSet) {
+      return [];
+    }
+
+    if (!this.usesClientPagination) {
+      return this.resultSet.items;
+    }
+
+    const start = this.clientPageIndex * this.clientPageSize;
+    const end = start + this.clientPageSize;
+    return this.resultSet.items.slice(start, end);
+  }
+
+  get paginationLength() {
+    if (!this.resultSet) {
+      return 0;
+    }
+
+    return this.usesClientPagination ? this.resultSet.items.length : this.resultSet.count;
+  }
+
+  get paginationPageIndex() {
+    if (this.usesClientPagination) {
+      return this.clientPageIndex;
+    }
+    return this.resultSet?.max ? Math.floor(this.resultSet.offset / this.resultSet.max) : 0;
+  }
+
+  get paginationPageSize() {
+    if (this.usesClientPagination) {
+      return this.clientPageSize;
+    }
+
+    return this.resultSet?.max ?? this.parameters?.max ?? 20;
+  }
+
+  get usesClientPagination() {
+    if (!this.resultSet) {
+      return false;
+    }
+
+    return this.resultSet.items.length > (this.resultSet.max || 20);
   }
 
   /**

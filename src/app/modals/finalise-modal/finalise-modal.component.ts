@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgClass, NgIf } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 export interface FinaliseModalResponse {
   status: ModalDialogStatus
@@ -38,7 +39,7 @@ export interface FinaliseModalResponse {
     templateUrl: './finalise-modal.component.html',
     styleUrls: ['./finalise-modal.component.scss'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatRadioGroup, MatRadioButton, NgClass, ExtendedModule, MatFormField, MatLabel, MatInput, MatDialogActions, NgIf, MatButton]
+    imports: [MatDialogTitle, MatDialogContent, FormsModule, MatRadioGroup, MatRadioButton, NgClass, ExtendedModule, MatFormField, MatLabel, MatInput, MatDialogActions, NgIf, MatButton, SafePipe]
 })
 export class FinaliseModalComponent implements OnInit {
   title: string;

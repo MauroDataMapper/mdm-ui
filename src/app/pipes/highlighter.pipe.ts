@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ export class HighlighterPipe implements PipeTransform {
       if (wildcardMatch) {
         const sections: string[] = phrase.split(' ');
         sections.forEach((section) => {
-          text = value.replace(new RegExp('(' + escape(section) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
+          text = value.replace(new RegExp('(' + encodeURIComponent(section) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
         });
       }
  else {
-        text = value.replace(new RegExp('(' + escape(phrase) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
+        text = value.replace(new RegExp('(' + encodeURIComponent(phrase) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
       }
     }
     return text;

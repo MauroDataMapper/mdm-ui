@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,17 +22,17 @@ SPDX-License-Identifier: Apache-2.0
 <mat-dialog-content class="mat-typography">
   <div class="full-width">
     <form role="form" class="mb-2">
-      <span [innerHtml]="message"></span>
+      <span [innerHtml]="message | safe"></span>
       <mat-radio-group name="versionList" [(value)]="data.versionList" [(ngModel)]="data.versionList" (ngModelChange)="onVersionChange()" class="mb-0">
 
         <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><em>(default)</em></small></mat-radio-button>
-        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionMajor"></span></small></div>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span>{{ versionMajor }}</span></small></div>
 
         <mat-radio-button value="Minor" [checked]="data.versionList == 'Minor'">Minor</mat-radio-button>
-        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionMinor"></span></small></div>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span>{{ versionMinor }}</span></small></div>
 
         <mat-radio-button value="Patch" [checked]="data.versionList == 'Patch'">Patch</mat-radio-button>
-        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionPatch"></span></small></div>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span>{{ versionPatch }}</span></small></div>
 
         <mat-radio-button value="Custom" [checked]="data.versionList == 'Custom'">Custom version</mat-radio-button>
         <div style="margin-left: 29px;"><small class="text-muted">Define your custom version </small></div>

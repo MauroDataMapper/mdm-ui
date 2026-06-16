@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -529,7 +529,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.editing
       .openDialog(BulkEditModalComponent, {
         data: {
-          dataElementIdLst: dataClassIds,
+          dataElementIdList: dataClassIds,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },
@@ -559,7 +559,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
     this.editing
       .openDialog(BulkEditModalComponent, {
         data: {
-          dataElementIdLst: dataElementIds,
+          dataElementIdList: dataElementIds,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },

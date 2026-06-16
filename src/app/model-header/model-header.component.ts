@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UIRouterGlobals } from '@uirouter/core';
+import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 import {
   Branchable,
   CatalogueItemDetail,
@@ -27,6 +29,7 @@ import {
   isModelDomainType,
   MdmTreeItem,
   MergableCatalogueItem,
+  MergableMultiFacetAwareDomainType,
   ModelDomain,
   Securable
 } from '@maurodatamapper/mdm-resources';
@@ -37,9 +40,20 @@ import { MauroIdentifier, MauroItem } from '@mdm/mauro/mauro-item.types';
 import { MauroModelVersioningService } from '@mdm/mauro/mauro-model-versioning.service';
 import { defaultBranchName } from '@mdm/modals/change-branch-name-modal/change-branch-name-modal.component';
 import {
+  DataClassMoveModalComponent,
+  DataClassMoveModalData,
+  DataClassMoveModalResult
+} from '@mdm/modals/data-class-move-modal/data-class-move-modal.component';
+import {
+  DataElementMoveModalComponent,
+  DataElementMoveModalData,
+  DataElementMoveModalResult
+} from '@mdm/modals/data-element-move-modal/data-element-move-modal.component';
+import {
   FinaliseModalComponent,
   FinaliseModalResponse
 } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityAccessResource } from '@mdm/modals/security-modal/security-modal.model';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { VersioningGraphModalConfiguration } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.model';
@@ -96,13 +110,15 @@ export class ModelHeaderComponent implements OnInit {
     private dialog: MatDialog,
     private elementTypes: ElementTypesService,
     private stateHandler: StateHandlerService,
+    private uiRouterGlobals: UIRouterGlobals,
     private itemUpdates: MauroItemUpdateService,
     private messageHandler: MessageHandlerService,
     private exportHandler: ExportHandlerService,
     private modelVersioning: MauroModelVersioningService,
     private itemRemoval: MauroItemRemoveService,
     private broadcast: BroadcastService,
-    private modelTree: ModelTreeService
+    private modelTree: ModelTreeService,
+    private resources: MdmResourcesService
   ) {}
 
   get isFinalisable() {
@@ -241,6 +257,20 @@ export class ModelHeaderComponent implements OnInit {
     return this.item.availableActions.includes('update');
   }
 
+  get canMove() {
+    if (!this.item) {
+      return false;
+    }
+
+    return (
+      [
+        CatalogueItemDomainType.DataClass,
+        CatalogueItemDomainType.DataElement
+      ].includes(this.item.domainType)
+      && this.item.availableActions.includes('update')
+    );
+  }
+
   get hasMenuOptions() {
     if (!this.item) {
       return false;
@@ -249,6 +279,7 @@ export class ModelHeaderComponent implements OnInit {
     return (
       this.canChangeBranchName
       || this.canBulkEdit
+      || this.canMove
       || this.canCompareModels
       || this.access.showDelete
       || this.canRestore
@@ -357,11 +388,172 @@ export class ModelHeaderComponent implements OnInit {
     }
   }
 
+  move() {
+    switch (this.item.domainType) {
+      case CatalogueItemDomainType.DataClass:
+        return this.moveDataClass();
+      case CatalogueItemDomainType.DataElement:
+        return this.moveDataElement();
+      default:
+        return;
+    }
+  }
+
+  moveDataClass() {
+    if (
+      this.item.domainType !== CatalogueItemDomainType.DataClass
+      || !this.item.model
+    ) {
+      return;
+    }
+
+    const parentDataClassBreadcrumb = this.item.breadcrumbs?.find(
+      bc => bc.domainType === CatalogueItemDomainType.DataClass
+        && bc.id === this.item.parentDataClass
+    );
+    const currentTab = this.uiRouterGlobals.params.tabView as string | undefined;
+
+    this.dialog
+      .open<
+        DataClassMoveModalComponent,
+        DataClassMoveModalData,
+        DataClassMoveModalResult
+      >(DataClassMoveModalComponent, {
+        data: {
+          parentCatalogueItem: { id: this.item.model },
+          currentDataClassId: this.item.id,
+          currentParentDataClassId: this.item.parentDataClass,
+          currentParentDataClassLabel: parentDataClassBreadcrumb?.label
+        },
+        panelClass: 'element-selector-modal'
+      })
+      .afterClosed()
+      .pipe(
+        filter(result => result?.status === ModalDialogStatus.Ok),
+        switchMap((result) => {
+          this.busy = true;
+          return this.resources.dataClass.move(
+            this.item.model,
+            this.item.id,
+            result.newParentDataClassId ?? undefined
+          );
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem moving the Data Class.',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.busy = false))
+      )
+      .subscribe((response: any) => {
+        const movedItem = response.body ?? response;
+        const updatedParentDataClassId = movedItem.parentDataClass ?? '';
+
+        this.messageHandler.showSuccess('Data Class moved successfully.');
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.Go(
+          'dataClass',
+          {
+            dataModelId: this.item.model,
+            dataClassId: updatedParentDataClassId,
+            id: this.item.id,
+            ...(currentTab && { tabView: currentTab })
+          },
+          { reload: true, location: true }
+        );
+      });
+  }
+
+  moveDataElement() {
+    if (
+      this.item.domainType !== CatalogueItemDomainType.DataElement
+      || !this.item.model
+      || !this.item.dataClass
+    ) {
+      return;
+    }
+
+    const dataClassBreadcrumb = this.item.breadcrumbs?.find(
+      bc => bc.domainType === CatalogueItemDomainType.DataClass
+        && bc.id === this.item.dataClass
+    );
+    const currentTab = this.uiRouterGlobals.params.tabView as string | undefined;
+
+    this.dialog
+      .open<
+        DataElementMoveModalComponent,
+        DataElementMoveModalData,
+        DataElementMoveModalResult
+      >(DataElementMoveModalComponent, {
+        data: {
+          parentCatalogueItem: { id: this.item.model },
+          currentDataClassId: this.item.dataClass,
+          currentDataClassLabel: dataClassBreadcrumb?.label
+        },
+        panelClass: 'element-selector-modal'
+      })
+      .afterClosed()
+      .pipe(
+        filter(result => result?.status === ModalDialogStatus.Ok),
+        switchMap((result) => {
+          this.busy = true;
+          return this.resources.dataElement.move(
+            this.item.model,
+            this.item.dataClass,
+            this.item.id,
+            result.newDataClassId as string
+          );
+        }),
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem moving the Data Element.',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => (this.busy = false))
+      )
+      .subscribe((response: any) => {
+        const movedItem = response.body ?? response;
+        const updatedDataClassId = movedItem.dataClass;
+
+        this.messageHandler.showSuccess('Data Element moved successfully.');
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.Go(
+          'dataElement',
+          {
+            dataModelId: this.item.model,
+            dataClassId: updatedDataClassId,
+            id: this.item.id,
+            ...(currentTab && { tabView: currentTab })
+          },
+          { reload: true, location: true }
+        );
+      });
+  }
+
   merge() {
-    return this.stateHandler.Go('mergediff', {
-      sourceId: this.item.id,
-      catalogueDomainType: catalogueItemToMultiFacetAware(this.item.domainType)
-    });
+    if (!this.item) {
+      return;
+    }
+
+    const catalogueDomainType = catalogueItemToMultiFacetAware(
+      this.item.domainType
+    ) as MergableMultiFacetAwareDomainType;
+
+    return this.dialog
+      .openMergeDiff({
+        sourceId: this.item.id,
+        catalogueDomainType
+      })
+      .afterClosed()
+      .pipe(filter(result => !!result?.success))
+      .subscribe(() => {
+        this.broadcast.reloadCatalogueTree();
+        this.stateHandler.reload();
+      });
   }
 
   showMergeGraph() {

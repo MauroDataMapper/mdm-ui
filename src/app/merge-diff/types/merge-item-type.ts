@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,9 +21,15 @@ export const branchNameField = 'branchName';
 
 export type MergeItemValueType = 'undefined' | 'string' | 'number';
 
-export interface MergeItemSelection {
-  mergeItem: MergeDiffItem
-  isCommitting: boolean
+export interface MergeItemSelectionChange {
+  mergeItem: MergeDiffItemModel
+  selected: boolean
+}
+
+export interface MergeItemColumnFilters {
+  type: string
+  path: string
+  apply: string
 }
 
 export interface CommittingMergeDiffItem {

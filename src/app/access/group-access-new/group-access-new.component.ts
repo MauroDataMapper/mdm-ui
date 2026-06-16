@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -80,6 +80,7 @@ export class GroupAccessNewComponent
   totalItemCount = 0;
   securableResourceGroupRoles: SecurableResourceGroupRole[] = [];
   userGroups: UserGroup[] = [];
+  availableUserGroups: UserGroup[] = [];
   groupRoles: GroupRole[] = [];
   loading = true;
   state: 'view' | 'add' = 'view';
@@ -135,6 +136,7 @@ export class GroupAccessNewComponent
       .subscribe(([userGroups, groupRoles]) => {
         this.userGroups = userGroups.body.items;
         this.groupRoles = groupRoles.body.items;
+        this.filterUserGroups();
       });
   }
 
@@ -177,7 +179,7 @@ export class GroupAccessNewComponent
       .addUserGroupToSecurableResourceGroupRole(
         this.catalogueItem.domainType,
         this.catalogueItem.id,
-        this.formGroup.controls.groupRole.value.id,
+        this.formGroup.controls.groupRole.value.name,
         this.formGroup.controls.userGroup.value.id,
         null
       )
@@ -201,7 +203,7 @@ export class GroupAccessNewComponent
       .removeUserGroupFromSecurableResourceGroupRole(
         this.catalogueItem.domainType,
         this.catalogueItem.id,
-        item.groupRole.id,
+        item.groupRole.name,
         item.userGroup.id
       )
       .pipe(
@@ -245,6 +247,7 @@ export class GroupAccessNewComponent
         this.securableResourceGroupRoles = response.body.items;
         this.totalItemCount = response.body.count;
         this.dataSource.data = this.securableResourceGroupRoles;
+        this.filterUserGroups();
       });
   }
 
@@ -258,5 +261,15 @@ export class GroupAccessNewComponent
     }
 
     return undefined;
+  }
+
+  private filterUserGroups() {
+    this.availableUserGroups = []
+    this.userGroups.forEach(val => this.availableUserGroups.push(Object.assign({}, val)));
+    this.securableResourceGroupRoles.forEach((securableResourceGroupRole) => {
+      this.availableUserGroups = this.userGroups.filter(userGroup =>
+        securableResourceGroupRole.userGroup.name !== userGroup.name
+      );
+    });
   }
 }

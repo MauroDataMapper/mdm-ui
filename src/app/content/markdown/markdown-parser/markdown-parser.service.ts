@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import * as marked from 'marked';
 import { MauroItem } from '@mdm/mauro/mauro-item.types';
-import { Pathable } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Pathable } from '@maurodatamapper/mdm-resources';
 import { CustomTokenizerService } from './custom-tokenizer.service';
 import { CustomHtmlRendererService } from './custom-html-renderer.service';
 import { CustomTextRendererService } from './custom-text-renderer.service';
@@ -33,7 +33,7 @@ export class MarkdownParserService {
     private customTextRendererService: CustomTextRendererService
   ) {}
 
-  public parse(source: string, renderType: string) {
+  public parse(source: string, renderType: string, rootObject?: CatalogueItem) {
     // There is a problem with parsing Mauro paths buried within Markdown links e.g. "[Complex Test DataModel](dm:Complex Test DataModel$main)"
     // The marked parser will not identify this as a Markdown link token because of the spaces in the href part between the brackets.
     // Identify all Markdown links in the text, then add a "^" character in the href part instead of spaces so that the marked parser will
@@ -49,6 +49,8 @@ export class MarkdownParserService {
     );
 
     let renderer: marked.Renderer = this.customHtmlRendererService;
+    (renderer as CustomHtmlRendererService).rootObject = rootObject;
+
     if (renderType === 'text') {
       renderer = this.customTextRendererService;
     }

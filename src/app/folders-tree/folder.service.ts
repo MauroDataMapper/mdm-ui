@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ export class FolderService {
   }
 
   async loadModelsToCompare(dataModel) {
-    const semanticLinks: any = await this.resources.catalogueItem.listSemanticLinks(dataModel.domainType as string, dataModel.id as string, { filters: 'all=true' }).toPromise();
+    const otherVersions: any = await this.resources.dataModel.modelVersionTree(dataModel.id).toPromise();
     const compareToList = [];
-    if (semanticLinks && semanticLinks.body.items) {
-      semanticLinks.body.items.map((link) => {
-        if (['Superseded By', 'New Version Of'].includes(link.linkType as string) && link.source.id === dataModel.id) {
-          compareToList.push(link.target);
+    if (otherVersions && otherVersions.body) {
+      otherVersions.body.map((dm) => {
+        if (dm.id != dataModel.id) {
+          compareToList.push(dm);
         }
       });
     }

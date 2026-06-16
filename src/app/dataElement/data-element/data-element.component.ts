@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-
 import { ProfileDataViewComponent } from '@mdm/shared/profile-data-view/profile-data-view.component';
 import { ModelHeaderComponent } from '@mdm/model-header/model-header.component';
 import { NgIf } from '@angular/common';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
     selector: 'mdm-data-element',
@@ -108,7 +109,8 @@ export class DataElementComponent
     private title: Title,
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService,
-    private elementTypes: ElementTypesService
+    private elementTypes: ElementTypesService,
+    private broadcast: BroadcastService
   ) {
     super();
     if (
@@ -200,6 +202,8 @@ export class DataElementComponent
   }
 
   save(saveItems: DefaultProfileItem[]) {
+    const previousDataClassId = this.dataClass.id as string;
+
     const resource: DataElement = {
       id: this.dataElementOutput.id,
       label: this.dataElementOutput.label,
@@ -247,14 +251,31 @@ export class DataElementComponent
       )
       .subscribe(
         (result: DataElementDetailResponse) => {
-          this.dataElementOutput = null;
+          const updated = result.body;
+          const currentTab = this.tabs.getByIndex(this.activeTab)?.name ?? 'description';
+          const parentDataClassChanged = previousDataClassId !== updated.dataClass;
 
-          setTimeout(() => {
-            this.dataElementOutput = result.body;
-          }, 250);
-
-          this.catalogueItem = result.body;
+          this.catalogueItem = updated;
+          this.dataModel.id = updated.model;
+          this.dataClass.id = updated.dataClass;
           this.messageHandler.showSuccess('Data Element updated successfully.');
+
+          if (parentDataClassChanged) {
+            this.broadcast.reloadCatalogueTree();
+            this.stateHandler.Go('dataElement', {
+              dataModelId: updated.model,
+              dataClassId: updated.dataClass,
+              id: updated.id,
+              tabView: currentTab
+            });
+            return;
+          }
+
+          this.dataElementDetails(
+            updated.model as string,
+            updated.dataClass as string,
+            updated.id as string
+          );
         },
         (error) => {
           this.messageHandler.showError(

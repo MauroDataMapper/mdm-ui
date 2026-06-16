@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 @Component({
     selector: 'mdm-markup-display-modal',
     templateUrl: './markup-display-modal.component.html',
     styleUrls: ['./markup-display-modal.component.scss'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton]
+    imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton, SafePipe]
 })
 export class MarkupDisplayModalComponent implements OnInit {
   title: string;

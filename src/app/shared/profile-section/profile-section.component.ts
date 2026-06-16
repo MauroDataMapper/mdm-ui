@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,23 +17,23 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { Component, Input } from '@angular/core';
-import { ProfileSection } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, ProfileSection } from '@maurodatamapper/mdm-resources';
 import { MoreDescriptionComponent } from '../more-description/more-description.component';
 import { FormsModule } from '@angular/forms';
 import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf, NgFor } from '@angular/common';
-import { EditProfileSectionComponent } from '@mdm/modals/edit-profile-section/edit-profile-section.component';
 
 @Component({
     selector: '[mdm-profile-section]',
     templateUrl: './profile-section.component.html',
     styleUrls: ['./profile-section.component.scss'],
     standalone: true,
-  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent, EditProfileSectionComponent]
+  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent]
 })
 export class ProfileSectionComponent {
   @Input() profileSection: ProfileSection;
+  @Input() rootObject: CatalogueItem;
 
   readonly formOptionsMap = {
     integer: 'number',

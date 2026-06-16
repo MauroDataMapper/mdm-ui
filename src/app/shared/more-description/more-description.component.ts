@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import {
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
 import { NgIf } from '@angular/common';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Component({
     selector: 'mdm-more-description',
@@ -37,6 +38,7 @@ import { NgIf } from '@angular/common';
 export class MoreDescriptionComponent implements AfterViewChecked {
   @Input() description: string;
   @Input() type: 'editable' | 'preformatted' = 'editable';
+  @Input() rootObject: CatalogueItem;
 
   showMore = true;
   isOverflowing = false;

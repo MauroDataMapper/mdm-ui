@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
       <div>
         <div
           *ngIf="!isLoadingContent"
-          [innerHTML]="introLeftContent | safe: 'html'"
+          [innerHTML]="introLeftContent | safe"
         ></div>
         <div *ngIf="!isLoggedIn && !isLoadingContent">
           <button
@@ -55,14 +55,14 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div
         *ngIf="!isLoadingContent"
-        [innerHTML]="introRightContent | safe: 'html'"
+        [innerHTML]="introRightContent | safe"
       ></div>
     </div>
     <!--    <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
       <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
         <div
           *ngIf="!isLoadingContent"
-          [innerHTML]="introLeftContent | safe: 'html'"
+          [innerHTML]="introLeftContent | safe"
         ></div>
 
         <div *ngIf="!isLoggedIn && !isLoadingContent">
@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
       <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
         <div
           *ngIf="!isLoadingContent"
-          [innerHTML]="introRightContent | safe: 'html'"
+          [innerHTML]="introRightContent | safe"
         ></div>
       </div>
     </div>
@@ -115,7 +115,7 @@ SPDX-License-Identifier: Apache-2.0
 
   <div
     *ngIf="!isLoadingContent"
-    [innerHTML]="detailHeading | safe: 'html'"
+    [innerHTML]="detailHeading | safe"
   ></div>
 
   <div
@@ -134,7 +134,7 @@ SPDX-License-Identifier: Apache-2.0
       ></ngx-skeleton-loader>
       <div
         *ngIf="!isLoadingContent"
-        [innerHTML]="detailColumn1 | safe: 'html'"
+        [innerHTML]="detailColumn1 | safe"
       ></div>
     </div>
     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
@@ -144,7 +144,7 @@ SPDX-License-Identifier: Apache-2.0
       ></ngx-skeleton-loader>
       <div
         *ngIf="!isLoadingContent"
-        [innerHTML]="detailColumn2 | safe: 'html'"
+        [innerHTML]="detailColumn2 | safe"
       ></div>
     </div>
     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
@@ -154,7 +154,7 @@ SPDX-License-Identifier: Apache-2.0
       ></ngx-skeleton-loader>
       <div
         *ngIf="!isLoadingContent"
-        [innerHTML]="detailColumn3 | safe: 'html'"
+        [innerHTML]="detailColumn3 | safe"
       ></div>
     </div>
   </div>

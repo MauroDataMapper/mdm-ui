@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import {
   CatalogueItemDomainType,
-  DataType
+  DataType,
+  MdmTreeItem
 } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import {
@@ -48,20 +49,25 @@ import { MatInput } from '@angular/material/input';
 import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
 import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
+import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
 
 @Component({
     selector: 'mdm-default-profile-editor-modal',
     templateUrl: './default-profile-editor-modal.component.html',
     styleUrls: ['./default-profile-editor-modal.component.sass'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe]
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe, EscapeHtmlPipe, ModelSelectorTreeComponent]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;
   dataTypeErrors: string;
+  dataClassErrors: string;
   showNewInlineDataType = false;
   pagination: McSelectPagination;
   newDataTypeHasErrors = false;
+
+  readonly dataClassDomainTypes: CatalogueItemDomainType[] = [CatalogueItemDomainType.DataClass];
   constructor(
     public dialogRef: MatDialogRef<
       DefaultProfileEditorModalComponent,
@@ -103,6 +109,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
         hasError = this.newDataTypeHasErrors;
       }
     });
+
+    hasError = hasError || !!this.dataClassErrors;
 
     if (!hasError) {
       this.dialogRef.close({
@@ -170,5 +178,30 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
   classificationChanged(classifications, item) {
     item.value = classifications;
+  }
+
+  onDataClassSelect(selectedItems: MdmTreeItem[], item: DefaultProfileItem) {
+    this.dataClassErrors = '';
+
+    if (selectedItems && selectedItems.length > 0) {
+      const selected = selectedItems[0];
+      if (
+        this.data.currentCatalogueItem?.domainType === CatalogueItemDomainType.DataClass
+        && selected.id === this.data.currentCatalogueItem.id
+      ) {
+        this.dataClassErrors = 'A Data Class cannot be its own parent.';
+        return;
+      }
+
+      item.value = selected.id;
+      item.selectedDataClass = {
+        id: selected.id,
+        label: selected.label,
+        domainType: selected.domainType as string
+      };
+    } else {
+      item.value = null;
+      item.selectedDataClass = null;
+    }
   }
 }

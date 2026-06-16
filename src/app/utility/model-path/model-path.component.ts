@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { NgIf, NgClass, NgFor } from '@angular/common';
+import { SafePipe } from '@mdm/content/safe.pipe';
 
 @Component({
     selector: 'mdm-model-path',
@@ -29,6 +30,7 @@ import { NgIf, NgClass, NgFor } from '@angular/common';
         NgClass,
         ExtendedModule,
         NgFor,
+      SafePipe,
     ],
 })
 

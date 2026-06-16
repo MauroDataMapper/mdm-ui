@@ -60,6 +60,8 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "./",
+              "deployUrl": "./",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -92,7 +94,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "mdm-ui:build"
+            "buildTarget": "mdm-ui:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {

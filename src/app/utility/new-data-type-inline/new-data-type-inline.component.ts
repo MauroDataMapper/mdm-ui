@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -258,9 +258,12 @@ export class NewDataTypeInlineComponent
     this.reloading = true;
     this.resourceService.referenceDataModel.list({ all: true }).subscribe(
       (data: ReferenceDataModelIndexResponse) => {
-        this.dataModels = data.body.items.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        );
+        this.dataModels = [];
+        if (data.body.items) {
+          this.dataModels = data.body.items.sort((a, b) =>
+            a.label.localeCompare(b.label)
+          );
+        }
         this.reloading = false;
       },
       () => {

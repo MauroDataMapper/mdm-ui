@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,29 +22,27 @@ import { CatalogueItemDomainType, DataClass, DataElement } from '@maurodatamappe
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { MatInput } from '@angular/material/input';
-import { MatFormField } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
+import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 
 @Component({
     selector: 'mdm-bulk-edit',
     templateUrl: './bulk-edit-modal.component.html',
     styleUrls: ['./bulk-edit-modal.component.scss'],
     standalone: true,
-    imports: [
-        MatDialogTitle,
-        MatIconButton,
-        MatDialogContent,
-        NgFor,
-        FormsModule,
-        MatFormField,
-        MatInput,
-        NgIf,
-        MatDialogActions,
-        MatButton,
-    ],
+  imports: [
+    MatDialogTitle,
+    MatIconButton,
+    MatDialogContent,
+    NgFor,
+    FormsModule,
+    NgIf,
+    MatDialogActions,
+    MatButton,
+    ContentEditorComponent
+  ]
 })
 export class BulkEditModalComponent implements AfterViewInit {
   @Input() afterSave: any;
@@ -82,7 +80,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   }
 
   getDataElements() {
-    this.data.dataElementIdLst.forEach((item: any) => {
+    this.data.dataElementIdList.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
         this.resources.dataElement.get(this.parentDataModel.id as string, this.parentDataClass.id as string, item.id as string).subscribe((result: { body: any }) => {
           if (result !== undefined) {

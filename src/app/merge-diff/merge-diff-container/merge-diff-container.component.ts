@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
@@ -43,19 +43,15 @@ import { MergeDiffAdapterService } from '../merge-diff-adapter/merge-diff-adapte
 import {
   branchNameField,
   MergeDiffItemModel,
-  MergeItemSelection
+  MergeItemSelectionChange
 } from '../types/merge-item-type';
 import { MergeComparisonComponent } from '../merge-comparsion/merge-comparsion.component';
 import { MergeItemSelectorComponent } from '../merge-item-selector/merge-item-selector.component';
-import { MatIconButton } from '@angular/material/button';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { BranchSelectorComponent } from '../../shared/branch-selector/branch-selector.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ModelIconComponent } from '../../shared/model-icon/model-icon.component';
-import { MatMenuItem } from '@angular/material/menu';
-import { FlexModule } from '@angular/flex-layout/flex';
 import { NgIf } from '@angular/common';
 
 /**
@@ -69,9 +65,17 @@ import { NgIf } from '@angular/common';
     templateUrl: './merge-diff-container.component.html',
     styleUrls: ['./merge-diff-container.component.scss'],
     standalone: true,
-    imports: [NgIf, FlexModule, MatMenuItem, ModelIconComponent, MatTooltip, BranchSelectorComponent, MatProgressBar, MatTabGroup, MatTab, MatTabLabel, MatToolbar, MatIconButton, MergeItemSelectorComponent, MergeComparisonComponent]
+  imports: [NgIf, ModelIconComponent, MatTooltip, BranchSelectorComponent, MatProgressBar, MatButton, MergeItemSelectorComponent, MergeComparisonComponent]
 })
 export class MergeDiffContainerComponent implements OnInit {
+  // Input properties for modal usage
+  @Input() sourceId?: Uuid;
+  @Input() targetId?: Uuid;
+  @Input() catalogueDomainType?: MergableMultiFacetAwareDomainType;
+
+  // Output properties
+  @Output() mergeComplete = new EventEmitter<void>();
+
   loaded = false;
   loadingContent = false;
   targetLoaded = false;
@@ -81,10 +85,8 @@ export class MergeDiffContainerComponent implements OnInit {
   source: MergableCatalogueItem;
   target: MergableCatalogueItem;
   diff: MergeDiff;
-  selectedItem: MergeItemSelection;
-  changesList: MergeDiffItemModel[];
-  committingList: MergeDiffItemModel[];
-  activeTab: number;
+  selectedItem: MergeDiffItemModel | null = null;
+  mergeItems: MergeDiffItemModel[] = [];
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -99,11 +101,20 @@ export class MergeDiffContainerComponent implements OnInit {
     return MergeConflictResolution;
   }
 
+  get selectedChangesCount(): number {
+    return this.mergeItems.filter(item => this.isItemSelected(item)).length;
+  }
+
+  get conflictCount(): number {
+    return this.mergeItems.filter(item => item.isMergeConflict).length;
+  }
+
   ngOnInit(): void {
     this.title.setTitle('Merge Changes');
-    const sourceId: Uuid = this.uiRouterGlobals.params.sourceId;
-    const targetId: Uuid = this.uiRouterGlobals.params.targetId;
-    this.domainType = this.uiRouterGlobals.params.catalogueDomainType;
+    // Use input properties if provided (modal mode), otherwise use route parameters
+    const sourceId: Uuid = this.sourceId ?? this.uiRouterGlobals.params.sourceId;
+    const targetId: Uuid = this.targetId ?? this.uiRouterGlobals.params.targetId;
+    this.domainType = this.catalogueDomainType ?? this.uiRouterGlobals.params.catalogueDomainType;
     this.mergeDiff
       .getCatalogueItemDetails(this.domainType, sourceId)
       .pipe(
@@ -159,6 +170,8 @@ export class MergeDiffContainerComponent implements OnInit {
   }
 
   onCommitChanges(): void {
+    const selectedChanges = this.getSelectedMergeItems();
+
     this.dialog
       .open<
         CheckInModalComponent,
@@ -167,7 +180,7 @@ export class MergeDiffContainerComponent implements OnInit {
       >(CheckInModalComponent, {
         data: {
           deleteSourceBranch: false,
-          items: this.committingList,
+          items: selectedChanges,
           label: this.source.label,
           domainType: this.domainType,
           isDataAsset: this.source?.type === 'Data Asset',
@@ -179,7 +192,7 @@ export class MergeDiffContainerComponent implements OnInit {
       .pipe(
         filter(result => result.status === ModalDialogStatus.Ok),
         switchMap((result) => {
-          const patches = this.committingList.filter(
+          const patches = selectedChanges.filter(
             item => item.branchSelected !== MergeConflictResolution.Target
           );
 
@@ -208,27 +221,42 @@ export class MergeDiffContainerComponent implements OnInit {
       )
       .subscribe(() => {
         this.messageHandler.showSuccess(
-          `Your changes were successfully committed to ${this.target.label}$${this.target.branchName}.`
+          `Your changes were successfully committed to ${this.target.label} ${this.target.branchName}.`
         );
-        this.stateHandler.Go(this.target.domainType, {
-          id: this.target.id,
-          reload: true,
-          location: true
-        });
+
+        // Emit event for modal usage or navigate for standalone usage
+        if (this.sourceId && this.catalogueDomainType) {
+          // Modal mode - emit completion event
+          this.mergeComplete.emit();
+        } else {
+          // Standalone mode - navigate to target
+          this.stateHandler.Go(this.target.domainType, {
+            id: this.target.id,
+            reload: true,
+            location: true
+          });
+        }
       });
   }
 
   onCancelChanges(): void {
-    this.stateHandler.GoPrevious();
+    // In modal mode, emit completion (essentially cancel)
+    if (this.sourceId && this.catalogueDomainType) {
+      this.mergeComplete.emit();
+    } else {
+      // Standalone mode - go to previous page
+      this.stateHandler.GoPrevious();
+    }
   }
 
   runDiff() {
-    this.resetLists();
+    this.resetItems();
     this.comparingBranches = true;
     this.mergeDiff
       .getMergeDiff(this.domainType, this.source.id, this.target.id)
       .pipe(finalize(() => (this.comparingBranches = false)))
       .subscribe((data) => {
+        this.diff = data;
         data.diffs.forEach((item: MergeDiffItemModel) => {
           if (item.fieldName === branchNameField) {
             // A merge diff item with the field name "branchName" should not be considered for the user
@@ -236,59 +264,26 @@ export class MergeDiffContainerComponent implements OnInit {
             return;
           }
 
-          if (item.isMergeConflict) {
-            this.changesList.push(item);
-          }
- else {
-            // This item can be merged automatically
-            item.branchSelected = MergeConflictResolution.Source;
-            item.branchNameSelected = this.source.branchName;
-            this.committingList.push(item);
-          }
+          this.initialiseMergeItem(item);
+          this.mergeItems.push(item);
         });
+
+        this.selectedItem = this.mergeItems[0] ?? null;
       });
   }
 
-  setSelectedMergeItem(item: MergeDiffItem, isCommitting: boolean) {
-    this.loadingContent = true;
-    this.selectedItem = { mergeItem: item, isCommitting };
-    this.loadingContent = false;
+  setSelectedMergeItem(item: MergeDiffItemModel) {
+    this.selectedItem = item;
   }
 
-  resetLists() {
-    this.changesList = Array<MergeDiffItemModel>();
-    this.committingList = Array<MergeDiffItemModel>();
+  resetItems() {
+    this.mergeItems = [];
+    this.selectedItem = null;
   }
 
   selectAll(branchUsed: MergeConflictResolution) {
-    this.selectedItem = null;
-    const tempArray: MergeDiffItemModel[] = [];
-    this.changesList.forEach((item) => {
-      if (item.type === MergeDiffType.Modification) {
-        item.branchSelected = branchUsed;
-        item.branchNameSelected
-          = branchUsed === MergeConflictResolution.Source
-            ? this.source.branchName
-            : this.target.branchName;
-        this.committingList.push(item);
-        return;
-      }
-      if (branchUsed === MergeConflictResolution.Source) {
-        item.branchSelected = branchUsed;
-        item.branchNameSelected = this.source.branchName;
-        this.committingList.push(item);
-      }
- else {
-        tempArray.push(item);
-      }
-    });
-
-    // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-    // array instance must be observed to affect a render
-    this.committingList = [...this.committingList];
-
-    this.changesList = new Array<MergeDiffItemModel>();
-    this.changesList = Object.assign([], tempArray);
+    this.mergeItems.forEach(item => this.setItemBranchSelection(item, branchUsed));
+    this.refreshItems();
   }
 
   cancelAll() {
@@ -302,78 +297,34 @@ export class MergeDiffContainerComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.selectedItem = null;
-          this.committingList.forEach((item) => {
-            item.branchSelected = null;
-            item.branchNameSelected = null;
-            this.changesList.push(item);
+          this.mergeItems.forEach(item => {
+            this.setItemBranchSelection(item, MergeConflictResolution.Target);
           });
-
-          // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-          // array instance must be observed to affect a render
-          this.changesList = [...this.changesList];
-
-          this.committingList = new Array<MergeDiffItemModel>();
+          this.refreshItems();
         }
       });
   }
 
   cancelCommit(item: MergeDiffItemModel) {
-    const index = this.committingList.findIndex(x => x === item);
-    if (index >= 0) {
-      this.selectedItem = null;
-
-      this.committingList.splice(index, 1);
-      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-      // array instance must be observed to affect a render
-      this.committingList = [...this.committingList];
-
-      item.branchSelected = null;
-      item.branchNameSelected = null;
-
-      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-      // array instance must be observed to affect a render
-      this.changesList = [...this.changesList, item];
-
-      this.activeTab = 0;
-      this.setSelectedMergeItem(item, false);
-    }
+    this.setItemBranchSelection(item, MergeConflictResolution.Target);
+    this.selectedItem = item;
+    this.refreshItems();
   }
 
   acceptCommit(item: MergeDiffItemModel) {
-    const index = this.changesList.findIndex(x => x === item);
-    if (index >= 0) {
-      this.changesList.splice(index, 1);
-
-      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-      // array instance must be observed to affect a render
-      this.changesList = [...this.changesList];
-
-      switch (item.branchSelected) {
-        case MergeConflictResolution.Source:
-          item.branchNameSelected = this.source.branchName;
-          break;
-        case MergeConflictResolution.Target:
-          item.branchNameSelected = this.target.branchName;
-          break;
-        case MergeConflictResolution.Mixed:
-          item.branchNameSelected = 'MIXED';
-          break;
-
-        default:
-          break;
-      }
-
-      // Since cdk-virtual-scroll-viewport is used, this forces it to refresh since a new
-      // array instance must be observed to affect a render
-      this.committingList = [...this.committingList, item];
-
-      this.selectedItem = null;
-    }
+    this.setItemBranchSelection(item, item.branchSelected ?? MergeConflictResolution.Source);
+    this.selectedItem = item;
+    this.refreshItems();
   }
 
-  tabSelected(index: number) {
-    this.activeTab = index;
+  onMergeItemSelectionChanged(change: MergeItemSelectionChange) {
+    this.setItemBranchSelection(
+      change.mergeItem,
+      change.selected
+        ? this.getDefaultSelectedResolution(change.mergeItem)
+        : MergeConflictResolution.Target
+    );
+    this.refreshItems();
   }
 
   private loadTarget(id: Uuid) {
@@ -388,5 +339,54 @@ export class MergeDiffContainerComponent implements OnInit {
       }),
       finalize(() => (this.targetLoaded = true))
     );
+  }
+
+  private initialiseMergeItem(item: MergeDiffItemModel) {
+    this.setItemBranchSelection(
+      item,
+      item.isMergeConflict
+        ? MergeConflictResolution.Target
+        : MergeConflictResolution.Source
+    );
+  }
+
+  private setItemBranchSelection(
+    item: MergeDiffItemModel,
+    branchUsed: MergeConflictResolution
+  ) {
+    item.branchSelected = branchUsed;
+
+    switch (branchUsed) {
+      case MergeConflictResolution.Source:
+        item.branchNameSelected = this.source?.branchName;
+        break;
+      case MergeConflictResolution.Target:
+        item.branchNameSelected = this.target?.branchName;
+        break;
+      case MergeConflictResolution.Mixed:
+        item.branchNameSelected = 'MIXED';
+        break;
+      default:
+        item.branchNameSelected = null;
+        break;
+    }
+  }
+
+  private getDefaultSelectedResolution(item: MergeDiffItemModel): MergeConflictResolution {
+    return item.branchSelected === MergeConflictResolution.Mixed
+      ? MergeConflictResolution.Mixed
+      : MergeConflictResolution.Source;
+  }
+
+  private refreshItems() {
+    this.mergeItems = [...this.mergeItems];
+  }
+
+  private getSelectedMergeItems(): MergeDiffItemModel[] {
+    return this.mergeItems.filter(item => this.isItemSelected(item));
+  }
+
+  private isItemSelected(item: MergeDiffItemModel): boolean {
+    return !!item && item.branchSelected !== null && item.branchSelected !== MergeConflictResolution.Target;
   }
 }

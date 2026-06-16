@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,63 +16,253 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-.headerContainer {
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.merge-diff-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.merge-diff-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.panel {
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.header-panel {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-top-row {
+  display: flex;
   justify-content: space-between;
-  flex-direction: row;
-  margin-top: 5px;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.title-block {
+  min-width: 0;
+}
+
+.summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+  color: rgba(0, 0, 0, 0.67);
+  font-size: 11px;
+}
+
+.conflict-summary {
+  color: #b3261e;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.cancel-icon {
+  color: #b3261e;
+}
+
+.branch-info-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+
+.branch-info {
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: #fafafa;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
+}
+
+.branch-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.64);
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.branch-value,
+.branch-selector {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.branch-selector {
+  display: block;
+
+  mdm-branch-selector {
+    display: block;
+    width: 100%;
+  }
+}
+
+.status-panel {
+  flex-shrink: 0;
+  padding: 12px 14px;
+}
+
+.content-panels {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 8px;
+  overflow: hidden;
+}
+
+.changes-panel,
+.details-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.changes-panel {
+  padding: 8px 12px 12px;
+}
+
+.details-panel {
+  padding: 0;
+}
+
+.details-panel > mdm-merge-comparison,
+.details-panel > .empty-selection {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.details-panel > mdm-merge-comparison {
   display: flex;
 }
 
-.tabContainer {
-  height: 10%;
-  min-height: 200px;
-  // max-height: 500px;
+.panel-header {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.div {
-  position: relative;
-  margin: 2.5px;
+.panel-subtitle {
+  margin-top: 2px;
+  color: rgba(0, 0, 0, 0.64);
+  font-size: 11px;
 }
 
-.div1 {
-  @extend .div;
-  width: 20%;
-  overflow-x: auto;
-  overflow-y: hidden;
+.bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
-.div2 {
-  @extend .div;
-  width: 80%;
-}
-
-.title {
-  text-align: center;
-}
-
-.noContent {
-  height: 250px;
-  text-align: center;
-}
-
-.selectBtn {
-  position: relative;
-  float: right;
-  margin-right: 75px;
-  margin-top: 15px;
-}
-
-.spacer {
+.noContent,
+.empty-selection {
   flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+  gap: 8px;
 }
 
-.button {
-  padding-right: 10px !important;
-  font-size: small !important;
-  width: fit-content !important;
+.empty-selection {
+  padding: 24px;
+
+  .fas {
+    font-size: 28px;
+    color: rgba(0, 0, 0, 0.35);
+  }
+
+  p {
+    margin: 0;
+  }
 }
 
-.cancelButton {
-  padding-right: 90px;
-  font-size: small;
+.marginless {
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  .content-panels {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .header-top-row,
+  .panel-header {
+    flex-direction: column;
+  }
+
+  .action-buttons,
+  .bulk-actions {
+    justify-content: flex-start;
+  }
+
+  .branch-info-container {
+    grid-template-columns: 1fr;
+  }
+
+  .content-panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  }
 }

@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
     <h4 class="modal-title marginless">{{ modalTitle }}</h4>
   </div>
   <div class="modal-body pxy-2">
-    <p [innerHtml]="message"></p>
+    <p [innerHtml]="message | safe"></p>
     <mdm-alert *ngIf="createRootFolder" alertStyle="info" [showIcon]="true">
       This will be added at the top of the tree.
     </mdm-alert>

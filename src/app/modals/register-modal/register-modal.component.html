@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -62,8 +62,17 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mdm--form-input mb-1">
         <mat-form-field class="paddingless mb-1" appearance="outline">
             <mat-label>Password</mat-label>
-            <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
-            <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">
+            <input required matInput [type]="hidePassword ? 'password' : 'text'" id="password" name="password" [(ngModel)]="password">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword; $event.preventDefault()"
+            >
+              <mat-icon>
+                {{ hidePassword ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+            </button>
         </mat-form-field>
         <password-strength-meter [password]="password" class="green mb-2">
         </password-strength-meter>
@@ -71,8 +80,17 @@ SPDX-License-Identifier: Apache-2.0
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Confirm password</mat-label>
-            <mat-pass-toggle-visibility #toggleConfirmPassword matSuffix></mat-pass-toggle-visibility>
-            <input matInput [type]="toggleConfirmPassword.type" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
+            <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hideConfirmPassword = !hideConfirmPassword; $event.preventDefault()"
+            >
+              <mat-icon>
+                {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
+            </button>
         </mat-form-field>
     </div>
     <div class="mb-2 text-center">

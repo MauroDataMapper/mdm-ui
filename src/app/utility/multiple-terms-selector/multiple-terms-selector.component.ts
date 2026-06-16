@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -226,9 +226,8 @@ export class MultipleTermsSelectorComponent {
           label: this.selectorSection.selectedTerminology.label
         },
         search: this.selectorSection.termSearchText,
-        pageSize: this.selectorSection.searchResultPageSize,
-        page:
-          offset === 0 ? 0 : this.selectorSection.searchResultPageSize / offset,
+        max: this.selectorSection.searchResultPageSize,
+        offset: offset,
         domainTypes: [CatalogueItemDomainType.Term],
         labelOnly: true
       };

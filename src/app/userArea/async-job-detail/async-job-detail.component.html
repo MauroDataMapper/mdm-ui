@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
   </table>
   <div *ngIf="job.message">
     <h4>Message</h4>
-    <p [innerHTML]="job.message | marked | safe: 'html'"></p>
+    <p [innerHTML]="job.message | marked | safe"></p>
   </div>
   <div>
     <button

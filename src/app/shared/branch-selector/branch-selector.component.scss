@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,10 +16,42 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+:host {
+//  display: block;
+  width: 100%;
+}
+
 .mdm-branch-selector {
   display: inline;
   height: 30px;
   line-height: 1;
   padding: 0 0.35em;
   width: auto;
+}
+
+.branch-selector-field {
+  width: 100%;
+}
+
+.branch-selector-field.compact {
+  font-size: 75%;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding: 0 10px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 34px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  ::ng-deep .mat-mdc-select-trigger {
+    min-height: 20px;
+    align-items: center;
+  }
 }

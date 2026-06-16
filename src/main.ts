@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ async function bootstrap() {
   await import('jodit/esm/plugins/source/source.js');
   await import('jodit/esm/plugins/source/editor/engines/ace.js');
   await import('jodit/esm/plugins/inline-popup/inline-popup.js');
+  await import('jodit/esm/plugins/clean-html/clean-html.js');
 
   // Now bootstrap the Angular app
   await bootstrapApplication(UiViewComponent, {

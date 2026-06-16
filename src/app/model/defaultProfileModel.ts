@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 export interface DefaultProfileModalConfiguration {
   items: Array<DefaultProfileItem>
   parentCatalogueItem?: any
+  currentCatalogueItem?: any
 }
 
 export interface DefaultProfileModalResponse {
@@ -34,11 +35,13 @@ export interface DefaultProfileModalResponse {
 
 export interface DefaultProfileItem {
   displayName: string
-  value?: string | Container[] | string[] | DataTypeReference
+  value?: string | Container[] | string[] | DataTypeReference | null
   controlType: ProfileControlTypes
   minMultiplicity?: number | string
   maxMultiplicity?: number | string
   propertyName: string
+  /** Used by the dataClass control type to hold a pre-selected tree item for display. */
+  selectedDataClass?: { id: string, label: string, domainType: string } | null
 }
 
 export enum ProfileControlTypes {
@@ -47,7 +50,8 @@ export enum ProfileControlTypes {
   aliases = 'Aliases',
   classifications = 'Classifications',
   multiplicity = 'Multiplicity',
-  dataType = 'DataType'
+  dataType = 'DataType',
+  dataClass = 'DataClass'
 }
 
 export class DefaultProfileControls {
@@ -63,14 +67,16 @@ export class DefaultProfileControls {
       'description',
       'classifications',
       'multiplicity',
-      'aliases'
+      'aliases',
+      'parentDataClass'
     ];
     const dataElement = [
       'description',
       'classifications',
       'multiplicity',
       'aliases',
-      'dataType'
+      'dataType',
+      'dataClass'
     ];
 
     const folder = ['description'];

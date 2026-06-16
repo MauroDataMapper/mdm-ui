@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -177,11 +177,12 @@ export class SubscribedCatalogueComponent implements OnInit {
       .pipe(
         switchMap(
           ([typesResponse, authenticationTypesResponse]: MdmResponse<
-            string[]
+            any
           >[]) => {
-            this.connectionTypes = typesResponse.body;
+            console.log(authenticationTypesResponse);
+            this.connectionTypes = typesResponse.body.items;
             this.authenticationTypes = this.supportedAuthenticationTypes.filter(
-              authType => authenticationTypesResponse.body.includes(authType)
+              authType => authenticationTypesResponse.body.items.includes(authType)
             );
 
             if (this.catalogueId) {

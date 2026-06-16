@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <form [formGroup]="formGroup">
   <div class="modal-body pxy-2">
-    <p *ngIf="message" [innerHtml]="message"></p>
+    <p *ngIf="message" [innerHtml]="message | safe"></p>
     <div class="mdm--form-input">
       <mat-form-field appearance="outline" required class="full-width">
         <mat-label>Name</mat-label>

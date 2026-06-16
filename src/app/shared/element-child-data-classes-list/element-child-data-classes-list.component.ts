@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -187,11 +187,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   bulkDelete() {
-    const dataElementIdLst = this.records.filter(record => record.checked === true);
+    const dataElementIdList = this.records.filter(record => record.checked === true);
 
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
+        data: { dataElementIdList, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
         panelClass: 'bulk-delete-modal'
       });
 

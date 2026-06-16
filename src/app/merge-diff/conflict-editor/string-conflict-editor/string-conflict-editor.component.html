@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
     <div
       #sourceView
       class="diff-view"
-      [innerHTML]="sourceText | safe: 'html'"
+      [innerHTML]="sourceText | safe"
     ></div>
   </div>
   <div class="target-view">
@@ -57,7 +57,7 @@ SPDX-License-Identifier: Apache-2.0
     <div
       #targetView
       class="diff-view"
-      [innerHTML]="targetText | safe: 'html'"
+      [innerHTML]="targetText | safe"
     ></div>
   </div>
   <div class="resolved-view">

@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -75,6 +75,8 @@ export class CatalogueItemSearchComponent {
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
 
   routeParams?: RawParams;
+  clientPageIndex = 0;
+  clientPageSize = 20;
 
   constructor(
     private catalogueSearch: CatalogueSearchService,
@@ -87,14 +89,20 @@ export class CatalogueItemSearchComponent {
       search: this.searchTerms,
       labelOnly: true,
       domainTypes: this.getDomainTypes(),
-      page: 0,
-      pageSize: 20
+      offset: 0,
+      max: 20
     };
 
     this.performSearch();
   }
 
   onSelectSortBy(selected: SortByOption) {
+    this.clientPageIndex = 0;
+    this.parameters.offset = 0;
+    // Preserve max if it was already set
+    if (!this.parameters.max) {
+      this.parameters.max = 20;
+    }
     const sortBy = selected.value as SearchListingSortByOption;
     this.parameters.sort = getSortFromSortByOptionString(sortBy);
     this.parameters.order = getOrderFromSortByOptionString(sortBy);
@@ -102,9 +110,60 @@ export class CatalogueItemSearchComponent {
   }
 
   onPageChange(event: PageEvent) {
-    this.parameters.page = event.pageIndex;
-    this.parameters.pageSize = event.pageSize;
+    if (this.usesClientPagination) {
+      this.clientPageIndex = event.pageIndex;
+      this.clientPageSize = event.pageSize;
+      return;
+    }
+
+    this.parameters.offset = event.pageIndex * event.pageSize;
+    this.parameters.max = event.pageSize;
     this.performSearch();
+  }
+
+  get visibleItems() {
+    if (!this.resultSet) {
+      return [];
+    }
+
+    if (!this.usesClientPagination) {
+      return this.resultSet.items;
+    }
+
+    const start = this.clientPageIndex * this.clientPageSize;
+    const end = start + this.clientPageSize;
+    return this.resultSet.items.slice(start, end);
+  }
+
+  get paginationLength() {
+    if (!this.resultSet) {
+      return 0;
+    }
+
+    return this.usesClientPagination ? this.resultSet.items.length : this.resultSet.count;
+  }
+
+  get paginationPageIndex() {
+    if (this.usesClientPagination) {
+      return this.clientPageIndex;
+    }
+    return this.resultSet?.max ? Math.floor(this.resultSet.offset / this.resultSet.max) : 0;
+  }
+
+  get paginationPageSize() {
+    if (this.usesClientPagination) {
+      return this.clientPageSize;
+    }
+
+    return this.resultSet?.max ?? this.parameters?.max ?? 20;
+  }
+
+  get usesClientPagination() {
+    if (!this.resultSet) {
+      return false;
+    }
+
+    return this.resultSet.items.length > (this.resultSet.max || 20);
   }
 
   private getDomainTypes() {
@@ -132,6 +191,12 @@ export class CatalogueItemSearchComponent {
       )
       .subscribe((resultSet) => {
         this.resultSet = resultSet;
+        if (this.usesClientPagination) {
+          const pageCount = Math.ceil(this.paginationLength / this.clientPageSize);
+          if (this.clientPageIndex >= pageCount) {
+            this.clientPageIndex = 0;
+          }
+        }
         this.status = 'ready';
         this.routeParams = mapSearchParametersToRawParams(this.parameters);
       });

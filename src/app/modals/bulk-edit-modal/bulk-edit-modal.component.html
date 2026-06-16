@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,9 +38,11 @@ SPDX-License-Identifier: Apache-2.0
               <small class="item-type">{{item.domainType}}</small>
             </td>
             <td style="width: 55%; max-width: 55%;">
-              <mat-form-field appearance="outline" class="full-width paddingless">
-                <textarea matInput rows="4" name="description" [(ngModel)]="item.description"></textarea>
-              </mat-form-field>
+              <mdm-content-editor
+                [(content)]="item.description"
+                [rootElement]="item.parentCatalogueItem"
+                [inEditMode]="true"
+              ></mdm-content-editor>
             </td>
             <td style="width: 10%; max-width: 10%; text-align: center;">
               <span *ngIf="finalResult && finalResult[item.id] && finalResult[item.id].hasError">

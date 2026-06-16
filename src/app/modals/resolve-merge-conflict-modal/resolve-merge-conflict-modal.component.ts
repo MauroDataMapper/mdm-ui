@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import { diff_match_patch } from 'diff-match-patch';
 import { SafePipe } from '../../content/safe.pipe';
 import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { rawToXml } from '@mdm/pipes/escapeHtml.pipe';
+import DOMPurify from 'dompurify';
 
 @Component({
     selector: 'mdm-resolve-merge-conflict-modal',
@@ -31,7 +33,7 @@ import { FormsModule } from '@angular/forms';
     imports: [MatDialogTitle, MatDialogContent, FormsModule, MatDialogActions, MatButton, MatDialogClose, SafePipe]
 })
 export class ResolveMergeConflictModalComponent implements AfterViewInit {
-  mergeString: any;
+  mergeString: string;
   mergeDiffrl: any;
   mergeDifflr: any;
 
@@ -63,7 +65,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
       this.mergeViewrl.nativeElement.querySelectorAll('button').forEach(x => x.addEventListener('click', this.onMergeConflictPress.bind(this)));
       this.mergeViewlr.nativeElement.querySelectorAll('button').forEach(x => x.addEventListener('click', this.onMergeConflictPress.bind(this)));
 
-      this.mergeString = this.diffIntoPrettyPlain(diffrl);
+      this.mergeString = DOMPurify.sanitize(this.diffIntoPrettyPlain(diffrl));
     }
   }
 
@@ -81,7 +83,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     document.querySelector(`span#loc${id}`).innerHTML = '';
 
     const regex = new RegExp(`<span id="loc${id}">`, 'g');
-    this.mergeString = this.mergeString.replace(regex, `<span id="loc${id}">${value}`);
+    this.mergeString = DOMPurify.sanitize(this.mergeString.replace(regex, `<span id="loc${id}">${value}`));
   }
 
   diffPrettyPlain = (diffs: any) => {
@@ -127,7 +129,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
             html[x] = `<span id="loc${x}"></span>`;
            break;
         case diffEqual:
-          html[x] = `<span>${text}</span>`;
+          html[x] = `<span>${rawToXml(text)}</span>`;
           break;
       }
     }

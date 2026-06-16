@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import * as marked from 'marked';
+import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +29,14 @@ export class CustomHtmlRendererService extends marked.Renderer {
     super();
   }
 
+  rootObject?: CatalogueItem;
+
   link(href: string, _: string, text: string) {
     if (!href) {
       return `<a href='#'>${text}</a>`;
     }
 
-    if (isUrl(href)) {
+    if (isUrl(href) || !this.rootObject) {
       // Create external link
       return `<a href='${href}' target="_blank">${text}</a>`;
     }
@@ -42,7 +45,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
     // First have to convert back hat characters to spaces. This was done in MarkdownParserService
     // because spaces in the href part meant the marked parser would not get us this far
     const path = href.replace(/\^/g, ' ');
-    const link = this.pathNames.createHref(path);
+    const link = this.pathNames.createHref(path, this.rootObject);
     return `<a href='${link}'>${text}</a>`;
   }
 

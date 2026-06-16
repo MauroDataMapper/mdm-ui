@@ -1,5 +1,5 @@
 <!--
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<mat-tree
+  [dataSource]="dataSource"
+  [treeControl]="treeControl"
+  (contextmenu)="noop($event)"
+>
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
     <button mat-icon-button disabled></button>
     <!-- Use #nodeTemplate ng-template and pass in node as default context. -->
@@ -46,6 +50,7 @@ SPDX-License-Identifier: Apache-2.0
 <ng-template #nodeTemplate let-node>
   <div
     class="mat-tree-node-content"
+    (contextmenu)="onContextMenu(node, $event)"
     [ngClass]="{
       'mat-tree-node-active': node === selected,
       'mat-tree-node-inactive': node !== selected
@@ -67,3 +72,223 @@ SPDX-License-Identifier: Apache-2.0
     ></mdm-element-label>
   </div>
 </ng-template>
+
+<!-- This is a stub to avoid menu trigger by left-click -->
+<div
+  #contextMenuTrigger="matMenuTrigger"
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="treeMenu"
+></div>
+
+<mat-menu #treeMenu="matMenu">
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canCreateElements(node)"
+      [matMenuTriggerFor]="createMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
+      <span class="fas fa-plus"></span> Add
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canAddToFavorites(node)"
+      (click)="handleFavourites(node)"
+    >
+      <span *ngIf="!isFavourited(node)" class="fas fa-star is-favourite"></span>
+      <span
+        *ngIf="isFavourited(node)"
+        class="fas fa-star is-not-favourite"
+      ></span>
+      {{ isFavourited(node) ? 'Remove from' : 'Add to' }} Favourites
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      [matMenuTriggerFor]="viewMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
+      <span class="fas fa-binoculars"></span> View
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canCompare(node)"
+      [matMenuTriggerFor]="compareMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
+      <span class="fas fa-eye"></span> Compare
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canDeleteElements(node)"
+      [matMenuTriggerFor]="deleteMenu"
+      [matMenuTriggerData]="{ node: node }"
+    >
+      <span class="far fa-trash-alt warning"></span> Delete
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "View" -->
+<mat-menu #viewMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="canSetTreeFocus(node)"
+      (click)="focusNode(node)"
+    >
+      <span class="fas fa-eye"></span> Focus on this element
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="openWindow(node)"
+    >
+      <span class="fas fa-external-link-alt"></span> Open in new window
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "Create" -->
+<mat-menu #createMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateFolderContainer"
+      (click)="handleAddFolder(node)"
+    >
+      <span class="fas fa-folder dataModelTypeIcon"></span> Folder
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddDataModel(node)"
+    >
+      <span class="fas fa-file-alt dataModelTypeIcon"></span> Data Model
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddTerminology(node)"
+    >
+      <span class="fas fa-book dataModelTypeIcon"></span> Terminology
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddCodeSet(node)"
+    >
+      <span class="fas fa-list dataModelTypeIcon"></span> Code Set
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModel"
+      (click)="handleAddReferenceDataModel(node)"
+    >
+      <span class="fas fa-file-contract dataModelTypeIcon"></span> Reference
+      Data Model
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="
+        node.access.canCreateModelItem &&
+        (node.domainType === 'DataModel' || node.domainType === 'DataClass')
+      "
+      (click)="handleAddDataClass(node)"
+    >
+      <span class="fas fa-puzzle-piece dataModelTypeIcon"></span> Data Class
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModelItem && node.domainType === 'DataModel'"
+      (click)="handleAddDataType(node)"
+    >
+      <span class="fas fa-code dataModelTypeIcon"></span> Data Type
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.canCreateModelItem && node.domainType === 'DataClass'"
+      (click)="handleAddDataElement(node)"
+    >
+      <span class="fas fa-atom dataModelTypeIcon"></span> Data Element
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "Delete" -->
+<mat-menu #deleteMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.showSoftDelete && !node.deleted"
+      (click)="handleSoftDelete(node)"
+    >
+      Mark as deleted
+    </button>
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      *ngIf="node.access.showPermanentDelete"
+      (click)="handlePermanentDelete(node)"
+    >
+      Delete <span class="warning">permanently</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- Sub-menu for "Compare..." -->
+<mat-menu #compareMenu="matMenu" class="tree-context-menu">
+  <ng-template matMenuContent let-node="node">
+    <button
+      type="button"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="handleDataModelCompare(node)"
+    >
+      Another Data Model...
+    </button>
+    <button
+      type="button"
+      *ngFor="let targetVersion of targetVersions"
+      mat-menu-item
+      class="tree-context-menu-item"
+      (click)="handleDataModelCompare(node, targetVersion)"
+    >
+      <mdm-element-label [item]="targetVersion"></mdm-element-label>
+    </button>
+  </ng-template>
+</mat-menu>
+

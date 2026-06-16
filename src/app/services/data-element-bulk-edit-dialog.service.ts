@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ export class DataElementBulkEditDialogService {
     public dialog: MatDialog,
     private editingService: EditingService) { }
 
-  open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any) {
+  open(dataElementIdList: any, parentDataModel: any, parentDataClass: any) {
     const dg = this.dialog.open(BulkEditModalComponent, {
-        data: { dataElementIdLst, parentDataModel, parentDataClass },
+        data: { dataElementIdList, parentDataModel, parentDataClass },
         panelClass: 'bulk-edit-modal'
       });
 

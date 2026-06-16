@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -44,13 +44,14 @@ import { MatButton } from '@angular/material/button';
 import { NgIf, NgFor, NgClass, KeyValuePipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FlexModule } from '@angular/flex-layout/flex';
+import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
 
 @Component({
     selector: 'mdm-element-link-list',
     templateUrl: './element-link-list.component.html',
     styleUrls: ['./element-link-list.component.sass'],
     standalone: true,
-    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MatSortHeader, MatFormField, MatLabel, MatInput, FormsModule, NgFor, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, KeyValuePipe, HighlighterPipe]
+    imports: [FlexModule, MatTooltip, NgIf, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MatSortHeader, MatFormField, MatLabel, MatInput, FormsModule, NgFor, TableButtonsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgClass, ExtendedModule, NgxSkeletonLoaderModule, MdmPaginatorComponent_1, KeyValuePipe, HighlighterPipe, EscapeHtmlPipe]
 })
 export class ElementLinkListComponent implements AfterViewInit {
   @Input() parent: any;

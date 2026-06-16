@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2025 University of Oxford and NHS England
+Copyright 2020-2026 University of Oxford and NHS England
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ const packageFile = require('../../package.json');
 export const environment = {
   production: false,
   version: packageFile?.version ?? '',
-  apiEndpoint: 'http://localhost:8080/api',
+  apiEndpoint: '/api',
   HDFLink: '',
   themeName: 'default',
   appTitle: 'Mauro Data Mapper',

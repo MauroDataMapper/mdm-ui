@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { HtmlParserService } from './html-parser.service';
 import { HrefOptions, RawParams, StateOrName, UIRouter } from '@uirouter/core';
 import { TestBed } from '@angular/core/testing';
-import { CatalogueItemDomainType } from '../../../../../../mdm-resources';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import { randomUUID } from 'node:crypto';
 

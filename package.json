@@ -92,7 +92,7 @@
     "ngx-jodit": {
       "rxjs": "$rxjs"
     },
-    "webpack": "5.94.0"
+    "webpack": "5.104.1"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^18.0.0",

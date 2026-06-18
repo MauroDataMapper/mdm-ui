@@ -64,7 +64,7 @@ export class HtmlParserService {
 
       // Create internal link, assuming the href is a Mauro path to a catalogue item
       const path = link.href;
-      link.href = this.pathNames.createHref(path, rootObject);
+      link.href = this.pathNames.createHref(path, rootObject, true);
     });
   }
 }

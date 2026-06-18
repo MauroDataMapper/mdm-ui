@@ -188,16 +188,16 @@ export class PathNameService {
     return pathElements;
   }
 
-  createHref(path: string, rootObject: CatalogueItem) {
+  createHref(path: string, rootObject: CatalogueItem, isRelative = false) {
     // const domain = this.getPathableDomainFromPath(path);
 
-    return this.createHrefFromPath(path, rootObject);
+    return this.createHrefFromPath(path, rootObject, isRelative);
   }
 
-  createHrefFromPath(path: string, rootObject?: CatalogueItem) {
+  createHrefFromPath(path: string, rootObject?: CatalogueItem, isRelative = false) {
     const pathElements = this.parse(path);
     const i = pathElements.findIndex(x => x.version);
-    if (i === -1) {
+    if (i === -1 && !isRelative) {
       return this.router.stateService.href(
         'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
         {
@@ -208,7 +208,10 @@ export class PathNameService {
       );
     }
     else {
-      const newPath = this.build(pathElements.slice(i));
+      let newPath = this.build(pathElements)
+      if (!isRelative) {
+        newPath = this.build(pathElements.slice(i));
+      }
       return this.router.stateService.href(
         'appContainer.mainApp.twoSidePanel.catalogue.catalogueItem',
         {

@@ -45,7 +45,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
     // First have to convert back hat characters to spaces. This was done in MarkdownParserService
     // because spaces in the href part meant the marked parser would not get us this far
     const path = href.replace(/\^/g, ' ');
-    const link = this.pathNames.createHref(path, this.rootObject);
+    const link = this.pathNames.createHref(path, this.rootObject, true);
     return `<a href='${link}'>${text}</a>`;
   }
 

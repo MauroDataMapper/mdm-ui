@@ -243,12 +243,13 @@ export class ImportModelsComponent implements OnInit {
 
   private mapFormData() {
     const formData = new FormData();
+    const fileParams: ImporterParameterGroup['parameters'] = [];
 
     this.selectedImporterGroups.forEach((selectedImporterGroup) => {
       const parameters = selectedImporterGroup.parameters;
       parameters.forEach((param) => {
         if (param.type === 'File') {
-          formData.append(param.name, this.getFile(param.name));
+          fileParams.push(param);
         }
  else if (param.type === 'DataModel') {
           formData.append(param.name, param.value[0].id);
@@ -260,6 +261,10 @@ export class ImportModelsComponent implements OnInit {
           formData.append(param.name, param.value);
         }
       });
+    });
+
+    fileParams.forEach((param) => {
+      formData.append(param.name, this.getFile(param.name));
     });
 
     return formData;

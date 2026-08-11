@@ -37,13 +37,56 @@ export interface UserSettings {
   editorFormat?: ContentEditorFormat
 }
 
+export interface TablePageSettings {
+  countPerTable: number
+  counts: number[]
+}
+
+export const defaultTableCounts = [5, 10, 20, 50, 100];
+export const defaultCountPerTableOrdinal = 2;
+export const defaultCountPerTable = defaultTableCounts[defaultCountPerTableOrdinal];
+
+export const resolveTablePageSettings = (settings?: UserSettings): TablePageSettings => {
+  const counts = Array.isArray(settings?.counts) && settings.counts.length > 0
+    ? settings.counts
+    : defaultTableCounts;
+
+  const configuredCount = typeof settings?.countPerTable === 'number'
+    ? settings.countPerTable
+    : undefined;
+
+  let countPerTable = counts.includes(defaultCountPerTable)
+    ? defaultCountPerTable
+    : counts[0];
+
+  if (configuredCount && counts.includes(configuredCount)) {
+    countPerTable = configuredCount;
+  }
+
+  return {
+    countPerTable,
+    counts
+  };
+};
+
+export const getTablePageSettingsFromLocalStorage = (): TablePageSettings => {
+  try {
+    return resolveTablePageSettings(
+      JSON.parse(localStorage.getItem('userSettings')) as UserSettings
+    );
+  }
+ catch {
+    return resolveTablePageSettings();
+  }
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserSettingsHandlerService {
   defaultSettings: UserSettings = {
-    countPerTable: 20,
-    counts: [5, 10, 20, 50],
+    countPerTable: defaultCountPerTable,
+    counts: defaultTableCounts,
     expandMoreDescription: false,
     favourites: [],
     includeModelSuperseded: true,

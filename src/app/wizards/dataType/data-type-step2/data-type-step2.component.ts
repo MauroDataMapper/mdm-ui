@@ -34,11 +34,11 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataModel, DataType } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -54,13 +54,13 @@ import { NgIf, NgFor } from '@angular/common';
     templateUrl: './data-type-step2.component.html',
     styleUrls: ['./data-type-step2.component.sass'],
     standalone: true,
-    imports: [NgIf, FormsModule, NewDataTypeInlineComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
+    imports: [NgIf, FormsModule, NewDataTypeInlineComponent, MatTooltip, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatFormField, MatLabel, MatInput, MatSelect, MatOption, NgFor, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent, MatProgressBar]
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
   @Input() parent: any;
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MdmPaginatorComponent) paginator = new QueryList<MdmPaginatorComponent>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
 
   successCount: number;
@@ -112,9 +112,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   parentScopeHandler: any;
   filterEvent = new EventEmitter<any>();
 
-  pageSize = 20;
-  pageSizeOptions = [5, 10, 20, 50];
-
   constructor(
     private resourceService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
@@ -125,12 +122,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
-
-    const settings = JSON.parse(localStorage.getItem('userSettings'));
-    if (settings) {
-      this.pageSize = settings.countPerTable;
-      this.pageSizeOptions = settings.counts;
-    }
   }
 
   ngOnInit() {

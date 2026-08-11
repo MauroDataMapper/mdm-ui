@@ -388,12 +388,10 @@ SPDX-License-Identifier: Apache-2.0
       class="mdm--mat-pagination"
       [ngClass]="{ 'is-hidden': totalItemCount < 6 }"
     >
-      <mat-paginator
-        [pageSizeOptions]="pageSizeOptions"
-        [pageSize]="pageSize"
+      <mdm-paginator
         [length]="totalItemCount"
         showFirstLastButtons
-      ></mat-paginator>
+      ></mdm-paginator>
     </div>
   </div>
 
@@ -604,12 +602,10 @@ SPDX-License-Identifier: Apache-2.0
       class="mdm--mat-pagination"
       [ngClass]="{ 'is-hidden': totalSelectedItemsCount < 6 }"
     >
-      <mat-paginator
-        [pageSizeOptions]="pageSizeOptions"
-        [pageSize]="pageSize"
+      <mdm-paginator
         [length]="totalSelectedItemsCount"
         showFirstLastButtons
-      ></mat-paginator>
+      ></mdm-paginator>
     </div>
     <div class="full-width mt-2 mb-2">
       <div *ngIf="processing">

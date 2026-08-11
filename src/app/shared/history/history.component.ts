@@ -73,8 +73,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   parentTypeVal;
   parentIdVal;
   isLoadingResults = true;
-  pageSizeOptions = [10, 20, 50];
-
   records: any[] = [];
   filter: any = '';
   applyFilter: any;

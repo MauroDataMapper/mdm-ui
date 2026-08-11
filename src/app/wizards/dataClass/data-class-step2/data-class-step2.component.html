@@ -146,7 +146,7 @@ SPDX-License-Identifier: Apache-2.0
         <p class="marginless warning">You have not selected any Data Classes.</p>
     </div>
     <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalSelectedItemsCount < 6}">
-        <mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="totalSelectedItemsCount" [pageSize]="pageSize" showFirstLastButtons></mat-paginator>
+        <mdm-paginator [length]="totalSelectedItemsCount" showFirstLastButtons></mdm-paginator>
     </div>
 </div>
 <div class="full-width mt-2 mb-2">

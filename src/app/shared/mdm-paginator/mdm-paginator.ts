@@ -15,8 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { getTablePageSettingsFromLocalStorage } from '@mdm/services/utility/user-settings-handler.service';
 
 @Component({
     selector: 'mdm-paginator',
@@ -24,20 +25,29 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
     standalone: true,
     imports: [MatPaginator]
 })
-export class MdmPaginatorComponent extends MatPaginator implements OnInit {
+export class MdmPaginatorComponent extends MatPaginator implements OnChanges, OnInit {
+  private pageSizeInputProvided = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.pageSize) {
+      this.pageSizeInputProvided = true;
+    }
+  }
+
   ngOnInit(): void {
     super.ngOnInit();
 
-    const settings = JSON.parse(localStorage.getItem('userSettings'));
-    if (settings) {
-      // If there is no pageSize or pageSizeOptions specified then use the settings value, if any.
-      this.pageSize = this.pageSize ?? settings.countPerTable;
-      this.pageSizeOptions = this.pageSizeOptions ?? settings.counts;
+    const pageSettings = getTablePageSettingsFromLocalStorage();
+
+    if (
+      !this.pageSizeInputProvided
+      || this.pageSize === undefined
+      || this.pageSize === null
+    ) {
+      this.pageSize = pageSettings.countPerTable;
     }
 
-    // Set defaults if still no values.
-    this.pageSize = this.pageSize ?? 20;
-    this.pageSizeOptions = this.pageSizeOptions ?? [5, 10, 20, 50];
+    this.pageSizeOptions = pageSettings.counts;
   }
 
   get pageOffset() {

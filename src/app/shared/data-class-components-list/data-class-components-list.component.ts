@@ -125,8 +125,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   bulkElementActionsVisible = 0;
 
   isOrderedDataSource = false;
-  pageSizeOptions = [10, 20, 50];
-
   constructor(
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,

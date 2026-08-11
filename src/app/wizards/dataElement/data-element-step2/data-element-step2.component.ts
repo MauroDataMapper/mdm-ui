@@ -30,7 +30,6 @@ import {
 import { merge, Subscription } from 'rxjs';
 import { NgForm, FormsModule } from '@angular/forms';
 import { MatSort, SortDirection, MatSortHeader } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
@@ -41,6 +40,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataClass, DataModel } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { HighlighterPipe } from '@mdm/pipes/highlighter.pipe';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
@@ -66,11 +66,11 @@ import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
     templateUrl: './data-element-step2.component.html',
     styleUrls: ['./data-element-step2.component.sass'],
     standalone: true,
-    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar, HighlighterPipe, EscapeHtmlPipe]
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatInput, ContentEditorComponent, FlexModule, MatLabel, MatHint, ElementDataTypeComponent, MatButton, McSelectComponent, ElementLinkComponent, NewDataTypeInlineComponent, ElementClassificationsComponent, MatTooltip, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent, MatProgressBar, HighlighterPipe, EscapeHtmlPipe]
 })
 export class DataElementStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MdmPaginatorComponent) paginator = new QueryList<MdmPaginatorComponent>();
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
@@ -116,9 +116,6 @@ export class DataElementStep2Component
   isAllChecked = true;
   checkAllCheckbox = false;
   totalSelectedItemsCount = 0;
-  pageSize = 20;
-  pageSizeOptions = [5, 10, 20, 50];
-
   constructor(
     private changeRef: ChangeDetectorRef,
     private gridService: GridService,
@@ -130,11 +127,6 @@ export class DataElementStep2Component
     this.dataSourceDataElements = new MatTableDataSource(
       this.recordsDataElements
     );
-    const settings = JSON.parse(localStorage.getItem('userSettings'));
-    if (settings) {
-      this.pageSize = settings.countPerTable;
-      this.pageSizeOptions = settings.counts;
-    }
   }
 
   ngOnInit() {

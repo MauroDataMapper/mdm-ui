@@ -90,17 +90,21 @@ export class BulkDeleteModalComponent implements AfterViewInit {
 
         switch (item.domainType) {
           case CatalogueItemDomainType.DataClass:
-            if (item.imported && (!this.parentDataClass || !this.parentDataClass.id)) {
+            const parentDataClassId = this.getParentDataClassId(item);
+            if (item.imported && !parentDataClassId) {
               return this.resources.dataModel.removeImportedDataClass(this.parentDataModel.id as string, item.model as string, item.id as string).toPromise();
             }
- else if (item.imported && this.parentDataClass?.id !== null) {
-              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
+ else if (item.imported) {
+              return this.resources.dataClass.removeImportedDataClass(this.parentDataModel.id as string, parentDataClassId, item.model as string, item.id as string).toPromise();
             }
- else if (item.extended && this.parentDataClass) {
-              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id as string, this.parentDataClass.id as string, item.model as string, item.id as string).toPromise();
+ else if (item.extended && parentDataClassId) {
+              return this.resources.dataClass.removeExtendDataClass(this.parentDataModel.id as string, parentDataClassId, item.model as string, item.id as string).toPromise();
+            }
+ else if (parentDataClassId) {
+              return this.resources.dataClass.removeChildDataClass(item.model as string, parentDataClassId, item.id as string).toPromise();
             }
  else {
-              return this.resources.dataClass.removeChildDataClass(item.model as string, item.parentDataClass as string, item.id as string).toPromise();
+              return this.resources.dataClass.remove(item.model as string, item.id as string).toPromise();
             }
           case CatalogueItemDomainType.DataElement:
             if (item.imported) {
@@ -140,4 +144,16 @@ export class BulkDeleteModalComponent implements AfterViewInit {
       this.isProcessComplete = true;
     });
   };
+
+  private getParentDataClassId(item: any): string | null {
+    const parentDataClassId = this.parentDataClass?.id ?? item.parentDataClass;
+    return this.isUsableId(parentDataClassId) ? parentDataClassId : null;
+  }
+
+  private isUsableId(value: any): value is string {
+    return typeof value === 'string'
+      && value.trim().length > 0
+      && value !== 'undefined'
+      && value !== 'null';
+  }
 }

@@ -15,7 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { ProfileField } from '@maurodatamapper/mdm-resources';
 import { MessageHandlerService } from '@mdm/services';
 import {
@@ -42,6 +49,7 @@ import {
 } from '@mdm/mauro/mauro-item.types';
 import { PathCellRendererComponent } from './cell-renderers/path-cell-renderer/path-cell-renderer.component';
 import { TextAreaCellEditorComponent } from './cell-editors/text-area-cell-editor/text-area-cell-editor.component';
+import { SourceCodeCellEditorComponent } from './cell-editors/source-code-cell-editor/source-code-cell-editor.component';
 import { MatDialog } from '@angular/material/dialog';
 import {
   FullContentEditDialogComponent,
@@ -53,6 +61,10 @@ import { AgGridAngular } from '@ag-grid-community/angular';
 import { NgIf } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
+import {
+  decodeSourceCodeValue,
+  isSourceCodeProfileDataType
+} from '@mdm/shared/source-code/source-code-value';
 
 @Component({
     selector: 'mdm-bulk-edit-editor',
@@ -80,6 +92,7 @@ export class BulkEditEditorComponent implements OnInit {
     checkboxCellRenderer: CheckboxCellRendererComponent,
     dateCellEditor: DateCellEditorComponent,
     pathCellRenderer: PathCellRendererComponent,
+    sourceCodeCellEditor: SourceCodeCellEditorComponent,
     textAreaCellEditor: TextAreaCellEditorComponent
   };
 
@@ -88,6 +101,7 @@ export class BulkEditEditorComponent implements OnInit {
   loaded = false;
   columns: ColGroupDef[] = [];
   rows: BulkEditDataRow[] = [];
+  stopEditingWhenCellsLoseFocus = true;
   cellRules: CellClassRules = {
     'mdm-bulk-editor__invalid': params => this.showValidationError(params),
     'mdm-bulk-editor__readonly': params =>
@@ -111,7 +125,8 @@ export class BulkEditEditorComponent implements OnInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private bulkEditProfiles: BulkEditProfileService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -346,7 +361,24 @@ export class BulkEditEditorComponent implements OnInit {
       };
     }
 
+    if (isSourceCodeProfileDataType(field.dataType as string)) {
+      column.cellEditor = 'sourceCodeCellEditor';
+      column.cellEditorParams = {
+        onFilePickerOpen: () => this.setStopEditingWhenCellsLoseFocus(false),
+        onFilePickerClose: () => this.setStopEditingWhenCellsLoseFocus(true)
+      };
+      column.valueFormatter = (params) => {
+        const value = decodeSourceCodeValue(params.value);
+        return value.source ? `${value.language}: ${value.source}` : '';
+      };
+    }
+
     return column;
+  }
+
+  private setStopEditingWhenCellsLoseFocus(value: boolean) {
+    this.stopEditingWhenCellsLoseFocus = value;
+    this.changeDetector.detectChanges();
   }
 
   private mapProfileToRow(profile: NavigatableProfile): BulkEditDataRow {

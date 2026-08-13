@@ -1,0 +1,185 @@
+/*
+Copyright 2020-2026 University of Oxford and NHS England
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+.mdm-source-code-editor {
+  width: 100%;
+
+  &__readonly {
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    background: #f8f9fb;
+  }
+
+  &__readonly-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    background: #eef1f5;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+    font-weight: 600;
+
+    button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      line-height: 1;
+
+      span {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        line-height: 1;
+      }
+    }
+
+    .fa-check {
+      color: #1b7f3a;
+    }
+  }
+
+  &__readonly-code {
+    overflow: auto;
+    max-height: 360px;
+    margin: 0;
+    padding: 12px;
+    background: #ffffff;
+    color: #1f2933;
+    font-family: Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+
+    code {
+      font: inherit;
+      color: inherit;
+    }
+
+    ::ng-deep .token.comment,
+    ::ng-deep .token.prolog,
+    ::ng-deep .token.doctype,
+    ::ng-deep .token.cdata {
+      color: #667085;
+    }
+
+    ::ng-deep .token.punctuation {
+      color: #475467;
+    }
+
+    ::ng-deep .token.property,
+    ::ng-deep .token.tag,
+    ::ng-deep .token.boolean,
+    ::ng-deep .token.number,
+    ::ng-deep .token.constant,
+    ::ng-deep .token.symbol,
+    ::ng-deep .token.deleted {
+      color: #b42318;
+    }
+
+    ::ng-deep .token.selector,
+    ::ng-deep .token.attr-name,
+    ::ng-deep .token.string,
+    ::ng-deep .token.char,
+    ::ng-deep .token.builtin,
+    ::ng-deep .token.inserted {
+      color: #067647;
+    }
+
+    ::ng-deep .token.operator,
+    ::ng-deep .token.entity,
+    ::ng-deep .token.url,
+    ::ng-deep .language-css .token.string,
+    ::ng-deep .style .token.string {
+      color: #175cd3;
+    }
+
+    ::ng-deep .token.atrule,
+    ::ng-deep .token.attr-value,
+    ::ng-deep .token.keyword {
+      color: #6941c6;
+    }
+
+    ::ng-deep .token.function,
+    ::ng-deep .token.class-name {
+      color: #b54708;
+    }
+
+    ::ng-deep .token.regex,
+    ::ng-deep .token.important,
+    ::ng-deep .token.variable {
+      color: #c11574;
+    }
+  }
+
+  &__toolbar {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+
+    mat-toolbar {
+      position: relative;
+      display: flex;
+      gap: 8px;
+      height: 56px;
+      min-height: 56px;
+      padding: 0 8px;
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 4px;
+
+      input[matInput] {
+        min-width: 0;
+        font-size: 14px;
+      }
+
+      button {
+        flex: 0 0 auto;
+        font-size: 14px;
+        line-height: 36px;
+      }
+    }
+
+    input[type='file'] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+
+  &__file-name {
+    flex: 1 1 auto;
+  }
+
+  &__ace-editor {
+    display: block;
+    width: 100%;
+    height: 360px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+  }
+}

@@ -38,6 +38,11 @@ SPDX-License-Identifier: Apache-2.0
             [rootElement]="data.parentCatalogueItem"
             [inEditMode]="true"
           ></mdm-content-editor>
+          <mdm-source-code-editor
+            *ngIf="isSourceCode(item)"
+            [(value)]="item.value"
+            [inEditMode]="true"
+          ></mdm-source-code-editor>
           <input
             *ngIf="item.controlType === profileControlType.text"
             matInput

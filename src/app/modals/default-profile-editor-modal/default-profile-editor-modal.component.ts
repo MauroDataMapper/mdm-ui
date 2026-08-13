@@ -51,13 +51,14 @@ import { ElementAliasComponent } from '../../utility/element-alias/element-alias
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
 import { ModelSelectorTreeComponent } from '../../model-selector-tree/model-selector-tree.component';
+import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
 
 @Component({
     selector: 'mdm-default-profile-editor-modal',
     templateUrl: './default-profile-editor-modal.component.html',
     styleUrls: ['./default-profile-editor-modal.component.sass'],
     standalone: true,
-    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe, EscapeHtmlPipe, ModelSelectorTreeComponent]
+    imports: [MatDialogTitle, MatDialogContent, NgFor, NgIf, ElementAliasComponent, ContentEditorComponent, SourceCodeEditorComponent, MatInput, FormsModule, InlineTextEditComponent, NgClass, ExtendedModule, MatButton, NewDataTypeInlineComponent, McSelectComponent, ElementLinkComponent, ElementClassificationsComponent, MatDialogActions, HighlighterPipe, EscapeHtmlPipe, ModelSelectorTreeComponent]
 })
 export class DefaultProfileEditorModalComponent implements OnInit {
   multiplicityError: string;
@@ -83,6 +84,10 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
+  }
+
+  isSourceCode(item: DefaultProfileItem): boolean {
+    return item.controlType === ProfileControlTypes.sourceCode;
   }
 
   ngOnInit(): void {}
@@ -199,7 +204,8 @@ export class DefaultProfileEditorModalComponent implements OnInit {
         label: selected.label,
         domainType: selected.domainType as string
       };
-    } else {
+    }
+ else {
       item.value = null;
       item.selectedDataClass = null;
     }

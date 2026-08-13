@@ -51,7 +51,8 @@ export enum ProfileControlTypes {
   classifications = 'Classifications',
   multiplicity = 'Multiplicity',
   dataType = 'DataType',
-  dataClass = 'DataClass'
+  dataClass = 'DataClass',
+  sourceCode = 'SourceCode'
 }
 
 export class DefaultProfileControls {

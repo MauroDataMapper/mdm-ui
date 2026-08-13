@@ -23,13 +23,15 @@ import { FormsModule } from '@angular/forms';
 import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf, NgFor } from '@angular/common';
+import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
+import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
 
 @Component({
     selector: '[mdm-profile-section]',
     templateUrl: './profile-section.component.html',
     styleUrls: ['./profile-section.component.scss'],
     standalone: true,
-  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, FormsModule, MoreDescriptionComponent]
+  imports: [NgIf, NgFor, MatTooltip, ContentEditorComponent, SourceCodeEditorComponent, FormsModule, MoreDescriptionComponent]
 })
 export class ProfileSectionComponent {
   @Input() profileSection: ProfileSection;
@@ -45,4 +47,8 @@ export class ProfileSectionComponent {
     datetime: 'datetime',
     decimal: 'number'
   };
+
+  isSourceCode(dataType: string): boolean {
+    return isSourceCodeProfileDataType(dataType);
+  }
 }

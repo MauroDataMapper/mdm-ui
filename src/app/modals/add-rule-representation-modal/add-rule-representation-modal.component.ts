@@ -24,6 +24,7 @@ import {
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import DmnModeler from 'dmn-js/lib/Modeler';
+import { migrateDiagram } from '@bpmn-io/dmn-migrate';
 
 import 'brace';
 import 'brace/mode/drools';
@@ -47,52 +48,13 @@ import { NgFor, NgIf } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { SafePipe } from '@mdm/content/safe.pipe';
+import {
+  SourceCodeLanguage as RuleLanguage,
+  supportedSourceCodeLanguages
+} from '@mdm/shared/source-code/source-code-languages';
 
-export class RuleLanguage {
-  displayName: string;
-  value: string;
-  aceValue?: string;
-  fileExt?: string;
-}
-
-export const supportedLanguages: RuleLanguage[] = [
-  { displayName: 'SQL', value: 'sql', aceValue: 'sql', fileExt: 'sql' },
-  { displayName: 'C#', value: 'c#', aceValue: 'csharp', fileExt: 'cs' },
-  {
-    displayName: 'JavaScript',
-    value: 'javascript',
-    aceValue: 'javascript',
-    fileExt: 'js'
-  },
-
-  { displayName: 'Java', value: 'java', aceValue: 'java', fileExt: 'java' },
-  {
-    displayName: 'JSON',
-    value: 'json',
-    aceValue: 'json',
-    fileExt: 'json'
-  },
-  {
-    displayName: 'JSON (MEQL)',
-    value: 'json-meql',
-    aceValue: 'json',
-    fileExt: 'json'
-  },
-  {
-    displayName: 'Typescript',
-    value: 'typescript',
-    aceValue: 'typescript',
-    fileExt: 'ts'
-  },
-  {
-    displayName: 'Drools',
-    value: 'drools',
-    aceValue: 'drools',
-    fileExt: 'drools'
-  },
-  { displayName: 'Text', value: 'text', aceValue: 'text', fileExt: 'txt' },
-  { displayName: 'DMN', value: 'dmn', fileExt: 'dmn' }
-];
+export { SourceCodeLanguage as RuleLanguage } from '@mdm/shared/source-code/source-code-languages';
+export const supportedLanguages: RuleLanguage[] = supportedSourceCodeLanguages;
 
 export interface AddRuleRepresentationModalConfig {
   language: string
@@ -223,7 +185,6 @@ export class AddRuleRepresentationModalComponent implements OnInit {
             ? this.data.representation
             : this.initialDiagram;
       }
-      const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
       migrateDiagram(xml).then((migratedXML) => {
         this.modeler.importXML(migratedXML, (err: Error) => {
           if (err) {

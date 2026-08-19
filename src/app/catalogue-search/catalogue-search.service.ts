@@ -40,10 +40,10 @@ import {
   CatalogueSearchProfileFilterDto,
   CatalogueSearchResultSet,
   defaultPage,
-  defaultPageSize,
   serializeDate,
   ungroupProfileFiltersDto
 } from './catalogue-search.types';
+import { getTablePageSettingsFromLocalStorage } from '@mdm/services/utility/user-settings-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -190,7 +190,7 @@ export class CatalogueSearchService {
     params: CatalogueSearchParameters
   ): [number, number, PageParameters] {
     const offset = params.offset ?? defaultPage;
-    const max = params.max ?? defaultPageSize;
+    const max = params.max ?? getTablePageSettingsFromLocalStorage().countPerTable;
     const pageParams: PageParameters = {
       max: max,
       offset: offset

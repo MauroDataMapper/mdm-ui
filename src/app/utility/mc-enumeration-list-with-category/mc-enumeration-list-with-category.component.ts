@@ -24,7 +24,7 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core';
-import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
+import { getTablePageSettingsFromLocalStorage, TablePageSettings } from '@mdm/services/utility/user-settings-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -118,8 +118,9 @@ export class McEnumerationListWithCategoryComponent
   hideFilters = true;
 
   currentPage = 0;
-  pageSize = this.userSettingsHandler.get('countPerTable');
-  pageSizes = this.userSettingsHandler.get('counts');
+  private readonly tablePageSettings: TablePageSettings = getTablePageSettingsFromLocalStorage();
+  pageSize: number = this.tablePageSettings.countPerTable;
+  pageSizes: number[] = this.tablePageSettings.counts;
   displayedColumnsEnums = ['group', 'key', 'value', 'buttons'];
 
   sortBy = 'group';
@@ -130,7 +131,6 @@ export class McEnumerationListWithCategoryComponent
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private userSettingsHandler: UserSettingsHandlerService,
     private securityHandler: SecurityHandlerService,
     private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,

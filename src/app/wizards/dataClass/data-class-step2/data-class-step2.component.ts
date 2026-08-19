@@ -32,10 +32,10 @@ import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { CreateType } from '@mdm/wizards/wizards.model';
 import { DataClass } from '@maurodatamapper/mdm-resources';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
@@ -53,13 +53,13 @@ import { NgIf, NgClass } from '@angular/common';
     templateUrl: './data-class-step2.component.html',
     styleUrls: ['./data-class-step2.component.sass'],
     standalone: true,
-    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatLabel, MatInput, ContentEditorComponent, FlexModule, MatHint, ElementClassificationsComponent, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatProgressBar]
+    imports: [NgIf, FormsModule, ModelPathComponent, MatFormField, MatLabel, MatInput, ContentEditorComponent, FlexModule, MatHint, ElementClassificationsComponent, ModelSelectorTreeComponent, NgClass, ExtendedModule, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, ElementLinkComponent, MoreDescriptionComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MdmPaginatorComponent, MatProgressBar]
 })
 export class DataClassStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MdmPaginatorComponent) paginator = new QueryList<MdmPaginatorComponent>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: {
@@ -81,8 +81,6 @@ export class DataClassStep2Component
   finalResult = {};
   successCount = 0;
   failCount = 0;
-  pageSize = 20;
-  pageSizeOptions = [5, 10, 20, 50];
   copyMessage = '';
 
   formChangesSubscription: Subscription;
@@ -98,13 +96,7 @@ export class DataClassStep2Component
     private validator: ValidatorService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService
-  ) {
-    const settings = JSON.parse(localStorage.getItem('userSettings'));
-    if (settings) {
-      this.pageSize = settings.countPerTable;
-      this.pageSizeOptions = settings.counts;
-    }
-  }
+  ) {}
 
   ngOnInit() {
     this.model = this.step.scope.model;

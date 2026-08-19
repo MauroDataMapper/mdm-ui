@@ -118,19 +118,35 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataClass
-      .getChildDataClass(
-        this.parentDataModelId,
-        this.grandParentDataClassId,
-        this.parentDataClassId
-      )
-      .subscribe((result) => {
-        result.body.breadcrumbs.push(Object.assign([], result.body));
-        this.model.parent = result.body;
-        this.steps.push(step1);
-        this.steps.push(step2);
-        this.changeRef.detectChanges();
-      });
+    if (this.grandParentDataClassId) {
+      this.resources.dataClass
+        .getChildDataClass(
+          this.parentDataModelId,
+          this.grandParentDataClassId,
+          this.parentDataClassId
+        )
+        .subscribe((result) => {
+          result.body.breadcrumbs.push(Object.assign([], result.body));
+          this.model.parent = result.body;
+          this.steps.push(step1);
+          this.steps.push(step2);
+          this.changeRef.detectChanges();
+        });
+    }
+    else {
+      this.resources.dataClass
+        .get(
+          this.parentDataModelId,
+          this.parentDataClassId
+        )
+        .subscribe((result) => {
+          result.body.breadcrumbs.push(Object.assign([], result.body));
+          this.model.parent = result.body;
+          this.steps.push(step1);
+          this.steps.push(step2);
+          this.changeRef.detectChanges();
+        });
+    }
 
     this.resources.dataType.list(this.parentDataModelId).subscribe((result) => {
       this.model.allDataTypesCount = result.count;

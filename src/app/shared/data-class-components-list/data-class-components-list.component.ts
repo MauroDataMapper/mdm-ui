@@ -289,7 +289,9 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         parentDataClassId: this.parentDataClass
           ? this.parentDataClass.id
           : null,
-        grandParentDataClassId: this.grandParentDataClass.id
+        grandParentDataClassId: this.grandParentDataClass
+          ? this.grandParentDataClass.id
+          : null,
       },
       null
     );

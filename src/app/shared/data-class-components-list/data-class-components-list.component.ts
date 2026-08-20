@@ -576,14 +576,14 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       });
   }
 
-  bulkClassDelete() {
-    const dataClassIdList = this.dataClassRecords.filter(
+  bulkDeleteClasses() {
+    const dataClassList = this.dataClassRecords.filter(
       record => record.checked
     );
     this.dialog
       .open(BulkDeleteModalComponent, {
         data: {
-          dataClassIdList,
+          dataElementIdList: dataClassList,
           parentDataModel: this.parentDataModel,
           parentDataClass: this.parentDataClass
         },
@@ -591,7 +591,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       })
       .afterClosed()
       .subscribe((result) => {
-        if (result != null && result.status === 'ok') {
+        if (result) {
           this.dataClassRecords.forEach(x => (x.checked = false));
           this.checkAllClassCheckbox = false;
           this.bulkClassActionsVisible = 0;
@@ -600,7 +600,7 @@ export class DataClassComponentsListComponent implements AfterViewInit {
       });
   }
 
-  bulkDelete() {
+  bulkDeleteElements() {
     const dataElementIdList = this.dataElementRecords.filter(
       record => record.checked
     );

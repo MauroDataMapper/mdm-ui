@@ -125,8 +125,6 @@ export class DataClassComponentsListComponent implements AfterViewInit {
   bulkElementActionsVisible = 0;
 
   isOrderedDataSource = false;
-  pageSizeOptions = [10, 20, 50];
-
   constructor(
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
@@ -291,7 +289,9 @@ export class DataClassComponentsListComponent implements AfterViewInit {
         parentDataClassId: this.parentDataClass
           ? this.parentDataClass.id
           : null,
-        grandParentDataClassId: this.grandParentDataClass.id
+        grandParentDataClassId: this.grandParentDataClass
+          ? this.grandParentDataClass.id
+          : null,
       },
       null
     );

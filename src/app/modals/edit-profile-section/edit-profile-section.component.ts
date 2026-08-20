@@ -15,25 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
-  ApiProperty,
-  ApiPropertyIndexResponse, Pathable,
-  Profile,
+  Pathable,
   ProfileField, ProfileSection,
   ProfileValidationError,
   ProfileValidationErrorList
 } from '@maurodatamapper/mdm-resources';
-import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MessageHandlerService } from '@mdm/services';
 import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import {
   EditProfileModalConfiguration,
   EditProfileModalResult
@@ -51,13 +44,15 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
 import { MatTooltip } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
+import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
+import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
 
 @Component({
     selector: '[mdm-edit-profile-section]',
     templateUrl: './edit-profile-section.component.html',
     styleUrls: ['./edit-profile-section.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, NgFor, MatTooltip, ContentEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError]
+    imports: [NgIf, FormsModule, NgFor, MatTooltip, ContentEditorComponent, SourceCodeEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError]
 })
 export class EditProfileSectionComponent implements OnInit {
   @Input() profileSection: ProfileSection;
@@ -152,6 +147,10 @@ export class EditProfileSectionComponent implements OnInit {
     return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
   }
 
+  isSourceCode(field: ProfileField): boolean {
+    return isSourceCodeProfileDataType(field.dataType as string);
+  }
+
   showAddElementToMarkdown(field: ProfileField) {
     const dg = this.dialog.open(ElementSelectorComponent, {
       data: { validTypesToSelect: ['DataModel'], notAllowedToSelectIds: [] },
@@ -169,5 +168,4 @@ export class EditProfileSectionComponent implements OnInit {
       = field.uneditable
         || (this.data.finalised && !field.editableAfterFinalisation);
   }
-
 }

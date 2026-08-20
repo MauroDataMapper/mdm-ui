@@ -81,8 +81,6 @@ export class ReferenceDataTypeSelectComponent
   totalItemCount = 0;
   loading = false;
   displayedColumns = ['select', 'label', 'description', 'type'];
-  pageSize = 20;
-  pageSizeOptions = [5, 10, 20, 50];
   showFilters = false;
   selectAll = false;
 

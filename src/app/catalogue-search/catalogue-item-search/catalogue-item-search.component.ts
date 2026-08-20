@@ -38,6 +38,7 @@ import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator'
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { CatalogueItemSearchResultComponent } from '../catalogue-item-search-result/catalogue-item-search-result.component';
 import { SortByComponent } from '../../shared/sort-by/sort-by.component';
+import { getTablePageSettingsFromLocalStorage } from '@mdm/services/utility/user-settings-handler.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -76,7 +77,8 @@ export class CatalogueItemSearchComponent {
 
   routeParams?: RawParams;
   clientPageIndex = 0;
-  clientPageSize = 20;
+  private readonly defaultPageSize = getTablePageSettingsFromLocalStorage().countPerTable;
+  clientPageSize = this.defaultPageSize;
 
   constructor(
     private catalogueSearch: CatalogueSearchService,
@@ -90,7 +92,7 @@ export class CatalogueItemSearchComponent {
       labelOnly: true,
       domainTypes: this.getDomainTypes(),
       offset: 0,
-      max: 20
+      max: this.defaultPageSize
     };
 
     this.performSearch();
@@ -101,7 +103,7 @@ export class CatalogueItemSearchComponent {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 20;
+      this.parameters.max = this.defaultPageSize;
     }
     const sortBy = selected.value as SearchListingSortByOption;
     this.parameters.sort = getSortFromSortByOptionString(sortBy);
@@ -155,7 +157,7 @@ export class CatalogueItemSearchComponent {
       return this.clientPageSize;
     }
 
-    return this.resultSet?.max ?? this.parameters?.max ?? 20;
+    return this.resultSet?.max ?? this.parameters?.max ?? this.defaultPageSize;
   }
 
   get usesClientPagination() {
@@ -163,7 +165,7 @@ export class CatalogueItemSearchComponent {
       return false;
     }
 
-    return this.resultSet.items.length > (this.resultSet.max || 20);
+    return this.resultSet.items.length > (this.resultSet.max || this.defaultPageSize);
   }
 
   private getDomainTypes() {

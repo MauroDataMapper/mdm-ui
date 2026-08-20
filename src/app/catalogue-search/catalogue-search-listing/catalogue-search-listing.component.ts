@@ -40,6 +40,7 @@ import { SearchFilterChange, SearchFiltersComponent } from '../search-filters/se
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileFilterDialogComponent } from '../profile-filter-dialog-component/profile-filter-dialog-component';
 import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { getTablePageSettingsFromLocalStorage } from '@mdm/services/utility/user-settings-handler.service';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { CatalogueItemSearchResultComponent } from '../catalogue-item-search-result/catalogue-item-search-result.component';
 import { ProfileFiltersComponent } from '../profile-filters/profile-filters.component';
@@ -79,7 +80,8 @@ export class CatalogueSearchListingComponent implements OnInit {
   sortByDefaultOption: SortByOption = this.searchListingSortByOptions[0];
   profileFilters?: CatalogueSearchProfileFilter[];
   clientPageIndex = 0;
-  clientPageSize = 20;
+  private readonly defaultPageSize = getTablePageSettingsFromLocalStorage().countPerTable;
+  clientPageSize = this.defaultPageSize;
 
   constructor(
     private routerGlobals: UIRouterGlobals,
@@ -168,7 +170,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 50;
+      this.parameters.max = this.defaultPageSize;
     }
     this.parameters.context = event;
     this.updateSearch();
@@ -179,7 +181,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 50;
+      this.parameters.max = this.defaultPageSize;
     }
     this.parameters.search = this.searchTerms;
     this.updateSearch();
@@ -202,7 +204,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 50;
+      this.parameters.max = this.defaultPageSize;
     }
     const sortBy = selected.value as SearchListingSortByOption;
     this.parameters.sort = getSortFromSortByOptionString(sortBy);
@@ -215,7 +217,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 50;
+      this.parameters.max = this.defaultPageSize;
     }
     this.parameters[event.name] = event.value;
     this.updateSearch();
@@ -226,7 +228,7 @@ export class CatalogueSearchListingComponent implements OnInit {
     this.parameters.offset = 0;
     // Preserve max if it was already set
     if (!this.parameters.max) {
-      this.parameters.max = 50;
+      this.parameters.max = this.defaultPageSize;
     }
     this.parameters.context = undefined;
     this.parameters.domainTypes = [];
@@ -308,7 +310,7 @@ export class CatalogueSearchListingComponent implements OnInit {
       return this.clientPageSize;
     }
 
-    return this.resultSet?.max ?? this.parameters?.max ?? 20;
+    return this.resultSet?.max ?? this.parameters?.max ?? this.defaultPageSize;
   }
 
   get usesClientPagination() {
@@ -316,7 +318,7 @@ export class CatalogueSearchListingComponent implements OnInit {
       return false;
     }
 
-    return this.resultSet.items.length > (this.resultSet.max || 20);
+    return this.resultSet.items.length > (this.resultSet.max || this.defaultPageSize);
   }
 
   /**

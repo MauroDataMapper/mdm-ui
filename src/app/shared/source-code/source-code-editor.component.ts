@@ -53,7 +53,8 @@ import {
 import {
   decodeSourceCodeValue,
   defaultSourceCodeLanguage,
-  encodeSourceCodeValue
+  encodeSourceCodeValue,
+  SourceCodeValueFormat
 } from './source-code-value';
 
 @Component({
@@ -68,6 +69,9 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   @Output() valueChange = new EventEmitter<string>();
 
   @Input() inEditMode = true;
+  @Input() fixedLanguage?: string;
+  @Input() pinLanguage = false;
+  @Input() valueFormat: SourceCodeValueFormat = 'sourcecode';
 
   language = defaultSourceCodeLanguage;
   source = '';
@@ -83,8 +87,17 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   private copiedTimeout?: ReturnType<typeof setTimeout>;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.value) {
-      const decoded = decodeSourceCodeValue(this.value);
+    if (
+      changes.value
+      || changes.fixedLanguage
+      || changes.pinLanguage
+      || changes.valueFormat
+    ) {
+      const decoded = decodeSourceCodeValue(this.value, {
+        fixedLanguage: this.fixedLanguage,
+        pinLanguage: this.pinLanguage,
+        valueFormat: this.valueFormat
+      });
       this.language = decoded.language;
       this.source = decoded.source;
       this.highlightedSource = this.highlightSource();
@@ -113,12 +126,14 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   }
 
   onLanguageChange() {
+    this.applyPinnedLanguage();
     this.highlightedSource = this.highlightSource();
     this.emitValue();
   }
 
   onSourceChange(value: string) {
     this.source = value;
+    this.applyPinnedLanguage();
     this.highlightedSource = this.highlightSource();
     this.emitValue();
   }
@@ -132,22 +147,29 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
 
     const file = target.files[0];
     const extension = file.name.split('.').pop();
-    const language = this.supportedLanguages.find(
-      lang => lang.fileExt === extension
-    );
 
-    if (!language) {
-      this.importFileName = '';
-      target.value = '';
-      return;
+    if (!this.pinLanguage) {
+      const language = this.supportedLanguages.find(
+        lang => lang.fileExt === extension
+      );
+
+      if (!language) {
+        this.importFileName = '';
+        target.value = '';
+        return;
+      }
+
+      this.language = language.value;
     }
 
     this.importFileName = file.name;
-    this.language = language.value;
+    this.applyPinnedLanguage();
 
     const reader = new FileReader();
     reader.onload = () => {
       this.source = reader.result?.toString() ?? '';
+      this.applyPinnedLanguage();
+      this.highlightedSource = this.highlightSource();
       this.emitValue();
     };
     reader.readAsText(file);
@@ -168,10 +190,17 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   }
 
   private emitValue() {
+    this.applyPinnedLanguage();
     this.valueChange.emit(encodeSourceCodeValue({
       language: this.language,
       source: this.source
-    }));
+    }, this.valueFormat));
+  }
+
+  private applyPinnedLanguage() {
+    if (this.pinLanguage && this.fixedLanguage) {
+      this.language = this.fixedLanguage;
+    }
   }
 
   private highlightSource(): string {

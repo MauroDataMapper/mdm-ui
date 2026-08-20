@@ -43,12 +43,15 @@ SPDX-License-Identifier: Apache-2.0
           id="{{ field.fieldName }}"
           [inEditMode]="!field.uneditable"
           [rootElement]="data.catalogueItem"
-          *ngIf="field.dataType === 'text' && !isSourceCode(field)"
+          *ngIf="field.dataType === 'text' && !isCodeEditor(field)"
         ></mdm-content-editor>
         <mdm-source-code-editor
           [(value)]="field.currentValue"
           [inEditMode]="!field.readOnly"
-          *ngIf="isSourceCode(field)"
+          [fixedLanguage]="codeEditorFixedLanguage(field)"
+          [pinLanguage]="codeEditorPinLanguage(field)"
+          [valueFormat]="codeEditorValueFormat(field)"
+          *ngIf="isCodeEditor(field)"
         ></mdm-source-code-editor>
 
         <input
@@ -71,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
                   field.dataType !== 'folder' &&
                   field.dataType !== 'model' &&
                   field.dataType != 'text' &&
-                  !isSourceCode(field) &&
+                  !isCodeEditor(field) &&
                   field.dataType != 'date' &&
                   field.dataType != 'datetime' &&
                   field.dataType != 'boolean' &&

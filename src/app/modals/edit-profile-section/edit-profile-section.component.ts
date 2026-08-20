@@ -45,7 +45,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
 import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
-import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
+import {
+  getSourceCodeEditorOptionsForDataType,
+  isCodeEditorProfileDataType,
+  SourceCodeValueFormat
+} from '@mdm/shared/source-code/source-code-value';
 
 @Component({
     selector: '[mdm-edit-profile-section]',
@@ -147,8 +151,26 @@ export class EditProfileSectionComponent implements OnInit {
     return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
   }
 
-  isSourceCode(field: ProfileField): boolean {
-    return isSourceCodeProfileDataType(field.dataType as string);
+  isCodeEditor(field: ProfileField): boolean {
+    return isCodeEditorProfileDataType(field.dataType as string);
+  }
+
+  codeEditorFixedLanguage(field: ProfileField): string | undefined {
+    return getSourceCodeEditorOptionsForDataType(
+      field.dataType as string
+    ).fixedLanguage;
+  }
+
+  codeEditorPinLanguage(field: ProfileField): boolean {
+    return !!getSourceCodeEditorOptionsForDataType(
+      field.dataType as string
+    ).pinLanguage;
+  }
+
+  codeEditorValueFormat(field: ProfileField): SourceCodeValueFormat {
+    return getSourceCodeEditorOptionsForDataType(
+      field.dataType as string
+    ).valueFormat ?? 'sourcecode';
   }
 
   showAddElementToMarkdown(field: ProfileField) {

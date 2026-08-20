@@ -24,7 +24,11 @@ import { ContentEditorComponent } from '@mdm/content/content-editor/content-edit
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf, NgFor } from '@angular/common';
 import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
-import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
+import {
+  getSourceCodeEditorOptionsForDataType,
+  isCodeEditorProfileDataType,
+  SourceCodeValueFormat
+} from '@mdm/shared/source-code/source-code-value';
 
 @Component({
     selector: '[mdm-profile-section]',
@@ -48,7 +52,19 @@ export class ProfileSectionComponent {
     decimal: 'number'
   };
 
-  isSourceCode(dataType: string): boolean {
-    return isSourceCodeProfileDataType(dataType);
+  isCodeEditor(dataType: string): boolean {
+    return isCodeEditorProfileDataType(dataType);
+  }
+
+  codeEditorFixedLanguage(dataType: string): string | undefined {
+    return getSourceCodeEditorOptionsForDataType(dataType).fixedLanguage;
+  }
+
+  codeEditorPinLanguage(dataType: string): boolean {
+    return !!getSourceCodeEditorOptionsForDataType(dataType).pinLanguage;
+  }
+
+  codeEditorValueFormat(dataType: string): SourceCodeValueFormat {
+    return getSourceCodeEditorOptionsForDataType(dataType).valueFormat ?? 'sourcecode';
   }
 }

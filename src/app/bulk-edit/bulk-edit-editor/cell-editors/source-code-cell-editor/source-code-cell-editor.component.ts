@@ -45,12 +45,16 @@ import {
 import {
   decodeSourceCodeValue,
   defaultSourceCodeLanguage,
-  encodeSourceCodeValue
+  encodeSourceCodeValue,
+  SourceCodeValueFormat
 } from '@mdm/shared/source-code/source-code-value';
 
 export type PopupPosition = 'under' | 'over';
 
 interface SourceCodeCellEditorParams {
+  fixedLanguage?: string
+  pinLanguage?: boolean
+  valueFormat?: SourceCodeValueFormat
   onFilePickerOpen?: () => void
   onFilePickerClose?: () => void
 }
@@ -82,7 +86,11 @@ export class SourceCodeCellEditorComponent implements ICellEditorAngularComp, On
   agInit(params: ICellEditorParams & SourceCodeCellEditorParams): void {
     this.params = params;
     this.originalValue = this.params.value ?? '';
-    const value = decodeSourceCodeValue(this.params.value);
+    const value = decodeSourceCodeValue(this.params.value, {
+      fixedLanguage: this.params.fixedLanguage,
+      pinLanguage: this.params.pinLanguage,
+      valueFormat: this.params.valueFormat
+    });
     this.language = value.language;
     this.source = value.source;
   }
@@ -107,7 +115,7 @@ export class SourceCodeCellEditorComponent implements ICellEditorAngularComp, On
     return encodeSourceCodeValue({
       language: this.language,
       source: this.source
-    });
+    }, this.params.valueFormat);
   }
 
   isPopup(): boolean {
@@ -119,11 +127,13 @@ export class SourceCodeCellEditorComponent implements ICellEditorAngularComp, On
   }
 
   onLanguageChange() {
+    this.applyPinnedLanguage();
     this.hasChanged = true;
   }
 
   onSourceChange(value: string) {
     this.source = value;
+    this.applyPinnedLanguage();
     this.hasChanged = true;
   }
 
@@ -139,23 +149,29 @@ export class SourceCodeCellEditorComponent implements ICellEditorAngularComp, On
 
     const file = target.files[0];
     const extension = file.name.split('.').pop();
-    const language = this.supportedLanguages.find(
-      lang => lang.fileExt === extension
-    );
 
-    if (!language) {
-      this.importFileName = '';
-      target.value = '';
-      return;
+    if (!this.params.pinLanguage) {
+      const language = this.supportedLanguages.find(
+        lang => lang.fileExt === extension
+      );
+
+      if (!language) {
+        this.importFileName = '';
+        target.value = '';
+        return;
+      }
+
+      this.language = language.value;
     }
 
     this.importFileName = file.name;
-    this.language = language.value;
+    this.applyPinnedLanguage();
     this.hasChanged = true;
 
     const reader = new FileReader();
     reader.onload = () => {
       this.source = reader.result?.toString() ?? '';
+      this.applyPinnedLanguage();
       this.hasChanged = true;
     };
     reader.readAsText(file);
@@ -195,5 +211,11 @@ export class SourceCodeCellEditorComponent implements ICellEditorAngularComp, On
 
   stopEvent(event: Event) {
     event.stopPropagation();
+  }
+
+  private applyPinnedLanguage() {
+    if (this.params.pinLanguage && this.params.fixedLanguage) {
+      this.language = this.params.fixedLanguage;
+    }
   }
 }

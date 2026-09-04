@@ -39,15 +39,15 @@
     "@ag-grid-community/client-side-row-model": "31.3.4",
     "@ag-grid-community/core": "31.3.4",
     "@ag-grid-community/styles": "31.3.4",
-    "@angular/animations": "18.2.13",
+    "@angular/animations": "18.2.14",
     "@angular/cdk": "18.2.14",
     "@angular/common": "18.2.13",
-    "@angular/core": "18.2.13",
+    "@angular/core": "18.2.14",
     "@angular/flex-layout": "15.0.0-beta.42",
-    "@angular/forms": "18.2.13",
+    "@angular/forms": "18.2.14",
     "@angular/material": "18.2.14",
-    "@angular/platform-browser": "18.2.13",
-    "@angular/platform-browser-dynamic": "18.2.13",
+    "@angular/platform-browser": "18.2.14",
+    "@angular/platform-browser-dynamic": "18.2.14",
     "@bpmn-io/dmn-migrate": "0.5.0",
     "@ctrl/ngx-codemirror": "6.1.0",
     "@fortawesome/fontawesome-free": "5.15.4",
@@ -86,7 +86,7 @@
     "prismjs": "1.30.0",
     "rxjs": "7.8.2",
     "svg-pan-zoom": "3.6.2",
-    "zone.js": "0.14.10"
+    "zone.js": "0.16.3"
   },
   "overrides": {
     "ngx-jodit": {
@@ -98,7 +98,7 @@
     "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-devkit/build-angular": "18.2.21",
     "@angular/cli": "^18.2.19",
-    "@angular/compiler-cli": "18.2.13",
+    "@angular/compiler-cli": "18.2.14",
     "@microsoft/eslint-formatter-sarif": "3.1.0",
     "@stylistic/eslint-plugin": "4.4.1",
     "@types/diff-match-patch": "^1.0.32",

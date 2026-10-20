@@ -571,6 +571,16 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
   }
 
   private editDefaultProfile(items: DefaultProfileItem[]) {
+    const parentCatalogueItem
+      = [
+        CatalogueItemDomainType.DataElement,
+        CatalogueItemDomainType.DataClass
+      ].includes(this.catalogueItem.domainType)
+        ? this.catalogueItem.breadcrumbs?.find(
+          breadcrumb => breadcrumb.domainType === CatalogueItemDomainType.DataModel
+        ) ?? this.catalogueItem
+        : this.catalogueItem.breadcrumbs?.[0] ?? this.catalogueItem;
+
     this.editing
       .openDialog<
         DefaultProfileEditorModalComponent,
@@ -579,9 +589,7 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
       >(DefaultProfileEditorModalComponent, {
         data: {
           items,
-          parentCatalogueItem: this.catalogueItem.breadcrumbs
-            ? this.catalogueItem.breadcrumbs[0]
-            : this.catalogueItem,
+          parentCatalogueItem,
           currentCatalogueItem: this.catalogueItem
         },
         panelClass: 'full-width-dialog'

@@ -210,7 +210,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div *ngIf="!allDataTypesMap[record?.domainType]?.displayLabel">
-          {{ allDataTypesMap[record.modelResourceDomainType]['displayLabel'] }}
+          {{ allDataTypesMap[record.modelResourceDomainType]?.displayLabel ?? 'Unknown' }}
         </div>
         <div class="full-width">
           <mdm-element-data-type

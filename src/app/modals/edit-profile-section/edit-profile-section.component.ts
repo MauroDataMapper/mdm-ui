@@ -19,9 +19,8 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   Pathable,
-  ProfileField, ProfileSection,
-  ProfileValidationError,
-  ProfileValidationErrorList
+  ProfileField,
+  ProfileSection
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
@@ -56,17 +55,11 @@ import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code
 })
 export class EditProfileSectionComponent implements OnInit {
   @Input() profileSection: ProfileSection;
+  @Input() showValidationErrors = false;
 
   description?: string;
   okBtnText: string;
   showCanEditPropertyAlert = true;
-  validationErrors: ProfileValidationErrorList = {
-    total: 0,
-    fieldTotal: 0,
-    errors: []
-  };
-
-  isValidated = false;
 
   formOptionsMap = {
     integer: 'number',
@@ -95,30 +88,32 @@ export class EditProfileSectionComponent implements OnInit {
     protected editing: EditingService
   ) {
     data.profile.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        if (data.isNew && field.defaultValue) {
-          field.currentValue = field.defaultValue;
-        }
-        if (field.dataType === 'boolean') {
-          if (field.currentValue !== 'true') {
-            field.currentValue = 'false';
+      if (section.fields) {
+        section.fields.forEach((field) => {
+          if (data.isNew && field.defaultValue) {
+            field.currentValue = field.defaultValue;
           }
-        }
-        if (field.dataType === 'folder') {
-          if (
-            field.currentValue === '[]'
-            || field.currentValue === '""'
-            || field.currentValue === ''
-          ) {
-            field.currentValue = null;
+          if (field.dataType === 'boolean') {
+            if (field.currentValue !== 'true') {
+              field.currentValue = 'false';
+            }
           }
- else {
-            field.currentValue = JSON.parse(field.currentValue);
+          if (field.dataType === 'folder') {
+            if (
+              field.currentValue === '[]'
+              || field.currentValue === '""'
+              || field.currentValue === ''
+            ) {
+              field.currentValue = null;
+            }
+            else {
+              field.currentValue = JSON.parse(field.currentValue);
+            }
           }
-        }
 
-        this.attachReadOnlyPropertyToField(field);
-      });
+          this.attachReadOnlyPropertyToField(field);
+        });
+      }
     });
 
     this.description = data.description;
@@ -131,19 +126,21 @@ export class EditProfileSectionComponent implements OnInit {
   save() {
   }
 
-  getValidationError(
-    metadataPropertyName: string
-  ): ProfileValidationError | undefined {
-    if (this.validationErrors.fieldTotal === 0) {
-      return undefined;
+  getValidationErrors(field: ProfileField): string[] {
+    if (!this.showValidationErrors) {
+      return [];
     }
 
-    return this.validationErrors.errors.find(
-      e => e.metadataPropertyName === metadataPropertyName
-    );
+    const errors = field['errors'];
+    return Array.isArray(errors)
+      ? errors.filter((error): error is string => typeof error === 'string')
+      : [];
   }
 
   sortBy(items: []) {
+    if (!items || items.length === 0) {
+      return items;
+    }
     return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
   }
 

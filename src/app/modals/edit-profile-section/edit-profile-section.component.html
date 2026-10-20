@@ -180,8 +180,8 @@ SPDX-License-Identifier: Apache-2.0
           >
           </mdm-model-selector-tree>
         </div>
-        <mat-error *ngIf="getValidationError(field.metadataPropertyName)">
-          {{ getValidationError(field.metadataPropertyName).message }}
+        <mat-error *ngFor="let error of getValidationErrors(field)">
+          {{ error }}
         </mat-error>
       </td>
     </tr>
@@ -189,7 +189,8 @@ SPDX-License-Identifier: Apache-2.0
     <tr
       *ngFor="let section of this.profileSection.sections"
       mdm-edit-profile-section
-      [profileSection]="section">
+      [profileSection]="section"
+      [showValidationErrors]="showValidationErrors">
     </tr>
   </table>
 </td>

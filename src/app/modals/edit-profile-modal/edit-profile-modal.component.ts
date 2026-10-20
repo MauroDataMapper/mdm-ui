@@ -22,6 +22,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogCont
 import {
   ApiProperty,
   ApiPropertyIndexResponse, Pathable,
+  MdmResponse,
   Profile,
   ProfileField,
   ProfileValidationError,
@@ -33,7 +34,7 @@ import { ElementSelectorComponent } from '@mdm/utility/element-selector.componen
 import { MessageHandlerService } from '@mdm/services';
 import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import {
   EditProfileModalConfiguration,
   EditProfileModalResult
@@ -101,30 +102,32 @@ export class EditProfileModalComponent implements OnInit {
     protected editing: EditingService
   ) {
     data.profile.sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        if (data.isNew && field.defaultValue) {
-          field.currentValue = field.defaultValue;
-        }
-        if (field.dataType === 'boolean') {
-          if (field.currentValue !== 'true') {
-            field.currentValue = 'false';
+      if (section.fields) {
+        section.fields.forEach((field) => {
+          if (data.isNew && field.defaultValue) {
+            field.currentValue = field.defaultValue;
           }
-        }
-        if (field.dataType === 'folder') {
-          if (
-            field.currentValue === '[]'
-            || field.currentValue === '""'
-            || field.currentValue === ''
-          ) {
-            field.currentValue = null;
+          if (field.dataType === 'boolean') {
+            if (field.currentValue !== 'true') {
+              field.currentValue = 'false';
+            }
           }
-          else {
-            field.currentValue = JSON.parse(field.currentValue);
+          if (field.dataType === 'folder') {
+            if (
+              field.currentValue === '[]'
+              || field.currentValue === '""'
+              || field.currentValue === ''
+            ) {
+              field.currentValue = null;
+            }
+            else {
+              field.currentValue = JSON.parse(field.currentValue);
+            }
           }
-        }
 
-        this.attachReadOnlyPropertyToField(field);
-      });
+          this.attachReadOnlyPropertyToField(field);
+        });
+      }
     });
 
     this.profileData = data.profile;
@@ -186,15 +189,18 @@ export class EditProfileModalComponent implements OnInit {
         );
 
         returnData.sections.forEach((section) => {
-          section.fields.forEach((field) => {
-            if (
-              field.dataType === 'folder'
-              && field.currentValue
-              && field.currentValue.length > 0
-            ) {
-              field.currentValue = JSON.stringify(field.currentValue);
-            }
-          });
+          if (section.fields) {
+            section.fields.forEach((field) => {
+              delete field.errors;
+              if (
+                field.dataType === 'folder'
+                && field.currentValue
+                && field.currentValue.length > 0
+              ) {
+                field.currentValue = JSON.stringify(field.currentValue);
+              }
+            });
+          }
         });
 
         this.dialogRef.close({
@@ -214,19 +220,10 @@ export class EditProfileModalComponent implements OnInit {
 
   validate() {
     this.validateData().subscribe(
-      errorList => (this.validationErrors = errorList)
-    );
-  }
-
-  getValidationError(
-    metadataPropertyName: string
-  ): ProfileValidationError | undefined {
-    if (this.validationErrors.fieldTotal === 0) {
-      return undefined;
-    }
-
-    return this.validationErrors.errors.find(
-      e => e.metadataPropertyName === metadataPropertyName
+      (errorList) => {
+        this.validationErrors = errorList;
+        this.isValidated = true;
+      }
     );
   }
 
@@ -263,18 +260,70 @@ export class EditProfileModalComponent implements OnInit {
         this.data.profile.version as string
       )
       .pipe(
-        map<unknown, ProfileValidationErrorList>(() => {
-          return {
-            total: 0,
-            fieldTotal: 0,
-            errors: []
-          };
+        map((response: MdmResponse<Profile>) => {
+          const errorList = this.getValidationErrorsFromProfile(response.body);
+          this.applyFieldValidationErrors(errorList.errors);
+          return errorList;
         }),
         catchError((error: HttpErrorResponse) => {
-          return of(error.error as ProfileValidationErrorList);
-        }),
-        finalize(() => (this.isValidated = true))
+          const errorList = error.error as ProfileValidationErrorList;
+          this.applyFieldValidationErrors(errorList.errors);
+          return of(errorList);
+        })
       );
+  }
+
+  private getValidationErrorsFromProfile(profile: Profile): ProfileValidationErrorList {
+    const errors: ProfileValidationError[] = [];
+    const addSectionErrors = (sections: Profile['sections']) => {
+      sections?.forEach((section) => {
+        section.fields?.forEach((field) => {
+          const fieldErrors = this.getFieldValidationMessages(field);
+          fieldErrors.forEach((message) => {
+            errors.push({
+              fieldName: field.fieldName,
+              metadataPropertyName: field.metadataPropertyName,
+              message
+            });
+          });
+        });
+        addSectionErrors(section.sections);
+      });
+    };
+    addSectionErrors(profile.sections);
+
+    return {
+      errors,
+      total: errors.length,
+      fieldTotal: new Set(errors.map(error => error.metadataPropertyName)).size
+    };
+  }
+
+  private applyFieldValidationErrors(errors: ProfileValidationError[]) {
+    const applyToSections = (sections: Profile['sections']) => {
+      sections?.forEach((section) => {
+        section.fields?.forEach((field) => {
+          field.errors = errors
+            .filter(error =>
+              error.fieldName === field.fieldName
+              && (
+                !error.metadataPropertyName
+                || error.metadataPropertyName === field.metadataPropertyName
+              )
+            )
+            .map(error => error.message);
+        });
+        applyToSections(section.sections);
+      });
+    };
+    applyToSections(this.profileData.sections);
+  }
+
+  private getFieldValidationMessages(field: ProfileField): string[] {
+    const errors = field['errors'];
+    return Array.isArray(errors)
+      ? errors.filter((error): error is string => typeof error === 'string')
+      : [];
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {

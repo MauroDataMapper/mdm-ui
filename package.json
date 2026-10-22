@@ -41,7 +41,7 @@
     "@ag-grid-community/styles": "31.3.4",
     "@angular/animations": "18.2.13",
     "@angular/cdk": "18.2.14",
-    "@angular/common": "18.2.13",
+    "@angular/common": "19.2.16",
     "@angular/core": "18.2.13",
     "@angular/flex-layout": "15.0.0-beta.42",
     "@angular/forms": "18.2.13",

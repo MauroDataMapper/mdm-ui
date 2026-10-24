@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
       <mat-label>Language</mat-label>
       <mat-select
         [(ngModel)]="language"
-        [disabled]="!inEditMode"
+        [disabled]="!inEditMode || pinLanguage"
         (selectionChange)="onLanguageChange()"
       >
         <mat-option

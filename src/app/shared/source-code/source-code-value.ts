@@ -20,32 +20,62 @@ export interface SourceCodeValue {
   source: string
 }
 
+export type SourceCodeValueFormat = 'sourcecode' | 'plain';
+
+export interface SourceCodeEditorOptions {
+  fixedLanguage?: string
+  pinLanguage?: boolean
+  valueFormat?: SourceCodeValueFormat
+}
+
 export const defaultSourceCodeLanguage = 'text';
 
-export const encodeSourceCodeValue = (value: SourceCodeValue): string =>
-  JSON.stringify({
+export const encodeSourceCodeValue = (
+  value: SourceCodeValue,
+  valueFormat: SourceCodeValueFormat = 'sourcecode'
+): string => {
+  if (valueFormat === 'plain') {
+    return value.source ?? '';
+  }
+
+  return JSON.stringify({
     language: value.language || defaultSourceCodeLanguage,
     source: value.source ?? ''
   });
+};
 
-export const decodeSourceCodeValue = (value?: string): SourceCodeValue => {
+export const decodeSourceCodeValue = (
+  value?: string,
+  options?: SourceCodeEditorOptions
+): SourceCodeValue => {
+  const language = options?.fixedLanguage || defaultSourceCodeLanguage;
+
   if (!value) {
     return {
-      language: defaultSourceCodeLanguage,
+      language,
       source: ''
+    };
+  }
+
+  if (options?.valueFormat === 'plain') {
+    return {
+      language,
+      source: value
     };
   }
 
   try {
     const parsed = JSON.parse(value);
     return {
-      language: parsed.language || defaultSourceCodeLanguage,
+      language: options?.pinLanguage
+        ? language
+        : parsed.language || language,
       source: parsed.source ?? parsed.representation ?? ''
     };
   }
  catch {
     return {
-      language: defaultSourceCodeLanguage,
+      language,
       source: value
     };
   }
@@ -53,3 +83,22 @@ export const decodeSourceCodeValue = (value?: string): SourceCodeValue => {
 
 export const isSourceCodeProfileDataType = (dataType?: string): boolean =>
   dataType === 'sourcecode';
+
+export const isCodeEditorProfileDataType = (dataType?: string): boolean =>
+  dataType === 'sourcecode' || dataType === 'json';
+
+export const getSourceCodeEditorOptionsForDataType = (
+  dataType?: string
+): SourceCodeEditorOptions => {
+  if (dataType === 'json') {
+    return {
+      fixedLanguage: 'json',
+      pinLanguage: true,
+      valueFormat: 'plain'
+    };
+  }
+
+  return {
+    valueFormat: 'sourcecode'
+  };
+};

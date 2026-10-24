@@ -44,12 +44,15 @@ SPDX-License-Identifier: Apache-2.0
           id="{{ field.fieldName }}"
           [inEditMode]="false"
           [rootElement]="rootObject"
-          *ngIf="field.dataType === 'text' && !isSourceCode(field.dataType)"
+          *ngIf="field.dataType === 'text' && !isCodeEditor(field.dataType)"
         ></mdm-content-editor>
         <mdm-source-code-editor
           [(value)]="field.currentValue"
           [inEditMode]="false"
-          *ngIf="isSourceCode(field.dataType)"
+          [fixedLanguage]="codeEditorFixedLanguage(field.dataType)"
+          [pinLanguage]="codeEditorPinLanguage(field.dataType)"
+          [valueFormat]="codeEditorValueFormat(field.dataType)"
+          *ngIf="isCodeEditor(field.dataType)"
         ></mdm-source-code-editor>
         <input
           type="checkbox"
@@ -71,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
             field.dataType !== 'folder' &&
             field.dataType !== 'model' &&
             field.dataType != 'text' &&
-            !isSourceCode(field.dataType) &&
+            !isCodeEditor(field.dataType) &&
             field.dataType != 'date' &&
             field.dataType != 'datetime' &&
             field.dataType != 'boolean'

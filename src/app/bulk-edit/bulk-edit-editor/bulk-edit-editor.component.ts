@@ -63,7 +63,8 @@ import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import {
   decodeSourceCodeValue,
-  isSourceCodeProfileDataType
+  getSourceCodeEditorOptionsForDataType,
+  isCodeEditorProfileDataType
 } from '@mdm/shared/source-code/source-code-value';
 
 @Component({
@@ -361,14 +362,19 @@ export class BulkEditEditorComponent implements OnInit {
       };
     }
 
-    if (isSourceCodeProfileDataType(field.dataType as string)) {
+    if (isCodeEditorProfileDataType(field.dataType as string)) {
+      const sourceCodeEditorOptions = getSourceCodeEditorOptionsForDataType(
+        field.dataType as string
+      );
+
       column.cellEditor = 'sourceCodeCellEditor';
       column.cellEditorParams = {
+        ...sourceCodeEditorOptions,
         onFilePickerOpen: () => this.setStopEditingWhenCellsLoseFocus(false),
         onFilePickerClose: () => this.setStopEditingWhenCellsLoseFocus(true)
       };
       column.valueFormatter = (params) => {
-        const value = decodeSourceCodeValue(params.value);
+        const value = decodeSourceCodeValue(params.value, sourceCodeEditorOptions);
         return value.source ? `${value.language}: ${value.source}` : '';
       };
     }

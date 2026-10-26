@@ -25,6 +25,7 @@ import 'brace/mode/javascript';
 import 'brace/mode/json';
 import 'brace/mode/typescript';
 import 'brace/mode/csharp';
+import 'brace/mode/html';
 import 'brace/mode/text';
 import 'brace/theme/github';
 import * as Prism from 'prismjs';

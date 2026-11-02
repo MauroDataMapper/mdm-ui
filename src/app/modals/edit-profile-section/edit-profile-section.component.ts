@@ -20,11 +20,12 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import {
   Pathable,
   ProfileField,
-  ProfileSection
+  ProfileSection,
+  Term
 } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
-import { MessageHandlerService } from '@mdm/services';
+import { GridService, MessageHandlerService } from '@mdm/services';
 import { MarkdownParserService } from '@mdm/content/markdown/markdown-parser/markdown-parser.service';
 import {
   EditProfileModalConfiguration,
@@ -45,13 +46,20 @@ import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
 import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
 import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import {
+  getProfileAllowedValueOptions,
+  ProfileAllowedValueOption
+} from '@mdm/shared/profile-field-values';
+
+type SelectedTerminologyTerm = Pick<Term, 'code'> & Partial<Pick<Term, 'definition'>>;
 
 @Component({
     selector: '[mdm-edit-profile-section]',
     templateUrl: './edit-profile-section.component.html',
     styleUrls: ['./edit-profile-section.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, NgFor, MatTooltip, ContentEditorComponent, SourceCodeEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError]
+    imports: [NgIf, FormsModule, NgFor, MatTooltip, ContentEditorComponent, SourceCodeEditorComponent, MatInput, NgClass, ExtendedModule, MatButton, MatFormField, MatSelect, MatOption, ModelSelectorTreeComponent, MatError, McSelectComponent]
 })
 export class EditProfileSectionComponent implements OnInit {
   @Input() profileSection: ProfileSection;
@@ -60,6 +68,10 @@ export class EditProfileSectionComponent implements OnInit {
   description?: string;
   okBtnText: string;
   showCanEditPropertyAlert = true;
+  private readonly selectedTerminologyTerms = new Map<
+    ProfileField,
+    SelectedTerminologyTerm[]
+  >();
 
   formOptionsMap = {
     integer: 'number',
@@ -83,6 +95,7 @@ export class EditProfileSectionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EditProfileModalConfiguration,
     private markdownParser: MarkdownParserService,
     protected resources: MdmResourcesService,
+    private gridService: GridService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     protected editing: EditingService
@@ -121,6 +134,14 @@ export class EditProfileSectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.profileSection.fields?.forEach((field) => {
+      if (this.isTerminologyField(field)) {
+        this.selectedTerminologyTerms.set(
+          field,
+          this.parseTerminologyCodes(field.currentValue).map(code => ({ code }))
+        );
+      }
+    });
   }
 
   save() {
@@ -137,15 +158,72 @@ export class EditProfileSectionComponent implements OnInit {
       : [];
   }
 
-  sortBy(items: []) {
-    if (!items || items.length === 0) {
-      return items;
-    }
-    return items.sort((a, b) => (a > b ? 1 : a === b ? 0 : -1));
+  getAllowedValueOptions(field: ProfileField): ProfileAllowedValueOption[] {
+    return getProfileAllowedValueOptions(field.allowedValues);
   }
 
   isSourceCode(field: ProfileField): boolean {
     return isSourceCodeProfileDataType(field.dataType as string);
+  }
+
+  isTerminologyField(field: ProfileField): boolean {
+    return field.dataType as string === 'terminology';
+  }
+
+  hasReferenceTerminology(field: ProfileField): boolean {
+    return !!this.referenceTerminologyId(field);
+  }
+
+  supportsMultipleTerminologyTerms(field: ProfileField): boolean {
+    return field.maxMultiplicity === -1 || field.maxMultiplicity > 1;
+  }
+
+  getSelectedTerminologyTerms(
+    field: ProfileField
+  ): SelectedTerminologyTerm | SelectedTerminologyTerm[] | null {
+    const selectedTerms = this.selectedTerminologyTerms.get(field) ?? [];
+    return this.supportsMultipleTerminologyTerms(field)
+      ? selectedTerms
+      : selectedTerms[0] ?? null;
+  }
+
+  fetchTerminologyTerms = (
+    text: string,
+    _loadAll: boolean,
+    offset: number,
+    limit: number,
+    field: ProfileField
+  ) => {
+    const terminologyId = this.referenceTerminologyId(field);
+    if (!terminologyId) {
+      throw new Error(`No terminology is configured for profile field "${field.fieldName}".`);
+    }
+
+    const options = this.gridService.constructOptions(
+      limit,
+      offset,
+      'code',
+      'asc',
+      text?.trim() ? { code: text } : {}
+    );
+    return this.resources.terms.list(terminologyId, options);
+  };
+
+  onTerminologyTermsSelected(
+    selected: SelectedTerminologyTerm | SelectedTerminologyTerm[] | null,
+    field: ProfileField
+  ): void {
+    const selectedTerms = Array.isArray(selected)
+      ? selected
+      : selected
+        ? [selected]
+        : [];
+    this.selectedTerminologyTerms.set(field, selectedTerms);
+    field.currentValue = JSON.stringify(selectedTerms.map(term => term.code));
+  }
+
+  getTerminologyCodes(value?: string): string[] {
+    return this.parseTerminologyCodes(value);
   }
 
   showAddElementToMarkdown(field: ProfileField) {
@@ -164,5 +242,28 @@ export class EditProfileSectionComponent implements OnInit {
     field.readOnly
       = field.uneditable
         || (this.data.finalised && !field.editableAfterFinalisation);
+  }
+
+  private referenceTerminologyId(field: ProfileField): string | undefined {
+    return (
+      field as ProfileField & { referenceTerminology?: string }
+    ).referenceTerminology;
+  }
+
+  private parseTerminologyCodes(value?: string): string[] {
+    if (!value) {
+      return [];
+    }
+
+    try {
+      const parsed: unknown = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((code): code is string => typeof code === 'string');
+      }
+      return typeof parsed === 'string' ? [parsed] : [];
+    }
+    catch {
+      return [value];
+    }
   }
 }

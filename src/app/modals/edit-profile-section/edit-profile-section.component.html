@@ -50,6 +50,33 @@ SPDX-License-Identifier: Apache-2.0
           [inEditMode]="!field.readOnly"
           *ngIf="isSourceCode(field)"
         ></mdm-source-code-editor>
+        <div *ngIf="isTerminologyField(field)">
+          <mdm-select
+            *ngIf="!field.readOnly && hasReferenceTerminology(field)"
+            [width]="'100%'"
+            [acceptTypedInput]="false"
+            [valueType]="'dynamic'"
+            [defaultValue]="getSelectedTerminologyTerms(field)"
+            [loadDynamicValues]="fetchTerminologyTerms"
+            [loadAllOnClick]="true"
+            [multiSelect]="supportsMultipleTerminologyTerms(field)"
+            [record]="field"
+            [idProperty]="'code'"
+            [displayProperty]="'code'"
+            [searchProperty]="'code'"
+            (selectEvent)="onTerminologyTermsSelected($event[0], $event[1])"
+          >
+            <ng-template #lineContent let-item>
+              <span [matTooltip]="item.definition">{{ item.code }}</span>
+            </ng-template>
+          </mdm-select>
+          <span *ngIf="field.readOnly || !hasReferenceTerminology(field)">
+            {{ getTerminologyCodes(field.currentValue).join(", ") }}
+          </span>
+          <mat-error *ngIf="!field.readOnly && !hasReferenceTerminology(field)">
+            This field does not reference a Terminology.
+          </mat-error>
+        </div>
 
         <input
           type="checkbox"
@@ -75,7 +102,8 @@ SPDX-License-Identifier: Apache-2.0
                   field.dataType != 'date' &&
                   field.dataType != 'datetime' &&
                   field.dataType != 'boolean' &&
-                  field.dataType != 'enumeration'
+                  field.dataType != 'enumeration' &&
+                  !isTerminologyField(field)
                 "
         >
           <span *ngIf="field.uneditable">{{ field.currentValue }}</span>
@@ -156,10 +184,13 @@ SPDX-License-Identifier: Apache-2.0
               [disabled]="field.readOnly"
             >
               <mat-option
-                *ngFor="let value of sortBy(field.allowedValues)"
-                [value]="value"
+                *ngFor="let allowedValue of getAllowedValueOptions(field)"
+                [value]="allowedValue.code"
               >
-                {{ value }}
+                {{ allowedValue.code }}
+                <span *ngIf="allowedValue.value !== allowedValue.code">
+                  ({{ allowedValue.value }})
+                </span>
               </mat-option>
             </mat-select>
           </mat-form-field>

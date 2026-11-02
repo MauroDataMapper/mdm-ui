@@ -25,6 +25,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf, NgFor } from '@angular/common';
 import { SourceCodeEditorComponent } from '@mdm/shared/source-code/source-code-editor.component';
 import { isSourceCodeProfileDataType } from '@mdm/shared/source-code/source-code-value';
+import { formatProfileFieldCurrentValue } from '@mdm/shared/profile-field-values';
 
 @Component({
     selector: '[mdm-profile-section]',
@@ -47,6 +48,34 @@ export class ProfileSectionComponent {
     datetime: 'datetime',
     decimal: 'number'
   };
+
+  isTerminologyField(dataType: string): boolean {
+    return dataType === 'terminology';
+  }
+
+  getAllowedValueDisplay(field: ProfileSection['fields'][number]): string {
+    return formatProfileFieldCurrentValue(
+      field.currentValue,
+      field.allowedValues
+    );
+  }
+
+  getTerminologyCodes(value?: string): string[] {
+    if (!value) {
+      return [];
+    }
+
+    try {
+      const parsed: unknown = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((code): code is string => typeof code === 'string');
+      }
+      return typeof parsed === 'string' ? [parsed] : [];
+    }
+    catch {
+      return [value];
+    }
+  }
 
   isSourceCode(dataType: string): boolean {
     return isSourceCodeProfileDataType(dataType);

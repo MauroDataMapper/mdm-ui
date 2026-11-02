@@ -86,13 +86,11 @@ SPDX-License-Identifier: Apache-2.0
 
               <div
                 *ngIf="
-                  model.domainType === 'Terminology' &&
-                  !model.modelResourceId &&
-                  !terminologies
+                  model.domainType === 'TerminologyType' &&
+                  !model.modelResourceId
                 "
               >
-                There are no Terminologies available, so you cannot define
-                Terminology DataType!
+                Select a Terminology to define this Data Type.
               </div>
 
               <!--
@@ -117,16 +115,14 @@ SPDX-License-Identifier: Apache-2.0
             </div>
           </td>
           <td>
-            <div
-              *ngIf="model.domainType === 'TerminologyType' && terminologies"
-            >
+            <div *ngIf="model.domainType === 'TerminologyType'">
               <mdm-select
                 [width]="'100%'"
                 name="newDataTypeSelect"
                 [acceptTypedInput]="false"
-                [valueType]="'static'"
-                [staticValues]="terminologies"
-                [minInputLength]="1"
+                [valueType]="'dynamic'"
+                [loadDynamicValues]="fetchTerminologies"
+                [loadAllOnClick]="true"
                 [hasError]="false"
                 [idProperty]="'id'"
                 [displayProperty]="'label'"
@@ -138,14 +134,14 @@ SPDX-License-Identifier: Apache-2.0
                 </ng-template>
               </mdm-select>
             </div>
-            <div *ngIf="model.domainType === 'CodeSetType' && codesets">
+            <div *ngIf="model.domainType === 'CodeSetType'">
               <mdm-select
                 [width]="'100%'"
                 name="newDataTypeSelect"
                 [acceptTypedInput]="false"
-                [valueType]="'static'"
-                [staticValues]="codesets"
-                [minInputLength]="1"
+                [valueType]="'dynamic'"
+                [loadDynamicValues]="fetchCodeSets"
+                [loadAllOnClick]="true"
                 [hasError]="false"
                 [idProperty]="'id'"
                 [displayProperty]="'label'"

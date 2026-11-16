@@ -1,0 +1,144 @@
+.mdm-code-snippet {
+  margin: 1em 0;
+}
+
+.mdm-code-snippet__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  background: #eff4f8;
+}
+
+.mdm-code-snippet__language {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mdm-code-snippet__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mdm-code-snippet__copy:hover {
+  background: #f8f9fb;
+}
+
+.mdm-markdown-text-area pre,
+.mdm-html-editor pre {
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: #f8f9fb;
+}
+
+.mdm-code-snippet pre {
+  margin: 0;
+  border-radius: 0 0 4px 4px;
+}
+
+.mdm-markdown-text-area pre code,
+.mdm-html-editor pre code {
+  color: #1f2933;
+  font-family: Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  white-space: pre;
+}
+
+.mdm-markdown-text-area pre .token.comment,
+.mdm-markdown-text-area pre .token.prolog,
+.mdm-markdown-text-area pre .token.doctype,
+.mdm-markdown-text-area pre .token.cdata,
+.mdm-html-editor pre .token.comment,
+.mdm-html-editor pre .token.prolog,
+.mdm-html-editor pre .token.doctype,
+.mdm-html-editor pre .token.cdata {
+  color: #667085;
+}
+
+.mdm-markdown-text-area pre .token.punctuation,
+.mdm-html-editor pre .token.punctuation {
+  color: #475467;
+}
+
+.mdm-markdown-text-area pre .token.property,
+.mdm-markdown-text-area pre .token.tag,
+.mdm-markdown-text-area pre .token.boolean,
+.mdm-markdown-text-area pre .token.number,
+.mdm-markdown-text-area pre .token.constant,
+.mdm-markdown-text-area pre .token.symbol,
+.mdm-markdown-text-area pre .token.deleted,
+.mdm-html-editor pre .token.property,
+.mdm-html-editor pre .token.tag,
+.mdm-html-editor pre .token.boolean,
+.mdm-html-editor pre .token.number,
+.mdm-html-editor pre .token.constant,
+.mdm-html-editor pre .token.symbol,
+.mdm-html-editor pre .token.deleted {
+  color: #b42318;
+}
+
+.mdm-markdown-text-area pre .token.selector,
+.mdm-markdown-text-area pre .token.attr-name,
+.mdm-markdown-text-area pre .token.string,
+.mdm-markdown-text-area pre .token.char,
+.mdm-markdown-text-area pre .token.builtin,
+.mdm-markdown-text-area pre .token.inserted,
+.mdm-html-editor pre .token.selector,
+.mdm-html-editor pre .token.attr-name,
+.mdm-html-editor pre .token.string,
+.mdm-html-editor pre .token.char,
+.mdm-html-editor pre .token.builtin,
+.mdm-html-editor pre .token.inserted {
+  color: #067647;
+}
+
+.mdm-markdown-text-area pre .token.operator,
+.mdm-markdown-text-area pre .token.entity,
+.mdm-markdown-text-area pre .token.url,
+.mdm-markdown-text-area pre .language-css .token.string,
+.mdm-markdown-text-area pre .style .token.string,
+.mdm-html-editor pre .token.operator,
+.mdm-html-editor pre .token.entity,
+.mdm-html-editor pre .token.url,
+.mdm-html-editor pre .language-css .token.string,
+.mdm-html-editor pre .style .token.string {
+  color: #175cd3;
+}
+
+.mdm-markdown-text-area pre .token.atrule,
+.mdm-markdown-text-area pre .token.attr-value,
+.mdm-markdown-text-area pre .token.keyword,
+.mdm-html-editor pre .token.atrule,
+.mdm-html-editor pre .token.attr-value,
+.mdm-html-editor pre .token.keyword {
+  color: #6941c6;
+}
+
+.mdm-markdown-text-area pre .token.function,
+.mdm-markdown-text-area pre .token.class-name,
+.mdm-html-editor pre .token.function,
+.mdm-html-editor pre .token.class-name {
+  color: #b54708;
+}
+
+.mdm-markdown-text-area pre .token.regex,
+.mdm-markdown-text-area pre .token.important,
+.mdm-markdown-text-area pre .token.variable,
+.mdm-html-editor pre .token.regex,
+.mdm-html-editor pre .token.important,
+.mdm-html-editor pre .token.variable {
+  color: #c11574;
+}

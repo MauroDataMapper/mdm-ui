@@ -40,7 +40,10 @@ import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatInput } from '@angular/material/input';
-import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '@mdm/content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
@@ -63,6 +66,7 @@ type SelectedTerminologyTerm = Pick<Term, 'code'> & Partial<Pick<Term, 'definiti
 })
 export class EditProfileSectionComponent implements OnInit {
   @Input() profileSection: ProfileSection;
+  @Input() contentEditorSize: ContentEditorSize = 'normal';
   @Input() showValidationErrors = false;
 
   description?: string;

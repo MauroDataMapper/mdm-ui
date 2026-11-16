@@ -46,7 +46,10 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
 import { InlineTextEditComponent } from '../../shared/inline-text-edit/inline-text-edit.component';
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '../../content/content-editor/content-editor.component';
 import { ElementAliasComponent } from '../../utility/element-alias/element-alias.component';
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { EscapeHtmlPipe } from '@mdm/pipes/escapeHtml.pipe';
@@ -84,6 +87,17 @@ export class DefaultProfileEditorModalComponent implements OnInit {
 
   public get profileControlType(): typeof ProfileControlTypes {
     return ProfileControlTypes;
+  }
+
+  get contentEditorSize(): ContentEditorSize {
+    const hasLongTextItem = this.data.items?.some(
+      item => item.controlType === ProfileControlTypes.html
+    );
+    if (!hasLongTextItem) {
+      return 'normal';
+    }
+
+    return this.data.items.length === 1 ? 'fill' : 'expanded';
   }
 
   isSourceCode(item: DefaultProfileItem): boolean {

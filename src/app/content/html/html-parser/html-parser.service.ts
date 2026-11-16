@@ -20,6 +20,10 @@ import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import { UIRouter } from '@uirouter/core';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import {
+  addCodeSnippetControls,
+  highlightHtmlCodeBlocks
+} from '@mdm/shared/source-code/source-code-highlight';
 
 export interface HtmlParserContext {
   versionOrBranchOverride?: string
@@ -44,6 +48,8 @@ export class HtmlParserService {
   parseAndModify(original: string, rootObject: CatalogueItem, context: HtmlParserContext): string {
     const document = this.domParser.parseFromString(original, 'text/html');
     this.rewriteHrefs(document, context, rootObject);
+    highlightHtmlCodeBlocks(document);
+    addCodeSnippetControls(document);
 
     return document.body.innerHTML;
   }

@@ -20,6 +20,7 @@ import { isUrl } from '@mdm/content/content.utils';
 import { PathNameService } from '@mdm/shared/path-name/path-name.service';
 import * as marked from 'marked';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
+import { highlightSourceCode } from '@mdm/shared/source-code/source-code-highlight';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,15 @@ export class CustomHtmlRendererService extends marked.Renderer {
   }
 
   rootObject?: CatalogueItem;
+
+  code(code: string, language: string | undefined, escaped: boolean) {
+    const languageName = language?.match(/\S*/)?.[0];
+    if (!languageName) {
+      return super.code(code, languageName, escaped);
+    }
+
+    return super.code(highlightSourceCode(code, languageName), languageName, true);
+  }
 
   link(href: string, _: string, text: string) {
     if (!href) {

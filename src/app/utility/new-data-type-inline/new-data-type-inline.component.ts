@@ -36,7 +36,10 @@ import {
   ReferenceDataModelIndexResponse,
 } from '@maurodatamapper/mdm-resources';
 import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '../../content/content-editor/content-editor.component';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
@@ -65,6 +68,7 @@ export class NewDataTypeInlineComponent
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
   @Input() showLabelAndDescription = false;
+  @Input() editorSize: ContentEditorSize = 'normal';
 
   @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: DataType = {

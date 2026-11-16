@@ -28,15 +28,6 @@ import 'brace/mode/csharp';
 import 'brace/mode/html';
 import 'brace/mode/text';
 import 'brace/theme/github';
-import * as Prism from 'prismjs';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-csharp';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-markup';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-typescript';
 import { AceConfigInterface, AceModule } from 'ngx-ace-wrapper';
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgFor, NgIf } from '@angular/common';
@@ -56,6 +47,10 @@ import {
   defaultSourceCodeLanguage,
   encodeSourceCodeValue
 } from './source-code-value';
+import {
+  highlightSourceCode,
+  prismLanguageForSourceCode
+} from './source-code-highlight';
 
 @Component({
     selector: 'mdm-source-code-editor',
@@ -69,6 +64,7 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   @Output() valueChange = new EventEmitter<string>();
 
   @Input() inEditMode = true;
+  @Input() showFileUpload = true;
 
   language = defaultSourceCodeLanguage;
   source = '';
@@ -176,40 +172,13 @@ export class SourceCodeEditorComponent implements OnChanges, OnDestroy {
   }
 
   private highlightSource(): string {
-    const language = this.prismLanguage;
-    const grammar = Prism.languages[language];
-
-    if (!grammar) {
-      return this.escapeHtml(this.source);
-    }
-
-    return Prism.highlight(this.source ?? '', grammar, language);
+    return highlightSourceCode(this.source, this.language);
   }
 
   get prismLanguage(): string {
-    switch (this.language) {
-      case 'c#':
-        return 'csharp';
-      case 'dmn':
-        return 'markup';
-      case 'drools':
-        return 'clike';
-      case 'json-meql':
-        return 'json';
-      case 'text':
-        return 'none';
-      default:
-        return this.language;
-    }
-  }
-
-  private escapeHtml(value: string): string {
-    return (value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return this.language === 'text'
+      ? 'none'
+      : prismLanguageForSourceCode(this.language);
   }
 
   private copyText(value: string): Promise<void> {

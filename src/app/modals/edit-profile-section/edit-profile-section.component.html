@@ -43,6 +43,7 @@ SPDX-License-Identifier: Apache-2.0
           id="{{ field.fieldName }}"
           [inEditMode]="!field.uneditable"
           [rootElement]="data.catalogueItem"
+          [editorSize]="contentEditorSize"
           *ngIf="field.dataType === 'text' && !isSourceCode(field)"
         ></mdm-content-editor>
         <mdm-source-code-editor
@@ -221,6 +222,7 @@ SPDX-License-Identifier: Apache-2.0
       *ngFor="let section of this.profileSection.sections"
       mdm-edit-profile-section
       [profileSection]="section"
+      [contentEditorSize]="contentEditorSize"
       [showValidationErrors]="showValidationErrors">
     </tr>
   </table>

@@ -95,6 +95,14 @@ SPDX-License-Identifier: Apache-2.0
     </button>
     <button
       mat-icon-button
+      aria-label="Insert code snippet"
+      [disabled]="showPreview"
+      (click)="insertCodeSnippet()"
+    >
+      <span class="fas fa-code"></span>
+    </button>
+    <button
+      mat-icon-button
       aria-label="Link to catalogue element"
       [matTooltip]="keyboardShortcuts['mauroLink']"
       [disabled]="showPreview"
@@ -131,6 +139,10 @@ SPDX-License-Identifier: Apache-2.0
     #editableTextArea
     rows="{{ rows ? rows : '6' }}"
     placeholder="Start writing..."
+    [ngClass]="{
+      'mdm-markdown-text-area__edit--expanded': editorSize === 'expanded',
+      'mdm-markdown-text-area__edit--fill': editorSize === 'fill'
+    }"
   >
   </textarea>
   <div

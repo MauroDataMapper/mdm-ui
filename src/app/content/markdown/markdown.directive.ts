@@ -15,10 +15,22 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
+import {
+  Directive,
+  Input,
+  ElementRef,
+  Renderer2,
+  OnInit,
+  HostListener
+} from '@angular/core';
 import { MarkdownParserService } from './markdown-parser/markdown-parser.service';
 import { CatalogueItem } from '@maurodatamapper/mdm-resources';
 import DOMPurify from 'dompurify';
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  addCodeSnippetControls,
+  copyCodeSnippetFromClick
+} from '@mdm/shared/source-code/source-code-highlight';
 
 @Directive({
     selector: '[mdmMarkdown]',
@@ -57,7 +69,8 @@ export class MarkdownDirective implements OnInit {
   constructor(
     private markdownParser: MarkdownParserService,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private clipboard: Clipboard
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +84,14 @@ export class MarkdownDirective implements OnInit {
         html = `<span>${html}</span>`;
       }
       this.renderer.setProperty(this.el.nativeElement, 'innerHTML', DOMPurify.sanitize(html, { RETURN_TRUSTED_TYPE: false }));
+      if (this.renderType !== 'text') {
+        addCodeSnippetControls(this.el.nativeElement);
+      }
     }
+  }
+
+  @HostListener('click', ['$event'])
+  onCodeSnippetClick(event: MouseEvent): void {
+    copyCodeSnippetFromClick(event, text => this.clipboard.copy(text));
   }
 }

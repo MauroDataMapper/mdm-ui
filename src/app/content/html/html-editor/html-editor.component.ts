@@ -38,6 +38,13 @@ import { SafePipe } from '../../safe.pipe';
 import { FormsModule } from '@angular/forms';
 import { JoditConfig, NgxJoditComponent } from 'ngx-jodit';
 import { NgIf } from '@angular/common';
+import { CodeSnippetDialogComponent } from '../../code-snippet-dialog/code-snippet-dialog.component';
+import { decodeSourceCodeValue } from '@mdm/shared/source-code/source-code-value';
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  copyCodeSnippetFromClick,
+  prismLanguageForSourceCode
+} from '@mdm/shared/source-code/source-code-highlight';
 
 const basicButtons = [
   'bold',
@@ -54,7 +61,9 @@ const basicButtons = [
   'font',
   'fontsize',
   'brush',
-  'paragraph'
+  'paragraph',
+  '|',
+  'component:codesnippet'
 ];
 
 const standardButtons = [
@@ -75,6 +84,8 @@ const standardButtons = [
   'fontsize',
   'brush',
   'paragraph',
+  '|',
+  'component:codesnippet',
   '|',
   'table',
   'link',
@@ -114,6 +125,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   @Input() rootElement?: CatalogueItem;
 
   @Input() buttonMode: HtmlButtonMode;
+  @Input() editorSize: 'normal' | 'expanded' | 'fill' = 'normal';
   ButtonModeType = HtmlButtonMode;
 
   editorConfig: JoditConfig;
@@ -128,7 +140,8 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private pathNames: PathNameService,
     private resources: MdmResourcesService,
-    private htmlParser: HtmlParserService
+    private htmlParser: HtmlParserService,
+    private clipboard: Clipboard
   ) {}
 
   get allowAutocompleteSearch() {
@@ -139,11 +152,19 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.configureEditor();
+  }
+
+  private configureEditor(): void {
     const buttons = this.buildCustomButtonsToolbar(
       this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons
     );
 
     this.editorConfig = {
+      height: this.editorSize === 'fill'
+        ? 'calc(90vh - 320px)'
+        : 'auto',
+      ...(this.editorSize === 'expanded' && { minHeight: 300 }),
       buttons,
       buttonsMD: buttons,
       buttonsSM: buttons,
@@ -161,6 +182,10 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.editorSize && !changes.editorSize.firstChange) {
+      this.configureEditor();
+    }
+
     if (changes.description) {
       if (this.inEditMode) {
         // Nothing to display because the edit control is being used
@@ -192,6 +217,31 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       event.stopPropagation();
       this.onElementSearch(this, event.target);
     }
+  }
+
+  onCodeSnippetClick(event: MouseEvent): void {
+    copyCodeSnippetFromClick(event, text => this.clipboard.copy(text));
+  }
+
+  onInsertCodeSnippet(editor: any) {
+    const savedSelection = editor.selection.save();
+
+    this.dialog
+      .open(CodeSnippetDialogComponent, {
+        width: '750px',
+        maxWidth: '95vw'
+      })
+      .afterClosed()
+      .pipe(filter((value): value is string => !!value))
+      .subscribe((value) => {
+        const { language, source } = decodeSourceCodeValue(value);
+        const prismLanguage = prismLanguageForSourceCode(language);
+        const html = `<pre><code class="language-${prismLanguage}">${this.escapeHtml(source)}</code></pre>`;
+
+        editor.selection.restore(savedSelection);
+        editor.selection.focus();
+        editor.selection.insertHTML(html);
+      });
   }
 
   /**
@@ -294,6 +344,13 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
         text: 'Search for Catalogue Item',
         icon: 'search',
         exec: (editor: any) => this.onElementSearch(this, editor)
+      },
+      {
+        name: 'codesnippet',
+        text: 'Insert code snippet',
+        tooltip: 'Insert code snippet',
+        icon: 'code',
+        exec: (editor: any) => this.onInsertCodeSnippet(editor)
       }
     ];
 
@@ -325,5 +382,14 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
 
     const pathElements = this.pathNames.parse(pathableRootElement.path);
     return this.pathNames.getVersionOrBranchName(pathElements);
+  }
+
+  private escapeHtml(value: string): string {
+    return (value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 }

@@ -82,12 +82,38 @@ export const addCodeSnippetControls = (root: ParentNode): void => {
     const wrapper = ownerDocument.createElement('div');
     wrapper.className = 'mdm-code-snippet';
 
+    const source = code.textContent ?? '';
+    const sourceLines = source.replace(/\r\n?$/, '').split(/\r\n|\r|\n/).length;
+    const isCollapsed = sourceLines > 3;
+    if (isCollapsed) {
+      wrapper.classList.add('mdm-code-snippet--collapsed');
+    }
+
     const toolbar = ownerDocument.createElement('div');
     toolbar.className = 'mdm-code-snippet__toolbar';
 
     const label = ownerDocument.createElement('span');
     label.className = 'mdm-code-snippet__language';
     label.textContent = displayLanguageName(language);
+
+    const actions = ownerDocument.createElement('div');
+    actions.className = 'mdm-code-snippet__actions';
+
+    const toggleButton = ownerDocument.createElement('button');
+    toggleButton.type = 'button';
+    toggleButton.className = 'mdm-code-snippet__toggle';
+    toggleButton.setAttribute('data-code-snippet-toggle', '');
+    toggleButton.setAttribute('aria-expanded', String(!isCollapsed));
+    toggleButton.setAttribute(
+      'aria-label',
+      isCollapsed ? 'Expand code snippet' : 'Collapse code snippet'
+    );
+    toggleButton.title = isCollapsed ? 'Expand code snippet' : 'Collapse code snippet';
+
+    const toggleIcon = ownerDocument.createElement('span');
+    toggleIcon.className = `mdm-code-snippet__toggle-icon fas ${isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'}`;
+    toggleIcon.setAttribute('aria-hidden', 'true');
+    toggleButton.append(toggleIcon);
 
     const button = ownerDocument.createElement('button');
     button.type = 'button';
@@ -100,19 +126,45 @@ export const addCodeSnippetControls = (root: ParentNode): void => {
     icon.setAttribute('aria-hidden', 'true');
     button.append(icon, ownerDocument.createTextNode(' Copy'));
 
-    toolbar.append(label, button);
+    actions.append(toggleButton, button);
+    toolbar.append(label, actions);
     parent.insertBefore(wrapper, pre);
     wrapper.append(toolbar, pre);
   });
 };
 
-export const copyCodeSnippetFromClick = (
+export const handleCodeSnippetControlClick = (
   event: MouseEvent,
   copyText: (text: string) => boolean
 ): boolean => {
   const target = event.target;
   if (!(target instanceof Element)) {
     return false;
+  }
+
+  const toggleButton = target.closest<HTMLButtonElement>('[data-code-snippet-toggle]');
+  if (toggleButton) {
+    const wrapper = toggleButton.closest('.mdm-code-snippet');
+    if (!wrapper) {
+      return false;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const isCollapsed = wrapper.classList.toggle('mdm-code-snippet--collapsed');
+    toggleButton.setAttribute('aria-expanded', String(!isCollapsed));
+    toggleButton.setAttribute(
+      'aria-label',
+      isCollapsed ? 'Expand code snippet' : 'Collapse code snippet'
+    );
+    toggleButton.title = isCollapsed ? 'Expand code snippet' : 'Collapse code snippet';
+    const toggleIcon = toggleButton.querySelector('.mdm-code-snippet__toggle-icon');
+    if (toggleIcon) {
+      toggleIcon.classList.remove('fa-chevron-down', 'fa-chevron-up');
+      toggleIcon.classList.add(isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up');
+    }
+    return true;
   }
 
   const button = target.closest<HTMLButtonElement>('[data-code-snippet-copy]');

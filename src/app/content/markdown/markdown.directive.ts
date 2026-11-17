@@ -29,7 +29,7 @@ import DOMPurify from 'dompurify';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   addCodeSnippetControls,
-  copyCodeSnippetFromClick
+  handleCodeSnippetControlClick
 } from '@mdm/shared/source-code/source-code-highlight';
 
 @Directive({
@@ -92,6 +92,6 @@ export class MarkdownDirective implements OnInit {
 
   @HostListener('click', ['$event'])
   onCodeSnippetClick(event: MouseEvent): void {
-    copyCodeSnippetFromClick(event, text => this.clipboard.copy(text));
+    handleCodeSnippetControlClick(event, text => this.clipboard.copy(text));
   }
 }

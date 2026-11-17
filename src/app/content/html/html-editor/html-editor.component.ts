@@ -42,7 +42,7 @@ import { CodeSnippetDialogComponent } from '../../code-snippet-dialog/code-snipp
 import { decodeSourceCodeValue } from '@mdm/shared/source-code/source-code-value';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
-  copyCodeSnippetFromClick,
+  handleCodeSnippetControlClick,
   prismLanguageForSourceCode
 } from '@mdm/shared/source-code/source-code-highlight';
 
@@ -220,7 +220,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
   }
 
   onCodeSnippetClick(event: MouseEvent): void {
-    copyCodeSnippetFromClick(event, text => this.clipboard.copy(text));
+    handleCodeSnippetControlClick(event, text => this.clipboard.copy(text));
   }
 
   onInsertCodeSnippet(editor: any) {

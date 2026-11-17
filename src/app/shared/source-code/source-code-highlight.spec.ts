@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   addCodeSnippetControls,
-  copyCodeSnippetFromClick,
+  handleCodeSnippetControlClick,
   highlightHtmlCodeBlocks,
   highlightSourceCode,
   prismLanguageForSourceCode
@@ -58,17 +58,46 @@ describe('source-code highlighting', () => {
 
     expect(container.querySelector('.mdm-code-snippet__language')?.textContent)
       .toBe('JavaScript');
+    expect(container.querySelector('.mdm-code-snippet__toggle-icon')?.classList)
+      .toContain('fa-chevron-up');
 
     const button = container.querySelector<HTMLButtonElement>(
       '[data-code-snippet-copy]'
     );
     const copyText = jest.fn(() => true);
     container.addEventListener('click', event =>
-      copyCodeSnippetFromClick(event as MouseEvent, copyText)
+      handleCodeSnippetControlClick(event as MouseEvent, copyText)
     );
     button.click();
 
     expect(copyText).toHaveBeenCalledWith('const answer = 42;');
     expect(button.textContent).toBe('Copied');
+  });
+
+  it('collapses code snippets longer than three lines and allows expanding them', () => {
+    const container = document.createElement('div');
+    container.innerHTML
+      = '<pre><code class="language-javascript">line 1\nline 2\nline 3\nline 4</code></pre>';
+    addCodeSnippetControls(container);
+
+    const snippet = container.querySelector('.mdm-code-snippet');
+    const toggle = container.querySelector<HTMLButtonElement>(
+      '[data-code-snippet-toggle]'
+    );
+    container.addEventListener('click', event =>
+      handleCodeSnippetControlClick(event as MouseEvent, () => true)
+    );
+    expect(snippet.classList).toContain('mdm-code-snippet--collapsed');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle.querySelector('.mdm-code-snippet__toggle-icon')?.classList)
+      .toContain('fa-chevron-down');
+
+    toggle.click();
+
+    expect(snippet.classList).not.toContain('mdm-code-snippet--collapsed');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(toggle.textContent).toBe('');
+    expect(toggle.querySelector('.mdm-code-snippet__toggle-icon')?.classList)
+      .toContain('fa-chevron-up');
   });
 });

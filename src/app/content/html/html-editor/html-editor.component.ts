@@ -45,6 +45,7 @@ import {
   handleCodeSnippetControlClick,
   prismLanguageForSourceCode
 } from '@mdm/shared/source-code/source-code-highlight';
+import { rawToXml } from '@mdm/pipes/escapeHtml.pipe';
 
 const basicButtons = [
   'bold',
@@ -236,7 +237,7 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         const { language, source } = decodeSourceCodeValue(value);
         const prismLanguage = prismLanguageForSourceCode(language);
-        const html = `<pre><code class="language-${prismLanguage}">${this.escapeHtml(source)}</code></pre>`;
+        const html = `<pre><code class="language-${prismLanguage}">${rawToXml(source)}</code></pre>`;
 
         editor.selection.restore(savedSelection);
         editor.selection.focus();
@@ -382,14 +383,5 @@ export class HtmlEditorComponent implements OnInit, OnChanges {
 
     const pathElements = this.pathNames.parse(pathableRootElement.path);
     return this.pathNames.getVersionOrBranchName(pathElements);
-  }
-
-  private escapeHtml(value: string): string {
-    return (value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
   }
 }

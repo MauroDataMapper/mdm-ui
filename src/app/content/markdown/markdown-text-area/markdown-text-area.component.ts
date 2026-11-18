@@ -207,7 +207,12 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
       .pipe(filter((value): value is string => !!value))
       .subscribe((value) => {
         const { language, source } = decodeSourceCodeValue(value);
-        const snippet = `\`\`\`${language}\n${source}\n\`\`\``;
+        const longestRun = Math.max(
+          0,
+          ...(source.match(/`+/g) ?? []).map(run => run.length)
+        );
+        const fence = '`'.repeat(Math.max(3, longestRun + 1));
+        const snippet = `${fence}${language}\n${source}\n${fence}`;
 
         this.insertCodeBlock(snippet);
         this.onEditorChanged();

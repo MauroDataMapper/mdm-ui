@@ -418,7 +418,8 @@ export class BulkEditEditorComponent implements OnInit {
           value
         },
         minWidth: 800,
-        maxHeight: 600
+        height: '90vh',
+        maxHeight: '90vh'
       })
       .afterClosed()
       .pipe(filter(response => response.status === ModalDialogStatus.Ok))

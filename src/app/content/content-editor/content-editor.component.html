@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <mdm-markdown-text-area
   *ngIf="contentFormat === 'markdown'"
   [inEditMode]="inEditMode"
+  [editorSize]="editorSize"
   [description]="content"
   [hideHelpText]="!markdownOptions.showHelpText"
   [rootElement]="rootElement"
@@ -28,6 +29,7 @@ SPDX-License-Identifier: Apache-2.0
 <mdm-html-editor
   *ngIf="contentFormat === 'html'"
   [inEditMode]="inEditMode"
+  [editorSize]="editorSize"
   [description]="content"
   [rootElement]="rootElement"
   [buttonMode]="

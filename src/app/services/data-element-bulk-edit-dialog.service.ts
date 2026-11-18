@@ -35,7 +35,9 @@ export class DataElementBulkEditDialogService {
   open(dataElementIdList: any, parentDataModel: any, parentDataClass: any) {
     const dg = this.dialog.open(BulkEditModalComponent, {
         data: { dataElementIdList, parentDataModel, parentDataClass },
-        panelClass: 'bulk-edit-modal'
+        panelClass: 'bulk-edit-modal',
+        height: '90vh',
+        maxHeight: '90vh'
       });
 
     this.editingService.configureDialogRef(dg);

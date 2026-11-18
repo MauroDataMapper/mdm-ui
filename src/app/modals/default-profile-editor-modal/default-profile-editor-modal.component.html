@@ -37,6 +37,7 @@ SPDX-License-Identifier: Apache-2.0
             id="{{ item.value }}"
             [rootElement]="data.parentCatalogueItem"
             [inEditMode]="true"
+            [editorSize]="contentEditorSize"
           ></mdm-content-editor>
           <mdm-source-code-editor
             *ngIf="isSourceCode(item)"
@@ -128,6 +129,7 @@ SPDX-License-Identifier: Apache-2.0
                 [showClassification]="false"
                 [showParentDataModel]="false"
                 [showLabelAndDescription]="false"
+                [editorSize]="'expanded'"
                 (validationStatusEvent)="validationStatusEventHandler($event)"
               >
               </mdm-data-type-inline>

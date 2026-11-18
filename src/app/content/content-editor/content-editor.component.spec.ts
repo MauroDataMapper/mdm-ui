@@ -41,4 +41,13 @@ describe('ContentEditorComponent', () => {
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
   });
+
+  it.each([
+    ['fenced HTML code', '```html\n<div>example</div>\n```', false],
+    ['an HTML fragment', '<div>example</div>', true]
+  ])('should identify %s correctly', (_description, content, expected) => {
+    harness.component.content = content;
+
+    expect(harness.component.isHtmlContent()).toBe(expected);
+  });
 });

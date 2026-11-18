@@ -43,7 +43,9 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
     imports: [NgIf, NgFor, NgClass, ExtendedModule, FormsModule, NgStyle, NgTemplateOutlet]
 })
 export class McSelectComponent implements OnInit, AfterViewInit {
-  @Output() paginationChanged = new EventEmitter<any>();
+  private readonly defaultPageSize = 20;
+
+  @Output() paginationChanged = new EventEmitter<McSelectPagination>();
   @Output() defaultValueChanged = new EventEmitter<any>();
   @Input() loadAllOnClick: boolean;
   @Input() acceptTypedInput: boolean;
@@ -75,7 +77,11 @@ export class McSelectComponent implements OnInit, AfterViewInit {
   wasInside = false;
   inputText: any;
   defaultVal: any;
-  paginationVal: McSelectPagination;
+  paginationVal: McSelectPagination = {
+    offset: 0,
+    limit: this.defaultPageSize
+  };
+
   loadingDynamicData: boolean;
   processing: boolean;
   show: boolean;
@@ -90,13 +96,17 @@ export class McSelectComponent implements OnInit, AfterViewInit {
     this.show = false;
   }
 
-  @Input() get pagination() {
+  @Input() get pagination(): McSelectPagination {
     return this.paginationVal;
   }
 
-  set pagination(val) {
-    this.paginationVal = val;
-    this.paginationChanged.emit(val);
+  set pagination(val: McSelectPagination) {
+    this.paginationVal = {
+      offset: val?.offset ?? 0,
+      limit: val?.limit ?? this.defaultPageSize,
+      count: val?.count
+    };
+    this.paginationChanged.emit(this.paginationVal);
   }
 
   @Input() get defaultValue() {
@@ -119,8 +129,13 @@ export class McSelectComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setDefaultValue();
-    this.pagination = { offset: undefined, count: undefined };
+    this.pagination = {
+      offset: 0,
+      limit: this.defaultPageSize,
+      count: undefined
+    };
     this.showCaret = true;
+    this.loadingDynamicData = false;
 
     this.inputStyle = { width: this.width, padding: '6px 40px 6px 12px' };
     this.holderStyle = { 'width': this.width, 'background-color': '#FFF' };
@@ -338,17 +353,17 @@ export class McSelectComponent implements OnInit, AfterViewInit {
     }
 
     this.pagination = {
-      offset: undefined,
+      offset: 0,
+      limit: this.pagination.limit ?? this.defaultPageSize,
       count: undefined
     };
 
-    let searchText = this.inputText;
+    let searchText = this.inputText ?? '';
 
-    if (this.minInputLength && this.inputText.trim().length < this.minInputLength) {
+    if (this.minInputLength && searchText.trim().length < this.minInputLength) {
       searchText = '';
     }
-    // Don't search on the empty string
-    if (searchText !== '') {
+    if (searchText !== '' || this.loadAllOnClick) {
       this.filterValues(searchText).then((result) => {
         this.show = true;
         this.displayValues = Object.assign([], result);
@@ -368,7 +383,7 @@ export class McSelectComponent implements OnInit, AfterViewInit {
 
   filterValues(inputValue) {
     const found = [];
-    const p = new Promise((resolve) => {
+    return new Promise((resolve) => {
       if (this.valueType === 'static') {
         if (inputValue.trim().length === 0) {
           resolve(this.staticValues);
@@ -387,65 +402,55 @@ export class McSelectComponent implements OnInit, AfterViewInit {
         }
       }
  else if (this.valueType === 'dynamic') {
-        if ((inputValue && inputValue.trim().length === 0) || !this.loadDynamicValues) {
-          resolve([]);
-        }
-        let loadAll = false;
-        if (!inputValue && this.loadAllOnClick) {
-          loadAll = true;
-        }
-        const query = this.loadDynamicValues(inputValue, loadAll, this.pagination.offset, this.pagination.limit);
-        this.loadingDynamicData = true;
-        query.subscribe((result) => {
-           this.pagination.count = 100;
-         //  if (result.body.count != null && result.body.count !== undefined) {
-         //  }
-
-          if (result.body.items) {
-             resolve(result.body.items);
+          const isEmptySearch = !inputValue || inputValue.trim().length === 0;
+          if ((isEmptySearch && !this.loadAllOnClick) || !this.loadDynamicValues) {
+            resolve([]);
+            return;
           }
-
-          if (result.body.rows) {
-            resolve(result.body.rows);
-         }
-          this.loadingDynamicData = false;
-        }, () => {
+          const offset = this.pagination.offset ?? 0;
+          const limit = this.pagination.limit ?? this.defaultPageSize;
+          const query = this.record === undefined
+            ? this.loadDynamicValues(inputValue, isEmptySearch, offset, limit)
+            : this.loadDynamicValues(inputValue, isEmptySearch, offset, limit, this.record);
+          this.loadingDynamicData = true;
+          query.subscribe((result) => {
+            const items = result.body.items ?? result.body.rows ?? [];
+            const count = result.body.count
+              ?? (items.length < limit ? offset + items.length : undefined);
+            this.pagination = { offset, limit, count };
+            resolve(items);
+            this.loadingDynamicData = false;
+          }, () => {
             this.loadingDynamicData = false;
           });
       }
     });
-    return p;
   }
 
   loadMore() {
-    // if dynamic and is not loading
-    // if it's loading, so do not load it again
-    if (this.valueType === 'dynamic' && this.loadingDynamicData === false) {
-       const loadedSoFar = this.pagination.offset + this.pagination.limit;
-       console.log(loadedSoFar, this.pagination.count);
-      if (loadedSoFar > 0 && this.pagination.count <= loadedSoFar) {
-        return;
+    if (this.valueType === 'dynamic' && !this.loadingDynamicData) {
+      const offset = this.pagination.offset ?? 0;
+      const limit = this.pagination.limit ?? this.defaultPageSize;
+      const nextOffset = offset + limit;
+      if (this.pagination.count !== undefined && nextOffset >= this.pagination.count) {
+          return;
       }
       const inputValue = this.inputText;
       this.loadingDynamicData = true;
-      this.pagination.offset += this.pagination.limit;
       this.changeRef.detectChanges();
 
-      console.log(this.pagination);
-      this.loadDynamicValues(inputValue, false, this.pagination.offset, this.pagination.limit).subscribe((result) => {
-        // append to this.displayValues
-
-        if (result.body.items) {
-           this.displayValues = this.displayValues.concat(result.body.items);
-         }
-
-         if (result.body.rows) {
-            this.displayValues = this.displayValues.concat(result.body.rows);
-     }
-
-        this.loadingDynamicData = false;
+      const query = this.record === undefined
+        ? this.loadDynamicValues(inputValue, false, nextOffset, limit)
+        : this.loadDynamicValues(inputValue, false, nextOffset, limit, this.record);
+      query.subscribe((result) => {
+          const items = result.body.items ?? result.body.rows ?? [];
+          this.displayValues = this.displayValues.concat(items);
+          const count = result.body.count
+            ?? (items.length < limit ? nextOffset + items.length : undefined);
+          this.pagination = { offset: nextOffset, limit, count };
+          this.loadingDynamicData = false;
       }, () => {
-        this.loadingDynamicData = false;
+          this.loadingDynamicData = false;
       });
     }
   }

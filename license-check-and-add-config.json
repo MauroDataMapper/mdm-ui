@@ -4,6 +4,7 @@
     ".git",
     ".github",
     "coverage",
+    "mdm-resources/**",
     "releases",
     "eslint",
     ".idea",

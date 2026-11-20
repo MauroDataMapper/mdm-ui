@@ -2,214 +2,200 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ "**" ]
-  pull_request_target:
-    types: [ opened, synchronize ]
+    branches: ["**"]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  ci:
     permissions:
-      statuses: write
-      checks: write
-      contents: write
-      pull-requests: write
-      actions: write
-      security-events: write
-    defaults:
-      run:
-        working-directory: ./mdm-ui # Only applies to `run` steps
+      contents: read
+    uses: MauroDataMapper/mauro-ci/.github/workflows/node-ci.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      node-version: "24.16.0"
+      working-directory: .
+      cache-dependency-path: package-lock.json
+      linked-package-repository: ${{ github.ref != 'refs/heads/main' && 'MauroDataMapper/mdm-resources' || '' }}
+      linked-package-ref: refs/heads/develop
+      linked-package-path: mdm-resources
+      linked-package-name: "@maurodatamapper/mdm-resources"
+      linked-package-use-npm-ci: false
+      verify-tools: |
+        tsc
+        jest
+      verify-dependencies: |
+        jsdom
+        jest
+        ts-jest
+        @angular/core
+      report-symlinked-names: true
+      license-script: license-check
+      license-argument: check
+      test-executable: npx
+      test-arguments: --no-install jest --coverage
+      lint-script: eslint-junit
+      lint-continue-on-error: true
+      sarif-script: eslint-sarif
+      sarif-continue-on-error: true
+      build-script: dist
+      test-junit-path: test-report/junit.xml
+      lint-junit-path: eslint/eslint-junit.xml
+      sarif-path: eslint/eslint_report.sarif
+      build-artifact-path: dist/*.tgz
+      build-artifact-name: mdm-ui-dist-original
 
+  build-nhs:
+    needs: ci
+    if: needs.ci.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
     steps:
-      - name: Get User Permission
-        if: ${{ github.event_name == 'pull_request_target' }}
-        id: checkAccess
-        uses: actions-cool/check-user-permission@v2
+      - name: Checkout mdm-ui
+        uses: actions/checkout@v6.1.0
         with:
-          require: write
-          username: ${{ github.triggering_actor }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
-      - name: Check User Permission
-        if: ${{ github.event_name == 'pull_request_target' && steps.checkAccess.outputs.require-result == 'false' }}
-        run: |
-          echo "${{ github.triggering_actor }} does not have permissions on this repo."
-          echo "Current permission level is ${{ steps.checkAccess.outputs.user-permission }}"
-          echo "Job originally triggered by ${{ github.actor }}"
-          exit 1
-
-      - name: Checkout PR head (gated for pull_request_target)
-        if: ${{ github.event_name == 'pull_request_target' && steps.checkAccess.outputs.require-result == 'true' }}
-        uses: actions/checkout@v6
+      - name: Set up Node.js and install dependencies
+        uses: MauroDataMapper/mauro-ci/actions/setup-node-npm@7f1066948f95a797f99a160545acf2b7145b886b
         with:
-          ref: ${{ github.event.pull_request.head.sha }} # This is dangerous without the first access check
-          path: ./mdm-ui
+          node-version: "24.16.0"
+          working-directory: .
+          cache-dependency-path: package-lock.json
 
-      - name: Checkout default (push/pull_request)
-        if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v6
+      - name: Build distribution with NHS Digital theme
+        uses: MauroDataMapper/mauro-ci/actions/run-npm-script@7f1066948f95a797f99a160545acf2b7145b886b
         with:
-          path: ./mdm-ui
-
-      - name: Install and configure
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24.16.0'
-
-      - name: Install tools
-        run: |
-          npm i -g npm@11.13.0
-          npm i -g @angular/cli
-          npm i -g symlinked
-          npm i -g npm-check
-
-      - name: Check tool versions
-        run: |
-          node --version
-          npm --version
-
-
-      - name: Clean install dependencies
-        run: |
-          npm config set registry https://registry.npmjs.org/
-          npm install
-
-      #########
-      #     Link a local copy of mdm-resources
-      #########
-      - name: Checkout mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
-        # working-directory: ./mdm-resources
-        uses: actions/checkout@v6
-        with:
-          repository: MauroDataMapper/mdm-resources
-          ref: refs/heads/develop
-          path: ./mdm-resources
-
-      - name: Build mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
-        working-directory: ./mdm-resources
-        run: |
-          npm install
-          npm run build
-          npm link
-
-      # Back in the (default) mdm-ui directory
-      - name: Link mdm-resources
-        if: success() && github.ref != 'refs/heads/main'
-        run: |
-          npm link @maurodatamapper/mdm-resources
-
-      - name: Report links
-        run: symlinked names
-
-      - name: License header check
-        run: npm run license-check check
-
-      - name: Check tool versions
-        run: |
-          node --version
-          npm --version
-          npx tsc --version
-          npx jest --version
-          npm ls jsdom jest ts-jest @angular/core
-          printenv | grep -v -i 'token\|secret\|key' | sort
-
-
-      - name: Run tests
-        run: npx jest --coverage
-
-      - name: Report Test results
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          working-directory: ./mdm-ui
-          name: Test Results
-          path: 'test-report/junit.xml'
-          reporter: java-junit
-
-      # Can't successfully get Megalinter to run in another folder.
-      # Disable it and use the native eslint instead
-      #- name: MegaLinter
-      #  uses:  oxsecurity/megalinter/flavors/javascript@v7.12.0
-      #  env:
-      #    # All available variables are described in documentation
-      #    # https://megalinter.io/configuration/
-      #    VALIDATE_ALL_CODEBASE: true
-      #    ENABLE_LINTERS: TYPESCRIPT_ES
-      #    LINTER_RULES_PATH: '.eslintrc.json' # This is the default anyway
-      #    DISABLE_ERRORS: true #Flag to have the linter complete with exit code 0 even if errors were detected.
-      #    SARIF_REPORTER: true
-      #    GITHUB_STATUS_REPORTER: true
-      #    GITHUB_COMMENT_REPORTER: true
-      #    MARKDOWN_SUMMARY_REPORTER: true
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #- name: Upload MegaLinter scan results to GitHub Security tab
-      #  if: ${{ success() }} || ${{ failure() }}
-      #  uses: github/codeql-action/upload-sarif@v3
-      #  with:
-      #    checkout_path: ./mdm-ui
-      #    sarif_file: 'megalinter-reports/megalinter-report.sarif'
-
-      - name: Run ESLint
-        run: npm run eslint-junit || true # Always succeed, even with linting errors
-
-      - name: Report ESLint results
-        uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          working-directory: ./mdm-ui
-          name: ESLint Results
-          path: "eslint/eslint-junit.xml"
-          reporter: java-junit
-          fail-on-error: false
-
-      - name: Run ESLint
-        run: npm run eslint-sarif || true # Always succeed, even with linting errors
-
-      - name: Upload EsLint scan results to GitHub Security tab
-        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: './mdm-ui/eslint/eslint_report.sarif'
-
-      - name: Build distribution with original theme
-        run: npm run dist
-
-      - name: Build distribution with nhs digital theme
-        run: npm run dist
+          npm-script: dist
+          working-directory: .
         env:
           MDM_UI_THEME_NAME: nhs-digital
 
-      - name: Archive distribution artifacts - snapshot
-        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && success() && ( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' )}}
-        run: |
-          cd dist ; \
-          for i in mdm-ui-*.tgz; do \
-            echo Uploading $i... ; \
-            curl -X PUT -H "X-Generate-Checksums: true" -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui/$i ; \
-          done
-
-      - name: Archive distribution artifacts - release
-        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && success() && github.ref == 'refs/heads/main' }}
-        run: |
-          cd dist ; \
-          for i in mdm-ui-*.tgz; do \
-            echo Uploading $i... ; \
-            curl -X PUT -H "X-Generate-Checksums: true" -u ${{secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME}}:${{secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD}} -T $i https://mauro-repository.com/artifacts/mauroDataMapper/mdm-ui/$i ; \
-          done
-
-      - name: Send a stream message
-        if: ${{ github.repository == 'MauroDataMapper/mdm-ui' && (success() || failure()) }}
-        uses: zulip/github-actions-zulip/send-message@v2
+      - name: Upload NHS Digital distribution artifact
+        uses: actions/upload-artifact@v7.0.2
         with:
-          api-key: ${{ secrets.ZULIP_API_KEY }}
-          email: "githubactionsbot-bot@maurodatamapper.zulipchat.com"
-          organization-url: "https://maurodatamapper.zulipchat.com"
-          to: "build/github-actions"
-          type: "stream"
-          topic: "${{github.repository}}"
-          content: "${{ job.status == 'success' && ':check_mark:' || ':cross_mark:' }} ${{github.repository}} : **${{github.ref}}**\nGitHub Actions build result: **${{ job.status }}**\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          name: mdm-ui-dist-nhs
+          path: dist/*.nhs-digital.tgz
+          retention-days: 7
+          if-no-files-found: error
 
+  combine-distributions:
+    needs: [ci, build-nhs]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    steps:
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@v8.0.2
+        with:
+          pattern: mdm-ui-dist-*
+          path: distribution
+          merge-multiple: true
+
+      - name: Upload combined distribution artifact
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: mdm-ui-dist
+          path: distribution/*.tgz
+          retention-days: 7
+          if-no-files-found: error
+
+  report-unit-tests:
+    needs: ci
+    if: >-
+      always() &&
+      needs.ci.outputs.unit-junit-artifact-id != '' &&
+      ((github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository) ||
+       (github.event_name == 'push' &&
+        (github.ref == 'refs/heads/main' ||
+         github.ref == 'refs/heads/develop')))
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+    uses: MauroDataMapper/mauro-ci/.github/workflows/junit-report.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      artifact-name: unit-junit-results
+      report-name: Unit Test Results
+
+  report-eslint:
+    needs: ci
+    if: >-
+      always() &&
+      needs.ci.outputs.lint-junit-artifact-id != '' &&
+      ((github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository) ||
+       (github.event_name == 'push' &&
+        (github.ref == 'refs/heads/main' ||
+         github.ref == 'refs/heads/develop')))
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+    uses: MauroDataMapper/mauro-ci/.github/workflows/junit-report.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      artifact-name: lint-junit-results
+      report-name: ESLint Results
+
+  upload-sarif:
+    needs: ci
+    if: >-
+      always() &&
+      github.event_name == 'push' &&
+      github.repository == 'MauroDataMapper/mdm-ui' &&
+      needs.ci.outputs.sarif-artifact-id != '' &&
+      (github.ref == 'refs/heads/main' ||
+       github.ref == 'refs/heads/develop')
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: MauroDataMapper/mauro-ci/.github/workflows/sarif-upload.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      artifact-name: sarif-results
+      sarif-path: eslint_report.sarif
+      category: ESLint
+
+  publish:
+    needs: [ci, combine-distributions]
+    if: >-
+      github.event_name == 'push' &&
+      github.repository == 'MauroDataMapper/mdm-ui' &&
+      needs.ci.result == 'success' &&
+      needs.combine-distributions.result == 'success' &&
+      (github.ref == 'refs/heads/main' ||
+       github.ref == 'refs/heads/develop')
+    permissions:
+      actions: read
+      contents: read
+    uses: MauroDataMapper/mauro-ci/.github/workflows/node-publish.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      artifact-name: mdm-ui-dist
+      environment-name: mauro-repository-publish
+      snapshot-url: https://mauro-repository.com/artifacts-snapshots/mauroDataMapper/mdm-ui
+      release-url: https://mauro-repository.com/artifacts/mauroDataMapper/mdm-ui
+    secrets:
+      REPOSITORY_USERNAME: ${{ secrets.MAURO_SNAPSHOT_REPOSITORY_USERNAME }}
+      REPOSITORY_PASSWORD: ${{ secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD }}
+
+  notify:
+    needs: [ci, publish]
+    if: >-
+      always() &&
+      github.event_name == 'push' &&
+      github.repository == 'MauroDataMapper/mdm-ui' &&
+      (github.ref == 'refs/heads/main' ||
+       github.ref == 'refs/heads/develop')
+    permissions: {}
+    uses: MauroDataMapper/mauro-ci/.github/workflows/zulip-notify.yml@7f1066948f95a797f99a160545acf2b7145b886b
+    with:
+      workflow-name: Continuous Integration
+      build-result: ${{ needs.ci.result }}
+      snapshot-result: ${{ needs.publish.result }}
+    secrets:
+      ZULIP_API_KEY: ${{ secrets.ZULIP_API_KEY }}

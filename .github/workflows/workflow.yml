@@ -36,16 +36,69 @@ jobs:
       license-argument: check
       test-executable: npx
       test-arguments: --no-install jest --coverage
-      lint-script: eslint-junit
-      lint-continue-on-error: true
-      sarif-script: eslint-sarif
-      sarif-continue-on-error: true
       build-script: dist
       test-junit-path: test-report/junit.xml
-      lint-junit-path: eslint/eslint-junit.xml
-      sarif-path: eslint/eslint_report.sarif
       build-artifact-path: dist/*.tgz
       build-artifact-name: mdm-ui-dist-original
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      lint-junit-artifact-id: ${{ steps.upload-lint-junit.outputs.artifact-id }}
+      sarif-artifact-id: ${{ steps.upload-sarif.outputs.artifact-id }}
+    steps:
+      - name: Checkout mdm-ui
+        uses: actions/checkout@v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js and install dependencies
+        uses: MauroDataMapper/mauro-ci/actions/setup-node-npm@7f1066948f95a797f99a160545acf2b7145b886b
+        with:
+          node-version: "24.16.0"
+          working-directory: .
+          cache-dependency-path: package-lock.json
+
+      - name: Run ESLint and generate JUnit results
+        continue-on-error: true
+        uses: MauroDataMapper/mauro-ci/actions/run-npm-script@7f1066948f95a797f99a160545acf2b7145b886b
+        with:
+          npm-script: eslint-junit
+          working-directory: .
+
+      - name: Upload ESLint JUnit results
+        id: upload-lint-junit
+        if: always()
+        uses: MauroDataMapper/mauro-ci/actions/upload-junit-results@7f1066948f95a797f99a160545acf2b7145b886b
+        with:
+          artifact-name: lint-junit-results
+          path: eslint/eslint-junit.xml
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Generate ESLint SARIF
+        id: eslint-sarif
+        continue-on-error: true
+        uses: MauroDataMapper/mauro-ci/actions/run-npm-script@7f1066948f95a797f99a160545acf2b7145b886b
+        with:
+          npm-script: eslint-sarif
+          working-directory: .
+
+      - name: Upload SARIF artifact
+        id: upload-sarif
+        if: >-
+          always() &&
+          (steps.eslint-sarif.outcome == 'success' ||
+           steps.eslint-sarif.outcome == 'failure')
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: sarif-results
+          path: eslint/eslint_report.sarif
+          retention-days: 7
+          if-no-files-found: warn
 
   build-nhs:
     needs: ci
@@ -124,10 +177,10 @@ jobs:
       report-name: Unit Test Results
 
   report-eslint:
-    needs: ci
+    needs: lint
     if: >-
       always() &&
-      needs.ci.outputs.lint-junit-artifact-id != '' &&
+      needs.lint.outputs.lint-junit-artifact-id != '' &&
       ((github.event_name == 'pull_request' &&
         github.event.pull_request.head.repo.full_name == github.repository) ||
        (github.event_name == 'push' &&
@@ -143,12 +196,12 @@ jobs:
       report-name: ESLint Results
 
   upload-sarif:
-    needs: ci
+    needs: lint
     if: >-
       always() &&
       github.event_name == 'push' &&
       github.repository == 'MauroDataMapper/mdm-ui' &&
-      needs.ci.outputs.sarif-artifact-id != '' &&
+      needs.lint.outputs.sarif-artifact-id != '' &&
       (github.ref == 'refs/heads/main' ||
        github.ref == 'refs/heads/develop')
     permissions:
@@ -162,11 +215,12 @@ jobs:
       category: ESLint
 
   publish:
-    needs: [ci, combine-distributions]
+    needs: [ci, lint, combine-distributions]
     if: >-
       github.event_name == 'push' &&
       github.repository == 'MauroDataMapper/mdm-ui' &&
       needs.ci.result == 'success' &&
+      needs.lint.result == 'success' &&
       needs.combine-distributions.result == 'success' &&
       (github.ref == 'refs/heads/main' ||
        github.ref == 'refs/heads/develop')
@@ -184,7 +238,7 @@ jobs:
       REPOSITORY_PASSWORD: ${{ secrets.MAURO_SNAPSHOT_REPOSITORY_PASSWORD }}
 
   notify:
-    needs: [ci, publish]
+    needs: [ci, lint, publish]
     if: >-
       always() &&
       github.event_name == 'push' &&
@@ -195,7 +249,7 @@ jobs:
     uses: MauroDataMapper/mauro-ci/.github/workflows/zulip-notify.yml@7f1066948f95a797f99a160545acf2b7145b886b
     with:
       workflow-name: Continuous Integration
-      build-result: ${{ needs.ci.result }}
+      build-result: ${{ needs.ci.result == 'success' && needs.lint.result == 'success' && 'success' || 'failure' }}
       snapshot-result: ${{ needs.publish.result }}
     secrets:
       ZULIP_API_KEY: ${{ secrets.ZULIP_API_KEY }}

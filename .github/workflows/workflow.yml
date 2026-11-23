@@ -240,11 +240,7 @@ jobs:
   notify:
     needs: [ci, lint, publish]
     if: >-
-      always() &&
-      github.event_name == 'push' &&
-      github.repository == 'MauroDataMapper/mdm-ui' &&
-      (github.ref == 'refs/heads/main' ||
-       github.ref == 'refs/heads/develop')
+      always()
     permissions: {}
     uses: MauroDataMapper/mauro-ci/.github/workflows/zulip-notify.yml@7f1066948f95a797f99a160545acf2b7145b886b
     with:

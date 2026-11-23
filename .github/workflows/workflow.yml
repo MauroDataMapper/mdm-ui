@@ -47,7 +47,6 @@ jobs:
     permissions:
       contents: read
     outputs:
-      lint-junit-artifact-id: ${{ steps.upload-lint-junit.outputs.artifact-id }}
       sarif-artifact-id: ${{ steps.upload-sarif.outputs.artifact-id }}
     steps:
       - name: Checkout mdm-ui
@@ -61,23 +60,6 @@ jobs:
           node-version: "24.16.0"
           working-directory: .
           cache-dependency-path: package-lock.json
-
-      - name: Run ESLint and generate JUnit results
-        continue-on-error: true
-        uses: MauroDataMapper/mauro-ci/actions/run-npm-script@7f1066948f95a797f99a160545acf2b7145b886b
-        with:
-          npm-script: eslint-junit
-          working-directory: .
-
-      - name: Upload ESLint JUnit results
-        id: upload-lint-junit
-        if: always()
-        uses: MauroDataMapper/mauro-ci/actions/upload-junit-results@7f1066948f95a797f99a160545acf2b7145b886b
-        with:
-          artifact-name: lint-junit-results
-          path: eslint/eslint-junit.xml
-          retention-days: 7
-          if-no-files-found: warn
 
       - name: Generate ESLint SARIF
         id: eslint-sarif
@@ -176,34 +158,15 @@ jobs:
       artifact-name: unit-junit-results
       report-name: Unit Test Results
 
-  report-eslint:
-    needs: lint
-    if: >-
-      always() &&
-      needs.lint.outputs.lint-junit-artifact-id != '' &&
-      ((github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name == github.repository) ||
-       (github.event_name == 'push' &&
-        (github.ref == 'refs/heads/main' ||
-         github.ref == 'refs/heads/develop')))
-    permissions:
-      actions: read
-      checks: write
-      contents: read
-    uses: MauroDataMapper/mauro-ci/.github/workflows/junit-report.yml@7f1066948f95a797f99a160545acf2b7145b886b
-    with:
-      artifact-name: lint-junit-results
-      report-name: ESLint Results
-
   upload-sarif:
     needs: lint
     if: >-
       always() &&
-      github.event_name == 'push' &&
       github.repository == 'MauroDataMapper/mdm-ui' &&
       needs.lint.outputs.sarif-artifact-id != '' &&
-      (github.ref == 'refs/heads/main' ||
-       github.ref == 'refs/heads/develop')
+      (github.event_name == 'push' ||
+       (github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository))
     permissions:
       actions: read
       contents: read

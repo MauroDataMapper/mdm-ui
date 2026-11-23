@@ -31,16 +31,15 @@ import { NgForm, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   CatalogueItemDomainType,
-  CodeSet,
-  CodeSetIndexResponse,
   DataType,
   ReferenceDataModel,
   ReferenceDataModelIndexResponse,
-  Terminology,
-  TerminologyIndexResponse
 } from '@maurodatamapper/mdm-resources';
 import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '../../content/content-editor/content-editor.component';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
@@ -52,6 +51,7 @@ import { MatSelect } from '@angular/material/select';
 import { MatFormField } from '@angular/material/form-field';
 import { ModelPathComponent } from '../model-path/model-path.component';
 import { NgIf, NgFor } from '@angular/common';
+import { GridService } from '@mdm/services';
 
 @Component({
     selector: 'mdm-data-type-inline',
@@ -68,6 +68,7 @@ export class NewDataTypeInlineComponent
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
   @Input() showLabelAndDescription = false;
+  @Input() editorSize: ContentEditorSize = 'normal';
 
   @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: DataType = {
@@ -88,21 +89,18 @@ export class NewDataTypeInlineComponent
   allDataTypes;
   isValid = false;
   reloading = false;
-  terminologies: Terminology[];
-  codesets: CodeSet[];
   dataModels: ReferenceDataModel[];
   @Input() advanced = false;
 
   constructor(
     private resourceService: MdmResourcesService,
-    private elementTypes: ElementTypesService
+    private elementTypes: ElementTypesService,
+    private gridService: GridService
   ) {
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
     if (this.allDataTypes) {
       this.model.domainType = this.allDataTypes[0];
     }
-    this.loadTerminologies();
-    this.loadCodeSets();
     this.loadReferenceModels();
   }
 
@@ -186,7 +184,7 @@ export class NewDataTypeInlineComponent
     }
 
     if (
-      this.model.domainType === CatalogueItemDomainType.CodeSet
+      this.model.domainType === CatalogueItemDomainType.CodeSetType
       && !this.model.modelResourceId
     ) {
       isValid = false;
@@ -216,20 +214,16 @@ export class NewDataTypeInlineComponent
     this.sendValidationStatus();
   };
 
-  loadTerminologies() {
-    this.reloading = true;
-    this.resourceService.terminology.list({ all: true }).subscribe(
-      (data: TerminologyIndexResponse) => {
-        this.terminologies = data.body.items.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        );
-        this.reloading = false;
-      },
-      () => {
-        this.reloading = false;
-      }
+  fetchTerminologies = (text: string, _loadAll: boolean, offset: number, limit: number) => {
+    const options = this.gridService.constructOptions(
+      limit,
+      offset,
+      'label',
+      'asc',
+      text?.trim() ? { label: text } : {}
     );
-  }
+    return this.resourceService.terminology.list(options);
+  };
 
   modelDataTypeSelected(value: any) {
     this.model.modelResourceId = value.id;
@@ -239,20 +233,16 @@ export class NewDataTypeInlineComponent
     this.sendValidationStatus();
   }
 
-  loadCodeSets() {
-    this.reloading = true;
-    this.resourceService.codeSet.list({ all: true }).subscribe(
-      (data: CodeSetIndexResponse) => {
-        this.codesets = data.body.items.sort((a, b) =>
-          a.label.localeCompare(b.label)
-        );
-        this.reloading = false;
-      },
-      () => {
-        this.reloading = false;
-      }
+  fetchCodeSets = (text: string, _loadAll: boolean, offset: number, limit: number) => {
+    const options = this.gridService.constructOptions(
+      limit,
+      offset,
+      'label',
+      'asc',
+      text?.trim() ? { label: text } : {}
     );
-  }
+    return this.resourceService.codeSet.list(options);
+  };
 
   loadReferenceModels() {
     this.reloading = true;

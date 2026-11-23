@@ -17,12 +17,15 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { NewDataTypeInlineComponent } from './new-data-type-inline.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 import { EMPTY, of } from 'rxjs';
 import '@mdm/utility/extensions/mat-legacy-dialog.extensions';
 import { ComponentHarness, setupTestModuleForComponent } from '@mdm/testing/testing.helpers';
 
 describe('NewDataTypeInlineComponent', () => {
   let harness: ComponentHarness<NewDataTypeInlineComponent>;
+  const terminologyList = jest.fn(() => of({ body: { items: [], count: 0 } }));
+  const codeSetList = jest.fn(() => of({ body: { items: [], count: 0 } }));
 
   interface MdmApiPropertiesStub {
     listPublic: jest.Mock
@@ -47,10 +50,10 @@ describe('NewDataTypeInlineComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             terminology: {
-              list: () => EMPTY
+              list: terminologyList
             },
             codeSet: {
-              list: () => EMPTY
+              list: codeSetList
             },
             referenceDataModel: {
               list: () => EMPTY
@@ -66,5 +69,36 @@ describe('NewDataTypeInlineComponent', () => {
 
   it('should create', () => {
     expect(harness.isComponentCreated).toBeTruthy();
+  });
+
+  it('fetches Terminologies using paginated options without requesting all records', () => {
+    harness.component.fetchTerminologies('', true, 0, 20);
+
+    expect(terminologyList).toHaveBeenCalledWith({
+      max: 20,
+      sort: 'label',
+      order: 'asc'
+    });
+  });
+
+  it('fetches CodeSets using paginated options without requesting all records', () => {
+    harness.component.fetchCodeSets('ICD', false, 20, 20);
+
+    expect(codeSetList).toHaveBeenCalledWith({
+      max: 20,
+      offset: 20,
+      sort: 'label',
+      order: 'asc',
+      label: 'ICD'
+    });
+  });
+
+  it('requires a CodeSet reference for CodeSet data types', () => {
+    harness.component.model.domainType = CatalogueItemDomainType.CodeSetType;
+    harness.component.model.modelResourceId = '';
+
+    harness.component.validate();
+
+    expect(harness.component.isValid).toBe(false);
   });
 });

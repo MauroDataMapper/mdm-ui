@@ -25,6 +25,8 @@ import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-
 import { MarkdownTextAreaComponent } from '../markdown/markdown-text-area/markdown-text-area.component';
 import { NgIf } from '@angular/common';
 
+export type ContentEditorSize = 'normal' | 'expanded' | 'fill';
+
 export interface ContentEditorMarkdownOptions {
   showHelpText: boolean
 }
@@ -54,6 +56,7 @@ export class ContentEditorComponent implements OnInit {
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;
   @Input() htmlOptions: ContentEditorHtmlOptions;
+  @Input() editorSize: ContentEditorSize = 'normal';
 
   ButtonModeTypes = HtmlButtonMode;
 
@@ -89,6 +92,10 @@ export class ContentEditorComponent implements OnInit {
 
   isHtmlContent() {
     if (!this.content) {
+      return false;
+    }
+
+    if (/^[\t ]{0,3}(?:`{3,}|~{3,})/m.test(this.content)) {
       return false;
     }
 

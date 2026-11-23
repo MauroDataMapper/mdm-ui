@@ -31,6 +31,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton, MatIconButton, MatIconAnchor } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { NgIf, NgClass } from '@angular/common';
+import { CodeSnippetDialogComponent } from '../../code-snippet-dialog/code-snippet-dialog.component';
+import { decodeSourceCodeValue } from '@mdm/shared/source-code/source-code-value';
 
 const macShortcuts = {
   bold: 'Bold (⌘ + B)',
@@ -67,6 +69,7 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
   @Input() inEditMode: boolean;
   @Input() hideHelpText: boolean;
   @Input() rows: number;
+  @Input() editorSize: 'normal' | 'expanded' | 'fill' = 'normal';
   @ViewChild('editableTextArea', { static: false })
   textArea: ElementRef<HTMLTextAreaElement>;
 
@@ -194,6 +197,28 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     this.elementDialogueService.open([], []);
   }
 
+  public insertCodeSnippet() {
+    this.dialog
+      .open(CodeSnippetDialogComponent, {
+        width: '750px',
+        maxWidth: '95vw'
+      })
+      .afterClosed()
+      .pipe(filter((value): value is string => !!value))
+      .subscribe((value) => {
+        const { language, source } = decodeSourceCodeValue(value);
+        const longestRun = Math.max(
+          0,
+          ...(source.match(/`+/g) ?? []).map(run => run.length)
+        );
+        const fence = '`'.repeat(Math.max(3, longestRun + 1));
+        const snippet = `${fence}${language}\n${source}\n${fence}`;
+
+        this.insertCodeBlock(snippet);
+        this.onEditorChanged();
+      });
+  }
+
   public elementSelected() {
     this.messageService.elementSelector.subscribe((data) => {
       this.selectedElement = data;
@@ -289,6 +314,31 @@ export class MarkdownTextAreaComponent implements OnInit, OnDestroy {
     el.focus();
 
     // Update binding
+    this.description = el.value;
+  }
+
+  private insertCodeBlock(snippet: string) {
+    const el = this.textArea?.nativeElement;
+    if (!el) {
+      return;
+    }
+
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const before = el.value.slice(0, start);
+    const after = el.value.slice(end);
+    let prefix = '';
+    if (before && !before.endsWith('\n\n')) {
+      prefix = before.endsWith('\n') ? '\n' : '\n\n';
+    }
+
+    let suffix = '';
+    if (after && !after.startsWith('\n\n')) {
+      suffix = after.startsWith('\n') ? '\n' : '\n\n';
+    }
+
+    el.setRangeText(`${prefix}${snippet}${suffix}`, start, end, 'end');
+    el.focus();
     this.description = el.value;
   }
 

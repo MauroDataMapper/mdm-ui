@@ -48,7 +48,10 @@ import { MatFormField, MatError } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { MatInput } from '@angular/material/input';
-import { ContentEditorComponent } from '../../content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '../../content/content-editor/content-editor.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { FormsModule } from '@angular/forms';
@@ -64,6 +67,7 @@ import { EditProfileSectionComponent } from '@mdm/modals/edit-profile-section/ed
 })
 export class EditProfileModalComponent implements OnInit {
   profileData: Profile;
+  contentEditorSize: ContentEditorSize = 'normal';
   description?: string;
   okBtnText: string;
   showCanEditPropertyAlert = true;
@@ -131,6 +135,10 @@ export class EditProfileModalComponent implements OnInit {
     });
 
     this.profileData = data.profile;
+    const fields = this.getProfileFields(data.profile.sections);
+    if (fields.some(field => field.dataType === 'text')) {
+      this.contentEditorSize = fields.length === 1 ? 'fill' : 'expanded';
+    }
     this.description = data.description;
     this.okBtnText = data.okBtn ?? 'Save';
   }
@@ -324,6 +332,13 @@ export class EditProfileModalComponent implements OnInit {
     return Array.isArray(errors)
       ? errors.filter((error): error is string => typeof error === 'string')
       : [];
+  }
+
+  private getProfileFields(sections: Profile['sections']): ProfileField[] {
+    return sections?.flatMap(section => [
+      ...(section.fields ?? []),
+      ...this.getProfileFields(section.sections)
+    ]) ?? [];
   }
 
   private loadDefaultCustomProfile(properties: ApiProperty[]) {

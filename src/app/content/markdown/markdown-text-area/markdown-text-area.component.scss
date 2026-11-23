@@ -41,6 +41,15 @@ $md-toolbar-font-size: 16px;
     min-height: 200px;
   }
 
+  &__edit--expanded {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  &__edit--fill {
+    height: calc(90vh - 320px);
+  }
+
   &__toolbar {
     font-size: $md-toolbar-font-size;
     height: auto;

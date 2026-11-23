@@ -16,14 +16,16 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<ngx-jodit
-  *ngIf="inEditMode"
-  [(ngModel)]="description"
-  [options]="editorConfig"
-  (joditChange)="onHtmlEditorChanged($event)"
-  (joditKeyDown)="onHtmlEditorKeydown($event)"
->
-</ngx-jodit>
-<div style="clear: both">
-  <span [innerHTML]="displayContent | safe" *ngIf="!inEditMode"></span>
+<div class="mdm-html-editor" (click)="onCodeSnippetClick($event)">
+  <ngx-jodit
+    *ngIf="inEditMode"
+    [(ngModel)]="description"
+    [options]="editorConfig"
+    (joditChange)="onHtmlEditorChanged($event)"
+    (joditKeyDown)="onHtmlEditorKeydown($event)"
+  >
+  </ngx-jodit>
+  <div style="clear: both">
+    <span [innerHTML]="displayContent | safe" *ngIf="!inEditMode"></span>
+  </div>
 </div>

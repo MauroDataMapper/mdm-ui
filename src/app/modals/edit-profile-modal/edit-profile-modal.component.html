@@ -45,6 +45,7 @@ SPDX-License-Identifier: Apache-2.0
         <tr mdm-edit-profile-section
           *ngFor="let section of this.profileData?.sections"
           [profileSection]="section"
+          [contentEditorSize]="contentEditorSize"
           [showValidationErrors]="isValidated">
         </tr>
       </tbody>

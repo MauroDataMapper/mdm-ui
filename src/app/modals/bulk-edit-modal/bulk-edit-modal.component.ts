@@ -25,7 +25,10 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { ContentEditorComponent } from '@mdm/content/content-editor/content-editor.component';
+import {
+  ContentEditorComponent,
+  ContentEditorSize
+} from '@mdm/content/content-editor/content-editor.component';
 
 @Component({
     selector: 'mdm-bulk-edit',
@@ -61,6 +64,15 @@ export class BulkEditModalComponent implements AfterViewInit {
   processing = false;
   isProcessComplete = false;
   finalResult = {};
+
+  get contentEditorSize(): ContentEditorSize {
+    const recordCount = this.data.dataElementIdList?.length ?? this.records.length;
+    if (recordCount === 1) {
+      return 'fill';
+    }
+
+    return recordCount > 1 ? 'expanded' : 'normal';
+  }
 
   constructor(
     public dialogRef: MatDialogRef<BulkEditModalComponent>,

@@ -306,7 +306,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           finalised: this.catalogueItem.finalised
         },
         disableClose: true,
-        panelClass: 'full-width-dialog'
+        panelClass: 'full-width-dialog',
+        height: '90vh',
+        maxHeight: '90vh'
       })
       .afterClosed()
       .pipe(
@@ -592,6 +594,8 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
           parentCatalogueItem,
           currentCatalogueItem: this.catalogueItem
         },
+        height: '90vh',
+        maxHeight: '90vh',
         panelClass: 'full-width-dialog'
       })
       .afterClosed()
@@ -777,7 +781,9 @@ export class ProfileDataViewComponent implements OnInit, OnChanges {
                 okBtn: 'Submit'
               },
               disableClose: true,
-              panelClass: 'full-width-dialog'
+              panelClass: 'full-width-dialog',
+              height: '90vh',
+              maxHeight: '90vh'
             })
             .afterClosed();
         }),
